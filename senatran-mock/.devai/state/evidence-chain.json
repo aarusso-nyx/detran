@@ -1,0 +1,159 @@
+{
+  "head": "2a571c2b8b1079aeda868470403fd6ab744bec24b2b6c10a0cbe02aabf9f24ff",
+  "records": [
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-997185890a2d7d9d",
+      "timestamp": "2026-07-07T00:53:08.735Z",
+      "actor": "claude-code",
+      "actor_role": "harness",
+      "action": "harness.bootstrap",
+      "status": "completed",
+      "context": {
+        "repo_root": ".",
+        "git": {
+          "head_sha": null,
+          "dirty_files": []
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "P0 bootstrap"
+      ],
+      "previous_run_hash": null,
+      "manifest_hash": "9a82293a8da3a07b5a3cbca8fe70a98148bdb8af26cf479c04f05d31d97e79fc"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-a75d1371e62d2333",
+      "timestamp": "2026-07-07T02:14:28.360Z",
+      "actor": "claude-code",
+      "actor_role": "harness",
+      "action": "design.transpose",
+      "status": "completed",
+      "context": {
+        "repo_root": ".",
+        "git": {
+          "head_sha": "90e76a65e88d8ba5c648134e7a976c3f9d954157",
+          "dirty_files": []
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "Transposed canonical RENACH/RENAINF (30 endpoints) into WSDenatran conventions; 87 ops unified; doctor 6/6; committed 90e76a6"
+      ],
+      "previous_run_hash": "9a82293a8da3a07b5a3cbca8fe70a98148bdb8af26cf479c04f05d31d97e79fc",
+      "manifest_hash": "d872e04dc5b8f59a7f197d8e428c6218060281306a0e9a176ccabffd38305716"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-91ecf8be3d7fe14e",
+      "timestamp": "2026-07-07T02:35:57.999Z",
+      "actor": "claude-code",
+      "actor_role": "harness",
+      "action": "db.implement",
+      "status": "completed",
+      "context": {
+        "repo_root": ".",
+        "git": {
+          "head_sha": "90e76a65e88d8ba5c648134e7a976c3f9d954157",
+          "dirty_files": [
+            ".devai/state/evidence-chain.json",
+            "DESIGN-DECISIONS.md",
+            "docs/framework/arch/contract-views.md",
+            "docs/framework/arch/data-model.md",
+            "package.json",
+            "database/",
+            "tools/scripts/generate-seed.ts",
+            "tools/scripts/generate-views.ts",
+            "tools/scripts/lib/"
+          ]
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "P3: DDL (schemas/tables/57+6 views) applies clean; deterministic seed generator; payloads match contract field-for-field (Veiculo 95/95, Condutor 115/115, Infracao 114/114); audit 102/102 hash-correct; db:reset green"
+      ],
+      "previous_run_hash": "d872e04dc5b8f59a7f197d8e428c6218060281306a0e9a176ccabffd38305716",
+      "manifest_hash": "ff539acbd83d8ba52eae05c98d18d1c8168631dcb2c473b97f072d7ca984e53a"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-ace00b9b3ad6ba5b",
+      "timestamp": "2026-07-07T02:52:15.104Z",
+      "actor": "claude-code",
+      "actor_role": "harness",
+      "action": "services.implement",
+      "status": "completed",
+      "context": {
+        "repo_root": ".",
+        "git": {
+          "head_sha": "6df9415c7086c8563e18636d82885d13712c2453",
+          "dirty_files": [
+            "apps/api/src/app.module.ts",
+            "apps/api/src/health/health.controller.ts",
+            "domain/autorizacoes/",
+            "domain/condutores/",
+            "domain/consulta-csv/",
+            "domain/indicadores/",
+            "domain/infracoes/",
+            "domain/renach/",
+            "domain/renainf/",
+            "domain/restricoes-judiciais/",
+            "domain/roubo-furto/",
+            "domain/shared/api/src/common/",
+            "domain/veiculos/"
+          ]
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "P4: 88 routes; global CpfUsuarioGuard + WsdenatranExceptionFilter + ReadService; 8 thin read modules over contract views; RENACH/RENAINF transactional modules (state machine+idempotency+audit). Verified: reads 200, auth 401, magic 402/404, RENACH exam 201+idempotent (no dup), RENAINF penalty/appeal ordering 402"
+      ],
+      "previous_run_hash": "ff539acbd83d8ba52eae05c98d18d1c8168631dcb2c473b97f072d7ca984e53a",
+      "manifest_hash": "23dff5de2d5dc95d890ea090df09adb6314b9cd930677c594ef5eaced14aff3b"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-ed1ca55879fc5cec",
+      "timestamp": "2026-07-07T03:09:48.245Z",
+      "actor": "claude-code",
+      "actor_role": "harness",
+      "action": "tests.implement",
+      "status": "completed",
+      "context": {
+        "repo_root": ".",
+        "git": {
+          "head_sha": "c2ddba4314f584d144123ac46c6b926847a9d35d",
+          "dirty_files": [
+            "BUILD-PLAN.md",
+            "docs/framework/arch/invariants/INV-IDEMP-001.json",
+            "docs/framework/arch/renach-renainf-workflows.md",
+            "docs/framework/contracts/canonical-mapping.md",
+            "docs/framework/contracts/scenarios.md",
+            "domain/renach/api/src/renach.service.ts",
+            "domain/renainf/api/src/renainf.service.ts",
+            "domain/shared/api/src/common/transaction-support.service.ts",
+            "vitest.config.ts",
+            ".github/",
+            "domain/renach/api/src/renach.service.spec.ts",
+            "domain/renainf/api/src/renainf.service.spec.ts",
+            "domain/shared/api/src/common/cpf-usuario.guard.spec.ts",
+            "domain/shared/api/src/common/read.service.spec.ts",
+            "domain/shared/api/src/common/scenario.service.spec.ts",
+            "domain/shared/api/src/common/transaction-support.service.spec.ts",
+            "domain/shared/api/src/common/wsdenatran-exception.filter.spec.ts",
+            "domain/veiculos/api/src/veiculos.controller.spec.ts",
+            "tests/"
+          ]
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "P5: 122 tests (unit 63 @88% line cov gate>=70, integration 8, e2e 51); all 9 invariant trace files exist; fixed idempotency semantics (explicit key only; duplicates 402); CI workflow added; doctor 6/6"
+      ],
+      "previous_run_hash": "23dff5de2d5dc95d890ea090df09adb6314b9cd930677c594ef5eaced14aff3b",
+      "manifest_hash": "2a571c2b8b1079aeda868470403fd6ab744bec24b2b6c10a0cbe02aabf9f24ff"
+    }
+  ]
+}

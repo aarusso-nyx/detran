@@ -1,0 +1,3311 @@
+openapi: 3.1.0
+info:
+  title: WSDenatran REST API (mock) — Transactional RENACH/RENAINF
+  version: 1.0.0
+  license:
+    name: UNLICENSED
+    url: https://example.invalid/senatran/LICENSE
+  description: >-
+    Dev-only mock. This specification is the transactional half of the same
+    WSDenatran mock, ported from the canonical RENACH/RENAINF adapter API into
+    the WSDenatran contract conventions (see
+    `docs/framework/contracts/canonical-mapping.md`). It shares the exact same
+    conventions as `openapi.yaml`: single `/v1` surface, `x-cpf-usuario` header,
+    certificate simulation via `x-client-cert-cn`, raw JSON success bodies and
+    the shared `ErrorResponse` (`returnCode`, `message`) error envelope.
+
+
+    Unlike the read-only `openapi.yaml`, these operations are transactional:
+    they create and mutate RENACH driver-licensing processes and RENAINF
+    administrative-infraction cases, driving their respective state machines.
+    Business-rule / state violations return 402 with the canonical error code
+    carried in `message` as `CODE — descrição`. Not for production use.
+
+servers:
+  - url: /v1
+
+security:
+  - clientCertSimulation: []
+
+tags:
+  - name: renachProcessos
+    description: RENACH — processos de habilitação (consulta, elegibilidade)
+  - name: renachExames
+    description: RENACH — exames médicos, avaliações psicológicas e retificações
+  - name: renachAgendamentos
+    description: RENACH — agendamentos de exame e check-in
+  - name: renachClinicas
+    description: RENACH — clínicas e profissionais credenciados
+  - name: renachJunta
+    description: RENACH — encaminhamentos e pareceres de junta médica
+  - name: renainfTalonario
+    description: RENAINF — talonário eletrônico (dispositivos, sincronização, faixas)
+  - name: renainfAutosInfracao
+    description: RENAINF — autos de infração de trânsito (AIT)
+  - name: renainfProcessos
+    description: RENAINF — processos administrativos e notificações
+  - name: renainfRecursos
+    description: RENAINF — defesas prévias, recursos e julgamentos
+  - name: renainfPagamentos
+    description: RENAINF — débitos e pagamentos
+  - name: renaestSinistros
+    description: >-
+      RENAEST — base nacional de sinistros/acidentes de trânsito (extensão
+      nacional; ver national-extensions-mapping.md)
+  - name: sneNotificacoes
+    description: >-
+      SNE — Sistema de Notificação Eletrônica: adesões e notificações de
+      autuação/penalidade (extensão nacional)
+  - name: cdtCidadao
+    description: >-
+      CDT — projeção de canal do cidadão sobre dados nacionais (SNE/RENAINF);
+      não é provedor de identidade (extensão nacional)
+  - name: detranBridge
+    description: >-
+      Bridge DETRAN estadual ↔ bases nacionais (RENAVAM/RENACH/RENAINF/RENAEST/
+      SNE); apenas semântica de base nacional (extensão nacional)
+
+paths:
+  # ---------------------------------------------------------------------------
+  # RENACH
+  # ---------------------------------------------------------------------------
+  /renach/processos:
+    get:
+      tags: [renachProcessos]
+      operationId: consultarProcessosRenach
+      summary: Consulta processos RENACH ativos por CPF
+      description: >-
+        Lista os processos RENACH ativos (situação não terminal) do candidato,
+        opcionalmente filtrados por `tipoProcesso`. Permite recuperar o
+        `numeroRenach` do processo que motivou `RENACH.PROCESS.ALREADY_OPEN`.
+        Extensão WSDenatran (sem equivalente no corpus canônico); ver
+        canonical-mapping.md.
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - name: cpf
+          in: query
+          required: true
+          description: CPF do candidato
+          schema: { type: string }
+        - name: tipoProcesso
+          in: query
+          required: false
+          description: Filtra por tipo de processo
+          schema: { $ref: '#/components/schemas/TipoProcesso' }
+      responses:
+        '200':
+          description: OK. Lista de processos ativos (possivelmente vazia).
+          content:
+            application/json:
+              schema:
+                { $ref: '#/components/schemas/ProcessoRenachListResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+    post:
+      tags: [renachProcessos]
+      operationId: abrirProcessoRenach
+      summary: Abrir processo RENACH
+      description: >-
+        Abre um novo processo RENACH para o candidato e retorna o
+        `numeroRenach` atribuído. Extensão WSDenatran (sem equivalente no corpus
+        canônico); ver canonical-mapping.md.
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              { $ref: '#/components/schemas/AberturaProcessoRenachRequest' }
+      responses:
+        '201':
+          description: Criado. Processo RENACH aberto em situação ABERTO.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProcessoRenach' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.PROCESS.ALREADY_OPEN` — já existe processo
+            ativo para o CPF e tipo informados.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}:
+    get:
+      tags: [renachProcessos]
+      operationId: getProcessoRenach
+      summary: Consultar processo RENACH
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProcessoRenach' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}/elegibilidadeExame:
+    post:
+      tags: [renachProcessos]
+      operationId: verificarElegibilidadeExame
+      summary: Consultar elegibilidade para exame
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ElegibilidadeExameRequest' }
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema:
+                { $ref: '#/components/schemas/ElegibilidadeExameResponse' }
+        '400':
+          description: >-
+            Requisição inválida. `RENACH.EXAM.INVALID_TYPE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.PROCESS.INVALID_STATUS`,
+            `RENACH.PROCESS.BLOCKED`, `RENACH.PROCESS.EXPIRED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/clinicasCredenciadas:
+    get:
+      tags: [renachClinicas]
+      operationId: listarClinicasCredenciadas
+      summary: Listar clínicas credenciadas
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/ClinicaCredenciada' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/profissionaisCredenciados:
+    get:
+      tags: [renachClinicas]
+      operationId: listarProfissionaisCredenciados
+      summary: Listar profissionais credenciados
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/ProfissionalCredenciado' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.EXAMINER.NOT_ACCREDITED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}/agendamentos:
+    post:
+      tags: [renachAgendamentos]
+      operationId: criarAgendamentoExame
+      summary: Criar agendamento de exame
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AgendamentoRequest' }
+      responses:
+        '201':
+          description: Criado. Agendamento registrado com sucesso.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Agendamento' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.PROCESS.INVALID_STATUS`,
+            `RENACH.CLINIC.NOT_ACCREDITED`, `RENACH.CLINIC.INACTIVE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/agendamentos/{idAgendamento}:
+    patch:
+      tags: [renachAgendamentos]
+      operationId: alterarAgendamento
+      summary: Cancelar ou remarcar agendamento
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idAgendamento
+          in: path
+          required: true
+          description: Identificador do agendamento
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AgendamentoPatchRequest' }
+      responses:
+        '200':
+          description: OK. Agendamento atualizado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Agendamento' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.PROCESS.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/agendamentos/{idAgendamento}/checkin:
+    post:
+      tags: [renachAgendamentos]
+      operationId: iniciarAtendimento
+      summary: Iniciar atendimento
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idAgendamento
+          in: path
+          required: true
+          description: Identificador do agendamento
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CheckinRequest' }
+      responses:
+        '200':
+          description: OK. Atendimento iniciado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Agendamento' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.PROCESS.INVALID_STATUS`,
+            `RENACH.BIOMETRY.NOT_MATCHED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}/examesMedicos:
+    post:
+      tags: [renachExames]
+      operationId: registrarExameMedico
+      summary: Registrar exame médico
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ExameMedicoRequest' }
+      responses:
+        '201':
+          description: Criado. Exame médico registrado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Exame' }
+        '400':
+          description: >-
+            Requisição inválida. `RENACH.EXAM.INVALID_TYPE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.EXAM.ALREADY_RECORDED`,
+            `RENACH.EXAM.RESULT_NOT_ALLOWED`, `RENACH.EXAM.REQUIRES_BOARD`,
+            `RENACH.CLINIC.NOT_ACCREDITED`, `RENACH.EXAMINER.NOT_ACCREDITED`,
+            `RENACH.EXAMINER.NOT_LINKED_TO_CLINIC`, `RENACH.SIGNATURE.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}/avaliacoesPsicologicas:
+    post:
+      tags: [renachExames]
+      operationId: registrarAvaliacaoPsicologica
+      summary: Registrar avaliação psicológica
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AvaliacaoPsicologicaRequest' }
+      responses:
+        '201':
+          description: Criado. Avaliação psicológica registrada.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Exame' }
+        '400':
+          description: >-
+            Requisição inválida. `RENACH.EXAM.INVALID_TYPE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.EXAM.ALREADY_RECORDED`,
+            `RENACH.EXAM.RESULT_NOT_ALLOWED`, `RENACH.EXAMINER.NOT_ACCREDITED`,
+            `RENACH.EXAMINER.NOT_LINKED_TO_CLINIC`, `RENACH.SIGNATURE.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}/exames:
+    get:
+      tags: [renachExames]
+      operationId: consultarResultadosExames
+      summary: Consultar resultados de exames
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ExameList' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/exames/{idExame}/retificacoes:
+    post:
+      tags: [renachExames]
+      operationId: retificarExame
+      summary: Retificar exame
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idExame
+          in: path
+          required: true
+          description: Identificador do exame
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RetificacaoExameRequest' }
+      responses:
+        '202':
+          description: Aceito. Retificação em processamento.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AceiteAssincrono' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.RECTIFICATION.NOT_ALLOWED`,
+            `RENACH.EXAM.RESULT_NOT_ALLOWED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}/encaminhamentosJunta:
+    post:
+      tags: [renachJunta]
+      operationId: encaminharJuntaMedica
+      summary: Encaminhar para junta médica
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EncaminhamentoJuntaRequest' }
+      responses:
+        '202':
+          description: Aceito. Encaminhamento à junta em processamento.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AceiteAssincrono' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.EXAM.REQUIRES_BOARD`,
+            `RENACH.PROCESS.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renach/processos/{numeroRenach}/pareceresJunta:
+    post:
+      tags: [renachJunta]
+      operationId: registrarParecerJunta
+      summary: Registrar parecer de junta
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: numeroRenach
+          in: path
+          required: true
+          description: Número do processo RENACH
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ParecerJuntaRequest' }
+      responses:
+        '201':
+          description: Criado. Parecer de junta registrado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Exame' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENACH.PROCESS.INVALID_STATUS`,
+            `RENACH.EXAM.RESULT_NOT_ALLOWED`, `RENACH.SIGNATURE.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENACH.PROCESS.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  # ---------------------------------------------------------------------------
+  # RENAINF
+  # ---------------------------------------------------------------------------
+  /renainf/talonario/dispositivos:
+    post:
+      tags: [renainfTalonario]
+      operationId: registrarDispositivoTalonario
+      summary: Registrar dispositivo de talonário
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DispositivoTalonarioRequest' }
+      responses:
+        '201':
+          description: Criado. Dispositivo de talonário registrado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DispositivoTalonario' }
+        '400':
+          description: >-
+            Requisição inválida. `RENAINF.AIT.INVALID_DEVICE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.SNE.NOT_ADHERED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/talonario/sincronizacao:
+    get:
+      tags: [renainfTalonario]
+      operationId: sincronizarDominioOperacional
+      summary: Sincronizar domínio operacional
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SincronizacaoTalonario' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/talonario/faixasNumeracaoAit:
+    post:
+      tags: [renainfTalonario]
+      operationId: reservarFaixaNumeracaoAit
+      summary: Reservar numeração de AIT
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/FaixaNumeracaoAitRequest' }
+      responses:
+        '201':
+          description: Criado. Faixa de numeração de AIT reservada.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FaixaNumeracaoAit' }
+        '400':
+          description: >-
+            Requisição inválida. `RENAINF.AIT.INVALID_NUMBER`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.AIT.OUT_OF_RANGE`,
+            `RENAINF.AIT.INVALID_DEVICE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/autosInfracao:
+    post:
+      tags: [renainfAutosInfracao]
+      operationId: criarAutoInfracao
+      summary: Criar AIT
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AutoInfracaoRequest' }
+      responses:
+        '201':
+          description: Criado. Auto de infração registrado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AutoInfracao' }
+        '400':
+          description: >-
+            Requisição inválida. `RENAINF.AIT.INVALID_NUMBER`,
+            `RENAINF.AIT.INVALID_INFRACTION_CODE`, `RENAINF.AIT.INVALID_AGENT`,
+            `RENAINF.AIT.INVALID_DEVICE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.AIT.DUPLICATED`, `RENAINF.AIT.OUT_OF_RANGE`,
+            `RENAINF.AIT.EVIDENCE_REQUIRED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/autosInfracao/lotes:
+    post:
+      tags: [renainfAutosInfracao]
+      operationId: transmitirLoteAutosInfracao
+      summary: Transmitir lote de AITs offline
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoteAutosInfracaoRequest' }
+      responses:
+        '202':
+          description: Aceito. Lote em processamento.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AceiteAssincrono' }
+        '400':
+          description: >-
+            Requisição inválida. `RENAINF.AIT.INVALID_NUMBER`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.AIT.TRANSMISSION_EXPIRED`,
+            `RENAINF.AIT.OUT_OF_RANGE`, `RENAINF.AIT.DUPLICATED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/autosInfracao/{numeroAit}:
+    get:
+      tags: [renainfAutosInfracao]
+      operationId: consultarAutoInfracao
+      summary: Consultar AIT
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - name: numeroAit
+          in: path
+          required: true
+          description: Número do auto de infração de trânsito
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AutoInfracao' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/autosInfracao/{numeroAit}/solicitacoesCancelamento:
+    post:
+      tags: [renainfAutosInfracao]
+      operationId: solicitarCancelamentoAutoInfracao
+      summary: Solicitar cancelamento do AIT
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: numeroAit
+          in: path
+          required: true
+          description: Número do auto de infração de trânsito
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              { $ref: '#/components/schemas/SolicitacaoCancelamentoRequest' }
+      responses:
+        '202':
+          description: Aceito. Solicitação de cancelamento em análise.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AceiteAssincrono' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.AIT.CANCELLATION_NOT_ALLOWED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos:
+    post:
+      tags: [renainfProcessos]
+      operationId: abrirAutuacao
+      summary: Abrir autuação
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              { $ref: '#/components/schemas/ProcessoAdministrativoRequest' }
+      responses:
+        '201':
+          description: Criado. Processo administrativo (autuação) aberto.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProcessoAdministrativo' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.CASE.INVALID_STATUS`,
+            `RENAINF.AIT.DUPLICATED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/notificacoes/autuacao:
+    post:
+      tags: [renainfProcessos]
+      operationId: emitirNotificacaoAutuacao
+      summary: Emitir notificação de autuação
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NotificacaoRequest' }
+      responses:
+        '201':
+          description: Criado. Notificação de autuação emitida.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Notificacao' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.CASE.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/indicacoesCondutor:
+    post:
+      tags: [renainfProcessos]
+      operationId: registrarIndicacaoCondutor
+      summary: Registrar indicação de condutor
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/IndicacaoCondutorRequest' }
+      responses:
+        '201':
+          description: Criado. Indicação de condutor registrada.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProcessoAdministrativo' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.CASE.INVALID_STATUS`,
+            `RENAINF.NOTICE.DEADLINE_EXPIRED`, `RENAINF.DEFENSE.INVALID_ACTOR`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/defesasPrevias:
+    post:
+      tags: [renainfRecursos]
+      operationId: protocolarDefesaPrevia
+      summary: Protocolar defesa prévia
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DefesaPreviaRequest' }
+      responses:
+        '201':
+          description: Criado. Defesa prévia protocolada.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProcessoAdministrativo' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.DEFENSE.NOT_ALLOWED`,
+            `RENAINF.DEFENSE.LATE_SUBMISSION`, `RENAINF.DEFENSE.INVALID_ACTOR`,
+            `RENAINF.CASE.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/penalidades:
+    post:
+      tags: [renainfProcessos]
+      operationId: imporPenalidade
+      summary: Imposição de penalidade
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PenalidadeRequest' }
+      responses:
+        '201':
+          description: Criado. Penalidade imposta.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ProcessoAdministrativo' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.PENALTY.ALREADY_IMPOSED`,
+            `RENAINF.CASE.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/notificacoes/penalidade:
+    post:
+      tags: [renainfProcessos]
+      operationId: emitirNotificacaoPenalidade
+      summary: Emitir notificação de penalidade
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NotificacaoRequest' }
+      responses:
+        '201':
+          description: Criado. Notificação de penalidade emitida.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Notificacao' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.CASE.INVALID_STATUS`,
+            `RENAINF.PENALTY.ALREADY_IMPOSED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/recursos:
+    post:
+      tags: [renainfRecursos]
+      operationId: protocolarRecurso
+      summary: Protocolar recurso JARI ou segunda instância
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RecursoRequest' }
+      responses:
+        '201':
+          description: Criado. Recurso protocolado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Recurso' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.APPEAL.INVALID_INSTANCE`,
+            `RENAINF.APPEAL.PREVIOUS_INSTANCE_REQUIRED`,
+            `RENAINF.CASE.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/recursos/{idRecurso}/julgamento:
+    post:
+      tags: [renainfRecursos]
+      operationId: registrarJulgamentoRecurso
+      summary: Registrar julgamento de recurso
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idRecurso
+          in: path
+          required: true
+          description: Identificador do recurso
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/JulgamentoRecursoRequest' }
+      responses:
+        '201':
+          description: Criado. Julgamento do recurso registrado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Recurso' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.APPEAL.INVALID_INSTANCE`,
+            `RENAINF.CASE.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/debito:
+    get:
+      tags: [renainfPagamentos]
+      operationId: consultarDebito
+      summary: Consultar débito
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK. Tudo funcionou como esperado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Debito' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renainf/processosAdministrativos/{idProcesso}/pagamentos:
+    post:
+      tags: [renainfPagamentos]
+      operationId: registrarPagamento
+      summary: Registrar pagamento
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: idProcesso
+          in: path
+          required: true
+          description: Identificador do processo administrativo
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PagamentoRequest' }
+      responses:
+        '201':
+          description: Criado. Pagamento registrado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Pagamento' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAINF.PAYMENT.ALREADY_SETTLED`,
+            `RENAINF.CASE.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: >-
+            Não encontrado. `RENAINF.CASE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  # ---------------------------------------------------------------------------
+  # RENAEST — base nacional de sinistros/acidentes de trânsito
+  # National extension ported into WSDenatran conventions; see
+  # national-extensions-mapping.md. Records are stateful (RECEBIDO → EM_ANALISE
+  # → {CONSOLIDADO|REJEITADO}); writes are idempotent and audited.
+  # ---------------------------------------------------------------------------
+  /renaest/sinistros:
+    post:
+      tags: [renaestSinistros]
+      operationId: submeterSinistroRenaest
+      summary: Submeter registro de sinistro
+      description: >-
+        Registra um sinistro/acidente na base nacional RENAEST e retorna o
+        `idSinistro` e o `protocolo`. Idempotente sob `Idempotency-Key`; um
+        reenvio da mesma tupla (uf, codigoMunicipio, dataHoraSinistro,
+        orgaoResponsavel) sem chave resulta em `RENAEST.CRASH.DUPLICATED`.
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SinistroRequest' }
+      responses:
+        '201':
+          description: Criado. Sinistro recebido em situação RECEBIDO.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Sinistro' }
+        '400':
+          description: >-
+            Requisição inválida. `RENAEST.CRASH.INVALID_LAYOUT` — versão de
+            leiaute não suportada; ou corpo malformado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAEST.CRASH.DUPLICATED` (reenvio duplicado sem
+            chave) ou `RENAEST.CRASH.INCOMPLETE_DATA` (dados de
+            vítima/local/gravidade obrigatórios ausentes).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renaest/sinistros/lotes:
+    post:
+      tags: [renaestSinistros]
+      operationId: submeterLoteSinistrosRenaest
+      summary: Submeter lote de sinistros
+      description: >-
+        Registra um lote de sinistros em uma única transação e retorna o
+        `protocoloLote` e os `itens` criados. Idempotente sob `Idempotency-Key`.
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SinistroLoteRequest' }
+      responses:
+        '201':
+          description: Criado. Lote recebido.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SinistroLoteResponse' }
+        '400':
+          description: >-
+            Requisição inválida. `RENAEST.CRASH.INVALID_LAYOUT` em algum item do
+            lote, ou corpo malformado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAEST.CRASH.INCOMPLETE_DATA` ou
+            `RENAEST.CRASH.DUPLICATED` em algum item do lote.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renaest/sinistros/{idSinistro}:
+    get:
+      tags: [renaestSinistros]
+      operationId: consultarSinistroRenaest
+      summary: Consultar sinistro por idSinistro
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - name: idSinistro
+          in: path
+          required: true
+          description: Identificador do registro de sinistro
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK. Registro de sinistro.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Sinistro' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: Não encontrado. `RENAEST.CRASH.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renaest/protocolos/{protocolo}:
+    get:
+      tags: [renaestSinistros]
+      operationId: consultarProtocoloRenaest
+      summary: Consultar sinistro por protocolo
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - name: protocolo
+          in: path
+          required: true
+          description: Protocolo de transmissão do sinistro
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK. Registro de sinistro correspondente ao protocolo.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Sinistro' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: Não encontrado. `RENAEST.CRASH.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renaest/sinistros/{idSinistro}/complementos:
+    post:
+      tags: [renaestSinistros]
+      operationId: complementarSinistroRenaest
+      summary: Submeter complemento a um sinistro
+      description: >-
+        Envia dados complementares vinculados a um sinistro existente. Não
+        permitido em situação terminal (`RENAEST.CRASH.CORRECTION_NOT_ALLOWED`).
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RetificacaoSinistroRequest' }
+      responses:
+        '202':
+          description: Aceito. Complemento em análise.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RetificacaoResponse' }
+        '400':
+          description: Requisição inválida. `RENAEST.CRASH.INVALID_LAYOUT`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAEST.CRASH.CORRECTION_NOT_ALLOWED` — registro em
+            situação terminal.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `RENAEST.CRASH.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /renaest/sinistros/{idSinistro}/correcoes:
+    post:
+      tags: [renaestSinistros]
+      operationId: corrigirSinistroRenaest
+      summary: Submeter correção a um sinistro
+      description: >-
+        Envia uma correção vinculada ao sinistro original. Não permitida em
+        situação terminal (`RENAEST.CRASH.CORRECTION_NOT_ALLOWED`).
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RetificacaoSinistroRequest' }
+      responses:
+        '202':
+          description: Aceito. Correção em análise.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RetificacaoResponse' }
+        '400':
+          description: Requisição inválida. `RENAEST.CRASH.INVALID_LAYOUT`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `RENAEST.CRASH.CORRECTION_NOT_ALLOWED` — registro em
+            situação terminal.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `RENAEST.CRASH.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  # ---------------------------------------------------------------------------
+  # SNE — Sistema de Notificação Eletrônica (extensão nacional)
+  # ---------------------------------------------------------------------------
+  /sne/adesoes/veiculos/{placa}:
+    get:
+      tags: [sneNotificacoes]
+      operationId: consultarAdesaoVeiculoSne
+      summary: Consultar adesão do veículo ao SNE
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: placa, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK. Situação de adesão do veículo.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdesaoSne' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /sne/adesoes/cidadaos/{cpf}:
+    get:
+      tags: [sneNotificacoes]
+      operationId: consultarAdesaoCidadaoSne
+      summary: Consultar adesão do cidadão ao SNE
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: cpf, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK. Situação de adesão do cidadão.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdesaoSne' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /sne/orgaos/{codigoOrgaoAutuador}/adesao:
+    get:
+      tags: [sneNotificacoes]
+      operationId: consultarAdesaoOrgaoSne
+      summary: Consultar adesão do órgão autuador ao SNE
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - {
+            name: codigoOrgaoAutuador,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      responses:
+        '200':
+          description: OK. Situação de adesão do órgão.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdesaoSne' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /sne/notificacoes/autuacao:
+    post:
+      tags: [sneNotificacoes]
+      operationId: notificarAutuacaoSne
+      summary: Notificar autuação pelo SNE
+      description: >-
+        Emite uma notificação eletrônica de autuação. Exige órgão e destinatário
+        aderentes; a notificação fora do prazo legal é recusada.
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NotificacaoSneRequest' }
+      responses:
+        '201':
+          description: Criada. Notificação aceita ou pendente de entrega.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NotificacaoSne' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `SNE.AGENCY.NOT_ADHERED`, `SNE.NOT_ADHERED`,
+            `SNE.NOTICE.DEADLINE_EXPIRED` ou `SNE.NOTIFICATION.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /sne/notificacoes/penalidade:
+    post:
+      tags: [sneNotificacoes]
+      operationId: notificarPenalidadeSne
+      summary: Notificar penalidade pelo SNE
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NotificacaoSneRequest' }
+      responses:
+        '201':
+          description: Criada. Notificação aceita ou pendente de entrega.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NotificacaoSne' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `SNE.AGENCY.NOT_ADHERED`, `SNE.NOT_ADHERED`,
+            `SNE.NOTICE.DEADLINE_EXPIRED` ou `SNE.NOTIFICATION.INVALID_STATUS`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /sne/notificacoes/{protocolo}:
+    get:
+      tags: [sneNotificacoes]
+      operationId: consultarNotificacaoSne
+      summary: Consultar notificação SNE por protocolo
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - {
+            name: protocolo,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      responses:
+        '200':
+          description: OK. Notificação.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/NotificacaoSne' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: Não encontrada. `SNE.NOTIFICATION.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /sne/notificacoes/{protocolo}/cancelamento:
+    post:
+      tags: [sneNotificacoes]
+      operationId: cancelarNotificacaoSne
+      summary: Cancelar notificação SNE
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - {
+            name: protocolo,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CancelamentoSneRequest' }
+      responses:
+        '200':
+          description: OK. Notificação cancelada.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CancelamentoSneResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `SNE.NOTIFICATION.INVALID_STATUS` — notificação em
+            situação terminal.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrada. `SNE.NOTIFICATION.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  # ---------------------------------------------------------------------------
+  # CDT — projeção de canal do cidadão (extensão nacional)
+  # ---------------------------------------------------------------------------
+  /cdt/cidadaos/{cpf}/notificacoes:
+    get:
+      tags: [cdtCidadao]
+      operationId: listarNotificacoesCidadaoCdt
+      summary: Notificações visíveis ao cidadão
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: cpf, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK. Projeção de notificações do cidadão.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CdtNotificacoes' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: Não encontrado. `CDT.CITIZEN.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /cdt/cidadaos/{cpf}/infracoes:
+    get:
+      tags: [cdtCidadao]
+      operationId: listarInfracoesCidadaoCdt
+      summary: Infrações visíveis ao cidadão
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: cpf, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK. Projeção de infrações do cidadão.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CdtInfracoes' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: Não encontrado. `CDT.CITIZEN.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /cdt/cidadaos/{cpf}/veiculos:
+    get:
+      tags: [cdtCidadao]
+      operationId: listarVeiculosCidadaoCdt
+      summary: Veículos visíveis ao cidadão
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: cpf, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK. Projeção de veículos do cidadão.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CdtVeiculos' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: Não encontrado. `CDT.CITIZEN.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /cdt/cidadaos/{cpf}/cnh:
+    get:
+      tags: [cdtCidadao]
+      operationId: consultarCnhCidadaoCdt
+      summary: Resumo de CNH do cidadão
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: cpf, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: OK. Resumo de CNH.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CdtCnh' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404':
+          description: Não encontrado. `CDT.CITIZEN.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /cdt/infracoes/{numeroAit}/pagamento:
+    get:
+      tags: [cdtCidadao]
+      operationId: consultarPagamentoInfracaoCdt
+      summary: Projeção de pagamento/desconto de uma infração
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - {
+            name: numeroAit,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      responses:
+        '200':
+          description: OK. Projeção de pagamento (boleto/desconto).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CdtPagamento' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: Erro de negócio. `CDT.DISCOUNT.NOT_AVAILABLE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrada. `CDT.INFRACTION.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /cdt/infracoes/{numeroAit}/reconhecimento:
+    post:
+      tags: [cdtCidadao]
+      operationId: reconhecerInfracaoCdt
+      summary: Reconhecer infração (libera desconto por reconhecimento)
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - {
+            name: numeroAit,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReconhecimentoRequest' }
+      responses:
+        '200':
+          description: OK. Infração reconhecida; desconto aplicado.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReconhecimentoResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `CDT.RECOGNITION.NOT_ALLOWED` (situação terminal) ou
+            `CDT.DISCOUNT.NOT_AVAILABLE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrada. `CDT.INFRACTION.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  # ---------------------------------------------------------------------------
+  # DETRAN bridge — estado ↔ bases nacionais (extensão nacional)
+  # ---------------------------------------------------------------------------
+  /detrans/{uf}/renavam/consultasVeiculo:
+    post:
+      tags: [detranBridge]
+      operationId: bridgeConsultarVeiculoDetran
+      summary: Bridge — consulta de veículo (RENAVAM) pelo DETRAN estadual
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - { name: uf, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BridgeRequest' }
+      responses:
+        '201':
+          description: Criado. Protocolo de bridge vinculado ao protocolo nacional.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BridgeResponse' }
+        '400':
+          description: Requisição inválida. `DETRAN.LAYOUT.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `DETRAN.PROFILE.INACTIVE` ou `DETRAN.BRIDGE.REJECTED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `DETRAN.PROFILE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /detrans/{uf}/renach/consultasCondutor:
+    post:
+      tags: [detranBridge]
+      operationId: bridgeConsultarCondutorDetran
+      summary: Bridge — consulta de condutor (RENACH) pelo DETRAN estadual
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - { name: uf, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BridgeRequest' }
+      responses:
+        '201':
+          description: Criado. Protocolo de bridge vinculado ao protocolo nacional.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BridgeResponse' }
+        '400':
+          description: Requisição inválida. `DETRAN.LAYOUT.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `DETRAN.PROFILE.INACTIVE` ou `DETRAN.BRIDGE.REJECTED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `DETRAN.PROFILE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /detrans/{uf}/renainf/autosInfracao:
+    post:
+      tags: [detranBridge]
+      operationId: bridgeEnviarAitDetran
+      summary: Bridge — envio de AIT (RENAINF) pelo DETRAN estadual
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - { name: uf, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BridgeRequest' }
+      responses:
+        '201':
+          description: Criado. Protocolo de bridge vinculado ao protocolo nacional.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BridgeResponse' }
+        '400':
+          description: Requisição inválida. `DETRAN.LAYOUT.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `DETRAN.PROFILE.INACTIVE` ou `DETRAN.BRIDGE.REJECTED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `DETRAN.PROFILE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /detrans/{uf}/renainf/autosInfracao/{numeroAit}:
+    get:
+      tags: [detranBridge]
+      operationId: bridgeConsultarAitDetran
+      summary: Bridge — consulta de AIT nacional pelo DETRAN estadual
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: uf, in: path, required: true, schema: { type: string } }
+        - {
+            name: numeroAit,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      responses:
+        '200':
+          description: OK. AIT nacional com metadados de bridge.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BridgeResponse' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: Erro de negócio. `DETRAN.PROFILE.INACTIVE`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `DETRAN.PROFILE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /detrans/{uf}/renaest/sinistros:
+    post:
+      tags: [detranBridge]
+      operationId: bridgeEnviarSinistroDetran
+      summary: Bridge — envio de sinistro (RENAEST) pelo DETRAN estadual
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - { name: uf, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BridgeRequest' }
+      responses:
+        '201':
+          description: Criado. Protocolo de bridge vinculado ao protocolo nacional.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BridgeResponse' }
+        '400':
+          description: Requisição inválida. `DETRAN.LAYOUT.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `DETRAN.PROFILE.INACTIVE` ou `DETRAN.BRIDGE.REJECTED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `DETRAN.PROFILE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /detrans/{uf}/sne/notificacoes:
+    post:
+      tags: [detranBridge]
+      operationId: bridgeEnviarNotificacaoDetran
+      summary: Bridge — envio de notificação (SNE) pelo DETRAN estadual
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - { name: uf, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/BridgeRequest' }
+      responses:
+        '201':
+          description: Criado. Protocolo de bridge vinculado ao protocolo nacional.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BridgeResponse' }
+        '400':
+          description: Requisição inválida. `DETRAN.LAYOUT.INVALID`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402':
+          description: >-
+            Erro de negócio. `DETRAN.PROFILE.INACTIVE` ou `DETRAN.BRIDGE.REJECTED`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '404':
+          description: Não encontrado. `DETRAN.PROFILE.NOT_FOUND`.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+components:
+  securitySchemes:
+    clientCertificate:
+      type: mutualTLS
+      description: >-
+        Real-service authentication: client digital certificate (mTLS). Using the
+        service requires prior registration of the certificate. Documented for
+        fidelity; the mock does not perform a TLS handshake.
+    clientCertSimulation:
+      type: apiKey
+      in: header
+      name: x-client-cert-cn
+      description: >-
+        Mock stand-in for the real mTLS certificate. Send the allowlisted
+        certificate Common Name in the `x-client-cert-cn` header. Enforced when
+        `AUTH_CERT_SIMULATION=on` (default); ignored when off. Every request must
+        also send `x-cpf-usuario`. See `docs/framework/contracts/auth.md`.
+
+  parameters:
+    XCpfUsuario:
+      name: x-cpf-usuario
+      in: header
+      required: true
+      description: CPF do usuário que está fazendo a requisição
+      schema:
+        type: string
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      description: >-
+        Chave de idempotência opcional. Se enviada, é honrada para deduplicar
+        escritas; caso contrário, a deduplicação usa chaves naturais
+        (`numeroAit`, `numeroRenach`).
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Requisição inválida. A requisição não foi aceita, geralmente por falta de um parâmetro requerido.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Não autorizado. Problemas durante a autenticação do certificado ou do CPF do usuário.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BusinessError:
+      description: Requisição falhou. Os parâmetros foram validados, mas houve algum erro de negócio.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Não encontrado. O recurso solicitado não existe.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServerError:
+      description: Erro no servidor. Ocorreu algum erro interno.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        returnCode:
+          type: integer
+        message:
+          type: string
+
+    # -----------------------------------------------------------------------
+    # Enums e tipos compartilhados
+    # -----------------------------------------------------------------------
+    TipoProcesso:
+      type: string
+      enum:
+        - PRIMEIRA_HABILITACAO
+        - RENOVACAO
+        - MUDANCA_CATEGORIA
+        - ADICAO_CATEGORIA
+    ResultadoExame:
+      type: string
+      enum:
+        - APTO
+        - APTO_COM_RESTRICOES
+        - INAPTO_TEMPORARIO
+        - INAPTO
+        - ENCAMINHADO_JUNTA
+        - PENDENTE
+    TipoRequerente:
+      type: string
+      enum:
+        - PROPRIETARIO
+        - CONDUTOR_IDENTIFICADO
+        - REPRESENTANTE_LEGAL
+    Instancia:
+      type: string
+      enum:
+        - JARI
+        - SEGUNDA_INSTANCIA
+    SituacaoRenach:
+      type: string
+      description: Estado do processo RENACH na máquina de estados.
+      enum:
+        - ABERTO
+        - AGUARDANDO_MEDICO
+        - AGENDADO
+        - EM_EXAME
+        - EXAME_REGISTRADO
+        - AGUARDANDO_PSICOLOGICO
+        - EM_ANALISE
+        - APROVADO
+        - REJEITADO
+    SituacaoRenainf:
+      type: string
+      description: Estado do processo administrativo RENAINF na máquina de estados.
+      enum:
+        - RASCUNHO
+        - EMITIDO
+        - ASSINADO
+        - TRANSMITIDO
+        - RECEBIDO
+        - VALIDADO
+        - REJEITADO
+        - AUTUACAO_ABERTA
+        - NOTIFICADO_AUTUACAO
+        - AGUARDANDO_INDICACAO_CONDUTOR
+        - CONDUTOR_INDICADO
+        - AGUARDANDO_DEFESA_PREVIA
+        - DEFESA_APRESENTADA
+        - DEFESA_ACEITA
+        - DEFESA_REJEITADA
+        - PENALIDADE_IMPOSTA
+        - NOTIFICADO_PENALIDADE
+        - RECURSO_JARI_APRESENTADO
+        - JARI_PROVIDO
+        - JARI_NEGADO
+        - SEGUNDA_INSTANCIA_APRESENTADA
+        - DECISAO_FINAL
+        - ARQUIVADO
+    AssinaturaDigital:
+      type: object
+      description: Assinatura digital do ato.
+      properties:
+        certificado: { type: string }
+        hash: { type: string }
+        dataAssinatura: { type: string, format: date-time }
+    Anexo:
+      type: object
+      properties:
+        nome: { type: string }
+        tipoConteudo: { type: string }
+        hash: { type: string }
+        urlArmazenamento: { type: string }
+    Restricao:
+      type: object
+      properties:
+        codigo: { type: string }
+        descricao: { type: string }
+    AceiteAssincrono:
+      type: object
+      description: >-
+        Resposta de aceite assíncrono (202). Além de protocolo/situacao, carrega
+        o identificador do recurso afetado conforme a operação.
+      required: [protocolo, situacao]
+      properties:
+        protocolo: { type: string }
+        situacao:
+          type: string
+          description: Estado do recurso após o aceite (RENACH ou RENAINF).
+        numeroRenach: { type: string }
+        idExame: { type: string }
+        idJunta: { type: string }
+        numeroAit: { type: string }
+        quantidade: { type: integer }
+
+    # -----------------------------------------------------------------------
+    # RENACH — request schemas
+    # -----------------------------------------------------------------------
+    AberturaProcessoRenachRequest:
+      type: object
+      description: Dados para abrir um novo processo RENACH.
+      required: [cpf, tipoProcesso]
+      properties:
+        cpf: { type: string }
+        tipoProcesso: { $ref: '#/components/schemas/TipoProcesso' }
+        categoriaAtual: { type: string }
+        categoriaPretendida: { type: string }
+      example:
+        cpf: '52998224725'
+        tipoProcesso: RENOVACAO
+        categoriaAtual: B
+        categoriaPretendida: B
+    ElegibilidadeExameRequest:
+      type: object
+      description: Dados para verificação de elegibilidade ao exame.
+      required: [tipoProcesso]
+      properties:
+        tipoProcesso: { $ref: '#/components/schemas/TipoProcesso' }
+        categoriaAtual: { type: string }
+        categoriaPretendida: { type: string }
+    AgendamentoRequest:
+      type: object
+      required: [dataHora, codigoClinica, cpfCondutor]
+      properties:
+        idAgendamento: { type: string }
+        dataHora: { type: string, format: date-time }
+        codigoClinica: { type: string }
+        cpfCondutor: { type: string }
+    AgendamentoPatchRequest:
+      type: object
+      description: Cancelamento ou remarcação de agendamento.
+      properties:
+        dataHora: { type: string, format: date-time }
+        codigoClinica: { type: string }
+        cancelar: { type: boolean }
+        motivo: { type: string }
+    CheckinRequest:
+      type: object
+      required: [cpfCondutor]
+      properties:
+        cpfCondutor: { type: string }
+        dataHora: { type: string, format: date-time }
+        biometriaValidada: { type: boolean }
+    ExameMedicoRequest:
+      type: object
+      description: Registro de exame médico (portado de MedicalExamRequest).
+      required: [idAgendamento, clinica, examinador, condutor, processo, exame]
+      properties:
+        idAgendamento: { type: string }
+        clinica:
+          type: object
+          required: [codigoClinica, cnpj]
+          properties:
+            codigoClinica: { type: string }
+            cnpj: { type: string }
+        examinador:
+          type: object
+          required: [cpf, conselho, numeroConselho, uf]
+          properties:
+            cpf: { type: string }
+            conselho:
+              type: string
+              enum: [CRM]
+            numeroConselho: { type: string }
+            uf: { type: string }
+        condutor:
+          type: object
+          required: [cpf, nome, dataNascimento]
+          properties:
+            cpf: { type: string }
+            nome: { type: string }
+            dataNascimento: { type: string, format: date }
+        processo:
+          type: object
+          required: [numeroRenach, tipoProcesso]
+          properties:
+            numeroRenach: { type: string }
+            tipoProcesso: { $ref: '#/components/schemas/TipoProcesso' }
+            categoriaAtual: { type: string }
+            categoriaPretendida: { type: string }
+        exame:
+          type: object
+          required: [dataRealizacao, resultado]
+          properties:
+            dataRealizacao: { type: string, format: date-time }
+            resultado: { $ref: '#/components/schemas/ResultadoExame' }
+            dataValidade: { type: string, format: date }
+            restricoes:
+              type: array
+              items: { $ref: '#/components/schemas/Restricao' }
+            observacoes: { type: string }
+        anexos:
+          type: array
+          items: { $ref: '#/components/schemas/Anexo' }
+        assinaturaDigital: { $ref: '#/components/schemas/AssinaturaDigital' }
+    AvaliacaoPsicologicaRequest:
+      type: object
+      description: Registro de avaliação psicológica (portado de PsychologicalEvaluationRequest).
+      required: [idAgendamento, clinica, examinador, avaliacao]
+      properties:
+        idAgendamento: { type: string }
+        clinica:
+          type: object
+          properties:
+            codigoClinica: { type: string }
+            cnpj: { type: string }
+        examinador:
+          type: object
+          properties:
+            cpf: { type: string }
+            conselho:
+              type: string
+              enum: [CRP]
+            numeroConselho: { type: string }
+            uf: { type: string }
+        avaliacao:
+          type: object
+          required: [dataRealizacao, resultado]
+          properties:
+            dataRealizacao: { type: string, format: date-time }
+            resultado: { $ref: '#/components/schemas/ResultadoExame' }
+            dataValidade: { type: string, format: date }
+            bateriaTestes:
+              type: array
+              items: { type: string }
+            observacoes: { type: string }
+        assinaturaDigital: { $ref: '#/components/schemas/AssinaturaDigital' }
+    RetificacaoExameRequest:
+      type: object
+      description: Solicitação de retificação de exame.
+      required: [motivo]
+      properties:
+        motivo: { type: string }
+        resultado: { $ref: '#/components/schemas/ResultadoExame' }
+        observacoes: { type: string }
+        assinaturaDigital: { $ref: '#/components/schemas/AssinaturaDigital' }
+    EncaminhamentoJuntaRequest:
+      type: object
+      description: Encaminhamento do processo à junta médica.
+      required: [motivo]
+      properties:
+        motivo: { type: string }
+        idExame: { type: string }
+        observacoes: { type: string }
+    ParecerJuntaRequest:
+      type: object
+      description: Parecer da junta médica.
+      required: [resultado]
+      properties:
+        resultado: { $ref: '#/components/schemas/ResultadoExame' }
+        dataRealizacao: { type: string, format: date-time }
+        dataValidade: { type: string, format: date }
+        restricoes:
+          type: array
+          items: { $ref: '#/components/schemas/Restricao' }
+        observacoes: { type: string }
+        assinaturaDigital: { $ref: '#/components/schemas/AssinaturaDigital' }
+
+    # -----------------------------------------------------------------------
+    # RENACH — response schemas
+    # -----------------------------------------------------------------------
+    ProcessoRenach:
+      type: object
+      properties:
+        protocolo: { type: string }
+        numeroRenach: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoRenach' }
+        tipoProcesso: { $ref: '#/components/schemas/TipoProcesso' }
+        categoriaAtual: { type: string }
+        categoriaPretendida: { type: string }
+        condutor:
+          type: object
+          properties:
+            cpf: { type: string }
+            nome: { type: string }
+            dataNascimento: { type: string, format: date }
+      example:
+        protocolo: RENACH-2026-000123
+        numeroRenach: RS123456789
+        situacao: AGUARDANDO_MEDICO
+        tipoProcesso: RENOVACAO
+        categoriaAtual: B
+        categoriaPretendida: B
+        condutor:
+          cpf: '52998224725'
+          nome: MARIA SILVA SANTOS
+          dataNascimento: '1985-03-14'
+    ProcessoRenachListResponse:
+      type: object
+      properties:
+        processos:
+          type: array
+          items: { $ref: '#/components/schemas/ProcessoRenach' }
+      example:
+        processos:
+          - protocolo: RENACH-2026-000123
+            numeroRenach: RS123456789
+            situacao: AGUARDANDO_MEDICO
+            tipoProcesso: RENOVACAO
+            categoriaAtual: B
+            categoriaPretendida: B
+            condutor:
+              cpf: '52998224725'
+              nome: MARIA SILVA SANTOS
+              dataNascimento: '1985-03-14'
+    ElegibilidadeExameResponse:
+      type: object
+      properties:
+        numeroRenach: { type: string }
+        tipoProcesso: { $ref: '#/components/schemas/TipoProcesso' }
+        elegivelExameMedico: { type: boolean }
+        exigeAvaliacaoPsicologica: { type: boolean }
+        motivos: { type: array, items: { type: string } }
+    Agendamento:
+      type: object
+      properties:
+        protocolo: { type: string }
+        idAgendamento: { type: string }
+        numeroRenach: { type: string }
+        # sub-resource lifecycle (AGENDADO, REMARCADO, CHECKIN), not the process state
+        situacao: { type: string }
+        dataHora: { type: string, format: date-time }
+        codigoClinica: { type: string }
+        cpfCondutor: { type: string }
+    Exame:
+      type: object
+      description: >-
+        Exame RENACH. The list read-back (GET .../exames) echoes the recorded
+        submission alongside the resource fields.
+      properties:
+        protocolo: { type: string }
+        idExame: { type: string }
+        numeroRenach: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoRenach' }
+        resultado: { $ref: '#/components/schemas/ResultadoExame' }
+        tipoExame: { type: string }
+        dataRealizacao: { type: string, format: date-time }
+        dataValidade: { type: string, format: date }
+        restricoes:
+          type: array
+          items: { $ref: '#/components/schemas/Restricao' }
+        idAgendamento: { type: string }
+        idJunta: { type: string }
+        clinica: { type: object }
+        examinador: { type: object }
+        condutor: { type: object }
+        processo: { type: object }
+        exame: { type: object }
+      example:
+        protocolo: RENACH-EXAME-2026-000045
+        idExame: 6f1c2a80-0000-4000-8000-000000000045
+        numeroRenach: RS123456789
+        situacao: EXAME_REGISTRADO
+        resultado: APTO
+        dataRealizacao: '2026-07-10T09:30:00.000Z'
+        dataValidade: '2031-07-10'
+        restricoes: []
+    ExameList:
+      type: object
+      properties:
+        quantidade: { type: integer }
+        exames:
+          type: array
+          items: { $ref: '#/components/schemas/Exame' }
+    ClinicaCredenciada:
+      type: object
+      properties:
+        codigoClinica: { type: string }
+        cnpj: { type: string }
+        nome: { type: string }
+        uf: { type: string }
+        credenciada: { type: boolean }
+        ativa: { type: boolean }
+      example:
+        codigoClinica: RS-CLINIC-0001
+        cnpj: '46931757000108'
+        nome: CLINICA RS-CLINIC-0001
+        uf: PR
+        ativa: true
+    ClinicaCredenciadaList:
+      type: object
+      properties:
+        clinicas:
+          type: array
+          items: { $ref: '#/components/schemas/ClinicaCredenciada' }
+    ProfissionalCredenciado:
+      type: object
+      properties:
+        cpf: { type: string }
+        nome: { type: string }
+        conselho:
+          type: string
+          enum: [CRM, CRP]
+        numeroConselho: { type: string }
+        uf: { type: string }
+        codigoClinica: { type: string }
+        credenciado: { type: boolean }
+        ativo: { type: boolean }
+      example:
+        cpf: '89177194659'
+        nome: CARLOS PEREIRA LIMA
+        conselho: CRM
+        numeroConselho: '52341'
+        uf: PR
+        ativo: true
+    ProfissionalCredenciadoList:
+      type: object
+      properties:
+        profissionais:
+          type: array
+          items: { $ref: '#/components/schemas/ProfissionalCredenciado' }
+
+    # -----------------------------------------------------------------------
+    # RENAINF — request schemas
+    # -----------------------------------------------------------------------
+    DispositivoTalonarioRequest:
+      type: object
+      required: [idDispositivo, codigoOrgaoAutuador]
+      properties:
+        idDispositivo: { type: string }
+        codigoOrgaoAutuador: { type: string }
+        descricao: { type: string }
+        lavradoOffline: { type: boolean }
+    FaixaNumeracaoAitRequest:
+      type: object
+      required: [codigoOrgaoAutuador, numeroInicial, numeroFinal]
+      properties:
+        codigoOrgaoAutuador: { type: string }
+        idDispositivo: { type: string }
+        numeroInicial: { type: string }
+        numeroFinal: { type: string }
+    AutoInfracaoRequest:
+      type: object
+      description: Criação de auto de infração (portado de InfractionNoticeRequest).
+      required:
+        [numeroAit, codigoOrgaoAutuador, agenteAutuador, infracao, veiculo]
+      properties:
+        numeroAit: { type: string }
+        codigoOrgaoAutuador: { type: string }
+        agenteAutuador:
+          type: object
+          required: [cpf, matricula]
+          properties:
+            cpf: { type: string }
+            matricula: { type: string }
+        dispositivo:
+          type: object
+          properties:
+            idDispositivo: { type: string }
+            lavradoOffline: { type: boolean }
+        infracao:
+          type: object
+          required: [codigoInfracao, dataInfracao, codigoMunicipio, local]
+          properties:
+            codigoInfracao: { type: string }
+            codigoDesdobramentoInfracao: { type: string }
+            descricaoInfracao: { type: string }
+            dataInfracao: { type: string, format: date-time }
+            codigoMunicipio: { type: string }
+            local:
+              type: object
+              properties:
+                descricao: { type: string }
+                latitude: { type: number }
+                longitude: { type: number }
+        veiculo:
+          type: object
+          required: [placa]
+          properties:
+            placa: { type: string }
+            codigoRenavam: { type: string }
+            uf: { type: string }
+            descricaoMarcaModelo: { type: string }
+        condutor:
+          type: object
+          properties:
+            abordado: { type: boolean }
+            cpf: { type: string }
+            numeroRegistro: { type: string }
+            uf: { type: string }
+            recusouAssinar: { type: boolean }
+        evidencias:
+          type: array
+          items:
+            type: object
+            properties:
+              tipo: { type: string }
+              hash: { type: string }
+              tipoConteudo: { type: string }
+              urlArmazenamento: { type: string }
+        assinaturas:
+          type: object
+          properties:
+            assinaturaAgente: { type: string }
+            assinaturaCondutor: { type: string }
+    LoteAutosInfracaoRequest:
+      type: object
+      description: Transmissão de lote de AITs lavrados offline.
+      required: [autos]
+      properties:
+        idLote: { type: string }
+        autos:
+          type: array
+          items: { $ref: '#/components/schemas/AutoInfracaoRequest' }
+    SolicitacaoCancelamentoRequest:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string }
+        codigoOrgaoAutuador: { type: string }
+        assinaturaDigital: { $ref: '#/components/schemas/AssinaturaDigital' }
+    ProcessoAdministrativoRequest:
+      type: object
+      description: Abertura de autuação (processo administrativo) a partir de um AIT.
+      required: [numeroAit]
+      properties:
+        numeroAit: { type: string }
+        codigoOrgaoAutuador: { type: string }
+    NotificacaoRequest:
+      type: object
+      required: [dataNotificacao]
+      properties:
+        dataNotificacao: { type: string, format: date-time }
+        canal: { type: string }
+        enderecoDestinatario: { type: string }
+    IndicacaoCondutorRequest:
+      type: object
+      description: Indicação/identificação de condutor infrator.
+      required: [requerente, condutorIndicado, dataProtocolo]
+      properties:
+        requerente:
+          type: object
+          required: [tipoRequerente, numeroDocumento]
+          properties:
+            tipoRequerente: { $ref: '#/components/schemas/TipoRequerente' }
+            numeroDocumento: { type: string }
+            nome: { type: string }
+        condutorIndicado:
+          type: object
+          required: [cpf]
+          properties:
+            cpf: { type: string }
+            nome: { type: string }
+            numeroRegistro: { type: string }
+            uf: { type: string }
+        dataProtocolo: { type: string, format: date-time }
+        canal: { type: string }
+        anexos:
+          type: array
+          items: { $ref: '#/components/schemas/Anexo' }
+    DefesaPreviaRequest:
+      type: object
+      description: Protocolo de defesa prévia (portado de PreliminaryDefenseRequest).
+      required: [requerente, fundamentacao, dataProtocolo]
+      properties:
+        requerente:
+          type: object
+          required: [tipoRequerente, numeroDocumento]
+          properties:
+            tipoRequerente: { $ref: '#/components/schemas/TipoRequerente' }
+            numeroDocumento: { type: string }
+            nome: { type: string }
+        fundamentacao: { type: string }
+        anexos:
+          type: array
+          items: { $ref: '#/components/schemas/Anexo' }
+        dataProtocolo: { type: string, format: date-time }
+        canal: { type: string }
+    PenalidadeRequest:
+      type: object
+      description: Imposição de penalidade.
+      required: [valorMulta]
+      properties:
+        valorMulta: { type: number }
+        pontos: { type: integer }
+        dataImposicao: { type: string, format: date-time }
+        fundamentacao: { type: string }
+        assinaturaDigital: { $ref: '#/components/schemas/AssinaturaDigital' }
+    RecursoRequest:
+      type: object
+      description: Protocolo de recurso JARI ou de segunda instância (portado de AppealRequest).
+      required: [instancia, requerente, fundamentacao]
+      properties:
+        instancia: { $ref: '#/components/schemas/Instancia' }
+        idRecursoAnterior: { type: string }
+        requerente:
+          type: object
+          properties:
+            tipoRequerente: { $ref: '#/components/schemas/TipoRequerente' }
+            numeroDocumento: { type: string }
+            nome: { type: string }
+        fundamentacao: { type: string }
+        anexos:
+          type: array
+          items: { $ref: '#/components/schemas/Anexo' }
+        dataProtocolo: { type: string, format: date-time }
+        canal: { type: string }
+    JulgamentoRecursoRequest:
+      type: object
+      description: Registro do julgamento de um recurso.
+      required: [resultado]
+      properties:
+        resultado:
+          type: string
+          enum: [PROVIDO, NEGADO]
+        dataJulgamento: { type: string, format: date-time }
+        fundamentacao: { type: string }
+        assinaturaDigital: { $ref: '#/components/schemas/AssinaturaDigital' }
+    PagamentoRequest:
+      type: object
+      required: [valorPago, dataPagamento, formaPagamento, numeroComprovante]
+      properties:
+        valorPago: { type: number }
+        dataPagamento: { type: string, format: date-time }
+        formaPagamento: { type: string }
+        numeroComprovante: { type: string }
+
+    # -----------------------------------------------------------------------
+    # RENAINF — response schemas
+    # -----------------------------------------------------------------------
+    AutoInfracao:
+      type: object
+      description: >-
+        Auto de infração. The read-back (GET .../{numeroAit}) echoes the recorded
+        submission (veiculo/infracao/evidencias/agenteAutuador) alongside the
+        resource fields.
+      properties:
+        protocolo: { type: string }
+        numeroAit: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoRenainf' }
+        codigoOrgaoAutuador: { type: string }
+        codigoInfracao: { type: string }
+        dataInfracao: { type: string, format: date-time }
+        placa: { type: string }
+        veiculo: { type: object }
+        infracao: { type: object }
+        agenteAutuador: { type: object }
+        evidencias: { type: array, items: { type: object } }
+      example:
+        protocolo: RENAINF-AIT-2026-000777
+        numeroAit: A0001001
+        situacao: AUTUACAO_ABERTA
+        codigoOrgaoAutuador: '204020'
+        codigoInfracao: '74550'
+        dataInfracao: '2024-03-12T14:20:00.000Z'
+        placa: ABC1D23
+    ProcessoAdministrativo:
+      type: object
+      properties:
+        protocolo: { type: string }
+        idProcesso: { type: string }
+        numeroAit: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoRenainf' }
+        codigoOrgaoAutuador: { type: string }
+        valor: { type: number }
+    Notificacao:
+      type: object
+      properties:
+        protocolo: { type: string }
+        idNotificacao: { type: string }
+        idProcesso: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoRenainf' }
+        tipoNotificacao: { type: string }
+        dataNotificacao: { type: string, format: date-time }
+        canal: { type: string }
+    Recurso:
+      type: object
+      properties:
+        protocolo: { type: string }
+        idRecurso: { type: string }
+        idProcesso: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoRenainf' }
+        instancia: { $ref: '#/components/schemas/Instancia' }
+        resultado:
+          type: string
+          enum: [PROVIDO, NEGADO, PENDENTE]
+    Debito:
+      type: object
+      properties:
+        idProcesso: { type: string }
+        # debt-record payment status (EM_ABERTO, QUITADO), not the case state
+        situacaoPagamento: { type: string }
+        valor: { type: number }
+        valorMulta: { type: number }
+        valorAtualizado: { type: number }
+        dataVencimento: { type: string, format: date }
+        quitado: { type: boolean }
+    Pagamento:
+      type: object
+      properties:
+        protocolo: { type: string }
+        idPagamento: { type: string }
+        idProcesso: { type: string }
+        # payment-record status (PAGO, …), not the case state
+        situacao: { type: string }
+        valorPago: { type: number }
+        dataPagamento: { type: string, format: date-time }
+        formaPagamento: { type: string }
+        numeroComprovante: { type: string }
+    DispositivoTalonario:
+      type: object
+      properties:
+        protocolo: { type: string }
+        idDispositivo: { type: string }
+        codigoOrgaoAutuador: { type: string }
+        # device-record status (REGISTRADO, …), not the case state
+        situacao: { type: string }
+        ativo: { type: boolean }
+    FaixaNumeracaoAit:
+      type: object
+      properties:
+        protocolo: { type: string }
+        idFaixa: { type: string }
+        codigoOrgaoAutuador: { type: string }
+        numeroInicial: { type: string }
+        numeroFinal: { type: string }
+        # range-record status (RESERVADA, …), not the case state
+        situacao: { type: string }
+    SincronizacaoTalonario:
+      type: object
+      properties:
+        dataSincronizacao: { type: string, format: date-time }
+        infracoes:
+          type: array
+          items:
+            type: object
+            properties:
+              codigoInfracao: { type: string }
+              descricaoInfracao: { type: string }
+        orgaosAutuadores:
+          type: array
+          items: { type: object }
+        municipios:
+          type: array
+          items: { type: object }
+        sincronizadoEm: { type: string, format: date-time }
+
+    # -----------------------------------------------------------------------
+    # RENAEST — sinistros/acidentes (extensão nacional)
+    # -----------------------------------------------------------------------
+    GravidadeSinistro:
+      type: string
+      description: Gravidade do sinistro; dirige a regra de dados de vítima.
+      enum:
+        - SEM_VITIMA
+        - COM_VITIMA_FERIDA
+        - COM_VITIMA_FATAL
+    SituacaoRenaest:
+      type: string
+      description: Estado do registro de sinistro na máquina de estados RENAEST.
+      enum:
+        - RECEBIDO
+        - EM_ANALISE
+        - CONSOLIDADO
+        - REJEITADO
+    ReferenciasSinistro:
+      type: object
+      description: >-
+        Vínculos opcionais com as demais bases nacionais. O mock valida apenas a
+        forma; não resolve os identificadores contra bases reais.
+      properties:
+        renavam: { type: string }
+        cpfCondutor: { type: string }
+        numeroAit: { type: string }
+    SinistroRequest:
+      type: object
+      description: Dados para registrar um sinistro na base nacional RENAEST.
+      required: [dataHoraSinistro, uf, codigoMunicipio, gravidade]
+      properties:
+        dataHoraSinistro: { type: string, format: date-time }
+        uf: { type: string }
+        codigoMunicipio: { type: string }
+        gravidade: { $ref: '#/components/schemas/GravidadeSinistro' }
+        local: { type: string }
+        orgaoResponsavel: { type: string }
+        codigoTipoSinistro: { type: string }
+        condicoesVia: { type: string }
+        condicoesMeteorologicas: { type: string }
+        versaoLeiaute: { type: string }
+        dataTransmissao: { type: string, format: date-time }
+        veiculos:
+          type: array
+          items: { type: object }
+        pessoas:
+          type: array
+          items: { type: object }
+        vitimas:
+          type: array
+          items: { type: object }
+        referencias: { $ref: '#/components/schemas/ReferenciasSinistro' }
+      example:
+        dataHoraSinistro: '2024-02-11T19:05:00.000Z'
+        uf: SP
+        codigoMunicipio: '3550308'
+        gravidade: COM_VITIMA_FERIDA
+        local: KM 120 - via urbana
+        orgaoResponsavel: DETRAN-SP
+        condicoesVia: SECA
+        condicoesMeteorologicas: BOM
+        versaoLeiaute: '1.0'
+        vitimas:
+          - { gravidadeLesao: LEVE, tipoEnvolvido: CONDUTOR }
+        referencias:
+          renavam: '00123456780'
+    SinistroLoteRequest:
+      type: object
+      description: Lote de sinistros.
+      required: [sinistros]
+      properties:
+        sinistros:
+          type: array
+          items: { $ref: '#/components/schemas/SinistroRequest' }
+    RetificacaoSinistroRequest:
+      type: object
+      description: Complemento ou correção vinculado a um sinistro existente.
+      properties:
+        motivo: { type: string }
+        versaoLeiaute: { type: string }
+        gravidade: { type: string }
+        local: { type: string }
+        vitimas:
+          type: array
+          items: { type: object }
+        veiculos:
+          type: array
+          items: { type: object }
+        pessoas:
+          type: array
+          items: { type: object }
+        referencias: { $ref: '#/components/schemas/ReferenciasSinistro' }
+      example:
+        motivo: Ajuste de gravidade da vítima
+        gravidade: COM_VITIMA_FERIDA
+    Sinistro:
+      type: object
+      description: Registro de sinistro RENAEST (resposta).
+      properties:
+        protocolo: { type: string }
+        idSinistro: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoRenaest' }
+        dataHoraSinistro: { type: string, format: date-time }
+        uf: { type: string }
+        codigoMunicipio: { type: string }
+        gravidade: { $ref: '#/components/schemas/GravidadeSinistro' }
+        local: { type: string }
+        orgaoResponsavel: { type: string }
+        codigoTipoSinistro: { type: string }
+        condicoesVia: { type: string }
+        condicoesMeteorologicas: { type: string }
+        veiculos:
+          type: array
+          items: { type: object }
+        pessoas:
+          type: array
+          items: { type: object }
+        vitimas:
+          type: array
+          items: { type: object }
+        referencias: { $ref: '#/components/schemas/ReferenciasSinistro' }
+        dataTransmissao: { type: string, format: date-time }
+      example:
+        protocolo: RENAEST-SEED-0000000002
+        idSinistro: SN00000000002
+        situacao: RECEBIDO
+        dataHoraSinistro: '2024-02-11T19:05:00.000Z'
+        uf: SP
+        codigoMunicipio: '3550308'
+        gravidade: COM_VITIMA_FERIDA
+        local: KM 120 - via urbana
+        orgaoResponsavel: DETRAN-SP
+        referencias:
+          renavam: '00123456780'
+    SinistroLoteResponse:
+      type: object
+      properties:
+        protocoloLote: { type: string }
+        quantidade: { type: integer }
+        situacao: { $ref: '#/components/schemas/SituacaoRenaest' }
+        itens:
+          type: array
+          items:
+            type: object
+            properties:
+              idSinistro: { type: string }
+              protocolo: { type: string }
+              situacao: { $ref: '#/components/schemas/SituacaoRenaest' }
+      example:
+        protocoloLote: RENAEST-6f1b2c3d
+        quantidade: 2
+        situacao: RECEBIDO
+        itens:
+          - {
+              idSinistro: SN70000000001,
+              protocolo: RENAEST-aa,
+              situacao: RECEBIDO,
+            }
+    RetificacaoResponse:
+      type: object
+      properties:
+        idRetificacao: { type: string }
+        idSinistro: { type: string }
+        tipo:
+          type: string
+          enum: [COMPLEMENTO, CORRECAO]
+        protocolo: { type: string }
+        situacao: { type: string }
+      example:
+        idRetificacao: 8b1c0e2a-1111-4d22-9a33-abcdef012345
+        idSinistro: SN00000000007
+        tipo: CORRECAO
+        protocolo: RENAEST-9f8e7d
+        situacao: RETIFICACAO_EM_ANALISE
+
+    # -----------------------------------------------------------------------
+    # SNE — notificações eletrônicas (extensão nacional)
+    # -----------------------------------------------------------------------
+    SituacaoSne:
+      type: string
+      enum: [ACEITA, PENDENTE, REJEITADA, CANCELADA, EXPIRADA]
+    CanalSne:
+      type: string
+      enum: [APP_CDT, EMAIL, SMS, INDISPONIVEL]
+    TipoNotificacaoSne:
+      type: string
+      enum: [AUTUACAO, PENALIDADE]
+    AdesaoSne:
+      type: object
+      description: Situação de adesão ao SNE (veículo, cidadão ou órgão).
+      properties:
+        placa: { type: string }
+        cpf: { type: string }
+        codigoOrgaoAutuador: { type: string }
+        aderido: { type: boolean }
+        canal: { type: string }
+      example:
+        placa: ABC1D23
+        aderido: true
+        canal: APP_CDT
+    NotificacaoSneRequest:
+      type: object
+      required: [numeroAit, codigoOrgaoAutuador]
+      properties:
+        numeroAit: { type: string }
+        codigoOrgaoAutuador: { type: string }
+        idProcesso: { type: string }
+        placa: { type: string }
+        cpfDestinatario: { type: string }
+        canal: { $ref: '#/components/schemas/CanalSne' }
+        dataInfracao: { type: string, format: date-time }
+        dataNotificacao: { type: string, format: date-time }
+        mensagem: { type: string }
+      example:
+        numeroAit: A0001001
+        codigoOrgaoAutuador: '204020'
+        placa: ABC1D23
+        cpfDestinatario: '52998224725'
+        canal: APP_CDT
+        dataInfracao: '2024-05-01T00:00:00.000Z'
+        dataNotificacao: '2024-05-10T00:00:00.000Z'
+    NotificacaoSne:
+      type: object
+      description: Notificação eletrônica SNE (resposta).
+      properties:
+        protocolo: { type: string }
+        numeroAit: { type: string }
+        idProcesso: { type: string }
+        tipoNotificacao: { $ref: '#/components/schemas/TipoNotificacaoSne' }
+        codigoOrgaoAutuador: { type: string }
+        placa: { type: string }
+        cpfDestinatario: { type: string }
+        situacao: { $ref: '#/components/schemas/SituacaoSne' }
+        canal: { $ref: '#/components/schemas/CanalSne' }
+        dataNotificacao: { type: string, format: date-time }
+        dataDisponibilizacao: { type: string, format: date-time }
+        dataCiencia: { type: string, format: date-time }
+        prazoLegal: { type: string, format: date-time }
+        mensagem: { type: string }
+      example:
+        protocolo: SNE-SEED-AUT-0001
+        numeroAit: A0001001
+        tipoNotificacao: AUTUACAO
+        codigoOrgaoAutuador: '204020'
+        placa: ABC1D23
+        cpfDestinatario: '52998224725'
+        situacao: ACEITA
+        canal: APP_CDT
+        dataNotificacao: '2024-05-01T10:00:00.000Z'
+    CancelamentoSneRequest:
+      type: object
+      properties:
+        motivo: { type: string }
+    CancelamentoSneResponse:
+      type: object
+      properties:
+        protocolo: { type: string }
+        situacao: { type: string }
+      example:
+        protocolo: SNE-SEED-AUT-0001
+        situacao: CANCELADA
+
+    # -----------------------------------------------------------------------
+    # CDT — projeção de canal do cidadão (extensão nacional)
+    # -----------------------------------------------------------------------
+    CdtNotificacoes:
+      type: object
+      properties:
+        cpf: { type: string }
+        notificacoes:
+          type: array
+          items: { type: object }
+    CdtInfracoes:
+      type: object
+      properties:
+        cpf: { type: string }
+        infracoes:
+          type: array
+          items: { type: object }
+    CdtVeiculos:
+      type: object
+      properties:
+        cpf: { type: string }
+        veiculos:
+          type: array
+          items: { type: object }
+    CdtCnh:
+      type: object
+      properties:
+        cpf: { type: string }
+        cnh: { type: object }
+    CdtPagamento:
+      type: object
+      description: Projeção de pagamento/desconto de uma infração no canal CDT.
+      properties:
+        numeroAit: { type: string }
+        cpf: { type: string }
+        situacao: { type: string }
+        valorOriginal: { type: number }
+        percentualDesconto: { type: integer }
+        valorComDesconto: { type: number }
+        boletoDisponivel: { type: boolean }
+        linhaDigitavel: { type: string }
+        dataVencimento: { type: string }
+        origem: { type: string }
+        protocoloSne: { type: string }
+        protocoloRenainf: { type: string }
+      example:
+        numeroAit: A0001001
+        cpf: '52998224725'
+        situacao: DISPONIVEL
+        valorOriginal: 293.47
+        percentualDesconto: 40
+        valorComDesconto: 176.08
+        boletoDisponivel: true
+        origem: RENAINF
+    ReconhecimentoRequest:
+      type: object
+      properties:
+        canal: { type: string }
+        cpf: { type: string }
+    ReconhecimentoResponse:
+      type: object
+      properties:
+        numeroAit: { type: string }
+        situacao: { type: string }
+        percentualDesconto: { type: integer }
+        valorOriginal: { type: number }
+        valorComDesconto: { type: number }
+        boletoDisponivel: { type: boolean }
+        linhaDigitavel: { type: string }
+      example:
+        numeroAit: A0001001
+        situacao: RECONHECIDA
+        percentualDesconto: 40
+        valorOriginal: 293.47
+        valorComDesconto: 176.08
+        boletoDisponivel: true
+
+    # -----------------------------------------------------------------------
+    # DETRAN bridge — estado ↔ bases nacionais (extensão nacional)
+    # -----------------------------------------------------------------------
+    BridgeRequest:
+      type: object
+      description: >-
+        Requisição de bridge do DETRAN estadual. `dados` carrega o payload
+        nacional específico; `codigoOrgao`/`versaoLeiaute` dirigem o perfil e a
+        validação de leiaute.
+      properties:
+        codigoOrgao: { type: string }
+        versaoLeiaute: { type: string }
+        placa: { type: string }
+        renavam: { type: string }
+        cpf: { type: string }
+        numeroAit: { type: string }
+        dados: { type: object }
+      example:
+        placa: ABC1D23
+        versaoLeiaute: '1.0'
+    BridgeResponse:
+      type: object
+      description: Protocolo de bridge vinculado ao protocolo da base nacional.
+      properties:
+        protocoloDetran: { type: string }
+        protocoloNacional: { type: string }
+        sistemaNacional: { type: string }
+        uf: { type: string }
+        codigoOrgao: { type: string }
+        perfilIntegracao: { type: string }
+        versaoLeiaute: { type: string }
+        numeroAit: { type: string }
+        situacao: { type: string }
+        retorno: { type: object }
+      example:
+        protocoloDetran: DTR-SP-70000000001
+        protocoloNacional: RENAVAM-70000000001
+        sistemaNacional: RENAVAM
+        uf: SP
+        codigoOrgao: '204020'
+        perfilIntegracao: PRODUCAO
+        versaoLeiaute: '1.0'
+        situacao: ACEITO
