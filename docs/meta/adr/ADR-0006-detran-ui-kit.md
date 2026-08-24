@@ -1,0 +1,31 @@
+# ADR-0006: Shared DETRAN Angular UI Kit over STYNX
+
+## Status
+
+Accepted for Phase 2 implementation (W2.4, 2026-08-24).
+
+## Context
+
+Five frontends need a coherent application frame and Portuguese-first common states,
+but each must remain free to express its own routes and domain screens. Reimplementing
+STYNX UI primitives in each frontend would fork the platform visual vocabulary.
+
+## Decision
+
+`packages/ui` publishes the workspace library `@detran/ui`, built with Angular 21 and
+ng-packagr. It consumes exact registry pins `@stynx-nyx/angular`, `angular-ui`,
+`angular-auth`, `angular-tenancy`, and `angular-i18n` at `0.5.0`; the Angular peer
+range remains `>=20.3.0 <22` and Node is `>=24 <25`.
+
+The kit owns only DETRAN-specific composition: light/dark custom-property tokens,
+an accessible responsive top-bar/side-nav shell and breadcrumbs, a standard
+authenticated bootstrap helper, Portuguese-first feedback wrappers, and re-exports
+of STYNX table, pagination, empty, loading and toast primitives. The bootstrap helper
+uses `provideStynxDefaults`, `provideStynxAuth` for OIDC/session exchange, and STYNX
+tenant context and i18n providers.
+
+## Consequences
+
+Apps consume one tested shell and consistent feedback language while keeping their
+route trees, business screens, OIDC values, tenant resolver and product catalogs
+local. This package must not gain backend/domain logic or direct SENATRAN access.

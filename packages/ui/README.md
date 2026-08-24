@@ -1,12 +1,15 @@
-# packages/ui — shared Angular kit (placeholder)
+# @detran/ui
 
-Shared Angular UI kit for all DETRAN frontends, built **on top of
-`@stynx-nyx/angular-ui`** (and the other `@stynx-nyx` Angular packages — making teat's
-seven declared-but-unused Angular packages actually used).
+Shared Angular 21 application foundation for TEAT, RAIT, PORTAL, DASHBOARD and BOAT.
+It composes the registry-pinned STYNX Angular packages; it does not replace them or
+define product screens.
 
-Built in Phase 2 (W2.4). Consumers: apps/rait/web, apps/portal/{web,mobile},
-apps/dashboard/web, apps/teat/{web,mobile}, apps/boat/mobile.
+```ts
+bootstrapApplication(AppComponent, {
+  providers: [provideDetranAuthenticatedApp({ angular, oidc, tenancy })],
+});
+```
 
-Contract: app-agnostic presentational components, layout shells, form controls and
-theming only — no domain logic, no HTTP clients (those live in the apps and in
-backend/domains contracts).
+Import `@detran/ui/styles` once at the application root. The kit supplies a responsive
+top-bar/side-nav shell, breadcrumbs, Portuguese-first empty/loading/error states, theme
+tokens, and re-exports STYNX table/pagination/toast primitives and i18n pipes.
