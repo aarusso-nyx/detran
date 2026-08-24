@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/module-blueprint.schema.json",
+  "title": "DETRAN module blueprint",
+  "type": "object",
+  "required": ["schemaVersion", "id", "module", "database"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "pattern": "^BP-[A-Z0-9-]+$" },
+    "module": {
+      "type": "object",
+      "required": ["name", "namespace", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "namespace": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "version": { "type": "string" },
+        "owners": { "type": "array", "items": { "type": "string" } },
+        "description": { "type": "string" }
+      }
+    },
+    "database": {
+      "type": "object",
+      "required": ["entities"],
+      "properties": {
+        "entities": { "type": "array", "items": { "$ref": "#/$defs/entity" } }
+      }
+    },
+    "api": { "type": "object" },
+    "auth": { "type": "object" },
+    "audit": { "type": "object" },
+    "ops": { "type": "object" }
+  },
+  "$defs": {
+    "entity": {
+      "type": "object",
+      "required": ["name", "table", "primaryKey", "fields"],
+      "properties": {
+        "name": { "type": "string" },
+        "table": { "type": "string" },
+        "primaryKey": { "type": "array", "items": { "type": "string" } },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "type"],
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "nullable": { "type": "boolean" },
+              "default": {},
+              "pii": { "type": "string" },
+              "retention": { "type": "string" }
+            }
+          }
+        },
+        "relations": { "type": "array" },
+        "indexes": { "type": "array" }
+      }
+    }
+  }
+}
