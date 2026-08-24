@@ -1,5 +1,5 @@
 {
-  "head": "6de2c95b9b77972c3920147a9ebb75033c9e9500fb079e44a73e667643e9ce8c",
+  "head": "1b6f2b05656619198b44109135fca1830f6d32f2198f577c8c3c80b7d5e83a71",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -405,6 +405,112 @@
       ],
       "previous_run_hash": "c0a719093e8991fc19c8a34c0f92df8c398cf815dd09869ca9052cf3724df5f7",
       "manifest_hash": "6de2c95b9b77972c3920147a9ebb75033c9e9500fb079e44a73e667643e9ce8c"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-620fe71919ae7f65",
+      "timestamp": "2026-08-24T15:54:08.411Z",
+      "actor": "Codex GPT-5.6",
+      "actor_role": "agent:engineer",
+      "action": "w31-inf-local-gate",
+      "status": "completed",
+      "context": {
+        "repo_root": "/private/tmp/claude-501/-Users-aarusso-Development-stech/a03ca349-af82-4752-b94c-0bd2838504ca/scratchpad/w31-inf",
+        "task_id": "TASK-31",
+        "worktree_id": "WT-W31-INF",
+        "git": {
+          "head_sha": "1586f0425f8b7238d39d47e43bb3e1b2c5ae8563",
+          "dirty_files": [
+            "backend/database/apply.sh",
+            "backend/database/ddl/30-ops-example.sql",
+            "backend/domains/ops/example/package.json",
+            "backend/domains/ops/example/src/controllers/example-record.controller.ts",
+            "backend/domains/ops/example/src/dto/create-example-record.dto.ts",
+            "backend/domains/ops/example/src/repositories/example-record.repository.ts",
+            "backend/domains/ops/example/src/services/example-record.service.ts",
+            "backend/domains/shared/src/policy.spec.ts",
+            "backend/domains/shared/src/policy.ts",
+            "package.json",
+            "pnpm-lock.yaml",
+            "tools/blueprints/generate.mjs",
+            "tools/blueprints/generated-files.json",
+            "tools/check-rls-smoke.ts",
+            "backend/database/ddl/30-inf-normative.sql",
+            "backend/database/ddl/31-inf-ait.sql",
+            "backend/database/ddl/32-inf-measures.sql",
+            "backend/database/ddl/33-inf-alcohol.sql",
+            "backend/domains/inf/ait/",
+            "backend/domains/inf/alcohol/",
+            "backend/domains/inf/measures/",
+            "backend/domains/inf/normative/",
+            "backend/domains/ops/example/src/index.ts",
+            "backend/domains/ops/example/tsconfig.build.json",
+            "backend/domains/ops/example/tsconfig.json",
+            "backend/domains/ops/example/vitest.config.ts",
+            "docs/framework/blueprints/BP-INF-AIT-001.json",
+            "docs/framework/blueprints/BP-INF-ALCOHOL-001.json",
+            "docs/framework/blueprints/BP-INF-MEASURES-001.json",
+            "docs/framework/blueprints/BP-INF-NORMATIVE-001.json"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": "docs/framework/blueprints/BP-INF-AIT-001.json",
+          "sha256": "ef69813e9ad97641c04b7bbbdb8110fe97446523d552fdf17da429d55de0b510"
+        },
+        {
+          "path": "docs/framework/blueprints/BP-INF-NORMATIVE-001.json",
+          "sha256": "8f7f7c36486cc7f2062f87bdfda6722994b3aff5dc8e5b80183ffea196fad19f"
+        },
+        {
+          "path": "backend/database/ddl/31-inf-ait.sql",
+          "sha256": "43c0870238a963d42b287f294ca83fc8418ba6818dc12345500a4c2b14c4e6a3"
+        },
+        {
+          "path": "backend/domains/inf/ait/src/ait-lifecycle.service.ts",
+          "sha256": "d03c1971144f49238a13df5e349e27b724b8bf5943b8ab78964e6c186a9d002e"
+        }
+      ],
+      "notes": [
+        "Program work item W3.1. Fresh candidate passed install, database reset, 28-table INF RLS smoke, backend unit/integration/e2e, root check, build, and all 245 SENATRAN mock tests.",
+        "DEVAI doctor has a pre-existing foundation deviation: docs/site lacks Docusaurus scaffolding; evidence chain verification is valid."
+      ],
+      "previous_run_hash": "6de2c95b9b77972c3920147a9ebb75033c9e9500fb079e44a73e667643e9ce8c",
+      "manifest_hash": "5446373b0cdcc9209960bd0d622233cdda4fdb5e6ee027b57915bf477ba18c9e"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-82808db2b433c381",
+      "timestamp": "2026-08-24T16:02:08.266Z",
+      "actor": "Codex GPT-5.6",
+      "actor_role": "agent:engineer",
+      "action": "w31-inf-main-sync",
+      "status": "completed",
+      "context": {
+        "repo_root": "/private/tmp/claude-501/-Users-aarusso-Development-stech/a03ca349-af82-4752-b94c-0bd2838504ca/scratchpad/w31-inf",
+        "task_id": "TASK-31",
+        "worktree_id": "WT-W31-INF",
+        "git": {
+          "head_sha": "349fbe794433334a7423e1a9494ba0f745c5a360",
+          "dirty_files": []
+        }
+      },
+      "artifacts": [
+        {
+          "path": "docs/framework/blueprints/BP-INF-AIT-001.json",
+          "sha256": "ef69813e9ad97641c04b7bbbdb8110fe97446523d552fdf17da429d55de0b510"
+        },
+        {
+          "path": "backend/database/ddl/31-inf-ait.sql",
+          "sha256": "43c0870238a963d42b287f294ca83fc8418ba6818dc12345500a4c2b14c4e6a3"
+        }
+      ],
+      "notes": [
+        "Program work item W3.1 synchronized with protected main commit 41079151a8079245e628b3e6b783ed932164e0dd. Frozen install, root check, build, and DEVAI chain verification passed on merge commit 349fbe794433334a7423e1a9494ba0f745c5a360."
+      ],
+      "previous_run_hash": "5446373b0cdcc9209960bd0d622233cdda4fdb5e6ee027b57915bf477ba18c9e",
+      "manifest_hash": "1b6f2b05656619198b44109135fca1830f6d32f2198f577c8c3c80b7d5e83a71"
     }
   ]
 }

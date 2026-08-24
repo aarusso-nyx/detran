@@ -1,0 +1,279 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-ALCOHOL-001",
+  "module": {
+    "name": "Alcohol",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "33-inf-alcohol.sql",
+    "dependencies": {
+      "@detran/inf-ait": "workspace:*",
+      "@detran/inf-measures": "workspace:*"
+    },
+    "handwrittenExports": [
+      "alcohol-lifecycle.service",
+      "alcohol-commands.controller"
+    ],
+    "owners": ["detran-inf"],
+    "description": "Breathalyzer and alcohol-testing procedure flows ported from TEAT."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "AlcoholProcedure",
+        "table": "alcohol_procedure",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid", "nullable": true },
+          { "name": "measure_id", "type": "uuid", "nullable": true },
+          { "name": "approach_id", "type": "uuid", "nullable": true },
+          { "name": "agent_id", "type": "uuid" },
+          { "name": "shift_id", "type": "uuid" },
+          { "name": "driver_person_id", "type": "uuid", "nullable": true },
+          { "name": "procedure_at", "type": "timestamptz" },
+          { "name": "location_json", "type": "jsonb", "nullable": true },
+          { "name": "procedure_type", "type": "varchar(60)" },
+          { "name": "outcome", "type": "varchar(80)" },
+          { "name": "status", "type": "varchar(40)", "default": "'draft'" },
+          { "name": "notes", "type": "text", "nullable": true },
+          {
+            "name": "location_geom",
+            "type": "geometry(Point,4674)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_alcohol_procedure_at",
+            "columns": ["tenant_id", "traffic_agency_id", "procedure_at"]
+          },
+          {
+            "name": "gist_inf_alcohol_location",
+            "columns": ["location_geom"],
+            "method": "gist"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_alcohol_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_alcohol_measure",
+            "columns": ["measure_id"],
+            "references": {
+              "table": "inf.administrative_measure",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_alcohol_approach",
+            "columns": ["approach_id"],
+            "references": { "table": "ops.ops_approach", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_alcohol_person",
+            "columns": ["driver_person_id"],
+            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "Breathalyzer",
+        "table": "alcohol_breathalyzer",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "serial_number", "type": "varchar(120)" },
+          { "name": "model", "type": "varchar(120)", "nullable": true },
+          { "name": "manufacturer", "type": "varchar(120)", "nullable": true },
+          { "name": "last_calibration_at", "type": "date", "nullable": true },
+          {
+            "name": "calibration_valid_until",
+            "type": "date",
+            "nullable": true
+          },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_breathalyzer_serial",
+            "columns": ["tenant_id", "serial_number"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "AlcoholTest",
+        "table": "alcohol_test",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "procedure_id", "type": "uuid" },
+          { "name": "breathalyzer_id", "type": "uuid", "nullable": true },
+          { "name": "test_number", "type": "varchar(80)", "nullable": true },
+          { "name": "tested_at", "type": "timestamptz" },
+          { "name": "result_mg_l", "type": "numeric(8,3)", "nullable": true },
+          { "name": "counterproof", "type": "boolean", "default": "false" },
+          {
+            "name": "result_image_evidence_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          { "name": "status", "type": "varchar(40)", "default": "'recorded'" }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_alcohol_test_procedure",
+            "columns": ["procedure_id"],
+            "references": {
+              "table": "inf.alcohol_procedure",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_alcohol_test_device",
+            "columns": ["breathalyzer_id"],
+            "references": {
+              "table": "inf.alcohol_breathalyzer",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_alcohol_test_evidence",
+            "columns": ["result_image_evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "AlcoholRefusal",
+        "table": "alcohol_refusal",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "procedure_id", "type": "uuid" },
+          { "name": "refused_at", "type": "timestamptz" },
+          { "name": "refusal_description", "type": "text" },
+          { "name": "witness_person_id", "type": "uuid", "nullable": true },
+          { "name": "evidence_id", "type": "uuid", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_alcohol_refusal_procedure",
+            "columns": ["procedure_id"],
+            "references": {
+              "table": "inf.alcohol_procedure",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_alcohol_refusal_person",
+            "columns": ["witness_person_id"],
+            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_alcohol_refusal_evidence",
+            "columns": ["evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "PsychomotorSign",
+        "table": "alcohol_psychomotor_sign",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "procedure_id", "type": "uuid" },
+          { "name": "sign_code", "type": "varchar(80)" },
+          { "name": "description", "type": "text" },
+          { "name": "observed", "type": "boolean", "default": "true" }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_alcohol_sign_procedure",
+            "columns": ["procedure_id"],
+            "references": {
+              "table": "inf.alcohol_procedure",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "AlcoholForwarding",
+        "table": "alcohol_forwarding",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "procedure_id", "type": "uuid" },
+          { "name": "forwarding_type", "type": "varchar(80)" },
+          { "name": "destination", "type": "varchar(255)" },
+          { "name": "forwarded_at", "type": "timestamptz" },
+          { "name": "protocol", "type": "varchar(120)", "nullable": true },
+          { "name": "notes", "type": "text", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_alcohol_forwarding_procedure",
+            "columns": ["procedure_id"],
+            "references": {
+              "table": "inf.alcohol_procedure",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/alcohol/",
+    "resources": [
+      {
+        "entity": "AlcoholProcedure",
+        "path": "procedures",
+        "resource": "alcohol-procedure"
+      },
+      {
+        "entity": "Breathalyzer",
+        "path": "breathalyzers",
+        "resource": "breathalyzer"
+      },
+      { "entity": "AlcoholTest", "path": "tests", "resource": "alcohol-test" },
+      {
+        "entity": "AlcoholRefusal",
+        "path": "refusals",
+        "resource": "alcohol-refusal"
+      },
+      {
+        "entity": "PsychomotorSign",
+        "path": "psychomotor-signs",
+        "resource": "psychomotor-sign"
+      },
+      {
+        "entity": "AlcoholForwarding",
+        "path": "forwardings",
+        "resource": "alcohol-forwarding"
+      }
+    ]
+  },
+  "auth": { "source": "TEAT_COMMAND_RULES" },
+  "audit": { "enabled": true }
+}

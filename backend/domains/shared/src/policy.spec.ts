@@ -51,6 +51,27 @@ describe('DETRAN unified policy kit', () => {
     ).toBe(false);
     expect(
       isDetranActionAllowed(
+        { roles: ['agency-admin'], permissions: [] },
+        'inf:normative-catalog',
+        'create',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['field-agent'], permissions: [] },
+        'inf:normative-catalog',
+        'create',
+      ),
+    ).toBe(false);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['field-agent'], permissions: [] },
+        'inf:alcohol-test',
+        'create',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
         { roles: ['field-agent'], permissions: [] },
         'inf:ait',
         'finalize',
