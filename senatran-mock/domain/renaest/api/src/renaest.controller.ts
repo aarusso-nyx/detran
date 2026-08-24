@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import type { Response } from 'express';
@@ -53,6 +54,11 @@ export class RenaestController {
   @Get('sinistros/:idSinistro')
   getSinistro(@Param('idSinistro') id: string) {
     return this.svc.getSinistro(id);
+  }
+
+  @Get('sinistros')
+  listar(@Query() query: Record<string, string | undefined>) {
+    return this.svc.listarSinistros(query);
   }
 
   @Get('protocolos/:protocolo')

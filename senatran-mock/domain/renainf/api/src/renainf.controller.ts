@@ -6,6 +6,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import type { Response } from 'express';
@@ -147,6 +148,16 @@ export class RenainfController {
     @Res({ passthrough: true }) res: Response,
   ) {
     return this.send(res, await this.svc.julgarRecurso(id, b));
+  }
+
+  @Get('recursos/:idRecurso')
+  getRecurso(@Param('idRecurso') id: string) {
+    return this.svc.getRecurso(id);
+  }
+
+  @Get('recursos')
+  listarRecursos(@Query() query: Record<string, string | undefined>) {
+    return this.svc.listarRecursos(query);
   }
 
   @Get('processosAdministrativos/:idProcesso/debito')

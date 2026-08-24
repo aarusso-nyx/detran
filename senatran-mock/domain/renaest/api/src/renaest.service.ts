@@ -100,6 +100,8 @@ export class RenaestService {
       codigoMunicipio: body.codigoMunicipio,
       gravidade: body.gravidade,
       local: body.local ?? null,
+      latitude: body.latitude ?? null,
+      longitude: body.longitude ?? null,
       orgaoResponsavel: body.orgaoResponsavel ?? null,
       codigoTipoSinistro: body.codigoTipoSinistro ?? null,
       condicoesVia: body.condicoesVia ?? null,
@@ -107,6 +109,7 @@ export class RenaestService {
       veiculos: body.veiculos ?? [],
       pessoas: body.pessoas ?? [],
       vitimas: body.vitimas ?? [],
+      evidencias: body.evidencias ?? [],
       referencias: ref,
       dataTransmissao: body.dataTransmissao ?? null,
     };
@@ -223,6 +226,40 @@ export class RenaestService {
         'RENAEST.CRASH.NOT_FOUND — registro de sinistro não encontrado.',
       );
     return r.rows[0].payload;
+  }
+
+  /** GET /v1/renaest/sinistros — contract-view search, cursor paginated. */
+  async listarSinistros(
+    q: Record<string, string | undefined>,
+  ): Promise<unknown> {
+    const limit = Math.min(
+      Math.max(Number(q.quantidadeRegistros ?? 20), 1),
+      100,
+    );
+    const r = await this.db.query<{ payload: unknown; id_sinistro: string }>(
+      `select payload, id_sinistro from contract.v_renaest_sinistro
+       where ($1::text is null or payload #>> '{veiculos,0,placa}' = $1)
+         and ($2::text is null or cpf_condutor = $2)
+         and ($3::timestamptz is null or data_hora_sinistro >= $3::timestamptz)
+         and ($4::timestamptz is null or data_hora_sinistro <= $4::timestamptz)
+         and ($5::text is null or orgao_responsavel = $5)
+         and ($6::text is null or id_sinistro > $6)
+       order by id_sinistro limit $7`,
+      [
+        q.placa ?? null,
+        q.cpfCondutor ?? null,
+        q.dataInicio ?? null,
+        q.dataFim ?? null,
+        q.orgaoResponsavel ?? null,
+        q.idUltimoRegistro ?? null,
+        limit,
+      ],
+    );
+    return {
+      quantidade: r.rows.length,
+      sinistros: r.rows.map((x) => x.payload),
+      idUltimoRegistro: r.rows.at(-1)?.id_sinistro ?? null,
+    };
   }
 
   /** GET /v1/renaest/protocolos/{protocolo}. */

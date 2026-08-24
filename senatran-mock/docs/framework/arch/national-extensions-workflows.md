@@ -170,6 +170,15 @@ Discount tiers projected per infraction: **40%** (recognition path, SNE-adherent
 Projections reflect SNE (`protocoloSne`) and RENAINF (`protocoloRenainf`) state.
 The only write (`reconhecimento`) is audited (`dominio = CDT`).
 
+## W3.2+ extension flows
+
+- RENAINF recurso reads are `contract.v_renainf_recurso` reads; history comes
+  from the audit chain and no transition is introduced by a GET.
+- CDT defense/resource submissions resolve the existing process by AIT and call
+  the existing RENAINF state machine with `canal: CDT`.
+- SNE citizen opt-in upserts `sne.adesao`, is idempotent and audited.
+- RENAEST search is a paginated contract-view read and never mutates a crash.
+
 ## State-DETRAN national-base bridge
 
 Models a state DETRAN acting **against the national bases** (RENAVAM/RENACH/

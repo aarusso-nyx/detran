@@ -13,6 +13,8 @@ import { SneService } from './sne.service.js';
 import { DtoValidationPipe } from '../../../shared/api/src/common/dto-validation.pipe.js';
 import { NotificacaoDto, CancelamentoDto } from './dto/notificacao.dto.js';
 
+type Body = Record<string, unknown>;
+
 /**
  * SNE national electronic-notification endpoints (7), ported to WSDenatran
  * conventions. Writes go through SneService (delivery lifecycle + idempotency +
@@ -35,6 +37,15 @@ export class SneController {
   @Get('adesoes/cidadaos/:cpf')
   adesaoCidadao(@Param('cpf') cpf: string) {
     return this.svc.adesaoCidadao(cpf);
+  }
+
+  @Post('adesoes/cidadaos')
+  async aderirCidadao(
+    @Body() body: Body,
+    @Headers('idempotency-key') key: string | undefined,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.send(res, await this.svc.aderirCidadao(body, key));
   }
 
   @Get('orgaos/:codigoOrgaoAutuador/adesao')

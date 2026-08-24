@@ -44,6 +44,21 @@ create or replace view contract.v_renainf_debito as
   from renainf.processo p
   join renainf.debito d on d.processo_id = p.id;
 
+create or replace view contract.v_renainf_recurso as
+  select r.id::text as id_recurso, r.instancia, r.situacao,
+         a.codigo_orgao_autuador, r.id_recurso_anterior::text,
+         (r.payload->>'dataProtocolo')::timestamptz as data_protocolo,
+         jsonb_build_object(
+           'idRecurso', r.id::text, 'idProcesso', r.processo_id::text,
+           'instancia', r.instancia, 'idRecursoAnterior', r.id_recurso_anterior::text,
+           'situacao', r.situacao, 'resultado', r.resultado,
+           'requerente', r.payload->'requerente', 'fundamentacao', r.payload->>'fundamentacao',
+           'anexos', coalesce(r.payload->'anexos', '[]'::jsonb),
+           'historico', coalesce((select jsonb_agg(jsonb_build_object('tipoEvento', ae.tipo_evento, 'situacaoAnterior', ae.situacao_anterior, 'situacaoNova', ae.situacao_nova, 'criadoEm', ae.criado_em) order by ae.criado_em) from audit.evento ae where ae.entidade = 'renainf.processo' and ae.entidade_id = r.processo_id::text), '[]'::jsonb)
+         ) as payload
+  from renainf.recurso r join renainf.processo p on p.id = r.processo_id
+  join renainf.ait a on a.id = p.ait_id;
+
 -- GET /v1/renaest/sinistros/{idSinistro} and /v1/renaest/protocolos/{protocolo}
 -- both read this view; the live `situacao` is injected into the stored payload.
 create or replace view contract.v_renaest_sinistro as

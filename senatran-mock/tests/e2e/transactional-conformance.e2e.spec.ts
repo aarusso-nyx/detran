@@ -486,6 +486,14 @@ describe('transactional contract conformance', () => {
       await get('/v1/sne/adesoes/cidadaos/52998224725'),
     );
     check(
+      'post',
+      '/sne/adesoes/cidadaos',
+      await post('/v1/sne/adesoes/cidadaos', {
+        cpf: freshCpf(),
+        canal: 'APP_CDT',
+      }),
+    );
+    check(
       'get',
       '/sne/orgaos/{codigoOrgaoAutuador}/adesao',
       await get('/v1/sne/orgaos/204020/adesao'),
@@ -549,6 +557,24 @@ describe('transactional contract conformance', () => {
       'post',
       '/cdt/infracoes/{numeroAit}/reconhecimento',
       await post('/v1/cdt/infracoes/A0001002/reconhecimento', {}),
+    );
+    check(
+      'post',
+      '/cdt/cidadaos/{cpf}/infracoes/{numeroAit}/defesas',
+      await post('/v1/cdt/cidadaos/52998224725/infracoes/A0068684/defesas', {
+        fundamentacao: 'Defesa CDT',
+        dataProtocolo: '2024-01-01T10:00:00.000Z',
+        anexos: [],
+      }),
+    );
+    check(
+      'post',
+      '/cdt/cidadaos/{cpf}/infracoes/{numeroAit}/recursos',
+      await post('/v1/cdt/cidadaos/52998224725/infracoes/A0068684/recursos', {
+        instancia: 'JARI',
+        fundamentacao: 'Recurso CDT',
+        anexos: [],
+      }),
     );
 
     // --- DETRAN bridge (active UF SP) ---
@@ -614,5 +640,15 @@ describe('transactional contract conformance', () => {
     expect(missing).toEqual([]);
     // most operations should reach a 2xx so their success schema is exercised
     expect(ok2xx).toBeGreaterThanOrEqual(28);
+  });
+
+  it('declares the W3.2+ citizen write operations', () => {
+    expect(
+      T.paths['/cdt/cidadaos/{cpf}/infracoes/{numeroAit}/defesas']?.post,
+    ).toBeTruthy();
+    expect(
+      T.paths['/cdt/cidadaos/{cpf}/infracoes/{numeroAit}/recursos']?.post,
+    ).toBeTruthy();
+    expect(T.paths['/sne/adesoes/cidadaos']?.post).toBeTruthy();
   });
 });

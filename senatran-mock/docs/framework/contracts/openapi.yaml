@@ -1823,6 +1823,97 @@ paths:
         '404': { $ref: '#/components/responses/NotFound' }
         '500': { $ref: '#/components/responses/ServerError' }
 
+  /renainf/recursos:
+    get:
+      tags: [infracoes]
+      operationId: listarRecursosRenainf
+      summary: Listar e pesquisar recursos RENAINF
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: orgaoAutuador, in: query, schema: { type: string } }
+        - { name: situacao, in: query, schema: { type: string } }
+        - { name: instancia, in: query, schema: { type: string } }
+        - {
+            name: dataInicio,
+            in: query,
+            schema: { type: string, format: date-time },
+          }
+        - {
+            name: dataFim,
+            in: query,
+            schema: { type: string, format: date-time },
+          }
+        - { name: quantidadeRegistros, in: query, schema: { type: integer } }
+        - { name: idUltimoRegistro, in: query, schema: { type: string } }
+      responses:
+        '200':
+          {
+            description: OK,
+            content: { application/json: { schema: { type: object } } },
+          }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /renainf/recursos/{idRecurso}:
+    get:
+      tags: [infracoes]
+      operationId: consultarRecursoRenainf
+      summary: Consultar recurso RENAINF e histórico de ciclo de vida
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - {
+            name: idRecurso,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      responses:
+        '200':
+          {
+            description: OK,
+            content: { application/json: { schema: { type: object } } },
+          }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /renaest/sinistros:
+    get:
+      tags: [infracoes]
+      operationId: listarSinistrosRenaest
+      summary: Pesquisar sinistros RENAEST
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - { name: placa, in: query, schema: { type: string } }
+        - { name: cpfCondutor, in: query, schema: { type: string } }
+        - {
+            name: dataInicio,
+            in: query,
+            schema: { type: string, format: date-time },
+          }
+        - {
+            name: dataFim,
+            in: query,
+            schema: { type: string, format: date-time },
+          }
+        - { name: orgaoResponsavel, in: query, schema: { type: string } }
+        - { name: quantidadeRegistros, in: query, schema: { type: integer } }
+        - { name: idUltimoRegistro, in: query, schema: { type: string } }
+      responses:
+        '200':
+          {
+            description: OK,
+            content: { application/json: { schema: { type: object } } },
+          }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
 components:
   securitySchemes:
     clientCertificate:
