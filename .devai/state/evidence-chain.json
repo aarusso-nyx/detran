@@ -1,5 +1,5 @@
 {
-  "head": "c0a719093e8991fc19c8a34c0f92df8c398cf815dd09869ca9052cf3724df5f7",
+  "head": "6de2c95b9b77972c3920147a9ebb75033c9e9500fb079e44a73e667643e9ce8c",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -347,6 +347,64 @@
       ],
       "previous_run_hash": "972c38f9477147a869d185887e574d2862a3b0e7086c0a632757a584e6ff48c5",
       "manifest_hash": "c0a719093e8991fc19c8a34c0f92df8c398cf815dd09869ca9052cf3724df5f7"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-bc83901e0f7139eb",
+      "timestamp": "2026-08-24T11:11:47.592Z",
+      "actor": "Codex",
+      "actor_role": "agent:engineer",
+      "action": "W2.2",
+      "status": "completed",
+      "context": {
+        "repo_root": "/private/tmp/claude-501/-Users-aarusso-Development-stech/a03ca349-af82-4752-b94c-0bd2838504ca/scratchpad/w22-adapter",
+        "task_id": "TASK-22",
+        "worktree_id": "WT-W2-2",
+        "git": {
+          "head_sha": "eed29cc73a0493be54dfd20d0c7efd4800c35aa7",
+          "dirty_files": []
+        }
+      },
+      "artifacts": [
+        {
+          "path": "packages/senatran-adapter/src/index.ts",
+          "sha256": "602bbac16826aaee704df06dca8029b6f170a258dfb2ef06d0e78a33932e9176"
+        },
+        {
+          "path": "packages/senatran-adapter/src/ports.ts",
+          "sha256": "75c55e1f362b50c296e39553a3fbf97f898e1ac7892ec249f1af8ad20a6762e4"
+        },
+        {
+          "path": "packages/senatran-adapter/src/generated/read.ts",
+          "sha256": "689163b043837eff2f32b232466a585141c7950627c92ed7cdcb72298f1c8782"
+        },
+        {
+          "path": "packages/senatran-adapter/src/generated/transactional.ts",
+          "sha256": "214be5698af1a23b52dd017c7962cd48a33ea4fb9a52684f027eb3ae66c63420"
+        },
+        {
+          "path": "tools/verify-senatran-boundary.ts",
+          "sha256": "d83cac0d0ac93f7a8bfd87e9d9edf036a625faf4f7480de2dc03851f6c85eaca"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "6f670f23d55df5004dc6acdf221aca2bf9f2b97365b9fa64064915ea93854d22"
+        },
+        {
+          "path": "docs/meta/adr/ADR-0008-senatran-port-provider-and-feature-flags.md",
+          "sha256": "67dd26ba1b452112cabcb9d5649aa1d652501c25d56ed37b7b2bbea822a73109"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "a930beb440907d7b7caf9ddf97309a89da3f3780d13eb3d8249c6b48c340e28f"
+        }
+      ],
+      "notes": [
+        "Sole SENATRAN boundary implemented with six typed English ports, generated 57+57 wire operations, mock/real switching, fail-closed real flags, mTLS, resilience, deterministic write idempotency and ALREADY_OPEN recovery.",
+        "Rebased onto origin/main 6a7f8c8. Verified frozen install; combined root check/build across 11 workspaces; adapter 20 unit + 4 integration + 8 live-mock e2e; real tier explicitly skipped without credentials; senatran-mock 245/245; boundary scan 130 runtime files; contract drift and canonical evidence chain valid."
+      ],
+      "previous_run_hash": "c0a719093e8991fc19c8a34c0f92df8c398cf815dd09869ca9052cf3724df5f7",
+      "manifest_hash": "6de2c95b9b77972c3920147a9ebb75033c9e9500fb079e44a73e667643e9ce8c"
     }
   ]
 }

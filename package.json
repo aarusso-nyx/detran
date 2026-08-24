@@ -12,13 +12,15 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm blueprints:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl",
+    "check": "pnpm format:check && pnpm blueprints:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
-    "build": "pnpm --filter @detran/shared build && pnpm --filter @detran/app build && pnpm --filter @detran/ui build",
+    "build": "pnpm --filter @detran/shared build && pnpm --filter @detran/senatran-adapter build && pnpm --filter @detran/app build && pnpm --filter @detran/ui build",
     "verify:decorators": "tsx tools/verify-controller-decorators.ts",
     "verify:rls-ddl": "tsx tools/check-rls-ddl.ts",
+    "verify:senatran-boundary": "tsx tools/verify-senatran-boundary.ts",
+    "verify:senatran-contracts": "pnpm --filter @detran/senatran-adapter contracts:check",
     "backend:db:apply": "bash backend/database/apply.sh",
     "backend:db:reset": "bash backend/database/apply.sh --full",
     "backend:rls-smoke": "tsx tools/check-rls-smoke.ts",
@@ -29,7 +31,8 @@
     "backend:test:ci": "pnpm backend:test:unit && pnpm backend:test:integration && pnpm backend:test:e2e",
     "devai:doctor": "devai doctor",
     "blueprints:generate": "node tools/blueprints/generate.mjs",
-    "blueprints:check": "node tools/blueprints/check.mjs"
+    "blueprints:check": "node tools/blueprints/check.mjs",
+    "senatran-adapter:test:ci": "pnpm --filter @detran/senatran-adapter test:ci"
   },
   "devDependencies": {
     "@devai-nyx/cli": "^0.3.0",
@@ -39,5 +42,12 @@
     "prettier": "^3.5.3",
     "tsx": "^4.20.6",
     "typescript": "^6.0.3"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "openapi-typescript>typescript": "6"
+      }
+    }
   }
 }

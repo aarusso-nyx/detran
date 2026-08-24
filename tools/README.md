@@ -15,6 +15,9 @@ Current Phase-2 checks:
 - `check-rls-ddl.ts` — static policy coverage for tables carrying `tenant_id`.
 - `check-rls-smoke.ts` — live cross-tenant denial, automatic tenant assignment
   and audit-chain persistence against the `detran` database.
+- `verify-senatran-boundary.ts` — scans runtime source for direct national base
+  URLs, SENATRAN auth headers and provider hosts outside
+  `packages/senatran-adapter` (ADR-0003/ADR-0008).
 
 Keep entries small and single-purpose; anything platform-generic belongs in stynx or
 devai, not here.

@@ -177,6 +177,42 @@ jobs:
       - name: Run backend unit, integration and e2e tiers
         run: pnpm backend:test:ci
 
+      - name: Verify SENATRAN boundary and generated contract drift
+        run: |
+          pnpm verify:senatran-boundary
+          pnpm verify:senatran-contracts
+
+      - name: Run SENATRAN adapter unit and HTTP integration tiers
+        run: |
+          pnpm --filter @detran/senatran-adapter test:unit
+          pnpm --filter @detran/senatran-adapter test:integration
+
+      # Jobs cannot share service containers. Keep the contract floor lean by
+      # reusing this job's PostGIS service, but isolate the mock in its own
+      # database and process. The required senatran-mock-tests job still owns
+      # the mock's complete 245-test regression suite.
+      - name: Run adapter contract tier against the in-repo SENATRAN mock
+        env:
+          DB_NAME: senatran
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/senatran
+          SENATRAN_MOCK_BASE_URL: http://127.0.0.1:3001
+          PORT: '3001'
+        run: |
+          pnpm --dir senatran-mock db:reset
+          pnpm --dir senatran-mock build
+          node senatran-mock/dist/apps/api/src/main.js > /tmp/senatran-adapter-mock.log 2>&1 &
+          mock_pid=$!
+          trap 'kill "$mock_pid" 2>/dev/null || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:3001/health >/dev/null; then break; fi
+            if [ "$attempt" = 30 ]; then
+              cat /tmp/senatran-adapter-mock.log
+              exit 1
+            fi
+            sleep 1
+          done
+          pnpm --filter @detran/senatran-adapter test:e2e
+
   # ---------------------------------------------------------------------------
   # Activated (W0.2, 2026-08-24): the senatran-mock port landed at
   # ./senatran-mock (245 tests: 119 unit + 14 integration + 112 e2e; 114
