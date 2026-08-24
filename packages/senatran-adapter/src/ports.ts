@@ -4,6 +4,8 @@ import { SenatranClient } from './client.js';
 import type {
   AdministrativeCase,
   Appeal,
+  AppealSearchFilters,
+  AppealSearchResult,
   AppealDecisionInput,
   AppealInput,
   CitizenCollection,
@@ -12,6 +14,8 @@ import type {
   CrashCorrectionInput,
   CrashReport,
   CrashReportInput,
+  CrashSearchFilters,
+  CrashSearchResult,
   DriverLicenseValidation,
   DriverLicenseValidationInput,
   DriverProcess,
@@ -155,6 +159,11 @@ export interface RenainfPort {
     caseId: string,
     context?: IntegrationContext,
   ): Promise<Transactional['Debito']>;
+  getAppeal(appealId: string, context?: IntegrationContext): Promise<Appeal>;
+  listAppeals(
+    filters?: AppealSearchFilters,
+    context?: IntegrationContext,
+  ): Promise<AppealSearchResult>;
 }
 
 export interface RenaestPort {
@@ -171,6 +180,10 @@ export interface RenaestPort {
     protocol: string,
     context?: IntegrationContext,
   ): Promise<CrashReport>;
+  searchCrashes(
+    filters?: CrashSearchFilters,
+    context?: IntegrationContext,
+  ): Promise<CrashSearchResult>;
   complementCrash(
     crashId: string,
     input: CrashCorrectionInput,
@@ -190,6 +203,10 @@ export interface SnePort {
   ): Promise<SneEnrollment>;
   getCitizenEnrollment(
     cpf: string,
+    context?: IntegrationContext,
+  ): Promise<SneEnrollment>;
+  enrollCitizen(
+    input: { cpf: string; channel?: string },
     context?: IntegrationContext,
   ): Promise<SneEnrollment>;
   getAgencyEnrollment(
@@ -241,9 +258,21 @@ export interface CdtPort {
     input?: { channel?: string; cpf?: string },
     context?: IntegrationContext,
   ): Promise<InfractionRecognition>;
+  submitCitizenPreliminaryDefense(
+    cpf: string,
+    aitNumber: string,
+    input: PreliminaryDefenseInput,
+    context?: IntegrationContext,
+  ): Promise<AdministrativeCase>;
+  submitCitizenAppeal(
+    cpf: string,
+    aitNumber: string,
+    input: AppealInput,
+    context?: IntegrationContext,
+  ): Promise<Appeal>;
 }
 
-/** Exact generated typing for every one of the 57 read-contract operations. */
+/** Exact generated typing for every one of the 60 read-contract operations. */
 export interface WsdenatranReadPort {
   read<Path extends ReadPath>(
     path: Path,
@@ -576,6 +605,53 @@ class RenainfHttpPort implements RenainfPort {
       context,
     );
   }
+
+  async getAppeal(
+    appealId: string,
+    context?: IntegrationContext,
+  ): Promise<Appeal> {
+    const response = await this.client.request<Transactional['Recurso']>(
+      readRequest(
+        'renainf',
+        'get-appeal',
+        `/v1/renainf/recursos/${segment(appealId)}`,
+      ),
+      context,
+    );
+    return mapAppeal(response);
+  }
+
+  async listAppeals(
+    filters: AppealSearchFilters = {},
+    context?: IntegrationContext,
+  ): Promise<AppealSearchResult> {
+    const response = await this.client.request<{
+      quantidade?: number;
+      recursos?: Transactional['Recurso'][];
+      idUltimoRegistro?: string | null;
+    }>(
+      readRequest('renainf', 'list-appeals', '/v1/renainf/recursos', {
+        orgaoAutuador: filters.agencyCode,
+        situacao: filters.status,
+        instancia:
+          filters.instance === 'SECOND_INSTANCE'
+            ? 'SEGUNDA_INSTANCIA'
+            : filters.instance,
+        dataInicio: filters.startedAt,
+        dataFim: filters.endedAt,
+        quantidadeRegistros: filters.limit,
+        idUltimoRegistro: filters.after,
+      }),
+      context,
+    );
+    return {
+      count: response.quantidade ?? response.recursos?.length ?? 0,
+      appeals: (response.recursos ?? []).map(mapAppeal),
+      ...(response.idUltimoRegistro
+        ? { nextAfter: response.idUltimoRegistro }
+        : {}),
+    };
+  }
 }
 
 class RenaestHttpPort implements RenaestPort {
@@ -642,6 +718,35 @@ class RenaestHttpPort implements RenaestPort {
       context,
     );
     return mapCrashReport(response);
+  }
+
+  async searchCrashes(
+    filters: CrashSearchFilters = {},
+    context?: IntegrationContext,
+  ): Promise<CrashSearchResult> {
+    const response = await this.client.request<{
+      quantidade?: number;
+      sinistros?: Transactional['Sinistro'][];
+      idUltimoRegistro?: string | null;
+    }>(
+      readRequest('renaest', 'search-crashes', '/v1/renaest/sinistros', {
+        placa: filters.plate,
+        cpfCondutor: filters.driverCpf,
+        dataInicio: filters.startedAt,
+        dataFim: filters.endedAt,
+        orgaoResponsavel: filters.responsibleAgency,
+        quantidadeRegistros: filters.limit,
+        idUltimoRegistro: filters.after,
+      }),
+      context,
+    );
+    return {
+      count: response.quantidade ?? response.sinistros?.length ?? 0,
+      crashes: (response.sinistros ?? []).map(mapCrashReport),
+      ...(response.idUltimoRegistro
+        ? { nextAfter: response.idUltimoRegistro }
+        : {}),
+    };
   }
 
   complementCrash(
@@ -711,6 +816,20 @@ class SneHttpPort implements SnePort {
       `/v1/sne/adesoes/cidadaos/${segment(cpf)}`,
       context,
     );
+  }
+
+  async enrollCitizen(
+    input: { cpf: string; channel?: string },
+    context?: IntegrationContext,
+  ): Promise<SneEnrollment> {
+    const response = await this.client.request<Transactional['AdesaoSne']>(
+      writeRequest('sne', 'enroll-citizen', '/v1/sne/adesoes/cidadaos', {
+        cpf: input.cpf,
+        ...(input.channel ? { canal: input.channel } : {}),
+      }),
+      context,
+    );
+    return mapSneEnrollment(response);
   }
 
   async getAgencyEnrollment(
@@ -881,6 +1000,44 @@ class CdtHttpPort implements CdtPort {
     return mapRecognition(response);
   }
 
+  async submitCitizenPreliminaryDefense(
+    cpf: string,
+    aitNumber: string,
+    input: PreliminaryDefenseInput,
+    context?: IntegrationContext,
+  ): Promise<AdministrativeCase> {
+    const response = await this.client.request<
+      Transactional['ProcessoAdministrativo']
+    >(
+      writeRequest(
+        'cdt',
+        'submit-citizen-preliminary-defense',
+        `/v1/cdt/cidadaos/${segment(cpf)}/infracoes/${segment(aitNumber)}/defesas`,
+        toPreliminaryDefense(input),
+      ),
+      context,
+    );
+    return mapAdministrativeCase(response);
+  }
+
+  async submitCitizenAppeal(
+    cpf: string,
+    aitNumber: string,
+    input: AppealInput,
+    context?: IntegrationContext,
+  ): Promise<Appeal> {
+    const response = await this.client.request<Transactional['Recurso']>(
+      writeRequest(
+        'cdt',
+        'submit-citizen-appeal',
+        `/v1/cdt/cidadaos/${segment(cpf)}/infracoes/${segment(aitNumber)}/recursos`,
+        toAppeal(input),
+      ),
+      context,
+    );
+    return mapAppeal(response);
+  }
+
   private async collection(
     operation: string,
     resource: 'notificacoes' | 'infracoes' | 'veiculos',
@@ -996,8 +1153,9 @@ function readRequest(
   surface: 'renainf' | 'renaest' | 'renach' | 'sne' | 'cdt' | 'wsdenatran-read',
   operation: string,
   path: string,
+  query?: Readonly<Record<string, string | number | boolean | undefined>>,
 ) {
-  return { surface, operation, method: 'GET' as const, path };
+  return { surface, operation, method: 'GET' as const, path, query };
 }
 
 function writeRequest<T>(

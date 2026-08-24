@@ -3,7 +3,7 @@
 > **Refreshed (W0.3/W0.2, 2026-08-24).** The mock now lives **in-repo** in the
 > `detran` monorepo at `senatran-mock/` (ported from the standalone `senatran`
 > repo, which is frozen per ADR-0004 — no further fixes land there). Reality is
-> **114 endpoints**, not 87 (the count this prompt used to quote before the
+> **120 endpoints**, not 87 (the count this prompt used to quote before the
 > RENAEST/SNE/CDT/DETRAN-bridge national extensions landed — D-0011). Two
 > audiences read this file differently:
 >
@@ -40,7 +40,7 @@ WHAT `senatran-mock` IS (rely on this — do not re-implement it)
 - Bring it up (no local Node/Postgres needed):
       cd ../detran/senatran-mock && docker compose up --build
   It serves on http://localhost:3000. Readiness: GET /health -> {"status":"ok","db":"up"}.
-- ONE convention across all 114 endpoints:
+- ONE convention across all 120 endpoints:
     * base path /v1
     * auth header `x-cpf-usuario` on every request (and `x-client-cert-cn` when
       cert simulation is on)
@@ -54,7 +54,7 @@ WHAT `senatran-mock` IS (rely on this — do not re-implement it)
       infraction-lifecycle workflows (stateful, idempotent), ported into
       WSDenatran conventions from the canonical reference (D-0009). Contract:
       ../detran/senatran-mock/docs/framework/contracts/openapi-transactional.yaml
-    * National extensions — 25 endpoints, same contract file as Transactional
+    * National extensions — 31 endpoints, same contract file as Transactional
       (D-0011): RENAEST crash/sinister base (6, `/v1/renaest/*`), SNE electronic
       notifications (7, `/v1/sne/*`), CDT citizen-channel projection (6,
       `/v1/cdt/*`), and the State-DETRAN national-base bridge (6,

@@ -111,6 +111,17 @@ backend (`INV-CDT-001`).
 `boletoDisponivel`, `linhaDigitavel`, `dataVencimento`, `origem`, `protocoloSne`,
 `protocoloRenainf`.
 
+## Extension round W3.2+
+
+The additive W3.2+ slice exposes six consumer-facing operations: RENAINF
+`GET /renainf/recursos` and `GET /renainf/recursos/{idRecurso}` (search and
+lifecycle-chain detail); `GET /renaest/sinistros` (placa, cpfCondutor, period
+and orgaoResponsavel search); citizen SNE opt-in at `POST /sne/adesoes/cidadaos`;
+and CDT bridges at `POST /cdt/cidadaos/{cpf}/infracoes/{numeroAit}/defesas` and
+`.../recursos`. The CDT writes delegate to the existing RENAINF process state
+machine, including deadline and prior-instance rules. RENAEST payloads now use
+typed vehicle/person/victim records, coordinates and metadata-only evidences.
+
 ## Surface: State-DETRAN national-base bridge
 
 A state DETRAN acting against the national bases — **only** national-base

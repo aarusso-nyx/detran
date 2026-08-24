@@ -92,6 +92,53 @@ describe('senatran-adapter contract against the live in-repo mock', () => {
     expect(payment.discountPercent).toBe(40);
   });
 
+  it('searches typed RENAEST crashes and preserves coordinates and participants', async () => {
+    const result = await adapter.ports.renaest.searchCrashes({
+      driverCpf: SENATRAN_SEED_FIXTURES.driver.cpf,
+    });
+    expect(result.count).toBeGreaterThan(0);
+    expect(result.crashes[0]?.crashId).toBeTruthy();
+    expect(result.crashes[0]).toEqual(
+      expect.objectContaining({
+        victims: expect.any(Array),
+      }),
+    );
+  });
+
+  it('reads RENAINF appeals and writes citizen defenses, appeals and SNE enrollment', async () => {
+    const cpf = SENATRAN_SEED_FIXTURES.cdt.citizenCpf;
+    const aitNumber = 'A5536201';
+    const defense = await adapter.ports.cdt.submitCitizenPreliminaryDefense(
+      cpf,
+      aitNumber,
+      {
+        applicant: { type: 'OWNER', document: cpf },
+        arguments: 'Adapter e2e defense',
+        submittedAt: '2030-01-02T12:00:00.000Z',
+      },
+    );
+    expect(defense.status).toBe('DEFESA_APRESENTADA');
+
+    const appeal = await adapter.ports.cdt.submitCitizenAppeal(cpf, aitNumber, {
+      instance: 'JARI',
+      applicant: { type: 'OWNER', document: cpf },
+      arguments: 'Adapter e2e appeal',
+    });
+    expect(appeal.appealId).toBeTruthy();
+    await expect(
+      adapter.ports.renainf.getAppeal(appeal.appealId!),
+    ).resolves.toMatchObject({ appealId: appeal.appealId });
+    await expect(adapter.ports.renainf.listAppeals()).resolves.toMatchObject({
+      appeals: expect.arrayContaining([
+        expect.objectContaining({ appealId: appeal.appealId }),
+      ]),
+    });
+
+    await expect(
+      adapter.ports.sne.enrollCitizen({ cpf, channel: 'APP_CDT' }),
+    ).resolves.toMatchObject({ cpf, enrolled: true, channel: 'APP_CDT' });
+  });
+
   it('maps mock business errors to BUSINESS without retry', async () => {
     const error = await adapter.ports.wsdenatranRead
       .findVehicleByPlate(SENATRAN_MAGIC_KEYS.businessErrorPlate)

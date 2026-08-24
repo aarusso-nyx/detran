@@ -593,8 +593,14 @@ export class RenainfService {
         }
         const id = randomUUID();
         await trx.query(
-          "insert into renainf.recurso (id, processo_id, instancia, situacao, payload) values ($1,$2,$3,'APRESENTADO',$4::jsonb)",
-          [id, idProcesso, instancia, JSON.stringify(body)],
+          "insert into renainf.recurso (id, processo_id, instancia, id_recurso_anterior, situacao, payload) values ($1,$2,$3,$4,'APRESENTADO',$5::jsonb)",
+          [
+            id,
+            idProcesso,
+            instancia,
+            body.idRecursoAnterior ?? null,
+            JSON.stringify(body),
+          ],
         );
         const nova =
           instancia === 'JARI'
@@ -665,6 +671,49 @@ export class RenainfService {
         return { status: 201, body: resp };
       },
     );
+  }
+
+  async getRecurso(idRecurso: string): Promise<unknown> {
+    const r = await this.db.query<{ payload: unknown }>(
+      'select payload from contract.v_renainf_recurso where id_recurso = $1',
+      [idRecurso],
+    );
+    if (!r.rows[0])
+      throw notFound('RENAINF.CASE.NOT_FOUND — recurso não encontrado.');
+    return r.rows[0].payload;
+  }
+
+  async listarRecursos(
+    q: Record<string, string | undefined>,
+  ): Promise<unknown> {
+    const limit = Math.min(
+      Math.max(Number(q.quantidadeRegistros ?? 20), 1),
+      100,
+    );
+    const r = await this.db.query<{ payload: unknown; id_recurso: string }>(
+      `select payload, id_recurso from contract.v_renainf_recurso
+       where ($1::text is null or codigo_orgao_autuador = $1)
+         and ($2::text is null or situacao = $2)
+         and ($3::text is null or instancia = $3)
+         and ($4::timestamptz is null or data_protocolo >= $4::timestamptz)
+         and ($5::timestamptz is null or data_protocolo <= $5::timestamptz)
+         and ($6::text is null or id_recurso > $6)
+       order by id_recurso limit $7`,
+      [
+        q.orgaoAutuador ?? null,
+        q.situacao ?? null,
+        q.instancia ?? null,
+        q.dataInicio ?? null,
+        q.dataFim ?? null,
+        q.idUltimoRegistro ?? null,
+        limit,
+      ],
+    );
+    return {
+      quantidade: r.rows.length,
+      recursos: r.rows.map((x) => x.payload),
+      idUltimoRegistro: r.rows.at(-1)?.id_recurso ?? null,
+    };
   }
 
   async getDebito(idProcesso: string): Promise<unknown> {

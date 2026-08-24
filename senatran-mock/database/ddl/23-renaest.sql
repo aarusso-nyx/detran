@@ -28,6 +28,8 @@ create table renaest.sinistro (
 create index idx_renaest_sinistro_protocolo on renaest.sinistro (protocolo);
 create index idx_renaest_sinistro_chave on renaest.sinistro (chave_natural);
 create index idx_renaest_sinistro_renavam on renaest.sinistro (renavam);
+create index idx_renaest_sinistro_cpf_condutor on renaest.sinistro (cpf_condutor);
+create index idx_renaest_sinistro_data_orgao on renaest.sinistro (data_hora_sinistro, orgao_responsavel);
 
 -- Mints idSinistro for crashes submitted at runtime (POST /v1/renaest/sinistros).
 -- Starts high so minted ids never collide with the seeded SN########### set.

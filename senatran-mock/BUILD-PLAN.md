@@ -23,10 +23,10 @@ record. Reference signals: `docs/framework/contracts/openapi.yaml` (read) +
   integration 8, e2e 51. CI workflow added.
 - **P6 (national extensions): complete.** Four national-base surfaces added
   (RENAEST crash/sinister, SNE electronic notifications, CDT citizen-channel
-  projection, State-DETRAN national-base bridge — **25 endpoints**), same
+  projection, State-DETRAN national-base bridge — **31 endpoints**), same
   conventions, merged in PR #3. Invariants INV-RENAEST/SNE/CDT/DETRAN-001 (D-0011);
   boundary in `national-extensions-mapping.md`; behaviour in
-  `national-extensions-workflows.md`. Totals now **114 endpoints**; tests **245**
+  `national-extensions-workflows.md`. Totals now **120 endpoints**; tests **245**
   (unit 119, integration 14, e2e 112) green; `openapi:check` 0 drift. All phases done.
 
 ## Locked decisions
@@ -37,7 +37,7 @@ over `contract.*` views for reads · transactional RENACH/RENAINF unified under
 WSDenatran conventions (D-0009) · national-base extensions (RENAEST/SNE/CDT/DETRAN)
 under the same conventions and contract file (D-0011). See `DESIGN-DECISIONS.md`.
 
-## Surface — 114 endpoints under `/v1`, one convention
+## Surface — 120 endpoints under `/v1`, one convention
 
 **Read (WSDenatran, 57 GET).** `veiculos` (20), `condutores` (12), `infracoes`
 (10), `indicadores` (8), `ConsultaCSV` (2), `restricoesJudiciaisAtivas` (2),

@@ -304,15 +304,46 @@ export function toCrashReport(
     codigoMunicipio: input.municipalityCode,
     gravidade: severityToWire[input.severity],
     local: input.location,
+    latitude: input.latitude,
+    longitude: input.longitude,
     orgaoResponsavel: input.responsibleAgency,
     codigoTipoSinistro: input.crashTypeCode,
     condicoesVia: input.roadConditions,
     condicoesMeteorologicas: input.weatherConditions,
     versaoLeiaute: input.layoutVersion,
     dataTransmissao: input.transmittedAt,
-    veiculos: input.vehicles as Transactional['SinistroRequest']['veiculos'],
-    pessoas: input.people as Transactional['SinistroRequest']['pessoas'],
-    vitimas: input.victims as Transactional['SinistroRequest']['vitimas'],
+    veiculos: input.vehicles?.map((vehicle) =>
+      compact({
+        placa: vehicle.plate,
+        renavam: vehicle.renavam,
+        tipoEnvolvimento: vehicle.involvementType,
+        dano: vehicle.damage,
+      }),
+    ),
+    pessoas: input.people?.map((person) =>
+      compact({
+        cpf: person.cpf,
+        tipoEnvolvido: person.involvementType,
+        nome: person.name,
+      }),
+    ),
+    vitimas: input.victims?.map((victim) =>
+      compact({
+        cpf: victim.cpf,
+        tipoEnvolvido: victim.involvementType,
+        gravidadeLesao: victim.injurySeverity,
+        obitoLocal: victim.diedAtScene,
+        dataObito: victim.deathAt,
+      }),
+    ),
+    evidencias: input.evidence?.map((evidence) =>
+      compact({
+        tipo: evidence.type,
+        nomeArquivo: evidence.fileName,
+        url: evidence.url,
+        hash: evidence.hash,
+      }),
+    ),
     referencias: input.references
       ? compact({
           renavam: input.references.renavam,
@@ -333,7 +364,44 @@ export function mapCrashReport(wire: Transactional['Sinistro']): CrashReport {
     municipalityCode: wire.codigoMunicipio,
     severity: wire.gravidade ? severityFromWire[wire.gravidade] : undefined,
     location: wire.local,
+    latitude: wire.latitude,
+    longitude: wire.longitude,
     responsibleAgency: wire.orgaoResponsavel,
+    crashTypeCode: wire.codigoTipoSinistro,
+    roadConditions: wire.condicoesVia,
+    weatherConditions: wire.condicoesMeteorologicas,
+    vehicles: wire.veiculos?.map((vehicle) =>
+      compact({
+        plate: vehicle.placa,
+        renavam: vehicle.renavam,
+        involvementType: vehicle.tipoEnvolvimento,
+        damage: vehicle.dano,
+      }),
+    ),
+    people: wire.pessoas?.map((person) =>
+      compact({
+        cpf: person.cpf,
+        involvementType: person.tipoEnvolvido,
+        name: person.nome,
+      }),
+    ),
+    victims: wire.vitimas?.map((victim) =>
+      compact({
+        cpf: victim.cpf,
+        involvementType: victim.tipoEnvolvido,
+        injurySeverity: victim.gravidadeLesao,
+        diedAtScene: victim.obitoLocal,
+        deathAt: victim.dataObito,
+      }),
+    ),
+    evidence: wire.evidencias?.map((evidence) =>
+      compact({
+        type: evidence.tipo,
+        fileName: evidence.nomeArquivo,
+        url: evidence.url,
+        hash: evidence.hash,
+      }),
+    ),
     references: wire.referencias
       ? compact({
           renavam: wire.referencias.renavam,
@@ -341,6 +409,7 @@ export function mapCrashReport(wire: Transactional['Sinistro']): CrashReport {
           aitNumber: wire.referencias.numeroAit,
         })
       : undefined,
+    transmittedAt: wire.dataTransmissao,
   });
 }
 
@@ -352,12 +421,40 @@ export function toCrashCorrection(
     versaoLeiaute: input.layoutVersion,
     gravidade: input.severity ? severityToWire[input.severity] : undefined,
     local: input.location,
-    vitimas:
-      input.victims as Transactional['RetificacaoSinistroRequest']['vitimas'],
-    veiculos:
-      input.vehicles as Transactional['RetificacaoSinistroRequest']['veiculos'],
-    pessoas:
-      input.people as Transactional['RetificacaoSinistroRequest']['pessoas'],
+    latitude: input.latitude,
+    longitude: input.longitude,
+    vitimas: input.victims?.map((victim) =>
+      compact({
+        cpf: victim.cpf,
+        tipoEnvolvido: victim.involvementType,
+        gravidadeLesao: victim.injurySeverity,
+        obitoLocal: victim.diedAtScene,
+        dataObito: victim.deathAt,
+      }),
+    ),
+    veiculos: input.vehicles?.map((vehicle) =>
+      compact({
+        placa: vehicle.plate,
+        renavam: vehicle.renavam,
+        tipoEnvolvimento: vehicle.involvementType,
+        dano: vehicle.damage,
+      }),
+    ),
+    pessoas: input.people?.map((person) =>
+      compact({
+        cpf: person.cpf,
+        tipoEnvolvido: person.involvementType,
+        nome: person.name,
+      }),
+    ),
+    evidencias: input.evidence?.map((evidence) =>
+      compact({
+        tipo: evidence.type,
+        nomeArquivo: evidence.fileName,
+        url: evidence.url,
+        hash: evidence.hash,
+      }),
+    ),
     referencias: input.references
       ? compact({
           renavam: input.references.renavam,

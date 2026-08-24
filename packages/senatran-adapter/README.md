@@ -14,11 +14,11 @@ remain private to this boundary.
 | `RenachPort`         | RENACH                   | driver lookup/validation and process list/read/open with `ALREADY_OPEN` recovery                                                                     |
 | `SnePort`            | SNE                      | vehicle/citizen/agency enrollment and notification send/read/cancel                                                                                  |
 | `CdtPort`            | CDT                      | citizen notification/infraction/vehicle/CNH views, payment quote and recognition                                                                     |
-| `WsdenatranReadPort` | WSDenatran read contract | exact generated typing for all 57 read operations plus English vehicle/driver conveniences; RENAVAM-ready without building the reserved `vam` domain |
+| `WsdenatranReadPort` | WSDenatran read contract | exact generated typing for all 60 read operations plus English vehicle/driver conveniences; RENAVAM-ready without building the reserved `vam` domain |
 
 `src/generated/read.ts` and `src/generated/transactional.ts` are generated from
-the two in-repo OpenAPI contracts. The generator asserts 57 operations in each
-contract before emitting 114 typed operations. `src/wire.ts` exports these types
+the two in-repo OpenAPI contracts. The generator asserts 60 operations in each
+contract before emitting 120 typed operations. `src/wire.ts` exports these types
 for adapter mapping work only; ordinary consumers should use the root English
 models.
 
