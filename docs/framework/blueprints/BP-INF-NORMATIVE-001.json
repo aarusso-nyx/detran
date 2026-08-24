@@ -1,0 +1,264 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-NORMATIVE-001",
+  "module": {
+    "name": "Normative",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "30-inf-normative.sql",
+    "handwrittenExports": [
+      "normative-lifecycle.service",
+      "normative-commands.controller"
+    ],
+    "owners": ["detran-inf"],
+    "description": "Infraction catalog, framing rules, agency parameters, templates, and mobile package versioning ported from TEAT."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "NormativeCatalog",
+        "table": "normative_catalog",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid", "nullable": true },
+          { "name": "name", "type": "varchar(255)" },
+          { "name": "catalog_type", "type": "varchar(60)" },
+          { "name": "version", "type": "varchar(80)" },
+          { "name": "published_at", "type": "date", "nullable": true },
+          { "name": "valid_from", "type": "date" },
+          { "name": "valid_to", "type": "date", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'draft'" },
+          { "name": "normative_source", "type": "text", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_normative_catalog_name_version",
+            "columns": ["tenant_id", "name", "version"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "NormativeFraming",
+        "table": "normative_framing",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "catalog_id", "type": "uuid" },
+          { "name": "framing_code", "type": "varchar(40)" },
+          { "name": "article", "type": "varchar(80)", "nullable": true },
+          { "name": "clause", "type": "varchar(80)", "nullable": true },
+          { "name": "description", "type": "text" },
+          { "name": "severity", "type": "varchar(40)", "nullable": true },
+          { "name": "penalty", "type": "text", "nullable": true },
+          {
+            "name": "administrative_measure_summary",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "allows_no_approach",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "requires_observation",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "requires_equipment",
+            "type": "boolean",
+            "default": "false"
+          },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_normative_framing_code",
+            "columns": ["tenant_id", "catalog_id", "framing_code"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_framing_catalog",
+            "columns": ["catalog_id"],
+            "references": {
+              "table": "inf.normative_catalog",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "NormativeValidationRule",
+        "table": "normative_validation_rule",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "catalog_id", "type": "uuid" },
+          { "name": "framing_id", "type": "uuid", "nullable": true },
+          { "name": "rule_code", "type": "varchar(80)" },
+          { "name": "description", "type": "text" },
+          { "name": "rule_type", "type": "varchar(60)" },
+          { "name": "expression_json", "type": "jsonb", "nullable": true },
+          { "name": "user_message", "type": "text", "nullable": true },
+          { "name": "severity", "type": "varchar(40)" },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_normative_rule_code",
+            "columns": ["tenant_id", "rule_code"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rule_catalog",
+            "columns": ["catalog_id"],
+            "references": {
+              "table": "inf.normative_catalog",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rule_framing",
+            "columns": ["framing_id"],
+            "references": {
+              "table": "inf.normative_framing",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "NormativeAgencyParameter",
+        "table": "normative_agency_parameter",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "key", "type": "varchar(120)" },
+          { "name": "value_json", "type": "jsonb" },
+          { "name": "value_type", "type": "varchar(40)" },
+          { "name": "valid_from", "type": "date" },
+          { "name": "valid_to", "type": "date", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_normative_agency_parameter",
+            "columns": ["tenant_id", "traffic_agency_id", "key", "valid_from"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "NormativeDocumentTemplate",
+        "table": "normative_document_template",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "document_type", "type": "varchar(80)" },
+          { "name": "name", "type": "varchar(255)" },
+          { "name": "version", "type": "varchar(80)" },
+          { "name": "template_body", "type": "text" },
+          { "name": "valid_from", "type": "date" },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_normative_document_template",
+            "columns": [
+              "tenant_id",
+              "traffic_agency_id",
+              "document_type",
+              "version"
+            ],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "MobileNormativePackage",
+        "table": "normative_mobile_package",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "catalog_id", "type": "uuid" },
+          { "name": "package_version", "type": "varchar(80)" },
+          { "name": "manifest_hash", "type": "varchar(128)" },
+          { "name": "package_uri", "type": "text" },
+          { "name": "published_at", "type": "timestamptz", "nullable": true },
+          { "name": "valid_until", "type": "date", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'draft'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_normative_mobile_package",
+            "columns": ["tenant_id", "traffic_agency_id", "package_version"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_mobile_package_catalog",
+            "columns": ["catalog_id"],
+            "references": {
+              "table": "inf.normative_catalog",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/normative/",
+    "resources": [
+      {
+        "entity": "NormativeCatalog",
+        "path": "catalogs",
+        "resource": "normative-catalog"
+      },
+      {
+        "entity": "NormativeFraming",
+        "path": "framings",
+        "resource": "framing"
+      },
+      {
+        "entity": "NormativeValidationRule",
+        "path": "validation-rules",
+        "resource": "validation-rule"
+      },
+      {
+        "entity": "NormativeAgencyParameter",
+        "path": "agency-parameters",
+        "resource": "agency-parameter"
+      },
+      {
+        "entity": "NormativeDocumentTemplate",
+        "path": "document-templates",
+        "resource": "document-template"
+      },
+      {
+        "entity": "MobileNormativePackage",
+        "path": "mobile-packages",
+        "resource": "mobile-normative-package"
+      }
+    ]
+  },
+  "auth": { "source": "TEAT_COMMAND_RULES" },
+  "audit": { "enabled": true }
+}

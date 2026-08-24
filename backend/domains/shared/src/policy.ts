@@ -706,6 +706,89 @@ const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ],
 ];
 
+const INF_READ_ROLES: readonly DetranRole[] = [
+  'field-agent',
+  'field-supervisor',
+  'processing-operator',
+  'traffic-authority',
+  'agency-admin',
+  'technical-admin',
+  'AUDITOR',
+  'bi-analyst',
+  'integration-operator',
+];
+const INF_FIELD_LEGAL_ROLES: readonly DetranRole[] = [
+  'field-agent',
+  'field-supervisor',
+  'processing-operator',
+  'traffic-authority',
+  'technical-admin',
+];
+const INF_ADMIN_ROLES: readonly DetranRole[] = [
+  'agency-admin',
+  'technical-admin',
+];
+const INF_ADMIN_RESOURCES = new Set([
+  'normative-catalog',
+  'framing',
+  'validation-rule',
+  'agency-parameter',
+  'document-template',
+  'mobile-normative-package',
+  'measure-type',
+  'tow-provider',
+  'yard',
+]);
+const INF_RESOURCES = [
+  'ait',
+  'ait-vehicle',
+  'ait-person',
+  'ait-status-history',
+  'ait-correction',
+  'ait-signature',
+  'ait-print-event',
+  'normative-catalog',
+  'framing',
+  'validation-rule',
+  'agency-parameter',
+  'document-template',
+  'mobile-normative-package',
+  'measure-type',
+  'administrative-measure',
+  'administrative-term',
+  'measure-retention',
+  'measure-removal',
+  'vehicle-inventory',
+  'tow-provider',
+  'yard',
+  'measure-status-history',
+  'alcohol-procedure',
+  'breathalyzer',
+  'alcohol-test',
+  'alcohol-refusal',
+  'psychomotor-sign',
+  'alcohol-forwarding',
+] as const;
+const INF_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> =
+  INF_RESOURCES.flatMap((resource) => [
+    [resource, 'read', INF_READ_ROLES],
+    [
+      resource,
+      'create',
+      INF_ADMIN_RESOURCES.has(resource)
+        ? INF_ADMIN_ROLES
+        : INF_FIELD_LEGAL_ROLES,
+    ],
+    [
+      resource,
+      'update',
+      INF_ADMIN_RESOURCES.has(resource)
+        ? INF_ADMIN_ROLES
+        : INF_FIELD_LEGAL_ROLES,
+    ],
+    [resource, 'delete', ['technical-admin']],
+  ]);
+
 export const DETRAN_POLICY_MATRIX: Readonly<
   Record<DetranPolicyKey, readonly DetranRole[]>
 > = Object.freeze(
@@ -720,6 +803,10 @@ export const DETRAN_POLICY_MATRIX: Readonly<
     ]),
     ...OPS_SURFACE_RULES.map(([resource, action, roles]) => [
       teat('ops', resource, action),
+      roles,
+    ]),
+    ...INF_SURFACE_RULES.map(([resource, action, roles]) => [
+      teat('inf', resource, action),
       roles,
     ]),
     ['portal:appeal:create', ['CIDADAO']],

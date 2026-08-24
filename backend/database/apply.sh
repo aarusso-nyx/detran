@@ -29,7 +29,8 @@ fi
 
 DDL=(00-extensions 01-schemas 02-auth 03-audit 04-integration-storage \
      10-postgis-functions 11-auth-functions 12-audit-functions \
-     13-ops-field-operations 20-rls-policies)
+     13-ops-field-operations 30-inf-normative 31-inf-ait \
+     32-inf-measures 33-inf-alcohol 20-rls-policies)
 for name in "${DDL[@]}"; do
   echo "ddl/$name.sql"
   "${PSQL[@]}" -d "$DB" -f "$DIR/ddl/$name.sql" >/dev/null

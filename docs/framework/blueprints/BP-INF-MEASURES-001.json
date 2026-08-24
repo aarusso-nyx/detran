@@ -1,0 +1,370 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-MEASURES-001",
+  "module": {
+    "name": "Measures",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "32-inf-measures.sql",
+    "dependencies": { "@detran/inf-ait": "workspace:*" },
+    "handwrittenExports": [
+      "measure-lifecycle.service",
+      "measure-commands.controller"
+    ],
+    "owners": ["detran-inf"],
+    "description": "Administrative measures, terms, retention, removal, inventory, providers, yards, and status history."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "MeasureType",
+        "table": "measure_type",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "code", "type": "varchar(60)" },
+          { "name": "name", "type": "varchar(160)" },
+          { "name": "description", "type": "text", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_measure_type_code",
+            "columns": ["tenant_id", "code"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "AdministrativeMeasure",
+        "table": "administrative_measure",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "measure_type_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid", "nullable": true },
+          { "name": "crash_record_id", "type": "uuid", "nullable": true },
+          { "name": "approach_id", "type": "uuid", "nullable": true },
+          { "name": "agent_id", "type": "uuid" },
+          { "name": "shift_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "started_at", "type": "timestamptz" },
+          { "name": "ended_at", "type": "timestamptz", "nullable": true },
+          { "name": "location_json", "type": "jsonb", "nullable": true },
+          { "name": "reason", "type": "text" },
+          {
+            "name": "current_status",
+            "type": "varchar(60)",
+            "default": "'started'"
+          },
+          { "name": "notes", "type": "text", "nullable": true },
+          {
+            "name": "location_geom",
+            "type": "geometry(Point,4674)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_measure_status",
+            "columns": ["tenant_id", "traffic_agency_id", "current_status"]
+          },
+          {
+            "name": "gist_inf_measure_location",
+            "columns": ["location_geom"],
+            "method": "gist"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_measure_type",
+            "columns": ["measure_type_id"],
+            "references": { "table": "inf.measure_type", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_measure_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_measure_approach",
+            "columns": ["approach_id"],
+            "references": { "table": "ops.ops_approach", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "AdministrativeTerm",
+        "table": "administrative_term",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "measure_id", "type": "uuid" },
+          { "name": "term_type", "type": "varchar(80)" },
+          { "name": "term_number", "type": "varchar(80)" },
+          { "name": "content_hash", "type": "varchar(128)" },
+          { "name": "file_evidence_id", "type": "uuid", "nullable": true },
+          { "name": "issued_at", "type": "timestamptz" },
+          { "name": "signed_by_person_id", "type": "uuid", "nullable": true },
+          { "name": "status", "type": "varchar(60)", "default": "'issued'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_administrative_term_number",
+            "columns": ["tenant_id", "term_number"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_term_measure",
+            "columns": ["measure_id"],
+            "references": {
+              "table": "inf.administrative_measure",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_term_evidence",
+            "columns": ["file_evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_term_person",
+            "columns": ["signed_by_person_id"],
+            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "MeasureRetention",
+        "table": "measure_retention",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "measure_id", "type": "uuid" },
+          { "name": "vehicle_snapshot_id", "type": "uuid" },
+          { "name": "retention_reason", "type": "text" },
+          { "name": "regularized_at", "type": "timestamptz", "nullable": true },
+          { "name": "released_at", "type": "timestamptz", "nullable": true },
+          { "name": "release_user_ref", "type": "uuid", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_retention_measure",
+            "columns": ["measure_id"],
+            "references": {
+              "table": "inf.administrative_measure",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_retention_vehicle",
+            "columns": ["vehicle_snapshot_id"],
+            "references": {
+              "table": "ops.snapshots_vehicle",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "MeasureRemoval",
+        "table": "measure_removal",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "measure_id", "type": "uuid" },
+          { "name": "vehicle_snapshot_id", "type": "uuid" },
+          { "name": "tow_provider_id", "type": "uuid", "nullable": true },
+          { "name": "yard_id", "type": "uuid", "nullable": true },
+          { "name": "requested_at", "type": "timestamptz", "nullable": true },
+          { "name": "tow_arrived_at", "type": "timestamptz", "nullable": true },
+          { "name": "delivered_at", "type": "timestamptz", "nullable": true },
+          {
+            "name": "destination_description",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_removal_measure",
+            "columns": ["measure_id"],
+            "references": {
+              "table": "inf.administrative_measure",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_removal_vehicle",
+            "columns": ["vehicle_snapshot_id"],
+            "references": {
+              "table": "ops.snapshots_vehicle",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "VehicleInventory",
+        "table": "vehicle_inventory",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "measure_id", "type": "uuid" },
+          { "name": "vehicle_snapshot_id", "type": "uuid" },
+          { "name": "inventory_json", "type": "jsonb" },
+          { "name": "damage_description", "type": "text", "nullable": true },
+          { "name": "signed_by_person_id", "type": "uuid", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_inventory_measure",
+            "columns": ["measure_id"],
+            "references": {
+              "table": "inf.administrative_measure",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_inventory_vehicle",
+            "columns": ["vehicle_snapshot_id"],
+            "references": {
+              "table": "ops.snapshots_vehicle",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_inventory_person",
+            "columns": ["signed_by_person_id"],
+            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "TowProvider",
+        "table": "tow_provider",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "name", "type": "varchar(255)" },
+          {
+            "name": "document_number",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          { "name": "contact_json", "type": "jsonb", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ]
+      },
+      {
+        "name": "Yard",
+        "table": "yard",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "name", "type": "varchar(255)" },
+          { "name": "address", "type": "text", "nullable": true },
+          { "name": "location_json", "type": "jsonb", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" },
+          {
+            "name": "location_geom",
+            "type": "geometry(Point,4674)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "gist_inf_yard_location",
+            "columns": ["location_geom"],
+            "method": "gist"
+          }
+        ]
+      },
+      {
+        "name": "MeasureStatusHistory",
+        "table": "measure_status_history",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "measure_id", "type": "uuid" },
+          { "name": "status", "type": "varchar(60)" },
+          { "name": "changed_at", "type": "timestamptz", "default": "now()" },
+          { "name": "user_ref", "type": "uuid", "nullable": true },
+          { "name": "reason", "type": "text", "nullable": true },
+          { "name": "details_json", "type": "jsonb", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_measure_history",
+            "columns": ["measure_id"],
+            "references": {
+              "table": "inf.administrative_measure",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/measures/",
+    "resources": [
+      { "entity": "MeasureType", "path": "types", "resource": "measure-type" },
+      {
+        "entity": "AdministrativeMeasure",
+        "path": "administrative-measures",
+        "resource": "administrative-measure"
+      },
+      {
+        "entity": "AdministrativeTerm",
+        "path": "terms",
+        "resource": "administrative-term"
+      },
+      {
+        "entity": "MeasureRetention",
+        "path": "retentions",
+        "resource": "measure-retention"
+      },
+      {
+        "entity": "MeasureRemoval",
+        "path": "removals",
+        "resource": "measure-removal"
+      },
+      {
+        "entity": "VehicleInventory",
+        "path": "vehicle-inventories",
+        "resource": "vehicle-inventory"
+      },
+      {
+        "entity": "TowProvider",
+        "path": "tow-providers",
+        "resource": "tow-provider"
+      },
+      { "entity": "Yard", "path": "yards", "resource": "yard" },
+      {
+        "entity": "MeasureStatusHistory",
+        "path": "status-history",
+        "resource": "measure-status-history"
+      }
+    ]
+  },
+  "auth": { "source": "TEAT_COMMAND_RULES" },
+  "audit": { "enabled": true }
+}

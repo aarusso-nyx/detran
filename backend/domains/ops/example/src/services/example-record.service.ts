@@ -7,12 +7,22 @@ import type { CreateExampleRecordDto } from '../dto/create-example-record.dto.js
 @Injectable()
 export class ExampleRecordService {
   constructor(private readonly repository: ExampleRecordRepository) {}
-  findAll(): Promise<unknown[]> {
+  findAll(): Promise<ExampleRecord[]> {
     return this.repository.findAll();
   }
-  create(_dto: CreateExampleRecordDto): Promise<ExampleRecord> {
-    throw new Error(
-      'create is generated as a domain port and must be implemented with a tenant transaction',
-    );
+  findOne(id: string): Promise<ExampleRecord> {
+    return this.repository.findOne(id);
+  }
+  create(dto: CreateExampleRecordDto): Promise<ExampleRecord> {
+    return this.repository.create(dto);
+  }
+  update(
+    id: string,
+    dto: Partial<CreateExampleRecordDto>,
+  ): Promise<ExampleRecord> {
+    return this.repository.update(id, dto);
+  }
+  remove(id: string): Promise<void> {
+    return this.repository.remove(id);
   }
 }

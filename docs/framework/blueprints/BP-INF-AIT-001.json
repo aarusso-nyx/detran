@@ -1,0 +1,399 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-AIT-001",
+  "module": {
+    "name": "Ait",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "31-inf-ait.sql",
+    "dependencies": {
+      "@detran/inf-normative": "workspace:*",
+      "@detran/senatran-adapter": "workspace:*"
+    },
+    "devDependencies": { "@types/pg": "^8.15.4", "pg": "^8.20.0" },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-normative",
+        "target": "../normative/src/index.ts"
+      }
+    ],
+    "handwrittenExports": ["ait-lifecycle.service", "ait-commands.controller"],
+    "owners": ["detran-inf"],
+    "description": "AIT issuance and lifecycle with immutable content hash, normative references, and operational satellites."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Ait",
+        "table": "ait_ait",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "executing_agency_id", "type": "uuid", "nullable": true },
+          { "name": "ait_number", "type": "varchar(80)" },
+          { "name": "series", "type": "varchar(40)", "default": "''" },
+          { "name": "agent_id", "type": "uuid" },
+          { "name": "shift_id", "type": "uuid" },
+          { "name": "operation_id", "type": "uuid", "nullable": true },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "framing_id", "type": "uuid" },
+          { "name": "catalog_id", "type": "uuid" },
+          { "name": "infraction_at", "type": "timestamptz" },
+          { "name": "issued_at", "type": "timestamptz" },
+          { "name": "issuance_mode", "type": "varchar(40)" },
+          { "name": "constatation_type", "type": "varchar(80)" },
+          { "name": "had_approach", "type": "boolean", "default": "false" },
+          { "name": "no_approach_reason", "type": "text", "nullable": true },
+          { "name": "location_description", "type": "text" },
+          { "name": "location_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "gps_accuracy_m",
+            "type": "numeric(8,2)",
+            "nullable": true
+          },
+          {
+            "name": "municipality_code",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          { "name": "uf", "type": "varchar(2)" },
+          { "name": "road", "type": "varchar(40)", "nullable": true },
+          { "name": "km", "type": "numeric(8,2)", "nullable": true },
+          { "name": "direction", "type": "varchar(60)", "nullable": true },
+          { "name": "mandatory_observation", "type": "text", "nullable": true },
+          {
+            "name": "complementary_observation",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "current_status",
+            "type": "varchar(60)",
+            "default": "'draft'"
+          },
+          { "name": "content_hash", "type": "varchar(128)", "nullable": true },
+          { "name": "system_signature_ref", "type": "text", "nullable": true },
+          {
+            "name": "receipt_protocol",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "location_geom",
+            "type": "geometry(Point,4674)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_ait_number",
+            "columns": [
+              "tenant_id",
+              "traffic_agency_id",
+              "series",
+              "ait_number"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ux_inf_ait_receipt_protocol",
+            "columns": ["tenant_id", "receipt_protocol"],
+            "unique": true,
+            "where": "receipt_protocol is not null"
+          },
+          {
+            "name": "ix_inf_ait_status",
+            "columns": ["tenant_id", "current_status"]
+          },
+          {
+            "name": "gist_inf_ait_location",
+            "columns": ["location_geom"],
+            "method": "gist"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_ait_issue_after_infraction",
+            "expression": "issued_at >= infraction_at"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_catalog",
+            "columns": ["catalog_id"],
+            "references": {
+              "table": "inf.normative_catalog",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_ait_framing",
+            "columns": ["framing_id"],
+            "references": {
+              "table": "inf.normative_framing",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "AitVehicle",
+        "table": "ait_vehicle",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid" },
+          { "name": "vehicle_snapshot_id", "type": "uuid" },
+          { "name": "role", "type": "varchar(60)" },
+          {
+            "name": "visually_confirmed_by_agent",
+            "type": "boolean",
+            "default": "false"
+          },
+          { "name": "observed_divergence", "type": "text", "nullable": true }
+        ],
+        "indexes": [
+          { "name": "ix_inf_ait_vehicle", "columns": ["tenant_id", "ait_id"] }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_vehicle_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_ait_vehicle_snapshot",
+            "columns": ["vehicle_snapshot_id"],
+            "references": {
+              "table": "ops.snapshots_vehicle",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "AitPerson",
+        "table": "ait_person",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid" },
+          { "name": "person_id", "type": "uuid" },
+          { "name": "role", "type": "varchar(60)" },
+          { "name": "identified_by", "type": "varchar(80)" },
+          { "name": "external_query_id", "type": "uuid", "nullable": true },
+          { "name": "signed", "type": "boolean", "default": "false" },
+          {
+            "name": "refused_signature",
+            "type": "boolean",
+            "default": "false"
+          },
+          { "name": "notes", "type": "text", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_ait_person",
+            "columns": ["tenant_id", "ait_id", "role"]
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_person_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_ait_person_snapshot",
+            "columns": ["person_id"],
+            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_ait_person_query",
+            "columns": ["external_query_id"],
+            "references": {
+              "table": "ops.snapshots_external_query",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "AitStatusHistory",
+        "table": "ait_status_history",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid" },
+          { "name": "status", "type": "varchar(60)" },
+          { "name": "changed_at", "type": "timestamptz", "default": "now()" },
+          { "name": "user_ref", "type": "uuid", "nullable": true },
+          { "name": "system_name", "type": "varchar(80)", "nullable": true },
+          { "name": "reason", "type": "text", "nullable": true },
+          { "name": "details_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_ait_history",
+            "columns": ["tenant_id", "ait_id", "changed_at"]
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_history_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "AitCorrection",
+        "table": "ait_correction",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid" },
+          { "name": "operator_user_ref", "type": "uuid" },
+          { "name": "correction_type", "type": "varchar(80)" },
+          { "name": "changed_field", "type": "varchar(120)", "nullable": true },
+          { "name": "previous_value", "type": "text", "nullable": true },
+          { "name": "new_value", "type": "text", "nullable": true },
+          { "name": "justification", "type": "text" },
+          { "name": "corrected_at", "type": "timestamptz", "default": "now()" },
+          { "name": "approved_by_user_ref", "type": "uuid", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_ait_correction",
+            "columns": ["tenant_id", "ait_id", "corrected_at"]
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_correction_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "AitSignature",
+        "table": "ait_signature",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid" },
+          { "name": "person_id", "type": "uuid", "nullable": true },
+          { "name": "signature_type", "type": "varchar(60)" },
+          { "name": "signature_evidence_id", "type": "uuid", "nullable": true },
+          { "name": "signed_at", "type": "timestamptz", "default": "now()" },
+          { "name": "location_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "refusal_or_impossibility_reason",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "location_geom",
+            "type": "geometry(Point,4674)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "gist_inf_ait_signature_location",
+            "columns": ["location_geom"],
+            "method": "gist"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_signature_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_ait_signature_person",
+            "columns": ["person_id"],
+            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_ait_signature_evidence",
+            "columns": ["signature_evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "AitPrintEvent",
+        "table": "ait_print_event",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid" },
+          { "name": "event_type", "type": "varchar(60)" },
+          { "name": "event_at", "type": "timestamptz", "default": "now()" },
+          { "name": "device_id", "type": "uuid", "nullable": true },
+          {
+            "name": "printer_identifier",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          { "name": "receipt_hash", "type": "varchar(128)", "nullable": true },
+          { "name": "failure_reason", "type": "text", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_print_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/ait/",
+    "resources": [
+      { "entity": "Ait", "path": "aits", "resource": "ait" },
+      { "entity": "AitVehicle", "path": "vehicles", "resource": "ait-vehicle" },
+      { "entity": "AitPerson", "path": "people", "resource": "ait-person" },
+      {
+        "entity": "AitStatusHistory",
+        "path": "status-history",
+        "resource": "ait-status-history"
+      },
+      {
+        "entity": "AitCorrection",
+        "path": "corrections",
+        "resource": "ait-correction"
+      },
+      {
+        "entity": "AitSignature",
+        "path": "signatures",
+        "resource": "ait-signature"
+      },
+      {
+        "entity": "AitPrintEvent",
+        "path": "print-events",
+        "resource": "ait-print-event"
+      }
+    ]
+  },
+  "auth": { "source": "TEAT_COMMAND_RULES" },
+  "audit": { "enabled": true }
+}

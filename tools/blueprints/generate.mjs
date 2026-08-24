@@ -59,9 +59,10 @@ function tsType(type) {
     type === 'timestamptz'
   )
     return 'string';
-  if (type === 'bool') return 'boolean';
-  if (type === 'int') return 'number';
+  if (type === 'bool' || type === 'boolean') return 'boolean';
+  if (/^(int|integer|bigint|numeric|decimal)/u.test(type)) return 'number';
   if (type === 'jsonb') return 'Record<string, unknown>';
+  if (/^geometry/u.test(type)) return 'unknown';
   return 'unknown';
 }
 function header(bp, sha, sql = false) {
@@ -90,7 +91,7 @@ function entityFields(entity) {
     ...entity.fields,
     ...(entity.fields.some((f) => f.name === 'created_at')
       ? []
-      : [{ name: 'created_at', type: 'timestamptz' }]),
+      : [{ name: 'created_at', type: 'timestamptz', default: 'now()' }]),
     ...(entity.fields.some((f) => f.name === 'updated_at')
       ? []
       : [{ name: 'updated_at', type: 'timestamptz', nullable: true }]),
@@ -112,17 +113,20 @@ function tableSql(module, entity) {
   return [
     `create table if not exists ${module.namespace}.${entity.table} (`,
     `${columns.join(',\n')},`,
-    `  constraint pk_${entity.table} primary key (${entity.primaryKey.join(', ')})`,
+    `  constraint pk_${entity.table} primary key (${entity.primaryKey.join(', ')})${(entity.checks ?? []).map((check) => `,\n  constraint ${check.name} check (${check.expression})`).join('')}${(entity.foreignKeys ?? []).map((foreignKey) => `,\n  constraint ${foreignKey.name} foreign key (${foreignKey.columns.join(', ')}) references ${foreignKey.references.table} (${foreignKey.references.columns.join(', ')})`).join('')}`,
     ');',
     ...indexes.map(
       (i) =>
-        `create ${i.unique ? 'unique ' : ''}index if not exists ${i.unique ? 'ux' : 'ix'}_${entity.table}_${i.columns.join('_')} on ${module.namespace}.${entity.table} (${i.columns.join(', ')});`,
+        `create ${i.unique ? 'unique ' : ''}index if not exists ${i.name ?? `${i.unique ? 'ux' : 'ix'}_${entity.table}_${i.columns.join('_')}`} on ${module.namespace}.${entity.table}${i.method ? ` using ${i.method}` : ''} (${i.columns.join(', ')})${i.where ? ` where ${i.where}` : ''};`,
     ),
   ].join('\n');
 }
 function dto(bp, sha, entity) {
   const fields = entity.fields.filter(
-    (f) => !['id', 'created_at', 'updated_at', 'deleted_at'].includes(f.name),
+    (f) =>
+      !['id', 'tenant_id', 'created_at', 'updated_at', 'deleted_at'].includes(
+        f.name,
+      ),
   );
   return `${header(bp, sha)}\nexport interface Create${entity.name}Dto {\n${fields.map((f) => `  ${f.name}${f.nullable || f.default !== undefined ? '?' : ''}: ${tsType(f.type)}${f.nullable ? ' | null' : ''};`).join('\n')}\n}`;
 }
@@ -138,14 +142,57 @@ function entity(bp, sha, item) {
 }
 function repository(bp, sha, entity, module) {
   const name = `${entity.name}Repository`;
-  return `${header(bp, sha)}\nimport { Injectable } from '@nestjs/common';\nimport { withTenantContext } from '@detran/shared';\n\n/** Database port intentionally has no optional or in-memory implementation. */\nexport interface ${module.name}Database { tx<T>(work: (transaction: unknown) => Promise<T>, options: { role: 'app' }): Promise<T>; }\nexport interface ${module.name}RequestContext { hasActiveContext(): boolean; snapshot(): { tenantId?: string; actorId?: string }; }\n\n@Injectable()\nexport class ${name} {\n  constructor(private readonly database: ${module.name}Database, private readonly requestContext: ${module.name}RequestContext) {}\n\n  findAll(): Promise<unknown[]> { return withTenantContext(this.database as never, this.requestContext as never, async (tx) => (await (tx as { query(sql: string): Promise<{ rows: unknown[] }> }).query('select * from ${module.namespace}.${entity.table} order by created_at desc limit 500')).rows); }\n}`;
+  const dtoName = `Create${entity.name}Dto`;
+  const writable = entity.fields
+    .filter(
+      (field) =>
+        !['id', 'tenant_id', 'created_at', 'updated_at', 'deleted_at'].includes(
+          field.name,
+        ),
+    )
+    .map((field) => `'${field.name}'`)
+    .join(', ');
+  return [
+    header(bp, sha),
+    `import { NotFoundException } from '@nestjs/common';`,
+    `import type { RequestContext } from '@stynx-nyx/core';`,
+    `import type { Database, Transaction } from '@stynx-nyx/data';`,
+    `import { withTenantContext } from '@detran/shared';`,
+    `import type { ${dtoName} } from '../dto/create-${kebab(entity.name)}.dto.js';`,
+    `import type { ${entity.name} } from '../entities/${kebab(entity.name)}.entity.js';`,
+    '',
+    `type SqlTransaction = Transaction & { query<T extends Record<string, unknown> = Record<string, unknown>>(sql: string, values?: readonly unknown[]): Promise<{ rows: T[] }> };`,
+    `const WRITABLE_FIELDS = new Set<string>([${writable}]);`,
+    '',
+    '/** SQL-only repository. Tenant identity is injected by the kernel trigger. */',
+    `export class ${name} {`,
+    `  constructor(private readonly database: Pick<Database, 'tx'>, private readonly requestContext: Pick<RequestContext, 'hasActiveContext' | 'snapshot'>) {}`,
+    `  transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> { return withTenantContext(this.database, this.requestContext, work); }`,
+    `  findAll(transaction?: Transaction): Promise<${entity.name}[]> { return this.execute(transaction, async (tx) => (await tx.query<${entity.name} & Record<string, unknown>>('select * from ${module.namespace}.${entity.table} order by created_at desc limit 500')).rows); }`,
+    `  async findOne(id: string, transaction?: Transaction): Promise<${entity.name}> { const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>('select * from ${module.namespace}.${entity.table} where id = $1 limit 1', [id])); const row = result.rows[0]; if (!row) throw new NotFoundException('${entity.name} ' + id + ' not found'); return row; }`,
+    `  create(dto: ${dtoName}, transaction?: Transaction): Promise<${entity.name}> { return this.write('insert', undefined, dto, transaction); }`,
+    `  update(id: string, dto: Partial<${dtoName}>, transaction?: Transaction): Promise<${entity.name}> { return this.write('update', id, dto, transaction); }`,
+    `  async remove(id: string, transaction?: Transaction): Promise<void> { const result = await this.execute(transaction, (tx) => tx.query('delete from ${module.namespace}.${entity.table} where id = $1 returning id', [id])); if (!result.rows[0]) throw new NotFoundException('${entity.name} ' + id + ' not found'); }`,
+    `  private async write(operation: 'insert' | 'update', id: string | undefined, dto: Partial<${dtoName}>, transaction?: Transaction): Promise<${entity.name}> { const entries = Object.entries(dto).filter(([, value]) => value !== undefined); if (!entries.length || entries.some(([field]) => !WRITABLE_FIELDS.has(field))) throw new Error('Invalid ${entity.name} write fields'); const columns = entries.map(([field]) => field); const values = entries.map(([, value]) => value); const insertSql = 'insert into ${module.namespace}.${entity.table} (' + columns.join(', ') + ') values (' + columns.map((_, index) => '$' + (index + 1)).join(', ') + ') returning *'; const updateSql = 'update ${module.namespace}.${entity.table} set ' + columns.map((field, index) => field + ' = $' + (index + 1)).join(', ') + ', updated_at = now() where id = $' + (columns.length + 1) + ' returning *'; const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>(operation === 'insert' ? insertSql : updateSql, operation === 'insert' ? values : [...values, id])); const row = result.rows[0]; if (!row) throw new NotFoundException('${entity.name} ' + id + ' not found'); return row; }`,
+    `  private execute<T>(transaction: Transaction | undefined, work: (transaction: SqlTransaction) => Promise<T>): Promise<T> { if (transaction) return work(transaction as SqlTransaction); return withTenantContext(this.database, this.requestContext, (tx) => work(tx as SqlTransaction)); }`,
+    '}',
+  ].join('\n');
 }
 function service(bp, sha, entity) {
-  return `${header(bp, sha)}\nimport { Injectable } from '@nestjs/common';\nimport { ${entity.name}Repository } from '../repositories/${kebab(entity.name)}.repository.js';\nimport type { ${entity.name} } from '../entities/${kebab(entity.name)}.entity.js';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\n\n@Injectable()\nexport class ${entity.name}Service {\n  constructor(private readonly repository: ${entity.name}Repository) {}\n  findAll(): Promise<unknown[]> { return this.repository.findAll(); }\n  create(_dto: Create${entity.name}Dto): Promise<${entity.name}> { throw new Error('create is generated as a domain port and must be implemented with a tenant transaction'); }\n}`;
+  return `${header(bp, sha)}\nimport { Injectable } from '@nestjs/common';\nimport { ${entity.name}Repository } from '../repositories/${kebab(entity.name)}.repository.js';\nimport type { ${entity.name} } from '../entities/${kebab(entity.name)}.entity.js';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\n\n@Injectable()\nexport class ${entity.name}Service {\n  constructor(private readonly repository: ${entity.name}Repository) {}\n  findAll(): Promise<${entity.name}[]> { return this.repository.findAll(); }\n  findOne(id: string): Promise<${entity.name}> { return this.repository.findOne(id); }\n  create(dto: Create${entity.name}Dto): Promise<${entity.name}> { return this.repository.create(dto); }\n  update(id: string, dto: Partial<Create${entity.name}Dto>): Promise<${entity.name}> { return this.repository.update(id, dto); }\n  remove(id: string): Promise<void> { return this.repository.remove(id); }\n}`;
 }
 function controller(bp, sha, entity, module) {
-  const resource = `${module.namespace}:${kebab(entity.name)}`;
-  return `${header(bp, sha)}\nimport { Controller, Get } from '@nestjs/common';\nimport { Action, Resource } from '@detran/shared';\nimport { ${entity.name}Service } from '../services/${kebab(entity.name)}.service.js';\n\n@Controller('${kebab(entity.name)}')\n@Resource('${resource}')\nexport class ${entity.name}Controller {\n  constructor(private readonly service: ${entity.name}Service) {}\n  @Get()\n  @Action('read')\n  list() { return this.service.findAll(); }\n}`;
+  const api = (bp.api?.resources ?? []).find(
+    (resource) => resource.entity === entity.name,
+  );
+  const resource = `${module.namespace}:${api?.resource ?? kebab(entity.name)}`;
+  const route = `${String(bp.api?.basePath ?? '')
+    .replace(/^\//u, '')
+    .replace(/\/$/u, '')}${api?.path ?? `/${kebab(entity.name)}`}`.replace(
+    /^\//u,
+    '',
+  );
+  return `${header(bp, sha)}\nimport { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';\nimport { Action, Audit, Resource } from '@detran/shared';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\nimport { ${entity.name}Service } from '../services/${kebab(entity.name)}.service.js';\n\n@Controller('${route}')\n@Resource('${resource}')\nexport class ${entity.name}Controller {\n  constructor(private readonly service: ${entity.name}Service) {}\n  @Get() @Action('read') list() { return this.service.findAll(); }\n  @Get(':id') @Action('read') get(@Param('id') id: string) { return this.service.findOne(id); }\n  @Post() @Action('create') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_CREATE', entity: '${module.namespace}.${entity.table}' }) create(@Body() dto: Create${entity.name}Dto) { return this.service.create(dto); }\n  @Patch(':id') @Action('update') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_UPDATE', entity: '${module.namespace}.${entity.table}' }) update(@Param('id') id: string, @Body() dto: Partial<Create${entity.name}Dto>) { return this.service.update(id, dto); }\n  @Delete(':id') @Action('delete') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_DELETE', entity: '${module.namespace}.${entity.table}' }) remove(@Param('id') id: string) { return this.service.remove(id); }\n}`;
 }
 function moduleFile(bp, sha, module, entities) {
   return `${header(bp, sha)}\nimport { Module } from '@nestjs/common';\n${entities.map((e) => `import { ${e.name}Controller } from './controllers/${kebab(e.name)}.controller.js';\nimport { ${e.name}Service } from './services/${kebab(e.name)}.service.js';\nimport { ${e.name}Repository } from './repositories/${kebab(e.name)}.repository.js';`).join('\n')}\n\n@Module({ controllers: [${entities.map((e) => `${e.name}Controller`).join(', ')}], providers: [${entities.flatMap((e) => [`${e.name}Service`, `${e.name}Repository`]).join(', ')}] })\nexport class ${pascal(module.name)}Module {}`;
@@ -160,9 +207,36 @@ function packageFiles(bp, sha, module, entities) {
         version: '0.0.1',
         private: true,
         type: 'module',
+        main: './dist/index.js',
+        types: './src/index.ts',
+        exports: {
+          '.': { types: './src/index.ts', default: './dist/index.js' },
+        },
+        scripts: {
+          typecheck: 'tsc --noEmit',
+          build: 'tsc -p tsconfig.build.json',
+          test: 'vitest run --config vitest.config.ts',
+          'test:unit':
+            'DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts',
+          'test:integration':
+            'DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts',
+          'test:e2e':
+            'DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts',
+          'test:real':
+            'DETRAN_TEST_TIER=real vitest run --config vitest.config.ts',
+        },
         dependencies: {
           '@detran/shared': 'workspace:*',
+          ...(module.dependencies ?? {}),
           '@nestjs/common': '^11.1.28',
+          '@stynx-nyx/core': '1.0.2',
+          '@stynx-nyx/data': '1.0.2',
+        },
+        devDependencies: {
+          '@types/node': '^24.10.1',
+          typescript: '^6.0.3',
+          vitest: '^4.1.7',
+          ...(module.devDependencies ?? {}),
         },
       },
       null,
@@ -172,6 +246,49 @@ function packageFiles(bp, sha, module, entities) {
   write(
     `${base}/src/${kebab(module.name)}.module.ts`,
     moduleFile(bp, sha, module, entities),
+  );
+  write(
+    `${base}/tsconfig.json`,
+    JSON.stringify(
+      {
+        compilerOptions: {
+          target: 'ES2023',
+          module: 'NodeNext',
+          moduleResolution: 'NodeNext',
+          strict: true,
+          noEmit: true,
+          skipLibCheck: true,
+          experimentalDecorators: true,
+          emitDecoratorMetadata: true,
+          types: ['node', 'vitest/globals'],
+        },
+        include: ['src/**/*.ts', 'tests/**/*.ts', 'vitest.config.ts'],
+      },
+      null,
+      2,
+    ),
+  );
+  write(
+    `${base}/tsconfig.build.json`,
+    JSON.stringify(
+      {
+        extends: './tsconfig.json',
+        compilerOptions: {
+          noEmit: false,
+          outDir: 'dist',
+          rootDir: 'src',
+          declaration: true,
+        },
+        include: ['src/**/*.ts'],
+        exclude: ['src/**/*.spec.ts', 'tests', 'vitest.config.ts'],
+      },
+      null,
+      2,
+    ),
+  );
+  write(
+    `${base}/vitest.config.ts`,
+    `import { fileURLToPath } from 'node:url';\nimport { defineConfig } from 'vitest/config';\nconst tier = process.env.DETRAN_TEST_TIER ?? 'unit';\nconst include: Record<string, string[]> = { unit: ['src/**/*.spec.ts', 'tests/unit/**/*.spec.ts'], integration: ['tests/integration/**/*.integration.spec.ts'], e2e: ['tests/e2e/**/*.e2e.spec.ts'], real: ['tests/real/**/*.real.spec.ts'] };\nexport default defineConfig({ resolve: { alias: { ${(module.testAliases ?? []).map((alias) => `'${alias.package}': fileURLToPath(new URL('${alias.target}', import.meta.url))`).join(', ')} } }, test: { environment: 'node', globals: true, include: include[tier], passWithNoTests: true, fileParallelism: false, testTimeout: tier === 'unit' ? 10000 : 30000 } });`,
   );
   for (const item of entities) {
     const k = kebab(item.name);
@@ -187,6 +304,17 @@ function packageFiles(bp, sha, module, entities) {
       controller(bp, sha, item, module),
     );
   }
+  write(
+    `${base}/src/index.ts`,
+    `${header(bp, sha)}\n${entities
+      .map((item) => {
+        const k = kebab(item.name);
+        return `export * from './controllers/${k}.controller.js';\nexport * from './dto/create-${k}.dto.js';\nexport * from './entities/${k}.entity.js';\nexport * from './repositories/${k}.repository.js';\nexport * from './services/${k}.service.js';`;
+      })
+      .join(
+        '\n',
+      )}\nexport * from './${kebab(module.name)}.module.js';${(module.handwrittenExports ?? []).map((target) => `\nexport * from './${target}.js';`).join('')}`,
+  );
   const ddl = [
     `${header(bp, sha, true)}`,
     `-- Regenerable-only DDL for ${bp.id}; request-path writes use role_app_backend.`,
@@ -196,9 +324,13 @@ function packageFiles(bp, sha, module, entities) {
       (e) =>
         `select auth.create_rls_policy('${module.namespace}', '${e.table}');`,
     ),
+    `select auth.install_tenant_triggers();`,
+    `grant usage on schema ${module.namespace} to role_app_backend;`,
+    `grant select, insert, update, delete on all tables in schema ${module.namespace} to role_app_backend;`,
+    `grant usage, select on all sequences in schema ${module.namespace} to role_app_backend;`,
   ].join('\n\n');
   write(
-    `backend/database/ddl/30-${module.namespace}-${kebab(module.name)}.sql`,
+    `backend/database/ddl/${module.ddlFile ?? `30-${module.namespace}-${kebab(module.name)}.sql`}`,
     ddl,
   );
 }

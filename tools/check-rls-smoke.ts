@@ -99,6 +99,41 @@ try {
   if (geometryRoundTrip.rows[0]?.location.type !== 'Point') {
     throw new Error('SRID-4674 geometry to JSON round-trip failed');
   }
+  const infRls = await client.query<{
+    table_name: string;
+    rls_enabled: boolean;
+    rls_forced: boolean;
+    has_policy: boolean;
+    has_trigger: boolean;
+  }>(
+    `select tables.table_name,
+            classes.relrowsecurity as rls_enabled,
+            classes.relforcerowsecurity as rls_forced,
+            exists (select 1 from pg_policies policies where policies.schemaname = 'inf' and policies.tablename = tables.table_name and policies.policyname = 'tenant_isolation') as has_policy,
+            exists (select 1 from pg_trigger triggers where triggers.tgrelid = classes.oid and triggers.tgname = 'enforce_tenant_id' and not triggers.tgisinternal) as has_trigger
+       from information_schema.tables tables
+       join pg_namespace namespaces on namespaces.nspname = tables.table_schema
+       join pg_class classes on classes.relnamespace = namespaces.oid and classes.relname = tables.table_name
+      where tables.table_schema = 'inf' and tables.table_type = 'BASE TABLE'
+      order by tables.table_name`,
+  );
+  if (infRls.rows.length !== 28) {
+    throw new Error(
+      `expected 28 inf tenant tables, found ${infRls.rows.length}`,
+    );
+  }
+  const unprotected = infRls.rows.filter(
+    (table) =>
+      !table.rls_enabled ||
+      !table.rls_forced ||
+      !table.has_policy ||
+      !table.has_trigger,
+  );
+  if (unprotected.length) {
+    throw new Error(
+      `inf RLS coverage failed: ${unprotected.map((table) => table.table_name).join(', ')}`,
+    );
+  }
   await client.query(
     `select audit.write($1, $2, 'AUDITOR', 'RLS_SMOKE', 'storage.object', null, '{}'::jsonb)`,
     [tenantA, actorA],
@@ -112,7 +147,7 @@ try {
   await client.query('rollback');
 
   console.log(
-    'check-rls-smoke: OK (tenant isolation, ops RLS, SRID-4674 round-trip, audit persistence)',
+    'check-rls-smoke: OK (tenant isolation, 28 inf tables, ops RLS, SRID-4674 round-trip, audit persistence)',
   );
 } finally {
   await client.end();
