@@ -12,11 +12,11 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm typecheck && pnpm verify:decorators && pnpm verify:rls-ddl",
+    "check": "pnpm format:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
-    "build": "pnpm --filter @detran/shared build && pnpm --filter @detran/app build",
+    "build": "pnpm --filter @detran/shared build && pnpm --filter @detran/app build && pnpm --filter @detran/ui build",
     "verify:decorators": "tsx tools/verify-controller-decorators.ts",
     "verify:rls-ddl": "tsx tools/check-rls-ddl.ts",
     "backend:db:apply": "bash backend/database/apply.sh",

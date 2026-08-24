@@ -1,0 +1,101 @@
+:root,
+:root[data-detran-theme='light'] {
+  --detran-color-primary: #005ca9;
+  --detran-color-primary-strong: #003f73;
+  --detran-color-accent: #f6c900;
+  --detran-color-surface: #ffffff;
+  --detran-color-surface-muted: #f3f6f8;
+  --detran-color-text: #172b3a;
+  --detran-color-danger: #b42318;
+  --detran-border-color: #cbd5df;
+  --detran-shadow: 0 2px 8px rgb(23 43 58 / 16%);
+  --stynx-color-primary: var(--detran-color-primary);
+  --stynx-color-danger: var(--detran-color-danger);
+  --stynx-radius: 6px;
+}
+
+:root[data-detran-theme='dark'] {
+  --detran-color-primary: #75b7f0;
+  --detran-color-primary-strong: #b8dcfb;
+  --detran-color-accent: #ffdb4d;
+  --detran-color-surface: #15212b;
+  --detran-color-surface-muted: #21313d;
+  --detran-color-text: #edf4f8;
+  --detran-color-danger: #ffb4ab;
+  --detran-border-color: #486174;
+  --detran-shadow: 0 2px 8px rgb(0 0 0 / 35%);
+}
+
+.detran-shell {
+  display: grid;
+  grid-template: auto 1fr / 16rem 1fr;
+  min-height: 100dvh;
+  color: var(--detran-color-text);
+  background: var(--detran-color-surface-muted);
+}
+.detran-topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 3.75rem;
+  padding: 0 1.25rem;
+  color: #fff;
+  background: var(--detran-color-primary-strong);
+}
+.detran-brand {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+.detran-sidenav {
+  padding: 1rem;
+  background: var(--detran-color-surface);
+  border-right: 1px solid var(--detran-border-color);
+}
+.detran-sidenav nav {
+  display: grid;
+  gap: 0.25rem;
+}
+.detran-sidenav a {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.625rem;
+  color: inherit;
+  border-radius: var(--stynx-radius);
+  text-decoration: none;
+}
+.detran-sidenav a:hover {
+  background: var(--detran-color-surface-muted);
+}
+.detran-content {
+  min-width: 0;
+  padding: 1.5rem;
+}
+.detran-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--detran-color-text);
+}
+.detran-breadcrumbs a {
+  color: var(--detran-color-primary);
+}
+@media (max-width: 48rem) {
+  .detran-shell {
+    grid-template: auto auto 1fr / 1fr;
+  }
+  .detran-topbar {
+    grid-column: auto;
+  }
+  .detran-sidenav {
+    border-right: 0;
+    border-bottom: 1px solid var(--detran-border-color);
+  }
+  .detran-sidenav nav {
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    overflow-x: auto;
+  }
+}
