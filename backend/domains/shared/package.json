@@ -1,0 +1,35 @@
+{
+  "name": "@detran/shared",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Cross-domain shared kit for the unified DETRAN backend: role union, policy matrix («domain»:«resource»:«action»), policy guard/evaluator helpers and the @Resource/@Action/@Audit/@Public decorator surface (ADR-0002, ADR-0005).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.28",
+    "@nestjs/core": "^11.1.28",
+    "@stynx-nyx/backend": "1.0.4",
+    "@stynx-nyx/contracts": "1.0.3",
+    "@stynx-nyx/core": "1.0.2",
+    "@stynx-nyx/data": "1.0.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
+  }
+}

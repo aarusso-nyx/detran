@@ -1,5 +1,5 @@
 {
-  "head": "26141c59410c6c1c017739c9591bab5127b7736c0b236a67a9aeb75c323575c2",
+  "head": "c029ac679a9282aae890bd837afeac135a09bdc488f27a75cdfa0219b7c4c557",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -26,6 +26,173 @@
       ],
       "previous_run_hash": null,
       "manifest_hash": "26141c59410c6c1c017739c9591bab5127b7736c0b236a67a9aeb75c323575c2"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-f5d7034b598991af",
+      "timestamp": "2026-08-24T10:21:43.999Z",
+      "actor": "Codex",
+      "actor_role": "agent:engineer",
+      "action": "W2.1",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Users/aarusso/Development/stech/detran",
+        "task_id": "TASK-21",
+        "worktree_id": "WT-W2-1",
+        "git": {
+          "head_sha": "7137f5014789980e522e9c7599d6fd4fa21216eb",
+          "dirty_files": [
+            ".github/workflows/ci.yml",
+            "DESIGN-DECISIONS.md",
+            "backend/app/package.json",
+            "backend/app/src/main.ts",
+            "backend/app/tsconfig.json",
+            "backend/database/ddl/README.md",
+            "backend/domains/shared/.gitkeep",
+            "backend/domains/shared/README.md",
+            "package.json",
+            "pnpm-lock.yaml",
+            "pnpm-workspace.yaml",
+            "tools/README.md",
+            "backend/app/README.md",
+            "backend/app/src/app.module.ts",
+            "backend/app/src/detran-runtime.spec.ts",
+            "backend/app/src/detran-runtime.ts",
+            "backend/app/tests/",
+            "backend/app/tsconfig.build.json",
+            "backend/app/vitest.config.ts",
+            "backend/database/apply.sh",
+            "backend/database/ddl/00-extensions.sql",
+            "backend/database/ddl/01-schemas.sql",
+            "backend/database/ddl/02-auth.sql",
+            "backend/database/ddl/03-audit.sql",
+            "backend/database/ddl/04-integration-storage.sql",
+            "backend/database/ddl/10-postgis-functions.sql",
+            "backend/database/ddl/11-auth-functions.sql",
+            "backend/database/ddl/12-audit-functions.sql",
+            "backend/database/ddl/20-rls-policies.sql",
+            "backend/domains/shared/package.json",
+            "backend/domains/shared/src/",
+            "backend/domains/shared/tsconfig.build.json",
+            "backend/domains/shared/tsconfig.json",
+            "backend/domains/shared/vitest.config.ts",
+            "docs/meta/adr/ADR-0005-unified-backend-kernel.md",
+            "tools/check-rls-ddl.ts",
+            "tools/check-rls-smoke.ts",
+            "tools/verify-controller-decorators.ts"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": "backend/app/src/app.module.ts",
+          "sha256": "6e882ebff3d5638ec4f1d20e630e8f6edd3e3854d1dd9322c114201b0ea0852a"
+        },
+        {
+          "path": "backend/app/src/detran-runtime.ts",
+          "sha256": "e0653afe76bf4ae4eb4461f1821569eca3d06ca8d263e79673ec04320ac4a221"
+        },
+        {
+          "path": "backend/domains/shared/src/policy.ts",
+          "sha256": "31445ed9f2e24deac005b39aba2af21c4ab4b93b05971a2d82d309ed8b71ff99"
+        },
+        {
+          "path": "backend/database/ddl/12-audit-functions.sql",
+          "sha256": "bb4e407cc3c982bc36cf45d1667bb1904b04f0373c1195aba1b67b0d952faf70"
+        },
+        {
+          "path": "docs/meta/adr/ADR-0005-unified-backend-kernel.md",
+          "sha256": "b875ce55dd235238b888db286a759b5c92b51f6edfbdf5cfcfa001c95ca74116"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "16040d8a5dcd7c5a06076122f21dc11e712449949343475765e50277d153bbc7"
+        }
+      ],
+      "notes": [
+        "Unified backend kernel, role/policy kit, request-path tenancy, persisted audit chain and shared PostGIS/RLS DDL implemented.",
+        "Verified: frozen install; root check; live RLS/audit smoke; 16 unit, 2 integration, 7 e2e; build; HTTP health/readiness; senatran-mock 245/245."
+      ],
+      "previous_run_hash": "26141c59410c6c1c017739c9591bab5127b7736c0b236a67a9aeb75c323575c2",
+      "manifest_hash": "6fc7e59af474112bebd42cb0afc6017a8e3804dafb2ede5d3b85dab37b5df31a"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-9b730291fbc2dffb",
+      "timestamp": "2026-08-24T10:23:51.922Z",
+      "actor": "Codex",
+      "actor_role": "agent:engineer",
+      "action": "W2.1-security-hardening",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Users/aarusso/Development/stech/detran",
+        "task_id": "TASK-21",
+        "worktree_id": "WT-W2-1",
+        "git": {
+          "head_sha": "7137f5014789980e522e9c7599d6fd4fa21216eb",
+          "dirty_files": [
+            ".devai/state/evidence-chain.json",
+            ".github/workflows/ci.yml",
+            "DESIGN-DECISIONS.md",
+            "backend/app/package.json",
+            "backend/app/src/main.ts",
+            "backend/app/tsconfig.json",
+            "backend/database/ddl/README.md",
+            "backend/domains/shared/.gitkeep",
+            "backend/domains/shared/README.md",
+            "package.json",
+            "pnpm-lock.yaml",
+            "pnpm-workspace.yaml",
+            "tools/README.md",
+            "backend/app/README.md",
+            "backend/app/src/app.module.ts",
+            "backend/app/src/detran-runtime.spec.ts",
+            "backend/app/src/detran-runtime.ts",
+            "backend/app/tests/",
+            "backend/app/tsconfig.build.json",
+            "backend/app/vitest.config.ts",
+            "backend/database/apply.sh",
+            "backend/database/ddl/00-extensions.sql",
+            "backend/database/ddl/01-schemas.sql",
+            "backend/database/ddl/02-auth.sql",
+            "backend/database/ddl/03-audit.sql",
+            "backend/database/ddl/04-integration-storage.sql",
+            "backend/database/ddl/10-postgis-functions.sql",
+            "backend/database/ddl/11-auth-functions.sql",
+            "backend/database/ddl/12-audit-functions.sql",
+            "backend/database/ddl/20-rls-policies.sql",
+            "backend/domains/shared/package.json",
+            "backend/domains/shared/src/",
+            "backend/domains/shared/tsconfig.build.json",
+            "backend/domains/shared/tsconfig.json",
+            "backend/domains/shared/vitest.config.ts",
+            "docs/meta/adr/ADR-0005-unified-backend-kernel.md",
+            "tools/check-rls-ddl.ts",
+            "tools/check-rls-smoke.ts",
+            "tools/verify-controller-decorators.ts"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": "backend/database/ddl/12-audit-functions.sql",
+          "sha256": "6743d965c87f724f6a5a97cc66ff6f527c898063cc764209f3f7580b6eb8554b"
+        },
+        {
+          "path": "backend/database/ddl/20-rls-policies.sql",
+          "sha256": "e27a657d079a5be34d5fc2a4afa8a5021dd3c618b9277b0b4bcbe1aa4f9afb2b"
+        },
+        {
+          "path": "tools/check-rls-smoke.ts",
+          "sha256": "76b03e59de84113a5642341e2af5c9fc66c475050b4589fcbb2c8c58867c2266"
+        }
+      ],
+      "notes": [
+        "Final audit privilege hardening: direct app-role inserts denied; chain writes restricted to locked-search-path audit.write; admin helpers revoked from PUBLIC.",
+        "Verified from fresh DDL: live RLS smoke including direct-audit denial; audit integration tier; root check."
+      ],
+      "previous_run_hash": "6fc7e59af474112bebd42cb0afc6017a8e3804dafb2ede5d3b85dab37b5df31a",
+      "manifest_hash": "c029ac679a9282aae890bd837afeac135a09bdc488f27a75cdfa0219b7c4c557"
     }
   ]
 }
