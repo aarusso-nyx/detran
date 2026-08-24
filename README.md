@@ -14,13 +14,13 @@ schema-per-domain + RLS), `apps/` holding **frontends only**, and a single
 
 Domains follow the national traffic systems:
 
-| Domain | National system | Scope |
-| --- | --- | --- |
-| `inf` | RENAINF | Infrações — AIT lifecycle, defesas, penalidades, recursos, julgamento (JARI) |
-| `est` | RENAEST | Sinistros — crash records and analytics |
-| `ch` | RENACH | Condutor/habilitação (the former pec domains) |
-| `vam` | RENAVAM | **Reserved — not built** |
-| `ops` | — | Cross-domain field operations: agents, devices, shifts, evidence custody, offline sync |
+| Domain | National system | Scope                                                                                  |
+| ------ | --------------- | -------------------------------------------------------------------------------------- |
+| `inf`  | RENAINF         | Infrações — AIT lifecycle, defesas, penalidades, recursos, julgamento (JARI)           |
+| `est`  | RENAEST         | Sinistros — crash records and analytics                                                |
+| `ch`   | RENACH          | Condutor/habilitação (the former pec domains)                                          |
+| `vam`  | RENAVAM         | **Reserved — not built**                                                               |
+| `ops`  | —               | Cross-domain field operations: agents, devices, shifts, evidence custody, offline sync |
 
 Transversal elements: `portal` and `dashboard` backend domains, `senatran-mock`
 (the ported national-API mock) and `packages/senatran-adapter`.

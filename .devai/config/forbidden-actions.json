@@ -17,9 +17,7 @@
       "action": "Push to `main` directly",
       "rationale": "Bypasses review",
       "severity": "critical",
-      "detect_patterns": [
-        "\\bgit\\s+push\\s+.*\\bmain\\b"
-      ],
+      "detect_patterns": ["\\bgit\\s+push\\s+.*\\bmain\\b"],
       "safer_alternative": "Push to a feature branch + PR"
     },
     {
@@ -27,9 +25,7 @@
       "action": "`git reset --hard` on tracked changes",
       "rationale": "Data loss",
       "severity": "critical",
-      "detect_patterns": [
-        "\\bgit\\s+reset\\s+--hard\\b"
-      ],
+      "detect_patterns": ["\\bgit\\s+reset\\s+--hard\\b"],
       "safer_alternative": "git stash or branch the work first"
     },
     {
@@ -37,9 +33,7 @@
       "action": "`git rebase --interactive`",
       "rationale": "Rewrites history",
       "severity": "high",
-      "detect_patterns": [
-        "\\bgit\\s+rebase\\s+(--interactive|-i)\\b"
-      ],
+      "detect_patterns": ["\\bgit\\s+rebase\\s+(--interactive|-i)\\b"],
       "safer_alternative": "Stack the change into a new commit"
     },
     {
@@ -47,9 +41,7 @@
       "action": "Any `--no-verify` flag",
       "rationale": "Bypasses hooks",
       "severity": "high",
-      "detect_patterns": [
-        "\\b--no-verify\\b"
-      ],
+      "detect_patterns": ["\\b--no-verify\\b"],
       "safer_alternative": "Fix the underlying hook failure"
     },
     {
@@ -57,10 +49,7 @@
       "action": "Any `--no-gpg-sign` flag",
       "rationale": "Bypasses signing",
       "severity": "high",
-      "detect_patterns": [
-        "\\b--no-gpg-sign\\b",
-        "commit\\.gpgsign=false"
-      ],
+      "detect_patterns": ["\\b--no-gpg-sign\\b", "commit\\.gpgsign=false"],
       "safer_alternative": "Configure signing in the environment"
     },
     {
@@ -91,9 +80,7 @@
       "action": "`rm -rf` on uncommitted work",
       "rationale": "Data loss",
       "severity": "high",
-      "detect_patterns": [
-        "\\brm\\s+-rf\\b"
-      ],
+      "detect_patterns": ["\\brm\\s+-rf\\b"],
       "safer_alternative": "Commit first; rm -rf only on confirmed paths"
     },
     {
@@ -129,9 +116,7 @@
       "action": "`npm publish` / `pnpm publish` (or equivalent)",
       "rationale": "Release action",
       "severity": "high",
-      "detect_patterns": [
-        "\\b(npm|pnpm|yarn)\\s+publish\\b"
-      ],
+      "detect_patterns": ["\\b(npm|pnpm|yarn)\\s+publish\\b"],
       "safer_alternative": "Release via the platform pipeline"
     },
     {
