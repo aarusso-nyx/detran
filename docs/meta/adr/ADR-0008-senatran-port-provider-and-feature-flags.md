@@ -15,7 +15,7 @@ payload/auth details remain certificate-gated and low-confidence. Exposing
 Portuguese DTOs or base/auth configuration to domains would make those domains
 responsible for future wire corrections and would weaken the sole-boundary rule.
 
-The read and transactional OpenAPI files each currently describe 57 operations.
+The read and transactional OpenAPI files each currently describe 60 operations.
 The read surface includes vehicle data that can support a future RENAVAM domain,
 but `vam` is explicitly reserved and must not be built in this phase.
 
@@ -27,7 +27,7 @@ but `vam` is explicitly reserved and must not be built in this phase.
    for every read path, making it RENAVAM-ready without creating a RENAVAM
    domain or claiming a validated real RENAVAM contract.
 2. `openapi-typescript@7.13.0` generates wire types from both committed mock
-   contracts. Generation asserts 57 operations per file and a drift check runs
+   contracts. Generation asserts 60 operations per file and a drift check runs
    in `pnpm check`. Portuguese generated DTOs are exported only through the
    explicit `./wire` subpath; hand-written mappers define the public English
    contract.
@@ -64,7 +64,7 @@ but `vam` is explicitly reserved and must not be built in this phase.
 ## Consequences
 
 - Domains see stable English concepts while generated Portuguese contracts stay
-  mechanically traceable to all 114 mock operations.
+  mechanically traceable to all 120 mock operations.
 - Mock and production exercise one request/resilience implementation; provider
   switching cannot silently broaden the real surface.
 - Retry, circuit, idempotency and error semantics are uniform across every

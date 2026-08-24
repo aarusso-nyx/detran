@@ -66,6 +66,35 @@ export class SneService {
     return { cpf, aderido: a?.aderido ?? false, canal: a?.canal ?? null };
   }
 
+  async aderirCidadao(
+    body: Row,
+    key?: string,
+  ): Promise<{ status: number; body: unknown }> {
+    const cpf = body.cpf as string;
+    if (!cpf)
+      throw businessError(
+        'SNE.ADHESION.INVALID_CPF',
+        'CPF do cidadão é obrigatório.',
+      );
+    return this.tx.idempotent('sne.adesao.cidadao', key, async (trx) => {
+      const canal = (body.canal as string) ?? 'APP_CDT';
+      const resp = { cpf, aderido: true, canal };
+      await trx.query(
+        "insert into sne.adesao (tipo, chave, aderido, canal, payload) values ('CIDADAO',$1,true,$2,$3::jsonb) on conflict (tipo,chave) do update set aderido = true, canal = excluded.canal, payload = excluded.payload",
+        [cpf, canal, JSON.stringify(resp)],
+      );
+      await this.tx.audit(trx, {
+        dominio: DOM,
+        entidade: 'sne.adesao',
+        entidadeId: cpf,
+        tipoEvento: 'adesao.cidadao',
+        situacaoNova: 'ADERIDO',
+        payload: resp,
+      });
+      return { status: 201, body: resp };
+    });
+  }
+
   /** GET /v1/sne/orgaos/{codigoOrgaoAutuador}/adesao. */
   async adesaoOrgao(codigo: string): Promise<unknown> {
     const forced = await this.scenario.forced('codigoOrgaoAutuador', codigo);

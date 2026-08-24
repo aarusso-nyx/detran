@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   Inject,
   Param,
   Post,
@@ -43,6 +44,40 @@ export class CdtController {
   @Get('cidadaos/:cpf/cnh')
   cnh(@Param('cpf') cpf: string) {
     return this.svc.cnh(cpf);
+  }
+
+  @Post('cidadaos/:cpf/infracoes/:numeroAit/defesas')
+  async defesa(
+    @Param('cpf') cpf: string,
+    @Param('numeroAit') numeroAit: string,
+    @Body() body: Body,
+    @Headers('idempotency-key') key: string | undefined,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.send(
+      res,
+      await this.svc.protocolarDefesa(
+        { ...body, cpf, numeroAit, canal: 'CDT' },
+        key,
+      ),
+    );
+  }
+
+  @Post('cidadaos/:cpf/infracoes/:numeroAit/recursos')
+  async recurso(
+    @Param('cpf') cpf: string,
+    @Param('numeroAit') numeroAit: string,
+    @Body() body: Body,
+    @Headers('idempotency-key') key: string | undefined,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.send(
+      res,
+      await this.svc.protocolarRecurso(
+        { ...body, cpf, numeroAit, canal: 'CDT' },
+        key,
+      ),
+    );
   }
 
   @Get('infracoes/:numeroAit/pagamento')

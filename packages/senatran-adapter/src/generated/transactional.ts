@@ -974,6 +974,57 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/cdt/cidadaos/{cpf}/infracoes/{numeroAit}/defesas': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Protocolar defesa cidadã CDT no processo RENAINF */
+    post: operations['protocolarDefesaCdt'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/cdt/cidadaos/{cpf}/infracoes/{numeroAit}/recursos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Protocolar recurso cidadão CDT no processo RENAINF */
+    post: operations['protocolarRecursoCdt'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/sne/adesoes/cidadaos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Opt-in cidadão ao SNE */
+    post: operations['aderirCidadaoSne'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1619,6 +1670,31 @@ export interface components {
       cpfCondutor?: string;
       numeroAit?: string;
     };
+    VeiculoSinistro: {
+      placa?: string;
+      renavam?: string;
+      tipoEnvolvimento?: string;
+      dano?: string;
+    };
+    PessoaSinistro: {
+      cpf?: string;
+      tipoEnvolvido?: string;
+      nome?: string;
+    };
+    VitimaSinistro: {
+      cpf?: string;
+      tipoEnvolvido?: string;
+      gravidadeLesao?: string;
+      obitoLocal?: boolean;
+      /** Format: date-time */
+      dataObito?: string;
+    };
+    EvidenciaSinistro: {
+      tipo?: string;
+      nomeArquivo?: string;
+      url?: string;
+      hash?: string;
+    };
     /**
      * @description Dados para registrar um sinistro na base nacional RENAEST.
      * @example {
@@ -1649,6 +1725,8 @@ export interface components {
       codigoMunicipio: string;
       gravidade: components['schemas']['GravidadeSinistro'];
       local?: string;
+      latitude?: string;
+      longitude?: string;
       orgaoResponsavel?: string;
       codigoTipoSinistro?: string;
       condicoesVia?: string;
@@ -1656,9 +1734,10 @@ export interface components {
       versaoLeiaute?: string;
       /** Format: date-time */
       dataTransmissao?: string;
-      veiculos?: Record<string, never>[];
-      pessoas?: Record<string, never>[];
-      vitimas?: Record<string, never>[];
+      veiculos?: components['schemas']['VeiculoSinistro'][];
+      pessoas?: components['schemas']['PessoaSinistro'][];
+      vitimas?: components['schemas']['VitimaSinistro'][];
+      evidencias?: components['schemas']['EvidenciaSinistro'][];
       referencias?: components['schemas']['ReferenciasSinistro'];
     };
     /** @description Lote de sinistros. */
@@ -1677,9 +1756,12 @@ export interface components {
       versaoLeiaute?: string;
       gravidade?: string;
       local?: string;
-      vitimas?: Record<string, never>[];
-      veiculos?: Record<string, never>[];
-      pessoas?: Record<string, never>[];
+      latitude?: string;
+      longitude?: string;
+      vitimas?: components['schemas']['VitimaSinistro'][];
+      veiculos?: components['schemas']['VeiculoSinistro'][];
+      pessoas?: components['schemas']['PessoaSinistro'][];
+      evidencias?: components['schemas']['EvidenciaSinistro'][];
       referencias?: components['schemas']['ReferenciasSinistro'];
     };
     /**
@@ -1709,13 +1791,16 @@ export interface components {
       codigoMunicipio?: string;
       gravidade?: components['schemas']['GravidadeSinistro'];
       local?: string;
+      latitude?: string;
+      longitude?: string;
       orgaoResponsavel?: string;
       codigoTipoSinistro?: string;
       condicoesVia?: string;
       condicoesMeteorologicas?: string;
-      veiculos?: Record<string, never>[];
-      pessoas?: Record<string, never>[];
-      vitimas?: Record<string, never>[];
+      veiculos?: components['schemas']['VeiculoSinistro'][];
+      pessoas?: components['schemas']['PessoaSinistro'][];
+      vitimas?: components['schemas']['VitimaSinistro'][];
+      evidencias?: components['schemas']['EvidenciaSinistro'][];
       referencias?: components['schemas']['ReferenciasSinistro'];
       /** Format: date-time */
       dataTransmissao?: string;
@@ -4723,6 +4808,117 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse'];
         };
       };
+      500: components['responses']['ServerError'];
+    };
+  };
+  protocolarDefesaCdt: {
+    parameters: {
+      query?: never;
+      header: {
+        /** @description CPF do usuário que está fazendo a requisição */
+        'x-cpf-usuario': components['parameters']['XCpfUsuario'];
+        /** @description Chave de idempotência opcional. Se enviada, é honrada para deduplicar escritas; caso contrário, a deduplicação usa chaves naturais (`numeroAit`, `numeroRenach`). */
+        'Idempotency-Key'?: components['parameters']['IdempotencyKey'];
+      };
+      path: {
+        cpf: string;
+        numeroAit: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DefesaPreviaRequest'];
+      };
+    };
+    responses: {
+      /** @description Criado */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ProcessoAdministrativo'];
+        };
+      };
+      400: components['responses']['BadRequest'];
+      401: components['responses']['Unauthorized'];
+      402: components['responses']['BusinessError'];
+      404: components['responses']['NotFound'];
+      500: components['responses']['ServerError'];
+    };
+  };
+  protocolarRecursoCdt: {
+    parameters: {
+      query?: never;
+      header: {
+        /** @description CPF do usuário que está fazendo a requisição */
+        'x-cpf-usuario': components['parameters']['XCpfUsuario'];
+        /** @description Chave de idempotência opcional. Se enviada, é honrada para deduplicar escritas; caso contrário, a deduplicação usa chaves naturais (`numeroAit`, `numeroRenach`). */
+        'Idempotency-Key'?: components['parameters']['IdempotencyKey'];
+      };
+      path: {
+        cpf: string;
+        numeroAit: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RecursoRequest'];
+      };
+    };
+    responses: {
+      /** @description Criado */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['Recurso'];
+        };
+      };
+      400: components['responses']['BadRequest'];
+      401: components['responses']['Unauthorized'];
+      402: components['responses']['BusinessError'];
+      404: components['responses']['NotFound'];
+      500: components['responses']['ServerError'];
+    };
+  };
+  aderirCidadaoSne: {
+    parameters: {
+      query?: never;
+      header: {
+        /** @description CPF do usuário que está fazendo a requisição */
+        'x-cpf-usuario': components['parameters']['XCpfUsuario'];
+        /** @description Chave de idempotência opcional. Se enviada, é honrada para deduplicar escritas; caso contrário, a deduplicação usa chaves naturais (`numeroAit`, `numeroRenach`). */
+        'Idempotency-Key'?: components['parameters']['IdempotencyKey'];
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': {
+          cpf: string;
+          canal?: string;
+        };
+      };
+    };
+    responses: {
+      /** @description Criado */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AdesaoSne'];
+        };
+      };
+      400: components['responses']['BadRequest'];
+      401: components['responses']['Unauthorized'];
+      402: components['responses']['BusinessError'];
+      404: components['responses']['NotFound'];
       500: components['responses']['ServerError'];
     };
   };

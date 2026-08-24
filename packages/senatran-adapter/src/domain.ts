@@ -169,6 +169,22 @@ export interface Appeal {
   status?: string;
 }
 
+export interface AppealSearchFilters {
+  agencyCode?: string;
+  status?: string;
+  instance?: Appeal['instance'];
+  startedAt?: string;
+  endedAt?: string;
+  limit?: number;
+  after?: string;
+}
+
+export interface AppealSearchResult {
+  count: number;
+  appeals: Appeal[];
+  nextAfter?: string;
+}
+
 export interface AppealDecisionInput {
   outcome: 'GRANTED' | 'DENIED';
   decidedAt?: string;
@@ -183,21 +199,52 @@ export interface AppealDecisionInput {
 export type CrashSeverity =
   'NO_VICTIMS' | 'WITH_INJURED_VICTIM' | 'WITH_FATAL_VICTIM';
 
+export interface CrashVehicle {
+  plate?: string;
+  renavam?: string;
+  involvementType?: string;
+  damage?: string;
+}
+
+export interface CrashPerson {
+  cpf?: string;
+  involvementType?: string;
+  name?: string;
+}
+
+export interface CrashVictim {
+  cpf?: string;
+  involvementType?: string;
+  injurySeverity?: string;
+  diedAtScene?: boolean;
+  deathAt?: string;
+}
+
+export interface CrashEvidence {
+  type?: string;
+  fileName?: string;
+  url?: string;
+  hash?: string;
+}
+
 export interface CrashReportInput {
   occurredAt: string;
   state: string;
   municipalityCode: string;
   severity: CrashSeverity;
   location?: string;
+  latitude?: string;
+  longitude?: string;
   responsibleAgency?: string;
   crashTypeCode?: string;
   roadConditions?: string;
   weatherConditions?: string;
   layoutVersion?: string;
   transmittedAt?: string;
-  vehicles?: Array<Record<string, unknown>>;
-  people?: Array<Record<string, unknown>>;
-  victims?: Array<Record<string, unknown>>;
+  vehicles?: CrashVehicle[];
+  people?: CrashPerson[];
+  victims?: CrashVictim[];
+  evidence?: CrashEvidence[];
   references?: {
     renavam?: string;
     driverCpf?: string;
@@ -214,8 +261,34 @@ export interface CrashReport {
   municipalityCode?: string;
   severity?: CrashSeverity;
   location?: string;
+  latitude?: string;
+  longitude?: string;
   responsibleAgency?: string;
+  crashTypeCode?: string;
+  roadConditions?: string;
+  weatherConditions?: string;
+  vehicles?: CrashVehicle[];
+  people?: CrashPerson[];
+  victims?: CrashVictim[];
+  evidence?: CrashEvidence[];
   references?: CrashReportInput['references'];
+  transmittedAt?: string;
+}
+
+export interface CrashSearchFilters {
+  plate?: string;
+  driverCpf?: string;
+  startedAt?: string;
+  endedAt?: string;
+  responsibleAgency?: string;
+  limit?: number;
+  after?: string;
+}
+
+export interface CrashSearchResult {
+  count: number;
+  crashes: CrashReport[];
+  nextAfter?: string;
 }
 
 export interface CrashCorrectionInput {
@@ -223,9 +296,12 @@ export interface CrashCorrectionInput {
   layoutVersion?: string;
   severity?: CrashSeverity;
   location?: string;
-  victims?: Array<Record<string, unknown>>;
-  vehicles?: Array<Record<string, unknown>>;
-  people?: Array<Record<string, unknown>>;
+  latitude?: string;
+  longitude?: string;
+  victims?: CrashVictim[];
+  vehicles?: CrashVehicle[];
+  people?: CrashPerson[];
+  evidence?: CrashEvidence[];
   references?: CrashReportInput['references'];
 }
 

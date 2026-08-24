@@ -2100,6 +2100,130 @@ paths:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
         '500': { $ref: '#/components/responses/ServerError' }
 
+  /cdt/cidadaos/{cpf}/infracoes/{numeroAit}/defesas:
+    post:
+      tags: [cdtCidadaos]
+      operationId: protocolarDefesaCdt
+      summary: Protocolar defesa cidadã CDT no processo RENAINF
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - { name: cpf, in: path, required: true, schema: { type: string } }
+        - {
+            name: numeroAit,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      requestBody:
+        {
+          required: true,
+          content:
+            {
+              application/json:
+                {
+                  schema: { $ref: '#/components/schemas/DefesaPreviaRequest' },
+                },
+            },
+        }
+      responses:
+        '201':
+          {
+            description: Criado,
+            content:
+              {
+                application/json:
+                  {
+                    schema:
+                      { $ref: '#/components/schemas/ProcessoAdministrativo' },
+                  },
+              },
+          }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /cdt/cidadaos/{cpf}/infracoes/{numeroAit}/recursos:
+    post:
+      tags: [cdtCidadaos]
+      operationId: protocolarRecursoCdt
+      summary: Protocolar recurso cidadão CDT no processo RENAINF
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - { name: cpf, in: path, required: true, schema: { type: string } }
+        - {
+            name: numeroAit,
+            in: path,
+            required: true,
+            schema: { type: string },
+          }
+      requestBody:
+        {
+          required: true,
+          content:
+            {
+              application/json:
+                { schema: { $ref: '#/components/schemas/RecursoRequest' } },
+            },
+        }
+      responses:
+        '201':
+          {
+            description: Criado,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/Recurso' } },
+              },
+          }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+  /sne/adesoes/cidadaos:
+    post:
+      tags: [sneNotificacoes]
+      operationId: aderirCidadaoSne
+      summary: Opt-in cidadão ao SNE
+      parameters:
+        - $ref: '#/components/parameters/XCpfUsuario'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        {
+          required: true,
+          content:
+            {
+              application/json:
+                {
+                  schema:
+                    {
+                      type: object,
+                      required: [cpf],
+                      properties:
+                        { cpf: { type: string }, canal: { type: string } },
+                    },
+                },
+            },
+        }
+      responses:
+        '201':
+          {
+            description: Criado,
+            content:
+              {
+                application/json:
+                  { schema: { $ref: '#/components/schemas/AdesaoSne' } },
+              },
+          }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '402': { $ref: '#/components/responses/BusinessError' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
 components:
   securitySchemes:
     clientCertificate:
@@ -2953,6 +3077,34 @@ components:
         renavam: { type: string }
         cpfCondutor: { type: string }
         numeroAit: { type: string }
+    VeiculoSinistro:
+      type: object
+      properties:
+        placa: { type: string }
+        renavam: { type: string }
+        tipoEnvolvimento: { type: string }
+        dano: { type: string }
+    PessoaSinistro:
+      type: object
+      properties:
+        cpf: { type: string }
+        tipoEnvolvido: { type: string }
+        nome: { type: string }
+    VitimaSinistro:
+      type: object
+      properties:
+        cpf: { type: string }
+        tipoEnvolvido: { type: string }
+        gravidadeLesao: { type: string }
+        obitoLocal: { type: boolean }
+        dataObito: { type: string, format: date-time }
+    EvidenciaSinistro:
+      type: object
+      properties:
+        tipo: { type: string }
+        nomeArquivo: { type: string }
+        url: { type: string }
+        hash: { type: string }
     SinistroRequest:
       type: object
       description: Dados para registrar um sinistro na base nacional RENAEST.
@@ -2963,6 +3115,8 @@ components:
         codigoMunicipio: { type: string }
         gravidade: { $ref: '#/components/schemas/GravidadeSinistro' }
         local: { type: string }
+        latitude: { type: string }
+        longitude: { type: string }
         orgaoResponsavel: { type: string }
         codigoTipoSinistro: { type: string }
         condicoesVia: { type: string }
@@ -2971,13 +3125,16 @@ components:
         dataTransmissao: { type: string, format: date-time }
         veiculos:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/VeiculoSinistro' }
         pessoas:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/PessoaSinistro' }
         vitimas:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/VitimaSinistro' }
+        evidencias:
+          type: array
+          items: { $ref: '#/components/schemas/EvidenciaSinistro' }
         referencias: { $ref: '#/components/schemas/ReferenciasSinistro' }
       example:
         dataHoraSinistro: '2024-02-11T19:05:00.000Z'
@@ -3009,15 +3166,20 @@ components:
         versaoLeiaute: { type: string }
         gravidade: { type: string }
         local: { type: string }
+        latitude: { type: string }
+        longitude: { type: string }
         vitimas:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/VitimaSinistro' }
         veiculos:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/VeiculoSinistro' }
         pessoas:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/PessoaSinistro' }
+        evidencias:
+          type: array
+          items: { $ref: '#/components/schemas/EvidenciaSinistro' }
         referencias: { $ref: '#/components/schemas/ReferenciasSinistro' }
       example:
         motivo: Ajuste de gravidade da vítima
@@ -3034,19 +3196,24 @@ components:
         codigoMunicipio: { type: string }
         gravidade: { $ref: '#/components/schemas/GravidadeSinistro' }
         local: { type: string }
+        latitude: { type: string }
+        longitude: { type: string }
         orgaoResponsavel: { type: string }
         codigoTipoSinistro: { type: string }
         condicoesVia: { type: string }
         condicoesMeteorologicas: { type: string }
         veiculos:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/VeiculoSinistro' }
         pessoas:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/PessoaSinistro' }
         vitimas:
           type: array
-          items: { type: object }
+          items: { $ref: '#/components/schemas/VitimaSinistro' }
+        evidencias:
+          type: array
+          items: { $ref: '#/components/schemas/EvidenciaSinistro' }
         referencias: { $ref: '#/components/schemas/ReferenciasSinistro' }
         dataTransmissao: { type: string, format: date-time }
       example:

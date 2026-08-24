@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Database } from '../../../shared/api/src/database/database.js';
 import { TransactionSupport } from '../../../shared/api/src/common/transaction-support.service.js';
 import { ScenarioService } from '../../../shared/api/src/common/scenario.service.js';
+import { RenainfService } from '../../../renainf/api/src/renainf.service.js';
 import {
   businessError,
   notFound,
@@ -27,11 +28,70 @@ export class CdtService {
     @Inject(Database) private readonly db: Database,
     @Inject(TransactionSupport) private readonly tx: TransactionSupport,
     @Inject(ScenarioService) private readonly scenario: ScenarioService,
+    @Inject(RenainfService) private readonly renainf: RenainfService,
   ) {}
 
   private async forcedCpf(cpf: string): Promise<void> {
     const f = await this.scenario.forced('cpf', cpf);
     if (f) throw new WsdenatranError(f.status, f.message);
+  }
+
+  private async processoPorAit(
+    cpf: string,
+    numeroAit: string,
+  ): Promise<string> {
+    await this.assertCidadao(cpf);
+    const r = await this.db.query<{ id: string }>(
+      'select p.id from renainf.processo p join renainf.ait a on a.id = p.ait_id where a.numero_ait = $1 limit 1',
+      [numeroAit],
+    );
+    if (!r.rows[0])
+      throw notFound(
+        'RENAINF.CASE.NOT_FOUND — processo administrativo não encontrado para o AIT.',
+      );
+    return r.rows[0].id;
+  }
+
+  async protocolarDefesa(
+    body: Row,
+    key?: string,
+  ): Promise<{ status: number; body: unknown }> {
+    const id = await this.processoPorAit(
+      body.cpf as string,
+      body.numeroAit as string,
+    );
+    return this.renainf.protocolarDefesa(
+      id,
+      {
+        ...body,
+        requerente: body.requerente ?? {
+          tipoRequerente: 'PROPRIETARIO',
+          numeroDocumento: body.cpf,
+        },
+      },
+      key,
+    );
+  }
+
+  async protocolarRecurso(
+    body: Row,
+    key?: string,
+  ): Promise<{ status: number; body: unknown }> {
+    const id = await this.processoPorAit(
+      body.cpf as string,
+      body.numeroAit as string,
+    );
+    return this.renainf.protocolarRecurso(
+      id,
+      {
+        ...body,
+        requerente: body.requerente ?? {
+          tipoRequerente: 'PROPRIETARIO',
+          numeroDocumento: body.cpf,
+        },
+      },
+      key,
+    );
   }
 
   /** A citizen is "known" if they are a condutor, a proprietário, or have a débito. */

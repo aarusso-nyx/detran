@@ -78,6 +78,7 @@ create table renainf.recurso (
   payload           jsonb not null default '{}'::jsonb
 );
 create index idx_renainf_recurso_proc on renainf.recurso (processo_id);
+create index idx_renainf_recurso_situacao on renainf.recurso (situacao, instancia);
 
 create table renainf.debito (
   processo_id       uuid primary key references renainf.processo(id),
