@@ -1,0 +1,25 @@
+{
+  "name": "detran",
+  "version": "0.0.1",
+  "private": true,
+  "description": "DETRAN suite monorepo — unified modular-monolith backend (inf/est/ch/ops + transversal portal/dashboard), frontend apps, senatran-mock and the senatran-adapter national-API boundary.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "author": "Antonio Augusto Russo <aarusso@nyxk.com.br>",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": ">=9 <10"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "check": "pnpm format:check && pnpm typecheck",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "devai:doctor": "devai doctor"
+  },
+  "devDependencies": {
+    "@devai-nyx/cli": "^0.3.0",
+    "prettier": "^3.5.3"
+  }
+}

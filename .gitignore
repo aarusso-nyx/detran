@@ -1,0 +1,49 @@
+.DS_Store
+node_modules/
+dist/
+build/
+coverage/
+reports/
+tmp/
+.turbo/
+.vite/
+.vite-temp/
+.test-results/
+.env
+.env.*
+!.env.example
+.secrets/
+
+# Docusaurus site (Phase 6 consolidation) — synced tree and build outputs
+docs/site/node_modules/
+docs/site/build/
+docs/site/.docusaurus/
+docs/site/docs/
+docs/site/static/docs-assets/
+
+# Round/working artifacts are unpublished and untracked (teat/pec convention)
+docs/work/**
+!docs/work/devai/
+!docs/work/devai/**
+
+# DEVAI machine state: derived artifacts are ignored; evidence-chain.json is
+# deliberately TRACKED (not ignored) — ADR-CI-ECONOMY Decision 1 requires
+# evidence records committed with the PR so the reusable evidence gate can
+# verify the Article 32 hash chain remotely.
+.devai/state/sensor-readings/
+.devai/state/sensors/
+.devai/state/inventory/
+.devai/state/mutation/
+.devai/state/scorecards/
+.devai/state/test-results/
+.devai/state/coverage/
+.devai/state/agent-runs/
+.devai/state/skills/
+.devai/state/health/
+.devai/state/rtd/
+.devai/state/rtd-manifests/
+.devai/state/obligations.json
+.devai/state/counters.json
+.devai/state/init-introspection.json
+.devai/state/docs-publish-baseline.txt
+!.devai/state/.gitkeep
