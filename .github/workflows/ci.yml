@@ -1,0 +1,175 @@
+name: DETRAN CI
+
+# NO paths/paths-ignore filters, deliberately: every root *.md (AGENTS.md,
+# CLAUDE.md, README.md, CONSTITUTION.md) and everything under docs/ is content
+# the devai doctor / docs-governance gates parse, and an absent required check
+# is NOT a passing one — a filtered-out required check makes the PR permanently
+# unmergeable under branch protection (pec PR #30 lesson; ADR-CI-ECONOMY
+# Decision 5.3: never filter content a gate reads).
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: detran-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Single-source evidence gate (ADR-CI-ECONOMY Decision 7).
+  #
+  # DEVIATION FROM THE PHASE-0 HANDOFF, RECORDED (W0.1, 2026-08-24): the plan
+  # said to call devai's reusable workflow at teat's SHA pin
+  # (devai-nyx/devai/.github/workflows/reusable-evidence-gate.yml@5595c05185
+  # 7a8e11e23c674cfee0646edeb7d602). That commit is UNREACHABLE upstream
+  # (devai main was rewritten for the 1.x ledger model; the adopter-facing
+  # reusable-evidence-gate.yml no longer exists at any reachable ref), and
+  # teat's own main has already migrated to an IN-REPO evidence-gate job
+  # running the installed DEVAI CLI. This job mirrors teat's current shape on
+  # the @devai-nyx/cli 0.3.0 verb set this repo pins: verify Article 32 chain
+  # integrity of the committed ledger; a corrupt/tampered/missing chain FAILS
+  # this job, and the foundation job below converts that into a red required
+  # check — the gate never silently opens.
+  #
+  # evidence_mode is constantly 'false' (no local-evidence policy verifier
+  # exists here yet), i.e. nothing heavy is ever skipped — pec's chain-file-
+  # only semantics. TODO(Phase 2, or the devai 1.x migration round): adopt a
+  # local-evidence policy + trusted-actors allowlist as teat does, and emit a
+  # real evidence_mode.
+  evidence-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      evidence_mode: 'false'
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify the Article 32 evidence chain (fail-closed)
+        run: pnpm exec devai evidence-verify --chain .devai/state/evidence-chain.json --human
+
+  foundation:
+    runs-on: ubuntu-latest
+    needs: evidence-gate
+    # Run even when evidence-gate fails so this required check goes RED instead
+    # of SKIPPED (a skipped required check would satisfy branch protection —
+    # ADR-CI-ECONOMY Decision 2 forbids the gate silently opening). The first
+    # step converts a gate failure into a job failure.
+    if: ${{ !cancelled() }}
+    steps:
+      - name: Enforce evidence-gate result
+        if: ${{ needs.evidence-gate.result != 'success' }}
+        run: |
+          echo "::error title=evidence-gate::evidence-gate did not succeed (result: ${{ needs.evidence-gate.result }}) — failing foundation (the gate never silently opens)."
+          exit 1
+
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      # pnpm must exist before setup-node's `cache: pnpm` runs. All @stynx-nyx
+      # and @devai-nyx packages install from GitHub Packages (.npmrc);
+      # PACKAGES_READ_TOKEN is a read:packages PAT covering the stynx-nyx and
+      # devai-nyx orgs — the built-in GITHUB_TOKEN cannot read another org's
+      # private packages.
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      # The staged gate set grows with the repo (Phase 2 adds RLS smoke,
+      # decorator check, OpenAPI drift, boundary check...). Today `pnpm check`
+      # runs the format gate (prettier) and the recursive workspace typecheck.
+      - name: Check (format + typecheck)
+        run: pnpm check
+
+      # Doctor is informational until the docs site + agent surfaces reach the
+      # doctor-green bar teat holds; flip to blocking (drop `|| true` and the
+      # continue-on-error) as soon as it passes locally.
+      # TODO(Phase 2): make `devai doctor` a blocking step.
+      - name: DEVAI doctor (advisory)
+        continue-on-error: true
+        run: pnpm exec devai doctor --human || true
+
+      - name: Whitespace check
+        run: git diff --check
+
+  # ---------------------------------------------------------------------------
+  # TODO(W0.2): activate this job when the senatran-mock port lands.
+  # Adapted from teat-ci.yml:103-146, EXCEPT: it composes the mock from the
+  # in-repo ./senatran-mock directory (no pinned sibling checkout, no symlink —
+  # the mock is a first-class workspace member per ADR-0003/ADR-0004).
+  # To activate: (1) remove `if: false`, (2) confirm senatran-mock/Dockerfile
+  # and senatran-mock/docker-compose.yml paths, (3) wire the ported 245-test
+  # suite (gate: full senatran suite green in detran CI), (4) add this job to
+  # the required checks.
+  # ---------------------------------------------------------------------------
+  senatran-mock:
+    if: false # TODO(W0.2): enable once ./senatran-mock is ported
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      # Mirrors senatran's own compose-smoke.yml: buildx with the GitHub
+      # Actions layer cache keeps a warm build at ~1-2 min; compose then reuses
+      # the loaded senatran-mock-app:ci tag (no --build).
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Build the senatran mock image (GHA layer cache)
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
+        with:
+          context: senatran-mock
+          file: senatran-mock/Dockerfile
+          tags: senatran-mock-app:ci
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Boot the senatran mock
+        working-directory: senatran-mock
+        run: |
+          docker compose up -d --wait
+          curl -fsS http://localhost:3000/health | grep -q '"db":"up"'
+
+      # TODO(W0.2): run the ported senatran test suite (245 tests) here.
+
+      - name: Dump senatran mock logs on failure
+        if: failure()
+        run: |
+          if [ -f senatran-mock/docker-compose.yml ]; then
+            docker compose --project-directory senatran-mock logs
+          fi
+
+      - name: Tear down the senatran mock
+        if: always()
+        run: |
+          if [ -f senatran-mock/docker-compose.yml ]; then
+            docker compose --project-directory senatran-mock down -v
+          fi
