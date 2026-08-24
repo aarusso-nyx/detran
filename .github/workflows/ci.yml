@@ -121,17 +121,19 @@ jobs:
         run: git diff --check
 
   # ---------------------------------------------------------------------------
-  # TODO(W0.2): activate this job when the senatran-mock port lands.
-  # Adapted from teat-ci.yml:103-146, EXCEPT: it composes the mock from the
-  # in-repo ./senatran-mock directory (no pinned sibling checkout, no symlink —
-  # the mock is a first-class workspace member per ADR-0003/ADR-0004).
-  # To activate: (1) remove `if: false`, (2) confirm senatran-mock/Dockerfile
-  # and senatran-mock/docker-compose.yml paths, (3) wire the ported 245-test
-  # suite (gate: full senatran suite green in detran CI), (4) add this job to
-  # the required checks.
+  # Activated (W0.2, 2026-08-24): the senatran-mock port landed at
+  # ./senatran-mock (245 tests: 119 unit + 14 integration + 112 e2e; 114
+  # OpenAPI operations, no drift — verified locally per the W0.2 gate before
+  # this job was enabled). Two independent things are exercised here on
+  # purpose: (1) the compose/Docker deploy-shaped smoke test (adapted from
+  # teat-ci.yml:103-146 and senatran's own compose-smoke.yml, composing from
+  # the in-repo ./senatran-mock directory — no pinned sibling checkout, no
+  # symlink, per ADR-0003/ADR-0004), and (2) the full ported test suite run
+  # directly against a native (non-Docker) Postgres service container, which
+  # is faster than exec-ing into the app container and matches how
+  # senatran-mock's own pull-request.yml ran tests standalone.
   # ---------------------------------------------------------------------------
   senatran-mock:
-    if: false # TODO(W0.2): enable once ./senatran-mock is ported
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
@@ -152,13 +154,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Boot the senatran mock
+      - name: Boot the senatran mock (compose smoke)
         working-directory: senatran-mock
         run: |
           docker compose up -d --wait
           curl -fsS http://localhost:3000/health | grep -q '"db":"up"'
-
-      # TODO(W0.2): run the ported senatran test suite (245 tests) here.
 
       - name: Dump senatran mock logs on failure
         if: failure()
@@ -173,3 +173,72 @@ jobs:
           if [ -f senatran-mock/docker-compose.yml ]; then
             docker compose --project-directory senatran-mock down -v
           fi
+
+  # Runs the ported 245-test suite (119 unit + 14 integration + 112 e2e)
+  # against a real Postgres service container — the gate is "full senatran
+  # suite green in detran CI" (Phase 0 plan, W0.2). Separate job from the
+  # compose smoke above so a test failure and a deploy-shape failure are
+  # distinguishable required checks.
+  #
+  # Install runs from the CHECKOUT ROOT, not senatran-mock/: senatran-mock is a
+  # pnpm workspace member (pnpm-workspace.yaml), and pnpm resolves the nearest
+  # ancestor pnpm-workspace.yaml regardless of cwd — `pnpm install
+  # --frozen-lockfile` run from inside senatran-mock/ with the full monorepo
+  # checked out installs the WHOLE workspace against the ROOT pnpm-lock.yaml
+  # (verified empirically: "Scope: all 3 workspace projects"), not senatran-
+  # mock's own standalone lockfile. That standalone lockfile
+  # (senatran-mock/pnpm-lock.yaml) exists solely for the Docker build above,
+  # whose context is scoped to senatran-mock/ alone (DESIGN-DECISIONS.md
+  # D-0012) — it is irrelevant here. Consequently this job needs
+  # PACKAGES_READ_TOKEN like `foundation`, even though senatran-mock itself has
+  # zero @stynx-nyx/@devai-nyx deps: the root workspace install resolves every
+  # member together.
+  senatran-mock-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: senatran
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/senatran
+      SENATRAN_TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/senatran
+      DB_HOST: localhost
+      DB_PORT: '5432'
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: senatran
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - name: Install dependencies (workspace root)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Check (lint + typecheck + openapi:check + unit)
+        working-directory: senatran-mock
+        run: pnpm check
+
+      - name: Reset the database (DDL + deterministic sample seed)
+        working-directory: senatran-mock
+        run: pnpm db:reset
+
+      - name: Run the tiered test suite (unit + integration + e2e)
+        working-directory: senatran-mock
+        run: pnpm test:ci
