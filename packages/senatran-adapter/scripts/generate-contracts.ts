@@ -16,7 +16,7 @@ const contracts = [
       'senatran-mock/docs/framework/contracts/openapi.yaml',
     ),
     output: resolve(packageRoot, 'src/generated/read.ts'),
-    expectedOperations: 57,
+    expectedOperations: 60,
   },
   {
     input: resolve(
@@ -24,7 +24,7 @@ const contracts = [
       'senatran-mock/docs/framework/contracts/openapi-transactional.yaml',
     ),
     output: resolve(packageRoot, 'src/generated/transactional.ts'),
-    expectedOperations: 57,
+    expectedOperations: 60,
   },
 ] as const;
 

@@ -13,7 +13,7 @@ import { SneService } from './sne.service.js';
 import { DtoValidationPipe } from '../../../shared/api/src/common/dto-validation.pipe.js';
 import { NotificacaoDto, CancelamentoDto } from './dto/notificacao.dto.js';
 
-type Body = Record<string, unknown>;
+type SneAdhesionBody = Record<string, unknown>;
 
 /**
  * SNE national electronic-notification endpoints (7), ported to WSDenatran
@@ -41,7 +41,7 @@ export class SneController {
 
   @Post('adesoes/cidadaos')
   async aderirCidadao(
-    @Body() body: Body,
+    @Body() body: SneAdhesionBody,
     @Headers('idempotency-key') key: string | undefined,
     @Res({ passthrough: true }) res: Response,
   ) {

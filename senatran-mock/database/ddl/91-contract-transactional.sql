@@ -62,7 +62,8 @@ create or replace view contract.v_renainf_recurso as
 -- GET /v1/renaest/sinistros/{idSinistro} and /v1/renaest/protocolos/{protocolo}
 -- both read this view; the live `situacao` is injected into the stored payload.
 create or replace view contract.v_renaest_sinistro as
-  select id_sinistro, protocolo,
+  select id_sinistro, protocolo, cpf_condutor, data_hora_sinistro,
+         orgao_responsavel,
          jsonb_set(payload, '{situacao}', to_jsonb(situacao)) as payload
   from renaest.sinistro;
 
