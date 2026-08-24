@@ -541,6 +541,171 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
   ],
 ];
 
+/**
+ * TEAT_COMMAND_RULES covered state-changing custody commands above. These are
+ * the ported CRUD surfaces whose TEAT fallback classified as field-legal or
+ * governance work; spelling them out keeps the unified matrix authoritative.
+ */
+const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
+  [
+    'agent-profile',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'agent-profile',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'operational-device',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'operational-device',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'team',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'team',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'shift',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'shift',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  ['homologation', 'create', ['agency-admin', 'technical-admin']],
+  ['application-version', 'create', ['agency-admin', 'technical-admin']],
+  [
+    'snapshot-person',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'snapshot-person',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'snapshot-vehicle',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'snapshot-vehicle',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'external-query',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'evidence',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'AUDITOR',
+      'technical-admin',
+    ],
+  ],
+];
+
 export const DETRAN_POLICY_MATRIX: Readonly<
   Record<DetranPolicyKey, readonly DetranRole[]>
 > = Object.freeze(
@@ -551,6 +716,10 @@ export const DETRAN_POLICY_MATRIX: Readonly<
     ]),
     ...TEAT_RULES.map(([domain, resource, action, roles]) => [
       teat(domain, resource, action),
+      roles,
+    ]),
+    ...OPS_SURFACE_RULES.map(([resource, action, roles]) => [
+      teat('ops', resource, action),
       roles,
     ]),
     ['portal:appeal:create', ['CIDADAO']],

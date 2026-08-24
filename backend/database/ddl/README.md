@@ -12,8 +12,10 @@ Applied in numeric order by `../apply.sh`:
    `enforce_tenant_id` trigger installer.
 8. `12-audit-functions.sql` — serialized per-tenant hash-chain persistence and
    verification.
-9. `20-rls-policies.sql` — forced RLS, trigger installation and least-privilege
-   grants.
+9. `13-ops-field-operations.sql` — Phase 2 field operations, frozen external
+   lookup snapshots and evidence custody, all owned by `ops.*`.
+10. `20-rls-policies.sql` — forced RLS, trigger installation and least-privilege
+    grants.
 
 `auth.tenants` is the canonical DETRAN tenant table. `tenancy.tenants` is a
 simple, automatically updatable compatibility view exposing the columns used by

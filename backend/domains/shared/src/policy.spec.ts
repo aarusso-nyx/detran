@@ -38,6 +38,20 @@ describe('DETRAN unified policy kit', () => {
     expect(
       isDetranActionAllowed(
         { roles: ['field-agent'], permissions: [] },
+        'ops:evidence',
+        'add-custody-event',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['field-agent'], permissions: [] },
+        'ops:homologation',
+        'create',
+      ),
+    ).toBe(false);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['field-agent'], permissions: [] },
         'inf:ait',
         'finalize',
       ),

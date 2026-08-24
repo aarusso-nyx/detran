@@ -84,6 +84,21 @@ try {
      values ('evidence', 'tenant-a', 'application/pdf', 1, '01', 'restricted')
      on conflict (tenant_id, object_key) do nothing`,
   );
+  const opsEvidence = await client.query<{ id: string }>(
+    `insert into ops.evidence_evidence
+       (traffic_agency_id, evidence_type, origin, storage_uri, mime_type, size_bytes, hash_algorithm, hash_value, captured_at, location_json, location_geom)
+     values ($1, 'photo', 'mobile', 'storage://evidence/rls', 'image/jpeg', 1, 'sha256', 'rls-smoke-evidence', now(), '{"latitude": -23.5505, "longitude": -46.6333}', public.detran_jsonb_point_4674('{"latitude": -23.5505, "longitude": -46.6333}'))
+     returning id`,
+    [tenantA],
+  );
+  if (!opsEvidence.rows[0]?.id) throw new Error('ops evidence insert failed');
+  const geometryRoundTrip = await client.query<{ location: { type?: string } }>(
+    `select st_asgeojson(location_geom)::json as location from ops.evidence_evidence where id = $1`,
+    [opsEvidence.rows[0].id],
+  );
+  if (geometryRoundTrip.rows[0]?.location.type !== 'Point') {
+    throw new Error('SRID-4674 geometry to JSON round-trip failed');
+  }
   await client.query(
     `select audit.write($1, $2, 'AUDITOR', 'RLS_SMOKE', 'storage.object', null, '{}'::jsonb)`,
     [tenantA, actorA],
@@ -97,7 +112,7 @@ try {
   await client.query('rollback');
 
   console.log(
-    'check-rls-smoke: OK (tenant isolation, enforce_tenant_id, audit persistence)',
+    'check-rls-smoke: OK (tenant isolation, ops RLS, SRID-4674 round-trip, audit persistence)',
   );
 } finally {
   await client.end();
