@@ -12,6 +12,9 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
   `SENATRAN_PROVIDER=mock|real`; boundary check in CI.
 - **ADR-0004** — Migration policy: fresh layout, module-by-module port, origin
   freeze on merge, archive at parity.
+- **ADR-0005** — Unified backend kernel: exact registry pins, fail-closed
+  profiles, role-union mapping, request-path tenancy, persisted audit chain and
+  the Phase-2 backend CI gate.
 
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo

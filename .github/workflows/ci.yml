@@ -120,6 +120,60 @@ jobs:
       - name: Whitespace check
         run: git diff --check
 
+  # Phase-2 unified backend kernel gate (ADR-0005). This is intentionally a
+  # separate architecture-named job so database/RLS failures are distinguishable
+  # from the general foundation floor. Recommended for branch protection after
+  # the orchestrator observes the first green PR run.
+  backend-kernel:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_DB: detran
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres -d detran"
+          --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran
+      DETRAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran
+      DB_HOST: localhost
+      DB_PORT: '5432'
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: detran
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Apply unified backend DDL
+        run: pnpm backend:db:reset
+
+      - name: Verify controller decorators
+        run: pnpm verify:decorators
+
+      - name: Verify live RLS and audit persistence
+        run: pnpm backend:rls-smoke
+
+      - name: Run backend unit, integration and e2e tiers
+        run: pnpm backend:test:ci
+
   # ---------------------------------------------------------------------------
   # Activated (W0.2, 2026-08-24): the senatran-mock port landed at
   # ./senatran-mock (245 tests: 119 unit + 14 integration + 112 e2e; 114

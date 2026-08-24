@@ -1,7 +1,12 @@
 # backend/domains/shared — Shared backend kit
 
-Cross-domain building blocks: the policy kit (unified «domain»:«resource»:«action»
-matrix, @Resource/@Action decorators), common types and HTTP conventions.
+Cross-domain building blocks: the policy kit (unified
+`domain:resource:action` matrix), `@Resource`/`@Action`/`@Audit`/`@Public`
+decorators, the global guard, role normalization and the request-path
+`withTenantContext` transaction façade.
 
-- Populated in Phase 2 (W2.1) alongside the composition root.
+- Package name: `@detran/shared`; domain packages import this workspace package
+  rather than using deep relative paths (ADR-0001).
+- Role union: PEC 15 + eight unique TEAT staff codes + `CIDADAO`; TEAT
+  `auditor` maps to PEC `AUDITOR` (ADR-0005).
 - Keep this thin: anything platform-generic belongs in stynx, not here.

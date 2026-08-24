@@ -12,14 +12,30 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm typecheck",
+    "check": "pnpm format:check && pnpm typecheck && pnpm verify:decorators && pnpm verify:rls-ddl",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
+    "build": "pnpm --filter @detran/shared build && pnpm --filter @detran/app build",
+    "verify:decorators": "tsx tools/verify-controller-decorators.ts",
+    "verify:rls-ddl": "tsx tools/check-rls-ddl.ts",
+    "backend:db:apply": "bash backend/database/apply.sh",
+    "backend:db:reset": "bash backend/database/apply.sh --full",
+    "backend:rls-smoke": "tsx tools/check-rls-smoke.ts",
+    "backend:test:unit": "pnpm --filter @detran/shared test && pnpm --filter @detran/app test:unit",
+    "backend:test:integration": "pnpm --filter @detran/app test:integration",
+    "backend:test:e2e": "pnpm --filter @detran/app test:e2e",
+    "backend:test:real": "pnpm --filter @detran/app test:real",
+    "backend:test:ci": "pnpm backend:test:unit && pnpm backend:test:integration && pnpm backend:test:e2e",
     "devai:doctor": "devai doctor"
   },
   "devDependencies": {
     "@devai-nyx/cli": "^0.3.0",
-    "prettier": "^3.5.3"
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.4",
+    "pg": "^8.20.0",
+    "prettier": "^3.5.3",
+    "tsx": "^4.20.6",
+    "typescript": "^6.0.3"
   }
 }
