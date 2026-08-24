@@ -14,3 +14,4 @@ binding; supersede only by a new ADR.
 | [ADR-0004](ADR-0004-migration-policy.md)                 | Migration policy: fresh layout, module-by-module port, origin freeze |
 | [ADR-0005](ADR-0005-unified-backend-kernel.md)           | Unified backend kernel contract                                      |
 | [ADR-0006](ADR-0006-detran-ui-kit.md)                    | Shared DETRAN Angular UI kit over STYNX                              |
+| [ADR-0007](ADR-0007-regenerable-blueprints.md)           | Blueprint output is regenerable-only                                 |

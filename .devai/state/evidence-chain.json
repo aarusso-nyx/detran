@@ -1,5 +1,5 @@
 {
-  "head": "972c38f9477147a869d185887e574d2862a3b0e7086c0a632757a584e6ff48c5",
+  "head": "c0a719093e8991fc19c8a34c0f92df8c398cf815dd09869ca9052cf3724df5f7",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -293,6 +293,60 @@
       ],
       "previous_run_hash": "abea39f16845b0fd2c69b51c0368d6a3288c4b87a8cd41097a1767474e608698",
       "manifest_hash": "972c38f9477147a869d185887e574d2862a3b0e7086c0a632757a584e6ff48c5"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-9c0f6262915cc731",
+      "timestamp": "2026-08-24T10:52:16.280Z",
+      "actor": "Codex",
+      "actor_role": "agent:engineer",
+      "action": "P2_BLUEPRINTS_REBASE",
+      "status": "completed",
+      "context": {
+        "repo_root": "/private/tmp/claude-501/-Users-aarusso-Development-stech/a03ca349-af82-4752-b94c-0bd2838504ca/scratchpad/w25-blueprints",
+        "task_id": "TASK-25",
+        "worktree_id": "WT-25-blueprints",
+        "git": {
+          "head_sha": "902ba190ccab08f73d50a93b86e74e624d957628",
+          "dirty_files": [
+            ".github/workflows/ci.yml",
+            "backend/database/ddl/30-ops-example.sql",
+            "backend/domains/ops/example/package.json",
+            "backend/domains/ops/example/src/controllers/example-record.controller.ts",
+            "backend/domains/ops/example/src/dto/create-example-record.dto.ts",
+            "backend/domains/ops/example/src/entities/example-record.entity.ts",
+            "backend/domains/ops/example/src/example.module.ts",
+            "backend/domains/ops/example/src/repositories/example-record.repository.ts",
+            "backend/domains/ops/example/src/services/example-record.service.ts",
+            "docs/framework/blueprints/BP-OPS-EXAMPLE-001.json",
+            "docs/framework/blueprints/README.md",
+            "docs/framework/blueprints/module-blueprint.schema.json",
+            "docs/meta/adr/ADR-0006-regenerable-blueprints.md",
+            "docs/meta/adr/ADR-0007-regenerable-blueprints.md",
+            "docs/meta/adr/README.md",
+            "package.json",
+            "pnpm-lock.yaml",
+            "tools/blueprints/check.mjs",
+            "tools/blueprints/generate.mjs",
+            "tools/blueprints/generated-files.json"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": "docs/meta/adr/ADR-0007-regenerable-blueprints.md",
+          "sha256": null
+        },
+        {
+          "path": "tools/blueprints/generate.mjs",
+          "sha256": null
+        }
+      ],
+      "notes": [
+        "Rebased regenerable blueprint generators onto origin/main after the ops-domain merge; preserved root CI/workspace additions and renumbered the blueprint ADR to ADR-0007."
+      ],
+      "previous_run_hash": "972c38f9477147a869d185887e574d2862a3b0e7086c0a632757a584e6ff48c5",
+      "manifest_hash": "c0a719093e8991fc19c8a34c0f92df8c398cf815dd09869ca9052cf3724df5f7"
     }
   ]
 }

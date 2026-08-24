@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl",
+    "check": "pnpm format:check && pnpm blueprints:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
@@ -27,7 +27,9 @@
     "backend:test:e2e": "pnpm --filter @detran/app test:e2e",
     "backend:test:real": "pnpm --filter @detran/app test:real",
     "backend:test:ci": "pnpm backend:test:unit && pnpm backend:test:integration && pnpm backend:test:e2e",
-    "devai:doctor": "devai doctor"
+    "devai:doctor": "devai doctor",
+    "blueprints:generate": "node tools/blueprints/generate.mjs",
+    "blueprints:check": "node tools/blueprints/check.mjs"
   },
   "devDependencies": {
     "@devai-nyx/cli": "^0.3.0",

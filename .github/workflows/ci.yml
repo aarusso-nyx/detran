@@ -171,6 +171,9 @@ jobs:
       - name: Verify live RLS and audit persistence
         run: pnpm backend:rls-smoke
 
+      - name: Verify blueprint regeneration has no drift
+        run: pnpm blueprints:check
+
       - name: Run backend unit, integration and e2e tiers
         run: pnpm backend:test:ci
 
