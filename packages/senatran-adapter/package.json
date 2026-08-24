@@ -1,0 +1,46 @@
+{
+  "name": "@detran/senatran-adapter",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Sole typed boundary between DETRAN domains and SENATRAN national APIs.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./test-kit": {
+      "types": "./src/test-kit.ts",
+      "default": "./dist/test-kit.js"
+    },
+    "./wire": {
+      "types": "./src/wire.ts",
+      "default": "./dist/wire.js"
+    }
+  },
+  "scripts": {
+    "contracts:generate": "tsx scripts/generate-contracts.ts",
+    "contracts:check": "tsx scripts/generate-contracts.ts --check",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run --config vitest.config.ts",
+    "test:unit": "DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts",
+    "test:integration": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "test:e2e": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "test:real": "DETRAN_TEST_TIER=real vitest run --config vitest.config.ts",
+    "test:ci": "pnpm test:unit && pnpm test:integration && pnpm test:e2e"
+  },
+  "dependencies": {
+    "@stynx-nyx/integration-adapter": "0.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "openapi-typescript": "7.13.0",
+    "prettier": "^3.5.3",
+    "tsx": "^4.20.6",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
+  }
+}
