@@ -1,0 +1,1465 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Normative — BP-INF-NORMATIVE-001",
+    "version": "1.0.0",
+    "description": "Infraction catalog, framing rules, agency parameters, templates, and mobile package versioning ported from TEAT.",
+    "x-blueprint": "BP-INF-NORMATIVE-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/normative/catalogs": {
+      "get": {
+        "tags": ["normative-catalog"],
+        "operationId": "listNormativeCatalog",
+        "summary": "List NormativeCatalog (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NormativeCatalog"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["normative-catalog"],
+        "operationId": "createNormativeCatalog",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNormativeCatalogDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeCatalog"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/catalogs/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["normative-catalog"],
+        "operationId": "getNormativeCatalog",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeCatalog"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["normative-catalog"],
+        "operationId": "updateNormativeCatalog",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNormativeCatalogDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeCatalog"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["normative-catalog"],
+        "operationId": "removeNormativeCatalog",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/framings": {
+      "get": {
+        "tags": ["framing"],
+        "operationId": "listNormativeFraming",
+        "summary": "List NormativeFraming (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NormativeFraming"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["framing"],
+        "operationId": "createNormativeFraming",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNormativeFramingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeFraming"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/framings/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["framing"],
+        "operationId": "getNormativeFraming",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeFraming"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["framing"],
+        "operationId": "updateNormativeFraming",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNormativeFramingDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeFraming"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["framing"],
+        "operationId": "removeNormativeFraming",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/validation-rules": {
+      "get": {
+        "tags": ["validation-rule"],
+        "operationId": "listNormativeValidationRule",
+        "summary": "List NormativeValidationRule (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NormativeValidationRule"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["validation-rule"],
+        "operationId": "createNormativeValidationRule",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNormativeValidationRuleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeValidationRule"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/validation-rules/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["validation-rule"],
+        "operationId": "getNormativeValidationRule",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeValidationRule"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["validation-rule"],
+        "operationId": "updateNormativeValidationRule",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNormativeValidationRuleDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeValidationRule"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["validation-rule"],
+        "operationId": "removeNormativeValidationRule",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/agency-parameters": {
+      "get": {
+        "tags": ["agency-parameter"],
+        "operationId": "listNormativeAgencyParameter",
+        "summary": "List NormativeAgencyParameter (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NormativeAgencyParameter"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["agency-parameter"],
+        "operationId": "createNormativeAgencyParameter",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNormativeAgencyParameterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeAgencyParameter"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/agency-parameters/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["agency-parameter"],
+        "operationId": "getNormativeAgencyParameter",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeAgencyParameter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["agency-parameter"],
+        "operationId": "updateNormativeAgencyParameter",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNormativeAgencyParameterDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeAgencyParameter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["agency-parameter"],
+        "operationId": "removeNormativeAgencyParameter",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/document-templates": {
+      "get": {
+        "tags": ["document-template"],
+        "operationId": "listNormativeDocumentTemplate",
+        "summary": "List NormativeDocumentTemplate (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NormativeDocumentTemplate"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["document-template"],
+        "operationId": "createNormativeDocumentTemplate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNormativeDocumentTemplateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeDocumentTemplate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/document-templates/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["document-template"],
+        "operationId": "getNormativeDocumentTemplate",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeDocumentTemplate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["document-template"],
+        "operationId": "updateNormativeDocumentTemplate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNormativeDocumentTemplateDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeDocumentTemplate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["document-template"],
+        "operationId": "removeNormativeDocumentTemplate",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/mobile-packages": {
+      "get": {
+        "tags": ["mobile-normative-package"],
+        "operationId": "listMobileNormativePackage",
+        "summary": "List MobileNormativePackage (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MobileNormativePackage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["mobile-normative-package"],
+        "operationId": "createMobileNormativePackage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMobileNormativePackageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNormativePackage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/mobile-packages/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["mobile-normative-package"],
+        "operationId": "getMobileNormativePackage",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNormativePackage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["mobile-normative-package"],
+        "operationId": "updateMobileNormativePackage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateMobileNormativePackageDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MobileNormativePackage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["mobile-normative-package"],
+        "operationId": "removeMobileNormativePackage",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "NormativeCatalog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "catalog_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'draft'"
+          },
+          "normative_source": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "name",
+          "catalog_type",
+          "version",
+          "valid_from",
+          "created_at"
+        ]
+      },
+      "CreateNormativeCatalogDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "catalog_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'draft'"
+          },
+          "normative_source": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["name", "catalog_type", "version", "valid_from"]
+      },
+      "NormativeFraming": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "framing_code": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "article": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "clause": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "penalty": {
+            "type": "string",
+            "nullable": true
+          },
+          "administrative_measure_summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "allows_no_approach": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "requires_observation": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "requires_equipment": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "catalog_id",
+          "framing_code",
+          "description",
+          "created_at"
+        ]
+      },
+      "CreateNormativeFramingDto": {
+        "type": "object",
+        "properties": {
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "framing_code": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "article": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "clause": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "penalty": {
+            "type": "string",
+            "nullable": true
+          },
+          "administrative_measure_summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "allows_no_approach": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "requires_observation": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "requires_equipment": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": ["catalog_id", "framing_code", "description"]
+      },
+      "NormativeValidationRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "framing_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "rule_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string"
+          },
+          "rule_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "expression_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "user_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "catalog_id",
+          "rule_code",
+          "description",
+          "rule_type",
+          "severity",
+          "created_at"
+        ]
+      },
+      "CreateNormativeValidationRuleDto": {
+        "type": "object",
+        "properties": {
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "framing_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "rule_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string"
+          },
+          "rule_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "expression_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "user_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": [
+          "catalog_id",
+          "rule_code",
+          "description",
+          "rule_type",
+          "severity"
+        ]
+      },
+      "NormativeAgencyParameter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "value_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "value_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "key",
+          "value_json",
+          "value_type",
+          "valid_from",
+          "created_at"
+        ]
+      },
+      "CreateNormativeAgencyParameterDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "value_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "value_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "key",
+          "value_json",
+          "value_type",
+          "valid_from"
+        ]
+      },
+      "NormativeDocumentTemplate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "template_body": {
+            "type": "string"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "document_type",
+          "name",
+          "version",
+          "template_body",
+          "valid_from",
+          "created_at"
+        ]
+      },
+      "CreateNormativeDocumentTemplateDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "template_body": {
+            "type": "string"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "document_type",
+          "name",
+          "version",
+          "template_body",
+          "valid_from"
+        ]
+      },
+      "MobileNormativePackage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "package_version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "package_uri": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'draft'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "catalog_id",
+          "package_version",
+          "manifest_hash",
+          "package_uri",
+          "created_at"
+        ]
+      },
+      "CreateMobileNormativePackageDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "package_version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "package_uri": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'draft'"
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "catalog_id",
+          "package_version",
+          "manifest_hash",
+          "package_uri"
+        ]
+      }
+    }
+  }
+}

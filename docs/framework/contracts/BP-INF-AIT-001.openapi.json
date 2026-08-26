@@ -1,0 +1,1807 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Ait — BP-INF-AIT-001",
+    "version": "1.0.0",
+    "description": "AIT issuance and lifecycle with immutable content hash, normative references, and operational satellites.",
+    "x-blueprint": "BP-INF-AIT-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/ait/aits": {
+      "get": {
+        "tags": ["ait"],
+        "operationId": "listAit",
+        "summary": "List Ait (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ait"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait"],
+        "operationId": "createAit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ait"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/aits/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait"],
+        "operationId": "getAit",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ait"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait"],
+        "operationId": "updateAit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ait"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait"],
+        "operationId": "removeAit",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/vehicles": {
+      "get": {
+        "tags": ["ait-vehicle"],
+        "operationId": "listAitVehicle",
+        "summary": "List AitVehicle (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitVehicle"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-vehicle"],
+        "operationId": "createAitVehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitVehicleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitVehicle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/vehicles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-vehicle"],
+        "operationId": "getAitVehicle",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitVehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-vehicle"],
+        "operationId": "updateAitVehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitVehicleDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitVehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-vehicle"],
+        "operationId": "removeAitVehicle",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/people": {
+      "get": {
+        "tags": ["ait-person"],
+        "operationId": "listAitPerson",
+        "summary": "List AitPerson (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitPerson"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-person"],
+        "operationId": "createAitPerson",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitPersonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitPerson"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/people/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-person"],
+        "operationId": "getAitPerson",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitPerson"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-person"],
+        "operationId": "updateAitPerson",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitPersonDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitPerson"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-person"],
+        "operationId": "removeAitPerson",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/status-history": {
+      "get": {
+        "tags": ["ait-status-history"],
+        "operationId": "listAitStatusHistory",
+        "summary": "List AitStatusHistory (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitStatusHistory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-status-history"],
+        "operationId": "createAitStatusHistory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitStatusHistoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitStatusHistory"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/status-history/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-status-history"],
+        "operationId": "getAitStatusHistory",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitStatusHistory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-status-history"],
+        "operationId": "updateAitStatusHistory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitStatusHistoryDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitStatusHistory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-status-history"],
+        "operationId": "removeAitStatusHistory",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/corrections": {
+      "get": {
+        "tags": ["ait-correction"],
+        "operationId": "listAitCorrection",
+        "summary": "List AitCorrection (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitCorrection"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-correction"],
+        "operationId": "createAitCorrection",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitCorrectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCorrection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/corrections/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-correction"],
+        "operationId": "getAitCorrection",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCorrection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-correction"],
+        "operationId": "updateAitCorrection",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitCorrectionDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCorrection"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-correction"],
+        "operationId": "removeAitCorrection",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/signatures": {
+      "get": {
+        "tags": ["ait-signature"],
+        "operationId": "listAitSignature",
+        "summary": "List AitSignature (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitSignature"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-signature"],
+        "operationId": "createAitSignature",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitSignatureDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitSignature"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/signatures/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-signature"],
+        "operationId": "getAitSignature",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitSignature"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-signature"],
+        "operationId": "updateAitSignature",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitSignatureDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitSignature"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-signature"],
+        "operationId": "removeAitSignature",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/print-events": {
+      "get": {
+        "tags": ["ait-print-event"],
+        "operationId": "listAitPrintEvent",
+        "summary": "List AitPrintEvent (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitPrintEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-print-event"],
+        "operationId": "createAitPrintEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitPrintEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitPrintEvent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/print-events/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-print-event"],
+        "operationId": "getAitPrintEvent",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitPrintEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-print-event"],
+        "operationId": "updateAitPrintEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitPrintEventDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitPrintEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-print-event"],
+        "operationId": "removeAitPrintEvent",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Ait": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "executing_agency_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "ait_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "series": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "''"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "framing_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "issuance_mode": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "constatation_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "had_approach": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "no_approach_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_description": {
+            "type": "string"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "gps_accuracy_m": {
+            "type": "number",
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "uf": {
+            "type": "string",
+            "maxLength": 2
+          },
+          "road": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "km": {
+            "type": "number",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "mandatory_observation": {
+            "type": "string",
+            "nullable": true
+          },
+          "complementary_observation": {
+            "type": "string",
+            "nullable": true
+          },
+          "current_status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'draft'"
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "system_signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "receipt_protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "ait_number",
+          "agent_id",
+          "shift_id",
+          "device_id",
+          "framing_id",
+          "catalog_id",
+          "infraction_at",
+          "issued_at",
+          "issuance_mode",
+          "constatation_type",
+          "location_description",
+          "uf",
+          "created_at"
+        ]
+      },
+      "CreateAitDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "executing_agency_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "ait_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "series": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "''"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "framing_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "issuance_mode": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "constatation_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "had_approach": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "no_approach_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_description": {
+            "type": "string"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "gps_accuracy_m": {
+            "type": "number",
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "uf": {
+            "type": "string",
+            "maxLength": 2
+          },
+          "road": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "km": {
+            "type": "number",
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "mandatory_observation": {
+            "type": "string",
+            "nullable": true
+          },
+          "complementary_observation": {
+            "type": "string",
+            "nullable": true
+          },
+          "current_status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'draft'"
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "system_signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "receipt_protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "ait_number",
+          "agent_id",
+          "shift_id",
+          "device_id",
+          "framing_id",
+          "catalog_id",
+          "infraction_at",
+          "issued_at",
+          "issuance_mode",
+          "constatation_type",
+          "location_description",
+          "uf"
+        ]
+      },
+      "AitVehicle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "visually_confirmed_by_agent": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "observed_divergence": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "ait_id",
+          "vehicle_snapshot_id",
+          "role",
+          "created_at"
+        ]
+      },
+      "CreateAitVehicleDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "visually_confirmed_by_agent": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "observed_divergence": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["ait_id", "vehicle_snapshot_id", "role"]
+      },
+      "AitPerson": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "identified_by": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "external_query_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signed": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "refused_signature": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "ait_id",
+          "person_id",
+          "role",
+          "identified_by",
+          "created_at"
+        ]
+      },
+      "CreateAitPersonDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "identified_by": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "external_query_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signed": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "refused_signature": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["ait_id", "person_id", "role", "identified_by"]
+      },
+      "AitStatusHistory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "system_name": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "ait_id", "status", "created_at"]
+      },
+      "CreateAitStatusHistoryDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "system_name": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["ait_id", "status"]
+      },
+      "AitCorrection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operator_user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "correction_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "changed_field": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "previous_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "new_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "justification": {
+            "type": "string"
+          },
+          "corrected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "approved_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "ait_id",
+          "operator_user_ref",
+          "correction_type",
+          "justification",
+          "created_at"
+        ]
+      },
+      "CreateAitCorrectionDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operator_user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "correction_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "changed_field": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "previous_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "new_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "justification": {
+            "type": "string"
+          },
+          "corrected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "approved_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "ait_id",
+          "operator_user_ref",
+          "correction_type",
+          "justification"
+        ]
+      },
+      "AitSignature": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "signature_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "refusal_or_impossibility_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "ait_id", "signature_type", "created_at"]
+      },
+      "CreateAitSignatureDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "signature_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "refusal_or_impossibility_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          }
+        },
+        "required": ["ait_id", "signature_type"]
+      },
+      "AitPrintEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "event_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "printer_identifier": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "receipt_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "failure_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "ait_id", "event_type", "created_at"]
+      },
+      "CreateAitPrintEventDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "event_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "printer_identifier": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "receipt_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "failure_reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["ait_id", "event_type"]
+      }
+    }
+  }
+}

@@ -1,0 +1,2441 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RaitCase — BP-INF-RAIT-CASE-001",
+    "version": "1.0.0",
+    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico do KB detran-refs.",
+    "x-blueprint": "BP-INF-RAIT-CASE-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/rait/cases": {
+      "get": {
+        "tags": ["rait-case"],
+        "operationId": "listRaitCase",
+        "summary": "List RaitCase (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitCase"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-case"],
+        "operationId": "createRaitCase",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitCaseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCase"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/cases/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-case"],
+        "operationId": "getRaitCase",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-case"],
+        "operationId": "updateRaitCase",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitCaseDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-case"],
+        "operationId": "removeRaitCase",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/parties": {
+      "get": {
+        "tags": ["rait-party"],
+        "operationId": "listRaitParty",
+        "summary": "List RaitParty (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitParty"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-party"],
+        "operationId": "createRaitParty",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitPartyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitParty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/parties/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-party"],
+        "operationId": "getRaitParty",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitParty"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-party"],
+        "operationId": "updateRaitParty",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitPartyDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitParty"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-party"],
+        "operationId": "removeRaitParty",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/documents": {
+      "get": {
+        "tags": ["rait-document"],
+        "operationId": "listRaitDocument",
+        "summary": "List RaitDocument (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitDocument"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-document"],
+        "operationId": "createRaitDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/documents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-document"],
+        "operationId": "getRaitDocument",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-document"],
+        "operationId": "updateRaitDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitDocumentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-document"],
+        "operationId": "removeRaitDocument",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/admissibility": {
+      "get": {
+        "tags": ["rait-admissibility"],
+        "operationId": "listRaitAdmissibility",
+        "summary": "List RaitAdmissibility (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitAdmissibility"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-admissibility"],
+        "operationId": "createRaitAdmissibility",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitAdmissibilityDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAdmissibility"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/admissibility/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-admissibility"],
+        "operationId": "getRaitAdmissibility",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAdmissibility"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-admissibility"],
+        "operationId": "updateRaitAdmissibility",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitAdmissibilityDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAdmissibility"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-admissibility"],
+        "operationId": "removeRaitAdmissibility",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/deadlines": {
+      "get": {
+        "tags": ["rait-deadline"],
+        "operationId": "listRaitDeadline",
+        "summary": "List RaitDeadline (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitDeadline"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-deadline"],
+        "operationId": "createRaitDeadline",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitDeadlineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDeadline"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/deadlines/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-deadline"],
+        "operationId": "getRaitDeadline",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDeadline"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-deadline"],
+        "operationId": "updateRaitDeadline",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitDeadlineDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDeadline"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-deadline"],
+        "operationId": "removeRaitDeadline",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/inquiries": {
+      "get": {
+        "tags": ["rait-inquiry"],
+        "operationId": "listRaitInquiry",
+        "summary": "List RaitInquiry (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitInquiry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-inquiry"],
+        "operationId": "createRaitInquiry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitInquiryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitInquiry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/inquiries/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-inquiry"],
+        "operationId": "getRaitInquiry",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitInquiry"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-inquiry"],
+        "operationId": "updateRaitInquiry",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitInquiryDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitInquiry"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-inquiry"],
+        "operationId": "removeRaitInquiry",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/decisions": {
+      "get": {
+        "tags": ["rait-decision"],
+        "operationId": "listRaitDecision",
+        "summary": "List RaitDecision (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitDecision"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-decision"],
+        "operationId": "createRaitDecision",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitDecisionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDecision"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/decisions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-decision"],
+        "operationId": "getRaitDecision",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDecision"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-decision"],
+        "operationId": "updateRaitDecision",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitDecisionDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitDecision"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-decision"],
+        "operationId": "removeRaitDecision",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/communications": {
+      "get": {
+        "tags": ["rait-communication"],
+        "operationId": "listRaitCommunication",
+        "summary": "List RaitCommunication (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitCommunication"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-communication"],
+        "operationId": "createRaitCommunication",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitCommunicationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCommunication"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/communications/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-communication"],
+        "operationId": "getRaitCommunication",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCommunication"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-communication"],
+        "operationId": "updateRaitCommunication",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitCommunicationDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCommunication"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-communication"],
+        "operationId": "removeRaitCommunication",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/events": {
+      "get": {
+        "tags": ["rait-case-event"],
+        "operationId": "listRaitCaseEvent",
+        "summary": "List RaitCaseEvent (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitCaseEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-case-event"],
+        "operationId": "createRaitCaseEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitCaseEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCaseEvent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/events/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-case-event"],
+        "operationId": "getRaitCaseEvent",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCaseEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-case-event"],
+        "operationId": "updateRaitCaseEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitCaseEventDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCaseEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-case-event"],
+        "operationId": "removeRaitCaseEvent",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RaitCase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "origin_case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROTOCOLADO",
+              "TRIAGEM_ADMISSIBILIDADE",
+              "NAO_CONHECIDO",
+              "ADMITIDO",
+              "AGUARDANDO_REMESSA_JARI",
+              "DISTRIBUIDO",
+              "EM_INSTRUCAO",
+              "DILIGENCIA",
+              "PRONTO_P_DECISAO",
+              "DECIDIDO_AUTORIDADE",
+              "PAUTADO",
+              "JULGADO_SESSAO",
+              "COMUNICADO",
+              "TRANSITADO",
+              "REMETIDO_2A_INSTANCIA",
+              "ENCERRADO_DESISTENCIA"
+            ],
+            "default": "'PROTOCOLADO'"
+          },
+          "intake_channel": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "admitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "remitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "communicated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "suspensive_effect": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "archived": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "non_admission_reason": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "intempestivo",
+              "ilegitimo",
+              "sem_assinatura",
+              "pedido_incompativel"
+            ],
+            "nullable": true
+          },
+          "withdrawal_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "last_movement_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "pending_completion": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "ait_id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "intake_channel",
+          "protocolled_at",
+          "created_at"
+        ],
+        "description": "Caso RAIT — um requerimento sobre um AIT em uma instancia (RN-RAIT-002)."
+      },
+      "CreateRaitCaseDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "origin_case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "protocol_number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROTOCOLADO",
+              "TRIAGEM_ADMISSIBILIDADE",
+              "NAO_CONHECIDO",
+              "ADMITIDO",
+              "AGUARDANDO_REMESSA_JARI",
+              "DISTRIBUIDO",
+              "EM_INSTRUCAO",
+              "DILIGENCIA",
+              "PRONTO_P_DECISAO",
+              "DECIDIDO_AUTORIDADE",
+              "PAUTADO",
+              "JULGADO_SESSAO",
+              "COMUNICADO",
+              "TRANSITADO",
+              "REMETIDO_2A_INSTANCIA",
+              "ENCERRADO_DESISTENCIA"
+            ],
+            "default": "'PROTOCOLADO'"
+          },
+          "intake_channel": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "admitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "judge_body_received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "remitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "communicated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "suspensive_effect": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "archived": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "non_admission_reason": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "intempestivo",
+              "ilegitimo",
+              "sem_assinatura",
+              "pedido_incompativel"
+            ],
+            "nullable": true
+          },
+          "withdrawal_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "last_movement_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "pending_completion": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": [
+          "ait_id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "intake_channel",
+          "protocolled_at"
+        ]
+      },
+      "RaitParty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "legitimacy_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "condutor",
+              "embarcador",
+              "transportador",
+              "possuidor_equiparado",
+              "principal_condutor"
+            ],
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 200,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 30,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          },
+          "representation_verified": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "representation_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "role",
+          "person_name",
+          "document_number",
+          "created_at"
+        ],
+        "description": "Parte do caso — legitimidade ativa (RN-RAIT-120) e representacao (RN-RAIT-121)."
+      },
+      "CreateRaitPartyDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["requerente", "procurador", "autoridade"]
+          },
+          "legitimacy_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "condutor",
+              "embarcador",
+              "transportador",
+              "possuidor_equiparado",
+              "principal_condutor"
+            ],
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 200,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 30,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "representation_kind": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["procuracao_publica", "particular_firma_autenticidade"],
+            "nullable": true
+          },
+          "representation_verified": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "representation_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["case_id", "role", "person_name", "document_number"]
+      },
+      "RaitDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "oficio"]
+          },
+          "storage_key": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "digitised_from_paper": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "attached_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "kind",
+          "origin",
+          "storage_key",
+          "filename",
+          "content_hash",
+          "created_at"
+        ],
+        "description": "Peca do dossie. origin='oficio' marca as pecas que o orgao junta por dever proprio (RN-RAIT-003)."
+      },
+      "CreateRaitDocumentDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "oficio"]
+          },
+          "storage_key": {
+            "type": "string"
+          },
+          "filename": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "digitised_from_paper": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "attached_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "case_id",
+          "kind",
+          "origin",
+          "storage_key",
+          "filename",
+          "content_hash"
+        ]
+      },
+      "RaitAdmissibility": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "criterion": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "tempestividade",
+              "legitimidade",
+              "assinatura",
+              "pedido_compativel"
+            ]
+          },
+          "verdict": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "evaluated_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "criterion",
+          "verdict",
+          "evaluated_by",
+          "created_at"
+        ],
+        "description": "Um veredito por criterio do art.4 da Res.900/2022 — AC-RAIT-002-3 exige os quatro registrados individualmente."
+      },
+      "CreateRaitAdmissibilityDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "criterion": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "tempestividade",
+              "legitimidade",
+              "assinatura",
+              "pedido_compativel"
+            ]
+          },
+          "verdict": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "evaluated_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["case_id", "criterion", "verdict", "evaluated_by"]
+      },
+      "RaitDeadline": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-REM10",
+              "T-DIL",
+              "T-R2",
+              "T-JUL-24M",
+              "T-PAR-3A",
+              "T-DEC",
+              "T-VOTO",
+              "T-CONV"
+            ]
+          },
+          "start_basis": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "suspended_by_act_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "legal_basis",
+          "created_at"
+        ],
+        "description": "Motor de prazos unico (RN-RAIT-005). due_on ja vem prorrogado ao 1o dia util (CONTRAN-918 art.29)."
+      },
+      "CreateRaitDeadlineDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-REM10",
+              "T-DIL",
+              "T-R2",
+              "T-JUL-24M",
+              "T-PAR-3A",
+              "T-DEC",
+              "T-VOTO",
+              "T-CONV"
+            ]
+          },
+          "start_basis": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "suspended_by_act_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "case_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "legal_basis"
+        ]
+      },
+      "RaitInquiry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "addressee": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "orgao_autuador"]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["respondida", "expirada"],
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "addressee",
+          "subject",
+          "requested_by",
+          "due_on",
+          "created_at"
+        ],
+        "description": "Diligencia (RN-RAIT-004). Expirar avanca o caso a PRONTO_P_DECISAO; nunca arquiva."
+      },
+      "CreateRaitInquiryDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "addressee": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requerente", "orgao_autuador"]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "answered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["respondida", "expirada"],
+            "nullable": true
+          }
+        },
+        "required": [
+          "case_id",
+          "addressee",
+          "subject",
+          "requested_by",
+          "due_on"
+        ]
+      },
+      "RaitDecision": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "acolhida",
+              "indeferida",
+              "provido",
+              "negado",
+              "nao_conhecido"
+            ]
+          },
+          "grounds": {
+            "type": "string"
+          },
+          "decided_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "circuit",
+          "decision_kind",
+          "grounds",
+          "decided_by",
+          "created_at"
+        ],
+        "description": "Decisao do caso. session_id referencia inf.rait_session sem FK — a sessao e criada em DDL posterior (36)."
+      },
+      "CreateRaitDecisionDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "acolhida",
+              "indeferida",
+              "provido",
+              "negado",
+              "nao_conhecido"
+            ]
+          },
+          "grounds": {
+            "type": "string"
+          },
+          "decided_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "case_id",
+          "circuit",
+          "decision_kind",
+          "grounds",
+          "decided_by"
+        ]
+      },
+      "RaitCommunication": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "next_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "authority_appeal_notice": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "enclosed_document_ids": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "content_ref": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "channel",
+          "content_ref",
+          "created_at"
+        ],
+        "description": "Comunicacao do resultado (RN-RAIT-130). effective_on e a ciencia — no SNE, sent_at+30d (RN-RAIT-124)."
+      },
+      "CreateRaitCommunicationDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "next_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "authority_appeal_notice": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "enclosed_document_ids": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "content_ref": {
+            "type": "string"
+          }
+        },
+        "required": ["case_id", "channel", "content_ref"]
+      },
+      "RaitCaseEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "case_id", "event_type", "created_at"],
+        "description": "Trilha de movimentacao e eventos de dominio publicados (WF-RAIT-001 secao Eventos). Toda linha reinicia o relogio C."
+      },
+      "CreateRaitCaseEventDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["case_id", "event_type"]
+      }
+    }
+  }
+}

@@ -1,0 +1,1379 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Alcohol — BP-INF-ALCOHOL-001",
+    "version": "1.0.0",
+    "description": "Breathalyzer and alcohol-testing procedure flows ported from TEAT.",
+    "x-blueprint": "BP-INF-ALCOHOL-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/alcohol/procedures": {
+      "get": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "listAlcoholProcedure",
+        "summary": "List AlcoholProcedure (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlcoholProcedure"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "createAlcoholProcedure",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlcoholProcedureDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholProcedure"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/procedures/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "getAlcoholProcedure",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholProcedure"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "updateAlcoholProcedure",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAlcoholProcedureDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholProcedure"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "removeAlcoholProcedure",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/breathalyzers": {
+      "get": {
+        "tags": ["breathalyzer"],
+        "operationId": "listBreathalyzer",
+        "summary": "List Breathalyzer (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Breathalyzer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["breathalyzer"],
+        "operationId": "createBreathalyzer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBreathalyzerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Breathalyzer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/breathalyzers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["breathalyzer"],
+        "operationId": "getBreathalyzer",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Breathalyzer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["breathalyzer"],
+        "operationId": "updateBreathalyzer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateBreathalyzerDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Breathalyzer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["breathalyzer"],
+        "operationId": "removeBreathalyzer",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/tests": {
+      "get": {
+        "tags": ["alcohol-test"],
+        "operationId": "listAlcoholTest",
+        "summary": "List AlcoholTest (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlcoholTest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["alcohol-test"],
+        "operationId": "createAlcoholTest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlcoholTestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholTest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/tests/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["alcohol-test"],
+        "operationId": "getAlcoholTest",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholTest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["alcohol-test"],
+        "operationId": "updateAlcoholTest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAlcoholTestDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholTest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["alcohol-test"],
+        "operationId": "removeAlcoholTest",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/refusals": {
+      "get": {
+        "tags": ["alcohol-refusal"],
+        "operationId": "listAlcoholRefusal",
+        "summary": "List AlcoholRefusal (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlcoholRefusal"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["alcohol-refusal"],
+        "operationId": "createAlcoholRefusal",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlcoholRefusalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholRefusal"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/refusals/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["alcohol-refusal"],
+        "operationId": "getAlcoholRefusal",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholRefusal"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["alcohol-refusal"],
+        "operationId": "updateAlcoholRefusal",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAlcoholRefusalDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholRefusal"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["alcohol-refusal"],
+        "operationId": "removeAlcoholRefusal",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/psychomotor-signs": {
+      "get": {
+        "tags": ["psychomotor-sign"],
+        "operationId": "listPsychomotorSign",
+        "summary": "List PsychomotorSign (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PsychomotorSign"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["psychomotor-sign"],
+        "operationId": "createPsychomotorSign",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePsychomotorSignDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PsychomotorSign"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/psychomotor-signs/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["psychomotor-sign"],
+        "operationId": "getPsychomotorSign",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PsychomotorSign"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["psychomotor-sign"],
+        "operationId": "updatePsychomotorSign",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreatePsychomotorSignDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PsychomotorSign"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["psychomotor-sign"],
+        "operationId": "removePsychomotorSign",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/forwardings": {
+      "get": {
+        "tags": ["alcohol-forwarding"],
+        "operationId": "listAlcoholForwarding",
+        "summary": "List AlcoholForwarding (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlcoholForwarding"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["alcohol-forwarding"],
+        "operationId": "createAlcoholForwarding",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlcoholForwardingDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholForwarding"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/forwardings/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["alcohol-forwarding"],
+        "operationId": "getAlcoholForwarding",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholForwarding"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["alcohol-forwarding"],
+        "operationId": "updateAlcoholForwarding",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAlcoholForwardingDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlcoholForwarding"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["alcohol-forwarding"],
+        "operationId": "removeAlcoholForwarding",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AlcoholProcedure": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "measure_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "approach_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "driver_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "procedure_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "procedure_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'draft'"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "agent_id",
+          "shift_id",
+          "procedure_at",
+          "procedure_type",
+          "outcome",
+          "created_at"
+        ]
+      },
+      "CreateAlcoholProcedureDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "measure_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "approach_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "driver_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "procedure_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "procedure_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'draft'"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "agent_id",
+          "shift_id",
+          "procedure_at",
+          "procedure_type",
+          "outcome"
+        ]
+      },
+      "Breathalyzer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "serial_number": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "manufacturer": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "last_calibration_at": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "calibration_valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "serial_number",
+          "created_at"
+        ]
+      },
+      "CreateBreathalyzerDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "serial_number": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "manufacturer": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "last_calibration_at": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "calibration_valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": ["traffic_agency_id", "serial_number"]
+      },
+      "AlcoholTest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "breathalyzer_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "test_number": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "tested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "result_mg_l": {
+            "type": "number",
+            "nullable": true
+          },
+          "counterproof": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "result_image_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'recorded'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "procedure_id", "tested_at", "created_at"]
+      },
+      "CreateAlcoholTestDto": {
+        "type": "object",
+        "properties": {
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "breathalyzer_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "test_number": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "tested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "result_mg_l": {
+            "type": "number",
+            "nullable": true
+          },
+          "counterproof": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "result_image_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'recorded'"
+          }
+        },
+        "required": ["procedure_id", "tested_at"]
+      },
+      "AlcoholRefusal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "refused_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refusal_description": {
+            "type": "string"
+          },
+          "witness_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "procedure_id",
+          "refused_at",
+          "refusal_description",
+          "created_at"
+        ]
+      },
+      "CreateAlcoholRefusalDto": {
+        "type": "object",
+        "properties": {
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "refused_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refusal_description": {
+            "type": "string"
+          },
+          "witness_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["procedure_id", "refused_at", "refusal_description"]
+      },
+      "PsychomotorSign": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sign_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string"
+          },
+          "observed": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "procedure_id",
+          "sign_code",
+          "description",
+          "created_at"
+        ]
+      },
+      "CreatePsychomotorSignDto": {
+        "type": "object",
+        "properties": {
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sign_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string"
+          },
+          "observed": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["procedure_id", "sign_code", "description"]
+      },
+      "AlcoholForwarding": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "forwarding_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "destination": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "forwarded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "procedure_id",
+          "forwarding_type",
+          "destination",
+          "forwarded_at",
+          "created_at"
+        ]
+      },
+      "CreateAlcoholForwardingDto": {
+        "type": "object",
+        "properties": {
+          "procedure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "forwarding_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "destination": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "forwarded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "procedure_id",
+          "forwarding_type",
+          "destination",
+          "forwarded_at"
+        ]
+      }
+    }
+  }
+}

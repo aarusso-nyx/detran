@@ -1,0 +1,626 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-RAIT-SESSION-001",
+  "module": {
+    "name": "RaitSession",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "36-inf-rait-session.sql",
+    "dependencies": {
+      "@detran/inf-rait-case": "workspace:*",
+      "@detran/inf-rait-worklist": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-rait-case",
+        "target": "../rait-case/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-rait-worklist",
+        "target": "../rait-worklist/src/index.ts"
+      }
+    ],
+    "owners": ["detran-inf"],
+    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "RaitSession",
+        "table": "rait_session",
+        "primaryKey": ["id"],
+        "description": "Sessao de julgamento. Sem quorum a sessao nao abre e vai a SESSAO_ADIADA (AC-RAIT-006-1); relogios nao param (AC-RAIT-006-2).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "judging_body",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "state",
+            "type": "varchar(30)",
+            "default": "'FORMANDO_PAUTA'"
+          },
+          {
+            "name": "scheduled_for",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "agenda_closed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "convened_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "opened_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "closed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "quorum_required",
+            "type": "integer"
+          },
+          {
+            "name": "quorum_observed",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "chair_member_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "adjourned_reason",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "extraordinary",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "short_notice_ack_by",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_rait_session_body_state",
+            "columns": ["tenant_id", "judging_body", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_session_body",
+            "expression": "judging_body in ('jari','cetran')"
+          },
+          {
+            "name": "ck_inf_rait_session_state",
+            "expression": "state in ('FORMANDO_PAUTA','PAUTA_FECHADA','CONVOCACAO_ENVIADA','SESSAO_ABERTA','SESSAO_ADIADA','RELATORIA_LIDA','SUSTENTACAO_ORAL','VOTACAO','DESEMPATE_PRESIDENTE','DECISAO_PROCLAMADA','ATA_LAVRADA','ATA_ASSINADA')"
+          },
+          {
+            "name": "ck_inf_rait_session_quorum_positive",
+            "expression": "quorum_required > 0"
+          },
+          {
+            "name": "ck_inf_rait_session_open_needs_quorum",
+            "expression": "opened_at is null or (quorum_observed is not null and quorum_observed >= quorum_required)"
+          },
+          {
+            "name": "ck_inf_rait_session_adjourned_reason",
+            "expression": "state <> 'SESSAO_ADIADA' or adjourned_reason is not null"
+          }
+        ]
+      },
+      {
+        "name": "RaitAgendaItem",
+        "table": "rait_agenda_item",
+        "primaryKey": ["id"],
+        "description": "Caso em pauta. priority=true para bandeiras ALERTA_N3/CRITICO — entrada obrigatoria (AC-RAIT-005-1). So entra com parecer registrado (AC-RAIT-005-2).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "session_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "position",
+            "type": "integer"
+          },
+          {
+            "name": "priority",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "rapporteur_member_id",
+            "type": "uuid"
+          },
+          {
+            "name": "opinion_summary",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "opinion_analysis",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "opinion_vote",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "opinion_registered_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "read_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "proclaimed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "outcome",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "withdrawn",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "withdrawn_reason",
+            "type": "varchar(40)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_agenda_item_case",
+            "columns": ["tenant_id", "session_id", "case_id"],
+            "unique": true
+          },
+          {
+            "name": "ux_inf_rait_agenda_item_position",
+            "columns": ["tenant_id", "session_id", "position"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_agenda_item_opinion_vote",
+            "expression": "opinion_vote is null or opinion_vote in ('provimento','nao_provimento','nao_conhecimento')"
+          },
+          {
+            "name": "ck_inf_rait_agenda_item_outcome",
+            "expression": "outcome is null or outcome in ('provido','negado','nao_conhecido')"
+          },
+          {
+            "name": "ck_inf_rait_agenda_item_opinion_complete",
+            "expression": "opinion_registered_at is null or (opinion_summary is not null and opinion_analysis is not null and opinion_vote is not null)"
+          },
+          {
+            "name": "ck_inf_rait_agenda_item_withdrawn_reason",
+            "expression": "withdrawn = false or withdrawn_reason is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_agenda_item_session",
+            "columns": ["session_id"],
+            "references": {
+              "table": "inf.rait_session",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_agenda_item_case",
+            "columns": ["case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_agenda_item_rapporteur",
+            "columns": ["rapporteur_member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitAttendance",
+        "table": "rait_attendance",
+        "primaryKey": ["id"],
+        "description": "Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "session_id",
+            "type": "uuid"
+          },
+          {
+            "name": "member_id",
+            "type": "uuid"
+          },
+          {
+            "name": "present",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "is_chair",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "is_chair_substitute",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "arrived_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "left_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "absence_justified",
+            "type": "boolean",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_attendance",
+            "columns": ["tenant_id", "session_id", "member_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_attendance_session",
+            "columns": ["session_id"],
+            "references": {
+              "table": "inf.rait_session",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_attendance_member",
+            "columns": ["member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitVote",
+        "table": "rait_vote",
+        "primaryKey": ["id"],
+        "description": "Voto individual vinculado a membro e caso (AC-RAIT-006-5). casting_vote marca o desempate do presidente (AC-RAIT-006-6).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "agenda_item_id",
+            "type": "uuid"
+          },
+          {
+            "name": "member_id",
+            "type": "uuid"
+          },
+          {
+            "name": "vote",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "casting_vote",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "cast_at",
+            "type": "timestamptz",
+            "default": "now()"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_vote_member",
+            "columns": ["tenant_id", "agenda_item_id", "member_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_vote_value",
+            "expression": "vote in ('provimento','nao_provimento','nao_conhecimento','abstencao')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_vote_item",
+            "columns": ["agenda_item_id"],
+            "references": {
+              "table": "inf.rait_agenda_item",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_vote_member",
+            "columns": ["member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitOralArgument",
+        "table": "rait_oral_argument",
+        "primaryKey": ["id"],
+        "description": "Sustentacao oral — etapa ISOLAVEL: a decisao do Owner entre prever como configuravel ou omitir segue aberta (WF-RAIT-003, tela T-12). Modelada a parte para que a decisao nao force retrabalho estrutural.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "agenda_item_id",
+            "type": "uuid"
+          },
+          {
+            "name": "requested_by_party_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "requested_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "granted",
+            "type": "boolean",
+            "nullable": true
+          },
+          {
+            "name": "denial_basis",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "held_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "duration_minutes",
+            "type": "integer",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_oral_argument_item",
+            "columns": ["tenant_id", "agenda_item_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_oral_argument_item",
+            "columns": ["agenda_item_id"],
+            "references": {
+              "table": "inf.rait_agenda_item",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitMinutes",
+        "table": "rait_minutes",
+        "primaryKey": ["id"],
+        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "session_id",
+            "type": "uuid"
+          },
+          {
+            "name": "content",
+            "type": "jsonb"
+          },
+          {
+            "name": "generated_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "signed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "signed_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "signature_kind",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "signature_ref",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "document_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_minutes_session",
+            "columns": ["tenant_id", "session_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_minutes_signature_kind",
+            "expression": "signature_kind is null or signature_kind = 'PAdES-TSA'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signed_complete",
+            "expression": "signed_at is null or (signed_by is not null and signature_kind is not null and signature_ref is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_minutes_session",
+            "columns": ["session_id"],
+            "references": {
+              "table": "inf.rait_session",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/rait/",
+    "resources": [
+      {
+        "entity": "RaitSession",
+        "path": "sessions",
+        "resource": "rait-session"
+      },
+      {
+        "entity": "RaitAgendaItem",
+        "path": "agenda-items",
+        "resource": "rait-agenda-item"
+      },
+      {
+        "entity": "RaitAttendance",
+        "path": "attendance",
+        "resource": "rait-attendance"
+      },
+      {
+        "entity": "RaitVote",
+        "path": "votes",
+        "resource": "rait-vote"
+      },
+      {
+        "entity": "RaitOralArgument",
+        "path": "oral-arguments",
+        "resource": "rait-oral-argument"
+      },
+      {
+        "entity": "RaitMinutes",
+        "path": "minutes",
+        "resource": "rait-minutes"
+      }
+    ]
+  },
+  "auth": {
+    "source": "RAIT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

@@ -1,0 +1,2019 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Measures — BP-INF-MEASURES-001",
+    "version": "1.0.0",
+    "description": "Administrative measures, terms, retention, removal, inventory, providers, yards, and status history.",
+    "x-blueprint": "BP-INF-MEASURES-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/measures/types": {
+      "get": {
+        "tags": ["measure-type"],
+        "operationId": "listMeasureType",
+        "summary": "List MeasureType (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeasureType"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["measure-type"],
+        "operationId": "createMeasureType",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMeasureTypeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureType"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/types/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["measure-type"],
+        "operationId": "getMeasureType",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["measure-type"],
+        "operationId": "updateMeasureType",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateMeasureTypeDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureType"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["measure-type"],
+        "operationId": "removeMeasureType",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/administrative-measures": {
+      "get": {
+        "tags": ["administrative-measure"],
+        "operationId": "listAdministrativeMeasure",
+        "summary": "List AdministrativeMeasure (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdministrativeMeasure"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["administrative-measure"],
+        "operationId": "createAdministrativeMeasure",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdministrativeMeasureDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdministrativeMeasure"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/administrative-measures/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["administrative-measure"],
+        "operationId": "getAdministrativeMeasure",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdministrativeMeasure"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["administrative-measure"],
+        "operationId": "updateAdministrativeMeasure",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAdministrativeMeasureDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdministrativeMeasure"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["administrative-measure"],
+        "operationId": "removeAdministrativeMeasure",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/terms": {
+      "get": {
+        "tags": ["administrative-term"],
+        "operationId": "listAdministrativeTerm",
+        "summary": "List AdministrativeTerm (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdministrativeTerm"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["administrative-term"],
+        "operationId": "createAdministrativeTerm",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAdministrativeTermDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdministrativeTerm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/terms/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["administrative-term"],
+        "operationId": "getAdministrativeTerm",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdministrativeTerm"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["administrative-term"],
+        "operationId": "updateAdministrativeTerm",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAdministrativeTermDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdministrativeTerm"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["administrative-term"],
+        "operationId": "removeAdministrativeTerm",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/retentions": {
+      "get": {
+        "tags": ["measure-retention"],
+        "operationId": "listMeasureRetention",
+        "summary": "List MeasureRetention (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeasureRetention"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["measure-retention"],
+        "operationId": "createMeasureRetention",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMeasureRetentionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureRetention"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/retentions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["measure-retention"],
+        "operationId": "getMeasureRetention",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureRetention"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["measure-retention"],
+        "operationId": "updateMeasureRetention",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateMeasureRetentionDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureRetention"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["measure-retention"],
+        "operationId": "removeMeasureRetention",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/removals": {
+      "get": {
+        "tags": ["measure-removal"],
+        "operationId": "listMeasureRemoval",
+        "summary": "List MeasureRemoval (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeasureRemoval"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["measure-removal"],
+        "operationId": "createMeasureRemoval",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMeasureRemovalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureRemoval"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/removals/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["measure-removal"],
+        "operationId": "getMeasureRemoval",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureRemoval"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["measure-removal"],
+        "operationId": "updateMeasureRemoval",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateMeasureRemovalDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureRemoval"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["measure-removal"],
+        "operationId": "removeMeasureRemoval",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/vehicle-inventories": {
+      "get": {
+        "tags": ["vehicle-inventory"],
+        "operationId": "listVehicleInventory",
+        "summary": "List VehicleInventory (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VehicleInventory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["vehicle-inventory"],
+        "operationId": "createVehicleInventory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVehicleInventoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleInventory"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/vehicle-inventories/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["vehicle-inventory"],
+        "operationId": "getVehicleInventory",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleInventory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["vehicle-inventory"],
+        "operationId": "updateVehicleInventory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateVehicleInventoryDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleInventory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["vehicle-inventory"],
+        "operationId": "removeVehicleInventory",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/tow-providers": {
+      "get": {
+        "tags": ["tow-provider"],
+        "operationId": "listTowProvider",
+        "summary": "List TowProvider (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TowProvider"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["tow-provider"],
+        "operationId": "createTowProvider",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTowProviderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TowProvider"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/tow-providers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["tow-provider"],
+        "operationId": "getTowProvider",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TowProvider"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["tow-provider"],
+        "operationId": "updateTowProvider",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateTowProviderDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TowProvider"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["tow-provider"],
+        "operationId": "removeTowProvider",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/yards": {
+      "get": {
+        "tags": ["yard"],
+        "operationId": "listYard",
+        "summary": "List Yard (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Yard"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["yard"],
+        "operationId": "createYard",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateYardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Yard"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/yards/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["yard"],
+        "operationId": "getYard",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Yard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["yard"],
+        "operationId": "updateYard",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateYardDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Yard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["yard"],
+        "operationId": "removeYard",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/status-history": {
+      "get": {
+        "tags": ["measure-status-history"],
+        "operationId": "listMeasureStatusHistory",
+        "summary": "List MeasureStatusHistory (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MeasureStatusHistory"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["measure-status-history"],
+        "operationId": "createMeasureStatusHistory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMeasureStatusHistoryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureStatusHistory"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/measures/status-history/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["measure-status-history"],
+        "operationId": "getMeasureStatusHistory",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureStatusHistory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["measure-status-history"],
+        "operationId": "updateMeasureStatusHistory",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateMeasureStatusHistoryDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasureStatusHistory"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["measure-status-history"],
+        "operationId": "removeMeasureStatusHistory",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MeasureType": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "code", "name", "created_at"]
+      },
+      "CreateMeasureTypeDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": ["code", "name"]
+      },
+      "AdministrativeMeasure": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measure_type_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "approach_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "reason": {
+            "type": "string"
+          },
+          "current_status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'started'"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "measure_type_id",
+          "agent_id",
+          "shift_id",
+          "device_id",
+          "started_at",
+          "reason",
+          "created_at"
+        ]
+      },
+      "CreateAdministrativeMeasureDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measure_type_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "approach_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "reason": {
+            "type": "string"
+          },
+          "current_status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'started'"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "measure_type_id",
+          "agent_id",
+          "shift_id",
+          "device_id",
+          "started_at",
+          "reason"
+        ]
+      },
+      "AdministrativeTerm": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "term_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "term_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "file_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signed_by_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'issued'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "measure_id",
+          "term_type",
+          "term_number",
+          "content_hash",
+          "issued_at",
+          "created_at"
+        ]
+      },
+      "CreateAdministrativeTermDto": {
+        "type": "object",
+        "properties": {
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "term_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "term_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "file_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signed_by_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'issued'"
+          }
+        },
+        "required": [
+          "measure_id",
+          "term_type",
+          "term_number",
+          "content_hash",
+          "issued_at"
+        ]
+      },
+      "MeasureRetention": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retention_reason": {
+            "type": "string"
+          },
+          "regularized_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "release_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "measure_id",
+          "vehicle_snapshot_id",
+          "retention_reason",
+          "created_at"
+        ]
+      },
+      "CreateMeasureRetentionDto": {
+        "type": "object",
+        "properties": {
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retention_reason": {
+            "type": "string"
+          },
+          "regularized_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "release_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["measure_id", "vehicle_snapshot_id", "retention_reason"]
+      },
+      "MeasureRemoval": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tow_provider_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "yard_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tow_arrived_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "delivered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "destination_description": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "measure_id",
+          "vehicle_snapshot_id",
+          "created_at"
+        ]
+      },
+      "CreateMeasureRemovalDto": {
+        "type": "object",
+        "properties": {
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tow_provider_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "yard_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "tow_arrived_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "delivered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "destination_description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["measure_id", "vehicle_snapshot_id"]
+      },
+      "VehicleInventory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inventory_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "damage_description": {
+            "type": "string",
+            "nullable": true
+          },
+          "signed_by_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "measure_id",
+          "vehicle_snapshot_id",
+          "inventory_json",
+          "created_at"
+        ]
+      },
+      "CreateVehicleInventoryDto": {
+        "type": "object",
+        "properties": {
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inventory_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "damage_description": {
+            "type": "string",
+            "nullable": true
+          },
+          "signed_by_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["measure_id", "vehicle_snapshot_id", "inventory_json"]
+      },
+      "TowProvider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "contact_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "traffic_agency_id", "name", "created_at"]
+      },
+      "CreateTowProviderDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "contact_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": ["traffic_agency_id", "name"]
+      },
+      "Yard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "location_geom": {
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "traffic_agency_id", "name", "created_at"]
+      },
+      "CreateYardDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "location_geom": {
+            "nullable": true
+          }
+        },
+        "required": ["traffic_agency_id", "name"]
+      },
+      "MeasureStatusHistory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "measure_id", "status", "created_at"]
+      },
+      "CreateMeasureStatusHistoryDto": {
+        "type": "object",
+        "properties": {
+          "measure_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["measure_id", "status"]
+      }
+    }
+  }
+}

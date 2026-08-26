@@ -1,0 +1,1431 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RaitWorklist — BP-INF-RAIT-WORKLIST-001",
+    "version": "1.0.0",
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): tres relogios de extincao com bandeiras e cadeia de escalonamento.",
+    "x-blueprint": "BP-INF-RAIT-WORKLIST-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/rait/pools": {
+      "get": {
+        "tags": ["rait-pool"],
+        "operationId": "listRaitPool",
+        "summary": "List RaitPool (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitPool"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-pool"],
+        "operationId": "createRaitPool",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitPoolDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPool"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/pools/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-pool"],
+        "operationId": "getRaitPool",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPool"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-pool"],
+        "operationId": "updateRaitPool",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitPoolDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPool"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-pool"],
+        "operationId": "removeRaitPool",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/pool-members": {
+      "get": {
+        "tags": ["rait-pool-member"],
+        "operationId": "listRaitPoolMember",
+        "summary": "List RaitPoolMember (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitPoolMember"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-pool-member"],
+        "operationId": "createRaitPoolMember",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitPoolMemberDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPoolMember"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/pool-members/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-pool-member"],
+        "operationId": "getRaitPoolMember",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPoolMember"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-pool-member"],
+        "operationId": "updateRaitPoolMember",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitPoolMemberDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitPoolMember"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-pool-member"],
+        "operationId": "removeRaitPoolMember",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/assignments": {
+      "get": {
+        "tags": ["rait-assignment"],
+        "operationId": "listRaitAssignment",
+        "summary": "List RaitAssignment (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitAssignment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-assignment"],
+        "operationId": "createRaitAssignment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitAssignmentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAssignment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/assignments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-assignment"],
+        "operationId": "getRaitAssignment",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAssignment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-assignment"],
+        "operationId": "updateRaitAssignment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitAssignmentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAssignment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-assignment"],
+        "operationId": "removeRaitAssignment",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/impediments": {
+      "get": {
+        "tags": ["rait-impediment"],
+        "operationId": "listRaitImpediment",
+        "summary": "List RaitImpediment (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitImpediment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-impediment"],
+        "operationId": "createRaitImpediment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitImpedimentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitImpediment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/impediments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-impediment"],
+        "operationId": "getRaitImpediment",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitImpediment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-impediment"],
+        "operationId": "updateRaitImpediment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitImpedimentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitImpediment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-impediment"],
+        "operationId": "removeRaitImpediment",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/clocks": {
+      "get": {
+        "tags": ["rait-clock"],
+        "operationId": "listRaitClock",
+        "summary": "List RaitClock (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitClock"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-clock"],
+        "operationId": "createRaitClock",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitClockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitClock"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/clocks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-clock"],
+        "operationId": "getRaitClock",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitClock"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-clock"],
+        "operationId": "updateRaitClock",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitClockDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitClock"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-clock"],
+        "operationId": "removeRaitClock",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/clock-alerts": {
+      "get": {
+        "tags": ["rait-clock-alert"],
+        "operationId": "listRaitClockAlert",
+        "summary": "List RaitClockAlert (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitClockAlert"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-clock-alert"],
+        "operationId": "createRaitClockAlert",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitClockAlertDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitClockAlert"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/clock-alerts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-clock-alert"],
+        "operationId": "getRaitClockAlert",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitClockAlert"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-clock-alert"],
+        "operationId": "updateRaitClockAlert",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitClockAlertDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitClockAlert"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-clock-alert"],
+        "operationId": "removeRaitClockAlert",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RaitPool": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "strategy": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["pull", "round_robin", "load_balanced"]
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "name",
+          "instance",
+          "circuit",
+          "strategy",
+          "created_at"
+        ],
+        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2)."
+      },
+      "CreateRaitPoolDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "strategy": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["pull", "round_robin", "load_balanced"]
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["name", "instance", "circuit", "strategy"]
+      },
+      "RaitPoolMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_role": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "analista",
+              "relator",
+              "presidente",
+              "coordenador",
+              "secretaria"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "ATIVO",
+              "IMPEDIDO",
+              "ADVERTIDO",
+              "AFASTADO_TEMP",
+              "MANDATO_ENCERRADO"
+            ],
+            "default": "'ATIVO'"
+          },
+          "mandate_starts_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "mandate_ends_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "late_opinion_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "unjustified_absence_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "pool_id",
+          "person_id",
+          "member_role",
+          "created_at"
+        ],
+        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116)."
+      },
+      "CreateRaitPoolMemberDto": {
+        "type": "object",
+        "properties": {
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_role": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "analista",
+              "relator",
+              "presidente",
+              "coordenador",
+              "secretaria"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "ATIVO",
+              "IMPEDIDO",
+              "ADVERTIDO",
+              "AFASTADO_TEMP",
+              "MANDATO_ENCERRADO"
+            ],
+            "default": "'ATIVO'"
+          },
+          "mandate_starts_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "mandate_ends_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "late_opinion_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "unjustified_absence_count": {
+            "type": "integer",
+            "default": "0"
+          }
+        },
+        "required": ["pool_id", "person_id", "member_role"]
+      },
+      "RaitAssignment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assigned_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "assigned_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "release_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "impedimento",
+              "afastamento",
+              "rebalanceamento",
+              "risco_prescricao",
+              "concluido"
+            ],
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "pool_id",
+          "member_id",
+          "created_at"
+        ],
+        "description": "Atribuicao de caso a membro. Reatribuir preserva estado e dossie (AC-RAIT-011-1); motivo e obrigatorio e tipado (AC-RAIT-011-2)."
+      },
+      "CreateRaitAssignmentDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assigned_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "assigned_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "release_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "impedimento",
+              "afastamento",
+              "rebalanceamento",
+              "risco_prescricao",
+              "concluido"
+            ],
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["case_id", "pool_id", "member_id"]
+      },
+      "RaitImpediment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "basis": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "declared_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "member_id",
+          "basis",
+          "created_at"
+        ],
+        "description": "Impedimento declarado por caso (RN-RAIT-116; CONTRAN-357 5.1.c). Impede redistribuicao ao mesmo membro (AC-RAIT-011-3)."
+      },
+      "CreateRaitImpedimentDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "basis": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "declared_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": ["case_id", "member_id", "basis"]
+      },
+      "RaitClock": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C"]
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "last_reset_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "clock_code",
+          "started_on",
+          "ceiling_on",
+          "legal_basis",
+          "created_at"
+        ],
+        "description": "Relogio de extincao de punibilidade. A=decadencia 180/360d (RN-RAIT-114); B=inercia 24 meses (RN-RAIT-110/111/112); C=paralisacao 3 anos (RN-RAIT-113). Uma bandeira POR RELOGIO — nunca agregada (AC-RAIT-010-3)."
+      },
+      "CreateRaitClockDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C"]
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "last_reset_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160
+          }
+        },
+        "required": [
+          "case_id",
+          "clock_code",
+          "started_on",
+          "ceiling_on",
+          "legal_basis"
+        ]
+      },
+      "RaitClockAlert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "level": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ]
+          },
+          "raised_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "notified_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "clock_id",
+          "level",
+          "notified_role",
+          "created_at"
+        ],
+        "description": "Degrau da escada de alertas (WF-RAIT-002 secao 4/6). PRESCRITO_OPERACIONAL exige incidente documentado (AC-RAIT-010-4)."
+      },
+      "CreateRaitClockAlertDto": {
+        "type": "object",
+        "properties": {
+          "clock_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "level": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ]
+          },
+          "raised_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "notified_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          }
+        },
+        "required": ["clock_id", "level", "notified_role"]
+      }
+    }
+  }
+}
