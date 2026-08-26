@@ -1,0 +1,1517 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RaitSession — BP-INF-RAIT-SESSION-001",
+    "version": "1.0.0",
+    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA.",
+    "x-blueprint": "BP-INF-RAIT-SESSION-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/rait/sessions": {
+      "get": {
+        "tags": ["rait-session"],
+        "operationId": "listRaitSession",
+        "summary": "List RaitSession (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitSession"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-session"],
+        "operationId": "createRaitSession",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitSessionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSession"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/sessions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-session"],
+        "operationId": "getRaitSession",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-session"],
+        "operationId": "updateRaitSession",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitSessionDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-session"],
+        "operationId": "removeRaitSession",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/agenda-items": {
+      "get": {
+        "tags": ["rait-agenda-item"],
+        "operationId": "listRaitAgendaItem",
+        "summary": "List RaitAgendaItem (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitAgendaItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-agenda-item"],
+        "operationId": "createRaitAgendaItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitAgendaItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAgendaItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/agenda-items/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-agenda-item"],
+        "operationId": "getRaitAgendaItem",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAgendaItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-agenda-item"],
+        "operationId": "updateRaitAgendaItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitAgendaItemDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAgendaItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-agenda-item"],
+        "operationId": "removeRaitAgendaItem",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/attendance": {
+      "get": {
+        "tags": ["rait-attendance"],
+        "operationId": "listRaitAttendance",
+        "summary": "List RaitAttendance (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitAttendance"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-attendance"],
+        "operationId": "createRaitAttendance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitAttendanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAttendance"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/attendance/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-attendance"],
+        "operationId": "getRaitAttendance",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAttendance"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-attendance"],
+        "operationId": "updateRaitAttendance",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitAttendanceDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitAttendance"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-attendance"],
+        "operationId": "removeRaitAttendance",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/votes": {
+      "get": {
+        "tags": ["rait-vote"],
+        "operationId": "listRaitVote",
+        "summary": "List RaitVote (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitVote"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-vote"],
+        "operationId": "createRaitVote",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitVoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitVote"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/votes/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-vote"],
+        "operationId": "getRaitVote",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitVote"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-vote"],
+        "operationId": "updateRaitVote",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitVoteDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitVote"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-vote"],
+        "operationId": "removeRaitVote",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/oral-arguments": {
+      "get": {
+        "tags": ["rait-oral-argument"],
+        "operationId": "listRaitOralArgument",
+        "summary": "List RaitOralArgument (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitOralArgument"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-oral-argument"],
+        "operationId": "createRaitOralArgument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitOralArgumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitOralArgument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/oral-arguments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-oral-argument"],
+        "operationId": "getRaitOralArgument",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitOralArgument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-oral-argument"],
+        "operationId": "updateRaitOralArgument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitOralArgumentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitOralArgument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-oral-argument"],
+        "operationId": "removeRaitOralArgument",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/minutes": {
+      "get": {
+        "tags": ["rait-minutes"],
+        "operationId": "listRaitMinutes",
+        "summary": "List RaitMinutes (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitMinutes"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-minutes"],
+        "operationId": "createRaitMinutes",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitMinutesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitMinutes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/minutes/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-minutes"],
+        "operationId": "getRaitMinutes",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitMinutes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-minutes"],
+        "operationId": "updateRaitMinutes",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitMinutesDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitMinutes"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-minutes"],
+        "operationId": "removeRaitMinutes",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RaitSession": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "judging_body": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["jari", "cetran"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "FORMANDO_PAUTA",
+              "PAUTA_FECHADA",
+              "CONVOCACAO_ENVIADA",
+              "SESSAO_ABERTA",
+              "SESSAO_ADIADA",
+              "RELATORIA_LIDA",
+              "SUSTENTACAO_ORAL",
+              "VOTACAO",
+              "DESEMPATE_PRESIDENTE",
+              "DECISAO_PROCLAMADA",
+              "ATA_LAVRADA",
+              "ATA_ASSINADA"
+            ],
+            "default": "'FORMANDO_PAUTA'"
+          },
+          "scheduled_for": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "agenda_closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "convened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "quorum_required": {
+            "type": "integer"
+          },
+          "quorum_observed": {
+            "type": "integer",
+            "nullable": true
+          },
+          "chair_member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "adjourned_reason": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "extraordinary": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "short_notice_ack_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "judging_body",
+          "quorum_required",
+          "created_at"
+        ],
+        "description": "Sessao de julgamento. Sem quorum a sessao nao abre e vai a SESSAO_ADIADA (AC-RAIT-006-1); relogios nao param (AC-RAIT-006-2)."
+      },
+      "CreateRaitSessionDto": {
+        "type": "object",
+        "properties": {
+          "judging_body": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["jari", "cetran"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "FORMANDO_PAUTA",
+              "PAUTA_FECHADA",
+              "CONVOCACAO_ENVIADA",
+              "SESSAO_ABERTA",
+              "SESSAO_ADIADA",
+              "RELATORIA_LIDA",
+              "SUSTENTACAO_ORAL",
+              "VOTACAO",
+              "DESEMPATE_PRESIDENTE",
+              "DECISAO_PROCLAMADA",
+              "ATA_LAVRADA",
+              "ATA_ASSINADA"
+            ],
+            "default": "'FORMANDO_PAUTA'"
+          },
+          "scheduled_for": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "agenda_closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "convened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "quorum_required": {
+            "type": "integer"
+          },
+          "quorum_observed": {
+            "type": "integer",
+            "nullable": true
+          },
+          "chair_member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "adjourned_reason": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "extraordinary": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "short_notice_ack_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["judging_body", "quorum_required"]
+      },
+      "RaitAgendaItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "priority": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "rapporteur_member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "opinion_summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "opinion_analysis": {
+            "type": "string",
+            "nullable": true
+          },
+          "opinion_vote": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["provimento", "nao_provimento", "nao_conhecimento"],
+            "nullable": true
+          },
+          "opinion_registered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "read_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "proclaimed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["provido", "negado", "nao_conhecido"],
+            "nullable": true
+          },
+          "withdrawn": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "withdrawn_reason": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "session_id",
+          "case_id",
+          "position",
+          "rapporteur_member_id",
+          "created_at"
+        ],
+        "description": "Caso em pauta. priority=true para bandeiras ALERTA_N3/CRITICO — entrada obrigatoria (AC-RAIT-005-1). So entra com parecer registrado (AC-RAIT-005-2)."
+      },
+      "CreateRaitAgendaItemDto": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "priority": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "rapporteur_member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "opinion_summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "opinion_analysis": {
+            "type": "string",
+            "nullable": true
+          },
+          "opinion_vote": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["provimento", "nao_provimento", "nao_conhecimento"],
+            "nullable": true
+          },
+          "opinion_registered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "read_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "proclaimed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["provido", "negado", "nao_conhecido"],
+            "nullable": true
+          },
+          "withdrawn": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "withdrawn_reason": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          }
+        },
+        "required": [
+          "session_id",
+          "case_id",
+          "position",
+          "rapporteur_member_id"
+        ]
+      },
+      "RaitAttendance": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "present": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "is_chair": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "is_chair_substitute": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "arrived_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "left_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "absence_justified": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "session_id", "member_id", "created_at"],
+        "description": "Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3)."
+      },
+      "CreateRaitAttendanceDto": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "present": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "is_chair": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "is_chair_substitute": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "arrived_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "left_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "absence_justified": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": ["session_id", "member_id"]
+      },
+      "RaitVote": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agenda_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vote": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "provimento",
+              "nao_provimento",
+              "nao_conhecimento",
+              "abstencao"
+            ]
+          },
+          "casting_vote": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "cast_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "agenda_item_id",
+          "member_id",
+          "vote",
+          "created_at"
+        ],
+        "description": "Voto individual vinculado a membro e caso (AC-RAIT-006-5). casting_vote marca o desempate do presidente (AC-RAIT-006-6)."
+      },
+      "CreateRaitVoteDto": {
+        "type": "object",
+        "properties": {
+          "agenda_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vote": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "provimento",
+              "nao_provimento",
+              "nao_conhecimento",
+              "abstencao"
+            ]
+          },
+          "casting_vote": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "cast_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": ["agenda_item_id", "member_id", "vote"]
+      },
+      "RaitOralArgument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agenda_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requested_by_party_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "granted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "denial_basis": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "held_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "agenda_item_id", "created_at"],
+        "description": "Sustentacao oral — etapa ISOLAVEL: a decisao do Owner entre prever como configuravel ou omitir segue aberta (WF-RAIT-003, tela T-12). Modelada a parte para que a decisao nao force retrabalho estrutural."
+      },
+      "CreateRaitOralArgumentDto": {
+        "type": "object",
+        "properties": {
+          "agenda_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requested_by_party_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "granted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "denial_basis": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "held_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "duration_minutes": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": ["agenda_item_id"]
+      },
+      "RaitMinutes": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "signed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "document_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "session_id", "content", "created_at"],
+        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8)."
+      },
+      "CreateRaitMinutesDto": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "signed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "signature_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "document_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          }
+        },
+        "required": ["session_id", "content"]
+      }
+    }
+  }
+}

@@ -1,0 +1,539 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-RAIT-WORKLIST-001",
+  "module": {
+    "name": "RaitWorklist",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "35-inf-rait-worklist.sql",
+    "dependencies": {
+      "@detran/inf-rait-case": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-rait-case",
+        "target": "../rait-case/src/index.ts"
+      }
+    ],
+    "owners": ["detran-inf"],
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): tres relogios de extincao com bandeiras e cadeia de escalonamento."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "RaitPool",
+        "table": "rait_pool",
+        "primaryKey": ["id"],
+        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "instance",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "circuit",
+            "type": "integer"
+          },
+          {
+            "name": "strategy",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "default": "true"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_pool_instance",
+            "columns": ["tenant_id", "instance"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_pool_instance",
+            "expression": "instance in ('defesa_previa','jari','cetran')"
+          },
+          {
+            "name": "ck_inf_rait_pool_strategy",
+            "expression": "strategy in ('pull','round_robin','load_balanced')"
+          }
+        ]
+      },
+      {
+        "name": "RaitPoolMember",
+        "table": "rait_pool_member",
+        "primaryKey": ["id"],
+        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "pool_id",
+            "type": "uuid"
+          },
+          {
+            "name": "person_id",
+            "type": "uuid"
+          },
+          {
+            "name": "member_role",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'ATIVO'"
+          },
+          {
+            "name": "mandate_starts_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "mandate_ends_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "late_opinion_count",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "unjustified_absence_count",
+            "type": "integer",
+            "default": "0"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_pool_member",
+            "columns": ["tenant_id", "pool_id", "person_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_pool_member_role",
+            "expression": "member_role in ('analista','relator','presidente','coordenador','secretaria')"
+          },
+          {
+            "name": "ck_inf_rait_pool_member_status",
+            "expression": "status in ('ATIVO','IMPEDIDO','ADVERTIDO','AFASTADO_TEMP','MANDATO_ENCERRADO')"
+          },
+          {
+            "name": "ck_inf_rait_pool_member_mandate_order",
+            "expression": "mandate_ends_on is null or mandate_starts_on is null or mandate_ends_on >= mandate_starts_on"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_pool_member_pool",
+            "columns": ["pool_id"],
+            "references": {
+              "table": "inf.rait_pool",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitAssignment",
+        "table": "rait_assignment",
+        "primaryKey": ["id"],
+        "description": "Atribuicao de caso a membro. Reatribuir preserva estado e dossie (AC-RAIT-011-1); motivo e obrigatorio e tipado (AC-RAIT-011-2).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "pool_id",
+            "type": "uuid"
+          },
+          {
+            "name": "member_id",
+            "type": "uuid"
+          },
+          {
+            "name": "assigned_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "assigned_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "released_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "release_reason",
+            "type": "varchar(30)",
+            "nullable": true
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "default": "true"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_assignment_active",
+            "columns": ["tenant_id", "case_id"],
+            "unique": true,
+            "where": "active"
+          },
+          {
+            "name": "ix_inf_rait_assignment_member",
+            "columns": ["tenant_id", "member_id"],
+            "where": "active"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_assignment_release_reason",
+            "expression": "release_reason is null or release_reason in ('impedimento','afastamento','rebalanceamento','risco_prescricao','concluido')"
+          },
+          {
+            "name": "ck_inf_rait_assignment_release_consistency",
+            "expression": "(active and released_at is null) or (not active and released_at is not null and release_reason is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_assignment_case",
+            "columns": ["case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_assignment_pool",
+            "columns": ["pool_id"],
+            "references": {
+              "table": "inf.rait_pool",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_assignment_member",
+            "columns": ["member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitImpediment",
+        "table": "rait_impediment",
+        "primaryKey": ["id"],
+        "description": "Impedimento declarado por caso (RN-RAIT-116; CONTRAN-357 5.1.c). Impede redistribuicao ao mesmo membro (AC-RAIT-011-3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "member_id",
+            "type": "uuid"
+          },
+          {
+            "name": "basis",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "declared_at",
+            "type": "timestamptz",
+            "default": "now()"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_impediment",
+            "columns": ["tenant_id", "case_id", "member_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_impediment_case",
+            "columns": ["case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_impediment_member",
+            "columns": ["member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitClock",
+        "table": "rait_clock",
+        "primaryKey": ["id"],
+        "description": "Relogio de extincao de punibilidade. A=decadencia 180/360d (RN-RAIT-114); B=inercia 24 meses (RN-RAIT-110/111/112); C=paralisacao 3 anos (RN-RAIT-113). Uma bandeira POR RELOGIO — nunca agregada (AC-RAIT-010-3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "clock_code",
+            "type": "varchar(1)"
+          },
+          {
+            "name": "started_on",
+            "type": "date"
+          },
+          {
+            "name": "ceiling_on",
+            "type": "date"
+          },
+          {
+            "name": "flag",
+            "type": "varchar(30)",
+            "default": "'SEM_RISCO'"
+          },
+          {
+            "name": "flag_changed_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "last_reset_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "legal_basis",
+            "type": "varchar(160)"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_clock_case_code",
+            "columns": ["tenant_id", "case_id", "clock_code"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_clock_flag",
+            "columns": ["tenant_id", "flag", "ceiling_on"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_clock_code",
+            "expression": "clock_code in ('A','B','C')"
+          },
+          {
+            "name": "ck_inf_rait_clock_flag",
+            "expression": "flag in ('SEM_RISCO','ALERTA_N1','ALERTA_N2','ALERTA_N3','CRITICO','PRESCRITO_OPERACIONAL')"
+          },
+          {
+            "name": "ck_inf_rait_clock_ceiling_after_start",
+            "expression": "ceiling_on > started_on"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_clock_case",
+            "columns": ["case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitClockAlert",
+        "table": "rait_clock_alert",
+        "primaryKey": ["id"],
+        "description": "Degrau da escada de alertas (WF-RAIT-002 secao 4/6). PRESCRITO_OPERACIONAL exige incidente documentado (AC-RAIT-010-4).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "clock_id",
+            "type": "uuid"
+          },
+          {
+            "name": "level",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "raised_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "notified_role",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "acknowledged_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "acknowledged_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "incident_ref",
+            "type": "varchar(80)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_clock_alert_level",
+            "columns": ["tenant_id", "clock_id", "level"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_clock_alert_level",
+            "expression": "level in ('SEM_RISCO','ALERTA_N1','ALERTA_N2','ALERTA_N3','CRITICO','PRESCRITO_OPERACIONAL')"
+          },
+          {
+            "name": "ck_inf_rait_clock_alert_incident_required",
+            "expression": "level <> 'PRESCRITO_OPERACIONAL' or incident_ref is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_clock_alert_clock",
+            "columns": ["clock_id"],
+            "references": {
+              "table": "inf.rait_clock",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/rait/",
+    "resources": [
+      {
+        "entity": "RaitPool",
+        "path": "pools",
+        "resource": "rait-pool"
+      },
+      {
+        "entity": "RaitPoolMember",
+        "path": "pool-members",
+        "resource": "rait-pool-member"
+      },
+      {
+        "entity": "RaitAssignment",
+        "path": "assignments",
+        "resource": "rait-assignment"
+      },
+      {
+        "entity": "RaitImpediment",
+        "path": "impediments",
+        "resource": "rait-impediment"
+      },
+      {
+        "entity": "RaitClock",
+        "path": "clocks",
+        "resource": "rait-clock"
+      },
+      {
+        "entity": "RaitClockAlert",
+        "path": "clock-alerts",
+        "resource": "rait-clock-alert"
+      }
+    ]
+  },
+  "auth": {
+    "source": "RAIT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

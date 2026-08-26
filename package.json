@@ -12,11 +12,11 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm blueprints:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts",
+    "check": "pnpm format:check && pnpm blueprints:check && pnpm contracts:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
-    "build": "pnpm --filter @detran/shared build && pnpm --filter @detran/senatran-adapter build && pnpm --filter @detran/inf-normative build && pnpm --filter @detran/inf-ait build && pnpm --filter @detran/inf-measures build && pnpm --filter @detran/inf-alcohol build && pnpm --filter @detran/app build && pnpm --filter @detran/ui build",
+    "build": "pnpm --filter @detran/shared build && pnpm --filter @detran/senatran-adapter build && pnpm --filter @detran/inf-normative build && pnpm --filter @detran/inf-ait build && pnpm --filter @detran/inf-measures build && pnpm --filter @detran/inf-alcohol build && pnpm --filter @detran/inf-rait-case build && pnpm --filter @detran/inf-rait-worklist build && pnpm --filter @detran/inf-rait-session build && pnpm --filter @detran/app build && pnpm --filter @detran/ui build",
     "verify:decorators": "tsx tools/verify-controller-decorators.ts",
     "verify:rls-ddl": "tsx tools/check-rls-ddl.ts",
     "verify:senatran-boundary": "tsx tools/verify-senatran-boundary.ts",
@@ -24,7 +24,7 @@
     "backend:db:apply": "bash backend/database/apply.sh",
     "backend:db:reset": "bash backend/database/apply.sh --full",
     "backend:rls-smoke": "tsx tools/check-rls-smoke.ts",
-    "backend:test:unit": "pnpm --filter @detran/shared test && pnpm --filter @detran/inf-normative test:unit && pnpm --filter @detran/inf-ait test:unit && pnpm --filter @detran/inf-measures test:unit && pnpm --filter @detran/inf-alcohol test:unit && pnpm --filter @detran/app test:unit",
+    "backend:test:unit": "pnpm --filter @detran/shared test && pnpm --filter @detran/inf-normative test:unit && pnpm --filter @detran/inf-ait test:unit && pnpm --filter @detran/inf-measures test:unit && pnpm --filter @detran/inf-alcohol test:unit && pnpm --filter @detran/inf-rait-case test:unit && pnpm --filter @detran/inf-rait-worklist test:unit && pnpm --filter @detran/inf-rait-session test:unit && pnpm --filter @detran/app test:unit",
     "backend:test:integration": "pnpm --filter @detran/app test:integration && pnpm --filter @detran/inf-ait test:integration",
     "backend:test:e2e": "pnpm --filter @detran/app test:e2e && pnpm --filter @detran/inf-ait test:e2e",
     "backend:test:real": "pnpm --filter @detran/app test:real",
@@ -32,6 +32,8 @@
     "devai:doctor": "devai doctor",
     "blueprints:generate": "node tools/blueprints/generate.mjs",
     "blueprints:check": "node tools/blueprints/check.mjs",
+    "contracts:openapi": "node tools/contracts/generate-openapi.mjs",
+    "contracts:check": "node tools/contracts/generate-openapi.mjs --check",
     "senatran-adapter:test:ci": "pnpm --filter @detran/senatran-adapter test:ci"
   },
   "devDependencies": {
