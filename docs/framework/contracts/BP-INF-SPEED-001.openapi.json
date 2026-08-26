@@ -1,0 +1,753 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Speed — BP-INF-SPEED-001",
+    "version": "1.0.0",
+    "description": "Medicao de velocidade por equipamento ACOPLADO ao talao eletronico (UC-TEAT-013). Escopo: inciso II do art. 3o §1o da Res. 918/2022. Fiscalizacao eletronica por equipamento fixo (inciso III, com referendo) esta FORA — ver inf/teat/APP.md secao Fronteira.",
+    "x-blueprint": "BP-INF-SPEED-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/speed/meters": {
+      "get": {
+        "tags": ["speed-meter"],
+        "operationId": "listSpeedMeter",
+        "summary": "List SpeedMeter (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpeedMeter"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["speed-meter"],
+        "operationId": "createSpeedMeter",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSpeedMeterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeter"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/speed/meters/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["speed-meter"],
+        "operationId": "getSpeedMeter",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["speed-meter"],
+        "operationId": "updateSpeedMeter",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSpeedMeterDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["speed-meter"],
+        "operationId": "removeSpeedMeter",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/speed/certificates": {
+      "get": {
+        "tags": ["speed-meter-certificate"],
+        "operationId": "listSpeedMeterCertificate",
+        "summary": "List SpeedMeterCertificate (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpeedMeterCertificate"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["speed-meter-certificate"],
+        "operationId": "createSpeedMeterCertificate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSpeedMeterCertificateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeterCertificate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/speed/certificates/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["speed-meter-certificate"],
+        "operationId": "getSpeedMeterCertificate",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeterCertificate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["speed-meter-certificate"],
+        "operationId": "updateSpeedMeterCertificate",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSpeedMeterCertificateDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeterCertificate"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["speed-meter-certificate"],
+        "operationId": "removeSpeedMeterCertificate",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/speed/measurements": {
+      "get": {
+        "tags": ["speed-measurement"],
+        "operationId": "listSpeedMeasurement",
+        "summary": "List SpeedMeasurement (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpeedMeasurement"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["speed-measurement"],
+        "operationId": "createSpeedMeasurement",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSpeedMeasurementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeasurement"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/speed/measurements/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["speed-measurement"],
+        "operationId": "getSpeedMeasurement",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeasurement"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["speed-measurement"],
+        "operationId": "updateSpeedMeasurement",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSpeedMeasurementDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpeedMeasurement"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["speed-measurement"],
+        "operationId": "removeSpeedMeasurement",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SpeedMeter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "serial_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "agency_identifier": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "meter_type": {
+            "type": "string",
+            "maxLength": 20,
+            "default": "'movel_acoplado'"
+          },
+          "inmetro_model_approval": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "has_ocr": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "model",
+          "serial_number",
+          "agency_identifier",
+          "inmetro_model_approval",
+          "created_at"
+        ],
+        "description": "Medidor de velocidade operado pelo agente, acoplado ao talao. A restricao de tipo torna a fronteira de escopo executavel: o banco recusa equipamento fixo enquanto o inciso III estiver fora do portfolio."
+      },
+      "CreateSpeedMeterDto": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "serial_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "agency_identifier": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "meter_type": {
+            "type": "string",
+            "maxLength": 20,
+            "default": "'movel_acoplado'"
+          },
+          "inmetro_model_approval": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "has_ocr": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": [
+          "model",
+          "serial_number",
+          "agency_identifier",
+          "inmetro_model_approval"
+        ]
+      },
+      "SpeedMeterCertificate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "meter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["inicial", "periodica"]
+          },
+          "certificate_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "issuer": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "issued_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "meter_id",
+          "kind",
+          "certificate_number",
+          "issuer",
+          "issued_on",
+          "valid_until",
+          "created_at"
+        ],
+        "description": "Verificacao metrologica do medidor (RN-TEAT-138): inicial e periodica. Sem certificado vigente nao ha lavratura — AC-TEAT-013-1."
+      },
+      "CreateSpeedMeterCertificateDto": {
+        "type": "object",
+        "properties": {
+          "meter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["inicial", "periodica"]
+          },
+          "certificate_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "issuer": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "issued_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "meter_id",
+          "kind",
+          "certificate_number",
+          "issuer",
+          "issued_on",
+          "valid_until"
+        ]
+      },
+      "SpeedMeasurement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "meter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "certificate_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measured_kmh": {
+            "type": "number"
+          },
+          "max_error_kmh": {
+            "type": "number"
+          },
+          "considered_kmh": {
+            "type": "number"
+          },
+          "road_limit_kmh": {
+            "type": "number"
+          },
+          "measured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "plate_image_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "ocr_plate_proposed": {
+            "type": "string",
+            "maxLength": 16,
+            "nullable": true
+          },
+          "plate_validated_by_agent": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "meter_id",
+          "certificate_id",
+          "measured_kmh",
+          "max_error_kmh",
+          "considered_kmh",
+          "road_limit_kmh",
+          "measured_at",
+          "latitude",
+          "longitude",
+          "agent_id",
+          "created_at"
+        ],
+        "description": "Medicao individual. measured e considered sao SEMPRE dois campos (AC-TEAT-013-2); considered = measured - max_error, garantido por constraint. certificate_id congela o certificado vigente NO MOMENTO DA MEDICAO (AC-TEAT-013-5)."
+      },
+      "CreateSpeedMeasurementDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "meter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "certificate_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "measured_kmh": {
+            "type": "number"
+          },
+          "max_error_kmh": {
+            "type": "number"
+          },
+          "considered_kmh": {
+            "type": "number"
+          },
+          "road_limit_kmh": {
+            "type": "number"
+          },
+          "measured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "plate_image_evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "ocr_plate_proposed": {
+            "type": "string",
+            "maxLength": 16,
+            "nullable": true
+          },
+          "plate_validated_by_agent": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "meter_id",
+          "certificate_id",
+          "measured_kmh",
+          "max_error_kmh",
+          "considered_kmh",
+          "road_limit_kmh",
+          "measured_at",
+          "latitude",
+          "longitude",
+          "agent_id"
+        ]
+      }
+    }
+  }
+}

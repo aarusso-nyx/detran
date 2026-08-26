@@ -1,0 +1,331 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-SPEED-001",
+  "module": {
+    "name": "Speed",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "37-inf-speed.sql",
+    "dependencies": {
+      "@detran/inf-ait": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-ait",
+        "target": "../ait/src/index.ts"
+      }
+    ],
+    "owners": ["detran-inf"],
+    "description": "Medicao de velocidade por equipamento ACOPLADO ao talao eletronico (UC-TEAT-013). Escopo: inciso II do art. 3o §1o da Res. 918/2022. Fiscalizacao eletronica por equipamento fixo (inciso III, com referendo) esta FORA — ver inf/teat/APP.md secao Fronteira."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "SpeedMeter",
+        "table": "speed_meter",
+        "primaryKey": ["id"],
+        "description": "Medidor de velocidade operado pelo agente, acoplado ao talao. A restricao de tipo torna a fronteira de escopo executavel: o banco recusa equipamento fixo enquanto o inciso III estiver fora do portfolio.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "model",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "serial_number",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "agency_identifier",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "meter_type",
+            "type": "varchar(20)",
+            "default": "'movel_acoplado'"
+          },
+          {
+            "name": "inmetro_model_approval",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "has_ocr",
+            "type": "boolean",
+            "default": "true"
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "default": "true"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_speed_meter_serial",
+            "columns": ["tenant_id", "serial_number"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_speed_meter_type_in_scope",
+            "expression": "meter_type = 'movel_acoplado'"
+          },
+          {
+            "name": "ck_inf_speed_meter_ocr_required",
+            "expression": "has_ocr = true"
+          }
+        ]
+      },
+      {
+        "name": "SpeedMeterCertificate",
+        "table": "speed_meter_certificate",
+        "primaryKey": ["id"],
+        "description": "Verificacao metrologica do medidor (RN-TEAT-138): inicial e periodica. Sem certificado vigente nao ha lavratura — AC-TEAT-013-1.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "meter_id",
+            "type": "uuid"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "certificate_number",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "issuer",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "issued_on",
+            "type": "date"
+          },
+          {
+            "name": "valid_until",
+            "type": "date"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_speed_certificate",
+            "columns": ["tenant_id", "meter_id", "kind", "certificate_number"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_speed_certificate_validity",
+            "columns": ["tenant_id", "meter_id", "valid_until"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_speed_certificate_kind",
+            "expression": "kind in ('inicial','periodica')"
+          },
+          {
+            "name": "ck_inf_speed_certificate_validity_order",
+            "expression": "valid_until >= issued_on"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_speed_certificate_meter",
+            "columns": ["meter_id"],
+            "references": {
+              "table": "inf.speed_meter",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "SpeedMeasurement",
+        "table": "speed_measurement",
+        "primaryKey": ["id"],
+        "description": "Medicao individual. measured e considered sao SEMPRE dois campos (AC-TEAT-013-2); considered = measured - max_error, garantido por constraint. certificate_id congela o certificado vigente NO MOMENTO DA MEDICAO (AC-TEAT-013-5).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "ait_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "meter_id",
+            "type": "uuid"
+          },
+          {
+            "name": "certificate_id",
+            "type": "uuid"
+          },
+          {
+            "name": "measured_kmh",
+            "type": "numeric(6,2)"
+          },
+          {
+            "name": "max_error_kmh",
+            "type": "numeric(6,2)"
+          },
+          {
+            "name": "considered_kmh",
+            "type": "numeric(6,2)"
+          },
+          {
+            "name": "road_limit_kmh",
+            "type": "numeric(6,2)"
+          },
+          {
+            "name": "measured_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "latitude",
+            "type": "numeric(10,7)"
+          },
+          {
+            "name": "longitude",
+            "type": "numeric(10,7)"
+          },
+          {
+            "name": "plate_image_evidence_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "ocr_plate_proposed",
+            "type": "varchar(16)",
+            "nullable": true
+          },
+          {
+            "name": "plate_validated_by_agent",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "agent_id",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_speed_measurement_ait",
+            "columns": ["tenant_id", "ait_id"]
+          },
+          {
+            "name": "ix_inf_speed_measurement_meter",
+            "columns": ["tenant_id", "meter_id", "measured_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_speed_measurement_considered_is_derived",
+            "expression": "considered_kmh = measured_kmh - max_error_kmh"
+          },
+          {
+            "name": "ck_inf_speed_measurement_error_not_negative",
+            "expression": "max_error_kmh >= 0"
+          },
+          {
+            "name": "ck_inf_speed_measurement_ait_requires_plate_image",
+            "expression": "ait_id is null or plate_image_evidence_id is not null"
+          },
+          {
+            "name": "ck_inf_speed_measurement_ait_requires_validated_plate",
+            "expression": "ait_id is null or plate_validated_by_agent = true"
+          },
+          {
+            "name": "ck_inf_speed_measurement_ait_requires_excess",
+            "expression": "ait_id is null or considered_kmh > road_limit_kmh"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_speed_measurement_ait",
+            "columns": ["ait_id"],
+            "references": {
+              "table": "inf.ait_ait",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_speed_measurement_meter",
+            "columns": ["meter_id"],
+            "references": {
+              "table": "inf.speed_meter",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_speed_measurement_certificate",
+            "columns": ["certificate_id"],
+            "references": {
+              "table": "inf.speed_meter_certificate",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/speed/",
+    "resources": [
+      {
+        "entity": "SpeedMeter",
+        "path": "meters",
+        "resource": "speed-meter"
+      },
+      {
+        "entity": "SpeedMeterCertificate",
+        "path": "certificates",
+        "resource": "speed-meter-certificate"
+      },
+      {
+        "entity": "SpeedMeasurement",
+        "path": "measurements",
+        "resource": "speed-measurement"
+      }
+    ]
+  },
+  "auth": {
+    "source": "TEAT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}
