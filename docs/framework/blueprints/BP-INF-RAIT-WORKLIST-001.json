@@ -24,7 +24,7 @@
       }
     ],
     "owners": ["detran-inf"],
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): tres relogios de extincao com bandeiras e cadeia de escalonamento."
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento."
   },
   "database": {
     "entities": [
@@ -334,7 +334,7 @@
         "name": "RaitClock",
         "table": "rait_clock",
         "primaryKey": ["id"],
-        "description": "Relogio de extincao de punibilidade. A=decadencia 180/360d (RN-RAIT-114); B=inercia 24 meses (RN-RAIT-110/111/112); C=paralisacao 3 anos (RN-RAIT-113). Uma bandeira POR RELOGIO — nunca agregada (AC-RAIT-010-3).",
+        "description": "Relogio de extincao de punibilidade. A=decadencia 180/360d (RN-RAIT-114); B=inercia 24 meses (RN-RAIT-110/111/112); C=paralisacao 3 anos (RN-RAIT-113); D=prescricao quinquenal 60 meses, nao reinicia por movimentacao — so pelas hipoteses do art.2 da Lei 9.873/1999 (RN-RAIT-113 caput, WF-RAIT-002 4.4, Decisao do Owner DT-030 2026-08-28). Uma bandeira POR RELOGIO — nunca agregada (AC-RAIT-010-3).",
         "fields": [
           {
             "name": "id",
@@ -395,7 +395,7 @@
         "checks": [
           {
             "name": "ck_inf_rait_clock_code",
-            "expression": "clock_code in ('A','B','C')"
+            "expression": "clock_code in ('A','B','C','D')"
           },
           {
             "name": "ck_inf_rait_clock_flag",
