@@ -23,7 +23,7 @@ forward-looking — capture the decision now so it's not lost before those domai
   counter-argument step), sustentação oral omitted by default, IPCA-E correction index, and a new
   five-year prescription clock (Relógio D) added to the SLA ladder.
 - [teat.md](teat.md) — bodycam and guarda monitorada both deferred out of MVP scope, including the
-  guarda monitorada *modeling itself* (not just activation).
+  guarda monitorada _modeling itself_ (not just activation).
 - [boat.md](boat.md) — RENAEST transmission periodicity confirmed monthly; national-record
   correction mechanism explicitly rejected (terminal, no retraction path); severity↔gravidade
   derivation rule delegated to engineering proposal, not yet decided.

@@ -9,7 +9,7 @@ rait-session}` and DDL in `backend/database/ddl/34-36-inf-rait-*.sql`.
 
 Three of four open points now answered, one still open:
 
-1. **Vinculado, not discretionary.** The authority is *obligated* to appeal whenever the 1st-
+1. **Vinculado, not discretionary.** The authority is _obligated_ to appeal whenever the 1st-
    instance decision is `provimento` — this was already settled in an earlier steering round
    (2026-08-24), restated here for completeness.
 2. **Centralized authority, not each of the 55.** The DETRAN-AM has 55 individuals holding
@@ -20,7 +20,7 @@ Three of four open points now answered, one still open:
    the actor assignment itself is still a placeholder.
 3. **No citizen counter-argument step.** When the authority appeals, the citizen is explicitly
    **not** intimated for contrarrazões — the subsidiary Lei 9.784/1999 mechanism (art. 62 notice,
-   art. 64 *reformatio in pejus* safeguard) was considered and rejected. Do not build a
+   art. 64 _reformatio in pejus_ safeguard) was considered and rejected. Do not build a
    counter-argument UI/step for this flow.
 4. **Still unanswered: the appeal deadline.** No numeric prazo has been fixed for when the
    authority's appeal clock starts or how long it runs — `WF-RAIT-001`'s "Reentrância" section for
@@ -48,7 +48,7 @@ already described **four** extinction clocks, but `WF-RAIT-001`'s consolidated t
 `WF-RAIT-002`'s calibrated ladders only had three. Added:
 
 - **`WF-RAIT-001`** — new row in the "Relógios de extinção" table and a `T-PRESC-5A` timer entry:
-  5 years (60 months) from `data_pratica_ato`, Lei 9.873/1999 art.1º *caput*.
+  5 years (60 months) from `data_pratica_ato`, Lei 9.873/1999 art.1º _caput_.
 - **`WF-RAIT-002` §4.4** — new escada, same 50/75/90% discipline as the other clocks: `ALERTA_N1`
   at 30 months, `ALERTA_N2` at 45 months, `CRITICO` at 54 months, `PRESCRITO_OPERACIONAL` at 60
   months.
@@ -56,8 +56,7 @@ already described **four** extinction clocks, but `WF-RAIT-001`'s consolidated t
 Unlike the 3-year paralisação clock (Relógio C), this one does **not** reset on every case
 movement — only on the specific interruption hypotheses of Lei 9.873/1999 art.2º (notification,
 condemnatory decision). Whether a penalty notice (`NP`) itself counts as the interrupting
-condemnatory decision is flagged as an open legal question in `RN-RAIT-113` (controvérsia point
-3) — do not implement an auto-reset on NP issuance without confirming that reading first.
+condemnatory decision is flagged as an open legal question in `RN-RAIT-113` (controvérsia point 3) — do not implement an auto-reset on NP issuance without confirming that reading first.
 
 ## Still open, not decided (DT-012)
 

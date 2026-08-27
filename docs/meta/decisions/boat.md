@@ -27,7 +27,7 @@ back through the Owner before hardening it.
 
 ## DT-020 — correction of a `CONSOLIDADO`/`REJEITADO` national record (`WF-BOAT-003`)
 
-Res. CONTRAN 808/2020 covers RENAEST data *entry* in detail but is silent on correcting a record
+Res. CONTRAN 808/2020 covers RENAEST data _entry_ in detail but is silent on correcting a record
 after it's homologated/consolidated or rejected. Of three options on the table (accept a linked
 "corrective new record" proposal; wait for CONTRAN/SENATRAN guidance; accept the operational risk
 of no correction path), the Owner chose: **no correction, ever**. A `CONSOLIDADO`/`REJEITADO`
