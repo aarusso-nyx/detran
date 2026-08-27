@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-WORKLIST-001 v1.0.0 sha256:a4378f112c84361ebe923b17329c2848218c3f266f9811c1b18090d9c79f0ee1
+-- Generated from BP-INF-RAIT-WORKLIST-001 v1.0.0 sha256:2297f42351909b6ac68f4a18e7c8b535508fa219dfdaa0f9b087f1ca3b745234
 
 -- Regenerable-only DDL for BP-INF-RAIT-WORKLIST-001; request-path writes use role_app_backend.
 
@@ -104,7 +104,7 @@ create table if not exists inf.rait_clock (
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_rait_clock primary key (id),
-  constraint ck_inf_rait_clock_code check (clock_code in ('A','B','C')),
+  constraint ck_inf_rait_clock_code check (clock_code in ('A','B','C','D')),
   constraint ck_inf_rait_clock_flag check (flag in ('SEM_RISCO','ALERTA_N1','ALERTA_N2','ALERTA_N3','CRITICO','PRESCRITO_OPERACIONAL')),
   constraint ck_inf_rait_clock_ceiling_after_start check (ceiling_on > started_on),
   constraint fk_inf_rait_clock_case foreign key (case_id) references inf.rait_case (id)

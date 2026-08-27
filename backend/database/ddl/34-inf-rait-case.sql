@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-CASE-001 v1.0.0 sha256:badca32b76e1022606203a012cf996ec5b175c2226d13b99d80123cb84352167
+-- Generated from BP-INF-RAIT-CASE-001 v1.0.0 sha256:aa7b398ec04e8ec20dddff316e606e4dc5b3dcad6348495f967681cbaf63f107
 
 -- Regenerable-only DDL for BP-INF-RAIT-CASE-001; request-path writes use role_app_backend.
 
@@ -17,6 +17,7 @@ create table if not exists inf.rait_case (
   protocolled_at timestamptz not null,
   admitted_at timestamptz,
   judge_body_received_at timestamptz,
+  cetran_received_at timestamptz,
   remitted_at timestamptz,
   decided_at timestamptz,
   communicated_at timestamptz,
@@ -38,12 +39,14 @@ create table if not exists inf.rait_case (
   constraint ck_inf_rait_case_non_admission_reason check (non_admission_reason is null or non_admission_reason in ('intempestivo','ilegitimo','sem_assinatura','pedido_incompativel')),
   constraint ck_inf_rait_case_remessa_state_only_jari check (state <> 'AGUARDANDO_REMESSA_JARI' or instance = 'jari'),
   constraint ck_inf_rait_case_cetran_is_final check (instance <> 'cetran' or state <> 'REMETIDO_2A_INSTANCIA'),
+  constraint ck_inf_rait_case_cetran_receipt_scope check (cetran_received_at is null or instance = 'cetran'),
   constraint fk_inf_rait_case_ait foreign key (ait_id) references inf.ait_ait (id),
   constraint fk_inf_rait_case_origin foreign key (origin_case_id) references inf.rait_case (id)
 );
 create unique index if not exists ux_inf_rait_case_protocol on inf.rait_case (tenant_id, protocol_number);
 create index if not exists ix_inf_rait_case_state on inf.rait_case (tenant_id, instance, state);
 create index if not exists ix_inf_rait_case_movement on inf.rait_case (tenant_id, last_movement_at);
+create index if not exists ix_inf_rait_case_cetran_received on inf.rait_case (tenant_id, cetran_received_at);
 create index if not exists ix_rait_case_tenant_id on inf.rait_case (tenant_id);
 create index if not exists ix_rait_case_ait_id on inf.rait_case (ait_id);
 create index if not exists ix_rait_case_origin_case_id on inf.rait_case (origin_case_id);
