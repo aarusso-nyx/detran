@@ -3,7 +3,7 @@
   "info": {
     "title": "RaitWorklist — BP-INF-RAIT-WORKLIST-001",
     "version": "1.0.0",
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): tres relogios de extincao com bandeiras e cadeia de escalonamento.",
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento.",
     "x-blueprint": "BP-INF-RAIT-WORKLIST-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
   },
@@ -1195,7 +1195,7 @@
           "clock_code": {
             "type": "string",
             "maxLength": 1,
-            "enum": ["A", "B", "C"]
+            "enum": ["A", "B", "C", "D"]
           },
           "started_on": {
             "type": "string",
@@ -1251,7 +1251,7 @@
           "legal_basis",
           "created_at"
         ],
-        "description": "Relogio de extincao de punibilidade. A=decadencia 180/360d (RN-RAIT-114); B=inercia 24 meses (RN-RAIT-110/111/112); C=paralisacao 3 anos (RN-RAIT-113). Uma bandeira POR RELOGIO — nunca agregada (AC-RAIT-010-3)."
+        "description": "Relogio de extincao de punibilidade. A=decadencia 180/360d (RN-RAIT-114); B=inercia 24 meses (RN-RAIT-110/111/112); C=paralisacao 3 anos (RN-RAIT-113); D=prescricao quinquenal 60 meses, nao reinicia por movimentacao — so pelas hipoteses do art.2 da Lei 9.873/1999 (RN-RAIT-113 caput, WF-RAIT-002 4.4, Decisao do Owner DT-030 2026-08-28). Uma bandeira POR RELOGIO — nunca agregada (AC-RAIT-010-3)."
       },
       "CreateRaitClockDto": {
         "type": "object",
@@ -1263,7 +1263,7 @@
           "clock_code": {
             "type": "string",
             "maxLength": 1,
-            "enum": ["A", "B", "C"]
+            "enum": ["A", "B", "C", "D"]
           },
           "started_on": {
             "type": "string",
