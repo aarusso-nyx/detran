@@ -111,7 +111,7 @@ describe('ReportLifecycleService', () => {
     expect(signing.renderAndSign).not.toHaveBeenCalled();
   });
 
-  it('AC-PEC-006-8 does not force SIGNED until every recorded track has a report', async () => {
+  it('AC-PEC-006-4 AC-PEC-006-7 AC-PEC-006-8 persists electronic validation evidence without forcing the other track', async () => {
     const preflight = {
       exam_id: 'exam-1',
       exam_data: {},
@@ -143,6 +143,20 @@ describe('ReportLifecycleService', () => {
       templateVersion: 'v1',
     });
 
+    expect(signing.renderAndSign).toHaveBeenCalledWith(
+      expect.objectContaining({
+        documentType: 'REPORT',
+        minimumSignatureLevel: 'QUALIFIED',
+      }),
+    );
+    expect(query.mock.calls[2]?.[1]).toEqual(
+      expect.arrayContaining([
+        receipt.signatureFormat,
+        receipt.tsaTime,
+        receipt.certificateValidationSource,
+        receipt.certificateValidationStatus,
+      ]),
+    );
     expect(query.mock.calls[3]?.[0]).toContain('integration.outbox');
     expect(query.mock.calls[3]?.[1]).toEqual(['report-1', 'MEDICAL']);
     const statusSql = query.mock.calls[4]?.[0] as string;
@@ -151,13 +165,109 @@ describe('ReportLifecycleService', () => {
     expect(statusSql).not.toContain("set status = 'SIGNED'");
   });
 
-  it('AC-PEC-007-2 requires a distinct addendum approver', async () => {
-    const query = vi.fn().mockResolvedValueOnce({ rows: [] });
-    const { service } = subject(query);
+  it('AC-PEC-007-2 requires Supervisor and Admin Clínica approvals by distinct actors', async () => {
+    const requested = {
+      id: 'addendum-1',
+      status: 'REQUESTED',
+      requested_by: 'requester-1',
+    };
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [requested] })
+      .mockResolvedValueOnce({ rows: [{ id: 'approval-1' }] })
+      .mockResolvedValueOnce({ rows: [{ approvals: 1, actors: 1 }] })
+      .mockResolvedValueOnce({ rows: [requested] })
+      .mockResolvedValueOnce({ rows: [{ id: 'approval-2' }] })
+      .mockResolvedValueOnce({ rows: [{ approvals: 2, actors: 2 }] })
+      .mockResolvedValueOnce({ rows: [{ ...requested, status: 'APPROVED' }] });
 
-    await expect(service.approveAddendum('addendum-1')).rejects.toThrow(
-      'Addendum approval requires a distinct actor',
+    await expect(
+      subject(query, undefined, 'supervisor-1').service.approveAddendum(
+        'addendum-1',
+        'SUPERVISOR',
+      ),
+    ).resolves.toMatchObject({ status: 'REQUESTED' });
+    await expect(
+      subject(query, undefined, 'admin-1').service.approveAddendum(
+        'addendum-1',
+        'ADMIN_CLINICA',
+      ),
+    ).resolves.toMatchObject({ status: 'APPROVED' });
+    expect(query.mock.calls[1]?.[1]).toEqual([
+      'addendum-1',
+      'SUPERVISOR',
+      'supervisor-1',
+    ]);
+    expect(query.mock.calls[4]?.[1]).toEqual([
+      'addendum-1',
+      'ADMIN_CLINICA',
+      'admin-1',
+    ]);
+    expect(query.mock.calls[6]?.[0]).toContain("status = 'APPROVED'");
+  });
+
+  it('AC-PEC-007-2 rejects approval by the requesting actor', async () => {
+    const query = vi.fn().mockResolvedValueOnce({
+      rows: [{ id: 'addendum-1', status: 'REQUESTED', requested_by: 'user-1' }],
+    });
+
+    await expect(
+      subject(query).service.approveAddendum('addendum-1', 'SUPERVISOR'),
+    ).rejects.toThrow('Addendum approval requires a distinct actor');
+    expect(query).toHaveBeenCalledTimes(1);
+  });
+
+  it('AC-PEC-006-5 AC-PEC-007-1 AC-PEC-007-3 AC-PEC-007-4 signs an appended artifact and enqueues an amended result', async () => {
+    const source = {
+      id: 'addendum-1',
+      report_id: 'report-1',
+      reason: 'Material correction',
+      content: { result: 'INAPTO_TEMPORARIO' },
+      content_sha256: 'a'.repeat(64),
+      signer_professional_id: 'professional-1',
+      signer_name: 'Professional',
+      signer_council: 'CRM/SP 1234',
+      professional_user_id: 'user-1',
+      report_kind: 'MEDICAL',
+      report_artifact_sha256: 'b'.repeat(64),
+    };
+    const signed = {
+      ...source,
+      status: 'SIGNED',
+      artifact_sha256: receipt.artifactSha256,
+    };
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [source] })
+      .mockResolvedValueOnce({ rows: [signed] })
+      .mockResolvedValueOnce({ rows: [] });
+    const signing = {
+      renderAndSign: vi.fn(async () => ({
+        ...receipt,
+        contentSha256: source.content_sha256,
+      })),
+    };
+    const { service } = subject(query, signing);
+
+    await expect(service.signAddendum('addendum-1')).resolves.toMatchObject({
+      status: 'SIGNED',
+    });
+    expect(signing.renderAndSign).toHaveBeenCalledWith(
+      expect.objectContaining({
+        documentType: 'REPORT_ADDENDUM',
+        content: expect.objectContaining({
+          reportId: 'report-1',
+          originalArtifactSha256: source.report_artifact_sha256,
+        }),
+        minimumSignatureLevel: 'QUALIFIED',
+      }),
     );
-    expect(query.mock.calls[0]?.[0]).toContain('requested_by <> $2');
+    expect(query.mock.calls[2]?.[0]).toContain('integration.outbox');
+    expect(query.mock.calls[2]?.[1]).toEqual([
+      'addendum-1',
+      'report-1',
+      'MEDICAL',
+    ]);
+    expect(query.mock.calls[2]?.[0]).toContain('ch.report-addendum:');
   });
 });

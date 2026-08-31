@@ -29,11 +29,18 @@ export class ReportCommandsController {
     return this.lifecycle.requestAddendum(reportId, input);
   }
 
-  @Post('addenda/:id/approve')
-  @Action('addendum-approve')
+  @Post('addenda/:id/approvals/supervisor')
+  @Action('addendum-approve-supervisor')
   @Audit({ action: 'CH_REPORT_ADDENDUM_APPROVE', entity: 'ch.report_addendum' })
-  approveAddendum(@Param('id') id: string) {
-    return this.lifecycle.approveAddendum(id);
+  approveAsSupervisor(@Param('id') id: string) {
+    return this.lifecycle.approveAddendum(id, 'SUPERVISOR');
+  }
+
+  @Post('addenda/:id/approvals/clinic-admin')
+  @Action('addendum-approve-clinic-admin')
+  @Audit({ action: 'CH_REPORT_ADDENDUM_APPROVE', entity: 'ch.report_addendum' })
+  approveAsClinicAdmin(@Param('id') id: string) {
+    return this.lifecycle.approveAddendum(id, 'ADMIN_CLINICA');
   }
 
   @Post('addenda/:id/sign')

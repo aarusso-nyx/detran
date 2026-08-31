@@ -4,7 +4,7 @@
   "module": {
     "name": "ClinicalReports",
     "namespace": "ch",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "ddlFile": "44-ch-reports.sql",
     "dependencies": {
       "@detran/ch-clinical-network": "workspace:*",
@@ -277,6 +277,49 @@
         ]
       },
       {
+        "name": "ReportAddendumApproval",
+        "table": "report_addendum_approval",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "report_addendum_id", "type": "uuid", "writable": false },
+          { "name": "approval_role", "type": "varchar(24)", "writable": false },
+          { "name": "approved_by", "type": "uuid", "writable": false },
+          {
+            "name": "approved_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_report_addendum_approval_role",
+            "columns": ["tenant_id", "report_addendum_id", "approval_role"],
+            "unique": true
+          },
+          {
+            "name": "ux_ch_report_addendum_approval_actor",
+            "columns": ["tenant_id", "report_addendum_id", "approved_by"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_report_addendum_approval_role",
+            "expression": "approval_role in ('SUPERVISOR','ADMIN_CLINICA')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_report_addendum_approval_addendum",
+            "columns": ["report_addendum_id"],
+            "references": { "table": "ch.report_addendum", "columns": ["id"] }
+          }
+        ]
+      },
+      {
         "name": "EpisodeExport",
         "table": "episode_export",
         "primaryKey": ["id"],
@@ -447,6 +490,12 @@
         "entity": "ReportAddendum",
         "path": "report-addenda",
         "resource": "report-addendum",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "ReportAddendumApproval",
+        "path": "report-addendum-approvals",
+        "resource": "report-addendum-approval",
         "operations": ["list", "get"]
       },
       {

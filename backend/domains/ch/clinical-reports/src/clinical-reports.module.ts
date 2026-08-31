@@ -1,4 +1,4 @@
-// Generated from BP-CH-REPORTS-001 v1.1.0 sha256:beee4caafe2a85a62db62a7c64f47b7e234388f5606028dbc331786eb1e2f350
+// Generated from BP-CH-REPORTS-001 v1.2.0 sha256:5045696b00b62bf7bd1c4ae7976e61f61de9954c392aed7987edaa45ba169501
 import { Module } from '@nestjs/common';
 import { ReportController } from './controllers/report.controller.js';
 import { ReportService } from './services/report.service.js';
@@ -6,6 +6,9 @@ import { ReportRepository } from './repositories/report.repository.js';
 import { ReportAddendumController } from './controllers/report-addendum.controller.js';
 import { ReportAddendumService } from './services/report-addendum.service.js';
 import { ReportAddendumRepository } from './repositories/report-addendum.repository.js';
+import { ReportAddendumApprovalController } from './controllers/report-addendum-approval.controller.js';
+import { ReportAddendumApprovalService } from './services/report-addendum-approval.service.js';
+import { ReportAddendumApprovalRepository } from './repositories/report-addendum-approval.repository.js';
 import { EpisodeExportController } from './controllers/episode-export.controller.js';
 import { EpisodeExportService } from './services/episode-export.service.js';
 import { EpisodeExportRepository } from './repositories/episode-export.repository.js';
@@ -22,6 +25,7 @@ import { EncounterClosureService } from './encounter-closure.service.js';
   controllers: [
     ReportController,
     ReportAddendumController,
+    ReportAddendumApprovalController,
     EpisodeExportController,
     ClinicalDocumentController,
     ReportCommandsController,
@@ -32,6 +36,8 @@ import { EncounterClosureService } from './encounter-closure.service.js';
     ReportRepository,
     ReportAddendumService,
     ReportAddendumRepository,
+    ReportAddendumApprovalService,
+    ReportAddendumApprovalRepository,
     EpisodeExportService,
     EpisodeExportRepository,
     ClinicalDocumentService,

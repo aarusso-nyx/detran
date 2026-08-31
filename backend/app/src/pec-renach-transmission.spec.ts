@@ -125,6 +125,59 @@ describe('PecRenachTransmissionService', () => {
     expect(query.mock.calls[3]?.[0]).toContain("interval '15 minutes'");
   });
 
+  it('AC-PEC-007-4 retransmits a signed amended result and artifact', async () => {
+    const addendumClaim = {
+      ...claimed,
+      payload: {
+        ...claimed.payload,
+        addendumId: 'addendum-1',
+      },
+      idempotency_key: 'ch.report-addendum:addendum-1',
+    };
+    const amendedSource = {
+      ...medicalSource,
+      artifact_sha256: 'c'.repeat(64),
+      signed_at: '2026-08-31T13:01:00.000Z',
+      result: 'INAPTO_TEMPORARIO',
+    };
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [addendumClaim] })
+      .mockResolvedValueOnce({ rows: [amendedSource] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] });
+    const submitMedicalExam = vi.fn().mockResolvedValue({
+      protocol: 'RENACH-2',
+      examId: 'exam-remote-1',
+      result: 'INAPTO_TEMPORARIO',
+    });
+
+    await expect(
+      subject(query, { submitMedicalExam }).dispatchDue(),
+    ).resolves.toEqual([
+      {
+        outboxId: 'outbox-1',
+        status: 'acked',
+        providerProtocol: 'RENACH-2',
+      },
+    ]);
+
+    expect(query.mock.calls[1]?.[0]).toContain('ch.report_addendum');
+    expect(query.mock.calls[1]?.[1]).toEqual(['report-1', 'addendum-1']);
+    expect(submitMedicalExam).toHaveBeenCalledWith(
+      expect.objectContaining({
+        result: 'INAPTO_TEMPORARIO',
+        signature: {
+          hash: 'c'.repeat(64),
+          signedAt: amendedSource.signed_at,
+        },
+      }),
+      expect.objectContaining({
+        metadata: { idempotencyKey: 'ch.report-addendum:addendum-1' },
+      }),
+    );
+  });
+
   it('AC-PEC-009-5 claims due work with skip-locked idempotent coordination', async () => {
     const query = vi.fn().mockResolvedValueOnce({ rows: [] });
     const submitMedicalExam = vi.fn();

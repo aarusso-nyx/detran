@@ -21,7 +21,7 @@ type SqlTransaction = Transaction & {
 
 interface ClaimedOutboxItem {
   id: string;
-  payload: { reportId?: string; kind?: string };
+  payload: { reportId?: string; addendumId?: string; kind?: string };
   idempotency_key: string;
   attempts: number;
 }
@@ -107,7 +107,10 @@ export class PecRenachTransmissionService {
   private async dispatch(item: ClaimedOutboxItem): Promise<DispatchResult> {
     let request: SubmitMedicalExamInput | SubmitPsychologicalEvaluationInput;
     try {
-      const source = await this.loadSource(item.payload.reportId);
+      const source = await this.loadSource(
+        item.payload.reportId,
+        item.payload.addendumId,
+      );
       if (item.payload.kind !== source.kind) {
         throw new Error(
           `Outbox report kind ${String(item.payload.kind)} does not match ${source.kind}`,
@@ -150,12 +153,16 @@ export class PecRenachTransmissionService {
 
   private async loadSource(
     reportId: string | undefined,
+    addendumId: string | undefined,
   ): Promise<ReportTransmissionSource> {
     if (!reportId) throw new Error('Outbox item has no reportId');
     const result = await this.transaction((tx) =>
       tx.query<ReportTransmissionSource>(
-        `select report.id as report_id, report.kind, report.artifact_sha256,
-                report.signed_at, encounter.renach_process_key,
+        `select report.id as report_id, report.kind,
+                coalesce(addendum.artifact_sha256, report.artifact_sha256)
+                  as artifact_sha256,
+                coalesce(addendum.signed_at, report.signed_at) as signed_at,
+                encounter.renach_process_key,
                 encounter.renach_process_type, encounter.current_category,
                 encounter.requested_category, encounter.appointment_id,
                 clinic.code as clinic_code, clinic.cnpj as clinic_cnpj,
@@ -165,7 +172,8 @@ export class PecRenachTransmissionService {
                 professional.council_type, professional.council_number,
                 professional.council_state,
                 coalesce(medical.performed_at, psychological.performed_at) as performed_at,
-                coalesce(medical.result, psychological.result) as result,
+                coalesce(addendum.content->>'result', medical.result,
+                         psychological.result) as result,
                 coalesce(medical.valid_until, psychological.valid_until) as valid_until,
                 coalesce((
                   select jsonb_agg(jsonb_build_object(
@@ -187,8 +195,12 @@ export class PecRenachTransmissionService {
              on report.kind = 'MEDICAL' and medical.id = report.source_exam_id
            left join ch.psychological_exam psychological
              on report.kind = 'PSYCH' and psychological.id = report.source_exam_id
-          where report.id = $1`,
-        [reportId],
+           left join ch.report_addendum addendum
+             on addendum.id = $2 and addendum.report_id = report.id
+            and addendum.status = 'SIGNED'
+          where report.id = $1
+            and ($2::uuid is null or addendum.id is not null)`,
+        [reportId, addendumId ?? null],
       ),
     );
     const source = result.rows[0];

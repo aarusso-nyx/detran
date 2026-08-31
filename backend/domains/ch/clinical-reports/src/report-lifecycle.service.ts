@@ -34,6 +34,8 @@ export interface RequestAddendumInput {
   content: Record<string, unknown>;
 }
 
+export type AddendumApprovalRole = 'SUPERVISOR' | 'ADMIN_CLINICA';
+
 interface ReportPreflight {
   exam_id: string;
   exam_data: Record<string, unknown>;
@@ -185,23 +187,63 @@ export class ReportLifecycleService {
     });
   }
 
-  approveAddendum(id: string): Promise<ReportAddendum> {
+  approveAddendum(
+    id: string,
+    approvalRole: AddendumApprovalRole,
+  ): Promise<ReportAddendum> {
     const actorId = this.requireActorId();
     return this.reports.transaction(async (transaction) => {
       const tx = transaction as SqlTransaction;
-      const result = await tx.query<ReportAddendum & Record<string, unknown>>(
-        `update ch.report_addendum
-            set status = 'APPROVED', approved_by = $2,
-                approved_at = now(), updated_at = now()
-          where id = $1 and status = 'REQUESTED' and requested_by <> $2
-          returning *`,
-        [id, actorId],
+      const current = await tx.query<ReportAddendum & Record<string, unknown>>(
+        `select * from ch.report_addendum
+          where id = $1 and status = 'REQUESTED'
+          for update`,
+        [id],
       );
-      const addendum = result.rows[0];
-      if (!addendum) {
+      const addendum = current.rows[0];
+      if (!addendum || addendum.requested_by === actorId) {
         throw new BadRequestException(
           'Addendum approval requires a distinct actor and REQUESTED status',
         );
+      }
+      const approval = await tx.query<{ id: string }>(
+        `insert into ch.report_addendum_approval
+          (report_addendum_id, approval_role, approved_by)
+         select $1, $2, $3
+          where not exists (
+            select 1 from ch.report_addendum_approval existing
+             where existing.report_addendum_id = $1
+               and existing.approved_by = $3
+          )
+         on conflict (tenant_id, report_addendum_id, approval_role) do nothing
+         returning id`,
+        [id, approvalRole, actorId],
+      );
+      if (!approval.rows[0]) {
+        throw new BadRequestException(
+          'Addendum approval requires a unique role and distinct actor',
+        );
+      }
+      const gate = await tx.query<{ approvals: number; actors: number }>(
+        `select count(distinct approval_role)::int as approvals,
+                count(distinct approved_by)::int as actors
+           from ch.report_addendum_approval
+          where report_addendum_id = $1
+            and approval_role in ('SUPERVISOR','ADMIN_CLINICA')`,
+        [id],
+      );
+      if (gate.rows[0]?.approvals === 2 && gate.rows[0]?.actors === 2) {
+        const approved = await tx.query<
+          ReportAddendum & Record<string, unknown>
+        >(
+          `update ch.report_addendum
+              set status = 'APPROVED', approved_by = $2,
+                  approved_at = now(), updated_at = now()
+            where id = $1 and status = 'REQUESTED'
+            returning *`,
+          [id, actorId],
+        );
+        return approved.rows[0] as ReportAddendum;
       }
       return addendum;
     });
@@ -221,11 +263,15 @@ export class ReportLifecycleService {
         signer_name: string;
         signer_council: string;
         professional_user_id: string | null;
+        report_kind: 'MEDICAL' | 'PSYCH';
+        report_artifact_sha256: string;
       }>(
         `select addendum.id, addendum.report_id, addendum.reason,
                 addendum.content, addendum.content_sha256,
                 report.signer_professional_id, report.signer_name,
                 report.signer_council,
+                report.kind as report_kind,
+                report.artifact_sha256 as report_artifact_sha256,
                 professional.user_id as professional_user_id
            from ch.report_addendum addendum
            join ch.report report on report.id = addendum.report_id
@@ -241,6 +287,7 @@ export class ReportLifecycleService {
           'Addendum must be signed by the original report professional',
         );
       }
+      this.assertAmendedResult(row.report_kind, row.content.result);
       return row;
     });
     const receipt = await this.signing.renderAndSign({
@@ -248,6 +295,7 @@ export class ReportLifecycleService {
       contentSha256: source.content_sha256,
       content: {
         reportId: source.report_id,
+        originalArtifactSha256: source.report_artifact_sha256,
         reason: source.reason,
         content: source.content,
       },
@@ -258,7 +306,7 @@ export class ReportLifecycleService {
       },
       minimumSignatureLevel: 'QUALIFIED',
     });
-    return this.persistSignedAddendum(id, receipt);
+    return this.persistSignedAddendum(id, receipt, source.report_kind);
   }
 
   private async preflight(
@@ -354,6 +402,7 @@ export class ReportLifecycleService {
   private persistSignedAddendum(
     id: string,
     receipt: ClinicalArtifactReceipt,
+    reportKind: 'MEDICAL' | 'PSYCH',
   ): Promise<ReportAddendum> {
     return this.reports.transaction(async (transaction) => {
       const tx = transaction as SqlTransaction;
@@ -381,8 +430,33 @@ export class ReportLifecycleService {
       const addendum = result.rows[0];
       if (!addendum)
         throw new ConflictException('Addendum is no longer signable');
+      if (typeof addendum.content.result === 'string') {
+        await tx.query(
+          `insert into integration.outbox
+            (topic, aggregate_type, aggregate_id, payload,
+             idempotency_key, status, available_at)
+           values ('ch.renach.exam-result', 'ch.report_addendum', $1,
+                   jsonb_build_object('reportId', $2, 'addendumId', $1, 'kind', $3),
+                   'ch.report-addendum:' || $1, 'pending', now())
+           on conflict (tenant_id, idempotency_key) do nothing`,
+          [addendum.id, addendum.report_id, reportKind],
+        );
+      }
       return addendum;
     });
+  }
+
+  private assertAmendedResult(kind: 'MEDICAL' | 'PSYCH', value: unknown): void {
+    if (value === undefined) return;
+    const allowed =
+      kind === 'MEDICAL'
+        ? ['APTO', 'APTO_COM_RESTRICOES', 'INAPTO_TEMPORARIO', 'INAPTO']
+        : ['APTO', 'INAPTO_TEMPORARIO', 'INAPTO'];
+    if (typeof value !== 'string' || !allowed.includes(value)) {
+      throw new BadRequestException(
+        `Invalid ${kind.toLowerCase()} result in addendum`,
+      );
+    }
   }
 
   private requireActorId(): string {

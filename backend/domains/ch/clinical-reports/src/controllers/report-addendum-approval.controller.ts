@@ -9,13 +9,13 @@ import {
   Post,
 } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
-import type { CreateReportAddendumDto } from '../dto/create-report-addendum.dto.js';
-import { ReportAddendumService } from '../services/report-addendum.service.js';
+import type { CreateReportAddendumApprovalDto } from '../dto/create-report-addendum-approval.dto.js';
+import { ReportAddendumApprovalService } from '../services/report-addendum-approval.service.js';
 
-@Controller('v1/ch/report-addenda')
-@Resource('ch:report-addendum')
-export class ReportAddendumController {
-  constructor(private readonly service: ReportAddendumService) {}
+@Controller('v1/ch/report-addendum-approvals')
+@Resource('ch:report-addendum-approval')
+export class ReportAddendumApprovalController {
+  constructor(private readonly service: ReportAddendumApprovalService) {}
   @Get() @Action('read') list() {
     return this.service.findAll();
   }

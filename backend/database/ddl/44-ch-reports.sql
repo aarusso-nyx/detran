@@ -1,4 +1,4 @@
--- Generated from BP-CH-REPORTS-001 v1.1.0 sha256:beee4caafe2a85a62db62a7c64f47b7e234388f5606028dbc331786eb1e2f350
+-- Generated from BP-CH-REPORTS-001 v1.2.0 sha256:5045696b00b62bf7bd1c4ae7976e61f61de9954c392aed7987edaa45ba169501
 
 -- Regenerable-only DDL for BP-CH-REPORTS-001; request-path writes use role_app_backend.
 
@@ -74,6 +74,24 @@ create index if not exists ix_report_addendum_tenant_id on ch.report_addendum (t
 create index if not exists ix_report_addendum_report_id on ch.report_addendum (report_id);
 create index if not exists ix_report_addendum_storage_document_id on ch.report_addendum (storage_document_id);
 
+create table if not exists ch.report_addendum_approval (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  report_addendum_id uuid not null,
+  approval_role varchar(24) not null,
+  approved_by uuid not null,
+  approved_at timestamptz default now() not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_report_addendum_approval primary key (id),
+  constraint ck_ch_report_addendum_approval_role check (approval_role in ('SUPERVISOR','ADMIN_CLINICA')),
+  constraint fk_ch_report_addendum_approval_addendum foreign key (report_addendum_id) references ch.report_addendum (id)
+);
+create unique index if not exists ux_ch_report_addendum_approval_role on ch.report_addendum_approval (tenant_id, report_addendum_id, approval_role);
+create unique index if not exists ux_ch_report_addendum_approval_actor on ch.report_addendum_approval (tenant_id, report_addendum_id, approved_by);
+create index if not exists ix_report_addendum_approval_tenant_id on ch.report_addendum_approval (tenant_id);
+create index if not exists ix_report_addendum_approval_report_addendum_id on ch.report_addendum_approval (report_addendum_id);
+
 create table if not exists ch.episode_export (
   id uuid default gen_random_uuid() not null,
   tenant_id uuid not null,
@@ -139,6 +157,8 @@ create index if not exists ix_clinical_document_storage_document_id on ch.clinic
 select auth.create_rls_policy('ch', 'report');
 
 select auth.create_rls_policy('ch', 'report_addendum');
+
+select auth.create_rls_policy('ch', 'report_addendum_approval');
 
 select auth.create_rls_policy('ch', 'episode_export');
 

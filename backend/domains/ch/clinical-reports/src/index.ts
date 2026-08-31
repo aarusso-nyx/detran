@@ -1,4 +1,4 @@
-// Generated from BP-CH-REPORTS-001 v1.1.0 sha256:beee4caafe2a85a62db62a7c64f47b7e234388f5606028dbc331786eb1e2f350
+// Generated from BP-CH-REPORTS-001 v1.2.0 sha256:5045696b00b62bf7bd1c4ae7976e61f61de9954c392aed7987edaa45ba169501
 export * from './controllers/report.controller.js';
 export * from './dto/create-report.dto.js';
 export * from './entities/report.entity.js';
@@ -9,6 +9,11 @@ export * from './dto/create-report-addendum.dto.js';
 export * from './entities/report-addendum.entity.js';
 export * from './repositories/report-addendum.repository.js';
 export * from './services/report-addendum.service.js';
+export * from './controllers/report-addendum-approval.controller.js';
+export * from './dto/create-report-addendum-approval.dto.js';
+export * from './entities/report-addendum-approval.entity.js';
+export * from './repositories/report-addendum-approval.repository.js';
+export * from './services/report-addendum-approval.service.js';
 export * from './controllers/episode-export.controller.js';
 export * from './dto/create-episode-export.dto.js';
 export * from './entities/episode-export.entity.js';
