@@ -27,6 +27,7 @@ export interface CreateMedicalExamInput {
   performedAt?: string;
   validUntil?: string;
   validityReductionReason?: string;
+  inaptitudeUntil?: string;
   data: Record<string, unknown>;
   result: MedicalResult;
 }
@@ -38,6 +39,7 @@ export interface CreatePsychologicalExamInput {
   performedAt?: string;
   validUntil?: string;
   validityReductionReason?: string;
+  inaptitudeUntil?: string;
   data: Record<string, unknown>;
   result: PsychologicalResult;
 }
@@ -99,6 +101,7 @@ export class ExamLifecycleService {
     if (!MEDICAL_RESULTS.has(input.result)) {
       throw new BadRequestException('Unsupported federal medical result');
     }
+    this.requireInaptitudePeriod(input.result, input.inaptitudeUntil);
     return this.medicalExams.transaction(async (transaction) => {
       const tx = transaction as SqlTransaction;
       const performedAt = input.performedAt ?? new Date().toISOString();
@@ -135,9 +138,10 @@ export class ExamLifecycleService {
         const result = await tx.query<MedicalExam & Record<string, unknown>>(
           `insert into ch.medical_exam
             (encounter_id, professional_id, performed_at,
-             statutory_valid_until, valid_until, validity_reduction_reason,
+             statutory_valid_until, valid_until, inaptitude_until,
+             validity_reduction_reason,
              data, result)
-           values ($1, $2, $3, $4, $5, $6, $7::jsonb, $8)
+           values ($1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9)
            returning *`,
           [
             input.encounterId,
@@ -145,6 +149,7 @@ export class ExamLifecycleService {
             performedAt,
             statutoryValidUntil,
             validUntil,
+            input.inaptitudeUntil ?? null,
             input.validityReductionReason?.trim() ?? null,
             JSON.stringify(input.data),
             input.result,
@@ -163,6 +168,7 @@ export class ExamLifecycleService {
     if (!PSYCHOLOGICAL_RESULTS.has(input.result)) {
       throw new BadRequestException('Unsupported federal psychological result');
     }
+    this.requireInaptitudePeriod(input.result, input.inaptitudeUntil);
     if (input.validUntil && !input.validityReductionReason?.trim()) {
       throw new BadRequestException(
         'Reduced psychological validity requires the examiner reason',
@@ -197,8 +203,9 @@ export class ExamLifecycleService {
         >(
           `insert into ch.psychological_exam
             (encounter_id, professional_id, instrument_id, performed_at,
-             valid_until, validity_reduction_reason, data, result)
-           values ($1, $2, $3, $4, $5, $6, $7::jsonb, $8)
+             valid_until, inaptitude_until, validity_reduction_reason,
+             data, result)
+           values ($1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9)
            returning *`,
           [
             input.encounterId,
@@ -206,6 +213,7 @@ export class ExamLifecycleService {
             input.instrumentId,
             performedAt,
             input.validUntil ?? null,
+            input.inaptitudeUntil ?? null,
             input.validityReductionReason?.trim() ?? null,
             JSON.stringify(input.data),
             input.result,
@@ -277,5 +285,21 @@ export class ExamLifecycleService {
       throw new ConflictException(message);
     }
     throw error;
+  }
+
+  private requireInaptitudePeriod(
+    result: MedicalResult | PsychologicalResult,
+    inaptitudeUntil: string | undefined,
+  ): void {
+    if (result === 'INAPTO_TEMPORARIO' && !inaptitudeUntil) {
+      throw new BadRequestException(
+        'Temporary inaptitude requires an explicit end date',
+      );
+    }
+    if (result !== 'INAPTO_TEMPORARIO' && inaptitudeUntil) {
+      throw new BadRequestException(
+        'Inaptitude end date is only valid for temporary inaptitude',
+      );
+    }
   }
 }

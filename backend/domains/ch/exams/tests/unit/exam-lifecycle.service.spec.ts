@@ -129,4 +129,15 @@ describe('ExamLifecycleService', () => {
       }),
     ).rejects.toBeInstanceOf(BadRequestException);
   });
+
+  it('AC-PEC-011-4 requires an explicit temporary-inaptitude deadline', () => {
+    expect(() =>
+      subject(vi.fn()).createMedical({
+        encounterId: 'encounter-1',
+        professionalId: 'professional-1',
+        data: {},
+        result: 'INAPTO_TEMPORARIO',
+      }),
+    ).toThrow('Temporary inaptitude requires an explicit end date');
+  });
 });

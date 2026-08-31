@@ -1,4 +1,4 @@
-// Generated from BP-CH-EXAMS-001 v1.0.0 sha256:b8585266a2e5ca4734d9b60ec5bade83fc01a1b209d3b3dbd1729a16a6b03734
+// Generated from BP-CH-EXAMS-001 v1.0.0 sha256:4768197f351ea702628ed5198543624eb79b54621bfc8fb4c6383ecc414b17b9
 export * from './controllers/psych-instrument.controller.js';
 export * from './dto/create-psych-instrument.dto.js';
 export * from './entities/psych-instrument.entity.js';

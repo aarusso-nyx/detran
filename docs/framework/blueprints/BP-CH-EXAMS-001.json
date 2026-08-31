@@ -86,6 +86,12 @@
           },
           { "name": "valid_until", "type": "date", "writable": false },
           {
+            "name": "inaptitude_until",
+            "type": "date",
+            "nullable": true,
+            "writable": false
+          },
+          {
             "name": "validity_reduction_reason",
             "type": "text",
             "nullable": true,
@@ -116,6 +122,10 @@
           {
             "name": "ck_ch_medical_exam_validity",
             "expression": "valid_until <= statutory_valid_until and (valid_until = statutory_valid_until or (validity_reduction_reason is not null and length(trim(validity_reduction_reason)) > 0))"
+          },
+          {
+            "name": "ck_ch_medical_exam_inaptitude_period",
+            "expression": "(result = 'INAPTO_TEMPORARIO' and inaptitude_until is not null and inaptitude_until > performed_at::date) or (result <> 'INAPTO_TEMPORARIO' and inaptitude_until is null)"
           }
         ],
         "foreignKeys": [
@@ -143,6 +153,11 @@
           { "name": "instrument_id", "type": "uuid" },
           { "name": "performed_at", "type": "timestamptz", "default": "now()" },
           { "name": "valid_until", "type": "date", "nullable": true },
+          {
+            "name": "inaptitude_until",
+            "type": "date",
+            "nullable": true
+          },
           {
             "name": "validity_reduction_reason",
             "type": "text",
@@ -173,6 +188,10 @@
           {
             "name": "ck_ch_psychological_exam_reduced_validity",
             "expression": "valid_until is null or (validity_reduction_reason is not null and length(trim(validity_reduction_reason)) > 0)"
+          },
+          {
+            "name": "ck_ch_psychological_exam_inaptitude_period",
+            "expression": "(result = 'INAPTO_TEMPORARIO' and inaptitude_until is not null and inaptitude_until > performed_at::date) or (result <> 'INAPTO_TEMPORARIO' and inaptitude_until is null)"
           }
         ],
         "foreignKeys": [

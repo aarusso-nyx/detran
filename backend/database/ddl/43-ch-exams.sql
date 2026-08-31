@@ -1,4 +1,4 @@
--- Generated from BP-CH-EXAMS-001 v1.0.0 sha256:b8585266a2e5ca4734d9b60ec5bade83fc01a1b209d3b3dbd1729a16a6b03734
+-- Generated from BP-CH-EXAMS-001 v1.0.0 sha256:4768197f351ea702628ed5198543624eb79b54621bfc8fb4c6383ecc414b17b9
 
 -- Regenerable-only DDL for BP-CH-EXAMS-001; request-path writes use role_app_backend.
 
@@ -32,6 +32,7 @@ create table if not exists ch.medical_exam (
   performed_at timestamptz default now() not null,
   statutory_valid_until date not null,
   valid_until date not null,
+  inaptitude_until date,
   validity_reduction_reason text,
   data jsonb not null,
   result varchar(32) not null,
@@ -40,6 +41,7 @@ create table if not exists ch.medical_exam (
   constraint pk_medical_exam primary key (id),
   constraint ck_ch_medical_exam_result check (result in ('APTO','APTO_COM_RESTRICOES','INAPTO_TEMPORARIO','INAPTO')),
   constraint ck_ch_medical_exam_validity check (valid_until <= statutory_valid_until and (valid_until = statutory_valid_until or (validity_reduction_reason is not null and length(trim(validity_reduction_reason)) > 0))),
+  constraint ck_ch_medical_exam_inaptitude_period check ((result = 'INAPTO_TEMPORARIO' and inaptitude_until is not null and inaptitude_until > performed_at::date) or (result <> 'INAPTO_TEMPORARIO' and inaptitude_until is null)),
   constraint fk_ch_medical_exam_encounter foreign key (encounter_id) references ch.encounter (id),
   constraint fk_ch_medical_exam_professional foreign key (professional_id) references ch.professional (id)
 );
@@ -56,6 +58,7 @@ create table if not exists ch.psychological_exam (
   instrument_id uuid not null,
   performed_at timestamptz default now() not null,
   valid_until date,
+  inaptitude_until date,
   validity_reduction_reason text,
   data jsonb not null,
   result varchar(32) not null,
@@ -64,6 +67,7 @@ create table if not exists ch.psychological_exam (
   constraint pk_psychological_exam primary key (id),
   constraint ck_ch_psychological_exam_result check (result in ('APTO','INAPTO_TEMPORARIO','INAPTO')),
   constraint ck_ch_psychological_exam_reduced_validity check (valid_until is null or (validity_reduction_reason is not null and length(trim(validity_reduction_reason)) > 0)),
+  constraint ck_ch_psychological_exam_inaptitude_period check ((result = 'INAPTO_TEMPORARIO' and inaptitude_until is not null and inaptitude_until > performed_at::date) or (result <> 'INAPTO_TEMPORARIO' and inaptitude_until is null)),
   constraint fk_ch_psychological_exam_encounter foreign key (encounter_id) references ch.encounter (id),
   constraint fk_ch_psychological_exam_professional foreign key (professional_id) references ch.professional (id),
   constraint fk_ch_psychological_exam_instrument foreign key (instrument_id) references ch.psych_instrument (id)
