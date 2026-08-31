@@ -1,5 +1,10 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 
+import {
+  PEC_BIOMETRIC_PROCESSING_POLICY,
+  type PecBiometricProcessingPurpose,
+} from './biometric-processing-policy.js';
+
 export interface BiometricVerificationRequest {
   providerCode: string;
   stationId: string;
@@ -26,16 +31,22 @@ export class BiometricVerificationHttpAdapter {
   ): Promise<BiometricVerificationReceipt> {
     const endpoint = process.env.DETRAN_BIOMETRIC_VERIFICATION_URL;
     const credential = process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN;
-    if (!endpoint || !credential) {
+    const processorContractId =
+      process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID;
+    if (!endpoint || !credential || !processorContractId) {
       throw new ServiceUnavailableException(
-        'Biometric verification provider is not configured',
+        'Biometric verification provider and processor contract are not configured',
       );
     }
+    const processingPurpose = this.processingPurpose(request);
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         authorization: `Bearer ${credential}`,
         'content-type': 'application/json',
+        'x-processing-contract-id': processorContractId,
+        'x-processing-legal-basis': PEC_BIOMETRIC_PROCESSING_POLICY.legalBasis,
+        'x-processing-purpose': processingPurpose,
       },
       body: JSON.stringify(request),
       signal: AbortSignal.timeout(10_000),
@@ -63,5 +74,22 @@ export class BiometricVerificationHttpAdapter {
       );
     }
     return receipt as BiometricVerificationReceipt;
+  }
+
+  private processingPurpose(
+    request: BiometricVerificationRequest,
+  ): PecBiometricProcessingPurpose {
+    if (request.kind === 'CHECKIN' && request.subjectReference.patientId) {
+      return PEC_BIOMETRIC_PROCESSING_POLICY.purposes.candidatePresence;
+    }
+    if (request.kind !== 'CHECKIN' && request.subjectReference.professionalId) {
+      return PEC_BIOMETRIC_PROCESSING_POLICY.purposes.examinerAuthorship;
+    }
+    if (request.kind !== 'CHECKIN' && request.subjectReference.patientId) {
+      return PEC_BIOMETRIC_PROCESSING_POLICY.purposes.candidatePresence;
+    }
+    throw new ServiceUnavailableException(
+      'Biometric verification request has no valid processing purpose',
+    );
   }
 }

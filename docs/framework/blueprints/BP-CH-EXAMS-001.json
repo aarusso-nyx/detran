@@ -4,7 +4,7 @@
   "module": {
     "name": "Exams",
     "namespace": "ch",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "43-ch-exams.sql",
     "dependencies": {
       "@detran/ch-clinical-network": "workspace:*",
@@ -76,20 +76,46 @@
         "fields": [
           { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
           { "name": "tenant_id", "type": "uuid" },
-          { "name": "encounter_id", "type": "uuid" },
-          { "name": "professional_id", "type": "uuid" },
-          { "name": "performed_at", "type": "timestamptz", "default": "now()" },
+          {
+            "name": "encounter_id",
+            "type": "uuid",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "professional_id",
+            "type": "uuid",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "performed_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
           {
             "name": "statutory_valid_until",
             "type": "date",
-            "writable": false
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
           },
-          { "name": "valid_until", "type": "date", "writable": false },
+          {
+            "name": "valid_until",
+            "type": "date",
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
           {
             "name": "inaptitude_until",
             "type": "date",
             "nullable": true,
-            "writable": false
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
           },
           {
             "name": "validity_reduction_reason",
@@ -105,7 +131,12 @@
             "pii": "sensitive-health",
             "retention": "last-record+20y"
           },
-          { "name": "result", "type": "varchar(32)" }
+          {
+            "name": "result",
+            "type": "varchar(32)",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          }
         ],
         "indexes": [
           {
@@ -148,15 +179,44 @@
         "fields": [
           { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
           { "name": "tenant_id", "type": "uuid" },
-          { "name": "encounter_id", "type": "uuid" },
-          { "name": "professional_id", "type": "uuid" },
-          { "name": "instrument_id", "type": "uuid" },
-          { "name": "performed_at", "type": "timestamptz", "default": "now()" },
-          { "name": "valid_until", "type": "date", "nullable": true },
+          {
+            "name": "encounter_id",
+            "type": "uuid",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "professional_id",
+            "type": "uuid",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "instrument_id",
+            "type": "uuid",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "performed_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "valid_until",
+            "type": "date",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
           {
             "name": "inaptitude_until",
             "type": "date",
-            "nullable": true
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
           },
           {
             "name": "validity_reduction_reason",
@@ -171,7 +231,12 @@
             "pii": "sensitive-health",
             "retention": "last-record+20y"
           },
-          { "name": "result", "type": "varchar(32)" }
+          {
+            "name": "result",
+            "type": "varchar(32)",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          }
         ],
         "indexes": [
           {

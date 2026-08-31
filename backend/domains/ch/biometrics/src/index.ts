@@ -1,4 +1,4 @@
-// Generated from BP-CH-BIOMETRICS-001 v1.0.0 sha256:918eef902a9909e28862909f968b34aade0b443ebe3741b3823b9b1761d3cdbb
+// Generated from BP-CH-BIOMETRICS-001 v1.1.0 sha256:23fc0416b68ed64cb3247e3a7945a7f7ae42043134403c34124d78f9a5dfd939
 export * from './controllers/biometric-reference.controller.js';
 export * from './dto/create-biometric-reference.dto.js';
 export * from './entities/biometric-reference.entity.js';
@@ -20,6 +20,7 @@ export * from './entities/biometric-exception.entity.js';
 export * from './repositories/biometric-exception.repository.js';
 export * from './services/biometric-exception.service.js';
 export * from './biometrics.module.js';
+export * from './biometric-processing-policy.js';
 export * from './biometric-verification.http-adapter.js';
 export * from './biometric-lifecycle.service.js';
 export * from './biometric-commands.controller.js';

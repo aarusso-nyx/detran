@@ -195,11 +195,13 @@ describe('BiometricLifecycleService', () => {
     expect(query.mock.calls[0]?.[0]).toContain('not passed');
   });
 
-  it('fails closed when the biometric provider is not configured', async () => {
+  it('AC-PEC-002-4 fails closed without a provider contract binding', async () => {
     const previousUrl = process.env.DETRAN_BIOMETRIC_VERIFICATION_URL;
     const previousToken = process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN;
+    const previousContract = process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID;
     delete process.env.DETRAN_BIOMETRIC_VERIFICATION_URL;
     delete process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN;
+    delete process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID;
     try {
       await expect(
         new BiometricVerificationHttpAdapter().verify({
@@ -211,12 +213,70 @@ describe('BiometricLifecycleService', () => {
           kind: 'CHECKIN',
           subjectReference: { patientId: 'patient-1' },
         }),
-      ).rejects.toThrow('Biometric verification provider is not configured');
+      ).rejects.toThrow(
+        'Biometric verification provider and processor contract are not configured',
+      );
     } finally {
       if (previousUrl)
         process.env.DETRAN_BIOMETRIC_VERIFICATION_URL = previousUrl;
       if (previousToken)
         process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN = previousToken;
+      if (previousContract)
+        process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID = previousContract;
+    }
+  });
+
+  it('AC-PEC-002-3 and AC-PEC-002-4 declare legal basis, contract, and purpose to the processor', async () => {
+    const previousUrl = process.env.DETRAN_BIOMETRIC_VERIFICATION_URL;
+    const previousToken = process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN;
+    const previousContract = process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID;
+    process.env.DETRAN_BIOMETRIC_VERIFICATION_URL =
+      'https://biometric.invalid/verify';
+    process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN = 'credential';
+    process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID = 'contract-2026';
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        passed: true,
+        score: 98,
+        lfdScore: 97,
+        evidenceDocumentId: 'document-1',
+        evidenceSha256: 'a'.repeat(64),
+        reason: null,
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    try {
+      await new BiometricVerificationHttpAdapter().verify({
+        providerCode: 'provider-1',
+        stationId: 'station-1',
+        deviceCertificateFingerprint: 'device-sha256',
+        captureReference: 'opaque',
+        modality: 'FINGERPRINT',
+        kind: 'MEDICAL',
+        subjectReference: { professionalId: 'professional-1' },
+      });
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://biometric.invalid/verify',
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'x-processing-contract-id': 'contract-2026',
+            'x-processing-legal-basis': 'LGPD_ART_11_II_A_LEGAL_OBLIGATION',
+            'x-processing-purpose': 'EXAMINER_AUTHORSHIP_VALIDATION',
+          }),
+        }),
+      );
+    } finally {
+      vi.unstubAllGlobals();
+      if (previousUrl)
+        process.env.DETRAN_BIOMETRIC_VERIFICATION_URL = previousUrl;
+      else delete process.env.DETRAN_BIOMETRIC_VERIFICATION_URL;
+      if (previousToken)
+        process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN = previousToken;
+      else delete process.env.DETRAN_BIOMETRIC_VERIFICATION_TOKEN;
+      if (previousContract)
+        process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID = previousContract;
+      else delete process.env.DETRAN_BIOMETRIC_PROCESSOR_CONTRACT_ID;
     }
   });
 });

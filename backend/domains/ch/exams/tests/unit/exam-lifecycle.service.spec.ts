@@ -105,6 +105,64 @@ describe('ExamLifecycleService', () => {
     ).rejects.toThrow('Exam must be recorded by its responsible professional');
   });
 
+  it('AC-PEC-002-5 permits at most one medical exam per encounter', async () => {
+    const duplicate = Object.assign(new Error('duplicate'), { code: '23505' });
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            birth_date: '1990-01-01',
+            professional_kind: 'MEDICO',
+            user_id: 'user-1',
+            encounter_status: 'IN_PROGRESS',
+            biometric_passed: true,
+          },
+        ],
+      })
+      .mockRejectedValueOnce(duplicate);
+
+    await expect(
+      subject(query).createMedical({
+        encounterId: 'encounter-1',
+        professionalId: 'professional-1',
+        performedAt: '2026-08-31T12:00:00.000Z',
+        data: {},
+        result: 'APTO',
+      }),
+    ).rejects.toThrow('Medical exam already recorded');
+  });
+
+  it('AC-PEC-002-5 permits at most one psychological exam per encounter', async () => {
+    const duplicate = Object.assign(new Error('duplicate'), { code: '23505' });
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            birth_date: '1990-01-01',
+            professional_kind: 'PSICOLOGO',
+            user_id: 'user-1',
+            encounter_status: 'IN_PROGRESS',
+            biometric_passed: true,
+          },
+        ],
+      })
+      .mockResolvedValueOnce({ rows: [{ id: 'instrument-1' }] })
+      .mockRejectedValueOnce(duplicate);
+
+    await expect(
+      subject(query).createPsychological({
+        encounterId: 'encounter-1',
+        professionalId: 'professional-1',
+        instrumentId: 'instrument-1',
+        performedAt: '2026-08-31T12:00:00.000Z',
+        data: {},
+        result: 'APTO',
+      }),
+    ).rejects.toThrow('Psychological exam already recorded');
+  });
+
   it('RN-PEC-102 requires a reason for examiner-reduced medical validity', async () => {
     const query = vi.fn().mockResolvedValueOnce({
       rows: [

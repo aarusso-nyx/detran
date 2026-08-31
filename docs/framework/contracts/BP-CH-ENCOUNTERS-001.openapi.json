@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Encounters — BP-CH-ENCOUNTERS-001",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel.",
     "x-blueprint": "BP-CH-ENCOUNTERS-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -133,36 +133,50 @@
           },
           "clinic_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "patient_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "professional_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "scheduled_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "status": {
             "type": "string",
             "maxLength": 24,
             "enum": ["SCHEDULED", "CHECKED_IN", "DONE", "NO_SHOW", "CANCELLED"],
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
             "default": "'SCHEDULED'"
           },
           "created_by": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "updated_by": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "created_at": {
             "type": "string",
@@ -187,20 +201,28 @@
         "properties": {
           "clinic_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "patient_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "professional_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "scheduled_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           }
         },
         "required": ["clinic_id", "patient_id", "scheduled_at"]
@@ -219,20 +241,28 @@
           },
           "clinic_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "patient_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "appointment_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "renach_process_key": {
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "renach_process_type": {
             "type": "string",
@@ -243,29 +273,41 @@
               "CATEGORY_CHANGE",
               "CATEGORY_ADDITION"
             ],
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "current_category": {
             "type": "string",
             "maxLength": 4,
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "requested_category": {
             "type": "string",
             "maxLength": 4,
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "requires_medical": {
             "type": "boolean",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
             "default": "true"
           },
           "requires_psychological": {
             "type": "boolean",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
             "default": "false"
           },
           "exam_eligible": {
             "type": "boolean",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "eligibility_reasons": {
             "type": "object",
@@ -277,7 +319,9 @@
           "eligibility_checked_at": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "status": {
             "type": "string",
@@ -290,22 +334,30 @@
               "CLOSED",
               "CANCELLED"
             ],
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
             "default": "'OPEN'"
           },
           "started_at": {
             "type": "string",
             "format": "date-time",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
             "default": "now()"
           },
           "closed_at": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "cancelled_at": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "cancel_reason": {
             "type": "string",
@@ -316,12 +368,16 @@
           "created_by": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "updated_by": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "created_at": {
             "type": "string",
@@ -340,16 +396,22 @@
         "properties": {
           "clinic_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "patient_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "appointment_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           }
         },
         "required": ["clinic_id", "patient_id"]
