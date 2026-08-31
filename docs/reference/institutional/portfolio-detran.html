@@ -1,0 +1,497 @@
+<title>Suíte DETRAN NYXK</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F6F7F4; --panel:#FFFFFF; --panel-2:#EFF2EC;
+    --ink:#12211C; --muted:#5B6A62; --line:#DCE1D8;
+    --deep:#0E4F42; --deep-soft:#E4EDE9;
+    --steel:#23617E; --steel-soft:#E5EDF2;
+    --copper:#A45C1E; --copper-soft:#F5EBDF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1512; --panel:#16201C; --panel-2:#1B2622;
+      --ink:#E8EDE7; --muted:#94A39A; --line:#2C3833;
+      --deep:#4FBFA3; --deep-soft:#12302A;
+      --steel:#7FB4D0; --steel-soft:#14262F;
+      --copper:#D89452; --copper-soft:#2E2115;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1512; --panel:#16201C; --panel-2:#1B2622;
+    --ink:#E8EDE7; --muted:#94A39A; --line:#2C3833;
+    --deep:#4FBFA3; --deep-soft:#12302A;
+    --steel:#7FB4D0; --steel-soft:#14262F;
+    --copper:#D89452; --copper-soft:#2E2115;
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink); margin:0;
+    font-family:Archivo,system-ui,sans-serif; font-size:16px; line-height:1.62;
+    padding:0 1.25rem 5rem;
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+  .prose{max-width:68ch}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  header{padding:4rem 0 0}
+  h1{
+    font-family:Newsreader,Georgia,serif; font-weight:600;
+    font-size:clamp(2.4rem,6vw,4rem); line-height:1.04; letter-spacing:-.02em;
+    margin:.6rem 0 1rem; text-wrap:balance;
+  }
+  h1 em{font-style:italic; color:var(--deep)}
+  .lede{font-size:1.15rem; color:var(--ink); max-width:64ch; margin:0 0 2rem}
+  h2{
+    font-family:Newsreader,Georgia,serif; font-weight:600; letter-spacing:-.01em;
+    font-size:clamp(1.5rem,3vw,2rem); margin:0 0 .5rem; text-wrap:balance;
+  }
+  h3{font-family:Newsreader,Georgia,serif;font-weight:600;font-size:1.15rem;margin:0 0 .3rem}
+  section{padding:3.5rem 0 0; border-top:1px solid var(--line); margin-top:3.5rem}
+  section:first-of-type{border-top:0}
+  p{margin:0 0 1rem}
+  .stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line); border-radius:4px;
+    overflow:hidden; margin:2.5rem 0 1rem;
+  }
+  .stat{background:var(--panel); padding:1.1rem 1rem}
+  .stat b{
+    display:block; font-family:Newsreader,serif; font-size:1.9rem; font-weight:600;
+    line-height:1; color:var(--deep); font-variant-numeric:tabular-nums;
+  }
+  .stat span{font-size:.82rem; color:var(--muted); display:block; margin-top:.35rem}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1rem; margin-top:1.8rem}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:6px;
+    padding:1.25rem 1.25rem 1.1rem; border-top:3px solid var(--deep);
+  }
+  .card.est{border-top-color:var(--steel)} .card.ch{border-top-color:var(--copper)}
+  .card.tr{border-top-color:var(--muted)}
+  .card .tag{
+    font-family:"IBM Plex Mono",monospace; font-size:.68rem; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--muted); display:block; margin-bottom:.5rem;
+  }
+  .card p{font-size:.92rem; margin:0 0 .7rem}
+  .meta{font-size:.8rem; color:var(--muted); border-top:1px dashed var(--line); padding-top:.6rem; margin:0}
+  .meta b{color:var(--ink); font-weight:600}
+  figure{margin:2.2rem 0 0; background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:1.2rem 1.2rem .4rem}
+  .scroll{overflow-x:auto}
+  svg{display:block; max-width:100%; height:auto; min-width:760px}
+  figcaption{color:var(--muted); font-size:.85rem; padding:.8rem .2rem .4rem; max-width:76ch}
+  .tbl-wrap{overflow-x:auto; margin-top:1.6rem}
+  table{border-collapse:collapse; width:100%; min-width:660px; font-size:.9rem}
+  th,td{text-align:left; padding:.6rem .7rem; border-bottom:1px solid var(--line); vertical-align:top}
+  th{
+    font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); font-weight:500; white-space:nowrap;
+  }
+  td code{font-family:"IBM Plex Mono",monospace; font-size:.82rem; color:var(--steel)}
+  .pill{
+    display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:.68rem;
+    padding:.12rem .45rem; border-radius:3px; background:var(--deep-soft); color:var(--deep);
+    white-space:nowrap;
+  }
+  .pill.spec{background:var(--copper-soft); color:var(--copper)}
+  .pill.res{background:var(--panel-2); color:var(--muted)}
+  .corpus{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1rem; margin-top:1.6rem}
+  .corpus div{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--copper); border-radius:4px; padding:.9rem 1rem}
+  .corpus h3{font-size:1rem; margin-bottom:.4rem}
+  .corpus p{font-size:.85rem; color:var(--muted); margin:0}
+  .quote{
+    border-left:3px solid var(--deep); padding:.2rem 0 .2rem 1.2rem; margin:2rem 0;
+    font-family:Newsreader,serif; font-size:1.2rem; line-height:1.5; max-width:60ch;
+  }
+  footer{margin-top:4rem; padding-top:2rem; border-top:1px solid var(--line); color:var(--muted); font-size:.88rem}
+  ul{margin:.2rem 0 1rem; padding-left:1.1rem} li{margin-bottom:.35rem}
+
+  @media print{
+    /* o PDF é sempre claro, independentemente do tema do sistema */
+    :root{
+      --bg:#FFFFFF; --panel:#FFFFFF; --panel-2:#F2F4EF;
+      --ink:#12211C; --muted:#55635B; --line:#C9D1C7;
+      --deep:#0E4F42; --deep-soft:#E8F0EC;
+      --steel:#23617E; --steel-soft:#E9F0F4;
+      --copper:#96541B; --copper-soft:#F7EFE4;
+    }
+    @page{size:A4; margin:14mm 13mm}
+    body{padding:0; font-size:10.2pt; line-height:1.5; background:#fff}
+    .wrap{max-width:none}
+    header{padding:0}
+    h1{font-size:30pt; margin:.4rem 0 .7rem}
+    .lede{font-size:11.5pt; margin-bottom:1.2rem}
+    h2{font-size:15.5pt; break-after:avoid}
+    h3{font-size:11.5pt; break-after:avoid}
+    .eyebrow{font-size:7.5pt; break-after:avoid}
+    section{padding-top:1.4rem; margin-top:1.4rem; break-inside:auto}
+    /* nada de barra de rolagem no papel: os diagramas encolhem para a largura útil */
+    .scroll,.tbl-wrap{overflow:visible}
+    svg{min-width:0; width:100%}
+    table{min-width:0; font-size:8.6pt}
+    th,td{padding:.35rem .45rem}
+    /* blocos que não podem ser partidos ao meio */
+    figure,.card,.corpus div,.stat,.quote,tr,footer{break-inside:avoid}
+    /* 6 números em 3 colunas = duas linhas exatas, sem célula órfã na largura A4 */
+    .stats{break-inside:avoid; margin:1.4rem 0 .6rem; grid-template-columns:repeat(3,1fr)}
+    .stat b{font-size:17pt}
+    .grid,.corpus{gap:.6rem}
+    .card{padding:.8rem .9rem .7rem}
+    .card p{font-size:8.8pt; margin-bottom:.5rem}
+    .meta{font-size:7.8pt}
+    figcaption{font-size:8.4pt}
+    .quote{font-size:12.5pt; margin:1.4rem 0}
+    /* sem quebras forçadas: o conteúdo flui e só os blocos indivisíveis acima seguram a página */
+    footer{margin-top:1.8rem; padding-top:1rem; font-size:8.4pt}
+  }
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">NYX Knowledge · Portfólio de software de trânsito · Amazonas, 2026</p>
+  <h1>Uma suíte inteira para o<br>ciclo de vida do <em>trânsito</em></h1>
+  <p class="lede">Seis aplicações, uma plataforma comum e um único ponto de integração com as
+  bases nacionais. Da lavratura do auto em campo até o julgamento do recurso — passando pelo
+  atendimento ao cidadão, pelo registro de sinistros e pela aptidão do condutor —, cada processo
+  é implementado sobre a norma que o rege, e não ao lado dela.</p>
+
+  <div class="stats">
+    <div class="stat"><b>6</b><span>aplicações do ecossistema</span></div>
+    <div class="stat"><b>4+2</b><span>bases nacionais e canais integrados</span></div>
+    <div class="stat"><b>120</b><span>operações de contrato mapeadas</span></div>
+    <div class="stat"><b>216</b><span>regras de negócio ancoradas em norma</span></div>
+    <div class="stat"><b>47</b><span>instrumentos normativos catalogados</span></div>
+    <div class="stat"><b>141</b><span>fluxos, casos de uso e jornadas</span></div>
+  </div>
+</header>
+
+<section>
+  <p class="eyebrow">Ecossistema</p>
+  <h2>Organizado como o trânsito é organizado</h2>
+  <div class="prose">
+    <p>A arquitetura não espelha departamentos nem telas: espelha os registros nacionais que
+    regem cada processo. Três domínios ativos — <b>INF</b> (infrações/RENAINF), <b>EST</b>
+    (sinistros/RENAEST) e <b>CH</b> (condutor e habilitação/RENACH) — mais um domínio
+    <b>VAM</b> (veículos/RENAVAM) reservado para expansão. Sobre eles operam dois produtos
+    transversais, que atravessam todos os domínios: o portal do cidadão e o painel de operação.</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <span class="tag">INF · RENAINF</span>
+      <h3>TEAT — Talonário Eletrônico</h3>
+      <p>Aplicativo do agente em campo para lavratura do auto de infração: enquadramento pelo
+      catálogo normativo vigente, evidências com cadeia de custódia, medidas administrativas,
+      procedimento de etilômetro e operação plenamente offline com numeração reservada.</p>
+      <p class="meta"><b>Situação:</b> backend, web e mobile · integração contínua com o mock nacional
+      <span class="pill">em consolidação</span></p>
+    </div>
+    <div class="card">
+      <span class="tag">INF · RENAINF</span>
+      <h3>RAIT — Recursos Administrativos</h3>
+      <p>Tratamento de defesas e recursos: triagem de admissibilidade, distribuição para
+      analistas, instrução, julgamento colegiado da JARI, segunda instância no CETRAN e
+      vigilância permanente dos prazos que extinguem a pretensão punitiva.</p>
+      <p class="meta"><b>Situação:</b> especificação completa — 37 regras, 3 fluxos, 12 casos de uso
+      <span class="pill spec">em construção</span></p>
+    </div>
+    <div class="card est">
+      <span class="tag">EST · RENAEST</span>
+      <h3>BOAT — Boletim de Acidentalidade</h3>
+      <p>Registro de sinistros de trânsito e vítimas, em campo e por instituições parceiras
+      (saúde, bombeiros, seguradora), com validação em três níveis e alimentação do registro
+      nacional de estatísticas.</p>
+      <p class="meta"><b>Situação:</b> especificação completa — 36 regras, domínio já modelado
+      <span class="pill spec">em construção</span></p>
+    </div>
+    <div class="card ch">
+      <span class="tag">CH · RENACH</span>
+      <h3>PEC — Prontuário Eletrônico do Condutor</h3>
+      <p>Exame de aptidão física e mental e avaliação psicológica do candidato: clínicas e
+      profissionais credenciados, biometria com validação de presença, laudos assinados
+      digitalmente e imutáveis, juntas médicas em três instâncias.</p>
+      <p class="meta"><b>Situação:</b> base madura, 29 módulos de domínio <span class="pill">em consolidação</span></p>
+    </div>
+    <div class="card tr">
+      <span class="tag">Transversal · Cidadão</span>
+      <h3>PORTAL — Serviços ao cidadão</h3>
+      <p>Porta única para condutores, proprietários e cidadãos: consultar multas e pontuação,
+      aderir à notificação eletrônica, indicar condutor, apresentar defesa e recursos, obter
+      documentos digitais, acompanhar processos e exercer direitos de titular de dados.</p>
+      <p class="meta"><b>Situação:</b> 19 casos de uso, 11 jornadas, 26 telas mapeadas
+      <span class="pill spec">em construção</span></p>
+    </div>
+    <div class="card tr">
+      <span class="tag">Transversal · Interno</span>
+      <h3>DASHBOARD — Painel de operação</h3>
+      <p>Monitoramento único do ecossistema: 42 indicadores tipados por natureza — tetos legais
+      cujo estouro extingue direitos, deveres periódicos com data certa, metas operacionais e
+      saúde técnica das integrações.</p>
+      <p class="meta"><b>Situação:</b> 30 regras, 3 fluxos, 7 jornadas de operação
+      <span class="pill spec">em construção</span></p>
+    </div>
+    <div class="card tr">
+      <span class="tag">Infraestrutura de desenvolvimento</span>
+      <h3>SENATRAN-MOCK</h3>
+      <p>Réplica fiel da API nacional, com as convenções, os códigos de retorno e as máquinas de
+      estado reais. Permite desenvolver e testar todo o ecossistema sem depender de
+      credenciamento, e serve como serviço de integração contínua.</p>
+      <p class="meta"><b>Situação:</b> 120 operações · 246 testes automatizados <span class="pill">operacional</span></p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Integração</p>
+  <h2>Uma fronteira única com as bases nacionais</h2>
+  <div class="prose">
+    <p>Nenhuma aplicação fala diretamente com a SENATRAN. Todo tráfego atravessa um adaptador
+    único, com portas tipadas por sistema nacional, que alterna entre a réplica de
+    desenvolvimento e o ambiente real por configuração — sem alteração de código e com cada
+    superfície real habilitada individualmente. Essa fronteira é verificada automaticamente:
+    uma chamada direta fora do adaptador reprova a integração contínua.</p>
+  </div>
+
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 430" role="img" aria-label="As seis aplicações consomem as bases nacionais exclusivamente através do senatran-adapter, que alterna entre a réplica de desenvolvimento e a SENATRAN real por configuração.">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/>
+        </marker>
+        <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--deep)"/>
+        </marker>
+        <marker id="ac" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--copper)"/>
+        </marker>
+      </defs>
+
+      <text x="24" y="26" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">APLICAÇÕES</text>
+      <g font-family="Archivo, sans-serif" font-size="13" fill="var(--ink)">
+        <rect x="24" y="40" width="128" height="42" rx="5" fill="var(--deep-soft)" stroke="var(--deep)"/><text x="88" y="66" text-anchor="middle">TEAT</text>
+        <rect x="164" y="40" width="128" height="42" rx="5" fill="var(--deep-soft)" stroke="var(--deep)"/><text x="228" y="66" text-anchor="middle">RAIT</text>
+        <rect x="304" y="40" width="128" height="42" rx="5" fill="var(--steel-soft)" stroke="var(--steel)"/><text x="368" y="66" text-anchor="middle">BOAT</text>
+        <rect x="444" y="40" width="128" height="42" rx="5" fill="var(--copper-soft)" stroke="var(--copper)"/><text x="508" y="66" text-anchor="middle">PEC</text>
+        <rect x="584" y="40" width="128" height="42" rx="5" fill="var(--panel-2)" stroke="var(--muted)"/><text x="648" y="66" text-anchor="middle">PORTAL</text>
+        <rect x="724" y="40" width="140" height="42" rx="5" fill="var(--panel-2)" stroke="var(--muted)"/><text x="794" y="66" text-anchor="middle">DASHBOARD</text>
+      </g>
+
+      <g stroke="var(--muted)" stroke-width="1.3" marker-end="url(#ar)">
+        <line x1="88" y1="82" x2="88" y2="150"/><line x1="228" y1="82" x2="228" y2="150"/>
+        <line x1="368" y1="82" x2="368" y2="150"/><line x1="508" y1="82" x2="508" y2="150"/>
+        <line x1="648" y1="82" x2="648" y2="150"/><line x1="794" y1="82" x2="794" y2="150"/>
+      </g>
+
+      <rect x="24" y="156" width="840" height="86" rx="6" fill="var(--deep-soft)" stroke="var(--deep)" stroke-width="2"/>
+      <text x="44" y="182" font-family="Newsreader, serif" font-size="16" font-weight="600" fill="var(--deep)">senatran-adapter — fronteira única e verificada</text>
+      <g font-family="IBM Plex Mono, monospace" font-size="11.5" fill="var(--ink)">
+        <text x="44" y="208">renainf</text><text x="132" y="208">renaest</text><text x="224" y="208">renach</text>
+        <text x="310" y="208">sne</text><text x="374" y="208">cdt</text><text x="434" y="208">wsdenatran-read</text>
+        <text x="580" y="208" fill="var(--muted)">(renavam — reservado)</text>
+      </g>
+      <text x="44" y="230" font-family="Archivo, sans-serif" font-size="11.5" fill="var(--muted)">disjuntor · reenvio · chave de idempotência · taxonomia de erro · flags por superfície</text>
+
+      <line x1="300" y1="242" x2="230" y2="316" stroke="var(--deep)" stroke-width="1.6" marker-end="url(#ag)"/>
+      <text x="120" y="286" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--deep)">PROVIDER=mock</text>
+      <line x1="600" y1="242" x2="672" y2="316" stroke="var(--copper)" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#ac)"/>
+      <text x="640" y="286" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--copper)">PROVIDER=real</text>
+
+      <rect x="24" y="322" width="400" height="80" rx="6" fill="var(--panel)" stroke="var(--deep)" stroke-width="1.4"/>
+      <text x="44" y="348" font-family="Newsreader, serif" font-size="15" font-weight="600" fill="var(--ink)">Réplica de desenvolvimento</text>
+      <text x="44" y="370" font-family="Archivo, sans-serif" font-size="12" fill="var(--muted)">120 operações · convenções, códigos de retorno</text>
+      <text x="44" y="388" font-family="Archivo, sans-serif" font-size="12" fill="var(--muted)">e máquinas de estado reais · 246 testes</text>
+
+      <rect x="464" y="322" width="400" height="80" rx="6" fill="none" stroke="var(--copper)" stroke-width="1.4" stroke-dasharray="6 4"/>
+      <text x="484" y="348" font-family="Newsreader, serif" font-size="15" font-weight="600" fill="var(--ink)">SENATRAN — ambiente real</text>
+      <text x="484" y="370" font-family="Archivo, sans-serif" font-size="12" fill="var(--muted)">mTLS e CPF de operador · habilitação superfície</text>
+      <text x="484" y="388" font-family="Archivo, sans-serif" font-size="12" fill="var(--muted)">a superfície, após homologação</text>
+
+      <text x="884" y="200" font-family="Archivo, sans-serif" font-size="12" fill="var(--muted)">nenhuma</text>
+      <text x="884" y="216" font-family="Archivo, sans-serif" font-size="12" fill="var(--muted)">chamada</text>
+      <text x="884" y="232" font-family="Archivo, sans-serif" font-size="12" fill="var(--muted)">direta</text>
+    </svg>
+    </div>
+    <figcaption>O adaptador é o único caminho até as bases nacionais. Trocar o ambiente de destino
+    é uma decisão de configuração, não de código — e cada superfície do ambiente real é liberada
+    individualmente, à medida que a homologação avança.</figcaption>
+  </figure>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Base / canal nacional</th><th>O que sustenta</th><th>Aplicações</th></tr></thead>
+    <tbody>
+      <tr><td><b>RENAINF</b> <code>renainf</code></td><td>Autos de infração, processos administrativos, defesas, penalidades, recursos e julgamentos</td><td>TEAT · RAIT · PORTAL</td></tr>
+      <tr><td><b>RENAEST</b> <code>renaest</code></td><td>Registro nacional de sinistros e estatísticas, com validação em três níveis</td><td>BOAT · PORTAL · DASHBOARD</td></tr>
+      <tr><td><b>RENACH</b> <code>renach</code></td><td>Processo de habilitação: exames, clínicas e profissionais credenciados, juntas</td><td>PEC · PORTAL</td></tr>
+      <tr><td><b>SNE</b> <code>sne</code></td><td>Notificação eletrônica: adesão, ciência e efeitos sobre prazos e descontos</td><td>PORTAL · RAIT</td></tr>
+      <tr><td><b>CDT</b> <code>cdt</code></td><td>Canal do cidadão: notificações, infrações, veículos e habilitação</td><td>PORTAL</td></tr>
+      <tr><td><b>WSDenatran</b> <code>wsdenatran-read</code></td><td>Consultas de veículos, condutores, indicadores e restrições</td><td>todas</td></tr>
+      <tr><td><b>RENAVAM</b> <span class="pill res">reservado</span></td><td>Domínio de veículos — porta prevista, construção futura</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Cobertura</p>
+  <h2>Os produtos cobrem um processo contínuo, não pedaços dele</h2>
+  <div class="prose">
+    <p>A prova mais concreta de especialização não é a lista de sistemas: é o fato de que um único
+    fato de trânsito atravessa a suíte inteira sem sair dela, e sem que o cidadão precise
+    reapresentar ao órgão aquilo que o órgão já tem.</p>
+  </div>
+
+  <figure>
+    <div class="scroll">
+    <svg viewBox="0 0 1000 260" role="img" aria-label="Uma infração percorre TEAT na lavratura, PORTAL na ciência e defesa do cidadão, RAIT no julgamento em duas instâncias, e retorna às bases nacionais; o DASHBOARD vigia os prazos legais em todo o percurso.">
+      <defs>
+        <marker id="b1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+          <path d="M0 0 L10 5 L0 10 z" fill="var(--deep)"/>
+        </marker>
+      </defs>
+      <g font-family="Archivo, sans-serif">
+        <rect x="16" y="60" width="168" height="74" rx="6" fill="var(--deep-soft)" stroke="var(--deep)"/>
+        <text x="34" y="86" font-size="14" font-weight="600" fill="var(--ink)">TEAT</text>
+        <text x="34" y="106" font-size="11.5" fill="var(--muted)">agente lavra o auto</text>
+        <text x="34" y="122" font-size="11.5" fill="var(--muted)">em campo, com evidências</text>
+
+        <rect x="228" y="60" width="168" height="74" rx="6" fill="var(--panel-2)" stroke="var(--muted)"/>
+        <text x="246" y="86" font-size="14" font-weight="600" fill="var(--ink)">PORTAL</text>
+        <text x="246" y="106" font-size="11.5" fill="var(--muted)">cidadão toma ciência,</text>
+        <text x="246" y="122" font-size="11.5" fill="var(--muted)">indica condutor ou defende-se</text>
+
+        <rect x="440" y="60" width="168" height="74" rx="6" fill="var(--deep-soft)" stroke="var(--deep)"/>
+        <text x="458" y="86" font-size="14" font-weight="600" fill="var(--ink)">RAIT</text>
+        <text x="458" y="106" font-size="11.5" fill="var(--muted)">defesa, JARI e CETRAN</text>
+        <text x="458" y="122" font-size="11.5" fill="var(--muted)">com prazos vigiados</text>
+
+        <rect x="652" y="60" width="168" height="74" rx="6" fill="var(--panel-2)" stroke="var(--muted)"/>
+        <text x="670" y="86" font-size="14" font-weight="600" fill="var(--ink)">PORTAL</text>
+        <text x="670" y="106" font-size="11.5" fill="var(--muted)">resultado, pagamento</text>
+        <text x="670" y="122" font-size="11.5" fill="var(--muted)">ou nova instância</text>
+
+        <rect x="864" y="60" width="120" height="74" rx="6" fill="var(--steel-soft)" stroke="var(--steel)"/>
+        <text x="882" y="86" font-size="14" font-weight="600" fill="var(--ink)">Bases</text>
+        <text x="882" y="106" font-size="11.5" fill="var(--muted)">nacionais</text>
+        <text x="882" y="122" font-size="11.5" fill="var(--muted)">(via adaptador)</text>
+      </g>
+      <g stroke="var(--deep)" stroke-width="1.6" marker-end="url(#b1)">
+        <line x1="184" y1="97" x2="222" y2="97"/><line x1="396" y1="97" x2="434" y2="97"/>
+        <line x1="608" y1="97" x2="646" y2="97"/><line x1="820" y1="97" x2="858" y2="97"/>
+      </g>
+      <rect x="16" y="176" width="968" height="56" rx="6" fill="var(--copper-soft)" stroke="var(--copper)" stroke-dasharray="5 4"/>
+      <text x="36" y="200" font-family="Newsreader, serif" font-size="14" font-weight="600" fill="var(--copper)">DASHBOARD — vigilância contínua sobre todo o percurso</text>
+      <text x="36" y="220" font-family="Archivo, sans-serif" font-size="11.5" fill="var(--ink)">tetos legais que extinguem direitos · deveres periódicos com data certa · metas operacionais · saúde das integrações</text>
+      <g stroke="var(--copper)" stroke-width="1.1" stroke-dasharray="3 3">
+        <line x1="100" y1="134" x2="100" y2="176"/><line x1="312" y1="134" x2="312" y2="176"/>
+        <line x1="524" y1="134" x2="524" y2="176"/><line x1="736" y1="134" x2="736" y2="176"/><line x1="924" y1="134" x2="924" y2="176"/>
+      </g>
+    </svg>
+    </div>
+    <figcaption>O mesmo fato percorre lavratura, ciência, defesa, julgamento e registro nacional
+    sem trocar de ecossistema. O painel de operação observa o percurso inteiro — não para produzir
+    relatórios, mas para impedir que um prazo legal expire em silêncio.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <p class="eyebrow">Plataforma</p>
+  <h2>O que se constrói uma vez, serve a todos</h2>
+  <div class="prose">
+    <p>As aplicações não repetem infraestrutura. Autenticação, isolamento por órgão, trilha de
+    auditoria encadeada, fluxo de trabalho, distribuição de tarefas com prazos, notificações,
+    assinatura digital, armazenamento probatório e operação offline são capacidades da
+    plataforma compartilhada — construídas uma vez, versionadas e adotadas por todos os produtos.</p>
+    <p>Sobre ela, um arcabouço de governança mantém a disciplina de engenharia: autoridade por
+    papel registrada em cada alteração, cadeia de evidências verificável e verificadores
+    automáticos que reprovam a entrega quando uma regra do próprio projeto é violada.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><span class="tag">Plataforma</span><h3>STYNX</h3>
+      <p>Cerca de 44 pacotes versionados: identidade e perfis, multi-órgão com isolamento no
+      banco, auditoria em cadeia de hash, motor de fluxo, distribuição de trabalho com relógios
+      de prazo, tarefas agendadas, publicação transacional de eventos, notificações,
+      assinatura PAdES, documentos e execução móvel offline.</p>
+      <p class="meta"><b>Adoção:</b> obrigatória para todos os produtos da suíte</p></div>
+    <div class="card"><span class="tag">Governança</span><h3>DEVAI</h3>
+      <p>Constituição de projeto, registro de ações vedadas, autoridade por papel aplicada na
+      autoria de cada alteração, cadeia de evidências verificável e sensores automáticos de
+      conformidade executados a cada entrega.</p>
+      <p class="meta"><b>Efeito:</b> a disciplina é verificada por máquina, não por memória</p></div>
+    <div class="card"><span class="tag">Arquitetura</span><h3>Monorepo DETRAN</h3>
+      <p>Um repositório, um backend em monólito modular com domínios isolados por pacote, um
+      PostgreSQL com esquema por domínio e isolamento por linha, PostGIS em SIRGAS 2000, e
+      contratos de API gerados a partir do código com verificação de divergência.</p>
+      <p class="meta"><b>Consequência:</b> uma decisão vale para toda a suíte</p></div>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Conformidade</p>
+  <h2>A norma é requisito, não anexo</h2>
+  <div class="prose">
+    <p>Cada regra de negócio da suíte carrega o dispositivo que a sustenta — artigo, inciso e
+    parágrafo — verificado contra o texto oficial. São <b>216 regras</b> ancoradas em
+    <b>47 instrumentos normativos</b>, cujos originais são preservados junto aos excertos. Onde a
+    norma é silente, ambígua ou conflitante, isso está escrito como tal: o projeto não preenche
+    lacuna legal com suposição.</p>
+    <p>Esse trabalho produziu, como subproduto, um mapa de pontos que merecem posição
+    institucional — prazos remetidos a regulamentação nunca editada, exigências praticadas sem
+    respaldo normativo, e um risco de reidentificação em estatísticas agregadas de municípios
+    pequenos. Levantar essas questões antes de codificá-las é, para nós, parte do serviço.</p>
+  </div>
+  <div class="corpus">
+    <div><h3>Código de Trânsito Brasileiro</h3><p>Lei 9.503/1997 e as reformas recentes — Leis 14.071/2020, 14.229/2021, 14.304/2022, 14.599/2023 e 15.428/2026 — com os capítulos de processo administrativo, medidas e habilitação transcritos na íntegra.</p></div>
+    <div><h3>Resoluções do CONTRAN</h3><p>900 e 918/2022 (processo e multas), 927/2022 (aptidão), 923/2022 e 1.009/2024 (toxicológico), 789/2020, 808/2020 (RENAEST), 809/2020, 931/2022 (SNE), 357/2010 (JARI), 432/2013 (alcoolemia), 985 e 1.003 (fiscalização), 1.025/2026 (remoção).</p></div>
+    <div><h3>Portarias SENATRAN e INMETRO</h3><p>997/2022 (talão eletrônico), 968/2022 e 495/2025 (biometria), 139/2025 (acesso e proteção de dados no RENAEST), INMETRO 369/2021 (metrologia de etilômetros).</p></div>
+    <div><h3>Conselhos profissionais</h3><p>CFM 1.636/2002 e 1.821/2007, CFP 01/2019 — requisitos técnicos da perícia médica, da avaliação psicológica e do prontuário eletrônico.</p></div>
+    <div><h3>Direito digital e do cidadão</h3><p>LGPD (13.709/2018), Governo Digital (14.129/2021), direitos do usuário (13.460/2017), acesso à informação (12.527/2011), inclusão (13.146/2015), assinatura eletrônica (14.063/2020 e MP 2.200-2), prontuário (13.787/2018).</p></div>
+    <div><h3>Normas estaduais do Amazonas</h3><p>Portarias DETRAN-AM 5.046/2018 (representação), 005/2021 (operação das clínicas) e 003/2026 (câmeras corporais) — com as lacunas locais registradas onde a publicação oficial não foi localizada.</p></div>
+  </div>
+
+  <p class="quote">Um sistema de trânsito que não conhece a norma que aplica não é um sistema de
+  trânsito: é um formulário caro.</p>
+</section>
+
+<section>
+  <p class="eyebrow">Trajetória</p>
+  <h2>Construção em fases, com fundação antes de fachada</h2>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Fase</th><th>Entrega</th><th>Situação</th></tr></thead>
+    <tbody>
+      <tr><td>Fundação</td><td>Monorepo, governança, réplica da API nacional integrada</td><td><span class="pill">concluída</span></td></tr>
+      <tr><td>Plataforma</td><td>Capacidades compartilhadas: tarefas, publicação transacional, notificações, distribuição de trabalho, execução móvel offline</td><td><span class="pill">concluída</span></td></tr>
+      <tr><td>Núcleo</td><td>Kernel do backend unificado, adaptador nacional, domínio de operações, biblioteca de interface, geradores verificados</td><td><span class="pill">concluída</span></td></tr>
+      <tr><td>Infrações</td><td>Domínio INF, RAIT e primeiras faixas do painel de operação</td><td><span class="pill spec">em curso</span></td></tr>
+      <tr><td>Cidadão</td><td>PORTAL com identidade gov.br e trilha completa de recurso</td><td><span class="pill spec">planejada</span></td></tr>
+      <tr><td>Sinistros</td><td>Domínio EST e BOAT, com captura em campo e intake de parceiros</td><td><span class="pill spec">planejada</span></td></tr>
+      <tr><td>Habilitação</td><td>Consolidação do PEC no ecossistema unificado</td><td><span class="pill spec">planejada</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Compromisso</p>
+  <h2>Por que trânsito</h2>
+  <div class="prose">
+    <p>Software de trânsito lida com direitos que prescrevem, com autos que precisam sustentar
+    contestação, com dados de saúde de vítimas e candidatos, e com decisões que afetam o meio de
+    vida de quem dirige profissionalmente. Não é um domínio onde se acerta por aproximação.</p>
+    <p>Nossa aposta é de longo prazo e é específica: uma plataforma própria, uma réplica fiel da
+    integração nacional para desenvolver sem depender de terceiros, uma base de conhecimento
+    normativo que cresce com o produto e um arcabouço de governança que torna a disciplina
+    verificável. É esse conjunto — e não uma aplicação isolada — que colocamos à disposição do
+    trânsito do Amazonas.</p>
+  </div>
+</section>
+
+<footer>
+  <p><b>NYX Knowledge (NYXK)</b> · Antonio Augusto Russo · aarusso@nyxk.com.br<br>
+  Documento de portfólio — situação de agosto de 2026. Os quantitativos citados refletem o estado
+  verificado dos repositórios e da base de conhecimento normativo na data de emissão.</p>
+</footer>
+</div>
