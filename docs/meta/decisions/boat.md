@@ -1,7 +1,9 @@
 # BOAT — owner decisions (2026-08-28)
 
-**Source of truth:** `detran-refs` @ `52e00a8`, `est/boat/rules/RN-BOAT-106.md`, `RN-BOAT-111.md`,
-`est/boat/workflows/WF-BOAT-003.md`. Forward-looking — `est` is still an empty placeholder domain
+**Source of truth:** canonical in-repository rules
+[RN-BOAT-106](../../framework/product/domains/est/boat/rules/RN-BOAT-106.md) and
+[RN-BOAT-111](../../framework/product/domains/est/boat/rules/RN-BOAT-111.md), plus workflow
+[WF-BOAT-003](../../framework/product/domains/est/boat/workflows/WF-BOAT-003.md). Forward-looking — `est` is still an empty placeholder domain
 in this monorepo (2 files, no implementation).
 
 ## DT-017 — RENAEST transmission periodicity (`RN-BOAT-106`)

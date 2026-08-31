@@ -1,4 +1,4 @@
-# ADR-0010: Phase 6 documentation and publication capability
+# ADR-0011: Phase 6 documentation and publication capability
 
 ## Status
 
@@ -29,7 +29,11 @@ would be an authority error.
    projection from the seven canonical `docs/` sections and
    `docs/_ia/categories.json`. Markdown links are rewritten to their published
    destinations; non-document assets are served under `docs-assets/`; missing
-   allowlisted sources and target collisions fail closed.
+   allowlisted sources and target collisions fail closed. The projection also
+   enforces `docs/_ia/publication.json`: intake material, internal provenance,
+   institutional artifacts, raw legal assets, and draft/stub product records are
+   excluded. Authored frontmatter is preserved as visible source metadata while
+   only projection-controlled frontmatter can affect Docusaurus routing.
 3. The sidebar preserves the manifest's explicit seven-section order. Generated
    `docs/site/docs`, `.docusaurus`, `build`, `node_modules`, and copied static
    documentation assets remain untracked.

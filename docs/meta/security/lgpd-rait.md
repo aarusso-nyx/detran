@@ -1,16 +1,17 @@
-# LGPD — RAIT (requirements handoff from detran-refs)
+# LGPD — RAIT (engineering projection from the canonical knowledge base)
 
-**Source of truth:** `aarusso-nyx/detran-refs` @ commit `28d3440`, files
-`inf/rait/rules/RN-RAIT-133.md` through `RN-RAIT-138.md`, plus `refs/leis/REF-LEI-13709-2018.md`
-(expanded LGPD legal-text reference) and `_meta/lgpd-assessment.md` (the transversal assessment
-that produced this block). This document is a pointer and an actionable summary, not a copy — for
-full legal citations and reasoning, read the source files in `detran-refs`.
+**Source of truth:** canonical rules
+[RN-RAIT-133](../../framework/product/domains/inf/rait/rules/RN-RAIT-133.md) through
+[RN-RAIT-138](../../framework/product/domains/inf/rait/rules/RN-RAIT-138.md), the
+[LGPD legal reference](../../reference/legal/leis/REF-LEI-13709-2018.md), and the internal
+[transversal assessment](../knowledge-base/lgpd-assessment.md). This document is an actionable
+engineering projection, not a competing copy of the full citations and reasoning.
 
-**Status.** All six rules below are `draft` in `detran-refs` — written by a legal/BPO analysis
+**Status.** All six canonical rules below are `draft` — written by a legal/BPO analysis
 round, **not yet reviewed by a human lawyer**. Nothing here is settled law. Treat as
 engineering-relevant findings to track and design around, not requirements to implement blindly.
-Tracked in `detran-refs` `_meta/open-issues.md` as DT-052 (legal-validation, P1) and DT-126
-(kb-consistency, done — the block itself is written).
+Tracked in the [canonical open-issues register](../knowledge-base/open-issues.md) as DT-052
+(legal-validation, P1) and DT-126 (kb-consistency, done — the block itself is written).
 
 ## Grounded against the current schema
 
@@ -56,22 +57,24 @@ Checked `backend/database/ddl/34-inf-rait-case.sql` against the findings below:
 6. **RN-RAIT-138 — data sharing with JARI-AM/CETRAN-AM.** Open institutional question, not an
    engineering one yet: are JARI-AM/CETRAN-AM the same LGPD controller as DETRAN-AM, or a distinct
    one (which would put case-escalation transmissions under LGPD art. 26's inter-controller
-   sharing regime)? Blocked on obtaining their regimento (`detran-refs` DT-060,
-   institutional-ask). Provisional posture in the source rule: treat conservatively as
+   sharing regime)? Blocked on obtaining their regimento (DT-060 in the
+   [canonical register](../knowledge-base/open-issues.md), institutional-ask). Provisional posture
+   in the source rule: treat conservatively as
    inter-controller sharing until resolved.
 
 ## What this is not
 
 Not a request to implement now. Items 2, 3, 4, and 6 explicitly leave a design decision open
-pending legal or product validation in `detran-refs`. This handoff exists so engineering has
+pending legal or product validation in the canonical knowledge base. This handoff exists so engineering has
 visibility before the schema stabilizes further — e.g., before adding more columns to
 `inf.rait_case`/`inf.rait_party` that might need to be revisited once legal basis, retention, and
 role-per-field are settled — not to trigger immediate implementation.
 
 ## Suggested next step
 
-When this is picked up: read `RN-RAIT-133`–`138` directly in `detran-refs` for full legal
-reasoning and citations. Track resolution of `detran-refs` `_meta/open-issues.md` DT-052 before
+When this is picked up: read canonical `RN-RAIT-133`–`138` at the links above for full legal
+reasoning and citations. Track DT-052 in the
+[open-issues register](../knowledge-base/open-issues.md) before
 implementing anything from findings 2, 3, 4, or 6 above; finding 1 (legal basis) and the
 structural half of finding 5 (role-per-field exposure) are lower-risk to start on since they don't
 depend on an open decision.

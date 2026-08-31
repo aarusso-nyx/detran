@@ -24,6 +24,8 @@ const markdownTargets = new Map();
 const assetTargets = new Map();
 const targetOwners = new Map();
 const frontmatterOverrides = new Map();
+let publicationPolicy;
+let publishedLegalMarkdown;
 
 function toPosix(path) {
   return path.split(sep).join('/');
@@ -31,6 +33,70 @@ function toPosix(path) {
 
 function publishedName(name) {
   return name === 'README.md' ? 'index.md' : name;
+}
+
+function repoRelative(path) {
+  return toPosix(relative(repoRoot, path));
+}
+
+function frontmatterStatus(content) {
+  const match = content.match(/^---\n([\s\S]*?)\n---\n/u);
+  if (match === null) return undefined;
+  const status = match[1].match(/^status:\s*["']?([^\s"']+)["']?\s*$/mu);
+  return status?.[1];
+}
+
+function isWithin(relativePath, root) {
+  return relativePath === root || relativePath.startsWith(`${root}/`);
+}
+
+function excludeDirectory(source) {
+  const sourceRelative = repoRelative(source);
+  return (
+    sourceRelative.split('/').includes('_intake') ||
+    isWithin(sourceRelative, 'docs/meta/knowledge-base') ||
+    isWithin(sourceRelative, 'docs/reference/institutional')
+  );
+}
+
+async function publishFile(source) {
+  const sourceRelative = repoRelative(source);
+  if (/\.(?:pdf|html|txt|docx)$/iu.test(sourceRelative)) return false;
+  if (isWithin(sourceRelative, 'docs/reference/legal')) {
+    return publishedLegalMarkdown.has(sourceRelative);
+  }
+  if (!/\.mdx?$/iu.test(sourceRelative)) return true;
+
+  const content = await fs.readFile(source, 'utf8');
+  const status = frontmatterStatus(content);
+  if (status === 'draft' || status === 'stub') return false;
+  if (
+    publicationPolicy.product.roots.some((root) =>
+      isWithin(sourceRelative, root),
+    )
+  ) {
+    return publicationPolicy.product.statuses.includes(status);
+  }
+  return true;
+}
+
+async function loadPublicationPolicy() {
+  publicationPolicy = JSON.parse(
+    await fs.readFile(join(sourceDocs, '_ia/publication.json'), 'utf8'),
+  );
+  publishedLegalMarkdown = new Set([publicationPolicy.legal.catalog]);
+  if (publicationPolicy.legal.publishCatalogEntries) {
+    const catalog = resolve(repoRoot, publicationPolicy.legal.catalog);
+    const content = await fs.readFile(catalog, 'utf8');
+    for (const match of content.matchAll(/\]\(([^)\s#]+\.md)(?:#[^)]*)?\)/gu)) {
+      const target = resolve(dirname(catalog), match[1]);
+      const targetRelative = repoRelative(target);
+      if (!isWithin(targetRelative, 'docs/reference/legal')) {
+        throw new Error(`legal catalog target escapes legal root: ${match[1]}`);
+      }
+      publishedLegalMarkdown.add(targetRelative);
+    }
+  }
 }
 
 function claimTarget(source, target) {
@@ -50,6 +116,7 @@ async function collectTree(source, docsTarget, assetTarget) {
     if (entry.name.startsWith('.')) continue;
     const src = join(source, entry.name);
     if (entry.isDirectory()) {
+      if (excludeDirectory(src)) continue;
       await collectTree(
         src,
         join(docsTarget, entry.name),
@@ -57,6 +124,7 @@ async function collectTree(source, docsTarget, assetTarget) {
       );
       continue;
     }
+    if (!(await publishFile(src))) continue;
     if (/\.mdx?$/iu.test(entry.name)) {
       const target = join(docsTarget, publishedName(entry.name));
       claimTarget(src, target);
@@ -105,34 +173,36 @@ function rewriteLinks(content, source, target) {
   );
 }
 
-function applyFrontmatterOverrides(content, overrides, source) {
-  if (overrides === undefined) return content;
+function projectFrontmatter(content, overrides, source) {
   const match = content.match(/^---\n([\s\S]*?)\n---\n/u);
-  if (match === null) {
+  if (match === null && overrides !== undefined) {
     throw new Error(
       `frontmatter override requires YAML frontmatter: ${toPosix(relative(repoRoot, source))}`,
     );
   }
-  let frontmatter = match[1];
-  for (const [key, value] of Object.entries(overrides)) {
+  if (match === null) return content;
+
+  const publishedFrontmatter = [];
+  for (const [key, value] of Object.entries(overrides ?? {})) {
     if (typeof value !== 'string' || !/^[a-z][a-z0-9_-]*$/u.test(key)) {
       throw new Error(
         `invalid frontmatter override for ${toPosix(relative(repoRoot, source))}`,
       );
     }
-    const line = `${key}: ${JSON.stringify(value)}`;
-    const pattern = new RegExp(`^${key}:.*$`, 'mu');
-    frontmatter = pattern.test(frontmatter)
-      ? frontmatter.replace(pattern, line)
-      : `${frontmatter}\n${line}`;
+    publishedFrontmatter.push(`${key}: ${JSON.stringify(value)}`);
   }
-  return `---\n${frontmatter}\n---\n${content.slice(match[0].length)}`;
+  const controlled =
+    publishedFrontmatter.length === 0
+      ? ''
+      : `---\n${publishedFrontmatter.join('\n')}\n---\n`;
+  const preserved = `<details><summary>Source metadata</summary>\n\n\`\`\`yaml\n${match[1]}\n\`\`\`\n\n</details>\n\n`;
+  return `${controlled}${preserved}${content.slice(match[0].length)}`;
 }
 
 async function copyPublishedTrees() {
   for (const [source, target] of markdownTargets.entries()) {
     await fs.mkdir(dirname(target), { recursive: true });
-    const content = applyFrontmatterOverrides(
+    const content = projectFrontmatter(
       await fs.readFile(source, 'utf8'),
       frontmatterOverrides.get(source),
       source,
@@ -239,6 +309,7 @@ async function ensureDirectoryIndexes(dir = siteDocs) {
 }
 
 async function main() {
+  await loadPublicationPolicy();
   const manifest = JSON.parse(
     await fs.readFile(join(sourceDocs, '_ia/categories.json'), 'utf8'),
   );

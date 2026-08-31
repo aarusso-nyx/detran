@@ -1,5 +1,5 @@
 {
-  "head": "1b6f2b05656619198b44109135fca1830f6d32f2198f577c8c3c80b7d5e83a71",
+  "head": "891d04f39ef0d2272f760824991d0893e1ab293ef90d0e0e44a13dca52d3dfda",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -511,6 +511,122 @@
       ],
       "previous_run_hash": "5446373b0cdcc9209960bd0d622233cdda4fdb5e6ee027b57915bf477ba18c9e",
       "manifest_hash": "1b6f2b05656619198b44109135fca1830f6d32f2198f577c8c3c80b7d5e83a71"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-3c9891265e4c189a",
+      "timestamp": "2026-08-31T16:00:52.325Z",
+      "actor": "Codex GPT-5.6",
+      "actor_role": "agent:engineer",
+      "action": "docs-kb-absorption",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Volumes/Thiamat II/stech/detran-worktrees/docs-kb-absorption",
+        "git": {
+          "head_sha": "4b02785f672b70171d3660433c13a86663fa3275",
+          "dirty_files": [
+            ".prettierignore",
+            "DESIGN-DECISIONS.md",
+            "backend/database/ddl/34-inf-rait-case.sql",
+            "backend/domains/inf/rait-case/src/controllers/rait-admissibility.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-case-event.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-case.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-communication.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-deadline.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-decision.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-document.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-inquiry.controller.ts",
+            "backend/domains/inf/rait-case/src/controllers/rait-party.controller.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-admissibility.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-case-event.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-case.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-communication.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-deadline.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-decision.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-document.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-inquiry.dto.ts",
+            "backend/domains/inf/rait-case/src/dto/create-rait-party.dto.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-admissibility.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-case-event.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-case.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-communication.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-deadline.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-decision.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-document.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-inquiry.entity.ts",
+            "backend/domains/inf/rait-case/src/entities/rait-party.entity.ts",
+            "backend/domains/inf/rait-case/src/index.ts",
+            "backend/domains/inf/rait-case/src/rait-case.module.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-admissibility.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-case-event.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-case.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-communication.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-deadline.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-decision.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-document.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-inquiry.repository.ts",
+            "backend/domains/inf/rait-case/src/repositories/rait-party.repository.ts",
+            "backend/domains/inf/rait-case/src/services/rait-admissibility.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-case-event.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-case.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-communication.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-deadline.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-decision.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-document.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-inquiry.service.ts",
+            "backend/domains/inf/rait-case/src/services/rait-party.service.ts",
+            "docs/README.md",
+            "docs/_ia/categories.json",
+            "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json",
+            "docs/framework/contracts/BP-INF-RAIT-CASE-001.openapi.json",
+            "docs/framework/glossary/README.md",
+            "docs/framework/product/README.md",
+            "docs/meta/adr/README.md",
+            "docs/meta/decisions/README.md",
+            "docs/meta/decisions/boat.md",
+            "docs/meta/decisions/dashboard.md",
+            "docs/meta/decisions/pec.md",
+            "docs/meta/decisions/portal.md",
+            "docs/meta/decisions/rait.md",
+            "docs/meta/decisions/teat.md",
+            "docs/meta/index.md",
+            "docs/meta/security/README.md",
+            "docs/meta/security/lgpd-rait.md",
+            "docs/reference/index.md",
+            "package.json",
+            "docs/_ia/publication.json",
+            "docs/framework/glossary/domain.md",
+            "docs/framework/product/domains/",
+            "docs/framework/product/shared/",
+            "docs/framework/product/transversal/",
+            "docs/meta/adr/ADR-0010-canonical-business-legal-knowledge-base.md",
+            "docs/meta/knowledge-base/",
+            "docs/reference/institutional/",
+            "docs/reference/legal/",
+            "tools/docs/"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": "docs/meta/knowledge-base/import-manifest.json",
+          "sha256": null
+        },
+        {
+          "path": "docs/meta/adr/ADR-0010-canonical-business-legal-knowledge-base.md",
+          "sha256": null
+        },
+        {
+          "path": "docs/_ia/publication.json",
+          "sha256": null
+        }
+      ],
+      "notes": [
+        "Imported detran-refs main aa276b8e71866bfa9e012b23ee4a14b6fc6720a3 into canonical detran/docs with manifest parity and selective publication checks.",
+        "pnpm check passed. DEVAI doctor remains advisory-failing only because the Phase-6 Docusaurus site is not yet scaffolded."
+      ],
+      "previous_run_hash": "1b6f2b05656619198b44109135fca1830f6d32f2198f577c8c3c80b7d5e83a71",
+      "manifest_hash": "891d04f39ef0d2272f760824991d0893e1ab293ef90d0e0e44a13dca52d3dfda"
     }
   ]
 }

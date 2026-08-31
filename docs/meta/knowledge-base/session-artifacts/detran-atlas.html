@@ -1,0 +1,1175 @@
+<title>DETRAN Monorepo Atlas</title>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"
+/>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --panel: #ffffff;
+    --ink: #20261f;
+    --muted: #5b6459;
+    --line: #d8dcd3;
+    --green: #1e7d46;
+    --green-soft: #e9f2eb;
+    --steel: #3d5a73;
+    --steel-soft: #e8eef3;
+    --violet: #6b5b8c;
+    --violet-soft: #eeeaf4;
+    --amber: #a66f1e;
+    --amber-soft: #f6eddc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --bg: #131714;
+      --panel: #1b211c;
+      --ink: #e7eae3;
+      --muted: #98a295;
+      --line: #343c35;
+      --green: #4cbe7e;
+      --green-soft: #1d2e23;
+      --steel: #82a6c2;
+      --steel-soft: #1e2933;
+      --violet: #a796c9;
+      --violet-soft: #262031;
+      --amber: #d99a3d;
+      --amber-soft: #322817;
+    }
+  }
+  :root[data-theme='dark'] {
+    --bg: #131714;
+    --panel: #1b211c;
+    --ink: #e7eae3;
+    --muted: #98a295;
+    --line: #343c35;
+    --green: #4cbe7e;
+    --green-soft: #1d2e23;
+    --steel: #82a6c2;
+    --steel-soft: #1e2933;
+    --violet: #a796c9;
+    --violet-soft: #262031;
+    --amber: #d99a3d;
+    --amber-soft: #322817;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    margin: 0;
+    padding: 2.5rem 1.25rem 4rem;
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 1220px;
+    margin: 0 auto;
+  }
+  header {
+    margin-bottom: 2rem;
+  }
+  h1 {
+    font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4vw, 2.7rem);
+    margin: 0 0 0.35rem;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .sub {
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .stamp {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  h2 {
+    font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin: 2.6rem 0 0.4rem;
+    letter-spacing: -0.005em;
+  }
+  figure {
+    margin: 1rem 0 0;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.1rem 1.1rem 0.6rem;
+  }
+  .scroll {
+    overflow-x: auto;
+  }
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    min-width: 840px;
+  }
+  figcaption {
+    color: var(--muted);
+    font-size: 0.85rem;
+    padding: 0.7rem 0.2rem 0.4rem;
+    max-width: 78ch;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+    margin: 0.9rem 0 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .sw {
+    width: 22px;
+    height: 0;
+    border-top: 3px solid var(--green);
+    display: inline-block;
+  }
+  .sw.dash {
+    border-top-style: dashed;
+    border-top-color: var(--amber);
+  }
+  .sw.steel {
+    border-top-color: var(--steel);
+  }
+  .sw.violet {
+    border-top-color: var(--violet);
+  }
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.6rem;
+    margin-top: 1rem;
+  }
+  .ph {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0.65rem 0.75rem;
+    background: var(--panel);
+  }
+  .ph b {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .ph .s {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .ph.done {
+    border-left: 3px solid var(--green);
+  }
+  .ph.done b {
+    color: var(--green);
+  }
+  .ph.next {
+    border-left: 3px dashed var(--amber);
+  }
+  .ph.next b {
+    color: var(--amber);
+  }
+  .note {
+    color: var(--muted);
+    font-size: 0.85rem;
+    max-width: 78ch;
+  }
+  text {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .t-h {
+    font-family: 'Bricolage Grotesque', 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="stamp">stech · detran suite · 2026-08-24</p>
+    <h1>DETRAN Monorepo Atlas</h1>
+    <p class="sub">
+      Module layout of the new <code>detran</code> monorepo and how it sits
+      between the <strong>devai</strong> governance framework and the
+      <strong>stynx</strong> platform. Solid green = merged on
+      <code>main</code> (Phases 0–2 + the Phase-1 platform round); dashed amber
+      = queued phases.
+    </p>
+  </header>
+
+  <h2>The three planes</h2>
+  <figure>
+    <div class="scroll">
+      <svg
+        viewBox="0 0 1160 620"
+        role="img"
+        aria-label="devai governs both stynx and detran; stynx publishes packages through GitHub Packages which detran consumes; senatran-mock lives inside detran as the sanctioned standalone exception."
+      >
+        <defs>
+          <marker
+            id="a-ink"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" />
+          </marker>
+          <marker
+            id="a-steel"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--steel)" />
+          </marker>
+          <marker
+            id="a-violet"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--violet)" />
+          </marker>
+        </defs>
+
+        <!-- DEVAI plane -->
+        <rect
+          x="20"
+          y="16"
+          width="1120"
+          height="118"
+          rx="8"
+          fill="var(--violet-soft)"
+          stroke="var(--violet)"
+          stroke-width="1.5"
+        />
+        <text x="40" y="44" class="t-h" font-size="15" fill="var(--violet)">
+          DEVAI — governance framework
+        </text>
+        <text x="40" y="68" font-size="12" fill="var(--ink)">
+          constitution · evidence chain (Article 32) · forbidden-actions
+          registry · doctor sensors · docs IA
+        </text>
+        <text x="40" y="90" font-size="12" fill="var(--ink)">
+          authority by git author-as-role: DEVAI Architect → law/ · DEVAI Owner
+          → product/ · DEVAI Inspector → tests
+        </text>
+        <text x="40" y="112" font-size="11.5" fill="var(--muted)">
+          stynx pins @aarusso-nyx/devai 1.2.x · detran pins @devai-nyx/cli 0.3.0
+          (1.x migration TODO in ci.yml)
+        </text>
+
+        <line
+          x1="290"
+          y1="134"
+          x2="290"
+          y2="196"
+          stroke="var(--violet)"
+          stroke-width="1.5"
+          marker-end="url(#a-violet)"
+        />
+        <text x="300" y="172" font-size="11.5" fill="var(--violet)">
+          governs: in-repo evidence gate,
+        </text>
+        <text x="300" y="188" font-size="11.5" fill="var(--violet)">
+          pre-push forbidden-actions
+        </text>
+        <line
+          x1="890"
+          y1="134"
+          x2="890"
+          y2="196"
+          stroke="var(--violet)"
+          stroke-width="1.5"
+          marker-end="url(#a-violet)"
+        />
+        <text x="900" y="172" font-size="11.5" fill="var(--violet)">
+          governs: evidence-gate is a
+        </text>
+        <text x="900" y="188" font-size="11.5" fill="var(--violet)">
+          required check on main
+        </text>
+
+        <!-- STYNX plane -->
+        <rect
+          x="20"
+          y="200"
+          width="540"
+          height="300"
+          rx="8"
+          fill="var(--steel-soft)"
+          stroke="var(--steel)"
+          stroke-width="1.5"
+        />
+        <text x="40" y="228" class="t-h" font-size="15" fill="var(--steel)">
+          STYNX — shared platform (BUSL-1.1)
+        </text>
+        <text x="40" y="252" font-size="11.5" fill="var(--muted)">
+          adoption mandatory · ~44 fixed-versioned packages
+        </text>
+
+        <rect
+          x="40"
+          y="266"
+          width="500"
+          height="62"
+          rx="6"
+          fill="var(--panel)"
+          stroke="var(--line)"
+        />
+        <text x="52" y="286" font-size="11.5" fill="var(--muted)">kernel</text>
+        <text x="52" y="306" font-size="12" fill="var(--ink)">
+          auth · tenancy · data(RLS) · audit · backend · storage
+        </text>
+        <text x="52" y="322" font-size="12" fill="var(--ink)">
+          flow · signature · pdf · i18n · privacy · integration-adapter
+        </text>
+
+        <rect
+          x="40"
+          y="338"
+          width="500"
+          height="66"
+          rx="6"
+          fill="var(--green-soft)"
+          stroke="var(--green)"
+          stroke-width="1.5"
+        />
+        <text x="52" y="358" font-size="11.5" fill="var(--green)">
+          NEW — this Phase-1 round (merged)
+        </text>
+        <text x="52" y="378" font-size="12" fill="var(--ink)">
+          jobs (E2) · outbox (E3) · notifications · worklist
+        </text>
+        <text x="52" y="394" font-size="12" fill="var(--ink)">
+          mobile-runtime + offline-sync (E6 — “no mobile” non-goal dropped)
+        </text>
+
+        <rect
+          x="40"
+          y="414"
+          width="500"
+          height="44"
+          rx="6"
+          fill="var(--panel)"
+          stroke="var(--line)"
+        />
+        <text x="52" y="432" font-size="11.5" fill="var(--muted)">web</text>
+        <text x="52" y="448" font-size="12" fill="var(--ink)">
+          angular · angular-ui · angular-auth · angular-tenancy · angular-flow ·
+          …
+        </text>
+
+        <text x="40" y="486" font-size="11.5" fill="var(--muted)">
+          also consumed by: pec · teat (until their Phase 3/6 ports)
+        </text>
+
+        <!-- registry arrow -->
+        <line
+          x1="560"
+          y1="350"
+          x2="636"
+          y2="350"
+          stroke="var(--steel)"
+          stroke-width="1.8"
+          marker-end="url(#a-steel)"
+        />
+        <text
+          x="598"
+          y="332"
+          font-size="11.5"
+          fill="var(--steel)"
+          text-anchor="middle"
+        >
+          @stynx-nyx/*
+        </text>
+        <text
+          x="598"
+          y="372"
+          font-size="11"
+          fill="var(--muted)"
+          text-anchor="middle"
+        >
+          GitHub Packages,
+        </text>
+        <text
+          x="598"
+          y="386"
+          font-size="11"
+          fill="var(--muted)"
+          text-anchor="middle"
+        >
+          exact pins
+        </text>
+
+        <!-- DETRAN plane -->
+        <rect
+          x="640"
+          y="200"
+          width="500"
+          height="300"
+          rx="8"
+          fill="var(--green-soft)"
+          stroke="var(--green)"
+          stroke-width="1.8"
+        />
+        <text x="660" y="228" class="t-h" font-size="15" fill="var(--green)">
+          DETRAN — private monorepo
+        </text>
+        <text x="660" y="252" font-size="12" fill="var(--ink)">
+          one modular-monolith backend · six frontends
+        </text>
+        <text x="660" y="270" font-size="12" fill="var(--ink)">
+          domains mapped to national systems: inf / est / ch / (vam)
+        </text>
+        <text x="660" y="296" font-size="11.5" fill="var(--muted)">
+          main protected: evidence-gate · foundation · senatran-mock
+        </text>
+        <text x="660" y="312" font-size="11.5" fill="var(--muted)">
+          senatran-mock-tests · backend-kernel (all required)
+        </text>
+
+        <rect
+          x="660"
+          y="330"
+          width="460"
+          height="64"
+          rx="6"
+          fill="var(--panel)"
+          stroke="var(--green)"
+          stroke-width="1.2"
+        />
+        <text x="672" y="350" font-size="11.5" fill="var(--green)">
+          senatran-mock/ — inside the monorepo
+        </text>
+        <text x="672" y="368" font-size="12" fill="var(--ink)">
+          114-endpoint national-API mock · own docker-compose
+        </text>
+        <text x="672" y="384" font-size="12" fill="var(--ink)">
+          245 tests · composed as a CI service
+        </text>
+
+        <text x="660" y="420" font-size="11.5" fill="var(--muted)">
+          D-0001: the mock is the ONE sanctioned exception to
+        </text>
+        <text x="660" y="436" font-size="11.5" fill="var(--muted)">
+          mandatory stynx adoption — plain pg, no @stynx-nyx deps
+        </text>
+        <text x="660" y="472" font-size="11.5" fill="var(--muted)">
+          apps/ · backend/ · packages/ · tools/ → see figure below
+        </text>
+      </svg>
+    </div>
+    <figcaption>
+      Dependency direction across the portfolio: devai governs both repos
+      through committed evidence and author-as-role authority; stynx publishes
+      the platform packages detran consumes with exact version pins; the
+      national-API mock travels inside detran itself, exempt from platform
+      adoption.
+    </figcaption>
+  </figure>
+
+  <h2>Inside the monorepo</h2>
+  <figure>
+    <div class="scroll">
+      <svg
+        viewBox="0 0 1160 1120"
+        role="img"
+        aria-label="detran monorepo interior: six frontend apps call one unified backend; the backend composes domain packages over a single schema-per-domain Postgres; all national-API traffic funnels through the senatran-adapter to either the in-repo mock or the real SENATRAN."
+      >
+        <defs>
+          <marker
+            id="b-ink"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--muted)" />
+          </marker>
+          <marker
+            id="b-green"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--green)" />
+          </marker>
+          <marker
+            id="b-amber"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="7"
+            markerHeight="7"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--amber)" />
+          </marker>
+        </defs>
+
+        <!-- monorepo frame -->
+        <rect
+          x="12"
+          y="10"
+          width="1136"
+          height="1100"
+          rx="10"
+          fill="none"
+          stroke="var(--line)"
+          stroke-width="1.5"
+        />
+        <text x="32" y="40" class="t-h" font-size="15" fill="var(--ink)">
+          detran/ · aarusso-nyx/detran (private)
+        </text>
+
+        <!-- apps row -->
+        <text x="32" y="72" font-size="12" fill="var(--muted)">
+          apps/ — frontends only, each builds on @detran/ui
+        </text>
+        <g>
+          <rect
+            x="32"
+            y="84"
+            width="170"
+            height="58"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="44" y="106" font-size="12.5" fill="var(--ink)">teat/</text>
+          <text x="44" y="124" font-size="11" fill="var(--muted)">
+            web + mobile · P3 re-host
+          </text>
+
+          <rect
+            x="214"
+            y="84"
+            width="170"
+            height="58"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="226" y="106" font-size="12.5" fill="var(--ink)">rait/</text>
+          <text x="226" y="124" font-size="11" fill="var(--muted)">
+            web · appeals/JARI · P3
+          </text>
+
+          <rect
+            x="396"
+            y="84"
+            width="170"
+            height="58"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="408" y="106" font-size="12.5" fill="var(--ink)">
+            dashboard/
+          </text>
+          <text x="408" y="124" font-size="11" fill="var(--muted)">
+            web · ops monitor · P3+
+          </text>
+
+          <rect
+            x="578"
+            y="84"
+            width="170"
+            height="58"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="590" y="106" font-size="12.5" fill="var(--ink)">
+            portal/
+          </text>
+          <text x="590" y="124" font-size="11" fill="var(--muted)">
+            web + mobile · citizens · P4
+          </text>
+
+          <rect
+            x="760"
+            y="84"
+            width="170"
+            height="58"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="772" y="106" font-size="12.5" fill="var(--ink)">boat/</text>
+          <text x="772" y="124" font-size="11" fill="var(--muted)">
+            mobile · sinistros · P5
+          </text>
+
+          <rect
+            x="942"
+            y="84"
+            width="186"
+            height="58"
+            rx="6"
+            fill="none"
+            stroke="var(--line)"
+            stroke-dasharray="3 4"
+          />
+          <text x="954" y="106" font-size="12.5" fill="var(--muted)">
+            pec/web
+          </text>
+          <text x="954" y="124" font-size="11" fill="var(--muted)">
+            reserved slot
+          </text>
+        </g>
+
+        <!-- ui package feeding apps -->
+        <rect
+          x="32"
+          y="170"
+          width="220"
+          height="46"
+          rx="6"
+          fill="var(--green-soft)"
+          stroke="var(--green)"
+          stroke-width="1.5"
+        />
+        <text x="44" y="190" font-size="12.5" fill="var(--ink)">
+          packages/ui ✓
+        </text>
+        <text x="44" y="206" font-size="11" fill="var(--muted)">
+          @detran/ui — tokens · shell · auth boot
+        </text>
+        <line
+          x1="142"
+          y1="170"
+          x2="142"
+          y2="150"
+          stroke="var(--green)"
+          stroke-width="1.5"
+          marker-end="url(#b-green)"
+        />
+        <text x="152" y="162" font-size="11" fill="var(--green)">
+          imported by every app
+        </text>
+
+        <!-- REST arrow -->
+        <line
+          x1="580"
+          y1="150"
+          x2="580"
+          y2="238"
+          stroke="var(--muted)"
+          stroke-width="1.6"
+          marker-end="url(#b-ink)"
+        />
+        <text x="592" y="196" font-size="11.5" fill="var(--muted)">
+          REST /v1 — one unified API surface
+        </text>
+
+        <!-- backend container -->
+        <rect
+          x="32"
+          y="242"
+          width="1096"
+          height="360"
+          rx="8"
+          fill="var(--panel)"
+          stroke="var(--green)"
+          stroke-width="1.8"
+        />
+        <text x="52" y="270" class="t-h" font-size="14" fill="var(--green)">
+          backend/ — modular monolith, ONE deployable ✓ kernel merged
+        </text>
+
+        <rect
+          x="52"
+          y="286"
+          width="330"
+          height="150"
+          rx="6"
+          fill="var(--green-soft)"
+          stroke="var(--green)"
+          stroke-width="1.2"
+        />
+        <text x="64" y="308" font-size="12.5" fill="var(--ink)">
+          app/ — composition root ✓
+        </text>
+        <text x="64" y="330" font-size="11.5" fill="var(--ink)">
+          · stynx runtime adapter hooks (8)
+        </text>
+        <text x="64" y="348" font-size="11.5" fill="var(--ink)">
+          · fail-closed runtime profiles
+        </text>
+        <text x="64" y="366" font-size="11.5" fill="var(--ink)">
+          · policy matrix — 24 roles + CIDADAO
+        </text>
+        <text x="64" y="384" font-size="11.5" fill="var(--ink)">
+          · withTenantContext on request path
+        </text>
+        <text x="64" y="402" font-size="11.5" fill="var(--ink)">
+          · audit sink → hash-chained audit.events
+        </text>
+        <text x="64" y="424" font-size="11" fill="var(--muted)">
+          no in-memory DB fallback — boot fails hard
+        </text>
+
+        <text x="410" y="308" font-size="12" fill="var(--muted)">
+          domains/ — one workspace package per bounded context, explicit deps
+        </text>
+        <g>
+          <rect
+            x="410"
+            y="322"
+            width="168"
+            height="52"
+            rx="6"
+            fill="var(--green-soft)"
+            stroke="var(--green)"
+            stroke-width="1.5"
+          />
+          <text x="422" y="342" font-size="12.5" fill="var(--ink)">
+            shared/ ✓
+          </text>
+          <text x="422" y="360" font-size="11" fill="var(--muted)">
+            policy kit · decorators
+          </text>
+
+          <rect
+            x="590"
+            y="322"
+            width="168"
+            height="52"
+            rx="6"
+            fill="var(--green-soft)"
+            stroke="var(--green)"
+            stroke-width="1.5"
+          />
+          <text x="602" y="342" font-size="12.5" fill="var(--ink)">ops/ ✓</text>
+          <text x="602" y="360" font-size="11" fill="var(--muted)">
+            agents · devices · evidence
+          </text>
+
+          <rect
+            x="770"
+            y="322"
+            width="168"
+            height="52"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="782" y="342" font-size="12.5" fill="var(--ink)">
+            inf/ P3
+          </text>
+          <text x="782" y="360" font-size="11" fill="var(--muted)">
+            AIT · defesas · RAIT/JARI
+          </text>
+
+          <rect
+            x="950"
+            y="322"
+            width="162"
+            height="52"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="962" y="342" font-size="12.5" fill="var(--ink)">
+            est/ P5
+          </text>
+          <text x="962" y="360" font-size="11" fill="var(--muted)">
+            crash records (RENAEST)
+          </text>
+
+          <rect
+            x="410"
+            y="386"
+            width="168"
+            height="52"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="422" y="406" font-size="12.5" fill="var(--ink)">ch/ P6</text>
+          <text x="422" y="424" font-size="11" fill="var(--muted)">
+            pec’s 29 domains (RENACH)
+          </text>
+
+          <rect
+            x="590"
+            y="386"
+            width="168"
+            height="52"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="602" y="406" font-size="12.5" fill="var(--ink)">
+            portal/ P4
+          </text>
+          <text x="602" y="424" font-size="11" fill="var(--muted)">
+            citizen aggregates · intake
+          </text>
+
+          <rect
+            x="770"
+            y="386"
+            width="168"
+            height="52"
+            rx="6"
+            fill="none"
+            stroke="var(--amber)"
+            stroke-dasharray="5 4"
+            stroke-width="1.5"
+          />
+          <text x="782" y="406" font-size="12.5" fill="var(--ink)">
+            dashboard/ P3+
+          </text>
+          <text x="782" y="424" font-size="11" fill="var(--muted)">
+            monitoring read-models
+          </text>
+
+          <rect
+            x="950"
+            y="386"
+            width="162"
+            height="52"
+            rx="6"
+            fill="none"
+            stroke="var(--line)"
+            stroke-dasharray="3 4"
+          />
+          <text x="962" y="406" font-size="12.5" fill="var(--muted)">
+            vam/ reserved
+          </text>
+          <text x="962" y="424" font-size="11" fill="var(--muted)">
+            RENAVAM — not built
+          </text>
+        </g>
+
+        <!-- DB -->
+        <g>
+          <ellipse
+            cx="330"
+            cy="486"
+            rx="278"
+            ry="16"
+            fill="var(--steel-soft)"
+            stroke="var(--steel)"
+            stroke-width="1.3"
+          />
+          <rect
+            x="52"
+            y="486"
+            width="556"
+            height="72"
+            fill="var(--steel-soft)"
+            stroke="none"
+          />
+          <line
+            x1="52"
+            y1="486"
+            x2="52"
+            y2="558"
+            stroke="var(--steel)"
+            stroke-width="1.3"
+          />
+          <line
+            x1="608"
+            y1="486"
+            x2="608"
+            y2="558"
+            stroke="var(--steel)"
+            stroke-width="1.3"
+          />
+          <ellipse
+            cx="330"
+            cy="558"
+            rx="278"
+            ry="16"
+            fill="var(--steel-soft)"
+            stroke="var(--steel)"
+            stroke-width="1.3"
+          />
+          <text x="72" y="514" font-size="12.5" fill="var(--ink)">
+            PostgreSQL + PostGIS (SRID 4674) — schema-per-domain ✓
+          </text>
+          <text x="72" y="534" font-size="11.5" fill="var(--ink)">
+            auth · audit(hash chain) · storage · integration · ops.* (+
+            inf/est/ch placeholders)
+          </text>
+          <text x="72" y="552" font-size="11.5" fill="var(--muted)">
+            RLS forced on every tenant table · tenant = UF DETRAN
+          </text>
+        </g>
+        <line
+          x1="330"
+          y1="440"
+          x2="330"
+          y2="468"
+          stroke="var(--steel)"
+          stroke-width="1.5"
+          marker-end="url(#b-ink)"
+        />
+        <text x="342" y="460" font-size="11" fill="var(--muted)">
+          SQL-first DDL · withTenantContext
+        </text>
+
+        <!-- tools -->
+        <rect
+          x="660"
+          y="470"
+          width="452"
+          height="112"
+          rx="6"
+          fill="var(--panel)"
+          stroke="var(--green)"
+          stroke-width="1.2"
+        />
+        <text x="676" y="494" font-size="12.5" fill="var(--ink)">tools/ ✓</text>
+        <text x="676" y="516" font-size="11.5" fill="var(--ink)">
+          · blueprint generators — regenerable-only drift gate
+        </text>
+        <text x="676" y="534" font-size="11.5" fill="var(--ink)">
+          · senatran boundary scan · decorator check · RLS smoke
+        </text>
+        <text x="676" y="556" font-size="11" fill="var(--muted)">
+          all wired into pnpm check + the 5 required CI checks
+        </text>
+
+        <!-- adapter path -->
+        <line
+          x1="580"
+          y1="602"
+          x2="580"
+          y2="646"
+          stroke="var(--green)"
+          stroke-width="1.8"
+          marker-end="url(#b-green)"
+        />
+        <text x="592" y="630" font-size="11.5" fill="var(--green)">
+          every national-API call — no exceptions (scanner-enforced)
+        </text>
+
+        <rect
+          x="330"
+          y="650"
+          width="500"
+          height="96"
+          rx="8"
+          fill="var(--green-soft)"
+          stroke="var(--green)"
+          stroke-width="1.8"
+        />
+        <text x="350" y="676" class="t-h" font-size="13.5" fill="var(--green)">
+          packages/senatran-adapter ✓ — the sole boundary
+        </text>
+        <text x="350" y="698" font-size="11.5" fill="var(--ink)">
+          typed ports: renainf · renaest · renach · sne · cdt · wsdenatran-read
+        </text>
+        <text x="350" y="716" font-size="11.5" fill="var(--ink)">
+          types generated from the mock’s OpenAPI (114 ops) · circuit breaker ·
+          retries
+        </text>
+        <text x="350" y="734" font-size="11.5" fill="var(--muted)">
+          idempotency keys on writes · error-code taxonomy · ALREADY_OPEN
+          recovery
+        </text>
+
+        <line
+          x1="460"
+          y1="746"
+          x2="330"
+          y2="806"
+          stroke="var(--green)"
+          stroke-width="1.6"
+          marker-end="url(#b-green)"
+        />
+        <text x="248" y="776" font-size="11.5" fill="var(--green)">
+          SENATRAN_PROVIDER=mock
+        </text>
+        <line
+          x1="700"
+          y1="746"
+          x2="830"
+          y2="806"
+          stroke="var(--amber)"
+          stroke-width="1.6"
+          stroke-dasharray="6 4"
+          marker-end="url(#b-amber)"
+        />
+        <text x="762" y="776" font-size="11.5" fill="var(--amber)">
+          =real · per-surface flags
+        </text>
+
+        <rect
+          x="96"
+          y="810"
+          width="440"
+          height="112"
+          rx="8"
+          fill="var(--panel)"
+          stroke="var(--green)"
+          stroke-width="1.5"
+        />
+        <text x="116" y="836" font-size="12.5" fill="var(--ink)">
+          senatran-mock/ ✓ (in-repo)
+        </text>
+        <text x="116" y="858" font-size="11.5" fill="var(--ink)">
+          WSDenatran reads · RENACH · RENAINF appeals chain
+        </text>
+        <text x="116" y="876" font-size="11.5" fill="var(--ink)">
+          RENAEST sinistros · SNE · CDT citizen channel
+        </text>
+        <text x="116" y="898" font-size="11.5" fill="var(--muted)">
+          D-0001 standalone (plain pg) · compose service in CI
+        </text>
+
+        <rect
+          x="640"
+          y="810"
+          width="440"
+          height="112"
+          rx="8"
+          fill="none"
+          stroke="var(--amber)"
+          stroke-dasharray="6 4"
+          stroke-width="1.5"
+        />
+        <text x="660" y="836" font-size="12.5" fill="var(--ink)">
+          SENATRAN (real)
+        </text>
+        <text x="660" y="858" font-size="11.5" fill="var(--muted)">
+          SERPRO-gated · mTLS certs + operator CPF
+        </text>
+        <text x="660" y="876" font-size="11.5" fill="var(--muted)">
+          payload schemas low-confidence — each surface
+        </text>
+        <text x="660" y="898" font-size="11.5" fill="var(--muted)">
+          stays flag-off until homologated
+        </text>
+
+        <!-- stynx consumption note -->
+        <rect
+          x="32"
+          y="960"
+          width="1096"
+          height="120"
+          rx="8"
+          fill="var(--steel-soft)"
+          stroke="var(--steel)"
+          stroke-width="1.3"
+        />
+        <text x="52" y="988" font-size="12.5" fill="var(--steel)" class="t-h">
+          consumed from stynx (exact pins, GitHub Packages)
+        </text>
+        <text x="52" y="1012" font-size="11.5" fill="var(--ink)">
+          backend: auth+Cognito(gov.br federation runbook) · tenancy · data/RLS
+          · audit · storage · flow
+        </text>
+        <text x="52" y="1030" font-size="11.5" fill="var(--ink)">
+          Phase-3+ consumers ready: worklist(RAIT) · jobs · outbox ·
+          notifications(PORTAL) · mobile-runtime+offline-sync(BOAT)
+        </text>
+        <text x="52" y="1054" font-size="11.5" fill="var(--muted)">
+          web: @detran/ui composes angular · angular-ui · angular-auth ·
+          angular-tenancy · angular-i18n
+        </text>
+      </svg>
+    </div>
+    <figcaption>
+      The interior mechanism: every frontend speaks to one backend; every domain
+      is a real workspace package over one schema-per-domain Postgres with
+      forced RLS; and every byte to or from the national API passes through
+      <code>senatran-adapter</code>, whose target is a config switch between the
+      in-repo mock and the flag-gated real SENATRAN. Green checks mark what is
+      merged today.
+    </figcaption>
+  </figure>
+
+  <div class="legend">
+    <span><i class="sw"></i> built &amp; merged</span>
+    <span><i class="sw dash"></i> queued phase (P3–P6)</span>
+    <span><i class="sw steel"></i> stynx platform</span>
+    <span><i class="sw violet"></i> devai governance</span>
+  </div>
+
+  <h2>Phase ledger</h2>
+  <div class="phases">
+    <div class="ph done">
+      <b>P0 ✓</b><span class="s">monorepo genesis + senatran-mock port</span>
+    </div>
+    <div class="ph done">
+      <b>P1 ✓*</b
+      ><span class="s">stynx round — 5 of 6 merged, outbox landing</span>
+    </div>
+    <div class="ph done">
+      <b>P2 ✓</b><span class="s">kernel · ui · ops · blueprints · adapter</span>
+    </div>
+    <div class="ph next">
+      <b>P3</b
+      ><span class="s">inf domain + RAIT + DASHBOARD, teat re-host</span>
+    </div>
+    <div class="ph next">
+      <b>P4</b><span class="s">PORTAL + gov.br federation + CDT writes</span>
+    </div>
+    <div class="ph next">
+      <b>P5</b><span class="s">est domain + BOAT (Capacitor, attestation)</span>
+    </div>
+    <div class="ph next">
+      <b>P6</b><span class="s">ch domain (pec port) + archive origins</span>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top: 1.4rem">
+    Acceptance scenario the whole layout serves: a gov.br-federated citizen
+    files a recurso in PORTAL → RAIT’s worklist distributes it to a relator →
+    the signed decision publishes through the outbox and senatran-adapter to the
+    mock → PORTAL shows the outcome, the citizen is notified, DASHBOARD reflects
+    the flow, and the audit hash chain verifies end-to-end.
+  </p>
+</div>

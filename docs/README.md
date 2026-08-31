@@ -15,4 +15,18 @@ The consolidated Docusaurus projection lives under `docs/site/`. Its
 `scripts/sync-docs.mjs` command rebuilds the generated site tree from these seven
 source sections and the allowlist in `_ia/categories.json`; generated content and
 build output remain untracked. Run `pnpm docs:check` for sync, type, build, and
-strict link validation. `docs/work/` (untracked) holds round/working artifacts.
+strict link validation. Publication is fail-closed by `_ia/publication.json`: intake
+material, internal provenance, institutional artifacts, raw legal assets, and
+draft/stub product records are excluded from the generated site.
+
+The business/legal knowledge base is maintained here as the single writable authority:
+
+- [framework/product/](framework/product/) — app charters, journeys, use cases, workflows,
+  business rules, screens, and shared semantics.
+- [reference/legal/](reference/legal/index.md) — curated legal catalog with captured originals
+  retained privately in Git.
+- [meta/knowledge-base/](meta/knowledge-base/index.md) — internal research, queues, templates, and
+  immutable import provenance.
+
+`docs/work/` (untracked) holds ephemeral round/working artifacts; imported research is tracked
+under the knowledge-base paths and remains unpublished.

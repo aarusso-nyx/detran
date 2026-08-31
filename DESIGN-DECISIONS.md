@@ -15,7 +15,9 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
 - **ADR-0005** — Unified backend kernel: exact registry pins, fail-closed
   profiles, role-union mapping, request-path tenancy, persisted audit chain and
   the Phase-2 backend CI gate.
-- **ADR-0010** — Phase 6 documentation capability: deterministic seven-section
+- **ADR-0010** — `detran/docs` is the single writable authority for the business/legal knowledge
+  base; source provenance is immutable, and publication is status-gated and fail-closed.
+- **ADR-0011** — Phase 6 documentation capability: deterministic seven-section
   Docusaurus projection, active Constitution publication, blocking CI validation,
   and separately authorized local GitHub Pages publication.
 
