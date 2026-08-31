@@ -31,6 +31,7 @@ import { createSenatranAdapter } from '@detran/senatran-adapter';
 import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
 import { BiometricsModule } from '@detran/ch-biometrics';
 import { BillingModule } from '@detran/ch-billing';
+import { ClinicalControlsModule } from '@detran/ch-clinical-controls';
 import { ClinicalNetworkModule } from '@detran/ch-clinical-network';
 import { ClinicalReportsModule } from '@detran/ch-clinical-reports';
 import { EncountersModule } from '@detran/ch-encounters';
@@ -187,6 +188,7 @@ export class AppModule {
         BiometricsModule,
         BillingModule,
         ExamsModule,
+        ClinicalControlsModule,
         ClinicalReportsModule,
         ProcessBlocksModule,
         TelehealthModule,
