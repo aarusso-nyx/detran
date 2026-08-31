@@ -109,6 +109,19 @@ The RENACH adapter contract is extended only inside
 consume English ports and never import Portuguese wire DTOs, provider URLs,
 certificate handling or mock-specific headers.
 
+### PEC configuration table
+
+`pec.process_parameters` is absorbed by the kernel-owned
+`tenancy.tenant_settings.settings` document under the reserved
+`ch.processParameters` namespace. A second tenant-configuration table under `ch`
+would create competing sources for the same setting and is therefore prohibited.
+The origin administration surface (list, normalized-key upsert, delete and feature
+evaluation) remains a kernel configuration obligation: writes must be schema
+validated, actor-attributed and audited, and feature evaluation must use the
+published persistent provider. The origin's `InMemoryFeatureFlagProvider` fallback
+is not ported. Until that kernel surface is wired and tested, process-parameter
+administration is explicitly deferred and cannot count as runtime parity.
+
 ### Port gates created by this mapping
 
 The following are blocking acceptance conditions for downstream PEC steps:
@@ -118,6 +131,9 @@ The following are blocking acceptance conditions for downstream PEC steps:
   `auth.clinics`, `auth.professionals` or `auth.stations` tables;
 - session behavior must be demonstrated through the shared runtime before the
   origin `admin-users` and authentication/session tests can count toward parity;
+- process-parameter administration must be demonstrated against
+  `tenancy.tenant_settings.settings -> 'ch' -> 'processParameters'`; a
+  `ch.process_parameter` table or process-local feature provider fails this gate;
 - persistent idempotency, rate limiting, outbox attempts, inbound receipts and
   ACK history must be demonstrated before RENACH transmission parity is claimed;
 - audit tests must verify one kernel chain rather than preserving PEC's parallel
