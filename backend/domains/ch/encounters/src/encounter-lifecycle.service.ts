@@ -108,6 +108,12 @@ export class EncounterLifecycleService {
           `select id, clinic_id, patient_id, status
              from ch.appointment
             where id = $1
+              and exists (
+                select 1 from ch.biometric_check biometric
+                 where biometric.appointment_id = ch.appointment.id
+                   and biometric.kind = 'CHECKIN'
+                   and biometric.passed
+              )
             limit 1`,
           [input.appointmentId],
         )
@@ -115,6 +121,12 @@ export class EncounterLifecycleService {
           `select id, clinic_id, patient_id, status
              from ch.appointment
             where patient_id = $1 and status = 'CHECKED_IN'
+              and exists (
+                select 1 from ch.biometric_check biometric
+                 where biometric.appointment_id = ch.appointment.id
+                   and biometric.kind = 'CHECKIN'
+                   and biometric.passed
+              )
             order by scheduled_at desc
             limit 1`,
           [input.patientId],

@@ -149,6 +149,12 @@
           { "name": "name", "type": "varchar(255)" },
           { "name": "fingerprint_hash", "type": "varchar(128)" },
           { "name": "camera_serial", "type": "varchar(120)", "nullable": true },
+          { "name": "provider_code", "type": "varchar(80)" },
+          {
+            "name": "device_certificate_fingerprint",
+            "type": "varchar(128)"
+          },
+          { "name": "lfd_capable", "type": "boolean", "default": "true" },
           {
             "name": "ip_address",
             "type": "inet",

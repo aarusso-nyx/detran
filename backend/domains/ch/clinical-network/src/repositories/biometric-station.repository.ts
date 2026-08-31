@@ -1,4 +1,4 @@
-// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:9e9bbc2f438a9fcb8207678f2c0927e3013d7ec0f104563fbebaf3ac446c8f7a
+// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:17207db7ca179e913375c7645edcf4c43c3e309891634856e04a72dd4a4d8f54
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -17,6 +17,9 @@ const WRITABLE_FIELDS = new Set<string>([
   'name',
   'fingerprint_hash',
   'camera_serial',
+  'provider_code',
+  'device_certificate_fingerprint',
+  'lfd_capable',
   'ip_address',
   'location_hint',
   'is_active',

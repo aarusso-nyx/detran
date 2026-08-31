@@ -1,0 +1,134 @@
+// Generated from BP-CH-BIOMETRICS-001 v1.0.0 sha256:918eef902a9909e28862909f968b34aade0b443ebe3741b3823b9b1761d3cdbb
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RequestContext } from '@stynx-nyx/core';
+import { Database, type Transaction } from '@stynx-nyx/data';
+import { withTenantContext } from '@detran/shared';
+import type { CreateBiometricExceptionDto } from '../dto/create-biometric-exception.dto.js';
+import type { BiometricException } from '../entities/biometric-exception.entity.js';
+
+type SqlTransaction = Transaction & {
+  query<T extends Record<string, unknown> = Record<string, unknown>>(
+    sql: string,
+    values?: readonly unknown[],
+  ): Promise<{ rows: T[] }>;
+};
+const WRITABLE_FIELDS = new Set<string>([
+  'appointment_id',
+  'encounter_id',
+  'clinic_id',
+  'station_id',
+  'biometric_check_id',
+  'scope',
+  'reason',
+  'justification',
+  'attachment_document_ids',
+]);
+
+/** SQL-only repository. Tenant identity is injected by the kernel trigger. */
+@Injectable()
+export class BiometricExceptionRepository {
+  constructor(
+    private readonly database: Database,
+    private readonly requestContext: RequestContext,
+  ) {}
+  transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> {
+    return withTenantContext(this.database, this.requestContext, work);
+  }
+  findAll(transaction?: Transaction): Promise<BiometricException[]> {
+    return this.execute(
+      transaction,
+      async (tx) =>
+        (
+          await tx.query<BiometricException & Record<string, unknown>>(
+            'select * from ch.biometric_exception order by created_at desc limit 500',
+          )
+        ).rows,
+    );
+  }
+  async findOne(
+    id: string,
+    transaction?: Transaction,
+  ): Promise<BiometricException> {
+    const result = await this.execute(transaction, (tx) =>
+      tx.query<BiometricException & Record<string, unknown>>(
+        'select * from ch.biometric_exception where id = $1 limit 1',
+        [id],
+      ),
+    );
+    const row = result.rows[0];
+    if (!row)
+      throw new NotFoundException('BiometricException ' + id + ' not found');
+    return row;
+  }
+  create(
+    dto: CreateBiometricExceptionDto,
+    transaction?: Transaction,
+  ): Promise<BiometricException> {
+    return this.write('insert', undefined, dto, transaction);
+  }
+  update(
+    id: string,
+    dto: Partial<CreateBiometricExceptionDto>,
+    transaction?: Transaction,
+  ): Promise<BiometricException> {
+    return this.write('update', id, dto, transaction);
+  }
+  async remove(id: string, transaction?: Transaction): Promise<void> {
+    const result = await this.execute(transaction, (tx) =>
+      tx.query(
+        'delete from ch.biometric_exception where id = $1 returning id',
+        [id],
+      ),
+    );
+    if (!result.rows[0])
+      throw new NotFoundException('BiometricException ' + id + ' not found');
+  }
+  private async write(
+    operation: 'insert' | 'update',
+    id: string | undefined,
+    dto: Partial<CreateBiometricExceptionDto>,
+    transaction?: Transaction,
+  ): Promise<BiometricException> {
+    const entries = Object.entries(dto).filter(
+      ([, value]) => value !== undefined,
+    );
+    if (
+      !entries.length ||
+      entries.some(([field]) => !WRITABLE_FIELDS.has(field))
+    )
+      throw new Error('Invalid BiometricException write fields');
+    const columns = entries.map(([field]) => field);
+    const values = entries.map(([, value]) => value);
+    const insertSql =
+      'insert into ch.biometric_exception (' +
+      columns.join(', ') +
+      ') values (' +
+      columns.map((_, index) => '$' + (index + 1)).join(', ') +
+      ') returning *';
+    const updateSql =
+      'update ch.biometric_exception set ' +
+      columns.map((field, index) => field + ' = $' + (index + 1)).join(', ') +
+      ', updated_at = now() where id = $' +
+      (columns.length + 1) +
+      ' returning *';
+    const result = await this.execute(transaction, (tx) =>
+      tx.query<BiometricException & Record<string, unknown>>(
+        operation === 'insert' ? insertSql : updateSql,
+        operation === 'insert' ? values : [...values, id],
+      ),
+    );
+    const row = result.rows[0];
+    if (!row)
+      throw new NotFoundException('BiometricException ' + id + ' not found');
+    return row;
+  }
+  private execute<T>(
+    transaction: Transaction | undefined,
+    work: (transaction: SqlTransaction) => Promise<T>,
+  ): Promise<T> {
+    if (transaction) return work(transaction as SqlTransaction);
+    return withTenantContext(this.database, this.requestContext, (tx) =>
+      work(tx as SqlTransaction),
+    );
+  }
+}

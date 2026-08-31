@@ -1,4 +1,4 @@
--- Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:9e9bbc2f438a9fcb8207678f2c0927e3013d7ec0f104563fbebaf3ac446c8f7a
+-- Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:17207db7ca179e913375c7645edcf4c43c3e309891634856e04a72dd4a4d8f54
 
 -- Regenerable-only DDL for BP-CH-CLINICAL-NETWORK-001; request-path writes use role_app_backend.
 
@@ -60,6 +60,9 @@ create table if not exists ch.biometric_station (
   name varchar(255) not null,
   fingerprint_hash varchar(128) not null,
   camera_serial varchar(120),
+  provider_code varchar(80) not null,
+  device_certificate_fingerprint varchar(128) not null,
+  lfd_capable boolean default true not null,
   ip_address inet,
   location_hint text,
   is_active boolean default true not null,

@@ -1,4 +1,4 @@
-// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:9e9bbc2f438a9fcb8207678f2c0927e3013d7ec0f104563fbebaf3ac446c8f7a
+// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:17207db7ca179e913375c7645edcf4c43c3e309891634856e04a72dd4a4d8f54
 export * from './controllers/clinic.controller.js';
 export * from './dto/create-clinic.dto.js';
 export * from './entities/clinic.entity.js';

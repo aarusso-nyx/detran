@@ -45,6 +45,7 @@ describe('EncounterLifecycleService', () => {
       }),
     ).resolves.toMatchObject({ id: 'encounter-1', status: 'OPEN' });
     expect(query).toHaveBeenCalledTimes(2);
+    expect(query.mock.calls[0]?.[0]).toContain('ch.biometric_check');
     expect(query.mock.calls[1]?.[0]).toContain('insert into ch.encounter');
   });
 

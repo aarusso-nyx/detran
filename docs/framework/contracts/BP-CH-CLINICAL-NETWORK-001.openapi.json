@@ -650,6 +650,18 @@
             "maxLength": 120,
             "nullable": true
           },
+          "provider_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "device_certificate_fingerprint": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "lfd_capable": {
+            "type": "boolean",
+            "default": "true"
+          },
           "ip_address": {
             "type": "string",
             "nullable": true,
@@ -683,6 +695,8 @@
           "clinic_id",
           "name",
           "fingerprint_hash",
+          "provider_code",
+          "device_certificate_fingerprint",
           "created_at"
         ]
       },
@@ -706,6 +720,18 @@
             "maxLength": 120,
             "nullable": true
           },
+          "provider_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "device_certificate_fingerprint": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "lfd_capable": {
+            "type": "boolean",
+            "default": "true"
+          },
           "ip_address": {
             "type": "string",
             "nullable": true,
@@ -725,7 +751,13 @@
             "nullable": true
           }
         },
-        "required": ["clinic_id", "name", "fingerprint_hash"]
+        "required": [
+          "clinic_id",
+          "name",
+          "fingerprint_hash",
+          "provider_code",
+          "device_certificate_fingerprint"
+        ]
       }
     }
   }

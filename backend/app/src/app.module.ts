@@ -28,6 +28,7 @@ import {
 import { Observable } from 'rxjs';
 
 import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
+import { BiometricsModule } from '@detran/ch-biometrics';
 import { ClinicalNetworkModule } from '@detran/ch-clinical-network';
 import { ClinicalReportsModule } from '@detran/ch-clinical-reports';
 import { EncountersModule } from '@detran/ch-encounters';
@@ -169,6 +170,7 @@ export class AppModule {
         ClinicalNetworkModule,
         PatientsModule,
         EncountersModule,
+        BiometricsModule,
         ExamsModule,
         ClinicalReportsModule,
       ],
