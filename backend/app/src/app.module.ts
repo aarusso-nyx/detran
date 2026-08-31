@@ -40,6 +40,7 @@ import { ProcessBlocksModule } from '@detran/ch-process-blocks';
 import { RestrictionsModule } from '@detran/ch-restrictions';
 import { RetentionModule } from '@detran/ch-retention';
 import { SchedulingModule } from '@detran/ch-scheduling';
+import { TelehealthModule } from '@detran/ch-telehealth';
 
 import {
   DetranPersistedAuditSink,
@@ -188,6 +189,7 @@ export class AppModule {
         ExamsModule,
         ClinicalReportsModule,
         ProcessBlocksModule,
+        TelehealthModule,
         SchedulingModule,
         RestrictionsModule,
         RetentionModule,

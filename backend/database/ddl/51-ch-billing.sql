@@ -1,4 +1,4 @@
--- Generated from BP-CH-BILLING-001 v1.0.0 sha256:b93ad2da6d0162ec02bff11759374782a27b26980a522e4c2c681e2daa1d9d53
+-- Generated from BP-CH-BILLING-001 v1.0.0 sha256:8814fad00febff6787905872dd30b4f54fe6c33ab4b750bd471093d1e6186fe4
 
 -- Regenerable-only DDL for BP-CH-BILLING-001; request-path writes use role_app_backend.
 
@@ -53,7 +53,8 @@ create table if not exists ch.billing_item (
   constraint ck_ch_billing_item_subject check (encounter_id is not null or telehealth_session_id is not null),
   constraint ck_ch_billing_item_exam_price check ((item_kind = 'EXAM' and federal_price_id is not null and exam_kind in ('MEDICAL','PSYCH')) or (item_kind <> 'EXAM' and federal_price_id is null and exam_kind is null)),
   constraint fk_ch_billing_item_encounter foreign key (encounter_id) references ch.encounter (id),
-  constraint fk_ch_billing_item_price foreign key (federal_price_id) references ch.federal_exam_public_price (id)
+  constraint fk_ch_billing_item_price foreign key (federal_price_id) references ch.federal_exam_public_price (id),
+  constraint fk_ch_billing_item_telehealth foreign key (telehealth_session_id) references ch.telehealth_session (id)
 );
 create index if not exists ix_ch_billing_item_encounter on ch.billing_item (tenant_id, encounter_id, status);
 create index if not exists ix_ch_billing_item_reference on ch.billing_item (tenant_id, reference_number);

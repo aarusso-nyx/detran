@@ -5,11 +5,12 @@
     "name": "Billing",
     "namespace": "ch",
     "version": "1.0.0",
-    "ddlFile": "50-ch-billing.sql",
+    "ddlFile": "51-ch-billing.sql",
     "dependencies": {
       "@detran/ch-clinical-network": "workspace:*",
       "@detran/ch-encounters": "workspace:*",
-      "@detran/ch-process-blocks": "workspace:*"
+      "@detran/ch-process-blocks": "workspace:*",
+      "@detran/ch-telehealth": "workspace:*"
     },
     "testAliases": [
       { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
@@ -169,6 +170,14 @@
             "columns": ["federal_price_id"],
             "references": {
               "table": "ch.federal_exam_public_price",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_ch_billing_item_telehealth",
+            "columns": ["telehealth_session_id"],
+            "references": {
+              "table": "ch.telehealth_session",
               "columns": ["id"]
             }
           }
