@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm blueprints:check && pnpm contracts:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts",
+    "check": "pnpm format:check && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm blueprints:check && pnpm contracts:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
@@ -34,6 +34,9 @@
     "blueprints:check": "node tools/blueprints/check.mjs",
     "contracts:openapi": "node tools/contracts/generate-openapi.mjs",
     "contracts:check": "node tools/contracts/generate-openapi.mjs --check",
+    "docs:kb:check": "node tools/docs/kb/check.mjs",
+    "docs:kb:cutover-check": "node tools/docs/kb/check.mjs --cutover",
+    "docs:kb:publish-check": "node tools/docs/kb/publish-dry-run.mjs",
     "senatran-adapter:test:ci": "pnpm --filter @detran/senatran-adapter test:ci"
   },
   "devDependencies": {
