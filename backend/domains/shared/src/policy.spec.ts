@@ -94,6 +94,23 @@ describe('DETRAN unified policy kit', () => {
     expect(permissionsForRoles(['technical-admin'])).toEqual(['*']);
   });
 
+  it('reserves retention review for the DPO role', () => {
+    expect(
+      isDetranActionAllowed(
+        { roles: ['DPO'], permissions: [] },
+        'ch:retention',
+        'review',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['GESTOR_DETRAN'], permissions: ['*'] },
+        'ch:retention',
+        'review',
+      ),
+    ).toBe(false);
+  });
+
   it('always uses the app role for request-path transactions', async () => {
     const tx = vi.fn(
       async (work: (trx: never) => Promise<string>, options: unknown) => {

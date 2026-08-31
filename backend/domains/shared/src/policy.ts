@@ -312,6 +312,11 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['restriction', 'create', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
   ['restriction', 'update', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
   ['restriction', 'delete', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
+  ['retention', 'read', ['DPO', 'AUDITOR', 'GESTOR_DETRAN']],
+  ['retention', 'assess', ['DPO', 'GESTOR_DETRAN']],
+  ['retention', 'hold', ['DPO', 'GESTOR_DETRAN']],
+  ['retention', 'propose', ['DPO', 'GESTOR_DETRAN']],
+  ['retention', 'review', ['DPO']],
   ['transmission', 'read', ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN']],
   [
     'transmission',
@@ -899,6 +904,12 @@ export function isDetranActionAllowed(
   if (!principal) return false;
   if (!resource || !action) return false;
   const key = policyKey(resource, action);
+  if (
+    key === 'ch:retention:review' &&
+    !canonicalRoles(principal.roles).includes('DPO')
+  ) {
+    return false;
+  }
   if (
     principal.permissions.includes('*') ||
     principal.permissions.includes(key) ||
