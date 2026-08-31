@@ -288,6 +288,32 @@ export class BiometricLifecycleService {
           'Exception decision requires a distinct supervisor before expiry',
         );
       }
+      if (approve && exception.scope === 'CHECKIN') {
+        await tx.query(
+          `update ch.appointment set status = 'CHECKED_IN', updated_at = now()
+            where id = $1 and status = 'SCHEDULED'
+              and exists (
+                select 1 from ch.biometric_exception approved
+                 where approved.id = $2 and approved.status = 'APPROVED'
+                   and approved.expires_at > now()
+              )`,
+          [exception.appointment_id, id],
+        );
+      } else if (approve) {
+        await tx.query(
+          `update ch.encounter set status = 'IN_PROGRESS', updated_at = now()
+            where id = $1 and status = 'OPEN'
+              and exists (
+                select 1 from ch.biometric_exception approved
+                join ch.biometric_check failed
+                  on failed.id = approved.biometric_check_id
+                 where approved.id = $2 and approved.status = 'APPROVED'
+                   and approved.expires_at > now()
+                   and failed.subject_patient_id is not null
+              )`,
+          [exception.encounter_id, id],
+        );
+      }
       return exception;
     });
   }

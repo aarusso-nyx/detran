@@ -52,6 +52,13 @@ export class EncounterLifecycleService {
     return this.encounters.transaction(async (transaction) => {
       const tx = transaction as SqlTransaction;
       const appointment = await this.resolveCheckedInAppointment(tx, input);
+      if (appointment.status === 'SCHEDULED') {
+        await tx.query(
+          `update ch.appointment set status = 'CHECKED_IN', updated_at = now()
+            where id = $1 and status = 'SCHEDULED'`,
+          [appointment.id],
+        );
+      }
       const result = await tx.query<Encounter & Record<string, unknown>>(
         `insert into ch.encounter
           (clinic_id, patient_id, appointment_id, renach_process_key,
@@ -125,7 +132,17 @@ export class EncounterLifecycleService {
                 select 1 from ch.biometric_check biometric
                  where biometric.appointment_id = ch.appointment.id
                    and biometric.kind = 'CHECKIN'
-                   and biometric.passed
+                   and (
+                     biometric.passed
+                     or exists (
+                       select 1 from ch.biometric_exception exception
+                        where exception.biometric_check_id = biometric.id
+                          and exception.appointment_id = ch.appointment.id
+                          and exception.scope = 'CHECKIN'
+                          and exception.status = 'APPROVED'
+                          and exception.expires_at > now()
+                     )
+                   )
               )
             limit 1`,
           [input.appointmentId],
@@ -133,12 +150,22 @@ export class EncounterLifecycleService {
       : await tx.query<AppointmentGate>(
           `select id, clinic_id, patient_id, status
              from ch.appointment
-            where patient_id = $1 and status = 'CHECKED_IN'
+            where patient_id = $1 and status in ('SCHEDULED','CHECKED_IN')
               and exists (
                 select 1 from ch.biometric_check biometric
                  where biometric.appointment_id = ch.appointment.id
                    and biometric.kind = 'CHECKIN'
-                   and biometric.passed
+                   and (
+                     biometric.passed
+                     or exists (
+                       select 1 from ch.biometric_exception exception
+                        where exception.biometric_check_id = biometric.id
+                          and exception.appointment_id = ch.appointment.id
+                          and exception.scope = 'CHECKIN'
+                          and exception.status = 'APPROVED'
+                          and exception.expires_at > now()
+                     )
+                   )
               )
             order by scheduled_at desc
             limit 1`,
@@ -148,7 +175,7 @@ export class EncounterLifecycleService {
     if (
       !appointment ||
       appointment.patient_id !== input.patientId ||
-      appointment.status !== 'CHECKED_IN' ||
+      !['SCHEDULED', 'CHECKED_IN'].includes(appointment.status) ||
       (input.clinicId && appointment.clinic_id !== input.clinicId)
     ) {
       throw new BadRequestException(

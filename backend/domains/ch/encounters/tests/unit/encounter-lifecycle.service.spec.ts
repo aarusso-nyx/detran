@@ -79,11 +79,45 @@ describe('EncounterLifecycleService', () => {
 
     await subject(query).open({ patientId: 'patient-1' });
 
-    expect(query.mock.calls[0]?.[0]).toContain("status = 'CHECKED_IN'");
+    expect(query.mock.calls[0]?.[0]).toContain(
+      "status in ('SCHEDULED','CHECKED_IN')",
+    );
+    expect(query.mock.calls[0]?.[0]).toContain("exception.status = 'APPROVED'");
     expect(query.mock.calls[0]?.[1]).toEqual(['patient-1']);
   });
 
-  it.each(['SCHEDULED', 'NO_SHOW', 'CANCELLED'])(
+  it('AC-PEC-003-2 accepts only a scoped, approved, non-expired check-in exception', async () => {
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            id: 'appointment-1',
+            clinic_id: 'clinic-1',
+            patient_id: 'patient-1',
+            status: 'SCHEDULED',
+          },
+        ],
+      })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [{ id: 'encounter-1', status: 'OPEN' }] });
+
+    await expect(
+      subject(query).open({
+        patientId: 'patient-1',
+        appointmentId: 'appointment-1',
+      }),
+    ).resolves.toMatchObject({ id: 'encounter-1', status: 'OPEN' });
+
+    const gateSql = query.mock.calls[0]?.[0] as string;
+    expect(gateSql).toContain('ch.biometric_exception');
+    expect(gateSql).toContain("exception.scope = 'CHECKIN'");
+    expect(gateSql).toContain("exception.status = 'APPROVED'");
+    expect(gateSql).toContain('exception.expires_at > now()');
+    expect(query.mock.calls[1]?.[0]).toContain("status = 'CHECKED_IN'");
+  });
+
+  it.each(['NO_SHOW', 'CANCELLED'])(
     'AC-PEC-002-1 rejects an appointment in %s',
     async (status) => {
       const query = vi.fn().mockResolvedValueOnce({

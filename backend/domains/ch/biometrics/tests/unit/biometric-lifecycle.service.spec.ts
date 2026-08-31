@@ -112,7 +112,7 @@ describe('BiometricLifecycleService', () => {
     expect(provider.verify).not.toHaveBeenCalled();
   });
 
-  it('AC-PEC-003-1 requires a distinct supervisor for exception approval', async () => {
+  it('AC-PEC-003-1 and AC-PEC-003-2 require a distinct supervisor before expiry', async () => {
     const query = vi.fn().mockResolvedValueOnce({ rows: [] });
     const { service } = subject(query);
 
@@ -122,6 +122,59 @@ describe('BiometricLifecycleService', () => {
     const sql = query.mock.calls[0]?.[0] as string;
     expect(sql).toContain('requested_by <> $3');
     expect(sql).toContain('expires_at > now()');
+  });
+
+  it('AC-PEC-003-2 advances only a live approved exception in its check-in scope', async () => {
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            id: 'exception-1',
+            appointment_id: 'appointment-1',
+            encounter_id: null,
+            scope: 'CHECKIN',
+            status: 'APPROVED',
+          },
+        ],
+      })
+      .mockResolvedValueOnce({ rows: [] });
+    const { service } = subject(query, undefined, 'supervisor-1');
+
+    await expect(
+      service.decideException('exception-1', true),
+    ).resolves.toMatchObject({ status: 'APPROVED' });
+
+    expect(query.mock.calls[1]?.[0]).toContain("status = 'CHECKED_IN'");
+    expect(query.mock.calls[1]?.[0]).toContain("approved.status = 'APPROVED'");
+    expect(query.mock.calls[1]?.[0]).toContain('approved.expires_at > now()');
+  });
+
+  it('AC-PEC-003-5 rejection never advances an appointment or encounter', async () => {
+    const query = vi.fn().mockResolvedValueOnce({
+      rows: [
+        {
+          id: 'exception-1',
+          appointment_id: 'appointment-1',
+          encounter_id: null,
+          scope: 'CHECKIN',
+          status: 'REJECTED',
+        },
+      ],
+    });
+    const { service } = subject(query, undefined, 'supervisor-1');
+
+    await expect(
+      service.decideException('exception-1', false, 'Capture must be retried'),
+    ).resolves.toMatchObject({ status: 'REJECTED' });
+
+    expect(query).toHaveBeenCalledTimes(1);
+    expect(query.mock.calls[0]?.[1]).toEqual([
+      'exception-1',
+      false,
+      'supervisor-1',
+      'Capture must be retried',
+    ]);
   });
 
   it('AC-PEC-003-4 binds an exception to the failed biometric evidence', async () => {

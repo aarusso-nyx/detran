@@ -324,13 +324,23 @@ export class ReportLifecycleService {
               professional.council_type || '/' || professional.council_number
                 as professional_council,
               professional.user_id as professional_user_id,
-              (select biometric.passed
-                 from ch.biometric_check biometric
-                where biometric.encounter_id = exam.encounter_id
-                  and biometric.kind = $3
-                  and biometric.subject_professional_id = professional.id
-                order by biometric.performed_at desc
-                limit 1) as professional_biometric_passed
+              exists (
+                select 1 from ch.biometric_check biometric
+                 where biometric.encounter_id = exam.encounter_id
+                   and biometric.kind = $3
+                   and biometric.subject_professional_id = professional.id
+                   and (
+                     biometric.passed
+                     or exists (
+                       select 1 from ch.biometric_exception exception
+                        where exception.biometric_check_id = biometric.id
+                          and exception.encounter_id = exam.encounter_id
+                          and exception.scope = $3
+                          and exception.status = 'APPROVED'
+                          and exception.expires_at > now()
+                     )
+                   )
+              ) as professional_biometric_passed
          from ${examTable} exam
          join ch.professional professional
            on professional.id = exam.professional_id

@@ -238,12 +238,23 @@ export class ExamLifecycleService {
               professional.professional_kind,
               professional.user_id,
               encounter.status as encounter_status,
-              (select biometric.passed
-                 from ch.biometric_check biometric
-                where biometric.encounter_id = encounter.id
-                  and biometric.kind = $3
-                order by biometric.performed_at desc
-                limit 1) as biometric_passed
+              exists (
+                select 1 from ch.biometric_check biometric
+                 where biometric.encounter_id = encounter.id
+                   and biometric.kind = $3
+                   and biometric.subject_patient_id = patient.id
+                   and (
+                     biometric.passed
+                     or exists (
+                       select 1 from ch.biometric_exception exception
+                        where exception.biometric_check_id = biometric.id
+                          and exception.encounter_id = encounter.id
+                          and exception.scope = $3
+                          and exception.status = 'APPROVED'
+                          and exception.expires_at > now()
+                     )
+                   )
+              ) as biometric_passed
          from ch.encounter encounter
          join ch.patient patient on patient.id = encounter.patient_id
          join ch.professional professional on professional.id = $2

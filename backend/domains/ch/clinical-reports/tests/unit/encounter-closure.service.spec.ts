@@ -139,7 +139,7 @@ describe('EncounterClosureService', () => {
     expect(responseMissing(error)).toEqual([CLOSURE_MISSING.restriction]);
   });
 
-  it('AC-PEC-008-3 refuses to use closure as the RENACH publication trigger', async () => {
+  it('AC-PEC-008-3 and AC-PEC-009-4 block closure until RENACH is acknowledged', async () => {
     const query = vi
       .fn()
       .mockResolvedValueOnce({
