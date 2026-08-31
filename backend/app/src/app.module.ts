@@ -35,6 +35,7 @@ import { ClinicalReportsModule } from '@detran/ch-clinical-reports';
 import { EncountersModule } from '@detran/ch-encounters';
 import { ExamsModule } from '@detran/ch-exams';
 import { PatientsModule } from '@detran/ch-patients';
+import { ProcessBlocksModule } from '@detran/ch-process-blocks';
 import { RestrictionsModule } from '@detran/ch-restrictions';
 import { RetentionModule } from '@detran/ch-retention';
 import { SchedulingModule } from '@detran/ch-scheduling';
@@ -184,6 +185,7 @@ export class AppModule {
         BiometricsModule,
         ExamsModule,
         ClinicalReportsModule,
+        ProcessBlocksModule,
         SchedulingModule,
         RestrictionsModule,
         RetentionModule,
