@@ -1,7 +1,7 @@
 // Generated from BP-INF-RAIT-WORKLIST-001 v1.0.0 sha256:2297f42351909b6ac68f4a18e7c8b535508fa219dfdaa0f9b087f1ca3b745234
-import { NotFoundException } from '@nestjs/common';
-import type { RequestContext } from '@stynx-nyx/core';
-import type { Database, Transaction } from '@stynx-nyx/data';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RequestContext } from '@stynx-nyx/core';
+import { Database, type Transaction } from '@stynx-nyx/data';
 import { withTenantContext } from '@detran/shared';
 import type { CreateRaitClockAlertDto } from '../dto/create-rait-clock-alert.dto.js';
 import type { RaitClockAlert } from '../entities/rait-clock-alert.entity.js';
@@ -23,13 +23,11 @@ const WRITABLE_FIELDS = new Set<string>([
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */
+@Injectable()
 export class RaitClockAlertRepository {
   constructor(
-    private readonly database: Pick<Database, 'tx'>,
-    private readonly requestContext: Pick<
-      RequestContext,
-      'hasActiveContext' | 'snapshot'
-    >,
+    private readonly database: Database,
+    private readonly requestContext: RequestContext,
   ) {}
   transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> {
     return withTenantContext(this.database, this.requestContext, work);

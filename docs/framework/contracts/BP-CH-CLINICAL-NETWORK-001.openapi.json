@@ -1,0 +1,732 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ClinicalNetwork — BP-CH-CLINICAL-NETWORK-001",
+    "version": "1.0.0",
+    "description": "Clinicas credenciadas, profissionais e estacoes biometricas do PEC, relocados do schema auth para o dominio ch conforme ADR-0011.",
+    "x-blueprint": "BP-CH-CLINICAL-NETWORK-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/clinical-network/clinics": {
+      "get": {
+        "tags": ["clinic"],
+        "operationId": "listClinic",
+        "summary": "List Clinic (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Clinic"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["clinic"],
+        "operationId": "createClinic",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClinicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Clinic"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/clinical-network/clinics/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["clinic"],
+        "operationId": "getClinic",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Clinic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["clinic"],
+        "operationId": "updateClinic",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateClinicDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Clinic"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/clinical-network/professionals": {
+      "get": {
+        "tags": ["professional"],
+        "operationId": "listProfessional",
+        "summary": "List Professional (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Professional"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["professional"],
+        "operationId": "createProfessional",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProfessionalDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professional"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/clinical-network/professionals/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["professional"],
+        "operationId": "getProfessional",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professional"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["professional"],
+        "operationId": "updateProfessional",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateProfessionalDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Professional"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/clinical-network/biometric-stations": {
+      "get": {
+        "tags": ["biometric-station"],
+        "operationId": "listBiometricStation",
+        "summary": "List BiometricStation (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BiometricStation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["biometric-station"],
+        "operationId": "createBiometricStation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBiometricStationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricStation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/clinical-network/biometric-stations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["biometric-station"],
+        "operationId": "getBiometricStation",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricStation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["biometric-station"],
+        "operationId": "updateBiometricStation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateBiometricStationDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricStation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Clinic": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "cnpj": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "legal_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 7,
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "contact_phone": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "code", "cnpj", "name", "created_at"]
+      },
+      "CreateClinicDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "cnpj": {
+            "type": "string",
+            "maxLength": 14
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "legal_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 7,
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "contact_phone": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["code", "cnpj", "name"]
+      },
+      "Professional": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 255,
+            "x-pii": "direct"
+          },
+          "document_cpf": {
+            "type": "string",
+            "maxLength": 11,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "professional_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "MEDICO",
+              "PSICOLOGO",
+              "TECNICO_BIOMETRIA",
+              "SUPERVISOR",
+              "RECEPCAO"
+            ]
+          },
+          "council_type": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["CRM", "CRP", "OUTRO"],
+            "nullable": true
+          },
+          "council_number": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true,
+            "x-pii": "professional"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "clinic_id",
+          "person_name",
+          "professional_kind",
+          "created_at"
+        ]
+      },
+      "CreateProfessionalDto": {
+        "type": "object",
+        "properties": {
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "person_name": {
+            "type": "string",
+            "maxLength": 255,
+            "x-pii": "direct"
+          },
+          "document_cpf": {
+            "type": "string",
+            "maxLength": 11,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "professional_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "MEDICO",
+              "PSICOLOGO",
+              "TECNICO_BIOMETRIA",
+              "SUPERVISOR",
+              "RECEPCAO"
+            ]
+          },
+          "council_type": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["CRM", "CRP", "OUTRO"],
+            "nullable": true
+          },
+          "council_number": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true,
+            "x-pii": "professional"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true,
+            "x-pii": "direct"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["clinic_id", "person_name", "professional_kind"]
+      },
+      "BiometricStation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "fingerprint_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "camera_serial": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "ip_address": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "indirect"
+          },
+          "location_hint": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "clinic_id",
+          "name",
+          "fingerprint_hash",
+          "created_at"
+        ]
+      },
+      "CreateBiometricStationDto": {
+        "type": "object",
+        "properties": {
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "fingerprint_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "camera_serial": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "ip_address": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "indirect"
+          },
+          "location_hint": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["clinic_id", "name", "fingerprint_hash"]
+      }
+    }
+  }
+}

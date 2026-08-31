@@ -21,6 +21,8 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
   ],
   ['clinic', 'write', ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['clinic', 'create', ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['clinic', 'update', ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
   [
     'user',
     'read',
@@ -41,6 +43,19 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     'write',
     ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
   ],
+  [
+    'professional',
+    'create',
+    ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
+  ],
+  [
+    'professional',
+    'update',
+    ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
+  ],
+  ['biometric-station', 'read', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],
+  ['biometric-station', 'create', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],
+  ['biometric-station', 'update', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],
   [
     'process-parameter',
     'read',
@@ -100,7 +115,6 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ],
   ['patient', 'create', ['RECEPCAO', 'ADMIN_CLINICA']],
   ['patient', 'update', ['RECEPCAO', 'ADMIN_CLINICA']],
-  ['patient', 'delete', ['RECEPCAO', 'ADMIN_CLINICA']],
   [
     'encounter',
     'read',
@@ -130,6 +144,7 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['encounter', 'create', ['RECEPCAO']],
   ['encounter', 'update', ['RECEPCAO']],
   ['encounter', 'checkin', ['RECEPCAO', 'TECNICO_BIOMETRIA']],
+  ['encounter', 'cancel', ['RECEPCAO', 'SUPERVISOR', 'GESTOR']],
   ['encounter', 'sign', ['MEDICO', 'PSICOLOGO']],
   ['encounter', 'close', ['MEDICO', 'PSICOLOGO']],
   [

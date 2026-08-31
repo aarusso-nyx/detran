@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateMobileNormativePackageDto } from '../dto/create-mobile-normative-package.dto.js';
 import { MobileNormativePackageService } from '../services/mobile-normative-package.service.js';
 
-@Controller('v1/inf/normativemobile-packages')
+@Controller('v1/inf/normative/mobile-packages')
 @Resource('inf:mobile-normative-package')
 export class MobileNormativePackageController {
   constructor(private readonly service: MobileNormativePackageService) {}

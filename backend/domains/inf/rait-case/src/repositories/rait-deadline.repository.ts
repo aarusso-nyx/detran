@@ -1,7 +1,7 @@
 // Generated from BP-INF-RAIT-CASE-001 v1.0.0 sha256:9d98d9786bc2f4b27bd75cb5516d4a00b6d74e520f3dbc52c39f33effb27f60e
-import { NotFoundException } from '@nestjs/common';
-import type { RequestContext } from '@stynx-nyx/core';
-import type { Database, Transaction } from '@stynx-nyx/data';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RequestContext } from '@stynx-nyx/core';
+import { Database, type Transaction } from '@stynx-nyx/data';
 import { withTenantContext } from '@detran/shared';
 import type { CreateRaitDeadlineDto } from '../dto/create-rait-deadline.dto.js';
 import type { RaitDeadline } from '../entities/rait-deadline.entity.js';
@@ -27,13 +27,11 @@ const WRITABLE_FIELDS = new Set<string>([
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */
+@Injectable()
 export class RaitDeadlineRepository {
   constructor(
-    private readonly database: Pick<Database, 'tx'>,
-    private readonly requestContext: Pick<
-      RequestContext,
-      'hasActiveContext' | 'snapshot'
-    >,
+    private readonly database: Database,
+    private readonly requestContext: RequestContext,
   ) {}
   transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> {
     return withTenantContext(this.database, this.requestContext, work);

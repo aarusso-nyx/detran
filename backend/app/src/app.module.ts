@@ -28,6 +28,9 @@ import {
 import { Observable } from 'rxjs';
 
 import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
+import { ClinicalNetworkModule } from '@detran/ch-clinical-network';
+import { EncountersModule } from '@detran/ch-encounters';
+import { PatientsModule } from '@detran/ch-patients';
 
 import {
   DetranPersistedAuditSink,
@@ -161,6 +164,9 @@ export class AppModule {
         StynxStorageModule.forRoot(detranStorageOptions()),
         StynxPlatformPipelineModule.forRoot(detranPipelineOptions()),
         StynxHealthModule.forRoot(detranHealthOptions(detranPostgresReadiness)),
+        ClinicalNetworkModule,
+        PatientsModule,
+        EncountersModule,
       ],
       providers: [
         DetranDatabaseBinder,

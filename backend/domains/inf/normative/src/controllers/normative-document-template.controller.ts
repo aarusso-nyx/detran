@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateNormativeDocumentTemplateDto } from '../dto/create-normative-document-template.dto.js';
 import { NormativeDocumentTemplateService } from '../services/normative-document-template.service.js';
 
-@Controller('v1/inf/normativedocument-templates')
+@Controller('v1/inf/normative/document-templates')
 @Resource('inf:document-template')
 export class NormativeDocumentTemplateController {
   constructor(private readonly service: NormativeDocumentTemplateService) {}

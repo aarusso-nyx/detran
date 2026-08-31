@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitCaseEventDto } from '../dto/create-rait-case-event.dto.js';
 import { RaitCaseEventService } from '../services/rait-case-event.service.js';
 
-@Controller('v1/inf/raitevents')
+@Controller('v1/inf/rait/events')
 @Resource('inf:rait-case-event')
 export class RaitCaseEventController {
   constructor(private readonly service: RaitCaseEventService) {}

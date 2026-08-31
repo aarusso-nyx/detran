@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitSessionDto } from '../dto/create-rait-session.dto.js';
 import { RaitSessionService } from '../services/rait-session.service.js';
 
-@Controller('v1/inf/raitsessions')
+@Controller('v1/inf/rait/sessions')
 @Resource('inf:rait-session')
 export class RaitSessionController {
   constructor(private readonly service: RaitSessionService) {}

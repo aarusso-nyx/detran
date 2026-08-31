@@ -1,0 +1,241 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-ENCOUNTERS-001",
+  "module": {
+    "name": "Encounters",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "42-ch-encounters.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-patients": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" },
+      {
+        "package": "@detran/ch-clinical-network",
+        "target": "../clinical-network/src/index.ts"
+      },
+      { "package": "@detran/ch-patients", "target": "../patients/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "encounter-lifecycle.service",
+      "encounter-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "encounter-commands.controller",
+        "symbol": "EncounterCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "encounter-lifecycle.service",
+        "symbol": "EncounterLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Appointment",
+        "table": "appointment",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "clinic_id", "type": "uuid" },
+          { "name": "patient_id", "type": "uuid" },
+          { "name": "professional_id", "type": "uuid", "nullable": true },
+          { "name": "scheduled_at", "type": "timestamptz" },
+          {
+            "name": "status",
+            "type": "varchar(24)",
+            "default": "'SCHEDULED'",
+            "writable": false
+          },
+          {
+            "name": "created_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "updated_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_appointment_slot",
+            "columns": ["tenant_id", "clinic_id", "patient_id", "scheduled_at"],
+            "unique": true
+          },
+          {
+            "name": "ix_ch_appointment_schedule",
+            "columns": ["tenant_id", "scheduled_at"]
+          },
+          {
+            "name": "ix_ch_appointment_patient",
+            "columns": ["tenant_id", "patient_id", "scheduled_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_appointment_status",
+            "expression": "status in ('SCHEDULED','CHECKED_IN','DONE','NO_SHOW','CANCELLED')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_appointment_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_appointment_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_appointment_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "Encounter",
+        "table": "encounter",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "clinic_id", "type": "uuid" },
+          { "name": "patient_id", "type": "uuid" },
+          { "name": "appointment_id", "type": "uuid", "nullable": true },
+          {
+            "name": "renach_process_key",
+            "type": "text",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "status",
+            "type": "varchar(32)",
+            "default": "'OPEN'",
+            "writable": false
+          },
+          {
+            "name": "started_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false
+          },
+          {
+            "name": "closed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "cancelled_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "cancel_reason",
+            "type": "text",
+            "nullable": true,
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "created_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "updated_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_encounter_status",
+            "columns": ["tenant_id", "status"]
+          },
+          {
+            "name": "ix_ch_encounter_patient",
+            "columns": ["tenant_id", "patient_id"]
+          },
+          {
+            "name": "ux_ch_encounter_renach_process",
+            "columns": ["tenant_id", "patient_id", "renach_process_key"],
+            "unique": true,
+            "where": "renach_process_key is not null"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_encounter_status",
+            "expression": "status in ('OPEN','IN_PROGRESS','READY_FOR_SIGNATURE','SIGNED','CLOSED','CANCELLED')"
+          },
+          {
+            "name": "ck_ch_encounter_cancelled",
+            "expression": "status <> 'CANCELLED' or (cancelled_at is not null and cancel_reason is not null and length(trim(cancel_reason)) > 0)"
+          },
+          {
+            "name": "ck_ch_encounter_closed",
+            "expression": "status <> 'CLOSED' or closed_at is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_encounter_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_encounter_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_encounter_appointment",
+            "columns": ["appointment_id"],
+            "references": { "table": "ch.appointment", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/",
+    "resources": [
+      {
+        "entity": "Appointment",
+        "path": "appointments",
+        "resource": "appointment",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "Encounter",
+        "path": "encounters",
+        "resource": "encounter",
+        "operations": ["list", "get"]
+      }
+    ]
+  },
+  "auth": { "source": "PEC_RULES" },
+  "audit": { "enabled": true }
+}

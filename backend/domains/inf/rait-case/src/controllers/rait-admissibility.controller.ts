@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitAdmissibilityDto } from '../dto/create-rait-admissibility.dto.js';
 import { RaitAdmissibilityService } from '../services/rait-admissibility.service.js';
 
-@Controller('v1/inf/raitadmissibility')
+@Controller('v1/inf/rait/admissibility')
 @Resource('inf:rait-admissibility')
 export class RaitAdmissibilityController {
   constructor(private readonly service: RaitAdmissibilityService) {}

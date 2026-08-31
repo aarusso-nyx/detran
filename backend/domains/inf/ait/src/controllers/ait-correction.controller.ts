@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAitCorrectionDto } from '../dto/create-ait-correction.dto.js';
 import { AitCorrectionService } from '../services/ait-correction.service.js';
 
-@Controller('v1/inf/aitcorrections')
+@Controller('v1/inf/ait/corrections')
 @Resource('inf:ait-correction')
 export class AitCorrectionController {
   constructor(private readonly service: AitCorrectionService) {}

@@ -1,0 +1,292 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Patients — BP-CH-PATIENTS-001",
+    "version": "1.0.0",
+    "description": "Cadastro do candidato/condutor no PEC, sob o regime de dado pessoal sensivel e retencao minima de 20 anos a partir do ultimo registro.",
+    "x-blueprint": "BP-CH-PATIENTS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/patients": {
+      "get": {
+        "tags": ["patient"],
+        "operationId": "listPatient",
+        "summary": "List Patient (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Patient"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["patient"],
+        "operationId": "createPatient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePatientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Patient"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/patients/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["patient"],
+        "operationId": "getPatient",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Patient"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["patient"],
+        "operationId": "updatePatient",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreatePatientDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Patient"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Patient": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "national_id": {
+            "type": "string",
+            "maxLength": 11,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "social_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "gender": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["M", "F", "O"],
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "mother_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "contact_phone": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "national_id", "name", "created_at"]
+      },
+      "CreatePatientDto": {
+        "type": "object",
+        "properties": {
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "national_id": {
+            "type": "string",
+            "maxLength": 11,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "social_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "gender": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["M", "F", "O"],
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "mother_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 320,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "contact_phone": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          }
+        },
+        "required": ["national_id", "name"]
+      }
+    }
+  }
+}

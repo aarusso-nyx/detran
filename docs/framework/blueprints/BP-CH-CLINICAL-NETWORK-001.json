@@ -1,0 +1,208 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-CLINICAL-NETWORK-001",
+  "module": {
+    "name": "ClinicalNetwork",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "40-ch-clinical-network.sql",
+    "owners": ["detran-ch"],
+    "description": "Clinicas credenciadas, profissionais e estacoes biometricas do PEC, relocados do schema auth para o dominio ch conforme ADR-0011."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Clinic",
+        "table": "clinic",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "code", "type": "varchar(80)" },
+          { "name": "cnpj", "type": "varchar(14)" },
+          { "name": "name", "type": "varchar(255)" },
+          { "name": "legal_name", "type": "varchar(255)", "nullable": true },
+          {
+            "name": "municipality_code",
+            "type": "varchar(7)",
+            "nullable": true
+          },
+          { "name": "address", "type": "text", "nullable": true },
+          {
+            "name": "contact_email",
+            "type": "varchar(320)",
+            "nullable": true,
+            "pii": "direct"
+          },
+          {
+            "name": "contact_phone",
+            "type": "varchar(32)",
+            "nullable": true,
+            "pii": "direct"
+          },
+          { "name": "is_active", "type": "boolean", "default": "true" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_clinic_code",
+            "columns": ["tenant_id", "code"],
+            "unique": true
+          },
+          {
+            "name": "ux_ch_clinic_cnpj",
+            "columns": ["tenant_id", "cnpj"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "Professional",
+        "table": "professional",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "clinic_id", "type": "uuid" },
+          { "name": "user_id", "type": "uuid", "nullable": true },
+          { "name": "person_name", "type": "varchar(255)", "pii": "direct" },
+          {
+            "name": "document_cpf",
+            "type": "varchar(11)",
+            "nullable": true,
+            "pii": "direct"
+          },
+          { "name": "professional_kind", "type": "varchar(40)" },
+          { "name": "council_type", "type": "varchar(20)", "nullable": true },
+          {
+            "name": "council_number",
+            "type": "varchar(80)",
+            "nullable": true,
+            "pii": "professional"
+          },
+          {
+            "name": "email",
+            "type": "varchar(320)",
+            "nullable": true,
+            "pii": "direct"
+          },
+          {
+            "name": "phone",
+            "type": "varchar(32)",
+            "nullable": true,
+            "pii": "direct"
+          },
+          { "name": "is_active", "type": "boolean", "default": "true" }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_professional_kind",
+            "columns": ["tenant_id", "professional_kind", "is_active"]
+          },
+          {
+            "name": "ux_ch_professional_council",
+            "columns": ["tenant_id", "council_type", "council_number"],
+            "unique": true,
+            "where": "council_type is not null and council_number is not null"
+          },
+          {
+            "name": "ux_ch_professional_user",
+            "columns": ["tenant_id", "user_id"],
+            "unique": true,
+            "where": "user_id is not null"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_professional_kind",
+            "expression": "professional_kind in ('MEDICO','PSICOLOGO','TECNICO_BIOMETRIA','SUPERVISOR','RECEPCAO')"
+          },
+          {
+            "name": "ck_ch_professional_council_type",
+            "expression": "council_type is null or council_type in ('CRM','CRP','OUTRO')"
+          },
+          {
+            "name": "ck_ch_professional_required_council",
+            "expression": "(professional_kind = 'MEDICO' and council_type = 'CRM' and council_number is not null) or (professional_kind = 'PSICOLOGO' and council_type = 'CRP' and council_number is not null) or professional_kind in ('TECNICO_BIOMETRIA','SUPERVISOR','RECEPCAO')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_professional_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_professional_user",
+            "columns": ["user_id"],
+            "references": { "table": "auth.users", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "BiometricStation",
+        "table": "biometric_station",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "clinic_id", "type": "uuid" },
+          { "name": "name", "type": "varchar(255)" },
+          { "name": "fingerprint_hash", "type": "varchar(128)" },
+          { "name": "camera_serial", "type": "varchar(120)", "nullable": true },
+          {
+            "name": "ip_address",
+            "type": "inet",
+            "nullable": true,
+            "pii": "indirect"
+          },
+          { "name": "location_hint", "type": "text", "nullable": true },
+          { "name": "is_active", "type": "boolean", "default": "true" },
+          { "name": "last_seen_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_biometric_station_fingerprint",
+            "columns": ["tenant_id", "fingerprint_hash"],
+            "unique": true
+          },
+          {
+            "name": "ix_ch_biometric_station_clinic",
+            "columns": ["tenant_id", "clinic_id", "is_active"]
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_biometric_station_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/clinical-network/",
+    "resources": [
+      {
+        "entity": "Clinic",
+        "path": "clinics",
+        "resource": "clinic",
+        "operations": ["list", "get", "create", "update"]
+      },
+      {
+        "entity": "Professional",
+        "path": "professionals",
+        "resource": "professional",
+        "operations": ["list", "get", "create", "update"]
+      },
+      {
+        "entity": "BiometricStation",
+        "path": "biometric-stations",
+        "resource": "biometric-station",
+        "operations": ["list", "get", "create", "update"]
+      }
+    ]
+  },
+  "auth": { "source": "PEC_RULES" },
+  "audit": { "enabled": true }
+}

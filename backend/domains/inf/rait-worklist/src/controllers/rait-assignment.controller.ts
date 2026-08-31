@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitAssignmentDto } from '../dto/create-rait-assignment.dto.js';
 import { RaitAssignmentService } from '../services/rait-assignment.service.js';
 
-@Controller('v1/inf/raitassignments')
+@Controller('v1/inf/rait/assignments')
 @Resource('inf:rait-assignment')
 export class RaitAssignmentController {
   constructor(private readonly service: RaitAssignmentService) {}

@@ -1,0 +1,314 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Encounters — BP-CH-ENCOUNTERS-001",
+    "version": "1.0.0",
+    "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel.",
+    "x-blueprint": "BP-CH-ENCOUNTERS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/appointments": {
+      "get": {
+        "tags": ["appointment"],
+        "operationId": "listAppointment",
+        "summary": "List Appointment (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Appointment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/appointments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["appointment"],
+        "operationId": "getAppointment",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Appointment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/encounters": {
+      "get": {
+        "tags": ["encounter"],
+        "operationId": "listEncounter",
+        "summary": "List Encounter (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Encounter"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/encounters/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["encounter"],
+        "operationId": "getEncounter",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Encounter"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Appointment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["SCHEDULED", "CHECKED_IN", "DONE", "NO_SHOW", "CANCELLED"],
+            "default": "'SCHEDULED'"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "updated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "clinic_id",
+          "patient_id",
+          "scheduled_at",
+          "created_at"
+        ]
+      },
+      "CreateAppointmentDto": {
+        "type": "object",
+        "properties": {
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["clinic_id", "patient_id", "scheduled_at"]
+      },
+      "Encounter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "renach_process_key": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "OPEN",
+              "IN_PROGRESS",
+              "READY_FOR_SIGNATURE",
+              "SIGNED",
+              "CLOSED",
+              "CANCELLED"
+            ],
+            "default": "'OPEN'"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_reason": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "updated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "clinic_id", "patient_id", "created_at"]
+      },
+      "CreateEncounterDto": {
+        "type": "object",
+        "properties": {
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["clinic_id", "patient_id"]
+      }
+    }
+  }
+}

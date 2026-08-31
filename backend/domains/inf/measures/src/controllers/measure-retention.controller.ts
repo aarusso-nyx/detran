@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateMeasureRetentionDto } from '../dto/create-measure-retention.dto.js';
 import { MeasureRetentionService } from '../services/measure-retention.service.js';
 
-@Controller('v1/inf/measuresretentions')
+@Controller('v1/inf/measures/retentions')
 @Resource('inf:measure-retention')
 export class MeasureRetentionController {
   constructor(private readonly service: MeasureRetentionService) {}

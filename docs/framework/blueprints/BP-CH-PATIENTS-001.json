@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-PATIENTS-001",
+  "module": {
+    "name": "Patients",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "41-ch-patients.sql",
+    "dependencies": { "@detran/ch-clinical-network": "workspace:*" },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" },
+      {
+        "package": "@detran/ch-clinical-network",
+        "target": "../clinical-network/src/index.ts"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Cadastro do candidato/condutor no PEC, sob o regime de dado pessoal sensivel e retencao minima de 20 anos a partir do ultimo registro."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Patient",
+        "table": "patient",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "clinic_id", "type": "uuid", "nullable": true },
+          {
+            "name": "national_id",
+            "type": "varchar(11)",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "name",
+            "type": "varchar(255)",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "social_name",
+            "type": "varchar(255)",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "birth_date",
+            "type": "date",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "gender",
+            "type": "varchar(1)",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "mother_name",
+            "type": "varchar(255)",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "contact_email",
+            "type": "varchar(320)",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "contact_phone",
+            "type": "varchar(32)",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "address",
+            "type": "text",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_patient_national_id",
+            "columns": ["tenant_id", "national_id"],
+            "unique": true
+          },
+          { "name": "ix_ch_patient_name", "columns": ["tenant_id", "name"] },
+          {
+            "name": "ix_ch_patient_clinic",
+            "columns": ["tenant_id", "clinic_id"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_patient_national_id",
+            "expression": "national_id ~ '^[0-9]{11}$'"
+          },
+          {
+            "name": "ck_ch_patient_gender",
+            "expression": "gender is null or gender in ('M','F','O')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_patient_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/",
+    "resources": [
+      {
+        "entity": "Patient",
+        "path": "patients",
+        "resource": "patient",
+        "operations": ["list", "get", "create", "update"]
+      }
+    ]
+  },
+  "auth": { "source": "PEC_RULES" },
+  "audit": { "enabled": true }
+}

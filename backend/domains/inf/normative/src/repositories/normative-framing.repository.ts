@@ -1,7 +1,7 @@
 // Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:8f7f7c36486cc7f2062f87bdfda6722994b3aff5dc8e5b80183ffea196fad19f
-import { NotFoundException } from '@nestjs/common';
-import type { RequestContext } from '@stynx-nyx/core';
-import type { Database, Transaction } from '@stynx-nyx/data';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RequestContext } from '@stynx-nyx/core';
+import { Database, type Transaction } from '@stynx-nyx/data';
 import { withTenantContext } from '@detran/shared';
 import type { CreateNormativeFramingDto } from '../dto/create-normative-framing.dto.js';
 import type { NormativeFraming } from '../entities/normative-framing.entity.js';
@@ -28,13 +28,11 @@ const WRITABLE_FIELDS = new Set<string>([
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */
+@Injectable()
 export class NormativeFramingRepository {
   constructor(
-    private readonly database: Pick<Database, 'tx'>,
-    private readonly requestContext: Pick<
-      RequestContext,
-      'hasActiveContext' | 'snapshot'
-    >,
+    private readonly database: Database,
+    private readonly requestContext: RequestContext,
   ) {}
   transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> {
     return withTenantContext(this.database, this.requestContext, work);
