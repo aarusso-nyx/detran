@@ -1,9 +1,11 @@
 # DASHBOARD — owner decisions (2026-08-28)
 
-**Source of truth:** `detran-refs` @ `52e00a8`, `transversal/dashboard/rules/RN-DASH-161.md`,
-`RN-DASH-160.md`, `transversal/dashboard/_intake/bpo-notes.md`, `transversal/dashboard/
-workflows/WF-DASH-001.md`, `WF-DASH-003.md`. Forward-looking — `dashboard` is still an empty
-placeholder domain in this monorepo (2 files, no implementation).
+**Source of truth:** canonical in-repository DASHBOARD
+[rules](../../framework/product/transversal/dashboard/rules/),
+[workflow specifications](../../framework/product/transversal/dashboard/workflows/), and internal
+[BPO notes](../../framework/product/transversal/dashboard/_intake/bpo-notes.md), including
+`RN-DASH-161`, `RN-DASH-160`, `WF-DASH-001`, and `WF-DASH-003`. Forward-looking — `dashboard` is
+still an empty placeholder domain in this monorepo (2 files, no implementation).
 
 ## DT-029 — cell-suppression threshold for aggregate crash-data publication (`RN-DASH-161`, `RN-DASH-160`)
 
@@ -23,7 +25,7 @@ Full detail in `bpo-notes.md`; summary of what's concretely fixed vs. still dele
 - **Item 1 (ACK SLA by severity):** N1 = 24h business, N2 = 8h business, N3 = 2h business, CRÍTICO
   = immediate.
 - **Item 3 (RAIT 5-year prescription clock, IND-DASH-105):** same 50/75/90% discipline as the
-  other clocks; propagated into `detran-refs` `WF-RAIT-002` §4.4 (see `rait.md` in this folder for
+  other clocks; propagated into canonical `WF-RAIT-002` §4.4 (see `rait.md` in this folder for
   detail — this also surfaced and fixed a pre-existing gap where the clock existed in
   `RN-RAIT-113` but wasn't in `WF-RAIT-001`'s consolidated table).
 - **Item 4 (age-based indicators without a numeric deadline):** floor of 60 days as a provisional

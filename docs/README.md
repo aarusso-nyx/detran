@@ -11,5 +11,15 @@ see `_ia/categories.json` for the authored order and labels):
 6. [reference/](reference/index.md) — generated/normative reference material.
 7. [meta/](meta/index.md) — engineering docs, [ADRs](meta/adr/), operations, security.
 
-No Docusaurus site exists yet; the consolidated detran site is a Phase 6 (W6.3)
-deliverable. `docs/work/` (untracked) holds round/working artifacts.
+The business/legal knowledge base is maintained here as the single writable authority:
+
+- [framework/product/](framework/product/) — app charters, journeys, use cases, workflows,
+  business rules, screens, and shared semantics.
+- [reference/legal/](reference/legal/index.md) — curated legal catalog with captured originals
+  retained privately in Git.
+- [meta/knowledge-base/](meta/knowledge-base/index.md) — internal research, queues, templates, and
+  immutable import provenance.
+
+No Docusaurus site exists yet; the consolidated detran site is a Phase 6 (W6.3) deliverable.
+Publication is already fail-closed by `_ia/publication.json`. `docs/work/` (untracked) holds
+ephemeral round/working artifacts; imported research is tracked under the knowledge-base paths.
