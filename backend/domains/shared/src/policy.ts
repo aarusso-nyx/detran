@@ -177,6 +177,13 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['exam', 'update', ['MEDICO', 'PSICOLOGO']],
   ['exam-result', 'write', ['MEDICO', 'PSICOLOGO']],
   [
+    'psych-instrument',
+    'read',
+    ['PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  ['psych-instrument', 'create', ['SUPERVISOR', 'GESTOR', 'GESTOR_DETRAN']],
+  ['psych-instrument', 'update', ['SUPERVISOR', 'GESTOR', 'GESTOR_DETRAN']],
+  [
     'biometric',
     'capture',
     ['RECEPCAO', 'TECNICO_BIOMETRIA', 'MEDICO', 'PSICOLOGO'],
@@ -243,6 +250,14 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
   ],
   ['report', 'create', ['MEDICO', 'PSICOLOGO']],
+  ['report', 'addendum-request', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
+  ['report', 'addendum-approve', ['SUPERVISOR']],
+  ['report', 'addendum-sign', ['MEDICO', 'PSICOLOGO']],
+  [
+    'report-addendum',
+    'read',
+    ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
   [
     'document',
     'read',

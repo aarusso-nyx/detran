@@ -1,0 +1,344 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-REPORTS-001",
+  "module": {
+    "name": "ClinicalReports",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "44-ch-reports.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-exams": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "pades-signing.http-adapter",
+      "report-lifecycle.service",
+      "report-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "report-commands.controller",
+        "symbol": "ReportCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "pades-signing.http-adapter",
+        "symbol": "PadesSigningHttpAdapter"
+      },
+      {
+        "target": "report-lifecycle.service",
+        "symbol": "ReportLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Laudos, adendos imutaveis e documentos clinicos com PAdES+TSA, validacao OCSP/CRL e artefatos sob custodia STYNX."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Report",
+        "table": "report",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "kind", "type": "varchar(16)" },
+          { "name": "source_exam_id", "type": "uuid" },
+          {
+            "name": "content_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          { "name": "storage_document_id", "type": "uuid", "writable": false },
+          {
+            "name": "artifact_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "signer_professional_id",
+            "type": "uuid",
+            "writable": false
+          },
+          { "name": "signer_name", "type": "varchar(255)", "writable": false },
+          {
+            "name": "signer_council",
+            "type": "varchar(120)",
+            "writable": false
+          },
+          {
+            "name": "signature_level",
+            "type": "varchar(24)",
+            "writable": false
+          },
+          {
+            "name": "signature_format",
+            "type": "varchar(24)",
+            "writable": false
+          },
+          { "name": "signed_at", "type": "timestamptz", "writable": false },
+          { "name": "tsa_time", "type": "timestamptz", "writable": false },
+          {
+            "name": "certificate_validation_source",
+            "type": "varchar(8)",
+            "writable": false
+          },
+          {
+            "name": "certificate_validation_status",
+            "type": "varchar(16)",
+            "writable": false
+          },
+          {
+            "name": "certificate_validated_at",
+            "type": "timestamptz",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_report_encounter_kind",
+            "columns": ["tenant_id", "encounter_id", "kind"],
+            "unique": true
+          },
+          {
+            "name": "ux_ch_report_storage_document",
+            "columns": ["tenant_id", "storage_document_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_report_kind",
+            "expression": "kind in ('MEDICAL','PSYCH')"
+          },
+          {
+            "name": "ck_ch_report_signature_format",
+            "expression": "signature_format = 'PAdES-TSA'"
+          },
+          {
+            "name": "ck_ch_report_signature_level",
+            "expression": "signature_level in ('ADVANCED','QUALIFIED')"
+          },
+          {
+            "name": "ck_ch_report_validation_source",
+            "expression": "certificate_validation_source in ('OCSP','CRL')"
+          },
+          {
+            "name": "ck_ch_report_validation_status",
+            "expression": "certificate_validation_status = 'GOOD'"
+          },
+          {
+            "name": "ck_ch_report_hashes",
+            "expression": "content_sha256 ~ '^[0-9a-f]{64}$' and artifact_sha256 ~ '^[0-9a-f]{64}$'"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_report_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_report_professional",
+            "columns": ["signer_professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "ReportAddendum",
+        "table": "report_addendum",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "report_id", "type": "uuid" },
+          {
+            "name": "reason",
+            "type": "text",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "content",
+            "type": "jsonb",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "content_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'REQUESTED'",
+            "writable": false
+          },
+          { "name": "requested_by", "type": "uuid", "writable": false },
+          {
+            "name": "approved_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "approved_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "storage_document_id",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "artifact_sha256",
+            "type": "varchar(64)",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "signed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "tsa_time",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "certificate_validation_source",
+            "type": "varchar(8)",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "certificate_validation_status",
+            "type": "varchar(16)",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "certificate_validated_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_report_addendum_report",
+            "columns": ["tenant_id", "report_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_report_addendum_status",
+            "expression": "status in ('REQUESTED','APPROVED','SIGNED','REJECTED')"
+          },
+          {
+            "name": "ck_ch_report_addendum_approval",
+            "expression": "status = 'REQUESTED' or (approved_by is not null and approved_at is not null and approved_by <> requested_by)"
+          },
+          {
+            "name": "ck_ch_report_addendum_signature",
+            "expression": "status <> 'SIGNED' or (storage_document_id is not null and artifact_sha256 is not null and signed_at is not null and tsa_time is not null and certificate_validation_source in ('OCSP','CRL') and certificate_validation_status = 'GOOD')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_report_addendum_report",
+            "columns": ["report_id"],
+            "references": { "table": "ch.report", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "ClinicalDocument",
+        "table": "clinical_document",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid", "nullable": true },
+          { "name": "patient_id", "type": "uuid" },
+          { "name": "kind", "type": "varchar(64)" },
+          { "name": "storage_document_id", "type": "uuid" },
+          { "name": "content_type", "type": "varchar(160)" },
+          { "name": "sha256", "type": "varchar(64)" },
+          { "name": "size_bytes", "type": "bigint" },
+          { "name": "uploaded_by", "type": "uuid" }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_clinical_document_encounter",
+            "columns": ["tenant_id", "encounter_id"]
+          },
+          {
+            "name": "ux_ch_clinical_document_storage",
+            "columns": ["tenant_id", "storage_document_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_clinical_document_hash",
+            "expression": "sha256 ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_ch_clinical_document_size",
+            "expression": "size_bytes >= 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_clinical_document_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_clinical_document_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/",
+    "resources": [
+      {
+        "entity": "Report",
+        "path": "reports",
+        "resource": "report",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "ReportAddendum",
+        "path": "report-addenda",
+        "resource": "report-addendum",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "ClinicalDocument",
+        "path": "documents",
+        "resource": "document",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

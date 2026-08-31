@@ -29,7 +29,9 @@ import { Observable } from 'rxjs';
 
 import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
 import { ClinicalNetworkModule } from '@detran/ch-clinical-network';
+import { ClinicalReportsModule } from '@detran/ch-clinical-reports';
 import { EncountersModule } from '@detran/ch-encounters';
+import { ExamsModule } from '@detran/ch-exams';
 import { PatientsModule } from '@detran/ch-patients';
 
 import {
@@ -167,6 +169,8 @@ export class AppModule {
         ClinicalNetworkModule,
         PatientsModule,
         EncountersModule,
+        ExamsModule,
+        ClinicalReportsModule,
       ],
       providers: [
         DetranDatabaseBinder,

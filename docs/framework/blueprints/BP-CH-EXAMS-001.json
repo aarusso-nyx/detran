@@ -1,0 +1,221 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-EXAMS-001",
+  "module": {
+    "name": "Exams",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "43-ch-exams.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-patients": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "exam-lifecycle.service",
+      "exam-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "exam-commands.controller",
+        "symbol": "ExamCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "exam-lifecycle.service",
+        "symbol": "ExamLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Exames medico e psicologico do PEC com vocabulularios federais separados, validade legal 10/5/3 e instrumentos psicologicos favoraveis no SATEPSI."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "PsychInstrument",
+        "table": "psych_instrument",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "code", "type": "varchar(80)" },
+          { "name": "name", "type": "varchar(255)" },
+          { "name": "version", "type": "varchar(80)" },
+          { "name": "satepsi_status", "type": "varchar(24)" },
+          { "name": "valid_from", "type": "date" },
+          { "name": "valid_to", "type": "date", "nullable": true },
+          { "name": "source_reference", "type": "text" },
+          { "name": "is_active", "type": "boolean", "default": "true" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_psych_instrument_version",
+            "columns": ["tenant_id", "code", "version"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_psych_instrument_status",
+            "expression": "satepsi_status in ('FAVORABLE','UNFAVORABLE','SUSPENDED')"
+          },
+          {
+            "name": "ck_ch_psych_instrument_period",
+            "expression": "valid_to is null or valid_to >= valid_from"
+          }
+        ]
+      },
+      {
+        "name": "MedicalExam",
+        "table": "medical_exam",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "professional_id", "type": "uuid" },
+          { "name": "performed_at", "type": "timestamptz", "default": "now()" },
+          {
+            "name": "statutory_valid_until",
+            "type": "date",
+            "writable": false
+          },
+          { "name": "valid_until", "type": "date", "writable": false },
+          {
+            "name": "validity_reduction_reason",
+            "type": "text",
+            "nullable": true,
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "data",
+            "type": "jsonb",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          { "name": "result", "type": "varchar(32)" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_medical_exam_encounter",
+            "columns": ["tenant_id", "encounter_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_medical_exam_result",
+            "expression": "result in ('APTO','APTO_COM_RESTRICOES','INAPTO_TEMPORARIO','INAPTO')"
+          },
+          {
+            "name": "ck_ch_medical_exam_validity",
+            "expression": "valid_until <= statutory_valid_until and (valid_until = statutory_valid_until or (validity_reduction_reason is not null and length(trim(validity_reduction_reason)) > 0))"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_medical_exam_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_medical_exam_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "PsychologicalExam",
+        "table": "psychological_exam",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "professional_id", "type": "uuid" },
+          { "name": "instrument_id", "type": "uuid" },
+          { "name": "performed_at", "type": "timestamptz", "default": "now()" },
+          { "name": "valid_until", "type": "date", "nullable": true },
+          {
+            "name": "validity_reduction_reason",
+            "type": "text",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "data",
+            "type": "jsonb",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          { "name": "result", "type": "varchar(32)" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_psychological_exam_encounter",
+            "columns": ["tenant_id", "encounter_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_psychological_exam_result",
+            "expression": "result in ('APTO','INAPTO_TEMPORARIO','INAPTO')"
+          },
+          {
+            "name": "ck_ch_psychological_exam_reduced_validity",
+            "expression": "valid_until is null or (validity_reduction_reason is not null and length(trim(validity_reduction_reason)) > 0)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_psychological_exam_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_psychological_exam_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_psychological_exam_instrument",
+            "columns": ["instrument_id"],
+            "references": { "table": "ch.psych_instrument", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/exams/",
+    "resources": [
+      {
+        "entity": "PsychInstrument",
+        "path": "psych-instruments",
+        "resource": "psych-instrument",
+        "operations": ["list", "get", "create", "update"]
+      },
+      {
+        "entity": "MedicalExam",
+        "path": "medical",
+        "resource": "exam",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "PsychologicalExam",
+        "path": "psychological",
+        "resource": "exam",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}
