@@ -148,6 +148,11 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['encounter', 'sign', ['MEDICO', 'PSICOLOGO']],
   ['encounter', 'close', ['MEDICO', 'PSICOLOGO']],
   [
+    'episode-export',
+    'read',
+    ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  [
     'exam',
     'read',
     [

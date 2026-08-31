@@ -4,7 +4,7 @@
   "module": {
     "name": "ClinicalReports",
     "namespace": "ch",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "44-ch-reports.sql",
     "dependencies": {
       "@detran/ch-clinical-network": "workspace:*",
@@ -17,12 +17,18 @@
     "handwrittenExports": [
       "pades-signing.http-adapter",
       "report-lifecycle.service",
-      "report-commands.controller"
+      "report-commands.controller",
+      "encounter-closure.service",
+      "encounter-closure.controller"
     ],
     "handwrittenControllers": [
       {
         "target": "report-commands.controller",
         "symbol": "ReportCommandsController"
+      },
+      {
+        "target": "encounter-closure.controller",
+        "symbol": "EncounterClosureController"
       }
     ],
     "handwrittenProviders": [
@@ -33,6 +39,10 @@
       {
         "target": "report-lifecycle.service",
         "symbol": "ReportLifecycleService"
+      },
+      {
+        "target": "encounter-closure.service",
+        "symbol": "EncounterClosureService"
       }
     ],
     "owners": ["detran-ch"],
@@ -267,6 +277,112 @@
         ]
       },
       {
+        "name": "EpisodeExport",
+        "table": "episode_export",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid", "writable": false },
+          {
+            "name": "content_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          { "name": "storage_document_id", "type": "uuid", "writable": false },
+          {
+            "name": "artifact_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "signer_professional_id",
+            "type": "uuid",
+            "writable": false
+          },
+          { "name": "signer_name", "type": "varchar(255)", "writable": false },
+          {
+            "name": "signer_council",
+            "type": "varchar(120)",
+            "writable": false
+          },
+          {
+            "name": "signature_level",
+            "type": "varchar(24)",
+            "writable": false
+          },
+          {
+            "name": "signature_format",
+            "type": "varchar(24)",
+            "writable": false
+          },
+          { "name": "signed_at", "type": "timestamptz", "writable": false },
+          { "name": "tsa_time", "type": "timestamptz", "writable": false },
+          {
+            "name": "certificate_validation_source",
+            "type": "varchar(8)",
+            "writable": false
+          },
+          {
+            "name": "certificate_validation_status",
+            "type": "varchar(16)",
+            "writable": false
+          },
+          {
+            "name": "certificate_validated_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_episode_export_encounter",
+            "columns": ["tenant_id", "encounter_id"],
+            "unique": true
+          },
+          {
+            "name": "ux_ch_episode_export_storage_document",
+            "columns": ["tenant_id", "storage_document_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_episode_export_signature_format",
+            "expression": "signature_format = 'PAdES-TSA'"
+          },
+          {
+            "name": "ck_ch_episode_export_signature_level",
+            "expression": "signature_level in ('ADVANCED','QUALIFIED')"
+          },
+          {
+            "name": "ck_ch_episode_export_validation_source",
+            "expression": "certificate_validation_source in ('OCSP','CRL')"
+          },
+          {
+            "name": "ck_ch_episode_export_validation_status",
+            "expression": "certificate_validation_status = 'GOOD'"
+          },
+          {
+            "name": "ck_ch_episode_export_hashes",
+            "expression": "content_sha256 ~ '^[0-9a-f]{64}$' and artifact_sha256 ~ '^[0-9a-f]{64}$'"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_episode_export_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_episode_export_professional",
+            "columns": ["signer_professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      },
+      {
         "name": "ClinicalDocument",
         "table": "clinical_document",
         "primaryKey": ["id"],
@@ -331,6 +447,12 @@
         "entity": "ReportAddendum",
         "path": "report-addenda",
         "resource": "report-addendum",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "EpisodeExport",
+        "path": "episode-exports",
+        "resource": "episode-export",
         "operations": ["list", "get"]
       },
       {

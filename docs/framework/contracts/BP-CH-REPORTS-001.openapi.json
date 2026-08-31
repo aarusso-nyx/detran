@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "ClinicalReports — BP-CH-REPORTS-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Laudos, adendos imutaveis e documentos clinicos com PAdES+TSA, validacao OCSP/CRL e artefatos sob custodia STYNX.",
     "x-blueprint": "BP-CH-REPORTS-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -106,6 +106,60 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReportAddendum"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/episode-exports": {
+      "get": {
+        "tags": ["episode-export"],
+        "operationId": "listEpisodeExport",
+        "summary": "List EpisodeExport (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EpisodeExport"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/episode-exports/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["episode-export"],
+        "operationId": "getEpisodeExport",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EpisodeExport"
                 }
               }
             }
@@ -428,6 +482,114 @@
           }
         },
         "required": ["report_id", "reason", "content"]
+      },
+      "EpisodeExport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "storage_document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "artifact_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "signer_professional_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signer_name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "signer_council": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "signature_level": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["ADVANCED", "QUALIFIED"]
+          },
+          "signature_format": {
+            "type": "string",
+            "maxLength": 24
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tsa_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "certificate_validation_source": {
+            "type": "string",
+            "maxLength": 8,
+            "enum": ["OCSP", "CRL"]
+          },
+          "certificate_validation_status": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "certificate_validated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "encounter_id",
+          "content_sha256",
+          "storage_document_id",
+          "artifact_sha256",
+          "signer_professional_id",
+          "signer_name",
+          "signer_council",
+          "signature_level",
+          "signature_format",
+          "signed_at",
+          "tsa_time",
+          "certificate_validation_source",
+          "certificate_validation_status",
+          "certificate_validated_at",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateEpisodeExportDto": {
+        "type": "object",
+        "properties": {}
       },
       "ClinicalDocument": {
         "type": "object",

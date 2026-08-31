@@ -1,7 +1,7 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 
 export interface ClinicalArtifactRequest {
-  documentType: 'REPORT' | 'REPORT_ADDENDUM';
+  documentType: 'REPORT' | 'REPORT_ADDENDUM' | 'EPISODE_EXPORT';
   contentSha256: string;
   content: Record<string, unknown>;
   signer: {

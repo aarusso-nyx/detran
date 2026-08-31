@@ -9,13 +9,13 @@ import {
   Post,
 } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
-import type { CreateClinicalDocumentDto } from '../dto/create-clinical-document.dto.js';
-import { ClinicalDocumentService } from '../services/clinical-document.service.js';
+import type { CreateEpisodeExportDto } from '../dto/create-episode-export.dto.js';
+import { EpisodeExportService } from '../services/episode-export.service.js';
 
-@Controller('v1/ch/documents')
-@Resource('ch:document')
-export class ClinicalDocumentController {
-  constructor(private readonly service: ClinicalDocumentService) {}
+@Controller('v1/ch/episode-exports')
+@Resource('ch:episode-export')
+export class EpisodeExportController {
+  constructor(private readonly service: EpisodeExportService) {}
   @Get() @Action('read') list() {
     return this.service.findAll();
   }

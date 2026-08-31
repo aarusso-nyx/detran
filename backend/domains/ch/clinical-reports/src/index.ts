@@ -1,4 +1,4 @@
-// Generated from BP-CH-REPORTS-001 v1.0.0 sha256:959226a383e0fb64d104a887fe34cb5dba462d875869163a39abc94227f6f966
+// Generated from BP-CH-REPORTS-001 v1.1.0 sha256:beee4caafe2a85a62db62a7c64f47b7e234388f5606028dbc331786eb1e2f350
 export * from './controllers/report.controller.js';
 export * from './dto/create-report.dto.js';
 export * from './entities/report.entity.js';
@@ -9,6 +9,11 @@ export * from './dto/create-report-addendum.dto.js';
 export * from './entities/report-addendum.entity.js';
 export * from './repositories/report-addendum.repository.js';
 export * from './services/report-addendum.service.js';
+export * from './controllers/episode-export.controller.js';
+export * from './dto/create-episode-export.dto.js';
+export * from './entities/episode-export.entity.js';
+export * from './repositories/episode-export.repository.js';
+export * from './services/episode-export.service.js';
 export * from './controllers/clinical-document.controller.js';
 export * from './dto/create-clinical-document.dto.js';
 export * from './entities/clinical-document.entity.js';
@@ -18,3 +23,5 @@ export * from './clinical-reports.module.js';
 export * from './pades-signing.http-adapter.js';
 export * from './report-lifecycle.service.js';
 export * from './report-commands.controller.js';
+export * from './encounter-closure.service.js';
+export * from './encounter-closure.controller.js';

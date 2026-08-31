@@ -1,4 +1,4 @@
--- Generated from BP-CH-REPORTS-001 v1.0.0 sha256:959226a383e0fb64d104a887fe34cb5dba462d875869163a39abc94227f6f966
+-- Generated from BP-CH-REPORTS-001 v1.1.0 sha256:beee4caafe2a85a62db62a7c64f47b7e234388f5606028dbc331786eb1e2f350
 
 -- Regenerable-only DDL for BP-CH-REPORTS-001; request-path writes use role_app_backend.
 
@@ -74,6 +74,42 @@ create index if not exists ix_report_addendum_tenant_id on ch.report_addendum (t
 create index if not exists ix_report_addendum_report_id on ch.report_addendum (report_id);
 create index if not exists ix_report_addendum_storage_document_id on ch.report_addendum (storage_document_id);
 
+create table if not exists ch.episode_export (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  encounter_id uuid not null,
+  content_sha256 varchar(64) not null,
+  storage_document_id uuid not null,
+  artifact_sha256 varchar(64) not null,
+  signer_professional_id uuid not null,
+  signer_name varchar(255) not null,
+  signer_council varchar(120) not null,
+  signature_level varchar(24) not null,
+  signature_format varchar(24) not null,
+  signed_at timestamptz not null,
+  tsa_time timestamptz not null,
+  certificate_validation_source varchar(8) not null,
+  certificate_validation_status varchar(16) not null,
+  certificate_validated_at timestamptz not null,
+  created_by uuid not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_episode_export primary key (id),
+  constraint ck_ch_episode_export_signature_format check (signature_format = 'PAdES-TSA'),
+  constraint ck_ch_episode_export_signature_level check (signature_level in ('ADVANCED','QUALIFIED')),
+  constraint ck_ch_episode_export_validation_source check (certificate_validation_source in ('OCSP','CRL')),
+  constraint ck_ch_episode_export_validation_status check (certificate_validation_status = 'GOOD'),
+  constraint ck_ch_episode_export_hashes check (content_sha256 ~ '^[0-9a-f]{64}$' and artifact_sha256 ~ '^[0-9a-f]{64}$'),
+  constraint fk_ch_episode_export_encounter foreign key (encounter_id) references ch.encounter (id),
+  constraint fk_ch_episode_export_professional foreign key (signer_professional_id) references ch.professional (id)
+);
+create unique index if not exists ux_ch_episode_export_encounter on ch.episode_export (tenant_id, encounter_id);
+create unique index if not exists ux_ch_episode_export_storage_document on ch.episode_export (tenant_id, storage_document_id);
+create index if not exists ix_episode_export_tenant_id on ch.episode_export (tenant_id);
+create index if not exists ix_episode_export_encounter_id on ch.episode_export (encounter_id);
+create index if not exists ix_episode_export_storage_document_id on ch.episode_export (storage_document_id);
+create index if not exists ix_episode_export_signer_professional_id on ch.episode_export (signer_professional_id);
+
 create table if not exists ch.clinical_document (
   id uuid default gen_random_uuid() not null,
   tenant_id uuid not null,
@@ -103,6 +139,8 @@ create index if not exists ix_clinical_document_storage_document_id on ch.clinic
 select auth.create_rls_policy('ch', 'report');
 
 select auth.create_rls_policy('ch', 'report_addendum');
+
+select auth.create_rls_policy('ch', 'episode_export');
 
 select auth.create_rls_policy('ch', 'clinical_document');
 

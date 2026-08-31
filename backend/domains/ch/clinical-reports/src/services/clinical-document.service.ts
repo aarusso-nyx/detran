@@ -1,4 +1,4 @@
-// Generated from BP-CH-REPORTS-001 v1.0.0 sha256:959226a383e0fb64d104a887fe34cb5dba462d875869163a39abc94227f6f966
+// Generated from BP-CH-REPORTS-001 v1.1.0 sha256:beee4caafe2a85a62db62a7c64f47b7e234388f5606028dbc331786eb1e2f350
 import { Injectable } from '@nestjs/common';
 import { ClinicalDocumentRepository } from '../repositories/clinical-document.repository.js';
 import type { ClinicalDocument } from '../entities/clinical-document.entity.js';
