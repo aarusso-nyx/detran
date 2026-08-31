@@ -1,4 +1,4 @@
-// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:243dd2a69921d6544f3664d22ea24b32a34148a32d18659ca5d926815bfbe154
+// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:98288e4c3b1f3ff28eef48c4d363085a60a99484a1feac9cb173c792d0ac6a3e
 import { Injectable } from '@nestjs/common';
 import { ProfessionalRepository } from '../repositories/professional.repository.js';
 import type { Professional } from '../entities/professional.entity.js';

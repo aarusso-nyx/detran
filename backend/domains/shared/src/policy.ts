@@ -318,6 +318,7 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['retention', 'propose', ['DPO', 'GESTOR_DETRAN']],
   ['retention', 'review', ['DPO']],
   ['transmission', 'read', ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN']],
+  ['transmission', 'dispatch', ['GESTOR', 'GESTOR_DETRAN']],
   [
     'transmission',
     'enqueue',

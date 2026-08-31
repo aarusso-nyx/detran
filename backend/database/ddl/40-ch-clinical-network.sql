@@ -1,4 +1,4 @@
--- Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:243dd2a69921d6544f3664d22ea24b32a34148a32d18659ca5d926815bfbe154
+-- Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:98288e4c3b1f3ff28eef48c4d363085a60a99484a1feac9cb173c792d0ac6a3e
 
 -- Regenerable-only DDL for BP-CH-CLINICAL-NETWORK-001; request-path writes use role_app_backend.
 
@@ -35,6 +35,7 @@ create table if not exists ch.professional (
   professional_kind varchar(40) not null,
   council_type varchar(20),
   council_number varchar(80),
+  council_state varchar(2),
   email varchar(320),
   phone varchar(32),
   is_active boolean default true not null,
@@ -43,7 +44,7 @@ create table if not exists ch.professional (
   constraint pk_professional primary key (id),
   constraint ck_ch_professional_kind check (professional_kind in ('MEDICO','PSICOLOGO','TECNICO_BIOMETRIA','SUPERVISOR','RECEPCAO')),
   constraint ck_ch_professional_council_type check (council_type is null or council_type in ('CRM','CRP','OUTRO')),
-  constraint ck_ch_professional_required_council check ((professional_kind = 'MEDICO' and council_type = 'CRM' and council_number is not null) or (professional_kind = 'PSICOLOGO' and council_type = 'CRP' and council_number is not null) or professional_kind in ('TECNICO_BIOMETRIA','SUPERVISOR','RECEPCAO')),
+  constraint ck_ch_professional_required_council check ((professional_kind = 'MEDICO' and council_type = 'CRM' and council_number is not null and council_state ~ '^[A-Z]{2}$') or (professional_kind = 'PSICOLOGO' and council_type = 'CRP' and council_number is not null and council_state ~ '^[A-Z]{2}$') or professional_kind in ('TECNICO_BIOMETRIA','SUPERVISOR','RECEPCAO')),
   constraint fk_ch_professional_clinic foreign key (clinic_id) references ch.clinic (id),
   constraint fk_ch_professional_user foreign key (user_id) references auth.users (id)
 );

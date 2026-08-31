@@ -1,4 +1,4 @@
-// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:243dd2a69921d6544f3664d22ea24b32a34148a32d18659ca5d926815bfbe154
+// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:98288e4c3b1f3ff28eef48c4d363085a60a99484a1feac9cb173c792d0ac6a3e
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -20,6 +20,7 @@ const WRITABLE_FIELDS = new Set<string>([
   'professional_kind',
   'council_type',
   'council_number',
+  'council_state',
   'email',
   'phone',
   'is_active',

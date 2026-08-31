@@ -26,6 +26,7 @@ import {
   TenantContextInterceptor,
 } from '@stynx-nyx/tenancy';
 import { Observable } from 'rxjs';
+import { createSenatranAdapter } from '@detran/senatran-adapter';
 
 import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
 import { BiometricsModule } from '@detran/ch-biometrics';
@@ -50,6 +51,11 @@ import {
   detranStorageOptions,
   detranTokenVerifier,
 } from './detran-runtime.js';
+import { PecRenachTransmissionController } from './pec-renach-transmission.controller.js';
+import {
+  PEC_RENACH_PORT,
+  PecRenachTransmissionService,
+} from './pec-renach-transmission.service.js';
 
 patchTenantContextInterceptorOrdering();
 
@@ -180,10 +186,16 @@ export class AppModule {
         RestrictionsModule,
         RetentionModule,
       ],
+      controllers: [PecRenachTransmissionController],
       providers: [
         DetranDatabaseBinder,
         DetranAuthContextGuard,
         DetranPolicyGuard,
+        PecRenachTransmissionService,
+        {
+          provide: PEC_RENACH_PORT,
+          useFactory: () => createSenatranAdapter().ports.renach,
+        },
         { provide: DetranPersistedAuditSink, useValue: detranAuditSink },
         { provide: DetranPostgresReadiness, useValue: detranPostgresReadiness },
         { provide: APP_GUARD, useExisting: DetranAuthContextGuard },

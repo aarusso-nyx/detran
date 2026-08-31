@@ -12,6 +12,17 @@ function subject(query: ReturnType<typeof vi.fn>) {
 }
 
 describe('EncounterLifecycleService', () => {
+  it('requires RENACH process key and type as one bound identity', () => {
+    const query = vi.fn();
+    expect(() =>
+      subject(query).open({
+        patientId: 'patient-1',
+        renachProcessKey: 'RN123',
+      }),
+    ).toThrow('RENACH process key and process type must be supplied together');
+    expect(query).not.toHaveBeenCalled();
+  });
+
   it('AC-PEC-002-1 opens an encounter only from a checked-in appointment', async () => {
     const query = vi
       .fn()

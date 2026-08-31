@@ -142,8 +142,20 @@ export class ReportLifecycleService {
           receipt.certificateValidatedAt,
         ],
       );
+      const report = result.rows[0];
+      if (!report) throw new Error('Report insert returned no row');
+      await tx.query(
+        `insert into integration.outbox
+          (topic, aggregate_type, aggregate_id, payload,
+           idempotency_key, status, available_at)
+         values ('ch.renach.exam-result', 'ch.report', $1,
+                 jsonb_build_object('reportId', $1, 'kind', $2),
+                 'ch.report:' || $1, 'pending', now())
+         on conflict (tenant_id, idempotency_key) do nothing`,
+        [report.id, input.kind],
+      );
       await this.refreshEncounterSignatureStatus(tx, input.encounterId);
-      return result.rows[0] as Report;
+      return report;
     });
   }
 

@@ -81,6 +81,11 @@
             "pii": "professional"
           },
           {
+            "name": "council_state",
+            "type": "varchar(2)",
+            "nullable": true
+          },
+          {
             "name": "email",
             "type": "varchar(320)",
             "nullable": true,
@@ -123,7 +128,7 @@
           },
           {
             "name": "ck_ch_professional_required_council",
-            "expression": "(professional_kind = 'MEDICO' and council_type = 'CRM' and council_number is not null) or (professional_kind = 'PSICOLOGO' and council_type = 'CRP' and council_number is not null) or professional_kind in ('TECNICO_BIOMETRIA','SUPERVISOR','RECEPCAO')"
+            "expression": "(professional_kind = 'MEDICO' and council_type = 'CRM' and council_number is not null and council_state ~ '^[A-Z]{2}$') or (professional_kind = 'PSICOLOGO' and council_type = 'CRP' and council_number is not null and council_state ~ '^[A-Z]{2}$') or professional_kind in ('TECNICO_BIOMETRIA','SUPERVISOR','RECEPCAO')"
           }
         ],
         "foreignKeys": [

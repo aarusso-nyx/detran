@@ -27,6 +27,10 @@ export interface OpenEncounterInput {
   clinicId?: string;
   appointmentId?: string;
   renachProcessKey?: string;
+  renachProcessType?:
+    'FIRST_LICENSE' | 'RENEWAL' | 'CATEGORY_CHANGE' | 'CATEGORY_ADDITION';
+  currentCategory?: string;
+  requestedCategory?: string;
 }
 
 const CANCELLABLE_STATUSES = new Set([
@@ -40,19 +44,28 @@ export class EncounterLifecycleService {
   constructor(private readonly encounters: EncounterRepository) {}
 
   open(input: OpenEncounterInput): Promise<Encounter> {
+    if (Boolean(input.renachProcessKey) !== Boolean(input.renachProcessType)) {
+      throw new BadRequestException(
+        'RENACH process key and process type must be supplied together',
+      );
+    }
     return this.encounters.transaction(async (transaction) => {
       const tx = transaction as SqlTransaction;
       const appointment = await this.resolveCheckedInAppointment(tx, input);
       const result = await tx.query<Encounter & Record<string, unknown>>(
         `insert into ch.encounter
-          (clinic_id, patient_id, appointment_id, renach_process_key, status)
-         values ($1, $2, $3, $4, 'OPEN')
+          (clinic_id, patient_id, appointment_id, renach_process_key,
+           renach_process_type, current_category, requested_category, status)
+         values ($1, $2, $3, $4, $5, $6, $7, 'OPEN')
          returning *`,
         [
           appointment.clinic_id,
           input.patientId,
           appointment.id,
           input.renachProcessKey ?? null,
+          input.renachProcessType ?? null,
+          input.currentCategory ?? null,
+          input.requestedCategory ?? null,
         ],
       );
       const encounter = result.rows[0];

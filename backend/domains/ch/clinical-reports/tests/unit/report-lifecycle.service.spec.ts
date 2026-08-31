@@ -127,6 +127,7 @@ describe('ReportLifecycleService', () => {
       .mockResolvedValueOnce({ rows: [preflight] })
       .mockResolvedValueOnce({ rows: [] })
       .mockResolvedValueOnce({ rows: [{ id: 'report-1' }] })
+      .mockResolvedValueOnce({ rows: [] })
       .mockResolvedValueOnce({ rows: [] });
     const signing = {
       renderAndSign: vi.fn(async (request: { contentSha256: string }) => ({
@@ -142,7 +143,9 @@ describe('ReportLifecycleService', () => {
       templateVersion: 'v1',
     });
 
-    const statusSql = query.mock.calls[3]?.[0] as string;
+    expect(query.mock.calls[3]?.[0]).toContain('integration.outbox');
+    expect(query.mock.calls[3]?.[1]).toEqual(['report-1', 'MEDICAL']);
+    const statusSql = query.mock.calls[4]?.[0] as string;
     expect(statusSql).toContain('not exists');
     expect(statusSql).toContain("else 'READY_FOR_SIGNATURE'");
     expect(statusSql).not.toContain("set status = 'SIGNED'");

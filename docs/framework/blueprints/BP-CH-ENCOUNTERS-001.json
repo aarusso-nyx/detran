@@ -125,6 +125,24 @@
             "writable": false
           },
           {
+            "name": "renach_process_type",
+            "type": "varchar(32)",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "current_category",
+            "type": "varchar(4)",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "requested_category",
+            "type": "varchar(4)",
+            "nullable": true,
+            "writable": false
+          },
+          {
             "name": "status",
             "type": "varchar(32)",
             "default": "'OPEN'",
@@ -197,6 +215,14 @@
           {
             "name": "ck_ch_encounter_closed",
             "expression": "status <> 'CLOSED' or closed_at is not null"
+          },
+          {
+            "name": "ck_ch_encounter_renach_process_type",
+            "expression": "renach_process_type is null or renach_process_type in ('FIRST_LICENSE','RENEWAL','CATEGORY_CHANGE','CATEGORY_ADDITION')"
+          },
+          {
+            "name": "ck_ch_encounter_renach_process_pair",
+            "expression": "(renach_process_key is null and renach_process_type is null) or (renach_process_key is not null and renach_process_type is not null)"
           }
         ],
         "foreignKeys": [

@@ -101,6 +101,25 @@ describe('SenatranClient resilience and auth', () => {
     );
   });
 
+  it('uses a durable caller idempotency key when dispatching an outbox item', async () => {
+    const transport = new FakeTransport([ok({ protocol: 'one' })]);
+    const client = new SenatranClient(mockSenatranConfig(), { transport });
+    await client.request(
+      {
+        surface: 'renach',
+        operation: 'submit-medical-exam',
+        method: 'POST',
+        path: '/v1/test',
+        body: { result: 'APTO' },
+        write: true,
+      },
+      { metadata: { idempotencyKey: 'ch.report:report-1' } },
+    );
+    expect(transport.inputs[0]?.headers['Idempotency-Key']).toBe(
+      'ch.report:report-1',
+    );
+  });
+
   it('fails before transport when a real surface is disabled', async () => {
     const transport = new FakeTransport([]);
     const config = mockSenatranConfig();

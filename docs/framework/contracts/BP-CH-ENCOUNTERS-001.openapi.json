@@ -234,6 +234,27 @@
             "type": "string",
             "nullable": true
           },
+          "renach_process_type": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "FIRST_LICENSE",
+              "RENEWAL",
+              "CATEGORY_CHANGE",
+              "CATEGORY_ADDITION"
+            ],
+            "nullable": true
+          },
+          "current_category": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
+          "requested_category": {
+            "type": "string",
+            "maxLength": 4,
+            "nullable": true
+          },
           "status": {
             "type": "string",
             "maxLength": 32,
