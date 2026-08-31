@@ -52,6 +52,8 @@ import {
   detranTokenVerifier,
 } from './detran-runtime.js';
 import { PecRenachTransmissionController } from './pec-renach-transmission.controller.js';
+import { PecRenachProcessController } from './pec-renach-process.controller.js';
+import { PecRenachProcessService } from './pec-renach-process.service.js';
 import {
   PEC_RENACH_PORT,
   PecRenachTransmissionService,
@@ -186,11 +188,15 @@ export class AppModule {
         RestrictionsModule,
         RetentionModule,
       ],
-      controllers: [PecRenachTransmissionController],
+      controllers: [
+        PecRenachProcessController,
+        PecRenachTransmissionController,
+      ],
       providers: [
         DetranDatabaseBinder,
         DetranAuthContextGuard,
         DetranPolicyGuard,
+        PecRenachProcessService,
         PecRenachTransmissionService,
         {
           provide: PEC_RENACH_PORT,
