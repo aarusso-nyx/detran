@@ -1,9 +1,10 @@
 # AGENTS.md — rules for agents working in detran
 
 This repository is the DETRAN consolidation monorepo. It is **DEVAI-governed**
-(Constitution 0.3.0, vendored at the root as `CONSTITUTION.md`; `.devai/` is the
-governance root) and built on the **STYNX** platform (`@stynx-nyx/*` from GitHub
-Packages). The program is executed in phases by an orchestrator with worker agents;
+(`@aarusso-nyx/devai@1.4.5`, Constitution 1.0.0 pinned at
+`.devai/pin/constitution.md`; `.devai/` is the governance root) and built on the
+**STYNX 1.1.1** platform (`@stynx-nyx/*` from GitHub Packages). The program is
+executed in phases by an orchestrator with worker agents;
 the phase plan and Decisions Ledger live in the orchestrator handoff plan and are
 **binding** — do not re-litigate owner decisions.
 
@@ -30,18 +31,19 @@ the phase plan and Decisions Ledger live in the orchestrator handoff plan and ar
 6. **Registry auth:** `export NODE_AUTH_TOKEN="$(gh auth token)"` locally; CI uses
    the `PACKAGES_READ_TOKEN` secret. Never commit tokens.
 7. **Record as you go:** consequential choices get an ADR in `docs/meta/adr/`;
-   evidence records are emitted via `pnpm exec devai evidence-emit`.
+   evidence records are emitted through the installed DEVAI 1.4.5
+   `pnpm exec devai evidence record` boundary.
 
 ## Orientation
 
-- Read first: `README.md`, `BUILD-PLAN.md`, `DESIGN-DECISIONS.md`,
-  `docs/meta/adr/` (ADR-0001…0004), `docs/start/index.md`,
-  `docs/framework/schemas`, `.devai/config/project.json`.
+- Read first: `README.md`, `law/constitution.md`, `law/adr/`, `law/schemas/`,
+  `BUILD-PLAN.md`, `DESIGN-DECISIONS.md`, `docs/meta/adr/` (ADR-0001…0004),
+  `docs/start/index.md`, `docs/framework/schemas`, `.devai/config/project.json`.
 - Layout: `backend/` (app + domains + ddl), `apps/` (frontends only),
   `packages/` (senatran-adapter, ui), `senatran-mock/`, `tools/`, `docs/` (7-section
   IA per `docs/_ia/categories.json`).
 - Checks: `pnpm check` (format + typecheck), `pnpm devai:doctor`,
-  `pnpm exec devai evidence-verify --human`.
+  `pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human`.
 - Declare the active Constitution Article 6 role (Owner/Architect/Engineer/
   Inspector/Auditor) before scoped work; do not introduce a second governance
   framework.

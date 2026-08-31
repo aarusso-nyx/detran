@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted for Phase 2 implementation (W2.4, 2026-08-24).
+Accepted for Phase 2 implementation (W2.4, 2026-08-24). Package pins amended by
+`law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md` on 2026-08-31.
 
 ## Context
 
@@ -14,7 +15,7 @@ STYNX UI primitives in each frontend would fork the platform visual vocabulary.
 
 `packages/ui` publishes the workspace library `@detran/ui`, built with Angular 21 and
 ng-packagr. It consumes exact registry pins `@stynx-nyx/angular`, `angular-ui`,
-`angular-auth`, `angular-tenancy`, and `angular-i18n` at `0.5.0`; the Angular peer
+`angular-auth`, `angular-tenancy`, and `angular-i18n` at `1.1.1`; the Angular peer
 range remains `>=20.3.0 <22` and Node is `>=24 <25`.
 
 The kit owns only DETRAN-specific composition: light/dark custom-property tokens,

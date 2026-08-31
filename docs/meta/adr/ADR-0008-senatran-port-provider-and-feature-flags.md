@@ -3,7 +3,8 @@
 ## Status
 
 Accepted for Phase 2 implementation (W2.2, derived from the owner-confirmed
-Decisions Ledger and ADR-0003; 2026-08-24).
+Decisions Ledger and ADR-0003; 2026-08-24). Package pin amended by
+`law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md` on 2026-08-31.
 
 ## Context
 
@@ -40,7 +41,7 @@ but `vam` is explicitly reserved and must not be built in this phase.
    surface is fail-closed behind its own `SENATRAN_REAL_ENABLE_*` flag. Real base,
    operator and mTLS configuration are mandatory even before a real call can be
    constructed. There is no working RENAVAM real flag in this phase.
-5. Calls execute through pinned `@stynx-nyx/integration-adapter@0.5.0`: default
+5. Calls execute through pinned `@stynx-nyx/integration-adapter@1.1.1`: default
    timeout 10 seconds; three attempts with bounded backoff and jitter; circuit
    breaker keyed by provider, surface and tenant; telemetry hook on every
    lifecycle phase. Only provider/network failures retry. The provider error

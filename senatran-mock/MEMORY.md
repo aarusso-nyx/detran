@@ -11,7 +11,8 @@ short; link to the authoritative doc. Newest at the top.
   `{id, manifest_hash}` JSON on success. Required flags: `--actor`, `--actor-role`
   (owner|architect|engineer|inspector|auditor|harness), `--status`.
 
-- **`devai doctor --adopter` tier3 requires a docs-site shape.** Needs
+- **Historical DEVAI 0.3 doctor behavior:** `devai doctor --adopter` tier3 required
+  a docs-site shape. It needed
   `docs/site/{docusaurus.config.ts,sidebars.ts,package.json}` (non-placeholder
   `url`/`organizationName`, curated sidebar with `label:`), `docs/start/index.md`
   landing, `docs/framework/constitution.md` stub, and `CONSTITUTION.md` listed in
