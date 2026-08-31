@@ -1,0 +1,707 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Billing — BP-CH-BILLING-001",
+    "version": "1.0.0",
+    "description": "Faturamento vinculado ao preco publico federal versionado por especie de exame, vigencia e referencia anual IPCA. Clinicas nao informam nem substituem o valor de exame.",
+    "x-blueprint": "BP-CH-BILLING-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/billing/exam-prices": {
+      "get": {
+        "tags": ["billing-event"],
+        "operationId": "listFederalExamPublicPrice",
+        "summary": "List FederalExamPublicPrice (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FederalExamPublicPrice"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/exam-prices/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["billing-event"],
+        "operationId": "getFederalExamPublicPrice",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FederalExamPublicPrice"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/items": {
+      "get": {
+        "tags": ["billing-event"],
+        "operationId": "listBillingItem",
+        "summary": "List BillingItem (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BillingItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/items/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["billing-event"],
+        "operationId": "getBillingItem",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/invoices": {
+      "get": {
+        "tags": ["invoice"],
+        "operationId": "listBillingInvoice",
+        "summary": "List BillingInvoice (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BillingInvoice"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/invoices/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["invoice"],
+        "operationId": "getBillingInvoice",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingInvoice"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/divergences": {
+      "get": {
+        "tags": ["invoice"],
+        "operationId": "listBillingDivergence",
+        "summary": "List BillingDivergence (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BillingDivergence"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/billing/divergences/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["invoice"],
+        "operationId": "getBillingDivergence",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingDivergence"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FederalExamPublicPrice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "exam_kind": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["MEDICAL", "PSYCH"]
+          },
+          "amount_cents": {
+            "type": "integer"
+          },
+          "effective_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "effective_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "ipca_reference_year": {
+            "type": "integer"
+          },
+          "index_name": {
+            "type": "string",
+            "maxLength": 16,
+            "default": "'IPCA'"
+          },
+          "federal_source_reference": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "exam_kind",
+          "amount_cents",
+          "effective_from",
+          "ipca_reference_year",
+          "federal_source_reference",
+          "published_at",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateFederalExamPublicPriceDto": {
+        "type": "object",
+        "properties": {
+          "exam_kind": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["MEDICAL", "PSYCH"]
+          },
+          "amount_cents": {
+            "type": "integer"
+          },
+          "effective_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "effective_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "ipca_reference_year": {
+            "type": "integer"
+          },
+          "index_name": {
+            "type": "string",
+            "maxLength": 16,
+            "default": "'IPCA'"
+          },
+          "federal_source_reference": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "exam_kind",
+          "amount_cents",
+          "effective_from",
+          "ipca_reference_year",
+          "federal_source_reference",
+          "published_at"
+        ]
+      },
+      "BillingItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "telehealth_session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "federal_price_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "item_kind": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["PROTOCOL", "EXAM", "TELEHEALTH", "ADJUSTMENT"]
+          },
+          "exam_kind": {
+            "type": "string",
+            "maxLength": 16,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 32,
+            "default": "'PEC'"
+          },
+          "amount_cents": {
+            "type": "integer"
+          },
+          "reference_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["ISSUED", "PAID", "ATTESTED", "DIVERGENT", "CANCELLED"],
+            "default": "'ISSUED'"
+          },
+          "payment_validated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "item_kind",
+          "amount_cents",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateBillingItemDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "telehealth_session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "item_kind": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["PROTOCOL", "EXAM", "TELEHEALTH", "ADJUSTMENT"]
+          },
+          "exam_kind": {
+            "type": "string",
+            "maxLength": 16,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 32,
+            "default": "'PEC'"
+          },
+          "reference_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": ["item_kind"]
+      },
+      "BillingInvoice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reference_period": {
+            "type": "string",
+            "maxLength": 7
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["OPEN", "CLOSED", "ATTESTED", "PAID", "CANCELLED"],
+            "default": "'OPEN'"
+          },
+          "total_cents": {
+            "type": "integer",
+            "default": "0"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "attested_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paid_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "reference_period",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateBillingInvoiceDto": {
+        "type": "object",
+        "properties": {
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reference_period": {
+            "type": "string",
+            "maxLength": 7
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": ["reference_period"]
+      },
+      "BillingDivergence": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invoice_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["OPEN", "RESOLVED", "REJECTED"],
+            "default": "'OPEN'"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string",
+            "nullable": true
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "resolved_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "reason", "created_by", "created_at"]
+      },
+      "CreateBillingDivergenceDto": {
+        "type": "object",
+        "properties": {
+          "invoice_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "item_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": ["reason"]
+      },
+      "BillingInvoiceItem": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invoice_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "linked_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "invoice_id",
+          "item_id",
+          "linked_by",
+          "created_at"
+        ]
+      },
+      "CreateBillingInvoiceItemDto": {
+        "type": "object",
+        "properties": {
+          "invoice_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "item_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["invoice_id", "item_id"]
+      }
+    }
+  }
+}

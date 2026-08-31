@@ -1,0 +1,381 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-BILLING-001",
+  "module": {
+    "name": "Billing",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "50-ch-billing.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-process-blocks": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "billing-lifecycle.service",
+      "billing-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "billing-commands.controller",
+        "symbol": "BillingCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "billing-lifecycle.service",
+        "symbol": "BillingLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch", "detran-finance"],
+    "description": "Faturamento vinculado ao preco publico federal versionado por especie de exame, vigencia e referencia anual IPCA. Clinicas nao informam nem substituem o valor de exame."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "FederalExamPublicPrice",
+        "table": "federal_exam_public_price",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "exam_kind", "type": "varchar(16)" },
+          { "name": "amount_cents", "type": "integer" },
+          { "name": "effective_from", "type": "date" },
+          { "name": "effective_to", "type": "date", "nullable": true },
+          { "name": "ipca_reference_year", "type": "integer" },
+          { "name": "index_name", "type": "varchar(16)", "default": "'IPCA'" },
+          { "name": "federal_source_reference", "type": "text" },
+          { "name": "published_at", "type": "date" },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_federal_exam_price_start",
+            "columns": ["tenant_id", "exam_kind", "effective_from"],
+            "unique": true
+          },
+          {
+            "name": "ix_ch_federal_exam_price_effective",
+            "columns": [
+              "tenant_id",
+              "exam_kind",
+              "effective_from",
+              "effective_to"
+            ]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_federal_exam_price_kind",
+            "expression": "exam_kind in ('MEDICAL','PSYCH')"
+          },
+          {
+            "name": "ck_ch_federal_exam_price_amount",
+            "expression": "amount_cents >= 0"
+          },
+          {
+            "name": "ck_ch_federal_exam_price_ipca",
+            "expression": "index_name = 'IPCA' and ipca_reference_year >= 2026"
+          },
+          {
+            "name": "ck_ch_federal_exam_price_period",
+            "expression": "effective_to is null or effective_to >= effective_from"
+          },
+          {
+            "name": "ck_ch_federal_exam_price_publication",
+            "expression": "published_at <= effective_from"
+          }
+        ]
+      },
+      {
+        "name": "BillingItem",
+        "table": "billing_item",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid", "nullable": true },
+          { "name": "telehealth_session_id", "type": "uuid", "nullable": true },
+          {
+            "name": "federal_price_id",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "item_kind", "type": "varchar(24)" },
+          { "name": "exam_kind", "type": "varchar(16)", "nullable": true },
+          { "name": "source", "type": "varchar(32)", "default": "'PEC'" },
+          { "name": "amount_cents", "type": "integer", "writable": false },
+          { "name": "reference_number", "type": "text", "nullable": true },
+          {
+            "name": "status",
+            "type": "varchar(24)",
+            "default": "'ISSUED'",
+            "writable": false
+          },
+          {
+            "name": "payment_validated_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "payload", "type": "jsonb", "default": "'{}'::jsonb" },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_billing_item_encounter",
+            "columns": ["tenant_id", "encounter_id", "status"]
+          },
+          {
+            "name": "ix_ch_billing_item_reference",
+            "columns": ["tenant_id", "reference_number"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_billing_item_kind",
+            "expression": "item_kind in ('PROTOCOL','EXAM','TELEHEALTH','ADJUSTMENT')"
+          },
+          {
+            "name": "ck_ch_billing_item_status",
+            "expression": "status in ('ISSUED','PAID','ATTESTED','DIVERGENT','CANCELLED')"
+          },
+          {
+            "name": "ck_ch_billing_item_amount",
+            "expression": "amount_cents >= 0"
+          },
+          {
+            "name": "ck_ch_billing_item_subject",
+            "expression": "encounter_id is not null or telehealth_session_id is not null"
+          },
+          {
+            "name": "ck_ch_billing_item_exam_price",
+            "expression": "(item_kind = 'EXAM' and federal_price_id is not null and exam_kind in ('MEDICAL','PSYCH')) or (item_kind <> 'EXAM' and federal_price_id is null and exam_kind is null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_billing_item_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_billing_item_price",
+            "columns": ["federal_price_id"],
+            "references": {
+              "table": "ch.federal_exam_public_price",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "BillingInvoice",
+        "table": "billing_invoice",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "clinic_id", "type": "uuid", "nullable": true },
+          { "name": "reference_period", "type": "varchar(7)" },
+          {
+            "name": "status",
+            "type": "varchar(24)",
+            "default": "'OPEN'",
+            "writable": false
+          },
+          {
+            "name": "total_cents",
+            "type": "integer",
+            "default": "0",
+            "writable": false
+          },
+          { "name": "payload", "type": "jsonb", "default": "'{}'::jsonb" },
+          {
+            "name": "closed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "attested_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "paid_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_billing_invoice_period",
+            "columns": ["tenant_id", "reference_period", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_billing_invoice_period",
+            "expression": "reference_period ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'"
+          },
+          {
+            "name": "ck_ch_billing_invoice_status",
+            "expression": "status in ('OPEN','CLOSED','ATTESTED','PAID','CANCELLED')"
+          },
+          {
+            "name": "ck_ch_billing_invoice_total",
+            "expression": "total_cents >= 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_billing_invoice_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "BillingDivergence",
+        "table": "billing_divergence",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "invoice_id", "type": "uuid", "nullable": true },
+          { "name": "item_id", "type": "uuid", "nullable": true },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'OPEN'",
+            "writable": false
+          },
+          { "name": "reason", "type": "text" },
+          {
+            "name": "resolution",
+            "type": "text",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "payload", "type": "jsonb", "default": "'{}'::jsonb" },
+          { "name": "created_by", "type": "uuid", "writable": false },
+          {
+            "name": "resolved_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "resolved_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_billing_divergence_status",
+            "columns": ["tenant_id", "status", "created_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_billing_divergence_status",
+            "expression": "status in ('OPEN','RESOLVED','REJECTED')"
+          },
+          {
+            "name": "ck_ch_billing_divergence_subject",
+            "expression": "invoice_id is not null or item_id is not null"
+          },
+          {
+            "name": "ck_ch_billing_divergence_resolution",
+            "expression": "status = 'OPEN' or (resolution is not null and resolved_by is not null and resolved_at is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_billing_divergence_invoice",
+            "columns": ["invoice_id"],
+            "references": { "table": "ch.billing_invoice", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_billing_divergence_item",
+            "columns": ["item_id"],
+            "references": { "table": "ch.billing_item", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "BillingInvoiceItem",
+        "table": "billing_invoice_item",
+        "primaryKey": ["tenant_id", "invoice_id", "item_id"],
+        "fields": [
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "invoice_id", "type": "uuid" },
+          { "name": "item_id", "type": "uuid" },
+          { "name": "linked_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_billing_invoice_item_once",
+            "columns": ["tenant_id", "item_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_billing_invoice_item_invoice",
+            "columns": ["invoice_id"],
+            "references": {
+              "table": "ch.billing_invoice",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_ch_billing_invoice_item_item",
+            "columns": ["item_id"],
+            "references": { "table": "ch.billing_item", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/billing/",
+    "resources": [
+      {
+        "entity": "FederalExamPublicPrice",
+        "path": "exam-prices",
+        "resource": "billing-event",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "BillingItem",
+        "path": "items",
+        "resource": "billing-event",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "BillingInvoice",
+        "path": "invoices",
+        "resource": "invoice",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "BillingDivergence",
+        "path": "divergences",
+        "resource": "invoice",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}
