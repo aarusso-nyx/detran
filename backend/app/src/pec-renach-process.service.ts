@@ -7,7 +7,11 @@ import {
 } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
-import type { DriverProcessType, RenachPort } from '@detran/senatran-adapter';
+import type {
+  DriverProcessType,
+  RenachExamEligibility,
+  RenachPort,
+} from '@detran/senatran-adapter';
 import { withTenantContext } from '@detran/shared';
 
 import { PEC_RENACH_PORT } from './pec-renach-transmission.service.js';
@@ -27,6 +31,10 @@ interface EncounterProcessSource {
   renach_process_type: DriverProcessType | null;
   current_category: string | null;
   requested_category: string | null;
+  requires_medical: boolean;
+  requires_psychological: boolean;
+  exam_eligible: boolean | null;
+  eligibility_reasons: string[];
 }
 
 export interface OpenRenachProcessCommand {
@@ -39,6 +47,9 @@ export interface RenachProcessBindingResult {
   encounterId: string;
   renachProcessKey: string;
   status: 'OPENED' | 'ALREADY_OPEN' | 'LOCAL_ALREADY_LINKED';
+  requiredTracks: Array<'MEDICAL' | 'PSYCH'>;
+  examEligible: boolean;
+  eligibilityReasons: string[];
   requestId?: string;
 }
 
@@ -67,7 +78,7 @@ export class PecRenachProcessService {
     const source = await this.loadEncounter(encounterId);
     if (source.renach_process_key) {
       this.assertCompatibleBinding(source, command);
-      return this.localResult(source.id, source.renach_process_key);
+      return this.localResult(source);
     }
 
     const context = this.requestContext.snapshot();
@@ -97,19 +108,40 @@ export class PecRenachProcessService {
     }
 
     const status = process.openingResult ?? 'OPENED';
+    const eligibility = await this.renach.getExamEligibility(
+      process.renachNumber,
+      {
+        tenantId: context.tenantId,
+        actorId: context.actorId,
+        correlationId: context.requestId,
+      },
+    );
+    if (
+      eligibility.processType &&
+      eligibility.processType !== command.processType
+    ) {
+      throw new ConflictException(
+        'RENACH eligibility belongs to a different process type',
+      );
+    }
     const binding = await this.bindProcess(
       encounterId,
       source.patient_id,
       process.renachNumber,
       command,
+      eligibility,
     );
     if (binding === 'LOCAL_ALREADY_LINKED') {
-      return this.localResult(encounterId, process.renachNumber);
+      const current = await this.loadEncounter(encounterId);
+      return this.localResult(current);
     }
     return {
       encounterId,
       renachProcessKey: process.renachNumber,
       status,
+      requiredTracks: requiredTracks(eligibility.psychologicalRequired),
+      examEligible: eligibility.medicalEligible,
+      eligibilityReasons: eligibility.reasons,
       ...(process.protocol ? { requestId: process.protocol } : {}),
     };
   }
@@ -122,7 +154,9 @@ export class PecRenachProcessService {
         `select encounter.id, encounter.patient_id,
                 patient.national_id as patient_cpf,
                 encounter.renach_process_key, encounter.renach_process_type,
-                encounter.current_category, encounter.requested_category
+                encounter.current_category, encounter.requested_category,
+                encounter.requires_medical, encounter.requires_psychological,
+                encounter.exam_eligible, encounter.eligibility_reasons
            from ch.encounter encounter
            join ch.patient patient on patient.id = encounter.patient_id
           where encounter.id = $1`,
@@ -140,12 +174,14 @@ export class PecRenachProcessService {
     patientId: string,
     renachProcessKey: string,
     command: OpenRenachProcessCommand,
+    eligibility: RenachExamEligibility,
   ): Promise<'BOUND' | 'LOCAL_ALREADY_LINKED'> {
     return this.bindProcessTransaction(
       encounterId,
       patientId,
       renachProcessKey,
       command,
+      eligibility,
     ).catch((error: unknown) => {
       if (isPostgresUniqueViolation(error)) {
         throw new ConflictException(
@@ -161,6 +197,7 @@ export class PecRenachProcessService {
     patientId: string,
     renachProcessKey: string,
     command: OpenRenachProcessCommand,
+    eligibility: RenachExamEligibility,
   ): Promise<'BOUND' | 'LOCAL_ALREADY_LINKED'> {
     return this.transaction(async (tx) => {
       const current = await tx.query<{
@@ -209,6 +246,9 @@ export class PecRenachProcessService {
         `update ch.encounter
             set renach_process_key = $2, renach_process_type = $3,
                 current_category = $4, requested_category = $5,
+                requires_medical = true, requires_psychological = $6,
+                exam_eligible = $7, eligibility_reasons = $8::jsonb,
+                eligibility_checked_at = now(),
                 updated_at = now()
           where id = $1 and renach_process_key is null
           returning id`,
@@ -218,6 +258,9 @@ export class PecRenachProcessService {
           command.processType,
           command.currentCategory ?? null,
           command.requestedCategory ?? null,
+          eligibility.psychologicalRequired,
+          eligibility.medicalEligible,
+          JSON.stringify(eligibility.reasons),
         ],
       );
       if (!updated.rows[0]) {
@@ -258,13 +301,20 @@ export class PecRenachProcessService {
   }
 
   private localResult(
-    encounterId: string,
-    renachProcessKey: string,
+    source: EncounterProcessSource,
   ): RenachProcessBindingResult {
+    if (!source.renach_process_key || source.exam_eligible === null) {
+      throw new ConflictException(
+        'Existing RENACH binding has no authoritative eligibility receipt',
+      );
+    }
     return {
-      encounterId,
-      renachProcessKey,
+      encounterId: source.id,
+      renachProcessKey: source.renach_process_key,
       status: 'LOCAL_ALREADY_LINKED',
+      requiredTracks: requiredTracks(source.requires_psychological),
+      examEligible: source.exam_eligible,
+      eligibilityReasons: source.eligibility_reasons,
     };
   }
 
@@ -275,6 +325,12 @@ export class PecRenachProcessService {
       work(tx as SqlTransaction),
     );
   }
+}
+
+function requiredTracks(
+  psychologicalRequired: boolean,
+): Array<'MEDICAL' | 'PSYCH'> {
+  return psychologicalRequired ? ['MEDICAL', 'PSYCH'] : ['MEDICAL'];
 }
 
 function isPostgresUniqueViolation(error: unknown): boolean {

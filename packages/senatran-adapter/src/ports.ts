@@ -26,6 +26,7 @@ import type {
   PaymentQuote,
   PreliminaryDefenseInput,
   RenachExamReceipt,
+  RenachExamEligibility,
   SneEnrollment,
   SneNotification,
   SneNotificationInput,
@@ -46,6 +47,7 @@ import {
   mapDriverProcess,
   mapRenachExam,
   mapPaymentQuote,
+  processTypeFromWire,
   mapRecognition,
   mapSneEnrollment,
   mapSneNotification,
@@ -118,6 +120,10 @@ export interface RenachPort {
     renachNumber: string,
     context?: IntegrationContext,
   ): Promise<DriverProcess>;
+  getExamEligibility(
+    renachNumber: string,
+    context?: IntegrationContext,
+  ): Promise<RenachExamEligibility>;
   openProcess(
     input: OpenDriverProcessInput,
     context?: IntegrationContext,
@@ -432,6 +438,36 @@ class RenachHttpPort implements RenachPort {
       context,
     );
     return mapDriverProcess(response);
+  }
+
+  async getExamEligibility(
+    renachNumber: string,
+    context?: IntegrationContext,
+  ): Promise<RenachExamEligibility> {
+    const response = await this.client.request<
+      Transactional['ElegibilidadeExameResponse']
+    >(
+      readRequest(
+        'renach',
+        'get-exam-eligibility',
+        `/v1/renach/processos/${segment(renachNumber)}/elegibilidade`,
+      ),
+      context,
+    );
+    if (response.numeroRenach && response.numeroRenach !== renachNumber) {
+      throw new Error(
+        'RENACH eligibility response changed the process identity',
+      );
+    }
+    return {
+      renachNumber,
+      ...(response.tipoProcesso
+        ? { processType: processTypeFromWire[response.tipoProcesso] }
+        : {}),
+      medicalEligible: response.elegivelExameMedico === true,
+      psychologicalRequired: response.exigeAvaliacaoPsicologica === true,
+      reasons: response.motivos ?? [],
+    };
   }
 
   async openProcess(

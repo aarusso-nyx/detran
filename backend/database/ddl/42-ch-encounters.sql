@@ -1,4 +1,4 @@
--- Generated from BP-CH-ENCOUNTERS-001 v1.0.0 sha256:a45f4d9aa68b80d085d4e052deb019f227158b561404fdd7e02b5260b8347912
+-- Generated from BP-CH-ENCOUNTERS-001 v1.1.0 sha256:7931238eb7e2720ab74ab9e327a65f946e9feb0fd555a8658cbf413e7db8b48b
 
 -- Regenerable-only DDL for BP-CH-ENCOUNTERS-001; request-path writes use role_app_backend.
 
@@ -40,6 +40,11 @@ create table if not exists ch.encounter (
   renach_process_type varchar(32),
   current_category varchar(4),
   requested_category varchar(4),
+  requires_medical boolean default true not null,
+  requires_psychological boolean default false not null,
+  exam_eligible boolean,
+  eligibility_reasons jsonb default '[]'::jsonb not null,
+  eligibility_checked_at timestamptz,
   status varchar(32) default 'OPEN' not null,
   started_at timestamptz default now() not null,
   closed_at timestamptz,
@@ -55,6 +60,7 @@ create table if not exists ch.encounter (
   constraint ck_ch_encounter_closed check (status <> 'CLOSED' or closed_at is not null),
   constraint ck_ch_encounter_renach_process_type check (renach_process_type is null or renach_process_type in ('FIRST_LICENSE','RENEWAL','CATEGORY_CHANGE','CATEGORY_ADDITION')),
   constraint ck_ch_encounter_renach_process_pair check ((renach_process_key is null and renach_process_type is null) or (renach_process_key is not null and renach_process_type is not null)),
+  constraint ck_ch_encounter_eligibility_binding check (renach_process_key is null or (exam_eligible is not null and eligibility_checked_at is not null)),
   constraint fk_ch_encounter_clinic foreign key (clinic_id) references ch.clinic (id),
   constraint fk_ch_encounter_patient foreign key (patient_id) references ch.patient (id),
   constraint fk_ch_encounter_appointment foreign key (appointment_id) references ch.appointment (id)

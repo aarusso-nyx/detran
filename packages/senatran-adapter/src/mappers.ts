@@ -43,7 +43,7 @@ const processTypeToWire: Record<
   CATEGORY_ADDITION: 'ADICAO_CATEGORIA',
 };
 
-const processTypeFromWire: Record<
+export const processTypeFromWire: Record<
   Transactional['TipoProcesso'],
   DriverProcessType
 > = {

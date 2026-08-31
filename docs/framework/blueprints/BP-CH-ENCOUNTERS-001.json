@@ -4,7 +4,7 @@
   "module": {
     "name": "Encounters",
     "namespace": "ch",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "42-ch-encounters.sql",
     "dependencies": {
       "@detran/ch-clinical-network": "workspace:*",
@@ -143,6 +143,38 @@
             "writable": false
           },
           {
+            "name": "requires_medical",
+            "type": "boolean",
+            "default": "true",
+            "writable": false
+          },
+          {
+            "name": "requires_psychological",
+            "type": "boolean",
+            "default": "false",
+            "writable": false
+          },
+          {
+            "name": "exam_eligible",
+            "type": "boolean",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "eligibility_reasons",
+            "type": "jsonb",
+            "default": "'[]'::jsonb",
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "eligibility_checked_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
             "name": "status",
             "type": "varchar(32)",
             "default": "'OPEN'",
@@ -223,6 +255,10 @@
           {
             "name": "ck_ch_encounter_renach_process_pair",
             "expression": "(renach_process_key is null and renach_process_type is null) or (renach_process_key is not null and renach_process_type is not null)"
+          },
+          {
+            "name": "ck_ch_encounter_eligibility_binding",
+            "expression": "renach_process_key is null or (exam_eligible is not null and eligibility_checked_at is not null)"
           }
         ],
         "foreignKeys": [

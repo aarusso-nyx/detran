@@ -15,7 +15,14 @@ function subject(query: ReturnType<typeof vi.fn>, actorId = 'actor-1') {
 }
 
 describe('AppointmentDistributionService', () => {
-  it('AC-PEC-013-1 and AC-PEC-013-5 select the least-assigned eligible clinic and professionals', async () => {
+  const eligibility = {
+    patient_id: 'patient-1',
+    exam_eligible: true,
+    requires_psychological: true,
+    eligibility_reasons: [],
+  };
+
+  it('AC-PEC-001-3 AC-PEC-013-1 and AC-PEC-013-5 derive tracks then select the least-assigned pool', async () => {
     const pool = [
       {
         clinic_id: 'clinic-overused',
@@ -44,14 +51,14 @@ describe('AppointmentDistributionService', () => {
     ];
     const query = vi
       .fn()
+      .mockResolvedValueOnce({ rows: [eligibility] })
       .mockResolvedValueOnce({ rows: pool })
       .mockResolvedValue({ rows: [] });
 
     const result = await subject(query).create({
-      patientId: 'patient-1',
+      encounterId: 'encounter-1',
       regionCode: 'NORTH',
       scheduledAt: '2099-08-31T12:00:00.000Z',
-      tracks: ['MEDICAL', 'PSYCH'],
     });
 
     expect(result.clinicId).toBe('clinic-balanced');
@@ -59,8 +66,9 @@ describe('AppointmentDistributionService', () => {
       { track: 'MEDICAL', professionalId: 'doctor-balanced' },
       { track: 'PSYCH', professionalId: 'psych-balanced' },
     ]);
-    expect(query.mock.calls[0]?.[0]).toContain('clinic.region_code = $1');
-    expect(query.mock.calls[1]?.[0]).toContain('insert into ch.appointment');
+    expect(query.mock.calls[0]?.[0]).toContain('eligibility_checked_at');
+    expect(query.mock.calls[1]?.[0]).toContain('clinic.region_code = $1');
+    expect(query.mock.calls[2]?.[0]).toContain('insert into ch.appointment');
   });
 
   it('AC-PEC-013-2 persists the seed, full pool and selected outcome', async () => {
@@ -74,17 +82,19 @@ describe('AppointmentDistributionService', () => {
     ];
     const query = vi
       .fn()
+      .mockResolvedValueOnce({
+        rows: [{ ...eligibility, requires_psychological: false }],
+      })
       .mockResolvedValueOnce({ rows: pool })
       .mockResolvedValue({ rows: [] });
 
     await subject(query).create({
-      patientId: 'patient-1',
+      encounterId: 'encounter-1',
       regionCode: 'NORTH',
       scheduledAt: '2099-08-31T12:00:00.000Z',
-      tracks: ['MEDICAL'],
     });
 
-    const drawCall = query.mock.calls[2];
+    const drawCall = query.mock.calls[3];
     expect(drawCall?.[0]).toContain(
       'insert into ch.appointment_assignment_draw',
     );
@@ -95,26 +105,82 @@ describe('AppointmentDistributionService', () => {
   });
 
   it('AC-PEC-013-3 rejects a pool missing a requested track', async () => {
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [eligibility] })
+      .mockResolvedValueOnce({
+        rows: [
+          {
+            clinic_id: 'clinic-1',
+            professional_id: 'doctor-1',
+            professional_kind: 'MEDICO',
+            assignment_count: 0,
+          },
+        ],
+      });
+
+    await expect(
+      subject(query).create({
+        encounterId: 'encounter-1',
+        regionCode: 'NORTH',
+        scheduledAt: '2099-08-31T12:00:00.000Z',
+      }),
+    ).rejects.toThrow('No eligible clinic and professional pool');
+    expect(query).toHaveBeenCalledTimes(2);
+  });
+
+  it('AC-PEC-001-4 blocks C/D/E follow-on scheduling when RENACH reports toxicology ineligible', async () => {
     const query = vi.fn().mockResolvedValueOnce({
       rows: [
         {
-          clinic_id: 'clinic-1',
-          professional_id: 'doctor-1',
-          professional_kind: 'MEDICO',
-          assignment_count: 0,
+          ...eligibility,
+          exam_eligible: false,
+          eligibility_reasons: [
+            'Valid toxicology exam is required for category D',
+          ],
         },
       ],
     });
 
     await expect(
       subject(query).create({
-        patientId: 'patient-1',
+        encounterId: 'encounter-1',
         regionCode: 'NORTH',
         scheduledAt: '2099-08-31T12:00:00.000Z',
-        tracks: ['MEDICAL', 'PSYCH'],
       }),
-    ).rejects.toThrow('No eligible clinic and professional pool');
+    ).rejects.toThrow('Valid toxicology exam is required for category D');
     expect(query).toHaveBeenCalledTimes(1);
+  });
+
+  it('AC-PEC-001-5 maps the database appointment-slot uniqueness violation to conflict', async () => {
+    const pool = [
+      {
+        clinic_id: 'clinic-1',
+        professional_id: 'doctor-1',
+        professional_kind: 'MEDICO',
+        assignment_count: 0,
+      },
+    ];
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({
+        rows: [{ ...eligibility, requires_psychological: false }],
+      })
+      .mockResolvedValueOnce({ rows: pool })
+      .mockRejectedValueOnce({
+        code: '23505',
+        constraint: 'ux_ch_appointment_slot',
+      });
+
+    await expect(
+      subject(query).create({
+        encounterId: 'encounter-1',
+        regionCode: 'NORTH',
+        scheduledAt: '2099-08-31T12:00:00.000Z',
+      }),
+    ).rejects.toThrow(
+      'Appointment already exists for this patient, clinic and time',
+    );
   });
 
   it('AC-PEC-013-4 excludes the refused clinic and preserves reroll lineage', async () => {

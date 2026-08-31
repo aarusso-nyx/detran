@@ -33,10 +33,9 @@ interface Selection {
 }
 
 export interface CreateDistributedAppointmentInput {
-  patientId: string;
+  encounterId: string;
   regionCode: string;
   scheduledAt: string;
-  tracks: Track[];
 }
 
 export interface DistributedAppointment {
@@ -56,45 +55,94 @@ export class AppointmentDistributionService {
     input: CreateDistributedAppointmentInput,
   ): Promise<DistributedAppointment> {
     const actorId = this.requireActorId();
-    const tracks = this.normalizeTracks(input.tracks);
     const scheduledAt = this.requireScheduledAt(input.scheduledAt);
     const seed = randomBytes(32).toString('hex');
-    return this.schedules.transaction(async (transaction) => {
-      const tx = transaction as SqlTransaction;
-      const pool = await this.loadPool(
-        tx,
-        input.regionCode,
-        scheduledAt,
-        tracks,
-      );
-      const selection = this.select(pool, tracks, seed);
-      const appointmentId = randomUUID();
-      const primary = selection.byTrack.MEDICAL ?? selection.byTrack.PSYCH;
-      await tx.query(
-        `insert into ch.appointment
-          (id, clinic_id, patient_id, professional_id, scheduled_at,
-           status, created_by)
-         values ($1, $2, $3, $4, $5, 'SCHEDULED', $6)`,
-        [
-          appointmentId,
-          selection.clinicId,
-          input.patientId,
-          primary?.professional_id,
+    return this.schedules
+      .transaction(async (transaction) => {
+        const tx = transaction as SqlTransaction;
+        const gate = await this.loadEligibilityGate(tx, input.encounterId);
+        if (!gate.exam_eligible) {
+          throw new ConflictException(
+            `RENACH exam eligibility blocks scheduling: ${gate.eligibility_reasons.join('; ') || 'no reason supplied'}`,
+          );
+        }
+        const tracks: Track[] = gate.requires_psychological
+          ? ['MEDICAL', 'PSYCH']
+          : ['MEDICAL'];
+        const pool = await this.loadPool(
+          tx,
+          input.regionCode,
           scheduledAt,
+          tracks,
+        );
+        const selection = this.select(pool, tracks, seed);
+        const appointmentId = randomUUID();
+        const primary = selection.byTrack.MEDICAL ?? selection.byTrack.PSYCH;
+        await tx.query(
+          `insert into ch.appointment
+            (id, clinic_id, patient_id, professional_id, scheduled_at,
+             status, created_by)
+           values ($1, $2, $3, $4, $5, 'SCHEDULED', $6)`,
+          [
+            appointmentId,
+            selection.clinicId,
+            gate.patient_id,
+            primary?.professional_id,
+            scheduledAt,
+            actorId,
+          ],
+        );
+        await this.persistDraws(tx, {
+          appointmentId,
+          regionCode: input.regionCode,
+          scheduledAt,
+          seed,
           actorId,
-        ],
-      );
-      await this.persistDraws(tx, {
-        appointmentId,
-        regionCode: input.regionCode,
-        scheduledAt,
-        seed,
-        actorId,
-        tracks,
-        selection,
+          tracks,
+          selection,
+        });
+        return this.present(appointmentId, selection, tracks);
+      })
+      .catch((error: unknown) => {
+        if (isAppointmentSlotConflict(error)) {
+          throw new ConflictException(
+            'Appointment already exists for this patient, clinic and time',
+          );
+        }
+        throw error;
       });
-      return this.present(appointmentId, selection, tracks);
-    });
+  }
+
+  private async loadEligibilityGate(
+    tx: SqlTransaction,
+    encounterId: string,
+  ): Promise<{
+    patient_id: string;
+    exam_eligible: boolean;
+    requires_psychological: boolean;
+    eligibility_reasons: string[];
+  }> {
+    const result = await tx.query<{
+      patient_id: string;
+      exam_eligible: boolean;
+      requires_psychological: boolean;
+      eligibility_reasons: string[];
+    }>(
+      `select patient_id, exam_eligible, requires_psychological,
+              eligibility_reasons
+         from ch.encounter
+        where id = $1 and renach_process_key is not null
+          and eligibility_checked_at is not null
+        for share`,
+      [encounterId],
+    );
+    const gate = result.rows[0];
+    if (!gate) {
+      throw new ConflictException(
+        'Authoritative RENACH exam eligibility is required before scheduling',
+      );
+    }
+    return gate;
   }
 
   reroll(
@@ -359,19 +407,6 @@ export class AppointmentDistributionService {
     return createHash('sha256').update(`${seed}:${value}`).digest('hex');
   }
 
-  private normalizeTracks(tracks: Track[]): Track[] {
-    const unique = [...new Set(tracks)];
-    if (
-      !unique.length ||
-      unique.some((track) => !['MEDICAL', 'PSYCH'].includes(track))
-    ) {
-      throw new BadRequestException(
-        'At least one valid exam track is required',
-      );
-    }
-    return unique;
-  }
-
   private requireScheduledAt(value: string): string {
     const date = new Date(value);
     if (Number.isNaN(date.valueOf()) || date <= new Date()) {
@@ -386,4 +421,15 @@ export class AppointmentDistributionService {
       throw new BadRequestException('Authenticated actor is required');
     return actorId;
   }
+}
+
+function isAppointmentSlotConflict(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (error as { code?: unknown }).code === '23505' &&
+    'constraint' in error &&
+    (error as { constraint?: unknown }).constraint === 'ux_ch_appointment_slot'
+  );
 }

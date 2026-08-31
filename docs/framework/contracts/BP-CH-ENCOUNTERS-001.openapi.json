@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Encounters — BP-CH-ENCOUNTERS-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Agendamentos e atendimentos clinicos do PEC. O ciclo de vida implementa WF-PEC-001 e torna CANCELLED alcancavel com motivo auditavel.",
     "x-blueprint": "BP-CH-ENCOUNTERS-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -253,6 +253,30 @@
           "requested_category": {
             "type": "string",
             "maxLength": 4,
+            "nullable": true
+          },
+          "requires_medical": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "requires_psychological": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "exam_eligible": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "eligibility_reasons": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'[]'::jsonb"
+          },
+          "eligibility_checked_at": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "status": {

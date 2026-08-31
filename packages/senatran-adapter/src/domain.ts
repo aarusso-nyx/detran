@@ -66,6 +66,14 @@ export interface DriverProcess {
   openingResult?: 'OPENED' | 'ALREADY_OPEN';
 }
 
+export interface RenachExamEligibility {
+  renachNumber: string;
+  processType?: DriverProcessType;
+  medicalEligible: boolean;
+  psychologicalRequired: boolean;
+  reasons: string[];
+}
+
 export interface DriverLicenseValidationInput {
   cpf: string;
   licenseNumber: string;

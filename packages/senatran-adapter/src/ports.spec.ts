@@ -4,6 +4,31 @@ import type { SenatranClient } from './client.js';
 import { createSenatranPorts } from './ports.js';
 
 describe('RenachPort clinical-result boundary', () => {
+  it('AC-PEC-001-3 maps authoritative exam-stage eligibility', async () => {
+    const request = vi.fn().mockResolvedValue({
+      numeroRenach: 'RN123',
+      tipoProcesso: 'RENOVACAO',
+      elegivelExameMedico: true,
+      exigeAvaliacaoPsicologica: false,
+      motivos: [],
+    });
+    const ports = createSenatranPorts({ request } as unknown as SenatranClient);
+
+    await expect(ports.renach.getExamEligibility('RN123')).resolves.toEqual({
+      renachNumber: 'RN123',
+      processType: 'RENEWAL',
+      medicalEligible: true,
+      psychologicalRequired: false,
+      reasons: [],
+    });
+    expect(request.mock.calls[0]?.[0]).toMatchObject({
+      surface: 'renach',
+      operation: 'get-exam-eligibility',
+      method: 'GET',
+      path: '/v1/renach/processos/RN123/elegibilidade',
+    });
+  });
+
   it('AC-PEC-009-1 maps only the minimum medical result contract', async () => {
     const request = vi.fn().mockResolvedValue({
       protocolo: 'protocol-1',

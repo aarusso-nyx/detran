@@ -11,6 +11,18 @@ const source = {
   renach_process_type: null,
   current_category: 'B',
   requested_category: null,
+  requires_medical: true,
+  requires_psychological: false,
+  exam_eligible: null,
+  eligibility_reasons: [],
+};
+
+const eligibility = {
+  renachNumber: 'RN123',
+  processType: 'RENEWAL',
+  medicalEligible: true,
+  psychologicalRequired: false,
+  reasons: [],
 };
 
 function subject(query: ReturnType<typeof vi.fn>, renach: object) {
@@ -52,16 +64,23 @@ describe('PecRenachProcessService', () => {
       openingResult: 'OPENED',
       protocol: 'request-123',
     });
+    const getExamEligibility = vi.fn().mockResolvedValue(eligibility);
 
     await expect(
-      subject(query, { openProcess }).openAndBind('encounter-1', {
-        processType: 'RENEWAL',
-        currentCategory: 'B',
-      }),
+      subject(query, { openProcess, getExamEligibility }).openAndBind(
+        'encounter-1',
+        {
+          processType: 'RENEWAL',
+          currentCategory: 'B',
+        },
+      ),
     ).resolves.toEqual({
       encounterId: 'encounter-1',
       renachProcessKey: 'RN123',
       status: 'OPENED',
+      requiredTracks: ['MEDICAL'],
+      examEligible: true,
+      eligibilityReasons: [],
       requestId: 'request-123',
     });
     expect(openProcess).toHaveBeenCalledWith(
@@ -76,7 +95,12 @@ describe('PecRenachProcessService', () => {
         },
       }),
     );
+    expect(getExamEligibility).toHaveBeenCalledWith(
+      'RN123',
+      expect.objectContaining({ tenantId: 'tenant-1' }),
+    );
     expect(query.mock.calls[3]?.[0]).toContain('update ch.encounter');
+    expect(query.mock.calls[3]?.[1]?.slice(5)).toEqual([false, true, '[]']);
   });
 
   it('AC-PEC-001-1 returns LOCAL_ALREADY_LINKED without calling RENACH', async () => {
@@ -86,6 +110,7 @@ describe('PecRenachProcessService', () => {
           ...source,
           renach_process_key: 'RN123',
           renach_process_type: 'RENEWAL',
+          exam_eligible: true,
         },
       ],
     });
@@ -99,6 +124,9 @@ describe('PecRenachProcessService', () => {
       encounterId: 'encounter-1',
       renachProcessKey: 'RN123',
       status: 'LOCAL_ALREADY_LINKED',
+      requiredTracks: ['MEDICAL'],
+      examEligible: true,
+      eligibilityReasons: [],
     });
     expect(openProcess).not.toHaveBeenCalled();
   });
@@ -135,11 +163,15 @@ describe('PecRenachProcessService', () => {
       processType: 'RENEWAL',
       openingResult: 'ALREADY_OPEN',
     });
+    const getExamEligibility = vi.fn().mockResolvedValue(eligibility);
 
     await expect(
-      subject(query, { openProcess }).openAndBind('encounter-1', {
-        processType: 'RENEWAL',
-      }),
+      subject(query, { openProcess, getExamEligibility }).openAndBind(
+        'encounter-1',
+        {
+          processType: 'RENEWAL',
+        },
+      ),
     ).rejects.toBeInstanceOf(ConflictException);
     expect(query).toHaveBeenCalledTimes(3);
   });
