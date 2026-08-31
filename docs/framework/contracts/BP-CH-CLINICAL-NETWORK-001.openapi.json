@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "ClinicalNetwork — BP-CH-CLINICAL-NETWORK-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Clinicas credenciadas, profissionais e estacoes biometricas do PEC, relocados do schema auth para o dominio ch conforme ADR-0011.",
     "x-blueprint": "BP-CH-CLINICAL-NETWORK-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -142,32 +142,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": ["professional"],
-        "operationId": "createProfessional",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateProfessionalDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Professional"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/v1/ch/clinical-network/professionals/{id}": {
@@ -185,40 +159,6 @@
       "get": {
         "tags": ["professional"],
         "operationId": "getProfessional",
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Professional"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["professional"],
-        "operationId": "updateProfessional",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateProfessionalDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "ok",

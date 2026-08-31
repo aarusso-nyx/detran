@@ -4,8 +4,29 @@
   "module": {
     "name": "ClinicalNetwork",
     "namespace": "ch",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "40-ch-clinical-network.sql",
+    "handwrittenExports": [
+      "council-verification.http-adapter",
+      "professional-lifecycle.service",
+      "professional-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "professional-commands.controller",
+        "symbol": "ProfessionalCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "council-verification.http-adapter",
+        "symbol": "CouncilVerificationHttpAdapter"
+      },
+      {
+        "target": "professional-lifecycle.service",
+        "symbol": "ProfessionalLifecycleService"
+      }
+    ],
     "owners": ["detran-ch"],
     "description": "Clinicas credenciadas, profissionais e estacoes biometricas do PEC, relocados do schema auth para o dominio ch conforme ADR-0011."
   },
@@ -205,7 +226,7 @@
         "entity": "Professional",
         "path": "professionals",
         "resource": "professional",
-        "operations": ["list", "get", "create", "update"]
+        "operations": ["list", "get"]
       },
       {
         "entity": "BiometricStation",

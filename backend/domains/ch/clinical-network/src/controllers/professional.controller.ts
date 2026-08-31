@@ -1,4 +1,4 @@
-// Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:98288e4c3b1f3ff28eef48c4d363085a60a99484a1feac9cb173c792d0ac6a3e
+// Generated from BP-CH-CLINICAL-NETWORK-001 v1.1.0 sha256:6257f652f4d63bb50c213e96f5977765a32de34bf9f211bea0c1d69d6f2a54db
 import {
   Body,
   Controller,
@@ -21,17 +21,5 @@ export class ProfessionalController {
   }
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({ action: 'CH_PROFESSIONAL_CREATE', entity: 'ch.professional' })
-  create(@Body() dto: CreateProfessionalDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({ action: 'CH_PROFESSIONAL_UPDATE', entity: 'ch.professional' })
-  update(@Param('id') id: string, @Body() dto: Partial<CreateProfessionalDto>) {
-    return this.service.update(id, dto);
   }
 }

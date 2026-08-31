@@ -11,6 +11,7 @@ SELECT auth.create_rls_policy('audit', 'events_default');
 SELECT auth.create_rls_policy('integration', 'outbox');
 SELECT auth.create_rls_policy('integration', 'delivery_attempt');
 SELECT auth.create_rls_policy('integration', 'inbox_receipt');
+SELECT auth.create_rls_policy('integration', 'professional_council_cache');
 SELECT auth.create_rls_policy('storage', 'objects');
 
 -- W2.3 field operations port. Keep every ported tenant table explicit here so

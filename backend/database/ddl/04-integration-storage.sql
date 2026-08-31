@@ -61,6 +61,25 @@ CREATE TABLE IF NOT EXISTS integration.inbox_receipt (
 CREATE INDEX IF NOT EXISTS ix_integration_inbox_receipt_status
   ON integration.inbox_receipt (tenant_id, status, received_at);
 
+CREATE TABLE IF NOT EXISTS integration.professional_council_cache (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id uuid NOT NULL REFERENCES auth.tenants(id) ON DELETE CASCADE,
+  council_type varchar(8) NOT NULL CHECK (council_type IN ('CRM', 'CRP')),
+  council_number varchar(80) NOT NULL,
+  council_state varchar(2) NOT NULL CHECK (council_state ~ '^[A-Z]{2}$'),
+  professional_name varchar(255),
+  status varchar(16) NOT NULL CHECK (status IN ('ACTIVE', 'INACTIVE', 'SUSPENDED')),
+  provider_checked_at timestamptz NOT NULL,
+  response_sha256 varchar(64) NOT NULL CHECK (response_sha256 ~ '^[0-9a-f]{64}$'),
+  created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+  updated_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+  UNIQUE (tenant_id, council_type, council_number, council_state)
+);
+
+CREATE INDEX IF NOT EXISTS ix_integration_professional_council_status
+  ON integration.professional_council_cache
+  (tenant_id, council_type, status, provider_checked_at);
+
 CREATE TABLE IF NOT EXISTS storage.objects (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id uuid NOT NULL REFERENCES auth.tenants(id) ON DELETE CASCADE,
