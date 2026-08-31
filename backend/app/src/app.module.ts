@@ -36,6 +36,7 @@ import { ClinicalNetworkModule } from '@detran/ch-clinical-network';
 import { ClinicalReportsModule } from '@detran/ch-clinical-reports';
 import { EncountersModule } from '@detran/ch-encounters';
 import { ExamsModule } from '@detran/ch-exams';
+import { InconsistenciesModule } from '@detran/ch-inconsistencies';
 import { PatientsModule } from '@detran/ch-patients';
 import { ProcessBlocksModule } from '@detran/ch-process-blocks';
 import { RestrictionsModule } from '@detran/ch-restrictions';
@@ -189,6 +190,7 @@ export class AppModule {
         BillingModule,
         ExamsModule,
         ClinicalControlsModule,
+        InconsistenciesModule,
         ClinicalReportsModule,
         ProcessBlocksModule,
         TelehealthModule,

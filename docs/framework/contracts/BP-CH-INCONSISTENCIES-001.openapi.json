@@ -1,0 +1,216 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Inconsistencies — BP-CH-INCONSISTENCIES-001",
+    "version": "1.0.0",
+    "description": "Ciclo auditavel de inconsistencias de dados, com evidencias de deteccao e correcao separadas e transicoes estritamente progressivas.",
+    "x-blueprint": "BP-CH-INCONSISTENCIES-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/inconsistencies/records": {
+      "get": {
+        "tags": ["inconsistency"],
+        "operationId": "listInconsistency",
+        "summary": "List Inconsistency (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Inconsistency"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/inconsistencies/records/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["inconsistency"],
+        "operationId": "getInconsistency",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inconsistency"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Inconsistency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "source_system": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": [
+              "DETECTED",
+              "NOTIFIED",
+              "CORRECTED",
+              "REPROCESSED",
+              "CLOSED"
+            ],
+            "default": "'DETECTED'"
+          },
+          "detection_reason": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "detection_payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'{}'::jsonb"
+          },
+          "correction": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'{}'::jsonb"
+          },
+          "resolution_note": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "notified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "corrected_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reprocessed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "due_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "updated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "source_system",
+          "severity",
+          "detection_reason",
+          "due_at",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateInconsistencyDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "source_system": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+          },
+          "detection_reason": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "detection_payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": ["source_system", "severity", "detection_reason"]
+      }
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-INCONSISTENCIES-001",
+  "module": {
+    "name": "Inconsistencies",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "53-ch-inconsistencies.sql",
+    "dependencies": {
+      "@detran/ch-encounters": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "inconsistency-lifecycle.service",
+      "inconsistency-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "inconsistency-commands.controller",
+        "symbol": "InconsistencyCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "inconsistency-lifecycle.service",
+        "symbol": "InconsistencyLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Ciclo auditavel de inconsistencias de dados, com evidencias de deteccao e correcao separadas e transicoes estritamente progressivas."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Inconsistency",
+        "table": "inconsistency",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid", "nullable": true },
+          { "name": "source_system", "type": "varchar(80)" },
+          { "name": "severity", "type": "varchar(16)" },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'DETECTED'",
+            "writable": false
+          },
+          { "name": "detection_reason", "type": "varchar(500)" },
+          {
+            "name": "detection_payload",
+            "type": "jsonb",
+            "default": "'{}'::jsonb",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "correction",
+            "type": "jsonb",
+            "default": "'{}'::jsonb",
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "resolution_note",
+            "type": "text",
+            "nullable": true,
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "notified_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "corrected_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "reprocessed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "closed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "due_at", "type": "timestamptz", "writable": false },
+          { "name": "created_by", "type": "uuid", "writable": false },
+          {
+            "name": "updated_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_inconsistency_status",
+            "columns": ["tenant_id", "status", "due_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_inconsistency_source",
+            "expression": "source_system ~ '^[A-Z][A-Z0-9_]{1,79}$'"
+          },
+          {
+            "name": "ck_ch_inconsistency_severity",
+            "expression": "severity in ('LOW','MEDIUM','HIGH','CRITICAL')"
+          },
+          {
+            "name": "ck_ch_inconsistency_status",
+            "expression": "status in ('DETECTED','NOTIFIED','CORRECTED','REPROCESSED','CLOSED')"
+          },
+          {
+            "name": "ck_ch_inconsistency_timestamps",
+            "expression": "(status = 'DETECTED') or (status = 'NOTIFIED' and notified_at is not null) or (status = 'CORRECTED' and notified_at is not null and corrected_at is not null) or (status = 'REPROCESSED' and notified_at is not null and corrected_at is not null and reprocessed_at is not null) or (status = 'CLOSED' and notified_at is not null and corrected_at is not null and reprocessed_at is not null and closed_at is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_inconsistency_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/inconsistencies/",
+    "resources": [
+      {
+        "entity": "Inconsistency",
+        "path": "records",
+        "resource": "inconsistency",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}
