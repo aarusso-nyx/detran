@@ -1,5 +1,10 @@
 import { createHash } from 'node:crypto';
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
 import type {
@@ -63,6 +68,21 @@ export interface DispatchResult {
   error?: string;
 }
 
+export interface RenachAcknowledgementInput {
+  idempotencyKey: string;
+  status: 'ACKED' | 'ERROR';
+  providerProtocol?: string;
+  providerCode?: string;
+  message?: string;
+}
+
+export interface AcknowledgementResult {
+  eventId: string;
+  outboxId: string;
+  status: 'acked' | 'error';
+  duplicate: boolean;
+}
+
 @Injectable()
 export class PecRenachTransmissionService {
   constructor(
@@ -102,6 +122,128 @@ export class PecRenachTransmissionService {
     const results: DispatchResult[] = [];
     for (const item of claimed.rows) results.push(await this.dispatch(item));
     return results;
+  }
+
+  recordAcknowledgement(
+    eventId: string,
+    rawBody: Buffer,
+    input: RenachAcknowledgementInput,
+  ): Promise<AcknowledgementResult> {
+    if (!eventId.trim() || !input.idempotencyKey?.trim()) {
+      throw new BadRequestException(
+        'RENACH acknowledgement identity is required',
+      );
+    }
+    if (input.status !== 'ACKED' && input.status !== 'ERROR') {
+      throw new BadRequestException(
+        'Unsupported RENACH acknowledgement status',
+      );
+    }
+    if (input.status === 'ERROR' && !input.message?.trim()) {
+      throw new BadRequestException(
+        'RENACH error acknowledgement requires a message',
+      );
+    }
+    const payloadHash = createHash('sha256').update(rawBody).digest('hex');
+    return this.transaction(async (tx) => {
+      const inserted = await tx.query<{ id: string }>(
+        `insert into integration.inbox_receipt
+          (provider, event_id, payload_sha256, status)
+         values ('RENACH', $1, $2, 'received')
+         on conflict (tenant_id, provider, event_id) do nothing
+         returning id`,
+        [eventId, payloadHash],
+      );
+      const receipt = await tx.query<{
+        id: string;
+        payload_sha256: string;
+        status: 'received' | 'processed' | 'error';
+      }>(
+        `select id, payload_sha256, status
+           from integration.inbox_receipt
+          where provider = 'RENACH' and event_id = $1
+          for update`,
+        [eventId],
+      );
+      const currentReceipt = receipt.rows[0];
+      if (!currentReceipt || currentReceipt.payload_sha256 !== payloadHash) {
+        throw new ConflictException(
+          'RENACH event identity was reused with a different payload',
+        );
+      }
+      const outbox = await tx.query<{
+        id: string;
+        status: string;
+        attempts: number;
+      }>(
+        `select id, status, attempts from integration.outbox
+          where idempotency_key = $1 and topic = 'ch.renach.exam-result'
+          for update`,
+        [input.idempotencyKey],
+      );
+      const item = outbox.rows[0];
+      if (!item) {
+        throw new BadRequestException(
+          'RENACH acknowledgement target was not found',
+        );
+      }
+      if (!inserted.rows[0] && currentReceipt.status === 'processed') {
+        return {
+          eventId,
+          outboxId: item.id,
+          status: item.status === 'acked' ? 'acked' : 'error',
+          duplicate: true,
+        };
+      }
+      const requestedStatus = input.status === 'ACKED' ? 'acked' : 'error';
+      const effectiveStatus =
+        item.status === 'acked' && requestedStatus === 'error'
+          ? 'acked'
+          : requestedStatus;
+      await tx.query(
+        `update integration.delivery_attempt
+            set status = $3, provider_protocol = coalesce($4, provider_protocol),
+                provider_code = coalesce($5, provider_code),
+                provider_message = coalesce($6, provider_message),
+                response_sha256 = $7, completed_at = now()
+          where outbox_id = $1 and attempt_number = $2`,
+        [
+          item.id,
+          Math.max(1, item.attempts),
+          effectiveStatus,
+          input.providerProtocol ?? null,
+          input.providerCode ?? null,
+          input.message?.trim() ?? null,
+          payloadHash,
+        ],
+      );
+      await tx.query(
+        `update integration.outbox
+            set status = $2,
+                completed_at = case when $2 = 'acked' then now() else null end,
+                available_at = case
+                  when $2 = 'error' then now() + interval '15 minutes'
+                  else now()
+                end,
+                last_error = case when $2 = 'error' then $3 else null end,
+                updated_at = now()
+          where id = $1`,
+        [item.id, effectiveStatus, input.message?.trim() ?? null],
+      );
+      await tx.query(
+        `update integration.inbox_receipt
+            set status = 'processed', processed_at = now(),
+                error_details = null, updated_at = now()
+          where id = $1`,
+        [currentReceipt.id],
+      );
+      return {
+        eventId,
+        outboxId: item.id,
+        status: effectiveStatus,
+        duplicate: false,
+      };
+    });
   }
 
   private async dispatch(item: ClaimedOutboxItem): Promise<DispatchResult> {

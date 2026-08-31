@@ -64,6 +64,7 @@ import {
   PEC_RENACH_PORT,
   PecRenachTransmissionService,
 } from './pec-renach-transmission.service.js';
+import { RenachWebhookGuard } from './renach-webhook.guard.js';
 
 patchTenantContextInterceptorOrdering();
 
@@ -210,6 +211,7 @@ export class AppModule {
         DetranPolicyGuard,
         PecRenachProcessService,
         PecRenachTransmissionService,
+        RenachWebhookGuard,
         {
           provide: PEC_RENACH_PORT,
           useFactory: () => createSenatranAdapter().ports.renach,

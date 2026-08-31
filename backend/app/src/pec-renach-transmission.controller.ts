@@ -1,7 +1,19 @@
-import { Controller, Post, Query } from '@nestjs/common';
-import { Action, Audit, Resource } from '@detran/shared';
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { Action, Audit, Public, Resource } from '@detran/shared';
 
-import { PecRenachTransmissionService } from './pec-renach-transmission.service.js';
+import {
+  type RenachAcknowledgementInput,
+  PecRenachTransmissionService,
+} from './pec-renach-transmission.service.js';
+import { RenachWebhookGuard } from './renach-webhook.guard.js';
 
 @Controller('v1/ch/transmissions')
 @Resource('ch:transmission')
@@ -16,5 +28,24 @@ export class PecRenachTransmissionController {
   })
   dispatch(@Query('limit') limit?: string) {
     return this.transmissions.dispatchDue(limit ? Number(limit) : undefined);
+  }
+
+  @Post('callbacks/renach')
+  @Public()
+  @UseGuards(RenachWebhookGuard)
+  @Audit({
+    action: 'CH_RENACH_ACK_RECEIVED',
+    entity: 'integration.inbox_receipt',
+  })
+  acknowledge(
+    @Headers('x-renach-event-id') eventId: string,
+    @Req() request: { rawBody?: Buffer },
+    @Body() input: RenachAcknowledgementInput,
+  ) {
+    return this.transmissions.recordAcknowledgement(
+      eventId,
+      request.rawBody as Buffer,
+      input,
+    );
   }
 }
