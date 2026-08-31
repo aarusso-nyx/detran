@@ -1,12 +1,12 @@
-# Owner decisions — requirements handoff from detran-refs
+# Owner decisions — engineering projections from the canonical knowledge base
 
-**Source of truth:** `aarusso-nyx/detran-refs` @ commit `52e00a8`, `_meta/open-issues.md`
-(items DT-010 through DT-031, type `owner-decision`). This folder is a pointer and an actionable
-summary per domain, not a copy — for full legal citations and reasoning, read the source files in
-`detran-refs`.
+**Source of truth:** the in-repository
+[open-issues register](../knowledge-base/open-issues.md) and the linked product artifacts imported
+from provenance commit `7efec0667fbcb6253624636ed81f9c654b119e68`. This folder is an
+actionable engineering projection, not a competing copy of the rules.
 
 **Status.** These are Owner business/product decisions made on 2026-08-28, most **without a
-formal legal opinion** (the underlying rules stay `draft` in `detran-refs` pending parecer). They
+formal legal opinion** (the underlying canonical rules stay `draft` pending parecer). They
 resolve product ambiguity so design/engineering can proceed, but they do not certify legal
 correctness — where a decision carries residual legal risk, the source rule says so explicitly and
 this handoff repeats the caveat.

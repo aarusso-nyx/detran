@@ -16,3 +16,5 @@ binding; supersede only by a new ADR.
 | [ADR-0006](ADR-0006-detran-ui-kit.md)                            | Shared DETRAN Angular UI kit over STYNX                              |
 | [ADR-0007](ADR-0007-regenerable-blueprints.md)                   | Blueprint output is regenerable-only                                 |
 | [ADR-0008](ADR-0008-senatran-port-provider-and-feature-flags.md) | SENATRAN port, provider and feature-flag design                      |
+| [ADR-0009](ADR-0009-generated-openapi-contracts.md)              | API contracts generated from blueprints                              |
+| [ADR-0010](ADR-0010-canonical-business-legal-knowledge-base.md)  | Canonical business and legal knowledge base                          |

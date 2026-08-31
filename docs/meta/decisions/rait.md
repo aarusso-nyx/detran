@@ -1,7 +1,12 @@
 # RAIT — owner decisions (2026-08-28)
 
-**Source of truth:** `detran-refs` @ `52e00a8`, `inf/rait/rules/RN-RAIT-113.md`, `RN-RAIT-129.md`,
-`RN-RAIT-130.md`, `inf/rait/workflows/WF-RAIT-001.md`, `WF-RAIT-002.md`, `WF-RAIT-003.md`.
+**Source of truth:** canonical in-repository rules
+[RN-RAIT-113](../../framework/product/domains/inf/rait/rules/RN-RAIT-113.md),
+[RN-RAIT-129](../../framework/product/domains/inf/rait/rules/RN-RAIT-129.md), and
+[RN-RAIT-130](../../framework/product/domains/inf/rait/rules/RN-RAIT-130.md), plus workflows
+[WF-RAIT-001](../../framework/product/domains/inf/rait/workflows/WF-RAIT-001.md),
+[WF-RAIT-002](../../framework/product/domains/inf/rait/workflows/WF-RAIT-002.md), and
+[WF-RAIT-003](../../framework/product/domains/inf/rait/workflows/WF-RAIT-003.md).
 Directly actionable — RAIT has real code in `backend/domains/inf/{rait-case,rait-worklist,
 rait-session}` and DDL in `backend/database/ddl/34-36-inf-rait-*.sql`.
 

@@ -6,4 +6,5 @@ as the corresponding phases deliver them.
 ## LGPD
 
 - [`lgpd-rait.md`](lgpd-rait.md) — RAIT domain: legal-basis, sensitive-data, retention and
-  data-sharing findings handed off from `detran-refs` (requirements only, not yet implemented).
+  data-sharing engineering projection from the canonical in-repository knowledge base
+  (requirements only, not yet implemented).

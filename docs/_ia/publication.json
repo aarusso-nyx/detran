@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "schemaVersion": "1.0.0",
+  "dryRunOutput": "tmp/docs-kb-publish",
+  "always": [
+    "docs/README.md",
+    "docs/framework/product/README.md",
+    "docs/framework/glossary/README.md",
+    "docs/reference/index.md"
+  ],
+  "product": {
+    "roots": [
+      "docs/framework/product/domains",
+      "docs/framework/product/transversal",
+      "docs/framework/product/shared",
+      "docs/framework/glossary/domain.md"
+    ],
+    "statuses": ["reviewed", "approved"]
+  },
+  "legal": {
+    "catalog": "docs/reference/legal/index.md",
+    "publishCatalogEntries": true,
+    "publishRawAssets": false
+  },
+  "exclude": [
+    "**/_intake/**",
+    "**/*.{pdf,html,txt,docx}",
+    "docs/meta/knowledge-base/**",
+    "docs/reference/institutional/**",
+    "artifacts with status draft or stub"
+  ]
+}

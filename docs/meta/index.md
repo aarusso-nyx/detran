@@ -11,3 +11,5 @@ Engineering documentation about the repository itself.
 - [eng/](eng/) — engineering baseline and conventions.
 - [ops/](ops/) — operations runbooks.
 - [security/](security/) — security notes and threat models.
+- [knowledge-base/](knowledge-base/index.md) — internal research, queues, templates, and immutable
+  provenance for the absorbed business/legal corpus.

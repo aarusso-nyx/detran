@@ -1,10 +1,12 @@
 # PEC — owner decisions (2026-08-28)
 
-**Source of truth:** `detran-refs` @ `52e00a8`, `ch/pec/rules/RN-PEC-113.md`, `RN-PEC-105.md`,
-`RN-PEC-141.md`, `RN-PEC-110.md`, `ch/pec/use-cases/UC-PEC-013.md`, `UC-PEC-011.md`,
-`UC-PEC-014.md`, `UC-PEC-012.md`, `UC-PEC-005.md`, `UC-PEC-010.md`, `ch/pec/workflows/
-WF-PEC-005.md`. Forward-looking — `ch` is still an empty placeholder domain in this monorepo (2
-files, no implementation). Capture these now so they're not re-litigated once PEC gets ported.
+**Source of truth:** canonical in-repository PEC
+[rules](../../framework/product/domains/ch/pec/rules/),
+[use cases](../../framework/product/domains/ch/pec/use-cases/), and
+[workflows](../../framework/product/domains/ch/pec/workflows/), including `RN-PEC-113`,
+`RN-PEC-105`, `RN-PEC-141`, `RN-PEC-110`, and `WF-PEC-005`. Forward-looking — `ch` is still an
+empty placeholder domain in this monorepo (2 files, no implementation). Capture these now so
+they're not re-litigated once PEC gets ported.
 
 ## DT-021 — exam-distribution regime (`RN-PEC-113`, `UC-PEC-013`)
 

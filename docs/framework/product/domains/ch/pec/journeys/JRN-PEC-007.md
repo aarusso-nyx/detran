@@ -1,0 +1,99 @@
+---
+id: JRN-PEC-007
+title: Manhã de exames da Dra. Patrícia — sessão única, janela de 08h-13h, e a realidade operacional do dia de atendimento
+status: draft
+apps: [pec]
+sources:
+  - REF-DETRANAM-PORTARIA-005-2021
+  - REF-CFM-1636-2002
+  - WF-PEC-001
+  - WF-PEC-003
+updated: 2026-08-24
+---
+
+## Persona e contexto
+
+Patrícia é médica perita examinadora de trânsito, credenciada em uma clínica de Manaus. Seu
+dia de atendimento é uma janela curta e rígida, não um turno flexível: [REF-DETRANAM-PORTARIA-
+005-2021] arts. 6º e 40 exigem que "os atendimentos deverão ocorrer, de forma exclusiva, no
+local e horário indicado no requerimento do credenciamento" e que as clínicas "funcionarão,
+obrigatoriamente, no horário de 08h00min às 13h00min" em dias úteis (extensível a dias não
+úteis mediante aviso à Gerência Médica e Psicológica). Cinco horas, uma janela fixa, um local
+único por sessão — é o piso operacional real sobre o qual toda tela de atendimento clínico do
+PEC precisa funcionar. Somado a isso, [REF-CFM-1636-2002] art. 4º, parágrafo único veda "exames
+simultâneos em grupos de pacientes" — o exame é sempre individualizado, uma sessão de cada vez.
+Esta jornada é a primeira do corpus PEC escrita do ponto de vista de quem trabalha _dentro_
+dessa janela, não de quem passa por ela uma vez.
+
+## Narrativa ponta-a-ponta
+
+1. **08h00 — a janela abre, e não há flexibilidade de horário para compensar atraso.** Se
+   Patrícia começa às 08h15 por qualquer motivo operacional (energia, sistema, atraso de
+   paciente), ela não ganha 15 minutos a mais no fim — a janela fecha às 13h00 de qualquer
+   forma. Qualquer painel de agenda que ela usa precisa mostrar, desde o primeiro paciente,
+   quantos atendimentos cabem realisticamente no tempo restante, não apenas a lista de quem
+   está agendado.
+2. **Um paciente de cada vez, do início ao fim — "sessão única" não é jargão do sistema, é a
+   forma como a lei estrutura o atendimento.** Patrícia não pode abrir o encounter do paciente
+   B enquanto ainda está em algum ponto do encounter do paciente A — não porque o software
+   bloqueia (a máquina de estados de [WF-PEC-001] não impõe essa exclusividade explicitamente),
+   mas porque a norma exige exame individualizado e sem simultaneidade. A tela de trabalho de
+   Patrícia deveria refletir essa realidade de negócio — um encounter ativo por vez, claramente
+   destacado — mesmo que o backend hoje permita, tecnicamente, múltiplos encounters abertos em
+   paralelo.
+3. **A ordem dos atendimentos é exclusivamente na clínica declarada — sem "encaixar" um
+   paciente de outra unidade no meio da manhã.** Art. 6º: local e horário são os declarados no
+   credenciamento. Se Patrícia atende em duas clínicas credenciadas em dias diferentes, a
+   agenda de cada manhã pertence a uma única unidade — a tela de agenda não deveria permitir
+   misturar pacientes de clínicas diferentes na mesma sessão da manhã, mesmo que fosse
+   tecnicamente conveniente.
+4. **A armadilha operacional real: "primeiro laudo assinado força `SIGNED`".** [WF-PEC-001]
+   documenta um comportamento observado no sistema — assinar o primeiro dos dois laudos
+   (médico ou psicológico) do encounter empurra o status para `SIGNED` incondicionalmente, o
+   que pode impedir o segundo profissional de assinar de forma independente pela mesma rota.
+   Numa janela de cinco horas com múltiplos pacientes, esse é exatamente o tipo de
+   comportamento que gera atrito silencioso: Patrícia assina o laudo médico de um paciente,
+   e minutos depois o psicólogo da mesma clínica não consegue finalizar o laudo psicológico do
+   mesmo paciente pelo caminho esperado. Enquanto esse comportamento não for corrigido no
+   backend, a tela de Patrícia precisa, no mínimo, **avisá-la explicitamente** antes de assinar
+   se o laudo do outro profissional ainda não existe — para que ela não gere, sem saber, um
+   bloqueio para o colega no meio da manhã corrida.
+5. **Interrupção é parte do dia, não exceção — mas sem o mesmo motivo de campo do BOAT.**
+   Diferente do agente de trânsito em cena de sinistro ([JRN-BOAT-001]), a interrupção aqui é
+   de fila: um paciente com dúvida, um telefonema da recepção, um caso de exceção biométrica
+   (ver [JRN-PEC-003]) que precisa da aprovação de um Supervisor no meio do atendimento de
+   outro. Nenhuma tela deveria perder o estado do encounter em andamento de Patrícia por causa
+   dessas interrupções curtas e normais do fluxo da manhã.
+6. **13h00 — a janela fecha, e o que não coube não "atrasa" para a tarde por padrão.** Se a
+   clínica não avisou a Gerência Médica e Psicológica sobre atendimento em dia não útil (§único
+   do art. 40), pacientes não atendidos até 13h não têm, pelos documentos capturados, um
+   caminho automático de continuação no mesmo dia — a tela de agenda deveria deixar isso
+   explícito para Patrícia e para a recepção, em vez de simplesmente deixar o paciente "preso"
+   numa fila sem previsão.
+7. **Fechamento do dia.** Patrícia revisa quantos encounters abriu, quantos fechou dentro da
+   janela, e quantos ficaram pendentes de laudo/assinatura — não como uma métrica de
+   produtividade punitiva, mas como visibilidade operacional honesta sobre o que a janela de
+   cinco horas realmente comporta, informação que ajuda o Gestor da clínica a dimensionar
+   agenda (ver handoff BPO do dossiê de pesquisa: a janela de 08h-13h, com dois exames por
+   candidato, é dado direto de dimensionamento).
+
+## Pontos de contato (apps/canais)
+
+- PEC — console clínico (agenda do dia, atendimento, emissão/assinatura de laudo).
+- Recepção da clínica — agenda e check-in dentro da mesma janela.
+- Supervisor — aprovações pontuais (exceção biométrica, retificação) que podem interromper o
+  fluxo da manhã de Patrícia.
+
+## Métricas de sucesso
+
+- Zero encounter de um paciente aberto enquanto outro do mesmo profissional ainda está em
+  andamento — sessão única respeitada na experiência de tela, mesmo onde o backend não impõe
+  isso hoje.
+- Zero assinatura de laudo disparada sem aviso prévio de que ela força `SIGNED` e pode
+  bloquear a assinatura independente do outro profissional — mitigação de tela para um bug de
+  workflow já documentado em [WF-PEC-001].
+- Painel de agenda mostrando, a qualquer momento da manhã, quantos atendimentos cabem
+  realisticamente no tempo restante até 13h00 — não apenas a lista de agendados.
+- Nenhum paciente não atendido até 13h00 deixado em estado ambíguo — a tela comunica
+  explicitamente que não há continuidade automática no mesmo dia, salvo aviso prévio de
+  atendimento em dia não útil.

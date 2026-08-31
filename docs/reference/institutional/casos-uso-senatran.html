@@ -1,0 +1,525 @@
+<title>Casos de Uso SENATRAN</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600;6..72,700&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#F6F7F4; --panel:#FFFFFF; --panel-2:#EFF2EC;
+    --ink:#12211C; --muted:#5B6A62; --line:#DCE1D8;
+    --deep:#0E4F42; --deep-soft:#E4EDE9;
+    --steel:#23617E; --steel-soft:#E5EDF2;
+    --copper:#A45C1E; --copper-soft:#F5EBDF;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1512; --panel:#16201C; --panel-2:#1B2622;
+      --ink:#E8EDE7; --muted:#94A39A; --line:#2C3833;
+      --deep:#4FBFA3; --deep-soft:#12302A;
+      --steel:#7FB4D0; --steel-soft:#14262F;
+      --copper:#D89452; --copper-soft:#2E2115;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1512; --panel:#16201C; --panel-2:#1B2622;
+    --ink:#E8EDE7; --muted:#94A39A; --line:#2C3833;
+    --deep:#4FBFA3; --deep-soft:#12302A;
+    --steel:#7FB4D0; --steel-soft:#14262F;
+    --copper:#D89452; --copper-soft:#2E2115;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg); color:var(--ink); margin:0; padding:0 1.25rem 5rem;
+    font-family:Archivo,system-ui,sans-serif; font-size:16px; line-height:1.6}
+  .wrap{max-width:1120px;margin:0 auto}
+  .prose{max-width:70ch}
+  .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--muted)}
+  header{padding:3.5rem 0 0}
+  h1{font-family:Newsreader,Georgia,serif; font-weight:600; font-size:clamp(2.1rem,5vw,3.2rem);
+    line-height:1.06; letter-spacing:-.02em; margin:.6rem 0 1rem; text-wrap:balance}
+  h1 em{font-style:italic; color:var(--deep)}
+  .lede{font-size:1.1rem; max-width:66ch; margin:0 0 1.6rem}
+  h2{font-family:Newsreader,Georgia,serif; font-weight:600; font-size:clamp(1.4rem,3vw,1.85rem);
+    letter-spacing:-.01em; margin:0 0 .35rem; text-wrap:balance}
+  h3{font-family:Newsreader,Georgia,serif; font-weight:600; font-size:1.08rem; margin:1.6rem 0 .4rem}
+  section{padding:3rem 0 0; border-top:1px solid var(--line); margin-top:3rem}
+  section:first-of-type{border-top:0}
+  p{margin:0 0 1rem}
+  .dom{display:flex; align-items:baseline; gap:.7rem; flex-wrap:wrap; margin-bottom:.2rem}
+  .dom .code{font-family:"IBM Plex Mono",monospace; font-size:.78rem; color:var(--steel);
+    background:var(--steel-soft); padding:.14rem .5rem; border-radius:3px}
+  .tbl-wrap{overflow-x:auto; margin-top:1.2rem}
+  table{border-collapse:collapse; width:100%; min-width:820px; font-size:.88rem}
+  th,td{text-align:left; padding:.55rem .6rem; border-bottom:1px solid var(--line); vertical-align:top}
+  thead th{font-family:"IBM Plex Mono",monospace; font-size:.67rem; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--muted); font-weight:500; white-space:nowrap;
+    border-bottom:2px solid var(--line)}
+  tbody tr:nth-child(odd){background:var(--panel)}
+  td.n{font-family:"IBM Plex Mono",monospace; color:var(--muted); font-size:.8rem; white-space:nowrap}
+  /* só o título do caso de uso (2ª coluna) é bloco; na coluna da operação o negrito
+     é ênfase dentro da frase e precisa continuar inline */
+  td:nth-child(2) > b{display:block; margin-bottom:.15rem}
+  .who{font-family:"IBM Plex Mono",monospace; font-size:.7rem; color:var(--deep); letter-spacing:.04em}
+  .base{display:block; font-size:.76rem; color:var(--muted); margin-top:.25rem}
+  .t{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:.68rem;
+    padding:.1rem .42rem; border-radius:3px; white-space:nowrap}
+  .t.r{background:var(--steel-soft); color:var(--steel)}
+  .t.m{background:var(--copper-soft); color:var(--copper)}
+  .t.i{background:var(--deep-soft); color:var(--deep)}
+  .t.n{background:var(--panel-2); color:var(--muted)}
+  .note{background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--copper);
+    border-radius:4px; padding:1rem 1.15rem; margin-top:1.4rem}
+  .note p:last-child{margin-bottom:0}
+  .note b{color:var(--ink)}
+  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; margin-top:1.4rem}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:6px;
+    padding:1rem 1.1rem; border-top:3px solid var(--deep)}
+  .card h3{margin:0 0 .35rem; font-size:1.02rem}
+  .card p{font-size:.88rem; margin:0; color:var(--muted)}
+  .legend{display:flex; gap:1.4rem; flex-wrap:wrap; margin-top:1rem; font-size:.84rem; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:.4rem}
+  ul{margin:.3rem 0 1rem; padding-left:1.15rem} li{margin-bottom:.4rem}
+  footer{margin-top:3.5rem; padding-top:1.6rem; border-top:1px solid var(--line);
+    color:var(--muted); font-size:.86rem}
+
+  @media print{
+    :root{--bg:#FFFFFF;--panel:#FFFFFF;--panel-2:#F2F4EF;--ink:#12211C;--muted:#55635B;
+      --line:#C9D1C7;--deep:#0E4F42;--deep-soft:#E8F0EC;--steel:#23617E;--steel-soft:#E9F0F4;
+      --copper:#96541B;--copper-soft:#F7EFE4}
+    @page{size:A4; margin:13mm 11mm}
+    body{padding:0; font-size:9.4pt; line-height:1.44; background:#fff}
+    .wrap{max-width:none} header{padding:0}
+    h1{font-size:26pt; margin:.3rem 0 .6rem} .lede{font-size:10.5pt}
+    h2{font-size:14pt; break-after:avoid} h3{font-size:10.5pt; break-after:avoid}
+    .eyebrow{font-size:7.2pt; break-after:avoid}
+    section{padding-top:1.2rem; margin-top:1.2rem}
+    .tbl-wrap{overflow:visible} table{min-width:0; font-size:8pt}
+    th,td{padding:.3rem .35rem}
+    tr,.card,.note,.legend{break-inside:avoid}
+    thead{display:table-header-group}
+    .base{font-size:7.2pt} .t{font-size:6.6pt} .who{font-size:6.8pt}
+    .card p{font-size:8.2pt}
+    footer{margin-top:1.6rem; padding-top:.9rem; font-size:8pt}
+  }
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">NYX Knowledge · DETRAN-AM · Processo de homologação · Agosto de 2026</p>
+  <h1>Casos de uso da <em>API SENATRAN</em><br>no ecossistema DETRAN-AM</h1>
+  <p class="lede">Este documento relaciona, por domínio, os usos que as aplicações do ecossistema
+  fazem — ou precisarão fazer — das interfaces oficiais da SENATRAN. Cada linha descreve o caso de
+  uso na aplicação, a operação necessária em linguagem funcional, a natureza da chamada e o
+  dispositivo normativo que a exige.</p>
+
+  <div class="note">
+    <p><b>Sobre a descrição das operações.</b> Ainda não dispomos da documentação oficial das
+    interfaces. Por isso, as operações estão descritas por <b>função pretendida</b> — “submissão de
+    auto de infração”, “envio de resultado de exame médico” — e não por caminho, verbo ou esquema
+    de dados. Onde a natureza da operação impõe requisitos técnicos (idempotência, reenvio seguro,
+    processamento assíncrono), isso está declarado, pois define como construímos o cliente e como
+    pretendemos nos comportar em produção.</p>
+    <p>O desenho atual foi validado contra uma réplica interna construída a partir das convenções
+    públicas conhecidas. Divergências em relação ao contrato oficial são esperadas e serão
+    absorvidas no adaptador, sem alteração das aplicações.</p>
+  </div>
+
+  <div class="legend">
+    <span><i class="t r">consulta</i> leitura, sem efeito de estado</span>
+    <span><i class="t m">mutação</i> cria ou altera registro nacional</span>
+    <span><i class="t i">idempotente</i> reenvio seguro com chave determinística</span>
+    <span><i class="t n">assíncrono</i> aceite com protocolo e apuração posterior</span>
+  </div>
+</header>
+
+<section>
+  <p class="eyebrow">Contexto</p>
+  <h2>Quem consome e por quê</h2>
+  <div class="prose">
+    <p>O ecossistema é composto por seis aplicações que cobrem, de ponta a ponta, o ciclo de vida
+    do trânsito no âmbito do órgão executivo estadual: lavratura em campo, processo administrativo
+    de infração, recursos, registro de sinistros, aptidão do condutor e atendimento ao cidadão.
+    Nenhuma delas conversa diretamente com a SENATRAN: todo o tráfego atravessa um adaptador único,
+    que concentra credenciais, política de reenvio, chaves de idempotência e trilha de auditoria.</p>
+    <p>Esse desenho tem consequência direta para a homologação: <b>o ponto de integração a ser
+    homologado é um só</b>, com comportamento uniforme, independentemente de quantas aplicações
+    estejam em operação.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>TEAT · talonário eletrônico</h3><p>Lavratura do auto em campo, com operação offline, numeração controlada e evidências.</p></div>
+    <div class="card"><h3>RAIT · recursos administrativos</h3><p>Defesa prévia, penalidade, JARI e CETRAN, com prazos vigiados.</p></div>
+    <div class="card"><h3>BOAT · sinistros</h3><p>Boletim de acidentalidade em campo e por instituições parceiras.</p></div>
+    <div class="card"><h3>PEC · aptidão do condutor</h3><p>Exame médico e avaliação psicológica em clínicas credenciadas.</p></div>
+    <div class="card"><h3>PORTAL · cidadão</h3><p>Consultas, adesão à notificação eletrônica, defesa, recurso e pagamento.</p></div>
+    <div class="card"><h3>DASHBOARD · operação</h3><p>Vigilância de prazos legais e da saúde das integrações.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="dom"><h2>Infrações</h2><span class="code">RENAINF</span></div>
+  <p class="eyebrow">TEAT · RAIT · PORTAL</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Nº</th><th style="width:31%">Caso de uso na aplicação</th><th style="width:33%">Operação necessária</th><th>Natureza</th></tr></thead>
+    <tbody>
+      <tr><td class="n">INF-01</td>
+        <td><b>Agente lavra o auto de infração em campo</b><span class="who">TEAT</span>
+          <span class="base">CTB art. 280-281 · Res. CONTRAN 918/2022 art. 3º · Port. SENATRAN 997/2022</span></td>
+        <td><b>Submissão de auto de infração</b> lavrado em dispositivo homologado, individual ou em lote, com número de série reservado, enquadramento, local, evidências referenciadas por hash e identificação do agente.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-02</td>
+        <td><b>Dispositivo reserva numeração antes de sair para a rua</b><span class="who">TEAT</span>
+          <span class="base">Port. SENATRAN 997/2022 — operação offline</span></td>
+        <td><b>Reserva e sincronização de faixas de numeração de AIT</b>, com devolução do intervalo concedido, prazo de validade e baixa dos números efetivamente consumidos.</td>
+        <td><i class="t m">mutação</i> <i class="t r">consulta</i></td></tr>
+      <tr><td class="n">INF-03</td>
+        <td><b>Registro e sincronização do talonário</b><span class="who">TEAT</span>
+          <span class="base">Port. SENATRAN 997/2022 — sessão exclusiva por dispositivo</span></td>
+        <td><b>Sincronização de dispositivos e sessões</b>: registro do par dispositivo/versão homologada, abertura e encerramento de sessão do agente, e sinalização de concorrência entre dispositivos.</td>
+        <td><i class="t m">mutação</i></td></tr>
+      <tr><td class="n">INF-04</td>
+        <td><b>Auto lavrado com inconsistência é cancelado</b><span class="who">TEAT · RAIT</span>
+          <span class="base">CTB art. 281, § 1º</span></td>
+        <td><b>Solicitação de cancelamento de auto</b>, com motivo estruturado e identificação da autoridade que determinou o cancelamento.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-05</td>
+        <td><b>Abertura e acompanhamento do processo administrativo</b><span class="who">RAIT</span>
+          <span class="base">CTB arts. 281-282 · Res. 918/2022 arts. 4º e 9º</span></td>
+        <td><b>Abertura de processo administrativo de infração</b> e consulta de sua situação, com o vínculo ao auto que lhe deu origem.</td>
+        <td><i class="t m">mutação</i> <i class="t r">consulta</i></td></tr>
+      <tr><td class="n">INF-06</td>
+        <td><b>Notificação da autuação é expedida</b><span class="who">RAIT</span>
+          <span class="base">Res. 918/2022 art. 4º — prazo de 30 dias</span></td>
+        <td><b>Registro da notificação de autuação</b>, com data de expedição e a data-limite de defesa que passa a correr.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-07</td>
+        <td><b>Proprietário indica o real condutor infrator</b><span class="who">PORTAL → RAIT</span>
+          <span class="base">Res. 918/2022 art. 5º e § 6º — registro no RENACH</span></td>
+        <td><b>Submissão de indicação de condutor</b>, com os dados do condutor apontado e a confirmação de aceite ou recusa, para que a indicação produza efeito e fique disponível à averiguação de reincidência.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-08</td>
+        <td><b>Interessado apresenta defesa prévia</b><span class="who">PORTAL → RAIT</span>
+          <span class="base">Res. CONTRAN 900/2022 · Res. 918/2022 art. 9º</span></td>
+        <td><b>Submissão de defesa da autuação</b>, com identificação do requerente, um único auto por requerimento e referência aos anexos por metadados (nome, tipo, hash) — os arquivos permanecem sob custódia do órgão.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-09</td>
+        <td><b>Penalidade é aplicada e notificada</b><span class="who">RAIT</span>
+          <span class="base">Res. 918/2022 arts. 9º § 2º e 12</span></td>
+        <td><b>Registro de aplicação de penalidade</b> e <b>registro da notificação da penalidade</b>, com valor, data-limite de recurso e de pagamento.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-10</td>
+        <td><b>Interessado interpõe recurso à JARI ou ao CETRAN</b><span class="who">PORTAL → RAIT</span>
+          <span class="base">CTB arts. 285-289 · Res. 918/2022 arts. 15-16</span></td>
+        <td><b>Submissão de recurso</b>, com a instância a que se dirige e o vínculo ao recurso anterior quando for segunda instância.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-11</td>
+        <td><b>Colegiado julga e a decisão é comunicada</b><span class="who">RAIT</span>
+          <span class="base">CTB arts. 285-290 · Res. 918/2022 arts. 17-18</span></td>
+        <td><b>Registro do julgamento do recurso</b>, com resultado, fundamentação e referência à decisão assinada digitalmente — e, no encerramento da instância, a liberação para registro da penalidade no prontuário.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">INF-12</td>
+        <td><b>Cidadão e analista acompanham o processo</b><span class="who">RAIT · PORTAL</span>
+          <span class="base">CTB art. 285 § 4º · Lei 13.460/2017 art. 5º</span></td>
+        <td><b>Consulta de processo, recurso e histórico de julgamento</b>, para exibir a situação real ao interessado e instruir a instância seguinte sem exigir dele documento que o órgão já possui.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">INF-13</td>
+        <td><b>Cidadão consulta e quita o débito</b><span class="who">PORTAL</span>
+          <span class="base">CTB art. 284 · Res. 918/2022 arts. 20-23</span></td>
+        <td><b>Consulta de débito da infração</b> e <b>registro do pagamento</b>, com a faixa de desconto aplicável e o efeito do recurso pendente sobre a exigibilidade.</td>
+        <td><i class="t r">consulta</i> <i class="t m">mutação</i></td></tr>
+      <tr><td class="n">INF-14</td>
+        <td><b>Consulta de infrações por diversos critérios</b><span class="who">TEAT · RAIT · PORTAL</span>
+          <span class="base">CTB art. 257 · Res. 918/2022</span></td>
+        <td><b>Consulta de infrações</b> por número do auto, placa, CPF ou CNPJ, registro de habilitação e órgão autuador, incluindo ocorrências e pagamentos associados.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">INF-15</td>
+        <td><b>Infração cometida fora da UF de registro</b><span class="who">RAIT</span>
+          <span class="base">CTB art. 287 — protocolo no órgão de domicílio</span></td>
+        <td><b>Encaminhamento interestadual</b> de defesa ou recurso protocolado no órgão de domicílio do interessado ao órgão autuador competente.</td>
+        <td><i class="t m">mutação</i></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="dom"><h2>Sinistros de trânsito</h2><span class="code">RENAEST</span></div>
+  <p class="eyebrow">BOAT · DASHBOARD</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Nº</th><th style="width:31%">Caso de uso na aplicação</th><th style="width:33%">Operação necessária</th><th>Natureza</th></tr></thead>
+    <tbody>
+      <tr><td class="n">EST-01</td>
+        <td><b>Agente registra o sinistro na cena</b><span class="who">BOAT</span>
+          <span class="base">CTB art. 326-A · Res. CONTRAN 808/2020</span></td>
+        <td><b>Submissão de boletim de sinistro</b>, com local, dinâmica, veículos, pessoas e vítimas, classificado por gravidade, individual ou em lote — a submissão pode ocorrer horas após o fato, por indisponibilidade de rede na cena.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i> <i class="t n">assíncrono</i></td></tr>
+      <tr><td class="n">EST-02</td>
+        <td><b>Dados chegam depois do registro inicial</b><span class="who">BOAT</span>
+          <span class="base">Res. 808/2020 — consolidação estadual</span></td>
+        <td><b>Complementação de sinistro já submetido</b>, para o caso em que a informação só existe depois: identificação de envolvido, evolução do quadro de uma vítima, laudo posterior.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">EST-03</td>
+        <td><b>Erro material é corrigido</b><span class="who">BOAT</span>
+          <span class="base">Res. 808/2020 art. 4º § 3º — atestação de consistência</span></td>
+        <td><b>Correção de sinistro</b>, preservando o registro original e a autoria da correção.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">EST-04</td>
+        <td><b>Coordenador acompanha a validação</b><span class="who">BOAT · DASHBOARD</span>
+          <span class="base">Res. 808/2020 arts. 8º-9º — validação em três níveis</span></td>
+        <td><b>Consulta de sinistro por identificador ou protocolo</b>, com a situação na cadeia de validação e o motivo em caso de rejeição.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">EST-05</td>
+        <td><b>Busca operacional de sinistros</b><span class="who">BOAT · DASHBOARD</span>
+          <span class="base">Res. 808/2020 — estatística e gestão</span></td>
+        <td><b>Consulta de sinistros por critérios</b> — placa, CPF de condutor, período, órgão — para reconciliar pendências e evitar registro duplicado.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">EST-06</td>
+        <td><b>Verificação de histórico do veículo</b><span class="who">BOAT · TEAT</span>
+          <span class="base">Res. 808/2020</span></td>
+        <td><b>Consulta de indicador de sinistro</b> por placa ou chassi, para checar antecedente relevante ao atendimento.</td>
+        <td><i class="t r">consulta</i></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="dom"><h2>Condutor e habilitação</h2><span class="code">RENACH</span></div>
+  <p class="eyebrow">PEC · PORTAL</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Nº</th><th style="width:31%">Caso de uso na aplicação</th><th style="width:33%">Operação necessária</th><th>Natureza</th></tr></thead>
+    <tbody>
+      <tr><td class="n">CH-01</td>
+        <td><b>Abertura do processo de habilitação</b><span class="who">PEC</span>
+          <span class="base">CTB art. 147 · Res. CONTRAN 789/2020</span></td>
+        <td><b>Abertura de processo de habilitação</b> para o candidato, com o tipo de processo, e recuperação do número do processo quando ele já existir — hoje tratamos a reabertura como retorno idempotente, não como erro.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">CH-02</td>
+        <td><b>Verificação de elegibilidade antes do exame</b><span class="who">PEC</span>
+          <span class="base">Res. CONTRAN 927/2022 · Res. 923/2022</span></td>
+        <td><b>Consulta de elegibilidade para exame</b>, indicando se a etapa é devida, se há impedimento e se o exame toxicológico exigido está válido.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">CH-03</td>
+        <td><b>Distribuição do candidato à clínica</b><span class="who">PEC</span>
+          <span class="base">Res. 927/2022 · Res. CFM 1.636/2002 art. 3º</span></td>
+        <td><b>Consulta de clínicas e profissionais credenciados</b>, com situação do credenciamento e especialidade — é o insumo do sorteio imparcial exigido pela norma do conselho.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">CH-04</td>
+        <td><b>Agendamento e comparecimento</b><span class="who">PEC</span>
+          <span class="base">Res. 927/2022</span></td>
+        <td><b>Registro de agendamento e de check-in</b> do candidato na clínica, com data, unidade e profissional responsável.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">CH-05</td>
+        <td><b>Perito conclui o exame médico</b><span class="who">PEC</span>
+          <span class="base">CTB art. 147 · Res. 927/2022 arts. 8º-9º</span></td>
+        <td><b>Envio de resultado de exame médico</b>, com o resultado no vocabulário oficial — apto, apto com restrições, inapto temporário ou inapto —, os códigos de restrição aplicáveis e a referência ao laudo assinado digitalmente, que permanece sob custódia do órgão.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">CH-06</td>
+        <td><b>Psicólogo conclui a avaliação</b><span class="who">PEC</span>
+          <span class="base">Res. 927/2022 · Res. CFP 01/2019</span></td>
+        <td><b>Envio de resultado de avaliação psicológica</b>, no mesmo formato de resultado e com a mesma referência ao laudo assinado.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">CH-07</td>
+        <td><b>Laudo é retificado por adendo</b><span class="who">PEC</span>
+          <span class="base">Res. CFM 1.636/2002 · Lei 13.787/2018</span></td>
+        <td><b>Envio de retificação de resultado</b>, que referencia o resultado original sem apagá-lo — o laudo é imutável e a correção se faz por adendo.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">CH-08</td>
+        <td><b>Candidato recorre à junta</b><span class="who">PEC</span>
+          <span class="base">Res. 927/2022 arts. 12-15 — três instâncias</span></td>
+        <td><b>Encaminhamento à junta</b> e <b>envio do parecer da junta</b>, identificando a instância — junta local, instância recursal e junta especial de saúde — e o resultado que prevalece.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">CH-09</td>
+        <td><b>Identificação do condutor no atendimento</b><span class="who">PEC · PORTAL</span>
+          <span class="base">CTB art. 147 § 1º — pessoalidade do ato</span></td>
+        <td><b>Consulta de condutor e de habilitação</b> por CPF, registro, PGU ou número do formulário, incluindo situação da CNH e impedimentos.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">CH-10</td>
+        <td><b>Validação de presença do candidato</b><span class="who">PEC</span>
+          <span class="base">Port. SENATRAN 968/2022 e 495/2025</span></td>
+        <td><b>Consulta de imagem e de dados biométricos do condutor</b> e <b>validação de segurança da habilitação</b>, para confirmar que quem se apresenta é quem diz ser antes de iniciar o exame.</td>
+        <td><i class="t r">consulta</i></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="dom"><h2>Notificação eletrônica</h2><span class="code">SNE</span></div>
+  <p class="eyebrow">PORTAL · RAIT</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Nº</th><th style="width:31%">Caso de uso na aplicação</th><th style="width:33%">Operação necessária</th><th>Natureza</th></tr></thead>
+    <tbody>
+      <tr><td class="n">SNE-01</td>
+        <td><b>Verificar se há adesão antes de notificar</b><span class="who">RAIT · PORTAL</span>
+          <span class="base">Res. CONTRAN 931/2022</span></td>
+        <td><b>Consulta de adesão</b> por veículo, cidadão ou órgão — define se a notificação seguirá por meio eletrônico ou postal.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">SNE-02</td>
+        <td><b>Cidadão adere pelo portal</b><span class="who">PORTAL</span>
+          <span class="base">Res. 931/2022 · CTB art. 282-A</span></td>
+        <td><b>Registro de adesão do cidadão</b> e seu cancelamento, com a data de vigência a partir da qual a ciência eletrônica passa a valer.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">SNE-03</td>
+        <td><b>Notificação enviada por meio eletrônico</b><span class="who">RAIT</span>
+          <span class="base">Res. 931/2022 · Res. 918/2022 art. 14 § 4º</span></td>
+        <td><b>Envio de notificação de autuação e de penalidade pelo canal eletrônico</b>, com retorno do protocolo que comprova a expedição e dispensa a publicação por edital.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">SNE-04</td>
+        <td><b>Comprovar a ciência em processo</b><span class="who">RAIT</span>
+          <span class="base">Res. 931/2022 — ciência em 30 dias</span></td>
+        <td><b>Consulta de notificação por protocolo</b>, para instruir o processo com a data de ciência efetiva ou ficta, da qual dependem todos os prazos seguintes.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">SNE-05</td>
+        <td><b>Notificação indevida é cancelada</b><span class="who">RAIT</span>
+          <span class="base">Res. 931/2022</span></td>
+        <td><b>Cancelamento de notificação eletrônica</b>, com motivo, quando o ato que a originou é desfeito.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="dom"><h2>Canal do cidadão</h2><span class="code">CDT</span></div>
+  <p class="eyebrow">PORTAL</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Nº</th><th style="width:31%">Caso de uso na aplicação</th><th style="width:33%">Operação necessária</th><th>Natureza</th></tr></thead>
+    <tbody>
+      <tr><td class="n">CDT-01</td>
+        <td><b>Cidadão vê sua situação consolidada</b><span class="who">PORTAL</span>
+          <span class="base">Lei 13.460/2017 · Lei 14.129/2021</span></td>
+        <td><b>Consulta consolidada do cidadão</b>: notificações pendentes, infrações, veículos vinculados e situação da habilitação, a partir do CPF autenticado.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">CDT-02</td>
+        <td><b>Cidadão consulta valor a pagar</b><span class="who">PORTAL</span>
+          <span class="base">CTB art. 284 · Res. 918/2022 arts. 20-21</span></td>
+        <td><b>Consulta de pagamento da infração</b>, com valor com e sem desconto, vencimento e disponibilidade de documento de arrecadação.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">CDT-03</td>
+        <td><b>Cidadão reconhece a infração para obter desconto</b><span class="who">PORTAL</span>
+          <span class="base">CTB art. 284 § 1º · Res. 918/2022 art. 21</span></td>
+        <td><b>Registro do reconhecimento da infração</b> — ato que concede a faixa de desconto e implica renúncia à defesa e ao recurso, e que por isso precisa ser registrado de forma inequívoca e rastreável.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+      <tr><td class="n">CDT-04</td>
+        <td><b>Cidadão protocola defesa ou recurso pelo canal digital</b><span class="who">PORTAL</span>
+          <span class="base">Res. 900/2022 arts. 6º § 4º e 12</span></td>
+        <td><b>Submissão de defesa ou recurso originada no canal do cidadão</b>. <b>Necessidade identificada:</b> a norma admite o protocolo eletrônico e remete o rito via notificação eletrônica a regulamentação específica; caso a interface oficial não ofereça essa entrada, o protocolo permanecerá no canal do órgão e apenas o resultado será refletido ao cidadão.</td>
+        <td><i class="t m">mutação</i> <i class="t i">idempotente</i></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="dom"><h2>Consultas de base</h2><span class="code">WSDenatran</span></div>
+  <p class="eyebrow">todas as aplicações</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Nº</th><th style="width:31%">Caso de uso na aplicação</th><th style="width:33%">Operação necessária</th><th>Natureza</th></tr></thead>
+    <tbody>
+      <tr><td class="n">BAS-01</td>
+        <td><b>Agente identifica o veículo abordado</b><span class="who">TEAT · BOAT</span>
+          <span class="base">CTB art. 280 — dados mínimos do auto</span></td>
+        <td><b>Consulta de veículo</b> por placa, chassi, RENAVAM ou motor, com característica, situação e dados do proprietário — insumo obrigatório do auto e do boletim de sinistro.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">BAS-02</td>
+        <td><b>Agente verifica alerta antes da abordagem</b><span class="who">TEAT · BOAT</span>
+          <span class="base">segurança da operação em campo</span></td>
+        <td><b>Consulta de indicadores do veículo</b>: roubo e furto, restrição judicial, alarme e sinistro — decisão operacional que antecede o contato com o condutor.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">BAS-03</td>
+        <td><b>Agente identifica o condutor</b><span class="who">TEAT</span>
+          <span class="base">CTB art. 280, IV · Res. 918/2022 art. 3º § 4º</span></td>
+        <td><b>Consulta de condutor e de habilitação</b> por CPF ou registro, com situação, categoria, validade e impedimentos.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">BAS-04</td>
+        <td><b>Cidadão consulta sua pontuação</b><span class="who">PORTAL</span>
+          <span class="base">CTB art. 259 · Lei 13.460/2017</span></td>
+        <td><b>Consulta de infrações do condutor</b> pelo registro de habilitação, para exibir a pontuação e o efeito de cada processo em curso.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">BAS-05</td>
+        <td><b>Verificação de titularidade e de venda comunicada</b><span class="who">RAIT</span>
+          <span class="base">Res. 918/2022 arts. 6º e 32</span></td>
+        <td><b>Consulta de comunicação de venda e de endereço do possuidor</b>, que define a quem a notificação deve ser dirigida e quem responde pela infração.</td>
+        <td><i class="t r">consulta</i></td></tr>
+      <tr><td class="n">BAS-06</td>
+        <td><b>Roteamento de operação para outra UF</b><span class="who">RAIT · BOAT · PEC</span>
+          <span class="base">CTB art. 287</span></td>
+        <td><b>Encaminhamento por unidade federativa</b> das operações que envolvem veículo ou condutor registrado em outro órgão executivo estadual.</td>
+        <td><i class="t r">consulta</i> <i class="t m">mutação</i></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Requisitos transversais</p>
+  <h2>Como pretendemos nos comportar em produção</h2>
+  <div class="prose">
+    <p>Os itens abaixo não são pedidos de funcionalidade: são compromissos de comportamento do
+    nosso cliente de integração, que submetemos à avaliação porque afetam diretamente a carga e a
+    integridade dos dados na base nacional.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>Idempotência em toda mutação</h3>
+      <p>Cada operação que cria ou altera registro nacional carrega chave determinística derivada do
+      ato de origem. Um reenvio após falha de rede não gera duplicidade; quando o registro já
+      existe, tratamos como sucesso e recuperamos o identificador, sem repetir o efeito.</p></div>
+    <div class="card"><h3>Reenvio contido</h3>
+      <p>Retentativa com espera progressiva e disjuntor por superfície: falhas sucessivas
+      interrompem o envio em vez de amplificar a carga. Nada é reenviado indefinidamente.</p></div>
+    <div class="card"><h3>Publicação transacional</h3>
+      <p>O envio à base nacional é decidido na mesma transação do ato local que o originou, com fila
+      própria e ordem preservada — não há ato local sem contrapartida registrada, nem envio de ato
+      que não se consumou.</p></div>
+    <div class="card"><h3>Operação offline no campo</h3>
+      <p>Agentes operam sem rede por períodos longos. A submissão ocorre na sincronização, com o
+      momento real do fato preservado — daí a importância da numeração previamente reservada.</p></div>
+    <div class="card"><h3>Credenciamento e trilha</h3>
+      <p>Certificado do órgão e identificação do operador em cada chamada, com registro auditável de
+      quem originou o ato, quando e sob qual sessão de dispositivo.</p></div>
+    <div class="card"><h3>Ambiente de homologação</h3>
+      <p>Solicitamos ambiente com dados fictícios para exercitar os fluxos de ponta a ponta, incluindo
+      os caminhos de erro. Hoje usamos réplica interna; ela não substitui a validação oficial.</p></div>
+  </div>
+
+  <div class="note">
+    <p><b>Volumetria.</b> A ordem de grandeza depende de dados operacionais do DETRAN-AM — efetivo de
+    agentes em campo, autos por mês, exames por mês e base de veículos e condutores do estado. Será
+    consolidada com o órgão e apresentada antes dos testes de homologação, junto às janelas de maior
+    concentração de tráfego (turnos de fiscalização e fechamento mensal de arrecadação).</p>
+  </div>
+</section>
+
+<section>
+  <p class="eyebrow">Delimitação</p>
+  <h2>O que não estamos solicitando</h2>
+  <div class="prose">
+    <p>A delimitação faz parte do pedido. Requisitamos o acesso mínimo necessário aos processos que
+    o órgão executivo estadual conduz — e nada além disso.</p>
+    <ul>
+      <li><b>Alteração de registro de veículo (RENAVAM).</b> O domínio está previsto na arquitetura,
+      mas nenhuma operação de escrita sobre o registro veicular é solicitada nesta homologação.</li>
+      <li><b>Extração de base para análise.</b> Não pedimos acesso em massa nem cargas completas: as
+      consultas são pontuais e vinculadas a um atendimento, processo ou ato em curso.</li>
+      <li><b>Dados de saúde de terceiros.</b> No domínio de sinistros, tratamos dado de vítima
+      estritamente no que a submissão exige; no domínio clínico, o dado é do próprio candidato
+      atendido.</li>
+      <li><b>Arquivos de documentos.</b> Anexos de defesa, recurso, laudos e evidências permanecem
+      sob custódia do órgão; ao registro nacional trafegam apenas metadados e resumo criptográfico.</li>
+      <li><b>Operações de outras UFs.</b> Fora do que o próprio processo interestadual exigir, na
+      forma do art. 287 do CTB.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <p><b>NYX Knowledge (NYXK)</b> · Antonio Augusto Russo · aarusso@nyxk.com.br<br>
+  Documento elaborado para o processo de homologação junto à SENATRAN — agosto de 2026.
+  As operações estão descritas por função pretendida; a nomenclatura, os caminhos e os esquemas de
+  dados serão ajustados ao contrato oficial quando disponibilizado, sem impacto nas aplicações,
+  por estarem isolados no adaptador de integração.</p>
+</footer>
+</div>

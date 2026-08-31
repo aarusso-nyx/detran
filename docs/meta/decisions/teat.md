@@ -1,8 +1,11 @@
 # TEAT — owner decisions (2026-08-28)
 
-**Source of truth:** `detran-refs` @ `52e00a8`, `inf/teat/rules/RN-TEAT-141.md`, `RN-TEAT-127.md`,
-`inf/teat/workflows/WF-TEAT-004.md`, `inf/teat/use-cases/UC-TEAT-009.md`,
-`inf/teat/screens/IU-TEAT-001.md`. Directly relevant — TEAT's core was ported into
+**Source of truth:** canonical in-repository rules
+[RN-TEAT-141](../../framework/product/domains/inf/teat/rules/RN-TEAT-141.md) and
+[RN-TEAT-127](../../framework/product/domains/inf/teat/rules/RN-TEAT-127.md), workflow
+[WF-TEAT-004](../../framework/product/domains/inf/teat/workflows/WF-TEAT-004.md), use case
+[UC-TEAT-009](../../framework/product/domains/inf/teat/use-cases/UC-TEAT-009.md), and screen
+[IU-TEAT-001](../../framework/product/domains/inf/teat/screens/IU-TEAT-001.md). Directly relevant — TEAT's core was ported into
 `backend/domains/inf/{ait,alcohol,measures,normative}`.
 
 ## DT-014 — bodycam (`RN-TEAT-141`)

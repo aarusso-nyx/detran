@@ -1,9 +1,11 @@
 # PORTAL — owner decisions (2026-08-28)
 
-**Source of truth:** `detran-refs` @ `52e00a8`, `transversal/portal/rules/RN-PORTAL-128.md`,
-`RN-PORTAL-116.md`, `RN-PORTAL-113.md`, `RN-PORTAL-126.md`, `transversal/portal/use-cases/
-UC-PORTAL-015.md`, `UC-PORTAL-012.md`. Forward-looking — `portal` is still an empty placeholder
-domain in this monorepo (2 files, no implementation).
+**Source of truth:** canonical in-repository PORTAL
+[rules](../../framework/product/transversal/portal/rules/) and
+[use cases](../../framework/product/transversal/portal/use-cases/), including `RN-PORTAL-128`,
+`RN-PORTAL-116`, `RN-PORTAL-113`, `RN-PORTAL-126`, `UC-PORTAL-015`, and `UC-PORTAL-012`.
+Forward-looking — `portal` is still an empty placeholder domain in this monorepo (2 files, no
+implementation).
 
 ## DT-026 — 40%-discount waiver instrument (`RN-PORTAL-128`, `UC-PORTAL-015`)
 
@@ -37,7 +39,8 @@ federal órgão máximo before offering card-installment payment, plus separate 
 processing companies (§§4º/15) — **neither act has been located** in the corpus. Rather than block
 all development on this administrative confirmation, the Owner decided to **proceed with the
 module assuming authorization exists**, while the confirmation is pursued in parallel as an
-institutional ask (tracked as DT-072 in `detran-refs`). **If that confirmation comes back
+institutional ask (tracked as DT-072 in the
+[canonical register](../knowledge-base/open-issues.md)). **If that confirmation comes back
 negative, this module needs to be disabled/reverted** — this is a consciously accepted risk, not a
 closed question. Don't remove the authorization-gate check from the design; just don't block
 development behind it.
