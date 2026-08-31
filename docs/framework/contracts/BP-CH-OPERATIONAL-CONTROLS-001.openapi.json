@@ -1,0 +1,189 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OperationalControls — BP-CH-OPERATIONAL-CONTROLS-001",
+    "version": "1.0.0",
+    "description": "Registro auditavel de controles operacionais preservados do PEC, inclusive validacao geodesica de local de clinica.",
+    "x-blueprint": "BP-CH-OPERATIONAL-CONTROLS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/operational-controls/records": {
+      "get": {
+        "tags": ["operational-control"],
+        "operationId": "listOperationalRecord",
+        "summary": "List OperationalRecord (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OperationalRecord"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/operational-controls/records/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["operational-control"],
+        "operationId": "getOperationalRecord",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationalRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OperationalRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "record_kind": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "CLINIC_INSPECTION",
+              "CREDENTIALING_STATUS",
+              "SANCTION",
+              "CLINIC_LOCATION",
+              "DASHBOARD_SNAPSHOT",
+              "BACKUP_DRILL",
+              "SUPPORT_TICKET",
+              "RELEASE_WINDOW"
+            ]
+          },
+          "subject_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "internal-operational",
+            "x-retention": "policy-defined",
+            "default": "'{}'::jsonb"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "record_kind",
+          "subject_type",
+          "status",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateOperationalRecordDto": {
+        "type": "object",
+        "properties": {
+          "record_kind": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "CLINIC_INSPECTION",
+              "CREDENTIALING_STATUS",
+              "SANCTION",
+              "CLINIC_LOCATION",
+              "DASHBOARD_SNAPSHOT",
+              "BACKUP_DRILL",
+              "SUPPORT_TICKET",
+              "RELEASE_WINDOW"
+            ]
+          },
+          "subject_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "internal-operational",
+            "x-retention": "policy-defined",
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": ["record_kind", "subject_type", "status"]
+      }
+    }
+  }
+}

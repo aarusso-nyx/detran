@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-OPERATIONAL-CONTROLS-001",
+  "module": {
+    "name": "OperationalControls",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "54-ch-operational-controls.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "operational-control.service",
+      "operational-control-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "operational-control-commands.controller",
+        "symbol": "OperationalControlCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "operational-control.service",
+        "symbol": "OperationalControlService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Registro auditavel de controles operacionais preservados do PEC, inclusive validacao geodesica de local de clinica."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "OperationalRecord",
+        "table": "operational_record",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "record_kind", "type": "varchar(32)" },
+          { "name": "subject_type", "type": "varchar(80)" },
+          { "name": "subject_id", "type": "uuid", "nullable": true },
+          { "name": "clinic_id", "type": "uuid", "nullable": true },
+          { "name": "status", "type": "varchar(80)" },
+          {
+            "name": "payload",
+            "type": "jsonb",
+            "default": "'{}'::jsonb",
+            "pii": "internal-operational",
+            "retention": "policy-defined"
+          },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_operational_record_kind",
+            "columns": ["tenant_id", "record_kind", "status", "created_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_operational_record_kind",
+            "expression": "record_kind in ('CLINIC_INSPECTION','CREDENTIALING_STATUS','SANCTION','CLINIC_LOCATION','DASHBOARD_SNAPSHOT','BACKUP_DRILL','SUPPORT_TICKET','RELEASE_WINDOW')"
+          },
+          {
+            "name": "ck_ch_operational_subject",
+            "expression": "subject_type ~ '^[A-Z][A-Z0-9_]{1,79}$'"
+          },
+          {
+            "name": "ck_ch_operational_status",
+            "expression": "status ~ '^[A-Z][A-Z0-9_]{1,79}$'"
+          },
+          {
+            "name": "ck_ch_operational_location_clinic",
+            "expression": "record_kind <> 'CLINIC_LOCATION' or clinic_id is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_operational_record_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/operational-controls/",
+    "resources": [
+      {
+        "entity": "OperationalRecord",
+        "path": "records",
+        "resource": "operational-control",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}
