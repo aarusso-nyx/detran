@@ -30,9 +30,8 @@ jobs:
   # (devai main was rewritten for the 1.x ledger model; the adopter-facing
   # reusable-evidence-gate.yml no longer exists at any reachable ref), and
   # teat's own main has already migrated to an IN-REPO evidence-gate job
-  # running the installed DEVAI CLI. This job mirrors teat's current shape on
-  # the @devai-nyx/cli 0.3.0 verb set this repo pins: verify Article 32 chain
-  # integrity of the committed ledger; a corrupt/tampered/missing chain FAILS
+  # running the installed DEVAI CLI. DETRAN now pins @aarusso-nyx/devai 1.4.5:
+  # verify the canonical record/proofs chain; a corrupt/tampered/missing chain FAILS
   # this job, and the foundation job below converts that into a red required
   # check — the gate never silently opens.
   #
@@ -64,8 +63,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: pnpm install --frozen-lockfile
 
-      - name: Verify the Article 32 evidence chain (fail-closed)
-        run: pnpm exec devai evidence-verify --chain .devai/state/evidence-chain.json --human
+      - name: Verify the DEVAI proof chain (fail-closed)
+        run: pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human
 
   foundation:
     runs-on: ubuntu-latest
@@ -85,9 +84,9 @@ jobs:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       # pnpm must exist before setup-node's `cache: pnpm` runs. All @stynx-nyx
-      # and @devai-nyx packages install from GitHub Packages (.npmrc);
+      # and @aarusso-nyx packages install from GitHub Packages (.npmrc);
       # PACKAGES_READ_TOKEN is a read:packages PAT covering the stynx-nyx and
-      # devai-nyx orgs — the built-in GITHUB_TOKEN cannot read another org's
+      # aarusso-nyx orgs — the built-in GITHUB_TOKEN cannot read another org's
       # private packages.
       - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
         with:
@@ -103,19 +102,25 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: pnpm install --frozen-lockfile
 
+      - name: Install documentation dependencies
+        run: npm ci --prefix docs/site
+
       # The staged gate set grows with the repo (Phase 2 adds RLS smoke,
       # decorator check, OpenAPI drift, boundary check...). Today `pnpm check`
       # runs the format gate (prettier) and the recursive workspace typecheck.
       - name: Check (format + typecheck)
         run: pnpm check
 
-      # Doctor is informational until the docs site + agent surfaces reach the
-      # doctor-green bar teat holds; flip to blocking (drop `|| true` and the
-      # continue-on-error) as soon as it passes locally.
-      # TODO(Phase 2): make `devai doctor` a blocking step.
-      - name: DEVAI doctor (advisory)
-        continue-on-error: true
-        run: pnpm exec devai doctor --human || true
+      - name: Build and link-check documentation
+        run: pnpm docs:check
+
+      - name: Audit documentation dependencies
+        run: pnpm docs:security
+
+      # CI validates the site but never publishes it. DEVAI reserves Pages
+      # publication for an explicitly authorized local external effect.
+      - name: DEVAI doctor (blocking)
+        run: pnpm exec devai doctor --repo-root . --format human
 
       - name: Whitespace check
         run: git diff --check

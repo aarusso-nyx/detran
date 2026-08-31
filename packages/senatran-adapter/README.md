@@ -61,7 +61,7 @@ The reserved flag stays false until the owner authorizes the `vam` scope.
 
 ## Resilience and errors
 
-Every request runs through `@stynx-nyx/integration-adapter@0.5.0` with a 10-second
+Every request runs through `@stynx-nyx/integration-adapter@1.1.1` with a 10-second
 timeout, three attempts, bounded exponential backoff, telemetry hooks and a
 per-provider/surface/tenant circuit key (opens after five failures; 30-second
 half-open interval). Only provider/network failures retry. Validation,

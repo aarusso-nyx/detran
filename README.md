@@ -2,8 +2,8 @@
 
 Private monorepo consolidating the DETRAN software suite: the former `pec`, `teat` and
 `senatran` repositories, plus four new applications (RAIT, PORTAL, BOAT, DASHBOARD),
-built on the **STYNX** platform (`@stynx-nyx/*`) and governed by **DEVAI**
-(`@devai-nyx/cli`, Constitution 0.3.0).
+built on the **STYNX** platform (`@stynx-nyx/*@1.1.1`) and governed by **DEVAI**
+(`@aarusso-nyx/devai@1.4.5`, Constitution 1.0.0).
 
 One unified NestJS **modular-monolith backend** (single deployable, one PostgreSQL with
 schema-per-domain + RLS), `apps/` holding **frontends only**, and a single
@@ -38,7 +38,7 @@ tools/  docs/  .devai/  .github/
 ## Getting started
 
 ```sh
-export NODE_AUTH_TOKEN="$(gh auth token)"   # GitHub Packages auth (@stynx-nyx, @devai-nyx)
+export NODE_AUTH_TOKEN="$(gh auth token)"   # GitHub Packages auth (@stynx-nyx, @aarusso-nyx)
 pnpm install
 pnpm check
 ```

@@ -17,6 +17,9 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
   the Phase-2 backend CI gate.
 - **ADR-0010** — `detran/docs` is the single writable authority for the business/legal knowledge
   base; source provenance is immutable, and publication is status-gated and fail-closed.
+- **ADR-0011** — Phase 6 documentation capability: deterministic seven-section
+  Docusaurus projection, active Constitution publication, blocking CI validation,
+  and separately authorized local GitHub Pages publication.
 
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo

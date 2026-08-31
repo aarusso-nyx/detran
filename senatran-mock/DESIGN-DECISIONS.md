@@ -99,10 +99,11 @@ even for `.ts` sources (NodeNext/Bundler resolution).
 
 ## D-0008 — Full DEVAI tier3 adopter bootstrap
 
-**Decision.** Adopt DEVAI at tier3 via the sibling CLI (`../devai`): `.devai/`
-config + evidence chain, pinned constitution 0.3.0, governance docs, a minimal
-docs-governance site shape, and `devai doctor --adopter` kept green (6/6). Evidence
-is emitted at phase boundaries.
+**Historical decision.** The original bootstrap adopted DEVAI at tier3 via the
+sibling CLI (`../devai`), with a pinned 0.3.0 constitution and the then-current
+`devai doctor --adopter` interface. The repository-level DEVAI 1.4.5 binding now
+supersedes that command surface; this module's scripts resolve the installed root
+package and diagnose the root adopter contract.
 
 ---
 
@@ -228,17 +229,17 @@ standalone repo: the `devai` npm scripts shelled out to a sibling
    `devai:doctor`, `devai:inventory`, `devai:scorecard` npm scripts now run
    `pnpm exec devai …` instead of `node ../devai/packages/cli/dist/bin.js …`.
    `pnpm exec` walks up from `senatran-mock/` through the workspace to the
-   detran root's `node_modules/.bin/devai` (installed there as `@devai-nyx/cli`
-   0.3.0, matching this repo's pinned `constitution.version`), so the scripts
+   detran root's `node_modules/.bin/devai` (installed there as
+   `@aarusso-nyx/devai` 1.4.5, with Constitution 1.0.0 bound at the root), so the scripts
    work identically whether invoked via `pnpm --filter senatran-mock run
 devai:doctor` from the root or `pnpm run devai:doctor` from inside
    `senatran-mock/` (pnpm still resolves the workspace root by walking up to
    `pnpm-workspace.yaml`). These scripts are dev-tooling only — the Docker image
    never invokes them, so this rewire has no effect on the standalone build.
-4. **Constitution pointers repointed to the detran-root vendor copy.**
+4. **Constitution pointers repointed to the detran-root binding.**
    `CONSTITUTION.md`, `docs/framework/constitution.md`, and
-   `.devai/constitution.md` now cite `detran`'s root-vendored `CONSTITUTION.md`
-   (also pinned at 0.3.0) instead of a sibling `../devai` checkout, since none
+   `.devai/constitution.md` now cite `detran`'s `.devai/pin/constitution.md`
+   instead of a sibling `../devai` checkout, since none
    exists inside the monorepo.
 5. **Dev database name unchanged: `senatran`.** `DATABASE_URL`/`DB_NAME` still
    default to a local Postgres database named `senatran` (`.env.example`,

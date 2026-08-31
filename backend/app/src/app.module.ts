@@ -45,10 +45,10 @@ import {
 patchTenantContextInterceptorOrdering();
 
 /**
- * Compatibility for @stynx-nyx/tenancy 1.0.3: its global interceptor may be
+ * Compatibility for @stynx-nyx/tenancy 1.1.1: its global interceptor may be
  * ordered before the core request-context interceptor. Seed only the missing
  * outer scope, then delegate to the published implementation unchanged.
- * Remove when W1.6 publishes the platform-level ordering fix.
+ * Retain until a later STYNX release proves the platform-level ordering fix.
  */
 function patchTenantContextInterceptorOrdering(): void {
   type Internals = {

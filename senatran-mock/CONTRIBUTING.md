@@ -8,7 +8,7 @@ rules and `CODESTYLE.md` for style.
 - Node 24 (`.nvmrc`), pnpm 9 (`corepack enable` or install pnpm ≥9).
 - A local PostgreSQL. Dev default targets Postgres.app 18 on
   `localhost:5432` with trust auth (`postgres://postgres@localhost:5432/senatran`).
-- The DEVAI CLI, installed at the `detran` monorepo root (`@devai-nyx/cli` 0.3.0
+- The DEVAI CLI, installed at the `detran` monorepo root (`@aarusso-nyx/devai` 1.4.5
   from GitHub Packages) — governance commands run via `pnpm exec devai …` from
   within this package (workspace-hoisted), or `pnpm --filter senatran-mock run
 devai:doctor` etc. from the monorepo root. Ported (W0.2) from a sibling
@@ -59,7 +59,7 @@ DDL set is canonical.
 ## Definition of done
 
 `pnpm check` passes, the new/changed behavior is covered at the right tiers,
-`pnpm devai:doctor` stays 6/6, and an evidence record is emitted for the phase.
+the applicable root DEVAI checks remain green, and an evidence record is emitted for the phase.
 
 ## Commits
 

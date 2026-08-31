@@ -89,7 +89,10 @@ function frontMatter(text) {
   return result;
 }
 
-const allDocsFiles = walk(docsRoot);
+const siteRoot = path.join(docsRoot, 'site');
+const allDocsFiles = walk(docsRoot).filter(
+  (file) => file !== siteRoot && !file.startsWith(`${siteRoot}${path.sep}`),
+);
 const markdownFiles = allDocsFiles.filter((file) => file.endsWith('.md'));
 const artifactFiles = artifactRoots
   .flatMap((entry) => walk(path.join(root, entry)))
