@@ -387,6 +387,10 @@
             "maxLength": 7,
             "nullable": true
           },
+          "region_code": {
+            "type": "string",
+            "maxLength": 40
+          },
           "address": {
             "type": "string",
             "nullable": true
@@ -417,7 +421,14 @@
             "nullable": true
           }
         },
-        "required": ["tenant_id", "code", "cnpj", "name", "created_at"]
+        "required": [
+          "tenant_id",
+          "code",
+          "cnpj",
+          "name",
+          "region_code",
+          "created_at"
+        ]
       },
       "CreateClinicDto": {
         "type": "object",
@@ -444,6 +455,10 @@
             "maxLength": 7,
             "nullable": true
           },
+          "region_code": {
+            "type": "string",
+            "maxLength": 40
+          },
           "address": {
             "type": "string",
             "nullable": true
@@ -465,7 +480,7 @@
             "default": "true"
           }
         },
-        "required": ["code", "cnpj", "name"]
+        "required": ["code", "cnpj", "name", "region_code"]
       },
       "Professional": {
         "type": "object",

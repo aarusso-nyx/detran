@@ -244,6 +244,21 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['appointment', 'create', ['RECEPCAO', 'ADMIN_CLINICA']],
   ['appointment', 'update', ['RECEPCAO', 'ADMIN_CLINICA']],
   ['appointment', 'delete', ['RECEPCAO', 'ADMIN_CLINICA']],
+  ['appointment', 'reroll', ['RECEPCAO', 'ADMIN_CLINICA', 'GESTOR']],
+  ['appointment', 'no-show', ['RECEPCAO', 'ADMIN_CLINICA']],
+  ['appointment', 'cancel', ['RECEPCAO', 'ADMIN_CLINICA']],
+  [
+    'schedule',
+    'read',
+    ['RECEPCAO', 'ADMIN_CLINICA', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  ['schedule', 'create', ['ADMIN_CLINICA', 'GESTOR', 'GESTOR_DETRAN']],
+  ['schedule', 'update', ['ADMIN_CLINICA', 'GESTOR', 'GESTOR_DETRAN']],
+  [
+    'appointment-assignment',
+    'read',
+    ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR'],
+  ],
   [
     'report',
     'read',

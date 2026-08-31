@@ -34,6 +34,7 @@ import { ClinicalReportsModule } from '@detran/ch-clinical-reports';
 import { EncountersModule } from '@detran/ch-encounters';
 import { ExamsModule } from '@detran/ch-exams';
 import { PatientsModule } from '@detran/ch-patients';
+import { SchedulingModule } from '@detran/ch-scheduling';
 
 import {
   DetranPersistedAuditSink,
@@ -173,6 +174,7 @@ export class AppModule {
         BiometricsModule,
         ExamsModule,
         ClinicalReportsModule,
+        SchedulingModule,
       ],
       providers: [
         DetranDatabaseBinder,

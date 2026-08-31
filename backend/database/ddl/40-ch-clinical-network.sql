@@ -1,4 +1,4 @@
--- Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:17207db7ca179e913375c7645edcf4c43c3e309891634856e04a72dd4a4d8f54
+-- Generated from BP-CH-CLINICAL-NETWORK-001 v1.0.0 sha256:243dd2a69921d6544f3664d22ea24b32a34148a32d18659ca5d926815bfbe154
 
 -- Regenerable-only DDL for BP-CH-CLINICAL-NETWORK-001; request-path writes use role_app_backend.
 
@@ -12,6 +12,7 @@ create table if not exists ch.clinic (
   name varchar(255) not null,
   legal_name varchar(255),
   municipality_code varchar(7),
+  region_code varchar(40) not null,
   address text,
   contact_email varchar(320),
   contact_phone varchar(32),
