@@ -1,5 +1,5 @@
 import { Body, Controller, Headers, HttpCode, Post } from '@nestjs/common';
-import { Action, Resource } from '@detran/shared';
+import { Action, Audit, Resource } from '@detran/shared';
 
 import { PecSefazService } from './pec-sefaz.service.js';
 
@@ -18,6 +18,7 @@ export class PecSefazController {
   @Post('payment/validate')
   @HttpCode(200)
   @Action('validate')
+  @Audit({ action: 'SEFAZ_PAYMENT_VALIDATE', entity: 'external.sefaz_payment' })
   validatePayment(
     @Body() command: ValidateSefazPaymentCommand,
     @Headers('x-correlation-id') correlationId?: string,

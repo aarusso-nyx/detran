@@ -51,17 +51,25 @@ export class PecCognitoAdminController {
   ) {
     return this.service.update(username, body);
   }
-  @Post(':username/block') @Action('update') @Idempotent() block(
-    @Param('username') username: string,
-  ) {
+  @Post(':username/block')
+  @Action('update')
+  @Idempotent()
+  @Audit({ action: 'COGNITO_USER_BLOCK', entity: 'external.cognito_user' })
+  block(@Param('username') username: string) {
     return this.service.disable(username);
   }
-  @Post(':username/unblock') @Action('update') @Idempotent() unblock(
-    @Param('username') username: string,
-  ) {
+  @Post(':username/unblock')
+  @Action('update')
+  @Idempotent()
+  @Audit({ action: 'COGNITO_USER_UNBLOCK', entity: 'external.cognito_user' })
+  unblock(@Param('username') username: string) {
     return this.service.enable(username);
   }
-  @Post(':username/groups/:group') @Action('update') @Idempotent() addToGroup(
+  @Post(':username/groups/:group')
+  @Action('update')
+  @Idempotent()
+  @Audit({ action: 'COGNITO_USER_GROUP_ADD', entity: 'external.cognito_user' })
+  addToGroup(
     @Param('username') username: string,
     @Param('group') group: string,
   ) {
@@ -70,13 +78,21 @@ export class PecCognitoAdminController {
   @Delete(':username/groups/:group')
   @Action('update')
   @Idempotent()
+  @Audit({
+    action: 'COGNITO_USER_GROUP_REMOVE',
+    entity: 'external.cognito_user',
+  })
   removeFromGroup(
     @Param('username') username: string,
     @Param('group') group: string,
   ) {
     return this.service.removeFromGroup(username, group);
   }
-  @Post(':username/verify') @Action('update') @Idempotent() verify(
+  @Post(':username/verify')
+  @Action('update')
+  @Idempotent()
+  @Audit({ action: 'COGNITO_USER_VERIFY', entity: 'external.cognito_user' })
+  verify(
     @Param('username') username: string,
     @Body() body: { email?: boolean; phone?: boolean },
   ) {
@@ -85,6 +101,10 @@ export class PecCognitoAdminController {
   @Post(':username/reset-password')
   @Action('update')
   @Idempotent()
+  @Audit({
+    action: 'COGNITO_USER_RESET_PASSWORD',
+    entity: 'external.cognito_user',
+  })
   resetPassword(@Param('username') username: string) {
     return this.service.resetPassword(username);
   }
