@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm blueprints:check && pnpm contracts:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts",
+    "check": "pnpm format:check && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm blueprints:check && pnpm contracts:check && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
@@ -21,6 +21,7 @@
     "verify:rls-ddl": "tsx tools/check-rls-ddl.ts",
     "verify:senatran-boundary": "tsx tools/verify-senatran-boundary.ts",
     "verify:senatran-contracts": "pnpm --filter @detran/senatran-adapter contracts:check",
+    "verify:pec-parity": "tsx tools/verify-pec-parity.ts",
     "backend:db:apply": "bash backend/database/apply.sh",
     "backend:db:reset": "bash backend/database/apply.sh --full",
     "backend:rls-smoke": "tsx tools/check-rls-smoke.ts",

@@ -18,6 +18,11 @@ Current Phase-2 checks:
 - `verify-senatran-boundary.ts` — scans runtime source for direct national base
   URLs, SENATRAN auth headers and provider hosts outside
   `packages/senatran-adapter` (ADR-0003/ADR-0008).
+- `verify-pec-parity.ts` — fail-closed accounting of every reviewed PEC
+  acceptance criterion as either executable or explicitly blocked, plus the
+  complete legacy-spec disposition ledger.
+- `refresh-pec-test-disposition.mjs` — regenerates the 611-row legacy PEC test
+  ledger from an explicitly supplied, read-only origin checkout.
 
 Keep entries small and single-purpose; anything platform-generic belongs in stynx or
 devai, not here.
