@@ -407,6 +407,21 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
   ],
   [
+    'portal:complaint',
+    'create',
+    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  [
+    'portal:complaint',
+    'read',
+    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  [
+    'portal:complaint',
+    'update',
+    ['DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  [
     'clinical-control',
     'read',
     ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR'],

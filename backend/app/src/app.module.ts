@@ -58,6 +58,7 @@ import { RetentionModule } from '@detran/ch-retention';
 import { SchedulingModule } from '@detran/ch-scheduling';
 import { TelehealthModule } from '@detran/ch-telehealth';
 import { ToxicologyModule } from '@detran/ch-toxicology';
+import { ComplaintsModule } from '@detran/portal-complaints';
 
 import {
   DetranPersistedAuditSink,
@@ -319,6 +320,7 @@ export class AppModule {
         SchedulingModule,
         RestrictionsModule,
         RetentionModule,
+        ComplaintsModule,
       ],
       controllers: [
         PecProcessParametersController,
