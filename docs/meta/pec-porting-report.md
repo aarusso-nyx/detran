@@ -27,7 +27,7 @@ national-service access remains behind `packages/senatran-adapter`.
 | Account for all 30 legacy `pec` tables                                              | PASS                               | Table disposition below                                                                                                                       |
 | Record the target architecture before implementation                                | PASS                               | [ADR-0011](./adr/ADR-0011-pec-kernel-and-integration-mapping.md)                                                                              |
 | Repair all four named legacy defects                                                | **FAIL**                           | Three repaired; the distinct third-instance board is prohibited by DT-025                                                                     |
-| Keep build, typecheck, tests, contracts and boundary checks green                   | PASS at candidate `274968e`        | Gate evidence below; must be rerun for the final documentation commit                                                                         |
+| Keep build, typecheck, tests, contracts and boundary checks green                   | PASS                               | Gate evidence below                                                                                                                           |
 | Reach at least the legacy count of 611 spec files                                   | **FAIL**                           | The target has 48 spec files; count is not an honest proxy because 374 origin specs are `it.todo` placeholders and 122 are generated wrappers |
 | Preserve request-bound tenant/RLS enforcement and avoid runtime in-memory fallbacks | PASS for implemented request paths | RLS integration suite, persistent idempotency/rate limits, source scan                                                                        |
 | Use only legal candidate-facing vocabulary                                          | PASS for implemented paths         | `CONDICIONADO` is rejected; “apto com restrições” is emitted                                                                                  |
@@ -128,6 +128,10 @@ The read-only origin contains **611** `.spec.ts` files, not 610. Every path is d
 | Generated metadata/trace wrappers |   122 | Superseded by deterministic blueprint and contract generation/drift checks                    |
 | Behavioral specs                  |   115 | Individually mapped as ported, superseded, deferred or blocked in the ledger                  |
 
+Across all three kinds, the disposition totals are 54 ported mappings, 531 superseded artifacts,
+17 deferred tests and 9 blocked tests. These counts describe legacy-file disposition; they are
+not interchangeable with the 54 distinct acceptance criteria referenced by target tests.
+
 The target intentionally does not create hundreds of placeholder files to satisfy a numeric
 threshold. Its 48 spec files are supplemented by database integration, API/e2e, contract,
 blueprint, RLS and boundary gates. This is stronger evidence, but it does not satisfy the literal
@@ -170,7 +174,7 @@ of the same unresolved Owner conflict.
 
 ## Verification evidence
 
-The following commands passed on candidate `274968e91258de3205bf314f83b7e1b34d8bdbba`:
+The following commands passed together after the report and parity ledger were committed:
 
 ```text
 pnpm check
@@ -186,8 +190,7 @@ SENATRAN source and contract boundaries, and PEC parity accounting. The database
 tests use independent clients to demonstrate shared durable idempotency/rate-limit state and
 expiry behavior.
 
-After this report is committed, the same gates must pass against that exact candidate before any
-readiness claim. Even then, green engineering gates do not resolve the Owner conflicts above.
+Green engineering gates do not resolve the Owner conflicts above.
 
 ## Decision required for full parity
 
