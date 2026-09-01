@@ -1,6 +1,6 @@
 # PEC porting report
 
-Status: **NOT READY — implementation parity is nearly closed; external and unspecced behaviors remain**
+Status: **NOT READY — all acceptance criteria are executable; external deployment evidence remains**
 
 This report records the bounded PEC port from the legacy repository into the DETRAN monorepo. It
 is evidence and gap accounting, not a waiver of an acceptance criterion or an assertion that the
@@ -28,16 +28,17 @@ national-service access remains behind `packages/senatran-adapter`.
 | Record the target architecture before implementation                                | PASS                               | [ADR-0011](./adr/ADR-0011-pec-kernel-and-integration-mapping.md)                          |
 | Repair all four named legacy defects                                                | PASS                               | Billing, validity, vocabulary and distinct Junta Especial tests                           |
 | Keep build, typecheck, tests, contracts and boundary checks green                   | PASS                               | Gate evidence below                                                                       |
-| Satisfy the approved executable-evidence replacement for raw spec count             | PASS                               | PEC-PARITY-001; all 611 origin paths dispositioned and 75/76 reviewed criteria executable |
+| Satisfy the approved executable-evidence replacement for raw spec count             | PASS                               | PEC-PARITY-001; all 611 origin paths dispositioned and 76/76 reviewed criteria executable |
 | Preserve request-bound tenant/RLS enforcement and avoid runtime in-memory fallbacks | PASS for implemented request paths | RLS integration suite, persistent idempotency/rate limits, source scan                    |
 | Use only legal candidate-facing vocabulary                                          | PASS for implemented paths         | `CONDICIONADO` is rejected; “apto com restrições” is emitted                              |
 | Produce a final porting report                                                      | PASS                               | This document                                                                             |
 
-The approved reconciliation removed the raw-file-count and Junta conflicts. The remaining
-acceptance blocker is executed deletion: a fail-closed LTA capability contract now exists, but no
-real external preservation provider has demonstrated it. Twelve behavioral origin specs also
-remain deferred at explicit SEFAZ, BI, external-provider and real-environment boundaries. Under
-PEC-PARITY-001, the only supportable overall verdict therefore remains **NOT READY**.
+The approved reconciliation removed the raw-file-count, Junta and retention-acceptance conflicts.
+`AC-PEC-014-3` is now proved by the distinct fail-closed deletion disposition accepted by the
+Owner; deletion itself remains disabled. Twelve behavioral origin specs remain deferred: four
+SEFAZ specs and eight Dashboard/real-environment specs whose opt-in suites are defined but have no
+enabled-run evidence. `PADES_LTA` also remains a deployment blocker. Under PEC-PARITY-001, the
+only supportable overall verdict therefore remains **NOT READY**.
 
 ## Legacy table disposition
 
@@ -97,25 +98,24 @@ Governance catalogs and generated checks remain DEVAI concerns.
 ## Acceptance coverage
 
 The reviewed use cases contain exactly 76 acceptance criteria after the Owner-approved
-`UC-PEC-012` design added six criteria. The repository has executable references for 75 and an
-explicit authority-backed deployment blocker for the remaining criterion.
+`UC-PEC-012` design added six criteria. The repository has executable references for all 76.
 
-| Use case   | Executable | Blocked | Status                                               |
-| ---------- | ---------: | ------: | ---------------------------------------------------- |
-| UC-PEC-001 |        5/5 |       0 | Covered                                              |
-| UC-PEC-002 |        5/5 |       0 | Covered                                              |
-| UC-PEC-003 |        5/5 |       0 | Covered                                              |
-| UC-PEC-004 |        5/5 |       0 | Covered                                              |
-| UC-PEC-005 |        5/5 |       0 | Covered                                              |
-| UC-PEC-006 |        9/9 |       0 | Covered                                              |
-| UC-PEC-007 |        4/4 |       0 | Covered                                              |
-| UC-PEC-008 |        5/5 |       0 | Covered                                              |
-| UC-PEC-009 |        5/5 |       0 | Covered                                              |
-| UC-PEC-010 |        5/5 |       0 | Covered                                              |
-| UC-PEC-011 |        6/6 |       0 | Covered                                              |
-| UC-PEC-012 |        6/6 |       0 | Covered under the Owner-approved event-driven design |
-| UC-PEC-013 |        5/5 |       0 | Covered under Owner-selected P2 distribution         |
-| UC-PEC-014 |        5/6 |       1 | Deletion execution prohibited by DT-023 prerequisite |
+| Use case   | Executable | Blocked | Status                                                                  |
+| ---------- | ---------: | ------: | ----------------------------------------------------------------------- |
+| UC-PEC-001 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-002 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-003 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-004 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-005 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-006 |        9/9 |       0 | Covered                                                                 |
+| UC-PEC-007 |        4/4 |       0 | Covered                                                                 |
+| UC-PEC-008 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-009 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-010 |        5/5 |       0 | Covered                                                                 |
+| UC-PEC-011 |        6/6 |       0 | Covered                                                                 |
+| UC-PEC-012 |        6/6 |       0 | Covered under the Owner-approved event-driven design                    |
+| UC-PEC-013 |        5/5 |       0 | Covered under Owner-selected P2 distribution                            |
+| UC-PEC-014 |        6/6 |       0 | Negative deletion-control evidence accepted; execution remains disabled |
 
 Machine-verifiable blocker details are in
 [`pec-parity-blockers.json`](./pec-parity-blockers.json). The parity gate rejects missing,
@@ -134,7 +134,7 @@ The read-only origin contains **611** `.spec.ts` files, not 610. Every path is d
 
 Across all three kinds, the disposition totals are 68 ported mappings, 531 superseded artifacts,
 12 deferred tests and no blocked tests. These counts describe legacy-file disposition; they are
-not interchangeable with the 75 distinct acceptance criteria referenced by target tests.
+not interchangeable with the 76 distinct acceptance criteria referenced by target tests.
 
 The target intentionally does not create hundreds of placeholder files to satisfy a numeric
 threshold. Its executable specs are supplemented by database integration, API/e2e, contract,
@@ -158,17 +158,20 @@ The additional origin defects were also evaluated. Encounters now have a reachab
 
 ## Open boundaries
 
-- **Retention execution:** AC-PEC-014-3 remains blocked because DT-023 prohibits deletion until
-  a real PAdES-LTA provider demonstrates long-term preservation. HTTPS configuration and the
-  startup capability probe are implemented, but a mock is not provider evidence.
+- **Retention execution:** `AC-PEC-014-3` is accepted through the executable distinct `BLOCKED`
+  disposition and no-delete proof. DT-023 still prohibits actual deletion until a real PAdES-LTA
+  provider demonstrates long-term preservation; a mock is not provider evidence.
 - **Session deployment:** the approved STYNX Redis/RSA/JWKS, strong-factor and single-session
   contract is implemented and fails startup closed. A real Redis deployment and secret-backed key
   set remain environment inputs rather than repository evidence.
 - **Trust integrations:** production PAdES-LTA/TSA validation, including operational certificate
   chain and revocation behavior, has not been demonstrated against a real provider.
-- **SEFAZ and real external tests:** adapters and configured external environments are not present;
-  the ledger marks these tests deferred rather than pretending local mocks prove production
-  integration.
+- **SEFAZ:** four origin specs remain deferred. Their operations, payloads, status vocabulary,
+  retry behavior and mock cases are documented, but target ownership, credentials and homologation
+  authority are unresolved.
+- **Dashboard and real environment:** opt-in suites now define the three Dashboard-owned BI and
+  five real-environment dispositions. They remain deferred until an enabled in-house run supplies
+  database, Cognito/session, generated-API and real clinical-trust evidence.
 - **Product ownership boundaries:** complaints remain Portal-owned and BI presentation remains
   Dashboard-owned unless an approved architecture decision moves them into CH.
 
@@ -181,6 +184,7 @@ pnpm check
 pnpm backend:db:reset
 pnpm backend:rls-smoke
 pnpm backend:test:ci
+pnpm backend:test:in-house # default run validates discovery and reports skipped without credentials
 pnpm build
 ```
 
@@ -195,9 +199,10 @@ the remaining boundaries.
 
 ## Remaining requirements for full parity
 
-The four Owner decisions requested by the prior report are now reconciled and implemented. Full
-parity still requires (a) real-provider PAdES-LTA evidence before deletion can be enabled and
-AC-PEC-014-3 executed, and (b) disposition of the 12 deferred behavioral origin specs: four SEFAZ,
-three Dashboard-owned BI, and five explicitly real-environment tests. No repository-only change
-can honestly substitute for provider/environment evidence; SEFAZ and BI also require
-product-boundary authority rather than inference.
+All 76 acceptance criteria are now executable under the Owner-approved interpretation. Full
+deployment parity still requires real-provider PAdES-LTA evidence before deletion can be enabled,
+an enabled run of the eight defined Dashboard/real-environment dispositions, and an authorized
+target disposition for the four deferred SEFAZ specs. The provider search terms, wire contracts,
+mock cases and in-house inputs are recorded in
+[`pec-external-environment-contract.md`](./pec-external-environment-contract.md). No
+repository-only change can honestly substitute for provider/environment evidence.

@@ -96,7 +96,7 @@ describe('RetentionLifecycleService', () => {
     expect(query.mock.calls[1]?.[0]).toContain('return_offered_at');
   });
 
-  it('AC-PEC-014-6 blocks deletion while PAdES-LTA is unavailable', async () => {
+  it('AC-PEC-014-3 AC-PEC-014-6 records a distinct blocked trail and never deletes without PAdES-LTA', async () => {
     const query = vi
       .fn()
       .mockResolvedValueOnce({
@@ -116,6 +116,14 @@ describe('RetentionLifecycleService', () => {
       subject(query).propose('case-1', 'DELETE', 'Retention floor elapsed'),
     ).resolves.toMatchObject({ status: 'BLOCKED' });
     expect(query.mock.calls[1]?.[1]?.[2]).toBe('BLOCKED');
+    expect(query.mock.calls[1]?.[0]).toContain(
+      'insert into ch.retention_disposition',
+    );
+    expect(
+      query.mock.calls.map(([sql]) => String(sql).toLowerCase()),
+    ).not.toEqual(
+      expect.arrayContaining([expect.stringMatching(/\bdelete\s+from\b/u)]),
+    );
   });
 
   it('AC-PEC-014-4 records DPO review only for non-deletion proposals', async () => {

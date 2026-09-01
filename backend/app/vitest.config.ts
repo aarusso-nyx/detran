@@ -2,13 +2,14 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 const tier = (process.env.DETRAN_TEST_TIER ?? 'unit') as
-  'unit' | 'integration' | 'e2e' | 'real';
+  'unit' | 'integration' | 'e2e' | 'real' | 'in-house';
 
 const includeByTier: Record<typeof tier, string[]> = {
   unit: ['src/**/*.spec.ts'],
   integration: ['tests/integration/**/*.integration.spec.ts'],
   e2e: ['tests/e2e/**/*.e2e.spec.ts'],
   real: ['tests/real/**/*.real.spec.ts'],
+  'in-house': ['tests/in-house/**/*.in-house.spec.ts'],
 };
 
 export default defineConfig({
@@ -37,6 +38,7 @@ export default defineConfig({
     include: includeByTier[tier],
     passWithNoTests: true,
     fileParallelism: false,
-    testTimeout: tier === 'unit' ? 10_000 : 30_000,
+    testTimeout:
+      tier === 'unit' ? 10_000 : tier === 'in-house' ? 120_000 : 30_000,
   },
 });

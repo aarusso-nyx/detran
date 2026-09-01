@@ -103,3 +103,12 @@ The Owner approved the following fail-closed production contract:
 Real-provider evidence is a deployment input. Local mocks may prove fail-closed contracts and
 receipt validation, but cannot be presented as proof of a production TSA, certificate chain,
 revocation responder or Redis deployment.
+
+## PEC-RETENTION-001 — negative-control acceptance for `AC-PEC-014-3`
+
+The Owner accepted on 2026-09-01 that `AC-PEC-014-3` is satisfied in this round by executable
+evidence that a proposed deletion creates its own `ch.retention_disposition` with status
+`BLOCKED`, distinct from record-use audit, and executes no SQL deletion. This reconciles the
+criterion with DT-023 without weakening either: deletion remains disabled until a real
+PAdES-LTA provider proves preservation, and any future enabled deletion must add positive,
+distinct execution-audit evidence.
