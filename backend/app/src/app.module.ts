@@ -37,6 +37,7 @@ import { StynxSessionsModule } from '@stynx-nyx/sessions';
 import { Observable } from 'rxjs';
 import { createSenatranAdapter } from '@detran/senatran-adapter';
 import { SefazHttpAdapter } from '@detran/sefaz-adapter';
+import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 
 import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
 import { BiometricsModule } from '@detran/ch-biometrics';
@@ -107,6 +108,8 @@ import { PecAuditQueryController } from './pec-audit-query.controller.js';
 import { PecAuditQueryService } from './pec-audit-query.service.js';
 import { PecUserAdminController } from './pec-user-admin.controller.js';
 import { PecUserAdminService } from './pec-user-admin.service.js';
+import { PecCognitoAdminController } from './pec-cognito-admin.controller.js';
+import { PecCognitoAdminService } from './pec-cognito-admin.service.js';
 
 patchTenantContextInterceptorOrdering();
 
@@ -337,6 +340,7 @@ export class AppModule {
         PecSefazController,
         PecAuditQueryController,
         PecUserAdminController,
+        PecCognitoAdminController,
       ],
       providers: [
         DetranDatabaseBinder,
@@ -378,6 +382,16 @@ export class AppModule {
               timeoutMs: Number(process.env.DETRAN_SEFAZ_TIMEOUT_MS ?? '10000'),
             });
           },
+        },
+        {
+          provide: PecCognitoAdminService,
+          useFactory: () =>
+            new PecCognitoAdminService(
+              new CognitoIdentityProviderClient({
+                region: process.env.DETRAN_COGNITO_REGION ?? 'sa-east-1',
+              }),
+              process.env.DETRAN_COGNITO_USER_POOL_ID ?? '',
+            ),
         },
         { provide: DetranPersistedAuditSink, useValue: detranAuditSink },
         { provide: DetranPostgresReadiness, useValue: detranPostgresReadiness },
