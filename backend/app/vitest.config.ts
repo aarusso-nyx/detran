@@ -24,6 +24,9 @@ export default defineConfig({
           import.meta.url,
         ),
       ),
+      '@detran/sefaz-adapter': fileURLToPath(
+        new URL('../../packages/sefaz-adapter/src/index.ts', import.meta.url),
+      ),
       '@detran/ch-juntas': fileURLToPath(
         new URL('../domains/ch/juntas/src/index.ts', import.meta.url),
       ),

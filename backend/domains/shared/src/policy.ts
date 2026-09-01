@@ -79,6 +79,11 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['tox', 'read', ['GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
   ['tox', 'write', ['GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
   ['sefaz', 'validate', ['GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR', 'SUPORTE']],
+  [
+    'ch:sefaz',
+    'validate',
+    ['GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR', 'SUPORTE'],
+  ],
   ['council', 'read', ['GESTOR', 'SUPERVISOR', 'SUPORTE']],
   ['council', 'write', ['GESTOR', 'SUPERVISOR', 'SUPORTE']],
   ['integration-biometric', 'read', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],

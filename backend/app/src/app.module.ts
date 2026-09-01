@@ -36,6 +36,7 @@ import {
 import { StynxSessionsModule } from '@stynx-nyx/sessions';
 import { Observable } from 'rxjs';
 import { createSenatranAdapter } from '@detran/senatran-adapter';
+import { SefazHttpAdapter } from '@detran/sefaz-adapter';
 
 import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
 import { BiometricsModule } from '@detran/ch-biometrics';
@@ -100,6 +101,8 @@ import {
 import { RenachWebhookGuard } from './renach-webhook.guard.js';
 import { PecToxicologyInboundController } from './pec-toxicology-inbound.controller.js';
 import { PecToxicologyInboundService } from './pec-toxicology-inbound.service.js';
+import { PecSefazController } from './pec-sefaz.controller.js';
+import { PEC_SEFAZ_PORT, PecSefazService } from './pec-sefaz.service.js';
 
 patchTenantContextInterceptorOrdering();
 
@@ -327,6 +330,7 @@ export class AppModule {
         PecRenachProcessController,
         PecRenachTransmissionController,
         PecToxicologyInboundController,
+        PecSefazController,
       ],
       providers: [
         DetranDatabaseBinder,
@@ -336,10 +340,36 @@ export class AppModule {
         PecRenachProcessService,
         PecRenachTransmissionService,
         PecToxicologyInboundService,
+        PecSefazService,
         RenachWebhookGuard,
         {
           provide: PEC_RENACH_PORT,
           useFactory: () => createSenatranAdapter().ports.renach,
+        },
+        {
+          provide: PEC_SEFAZ_PORT,
+          useFactory: () => {
+            const provider =
+              process.env.DETRAN_SEFAZ_PROVIDER ?? (local ? 'mock' : 'real');
+            if (provider !== 'mock' && provider !== 'real') {
+              throw new Error('DETRAN_SEFAZ_PROVIDER must be mock or real');
+            }
+            const baseUrl =
+              provider === 'mock'
+                ? (process.env.DETRAN_SEFAZ_MOCK_BASE_URL ??
+                  'http://localhost:3999')
+                : process.env.DETRAN_SEFAZ_REAL_BASE_URL;
+            if (!baseUrl) {
+              throw new Error(
+                'DETRAN_SEFAZ_REAL_BASE_URL is required for the real provider',
+              );
+            }
+            return new SefazHttpAdapter({
+              baseUrl,
+              pathPrefix: provider === 'mock' ? '/mock' : '',
+              timeoutMs: Number(process.env.DETRAN_SEFAZ_TIMEOUT_MS ?? '10000'),
+            });
+          },
         },
         { provide: DetranPersistedAuditSink, useValue: detranAuditSink },
         { provide: DetranPostgresReadiness, useValue: detranPostgresReadiness },
