@@ -15,11 +15,34 @@ import type {
 } from '@stynx-nyx/contracts';
 import { CognitoTokenVerifier } from '@stynx-nyx/auth';
 import {
+  generateRequestId,
+  RequestContext,
+  RequestContextMutator,
+} from '@stynx-nyx/core';
+import {
   Database,
   type StynxDataModuleOptions,
   type Transaction,
 } from '@stynx-nyx/data';
 import type { StynxHealthModuleOptions } from '@stynx-nyx/health';
+import {
+  PgIdempotencyStore,
+  type IdempotencyBackend,
+  type IdempotencyDecisionContext,
+  type IdempotencyStoredEntry,
+  type IdempotencySqlExecutor,
+  type IdempotencyStore,
+} from '@stynx-nyx/idempotency';
+import {
+  PgRateLimitStore,
+  type RateLimitDecision,
+  type RateLimitDecisionContext,
+  type RateLimitMetadata,
+  type RateLimitPolicyResolver,
+  type ResolvedRateLimitPolicy,
+  type RateLimitSqlExecutor,
+  type RateLimitStore,
+} from '@stynx-nyx/ratelimit';
 import type { StynxStorageModuleOptions } from '@stynx-nyx/storage';
 
 import { isDetranActionAllowed, permissionsForRoles } from '@detran/shared';
@@ -359,6 +382,178 @@ export class DetranPostgresReadiness {
   }
 }
 
+type PipelineDatabase = Pick<Database, 'tx'>;
+
+/** Runs STYNX pipeline persistence through the request-bound app connection. */
+export class DetranPipelineSqlExecutor
+  implements IdempotencySqlExecutor, RateLimitSqlExecutor
+{
+  private database: PipelineDatabase | undefined;
+
+  bindDatabase(database: PipelineDatabase): void {
+    this.database = database;
+  }
+
+  async query<T = Record<string, unknown>>(
+    sql: string,
+    params?: ReadonlyArray<unknown>,
+  ): Promise<{ rows: T[]; rowCount?: number }> {
+    if (!this.database) {
+      throw new Error(
+        'DETRAN pipeline persistence requires the Database provider',
+      );
+    }
+    return this.database.tx(
+      async (transaction) => {
+        const result = await transaction.query(
+          sql,
+          params ? [...params] : undefined,
+        );
+        return {
+          rows: result.rows as T[],
+          ...(result.rowCount === null ? {} : { rowCount: result.rowCount }),
+        };
+      },
+      { role: 'app' },
+    );
+  }
+}
+
+export class DetranPersistentPipelineStore
+  implements IdempotencyStore, RateLimitStore
+{
+  private requestContext: RequestContext | undefined;
+  private requestContextMutator: RequestContextMutator | undefined;
+  private readonly idempotency: PgIdempotencyStore;
+  private readonly rateLimit: PgRateLimitStore;
+
+  constructor(executor: DetranPipelineSqlExecutor) {
+    this.idempotency = new PgIdempotencyStore({ executor });
+    this.rateLimit = new PgRateLimitStore({ executor });
+  }
+
+  bindRequestContext(
+    requestContext: RequestContext,
+    requestContextMutator: RequestContextMutator,
+  ): void {
+    this.requestContext = requestContext;
+    this.requestContextMutator = requestContextMutator;
+  }
+
+  lookup(context: IdempotencyDecisionContext) {
+    return this.runBound(context, () => this.idempotency.lookup(context));
+  }
+
+  reserve(context: IdempotencyDecisionContext) {
+    return this.runBound(context, () => this.idempotency.reserve(context));
+  }
+
+  persistResponse(
+    context: IdempotencyDecisionContext,
+    statusCode: number,
+    body: unknown,
+    headers?: Record<string, string>,
+  ) {
+    return this.runBound(context, () =>
+      this.idempotency.persistResponse(context, statusCode, body, headers),
+    );
+  }
+
+  clearReservation(context: IdempotencyDecisionContext) {
+    return this.runBound(context, () =>
+      this.idempotency.clearReservation(context),
+    );
+  }
+
+  consume(context: RateLimitDecisionContext): Promise<RateLimitDecision> {
+    return this.runBound(context, () => this.rateLimit.consume(context));
+  }
+
+  private runBound<T>(
+    context: Pick<IdempotencyDecisionContext, 'tenantId' | 'userId'>,
+    work: () => Promise<T>,
+  ): Promise<T> {
+    if (!this.requestContext || !this.requestContextMutator) {
+      throw new Error('DETRAN pipeline request context is not bound');
+    }
+    if (this.requestContext.hasActiveContext()) return work();
+    if (!context.tenantId || !context.userId) {
+      throw new Error(
+        'DETRAN durable pipeline requires tenant and actor context',
+      );
+    }
+    return Promise.resolve(
+      this.requestContextMutator.runWithRequestContext(
+        {
+          requestId: generateRequestId(),
+          tenantId: context.tenantId,
+          actorId: context.userId,
+          startedAt: new Date(),
+        },
+        work,
+      ),
+    );
+  }
+}
+
+/**
+ * Lets the PostgreSQL unique reservation be the cross-instance lock. Cache
+ * operations deliberately do nothing; durable storage is authoritative.
+ */
+export class DetranDurableIdempotencyBackend implements IdempotencyBackend {
+  async get(
+    _context: IdempotencyDecisionContext,
+  ): Promise<IdempotencyStoredEntry | null> {
+    return null;
+  }
+
+  async set(
+    _context: IdempotencyDecisionContext,
+    _entry: IdempotencyStoredEntry,
+  ): Promise<void> {}
+
+  async acquireLock(
+    _context: IdempotencyDecisionContext,
+    _token: string,
+  ): Promise<boolean> {
+    return true;
+  }
+
+  async releaseLock(
+    _context: IdempotencyDecisionContext,
+    _token: string,
+  ): Promise<void> {}
+
+  async isLocked(_context: IdempotencyDecisionContext): Promise<boolean> {
+    return false;
+  }
+}
+
+export class DetranRateLimitPolicyResolver implements RateLimitPolicyResolver {
+  async resolve(
+    _request: unknown,
+    metadata: RateLimitMetadata,
+  ): Promise<ResolvedRateLimitPolicy> {
+    return {
+      ...metadata,
+      cost: metadata.cost ?? 1,
+      limit:
+        metadata.limit ?? Number(process.env.STYNX_RATE_LIMIT_DEFAULT ?? 120),
+      windowSeconds:
+        metadata.windowSeconds ??
+        Number(process.env.STYNX_RATE_LIMIT_WINDOW_SECONDS ?? 60),
+    };
+  }
+}
+
+export const detranPipelineSqlExecutor = new DetranPipelineSqlExecutor();
+export const detranPersistentPipelineStore = new DetranPersistentPipelineStore(
+  detranPipelineSqlExecutor,
+);
+export const detranIdempotencyBackend = new DetranDurableIdempotencyBackend();
+export const detranRateLimitPolicyResolver =
+  new DetranRateLimitPolicyResolver();
+
 export function detranHealthOptions(
   readiness: DetranPostgresReadiness,
 ): StynxHealthModuleOptions {
@@ -381,11 +576,17 @@ export function detranPipelineOptions() {
         '/v1/healthz',
         '/v1/readyz',
       ],
+      distributedStrict: true,
+      store: detranPersistentPipelineStore,
+      policyResolver: detranRateLimitPolicyResolver,
     },
     idempotency: {
       ttlMs: Number(
         process.env.STYNX_IDEMPOTENCY_TTL_MS ?? 24 * 60 * 60 * 1_000,
       ),
+      durableStrict: true,
+      store: detranPersistentPipelineStore,
+      backend: detranIdempotencyBackend,
     },
   };
 }

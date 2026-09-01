@@ -61,6 +61,36 @@ CREATE TABLE IF NOT EXISTS integration.inbox_receipt (
 CREATE INDEX IF NOT EXISTS ix_integration_inbox_receipt_status
   ON integration.inbox_receipt (tenant_id, status, received_at);
 
+-- Durable stores consumed by the published STYNX pipeline. These remain
+-- kernel integration records rather than PEC domain aggregates.
+CREATE TABLE IF NOT EXISTS integration.idempotency_keys (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id uuid NOT NULL REFERENCES auth.tenants(id) ON DELETE CASCADE,
+  idem_key text NOT NULL,
+  request_fingerprint varchar(64) NOT NULL
+    CHECK (request_fingerprint ~ '^[0-9a-f]{64}$'),
+  status_code integer,
+  response_body jsonb,
+  expires_at timestamptz NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+  UNIQUE (tenant_id, idem_key)
+);
+
+CREATE INDEX IF NOT EXISTS ix_integration_idempotency_expiry
+  ON integration.idempotency_keys (tenant_id, expires_at);
+
+CREATE TABLE IF NOT EXISTS integration.rate_limit_windows (
+  tenant_id uuid NOT NULL REFERENCES auth.tenants(id) ON DELETE CASCADE,
+  bucket_key text NOT NULL,
+  window_start timestamptz NOT NULL,
+  hits integer NOT NULL CHECK (hits >= 0),
+  expires_at timestamptz NOT NULL,
+  PRIMARY KEY (tenant_id, bucket_key, window_start)
+);
+
+CREATE INDEX IF NOT EXISTS ix_integration_rate_limit_expiry
+  ON integration.rate_limit_windows (tenant_id, expires_at);
+
 CREATE TABLE IF NOT EXISTS integration.professional_council_cache (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   tenant_id uuid NOT NULL REFERENCES auth.tenants(id) ON DELETE CASCADE,

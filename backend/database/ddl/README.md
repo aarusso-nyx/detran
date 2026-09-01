@@ -6,7 +6,8 @@ Applied in numeric order by `../apply.sh`:
 2. `01-schemas.sql` — shared plus empty `inf`/`est`/`ch`/`ops` domain schemas.
 3. `02-auth.sql` — DETRAN tenants, identities, roles, memberships and sessions.
 4. `03-audit.sql` — partitioned append-only `audit.events`.
-5. `04-integration-storage.sql` — shared outbox and storage metadata foundations.
+5. `04-integration-storage.sql` — shared outbox, durable idempotency/rate-limit
+   stores and storage metadata foundations.
 6. `10-postgis-functions.sql` — SRID-4674 JSON/GeoJSON conversion helpers.
 7. `11-auth-functions.sql` — request tenant setting, RLS helper and automatic
    `enforce_tenant_id` trigger installer.

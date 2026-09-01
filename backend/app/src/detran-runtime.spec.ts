@@ -5,6 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   DetranLocalTokenVerifier,
   DetranPersistedAuditSink,
+  DetranPipelineSqlExecutor,
   DetranPolicyEvaluator,
   detranDataOptions,
   detranPipelineOptions,
@@ -83,9 +84,37 @@ describe('DETRAN runtime hooks', () => {
       exports: { classificationDefault: 'confidential' },
     });
     expect(detranPipelineOptions()).toMatchObject({
-      rateLimit: { defaultLimit: 120 },
-      idempotency: { ttlMs: 86_400_000 },
+      rateLimit: {
+        defaultLimit: 120,
+        distributedStrict: true,
+        store: expect.anything(),
+      },
+      idempotency: {
+        ttlMs: 86_400_000,
+        durableStrict: true,
+        store: expect.anything(),
+      },
     });
+  });
+
+  it('executes pipeline persistence through the request-bound app role only', async () => {
+    const executor = new DetranPipelineSqlExecutor();
+    await expect(executor.query('select 1')).rejects.toThrow(
+      'requires the Database provider',
+    );
+    const query = vi
+      .fn()
+      .mockResolvedValue({ rows: [{ value: 1 }], rowCount: 1 });
+    const tx = vi.fn(
+      async (work: (transaction: Transaction) => Promise<unknown>) =>
+        work({ query } as unknown as Transaction),
+    );
+    executor.bindDatabase({ tx } as never);
+    await expect(executor.query('select $1', [1])).resolves.toEqual({
+      rows: [{ value: 1 }],
+      rowCount: 1,
+    });
+    expect(tx).toHaveBeenCalledWith(expect.any(Function), { role: 'app' });
   });
 
   it('persists audit envelopes and has no unbound/in-memory fallback', async () => {

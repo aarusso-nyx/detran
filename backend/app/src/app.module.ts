@@ -16,7 +16,11 @@ import {
   StynxAuthorizationModule,
   StynxPlatformPipelineModule,
 } from '@stynx-nyx/backend';
-import { generateRequestId } from '@stynx-nyx/core';
+import {
+  generateRequestId,
+  RequestContext,
+  RequestContextMutator,
+} from '@stynx-nyx/core';
 import { Database, StynxDataModule } from '@stynx-nyx/data';
 import { StynxHealthModule } from '@stynx-nyx/health';
 import { StynxLoggingModule } from '@stynx-nyx/logging';
@@ -53,11 +57,15 @@ import {
   DetranTenantResolver,
   detranDataOptions,
   detranHealthOptions,
+  detranPipelineSqlExecutor,
   detranPipelineOptions,
+  detranPersistentPipelineStore,
   detranStorageOptions,
   detranTokenVerifier,
 } from './detran-runtime.js';
 import { PecRenachTransmissionController } from './pec-renach-transmission.controller.js';
+import { PecProcessParametersController } from './pec-process-parameters.controller.js';
+import { PecProcessParametersService } from './pec-process-parameters.service.js';
 import { PecRenachProcessController } from './pec-renach-process.controller.js';
 import { PecRenachProcessService } from './pec-renach-process.service.js';
 import {
@@ -152,11 +160,20 @@ export class DetranAuthContextGuard implements CanActivate {
 
 @Injectable()
 class DetranDatabaseBinder implements OnModuleInit {
-  constructor(private readonly database: Database) {}
+  constructor(
+    private readonly database: Database,
+    private readonly requestContext: RequestContext,
+    private readonly requestContextMutator: RequestContextMutator,
+  ) {}
 
   onModuleInit(): void {
     detranAuditSink.bindDatabase(this.database);
     detranPostgresReadiness.bindDatabase(this.database);
+    detranPipelineSqlExecutor.bindDatabase(this.database);
+    detranPersistentPipelineStore.bindRequestContext(
+      this.requestContext,
+      this.requestContextMutator,
+    );
   }
 }
 
@@ -202,6 +219,7 @@ export class AppModule {
         RetentionModule,
       ],
       controllers: [
+        PecProcessParametersController,
         PecRenachProcessController,
         PecRenachTransmissionController,
       ],
@@ -209,6 +227,7 @@ export class AppModule {
         DetranDatabaseBinder,
         DetranAuthContextGuard,
         DetranPolicyGuard,
+        PecProcessParametersService,
         PecRenachProcessService,
         PecRenachTransmissionService,
         RenachWebhookGuard,

@@ -94,8 +94,8 @@ re-expressed against the kernel, including concurrent writes and mutation denial
 | `integration.renach_acks`        | shared outbox delivery-attempt/receipt history                              | Preserve provider code, message, timestamp and relation to the delivery attempt in the kernel delivery ledger. ACK data is transport evidence, not a `ch` aggregate.                                                                                                                                                      |
 | `integration.crm_crp_cache`      | future `ch.professional_council_verifications` plus a council outbound port | Retain the last verified status and provenance as tenant-scoped professional-accreditation data. The external council adapter is distinct from SENATRAN. Global nullable-tenant cache rows are prohibited.                                                                                                                |
 | `integration.toxicology_cache`   | future `ch.toxicology_results` plus a toxicology outbound port              | Retain the result, laboratory, collection/expiry dates, source receipt and workflow linkage as a versioned domain record, not a generic cache. The owner register records the periodic flow as in scope, while `UC-PEC-012` still calls that decision open; implementation waits for those F1 artifacts to be reconciled. |
-| `integration.idempotency_keys`   | STYNX idempotency runtime with a kernel-owned durable store                 | Do not copy the PEC table. Before any PEC write surface is accepted, prove cross-instance replay, fingerprint mismatch rejection, expiry and fail-closed persistence. Process-local memory is not acceptable.                                                                                                             |
-| `integration.rate_limit_windows` | STYNX rate-limit runtime with a kernel-owned durable store                  | Do not copy the PEC table. Before parity is claimed, prove tenant-scoped cross-instance windows and expiry against persistent storage.                                                                                                                                                                                    |
+| `integration.idempotency_keys`   | STYNX idempotency runtime with a kernel-owned durable store                 | The kernel-shaped replacement is wired through the published PostgreSQL store. Independent-client integration tests prove reservation/replay and expiry; HTTP tests prove replay and fingerprint-mismatch rejection. Durable failure is strict and process-local memory is not used.                                      |
+| `integration.rate_limit_windows` | STYNX rate-limit runtime with a kernel-owned durable store                  | The kernel-shaped replacement is wired through the published PostgreSQL store with strict distributed failure. Independent-client integration tests prove tenant-scoped shared windows.                                                                                                                                   |
 
 `integration.v_transmission_status` becomes a shared delivery read model backed by
 the outbox delivery ledger. The current DETRAN base has `integration.outbox` and
@@ -116,11 +116,10 @@ certificate handling or mock-specific headers.
 `ch.processParameters` namespace. A second tenant-configuration table under `ch`
 would create competing sources for the same setting and is therefore prohibited.
 The origin administration surface (list, normalized-key upsert, delete and feature
-evaluation) remains a kernel configuration obligation: writes must be schema
-validated, actor-attributed and audited, and feature evaluation must use the
-published persistent provider. The origin's `InMemoryFeatureFlagProvider` fallback
-is not ported. Until that kernel surface is wired and tested, process-parameter
-administration is explicitly deferred and cannot count as runtime parity.
+evaluation) is implemented by the kernel composition root. Values are schema-
+validated, size-bounded, actor-attributed and audited; row locking prevents lost
+updates, and feature evaluation reads only the tenant's persistent document. The
+origin's `InMemoryFeatureFlagProvider` fallback is not ported.
 
 ### Port gates created by this mapping
 
@@ -150,8 +149,9 @@ misplaced under `auth` and two formerly described as integration caches become
 explicit `ch` records, so replacing infrastructure does not erase clinical
 behavior.
 
-This decision also makes current gaps visible. Existing DDL or package presence
-is not sufficient evidence for session, idempotency, rate-limit or delivery
-parity; those capabilities must be wired to durable stores and tested before the
-related origin suites can be retired. No origin module is frozen by this mapping
-ADR alone.
+This decision also makes current gaps visible. Session parity remains unproven:
+the installed STYNX session runtime requires a Redis deployment and signing-key
+contract, while PEC also requires a reconciled strong-factor rule. Existing DDL
+or package presence is not sufficient session evidence. Idempotency, rate-limit,
+inbox, delivery-attempt and process-parameter persistence now have executable
+target evidence. No origin module is frozen by this mapping ADR alone.
