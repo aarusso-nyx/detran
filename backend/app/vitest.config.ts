@@ -23,6 +23,12 @@ export default defineConfig({
           import.meta.url,
         ),
       ),
+      '@detran/ch-juntas': fileURLToPath(
+        new URL('../domains/ch/juntas/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-toxicology': fileURLToPath(
+        new URL('../domains/ch/toxicology/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {
