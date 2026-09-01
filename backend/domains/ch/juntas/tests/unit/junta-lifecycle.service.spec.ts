@@ -32,7 +32,7 @@ const members = [
 ];
 
 describe('JuntaLifecycleService', () => {
-  it('records candidate and operator separately and derives the sourced 30-day deadline', async () => {
+  it('AC-PEC-004-1 AC-PEC-004-3 AC-PEC-004-4 records a deliberate candidate request, taxonomy, actor, and sourced deadline', async () => {
     const record = { id: 'case-1', status: 'SUBMITTED' };
     const query = vi.fn().mockResolvedValue({ rows: [record] });
 
@@ -79,7 +79,7 @@ describe('JuntaLifecycleService', () => {
     ).rejects.toBeInstanceOf(NotFoundException);
   });
 
-  it('requires a holiday-aware deadline input for the sourced 15-business-day rule', () => {
+  it('AC-PEC-005-3 requires holiday-aware sourced deadlines across the appeal ladder', () => {
     const query = vi.fn();
     expect(() =>
       subject(query).service.designateSecond('case-1', {
@@ -89,7 +89,7 @@ describe('JuntaLifecycleService', () => {
     ).toThrow(BadRequestException);
   });
 
-  it('never invents a designation deadline for Junta Especial', () => {
+  it('AC-PEC-010-2 never invents a designation deadline for Junta Especial', () => {
     const query = vi.fn();
     expect(() =>
       subject(query).service.designateSpecial('case-1', {
@@ -100,7 +100,7 @@ describe('JuntaLifecycleService', () => {
     ).toThrow(BadRequestException);
   });
 
-  it('requires exactly three distinct members and two specialists for Junta Especial', () => {
+  it('AC-PEC-010-1 requires exactly three distinct members and two specialists for Junta Especial', () => {
     const query = vi.fn();
     expect(() =>
       subject(query).service.designateSpecial('case-1', {
@@ -110,7 +110,7 @@ describe('JuntaLifecycleService', () => {
     ).toThrow(BadRequestException);
   });
 
-  it('creates a distinct CETRAN-designated board with persisted membership', async () => {
+  it('AC-PEC-004-5 AC-PEC-005-2 AC-PEC-010-3 creates a distinct CETRAN-designated board with persisted membership', async () => {
     const query = vi
       .fn()
       .mockResolvedValueOnce({
@@ -156,7 +156,7 @@ describe('JuntaLifecycleService', () => {
     ).toHaveLength(3);
   });
 
-  it('requires an upheld second-instance decision before accepting an appeal', async () => {
+  it('AC-PEC-005-5 requires an upheld second-instance decision before accepting an appeal', async () => {
     const query = vi.fn().mockResolvedValue({ rows: [] });
     await expect(
       subject(query).service.fileAppeal('case-1', {
@@ -190,7 +190,66 @@ describe('JuntaLifecycleService', () => {
     ).rejects.toBeInstanceOf(ConflictException);
   });
 
-  it('signs a distinct Junta Especial decision and marks administrative exhaustion', async () => {
+  it('AC-PEC-005-4 keeps the case open when the board requests a complement', async () => {
+    const board = {
+      id: 'board-1',
+      case_id: 'case-1',
+      instance: 'SECOND',
+      status: 'DESIGNATED',
+      track: 'MEDICAL',
+    };
+    const persistedMembers = members.map((member) => ({
+      id: member.professionalId,
+      person_name: member.professionalId,
+      professional_kind: 'MEDICO',
+      council_type: 'CRM',
+      council_number: '123',
+      council_state: 'AM',
+      user_id: member.professionalId === 'p-1' ? 'actor-1' : null,
+      is_active: true,
+      role: member.role,
+      specialist: member.specialist,
+    }));
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [board] })
+      .mockResolvedValueOnce({ rows: persistedMembers })
+      .mockResolvedValueOnce({ rows: [board] })
+      .mockResolvedValueOnce({ rows: [{ id: 'decision-1' }] })
+      .mockResolvedValue({ rows: [] });
+    const { service, signing } = subject(query);
+    signing.renderAndSign.mockResolvedValue({
+      contentSha256: 'a'.repeat(64),
+      storageDocumentId: 'storage-1',
+      artifactSha256: 'b'.repeat(64),
+      signatureLevel: 'QUALIFIED',
+      signatureFormat: 'PAdES-TSA',
+      signedAt: '2026-08-31T00:00:00.000Z',
+      tsaTime: '2026-08-31T00:00:01.000Z',
+      certificateValidationSource: 'OCSP',
+      certificateValidationStatus: 'GOOD',
+      certificateValidatedAt: '2026-08-31T00:00:02.000Z',
+    });
+
+    await service.decide('board-1', {
+      outcome: 'COMPLEMENT_REQUIRED',
+      rationale: 'Complemento necessário',
+    });
+    expect(
+      query.mock.calls.some(
+        ([sql, values]) =>
+          String(sql).includes('update ch.junta_case') &&
+          values?.[1] === 'AWAITING_COMPLEMENT',
+      ),
+    ).toBe(true);
+    expect(
+      query.mock.calls.some(([sql]) =>
+        String(sql).includes("set status = 'DECIDED'"),
+      ),
+    ).toBe(false);
+  });
+
+  it('AC-PEC-005-1 AC-PEC-010-4 AC-PEC-010-5 signs and transmits a distinct Junta Especial decision with administrative exhaustion', async () => {
     const board = {
       id: 'board-1',
       case_id: 'case-1',
@@ -260,6 +319,11 @@ describe('JuntaLifecycleService', () => {
     expect(
       query.mock.calls.some(([sql]) =>
         String(sql).includes("status = 'DECIDED'"),
+      ),
+    ).toBe(true);
+    expect(
+      query.mock.calls.some(([sql]) =>
+        String(sql).includes("'ch.renach.junta-decision'"),
       ),
     ).toBe(true);
   });

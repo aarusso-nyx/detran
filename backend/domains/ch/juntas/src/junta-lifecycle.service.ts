@@ -421,13 +421,23 @@ export class JuntaLifecycleService {
           (topic, aggregate_type, aggregate_id, payload, idempotency_key, status, available_at)
          values ('ch.renach.junta-decision', 'ch.junta_decision', $1,
                  jsonb_build_object('decisionId', $1, 'caseId', $2, 'outcome', $3,
-                                    'administrativeExhausted', $4),
+                                    'administrativeExhausted', $4,
+                                    'remainingAppeal',
+                                    case
+                                      when $5 = 'SECOND' and $3 = 'UPHELD'
+                                      then jsonb_build_object(
+                                        'instance', 'SPECIAL',
+                                        'designatingAuthority', 'CETRAN',
+                                        'filingDeadlineRule', '30_CALENDAR_DAYS')
+                                      else null
+                                    end),
                  'ch.junta-decision:' || $1, 'pending', now())`,
         [
           decision.id,
           board.case_id,
           input.outcome,
           decision.administrative_exhausted,
+          board.instance,
         ],
       );
       return decision;

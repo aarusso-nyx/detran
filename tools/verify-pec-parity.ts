@@ -52,8 +52,8 @@ const blockers = JSON.parse(fs.readFileSync(blockerPath, 'utf8')) as {
 const blocked = new Set(blockers.acceptanceBlockers.map(({ id }) => id));
 const failures: string[] = [];
 
-if (accepted.size !== 70)
-  failures.push(`expected 70 acceptance criteria, found ${accepted.size}`);
+if (accepted.size !== 76)
+  failures.push(`expected 76 acceptance criteria, found ${accepted.size}`);
 for (const id of accepted) {
   const coverage = Number(tested.has(id)) + Number(blocked.has(id));
   if (coverage !== 1)
@@ -173,6 +173,6 @@ if (failures.length) {
   process.exitCode = 1;
 } else {
   console.log(
-    `verify-pec-parity: ACCOUNTED / ${blockers.verdict} (${tested.size}/70 tested, ${blocked.size}/70 blocked, 611 origin specs dispositioned)`,
+    `verify-pec-parity: ACCOUNTED / ${blockers.verdict} (${tested.size}/${accepted.size} tested, ${blocked.size}/${accepted.size} blocked, 611 origin specs dispositioned)`,
   );
 }

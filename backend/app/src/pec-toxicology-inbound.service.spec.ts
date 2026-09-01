@@ -32,7 +32,7 @@ const event = {
 
 const rawBody = Buffer.from(JSON.stringify(event));
 describe('PecToxicologyInboundService', () => {
-  it('creates an immutable result and three-month suspension for a positive event', async () => {
+  it('AC-PEC-012-2 AC-PEC-012-4 creates an immutable non-encounter result and three-month suspension', async () => {
     let derivedHash = '';
     const query = vi
       .fn()
@@ -76,7 +76,7 @@ describe('PecToxicologyInboundService', () => {
     ).toBe(false);
   });
 
-  it('preserves the positive source result and releases only the active suspension on a later negative', async () => {
+  it('AC-PEC-012-5 preserves source history and releases only the active suspension on a later negative', async () => {
     const negative = {
       ...event,
       result: 'NEGATIVE',
@@ -123,7 +123,7 @@ describe('PecToxicologyInboundService', () => {
     expect(releaseSql).not.toContain('delete');
   });
 
-  it('records malformed and unmatched events as audited inbox exceptions', async () => {
+  it('AC-PEC-012-3 AC-PEC-012-6 validates scope and records malformed or unmatched events as audited exceptions', async () => {
     let derivedHash = '';
     const malformedQuery = vi
       .fn()
@@ -168,7 +168,7 @@ describe('PecToxicologyInboundService', () => {
     });
   });
 
-  it('returns a processed duplicate without applying the driver effect twice', async () => {
+  it('AC-PEC-012-1 returns an authenticated processed duplicate without applying effects twice', async () => {
     let derivedHash = '';
     const query = vi
       .fn()

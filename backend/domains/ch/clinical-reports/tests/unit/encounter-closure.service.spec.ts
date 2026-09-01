@@ -160,7 +160,7 @@ describe('EncounterClosureService', () => {
     ).toBe(true);
   });
 
-  it('fails closed while the Owner-blocked junta ledger is unavailable', async () => {
+  it('AC-PEC-004-2 fails closed while the Junta ledger is unavailable or pending', async () => {
     const query = vi
       .fn()
       .mockResolvedValueOnce({ rows: [baseSnapshot] })
