@@ -103,6 +103,10 @@ import { PecToxicologyInboundController } from './pec-toxicology-inbound.control
 import { PecToxicologyInboundService } from './pec-toxicology-inbound.service.js';
 import { PecSefazController } from './pec-sefaz.controller.js';
 import { PEC_SEFAZ_PORT, PecSefazService } from './pec-sefaz.service.js';
+import { PecAuditQueryController } from './pec-audit-query.controller.js';
+import { PecAuditQueryService } from './pec-audit-query.service.js';
+import { PecUserAdminController } from './pec-user-admin.controller.js';
+import { PecUserAdminService } from './pec-user-admin.service.js';
 
 patchTenantContextInterceptorOrdering();
 
@@ -331,6 +335,8 @@ export class AppModule {
         PecRenachTransmissionController,
         PecToxicologyInboundController,
         PecSefazController,
+        PecAuditQueryController,
+        PecUserAdminController,
       ],
       providers: [
         DetranDatabaseBinder,
@@ -341,6 +347,8 @@ export class AppModule {
         PecRenachTransmissionService,
         PecToxicologyInboundService,
         PecSefazService,
+        PecAuditQueryService,
+        PecUserAdminService,
         RenachWebhookGuard,
         {
           provide: PEC_RENACH_PORT,
