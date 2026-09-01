@@ -10,6 +10,8 @@ import {
   detranDataOptions,
   detranPipelineOptions,
   detranRuntimeProfile,
+  detranSessionsOptions,
+  detranFullAuthOptions,
   detranStorageOptions,
   detranTokenVerifier,
 } from './detran-runtime.js';
@@ -21,8 +23,14 @@ const keys = [
   'NODE_ENV',
   'STYNX_APP_DATABASE_URL',
   'STYNX_COGNITO_ISSUER',
+  'STYNX_COGNITO_JWKS_URI',
   'STYNX_OWNER_DATABASE_URL',
   'STYNX_READER_DATABASE_URL',
+  'STYNX_REDIS_URL',
+  'STYNX_SESSION_ISSUER',
+  'STYNX_SESSION_JWKS_URI',
+  'STYNX_SESSION_SIGNING_KEY_SET',
+  'STYNX_SESSION_SIGNING_SECRET_ID',
 ] as const;
 const original = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
 
@@ -75,6 +83,41 @@ describe('DETRAN runtime hooks', () => {
     expect(() => detranDataOptions()).toThrow(
       'distinct owner/app/reader principals',
     );
+  });
+
+  it('requires externally signed TLS-backed sessions outside local profiles', () => {
+    process.env.DETRAN_RUNTIME_PROFILE = 'production';
+    process.env.STYNX_SESSION_ISSUER = 'https://sessions.example.test';
+    process.env.STYNX_REDIS_URL = 'rediss://redis.example.test:6380';
+    process.env.STYNX_SESSION_SIGNING_SECRET_ID = 'detran/session-signing';
+    expect(detranSessionsOptions()).toMatchObject({
+      issuer: 'https://sessions.example.test',
+      redis: { url: 'rediss://redis.example.test:6380' },
+      jwt: { secretId: 'detran/session-signing' },
+    });
+
+    process.env.STYNX_SESSION_SIGNING_KEY_SET = '{"keys":[]}';
+    expect(() => detranSessionsOptions()).toThrow(
+      'Inline STYNX session signing',
+    );
+    delete process.env.STYNX_SESSION_SIGNING_KEY_SET;
+    process.env.STYNX_REDIS_URL = 'redis://redis.example.test:6379';
+    expect(() => detranSessionsOptions()).toThrow('must use TLS');
+  });
+
+  it('requires HTTPS external JWT trust configuration', () => {
+    process.env.DETRAN_RUNTIME_PROFILE = 'staging-like';
+    process.env.STYNX_COGNITO_ISSUER = 'https://cognito.example.test';
+    process.env.STYNX_SESSION_ISSUER = 'https://sessions.example.test';
+    process.env.STYNX_SESSION_JWKS_URI = 'https://keys.example.test/jwks';
+    process.env.STYNX_REDIS_URL = 'rediss://redis.example.test:6380';
+    expect(detranFullAuthOptions()).toMatchObject({
+      cognito: { issuer: 'https://cognito.example.test' },
+      stynx: { jwksUri: 'https://keys.example.test/jwks' },
+      permissions: { dbFallbackOnRedisDown: false },
+    });
+    process.env.STYNX_SESSION_JWKS_URI = 'http://keys.example.test/jwks';
+    expect(() => detranFullAuthOptions()).toThrow('must use HTTPS');
   });
 
   it('builds the storage, rate-limit, and idempotency hook configuration', () => {

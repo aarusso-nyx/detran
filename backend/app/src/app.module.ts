@@ -10,9 +10,9 @@ import {
 import { APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import {
   AuditInterceptor,
-  AuthContextGuard,
+  AuthContextGuard as LegacyAuthContextGuard,
   StynxAuditModule,
-  StynxAuthModule,
+  StynxAuthModule as LegacyStynxAuthModule,
   StynxAuthorizationModule,
   StynxPlatformPipelineModule,
 } from '@stynx-nyx/backend';
@@ -29,6 +29,11 @@ import {
   StynxTenancyModule,
   TenantContextInterceptor,
 } from '@stynx-nyx/tenancy';
+import {
+  StynxAuthGuard,
+  StynxAuthModule as FullStynxAuthModule,
+} from '@stynx-nyx/auth';
+import { StynxSessionsModule } from '@stynx-nyx/sessions';
 import { Observable } from 'rxjs';
 import { createSenatranAdapter } from '@detran/senatran-adapter';
 
@@ -55,16 +60,30 @@ import {
   DetranPersistedAuditSink,
   DetranPolicyEvaluator,
   DetranPostgresReadiness,
+  DetranSessionReadiness,
   DetranTenantEntitlementPolicy,
   DetranTenantResolver,
   detranDataOptions,
   detranHealthOptions,
+  detranFullAuthOptions,
   detranPipelineSqlExecutor,
   detranPipelineOptions,
   detranPersistentPipelineStore,
   detranStorageOptions,
+  detranSessionsOptions,
   detranTokenVerifier,
+  detranRuntimeProfile,
+  isLocalRuntimeProfile,
 } from './detran-runtime.js';
+import {
+  DetranSessionReadinessBinder,
+  DetranSessionStrongFactorGuard,
+  DetranSingleSessionInterceptor,
+} from './detran-session-policy.js';
+import {
+  DetranClinicalTrustReadiness,
+  DetranClinicalTrustReadinessBinder,
+} from './detran-clinical-trust.js';
 import { PecRenachTransmissionController } from './pec-renach-transmission.controller.js';
 import { PecProcessParametersController } from './pec-process-parameters.controller.js';
 import { PecProcessParametersService } from './pec-process-parameters.service.js';
@@ -139,12 +158,36 @@ function patchTenantContextInterceptorOrdering(): void {
 
 export const detranAuditSink = new DetranPersistedAuditSink();
 export const detranPostgresReadiness = new DetranPostgresReadiness();
+export const detranSessionReadiness = new DetranSessionReadiness();
+export const detranClinicalTrustReadiness = new DetranClinicalTrustReadiness();
 
 @Injectable()
-export class DetranAuthContextGuard implements CanActivate {
+export class DetranLegacyAuthContextGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly inner: AuthContextGuard,
+    private readonly inner: LegacyAuthContextGuard,
+  ) {}
+
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean | undefined>(
+      DETRAN_PUBLIC_METADATA_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+    if (isPublic) return true;
+    const request = context
+      .switchToHttp()
+      .getRequest<{ path?: string; url?: string }>();
+    const path = request.path ?? request.url ?? '';
+    if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
+    return this.inner.canActivate(context);
+  }
+}
+
+@Injectable()
+export class DetranStynxAuthContextGuard implements CanActivate {
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly inner: StynxAuthGuard,
   ) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
@@ -184,7 +227,54 @@ class DetranDatabaseBinder implements OnModuleInit {
 @Module({})
 export class AppModule {
   static forRoot(): DynamicModule {
-    const tokenVerifier = detranTokenVerifier();
+    const local = isLocalRuntimeProfile(detranRuntimeProfile());
+    const authImports = local
+      ? [
+          LegacyStynxAuthModule.forRoot({
+            tokenVerifier: detranTokenVerifier(),
+            tenantResolver: new DetranTenantResolver(),
+            tenantEntitlementPolicy: new DetranTenantEntitlementPolicy(),
+          }),
+        ]
+      : [
+          StynxSessionsModule.forRoot(detranSessionsOptions()),
+          FullStynxAuthModule.forRoot(detranFullAuthOptions()),
+        ];
+    const authProviders = local
+      ? [
+          DetranLegacyAuthContextGuard,
+          {
+            provide: APP_GUARD,
+            useExisting: DetranLegacyAuthContextGuard,
+          },
+        ]
+      : [
+          DetranStynxAuthContextGuard,
+          DetranSessionStrongFactorGuard,
+          DetranSingleSessionInterceptor,
+          DetranSessionReadinessBinder,
+          DetranClinicalTrustReadinessBinder,
+          {
+            provide: DetranSessionReadiness,
+            useValue: detranSessionReadiness,
+          },
+          {
+            provide: DetranClinicalTrustReadiness,
+            useValue: detranClinicalTrustReadiness,
+          },
+          {
+            provide: APP_GUARD,
+            useExisting: DetranStynxAuthContextGuard,
+          },
+          {
+            provide: APP_GUARD,
+            useExisting: DetranSessionStrongFactorGuard,
+          },
+          {
+            provide: APP_INTERCEPTOR,
+            useExisting: DetranSingleSessionInterceptor,
+          },
+        ];
     return {
       module: AppModule,
       imports: [
@@ -193,11 +283,7 @@ export class AppModule {
           redactPaths: ['authorization', 'cookie', 'set-cookie'],
         }),
         StynxDataModule.forRoot(detranDataOptions()),
-        StynxAuthModule.forRoot({
-          tokenVerifier,
-          tenantResolver: new DetranTenantResolver(),
-          tenantEntitlementPolicy: new DetranTenantEntitlementPolicy(),
-        }),
+        ...authImports,
         StynxAuthorizationModule.forRoot({
           policyEvaluator: new DetranPolicyEvaluator(),
         }),
@@ -205,7 +291,13 @@ export class AppModule {
         StynxAuditModule.forRoot({ sink: detranAuditSink }),
         StynxStorageModule.forRoot(detranStorageOptions()),
         StynxPlatformPipelineModule.forRoot(detranPipelineOptions()),
-        StynxHealthModule.forRoot(detranHealthOptions(detranPostgresReadiness)),
+        StynxHealthModule.forRoot(
+          detranHealthOptions(
+            detranPostgresReadiness,
+            local ? undefined : detranSessionReadiness,
+          ),
+          local ? [] : [detranClinicalTrustReadiness],
+        ),
         ClinicalNetworkModule,
         PatientsModule,
         EncountersModule,
@@ -232,7 +324,7 @@ export class AppModule {
       ],
       providers: [
         DetranDatabaseBinder,
-        DetranAuthContextGuard,
+        ...authProviders,
         DetranPolicyGuard,
         PecProcessParametersService,
         PecRenachProcessService,
@@ -245,7 +337,6 @@ export class AppModule {
         },
         { provide: DetranPersistedAuditSink, useValue: detranAuditSink },
         { provide: DetranPostgresReadiness, useValue: detranPostgresReadiness },
-        { provide: APP_GUARD, useExisting: DetranAuthContextGuard },
         { provide: APP_GUARD, useExisting: DetranPolicyGuard },
         { provide: APP_INTERCEPTOR, useExisting: AuditInterceptor },
       ],

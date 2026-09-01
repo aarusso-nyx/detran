@@ -62,5 +62,6 @@ import { EncounterClosureService } from './encounter-closure.service.js';
     CandidateDossierService,
     EncounterClosureService,
   ],
+  exports: [PadesSigningHttpAdapter],
 })
 export class ClinicalReportsModule {}
