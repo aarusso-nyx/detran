@@ -49,6 +49,7 @@ import { RestrictionsModule } from '@detran/ch-restrictions';
 import { RetentionModule } from '@detran/ch-retention';
 import { SchedulingModule } from '@detran/ch-scheduling';
 import { TelehealthModule } from '@detran/ch-telehealth';
+import { ToxicologyModule } from '@detran/ch-toxicology';
 
 import {
   DetranPersistedAuditSink,
@@ -74,6 +75,8 @@ import {
   PecRenachTransmissionService,
 } from './pec-renach-transmission.service.js';
 import { RenachWebhookGuard } from './renach-webhook.guard.js';
+import { PecToxicologyInboundController } from './pec-toxicology-inbound.controller.js';
+import { PecToxicologyInboundService } from './pec-toxicology-inbound.service.js';
 
 patchTenantContextInterceptorOrdering();
 
@@ -216,6 +219,7 @@ export class AppModule {
         ClinicalReportsModule,
         ProcessBlocksModule,
         TelehealthModule,
+        ToxicologyModule,
         SchedulingModule,
         RestrictionsModule,
         RetentionModule,
@@ -224,6 +228,7 @@ export class AppModule {
         PecProcessParametersController,
         PecRenachProcessController,
         PecRenachTransmissionController,
+        PecToxicologyInboundController,
       ],
       providers: [
         DetranDatabaseBinder,
@@ -232,6 +237,7 @@ export class AppModule {
         PecProcessParametersService,
         PecRenachProcessService,
         PecRenachTransmissionService,
+        PecToxicologyInboundService,
         RenachWebhookGuard,
         {
           provide: PEC_RENACH_PORT,

@@ -17,6 +17,12 @@ export default defineConfig({
       '@detran/shared': fileURLToPath(
         new URL('../domains/shared/src/index.ts', import.meta.url),
       ),
+      '@detran/senatran-adapter': fileURLToPath(
+        new URL(
+          '../../packages/senatran-adapter/src/index.ts',
+          import.meta.url,
+        ),
+      ),
     },
   },
   test: {
