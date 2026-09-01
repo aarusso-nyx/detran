@@ -18,6 +18,63 @@ export default defineConfig({
       '@detran/shared': fileURLToPath(
         new URL('../domains/shared/src/index.ts', import.meta.url),
       ),
+      '@detran/ch-billing': fileURLToPath(
+        new URL('../domains/ch/billing/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-biometrics': fileURLToPath(
+        new URL('../domains/ch/biometrics/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-clinical-controls': fileURLToPath(
+        new URL(
+          '../domains/ch/clinical-controls/src/index.ts',
+          import.meta.url,
+        ),
+      ),
+      '@detran/ch-clinical-network': fileURLToPath(
+        new URL('../domains/ch/clinical-network/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-clinical-reports': fileURLToPath(
+        new URL('../domains/ch/clinical-reports/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-encounters': fileURLToPath(
+        new URL('../domains/ch/encounters/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-exams': fileURLToPath(
+        new URL('../domains/ch/exams/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-inconsistencies': fileURLToPath(
+        new URL('../domains/ch/inconsistencies/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-juntas': fileURLToPath(
+        new URL('../domains/ch/juntas/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-operational-controls': fileURLToPath(
+        new URL(
+          '../domains/ch/operational-controls/src/index.ts',
+          import.meta.url,
+        ),
+      ),
+      '@detran/ch-patients': fileURLToPath(
+        new URL('../domains/ch/patients/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-process-blocks': fileURLToPath(
+        new URL('../domains/ch/process-blocks/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-restrictions': fileURLToPath(
+        new URL('../domains/ch/restrictions/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-retention': fileURLToPath(
+        new URL('../domains/ch/retention/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-scheduling': fileURLToPath(
+        new URL('../domains/ch/scheduling/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-telehealth': fileURLToPath(
+        new URL('../domains/ch/telehealth/src/index.ts', import.meta.url),
+      ),
+      '@detran/ch-toxicology': fileURLToPath(
+        new URL('../domains/ch/toxicology/src/index.ts', import.meta.url),
+      ),
       '@detran/senatran-adapter': fileURLToPath(
         new URL(
           '../../packages/senatran-adapter/src/index.ts',
@@ -29,12 +86,6 @@ export default defineConfig({
       ),
       '@detran/portal-complaints': fileURLToPath(
         new URL('../domains/portal/complaints/src/index.ts', import.meta.url),
-      ),
-      '@detran/ch-juntas': fileURLToPath(
-        new URL('../domains/ch/juntas/src/index.ts', import.meta.url),
-      ),
-      '@detran/ch-toxicology': fileURLToPath(
-        new URL('../domains/ch/toxicology/src/index.ts', import.meta.url),
       ),
     },
   },
