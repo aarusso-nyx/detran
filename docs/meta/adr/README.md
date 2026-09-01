@@ -19,3 +19,4 @@ binding; supersede only by a new ADR.
 | [ADR-0009](ADR-0009-generated-openapi-contracts.md)              | API contracts generated from blueprints                              |
 | [ADR-0010](ADR-0010-canonical-business-legal-knowledge-base.md)  | Canonical business and legal knowledge base                          |
 | [ADR-0011](ADR-0011-pec-kernel-and-integration-mapping.md)       | PEC auth, audit and integration mapping                              |
+| [ADR-0012](ADR-0012-pec-parity-closure-contract.md)              | PEC parity closure contract                                          |

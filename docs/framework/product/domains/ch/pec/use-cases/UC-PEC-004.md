@@ -8,13 +8,14 @@ sources:
   - pec:domain/juntas-medical-board/api/src/juntas/dto/create-junta-case.dto.ts
   - pec:domain/shared/api/src/pec-policy.ts
   - pec:docs/framework/pec/flows/junta-recursos.md
-updated: 2026-08-26
+updated: 2026-08-31
 ---
 
 ## Ator e objetivo
 
-Auditor, Gestor ou Gestor DETRAN encaminha um caso com dúvida ou divergência clínica para
-avaliação formal da junta médica, bloqueando o encerramento do encounter até a decisão.
+Candidato/condutor requer revisão do resultado; um operador autorizado protocola o ato e o
+órgão designa uma junta médica ou psicológica, bloqueando o encerramento do encounter até a
+decisão.
 Origem: UCAP-UC-15 ("Enviar à Junta Médica"), rastreado internamente como UC-J1. Ver
 [JRN-PEC-002] para a narrativa completa e [WF-PEC-002] para a máquina de estados.
 
@@ -26,18 +27,19 @@ Origem: UCAP-UC-15 ("Enviar à Junta Médica"), rastreado internamente como UC-J
 
 ## Fluxo principal
 
-1. Auditor, Gestor ou Gestor DETRAN monta o dossiê com evidências do encounter.
-2. Chama `POST /juntas` com `encounterId`, `reason` (texto livre, até 240 caracteres) e
-   `payload` opcional.
-3. Sistema cria o caso em `status='SUBMITTED'`.
+1. O candidato apresenta requerimento dentro de 30 dias da ciência do resultado.
+2. Operador autorizado protocola `encounterId`, trilha médica/psicológica, candidato requerente,
+   data de ciência, motivo taxonomizado e complemento textual opcional.
+3. Sistema cria o caso em `SUBMITTED`, calcula somente os prazos com fonte e registra o ator que
+   protocolou sem substituí-lo pelo requerente.
 4. Enquanto o caso não estiver `DECIDED`, o encounter associado não pode ser encerrado
    ([WF-PEC-001] §"Gate de encerramento").
 
 ## Fluxos alternativos / exceções
 
-- Não há criação automática de caso por regra de sistema (ex.: resultado de exame
-  inconclusivo não abre junta sozinho) — sempre ato humano deliberado.
-- Não há taxonomia fixa de motivo — o campo `reason` é texto livre, não um enum de causas.
+- Não há criação automática de caso por regra de sistema: a submissão é um ato humano deliberado
+  em nome do candidato identificado.
+- Motivo não reconhecido falha fechado; detalhe livre complementa, mas não substitui, a taxonomia.
 
 ## Pós-condições
 

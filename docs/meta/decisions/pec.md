@@ -1,12 +1,11 @@
-# PEC — owner decisions (2026-08-28)
+# PEC — owner decisions (2026-08-28, reconciled 2026-08-31)
 
 **Source of truth:** canonical in-repository PEC
 [rules](../../framework/product/domains/ch/pec/rules/),
 [use cases](../../framework/product/domains/ch/pec/use-cases/), and
 [workflows](../../framework/product/domains/ch/pec/workflows/), including `RN-PEC-113`,
-`RN-PEC-105`, `RN-PEC-141`, `RN-PEC-110`, and `WF-PEC-005`. Forward-looking — `ch` is still an
-empty placeholder domain in this monorepo (2 files, no implementation). Capture these now so
-they're not re-litigated once PEC gets ported.
+`RN-PEC-105`, `RN-PEC-141`, `RN-PEC-110`, and `WF-PEC-005`. The decisions are binding inputs to
+the in-progress `ch` implementation and supersede incompatible origin behavior.
 
 ## DT-021 — exam-distribution regime (`RN-PEC-113`, `UC-PEC-013`)
 
@@ -43,9 +42,21 @@ Res. CONTRAN 923/2022 art.10-A (introduced by 1.009/2024) creates a periodic tox
 C/D/E drivers post-licensing, with SENATRAN alerting the driver directly — no clear normative role
 for the state executive body. Two branches were on the table: (a) entirely out of PEC's scope, or
 (b) PEC receives and processes the result event. The Owner chose **(b), in scope** — but the
-design itself (event receiver, responsible actor, effect on driver record, interaction with the
-`RN-PEC-106` cadastro block) is **not yet written**. `UC-PEC-012` stays `stub`, now blocked on
-design work rather than on a scope decision.
+design itself was approved by the Owner on 2026-08-31 as follows:
+
+- PEC consumes authenticated, idempotent periodic-result events from RENACH through the
+  SENATRAN adapter boundary; it never calls a laboratory directly;
+- the source event, not a human operator, is the initiating actor, and the trusted integration
+  principal plus event identity are retained in audit evidence;
+- the post-CNH result is a distinct domain record and does not fabricate a clinical encounter;
+- a valid positive result creates a three-month driving-suspension record; a later valid negative
+  result or the sourced expiry transition may release it, without mutating the source result;
+- SENATRAN remains responsible for the statutory driver alert; PEC records received status and
+  does not duplicate or pretend to have delivered that alert; and
+- unmatched, stale, malformed or unsupported-category events fail closed into an auditable
+  exception state and never silently change the driver record.
+
+`UC-PEC-012` is therefore promoted from `stub` to `reviewed` and is a build target.
 
 ## DT-025 — Junta Especial de Saúde (3rd-instance appeal board) (`UC-PEC-005`, `UC-PEC-010`, `RN-PEC-110`)
 
@@ -53,7 +64,42 @@ Res. CONTRAN 927/2022 arts.13-15 describe a 3-instance review chain, with the 3r
 **distinct technical collegiate body** (Junta Especial de Saúde, ≥3 professionals incl. 2
 specialists) designated by CETRAN. The existing implementation reference (`escalateToCetran`)
 only reassigns the decision's signer within the same record — no separate case, deadline, or
-collegiate body. The Owner decided to **keep the simplified signature-reassignment mechanism** and
-**not** model the Junta Especial de Saúde as a distinct body. The full normative reading stays in
-`UC-PEC-010`/`RN-PEC-110` as documented compliance risk, not as a build target — do not implement
-a separate appeal-board flow for this.
+collegiate body.
+
+**Superseding Owner decision (2026-08-31):** full normative parity is required. The earlier choice
+to retain signature reassignment is withdrawn. The target must model the candidate request, the
+medical/psychological second-instance board, formal appeal, CETRAN designation, distinct Junta
+Especial composition and its own signed decision. `escalateToCetran` is not a valid target
+mechanism. Only sourced deadlines are enforced; unsourced designation/decision deadlines remain
+explicitly unset.
+
+## PEC-PARITY-001 — executable parity evidence replaces raw spec-file count
+
+The Owner approved replacing the literal “at least 611 spec files” threshold. The origin contains
+374 generated `it.todo` placeholders and 122 generated wrappers, so file count rewards inert
+artifacts rather than behavior. Parity now requires:
+
+1. every reviewed `AC-PEC-*` criterion is referenced by an executable target test;
+2. no acceptance blocker remains in the parity ledger;
+3. every origin spec path has a non-empty, machine-validated disposition and target evidence;
+4. deferred or blocked behavioral origin specs keep the verdict `NOT_READY`; and
+5. the complete unit, integration, e2e, contract, blueprint, RLS and boundary gates pass.
+
+## PEC-TRUST-001 — session and clinical-signing trust prerequisites
+
+The Owner approved the following fail-closed production contract:
+
+- STYNX sessions use Redis only outside test/local profiles and load an RSA signing key set from
+  the platform secret mechanism; no in-memory session store or inline production private key is
+  allowed;
+- a successful upstream strong factor is required before session creation or tenant switch;
+- at most one active session per user and tenant is retained; replacement revokes the prior
+  session, and refresh-token reuse revokes the token family through the STYNX runtime;
+- session revocation and expiry must be checked on authenticated requests, not only encoded in a
+  JWT; and
+- clinical PAdES/TSA/OCSP-or-CRL remains an external trust service, but non-local startup/readiness
+  requires HTTPS endpoints, secret-backed credentials and a successful trust-capability probe.
+
+Real-provider evidence is a deployment input. Local mocks may prove fail-closed contracts and
+receipt validation, but cannot be presented as proof of a production TSA, certificate chain,
+revocation responder or Redis deployment.

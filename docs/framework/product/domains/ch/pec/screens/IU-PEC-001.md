@@ -42,15 +42,15 @@ decisão pendente do Owner.
 
 ## B — Console regulatório (7)
 
-| id       | Tela                                                       | Ator            | UC / WF                                                 |
-| -------- | ---------------------------------------------------------- | --------------- | ------------------------------------------------------- |
-| R-01     | Fila e montagem de dossiê para a junta                     | Auditor, Gestor | [UC-PEC-004]                                            |
-| R-02     | Dossiê do caso + registro de parecer                       | Junta           | [UC-PEC-005], [WF-PEC-002]                              |
-| R-03     | Recurso à Junta Especial de Saúde                          | CETRAN          | [UC-PEC-010] — entidade **hoje inexistente no sistema** |
-| R-04     | Escada de prazos do caso (30 / 15du / 30 / 30 / 20du)      | Junta, Gestor   | [RN-PEC-112]                                            |
-| R-05     | Credenciamento de clínicas e profissionais                 | Gestor DETRAN   | fora dos UC atuais; alimenta o pool de [UC-PEC-013]     |
-| R-06     | Relatórios regulatórios e trilha de auditoria              | Auditor, DPO    | somente leitura                                         |
-| **R-07** | **Retenção e eliminação de prontuário (lote + aprovação)** | DPO             | [UC-PEC-014], [RN-PEC-141]                              |
+| id       | Tela                                                       | Ator            | UC / WF                                             |
+| -------- | ---------------------------------------------------------- | --------------- | --------------------------------------------------- |
+| R-01     | Fila e montagem de dossiê para a junta                     | Auditor, Gestor | [UC-PEC-004]                                        |
+| R-02     | Dossiê do caso + registro de parecer                       | Junta           | [UC-PEC-005], [WF-PEC-002]                          |
+| R-03     | Recurso à Junta Especial de Saúde                          | CETRAN          | [UC-PEC-010] — colegiado distinto aprovado          |
+| R-04     | Escada de prazos do caso (30 / 15du / 30 / 30 / 20du)      | Junta, Gestor   | [RN-PEC-112]                                        |
+| R-05     | Credenciamento de clínicas e profissionais                 | Gestor DETRAN   | fora dos UC atuais; alimenta o pool de [UC-PEC-013] |
+| R-06     | Relatórios regulatórios e trilha de auditoria              | Auditor, DPO    | somente leitura                                     |
+| **R-07** | **Retenção e eliminação de prontuário (lote + aprovação)** | DPO             | [UC-PEC-014], [RN-PEC-141]                          |
 
 ## C — Portal do candidato (7)
 
@@ -61,7 +61,7 @@ decisão pendente do Owner.
 | P-03     | Entender minha restrição                                                    | [UC-PEC-011] — conteúdo limitado pelo Anexo XV, não capturado |
 | P-04     | Solicitar junta médica/psicológica (exercer o prazo de 30 dias)             | [UC-PEC-004], [RN-PEC-112]                                    |
 | P-05     | Acompanhar meu recurso                                                      | [UC-PEC-010]                                                  |
-| P-06     | Meu calendário de exame toxicológico periódico                              | [UC-PEC-012] — **condicional** à decisão de escopo (DT-024)   |
+| P-06     | Meu estado de exame toxicológico periódico                                  | [UC-PEC-012] — leitura do evento recebido do RENACH           |
 | **P-07** | **Exercer direitos do titular (acesso, correção, devolução do prontuário)** | [RN-PEC-153], [UC-PEC-014]                                    |
 
 ## D — Requisitos transversais
@@ -80,15 +80,13 @@ decisão pendente do Owner.
 6. **Prazo é direito, não jargão.** Nas telas do candidato, o prazo aparece como "até quando você
    pode agir", nunca como nome de estado interno.
 
-## E — Telas bloqueadas por decisão pendente
+## E — Telas ainda condicionadas por autoridade externa
 
 | Tela               | Depende de                                                                 |
 | ------------------ | -------------------------------------------------------------------------- |
-| P-06               | DT-024 — o PEC participa do ciclo toxicológico periódico?                  |
 | P-01 (forma final) | DT-021 — regime de distribuição P1/P2/P3                                   |
-| R-03               | DT-025 — a Junta Especial de Saúde é órgão distinto no modelo?             |
 | R-07, P-07         | DT-023 — quem é o responsável pela guarda do prontuário                    |
 | C-12 (rótulos)     | DT-022 — mapeamento do vocabulário de resultado confirmado com o DETRAN-AM |
 
-Cinco das 26 telas dependem de decisão do Owner. Nenhuma delas está no caminho crítico do
+Três das 26 telas ainda dependem de autoridade externa. Nenhuma delas está no caminho crítico do
 atendimento clínico — C-01 a C-11 formam um fluxo completo e implementável sem essas respostas.
