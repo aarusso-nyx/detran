@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAlcoholTestDto } from '../dto/create-alcohol-test.dto.js';
 import { AlcoholTestService } from '../services/alcohol-test.service.js';
 
-@Controller('v1/inf/alcoholtests')
+@Controller('v1/inf/alcohol/tests')
 @Resource('inf:alcohol-test')
 export class AlcoholTestController {
   constructor(private readonly service: AlcoholTestService) {}

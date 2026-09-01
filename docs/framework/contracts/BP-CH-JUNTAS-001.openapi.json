@@ -1,0 +1,859 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Juntas — BP-CH-JUNTAS-001",
+    "version": "1.0.0",
+    "description": "Requerimento do candidato, juntas medica e psicologica, recurso formal e Junta Especial de Saude distinta designada pelo CETRAN.",
+    "x-blueprint": "BP-CH-JUNTAS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/juntas/cases": {
+      "get": {
+        "tags": ["junta"],
+        "operationId": "listJuntaCase",
+        "summary": "List JuntaCase (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JuntaCase"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/cases/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["junta"],
+        "operationId": "getJuntaCase",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JuntaCase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/boards": {
+      "get": {
+        "tags": ["junta"],
+        "operationId": "listJuntaBoard",
+        "summary": "List JuntaBoard (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JuntaBoard"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/boards/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["junta"],
+        "operationId": "getJuntaBoard",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JuntaBoard"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/board-members": {
+      "get": {
+        "tags": ["junta"],
+        "operationId": "listJuntaBoardMember",
+        "summary": "List JuntaBoardMember (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JuntaBoardMember"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/board-members/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["junta"],
+        "operationId": "getJuntaBoardMember",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JuntaBoardMember"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/decisions": {
+      "get": {
+        "tags": ["junta"],
+        "operationId": "listJuntaDecision",
+        "summary": "List JuntaDecision (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JuntaDecision"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/decisions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["junta"],
+        "operationId": "getJuntaDecision",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JuntaDecision"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/appeals": {
+      "get": {
+        "tags": ["junta"],
+        "operationId": "listJuntaAppeal",
+        "summary": "List JuntaAppeal (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/JuntaAppeal"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/juntas/appeals/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["junta"],
+        "operationId": "getJuntaAppeal",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JuntaAppeal"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "JuntaCase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "applicant_patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "track": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["MEDICAL", "PSYCH"]
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 48,
+            "enum": [
+              "RESULT_DISAGREEMENT",
+              "PERMANENT_INAPTITUDE",
+              "CLINICAL_DIVERGENCE",
+              "OTHER_DOCUMENTED"
+            ]
+          },
+          "reason_detail": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "result_known_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "request_deadline_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "SUBMITTED",
+              "UNDER_REVIEW",
+              "AWAITING_COMPLEMENT",
+              "DECIDED",
+              "APPEALED",
+              "FINAL_DECIDED"
+            ],
+            "default": "'SUBMITTED'"
+          },
+          "submitted_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "finalized_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "encounter_id",
+          "applicant_patient_id",
+          "track",
+          "reason_code",
+          "result_known_at",
+          "requested_at",
+          "request_deadline_at",
+          "submitted_by",
+          "created_at"
+        ]
+      },
+      "CreateJuntaCaseDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "applicant_patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "track": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["MEDICAL", "PSYCH"]
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 48,
+            "enum": [
+              "RESULT_DISAGREEMENT",
+              "PERMANENT_INAPTITUDE",
+              "CLINICAL_DIVERGENCE",
+              "OTHER_DOCUMENTED"
+            ]
+          },
+          "reason_detail": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "result_known_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "encounter_id",
+          "applicant_patient_id",
+          "track",
+          "reason_code",
+          "result_known_at",
+          "requested_at"
+        ]
+      },
+      "JuntaBoard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["SECOND", "SPECIAL"]
+          },
+          "designated_by": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "designated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "designation_deadline_rule": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true
+          },
+          "designation_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decision_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["DESIGNATED", "DECIDED"],
+            "default": "'DESIGNATED'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "instance",
+          "designated_by",
+          "designated_at",
+          "created_at"
+        ]
+      },
+      "CreateJuntaBoardDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["SECOND", "SPECIAL"]
+          },
+          "designated_by": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "designated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "designation_deadline_rule": {
+            "type": "string",
+            "maxLength": 32,
+            "nullable": true
+          },
+          "designation_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decision_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["case_id", "instance", "designated_by", "designated_at"]
+      },
+      "JuntaBoardMember": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "board_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["CHAIR", "MEMBER"],
+            "default": "'MEMBER'"
+          },
+          "specialist": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "board_id", "professional_id", "created_at"]
+      },
+      "CreateJuntaBoardMemberDto": {
+        "type": "object",
+        "properties": {
+          "board_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["CHAIR", "MEMBER"],
+            "default": "'MEMBER'"
+          },
+          "specialist": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": ["board_id", "professional_id"]
+      },
+      "JuntaDecision": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "board_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": ["REVERSED", "UPHELD", "COMPLEMENT_REQUIRED"]
+          },
+          "rationale": {
+            "type": "string",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "content_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "storage_document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "artifact_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "signature_level": {
+            "type": "string",
+            "maxLength": 24
+          },
+          "signature_format": {
+            "type": "string",
+            "maxLength": 24
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tsa_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "certificate_validation_source": {
+            "type": "string",
+            "maxLength": 8
+          },
+          "certificate_validation_status": {
+            "type": "string",
+            "maxLength": 16
+          },
+          "certificate_validated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recorded_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "administrative_exhausted": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "board_id",
+          "outcome",
+          "rationale",
+          "content_sha256",
+          "storage_document_id",
+          "artifact_sha256",
+          "signature_level",
+          "signature_format",
+          "signed_at",
+          "tsa_time",
+          "certificate_validation_source",
+          "certificate_validation_status",
+          "certificate_validated_at",
+          "decided_at",
+          "recorded_by",
+          "created_at"
+        ]
+      },
+      "CreateJuntaDecisionDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "board_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": ["REVERSED", "UPHELD", "COMPLEMENT_REQUIRED"]
+          },
+          "rationale": {
+            "type": "string",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          }
+        },
+        "required": ["case_id", "board_id", "outcome", "rationale"]
+      },
+      "JuntaAppeal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_decision_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "applicant_patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "result_known_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "filed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "filing_deadline_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "forwarded_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "forwarding_deadline_rule": {
+            "type": "string",
+            "maxLength": 32,
+            "default": "'20_BUSINESS_DAYS'"
+          },
+          "forwarding_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["FILED", "FORWARDED", "DESIGNATED", "DECIDED"],
+            "default": "'FILED'"
+          },
+          "filed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "source_decision_id",
+          "applicant_patient_id",
+          "result_known_at",
+          "filed_at",
+          "filing_deadline_at",
+          "filed_by",
+          "created_at"
+        ]
+      },
+      "CreateJuntaAppealDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_decision_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "applicant_patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "result_known_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "filed_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "case_id",
+          "source_decision_id",
+          "applicant_patient_id",
+          "result_known_at",
+          "filed_at"
+        ]
+      }
+    }
+  }
+}

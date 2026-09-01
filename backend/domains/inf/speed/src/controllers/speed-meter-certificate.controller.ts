@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateSpeedMeterCertificateDto } from '../dto/create-speed-meter-certificate.dto.js';
 import { SpeedMeterCertificateService } from '../services/speed-meter-certificate.service.js';
 
-@Controller('v1/inf/speedcertificates')
+@Controller('v1/inf/speed/certificates')
 @Resource('inf:speed-meter-certificate')
 export class SpeedMeterCertificateController {
   constructor(private readonly service: SpeedMeterCertificateService) {}

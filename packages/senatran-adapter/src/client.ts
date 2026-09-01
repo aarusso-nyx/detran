@@ -97,11 +97,13 @@ export class SenatranClient {
       ...request,
       ...(request.write
         ? {
-            idempotencyKey: deterministicIdempotencyKey(
-              request.surface,
-              request.operation,
-              request.body,
-            ),
+            idempotencyKey:
+              context.metadata?.idempotencyKey?.trim() ||
+              deterministicIdempotencyKey(
+                request.surface,
+                request.operation,
+                request.body,
+              ),
           }
         : {}),
     };

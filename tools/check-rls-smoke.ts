@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import pg from 'pg';
 
 const { Client } = pg;
@@ -9,6 +12,7 @@ const tenantA = '00000000-0000-7000-8000-000000000101';
 const tenantB = '00000000-0000-7000-8000-000000000102';
 const actorA = '00000000-0000-4000-8000-000000000201';
 const actorB = '00000000-0000-4000-8000-000000000202';
+const expectedDomainTables = expectedTenantDomainTables();
 
 const client = new Client({ connectionString });
 await client.connect();
@@ -99,30 +103,48 @@ try {
   if (geometryRoundTrip.rows[0]?.location.type !== 'Point') {
     throw new Error('SRID-4674 geometry to JSON round-trip failed');
   }
-  const infRls = await client.query<{
+  const domainRls = await client.query<{
+    table_schema: string;
     table_name: string;
     rls_enabled: boolean;
     rls_forced: boolean;
     has_policy: boolean;
     has_trigger: boolean;
   }>(
-    `select tables.table_name,
+    `select tables.table_schema,
+            tables.table_name,
             classes.relrowsecurity as rls_enabled,
             classes.relforcerowsecurity as rls_forced,
-            exists (select 1 from pg_policies policies where policies.schemaname = 'inf' and policies.tablename = tables.table_name and policies.policyname = 'tenant_isolation') as has_policy,
+            exists (select 1 from pg_policies policies where policies.schemaname = tables.table_schema and policies.tablename = tables.table_name and policies.policyname = 'tenant_isolation') as has_policy,
             exists (select 1 from pg_trigger triggers where triggers.tgrelid = classes.oid and triggers.tgname = 'enforce_tenant_id' and not triggers.tgisinternal) as has_trigger
        from information_schema.tables tables
        join pg_namespace namespaces on namespaces.nspname = tables.table_schema
        join pg_class classes on classes.relnamespace = namespaces.oid and classes.relname = tables.table_name
-      where tables.table_schema = 'inf' and tables.table_type = 'BASE TABLE'
-      order by tables.table_name`,
+      where tables.table_schema in ('inf', 'ch')
+        and tables.table_type = 'BASE TABLE'
+        and exists (
+          select 1 from information_schema.columns columns
+           where columns.table_schema = tables.table_schema
+             and columns.table_name = tables.table_name
+             and columns.column_name = 'tenant_id'
+        )
+      order by tables.table_schema, tables.table_name`,
   );
-  if (infRls.rows.length !== 28) {
+  const actualDomainTables = domainRls.rows.map(
+    (table) => `${table.table_schema}.${table.table_name}`,
+  );
+  const missingTables = expectedDomainTables.filter(
+    (table) => !actualDomainTables.includes(table),
+  );
+  const unexpectedTables = actualDomainTables.filter(
+    (table) => !expectedDomainTables.includes(table),
+  );
+  if (missingTables.length || unexpectedTables.length) {
     throw new Error(
-      `expected 28 inf tenant tables, found ${infRls.rows.length}`,
+      `domain migration mismatch; missing=[${missingTables.join(', ')}] unexpected=[${unexpectedTables.join(', ')}]`,
     );
   }
-  const unprotected = infRls.rows.filter(
+  const unprotected = domainRls.rows.filter(
     (table) =>
       !table.rls_enabled ||
       !table.rls_forced ||
@@ -131,7 +153,7 @@ try {
   );
   if (unprotected.length) {
     throw new Error(
-      `inf RLS coverage failed: ${unprotected.map((table) => table.table_name).join(', ')}`,
+      `domain RLS coverage failed: ${unprotected.map((table) => `${table.table_schema}.${table.table_name}`).join(', ')}`,
     );
   }
   await client.query(
@@ -147,8 +169,27 @@ try {
   await client.query('rollback');
 
   console.log(
-    'check-rls-smoke: OK (tenant isolation, 28 inf tables, ops RLS, SRID-4674 round-trip, audit persistence)',
+    `check-rls-smoke: OK (tenant isolation, ${domainRls.rows.length} inf/ch tables, ops RLS, SRID-4674 round-trip, audit persistence)`,
   );
 } finally {
   await client.end();
+}
+
+function expectedTenantDomainTables(): string[] {
+  const ddlDirectory = path.join(process.cwd(), 'backend', 'database', 'ddl');
+  const sql = fs
+    .readdirSync(ddlDirectory)
+    .filter((name) => name.endsWith('.sql'))
+    .sort()
+    .map((name) => fs.readFileSync(path.join(ddlDirectory, name), 'utf8'))
+    .join('\n');
+  const tables: string[] = [];
+  const createTable =
+    /create\s+table\s+if\s+not\s+exists\s+((?:inf|ch)\.[\w]+)\s*\(([\s\S]*?)\);/gi;
+  let match: RegExpExecArray | null;
+  while ((match = createTable.exec(sql))) {
+    if (/\btenant_id\b/i.test(match[2] ?? ''))
+      tables.push((match[1] ?? '').toLowerCase());
+  }
+  return [...new Set(tables)].sort();
 }

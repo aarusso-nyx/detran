@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateNormativeFramingDto } from '../dto/create-normative-framing.dto.js';
 import { NormativeFramingService } from '../services/normative-framing.service.js';
 
-@Controller('v1/inf/normativeframings')
+@Controller('v1/inf/normative/framings')
 @Resource('inf:framing')
 export class NormativeFramingController {
   constructor(private readonly service: NormativeFramingService) {}

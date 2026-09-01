@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateMeasureStatusHistoryDto } from '../dto/create-measure-status-history.dto.js';
 import { MeasureStatusHistoryService } from '../services/measure-status-history.service.js';
 
-@Controller('v1/inf/measuresstatus-history')
+@Controller('v1/inf/measures/status-history')
 @Resource('inf:measure-status-history')
 export class MeasureStatusHistoryController {
   constructor(private readonly service: MeasureStatusHistoryService) {}

@@ -56,15 +56,14 @@ abaixo.
 | Composição  | 3 profissionais (Junta); mínimo 3, com 2 especialistas (Junta Especial de Saúde)                  | Papel RBAC monolítico `JUNTA`, um único `decided_by` (UUID), sem contagem de membros                            |
 | Prazos      | 30d / 15du / 30d / 30d / 20du (ver tabela)                                                        | Nenhum prazo modelado                                                                                           |
 
-**Pergunta estrutural — posição de LEGAL ([RN-PEC-110]), decisão de implementação ainda pendente
-do Owner.** [RN-PEC-110] item de verificação nº 1 toma posição explícita: _"o requerente é o
+**Decisão estrutural aprovada em 2026-08-31.** [RN-PEC-110] item de verificação nº 1 toma posição explícita: _"o requerente é o
 cidadão"_ — a norma não admite a leitura de que o requerimento do art. 12 seja substituível por
 um encaminhamento administrativo interno. Isso não significa necessariamente que a fila
 `SUBMITTED→DECIDED` do PEC deva ser descartada: [RN-PEC-110] propõe que **"o ato administrativo
 interno pode continuar existindo como canal de entrada (protocolo), mas o requerente é o
 cidadão"** — ou seja, a fila pode sobreviver como _mecanismo de registro_, mas o **legitimado**
 que hoje aparece no `POST /juntas` (Auditor/Gestor/Gestor DETRAN) está normativamente incorreto e
-precisa ser corrigido para refletir o candidato como parte solicitante, com o marco de "ciência do
+é corrigido no alvo para refletir o candidato como parte solicitante, com o marco de "ciência do
 candidato" como termo inicial do prazo de 30 dias (ver "Escada de escalonamento" abaixo). **O que
 permanece genuinamente em aberto** (não resolvido por LEGAL, ver [RN-PEC-110] §Controvérsia): a
 Junta de 2ª instância **refaz o exame** (novo `encounter`, com nova biometria de presença) ou
@@ -102,15 +101,15 @@ stateDiagram-v2
 
 ### Transições e gatilhos — trilha legal
 
-| Transição                                                  | Ator                                          | Base legal               | Nota                                                                                                                                                                                             |
-| ---------------------------------------------------------- | --------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `[*] → REQUERIMENTO_APRESENTADO`                           | Candidato/condutor                            | art. 12, _caput_         | requerimento cabe "independentemente do resultado" — não é exclusivo de resultado desfavorável                                                                                                   |
-| `REQUERIMENTO_APRESENTADO → JUNTA_DESIGNADA`               | Órgão executivo de trânsito (DETRAN-AM)       | art. 14 §1º              | designa Junta Médica (3 médicos peritos/especialistas) ou Junta Psicológica (3 psicólogos peritos/especialistas), art. 12 §§1º-2º                                                                |
-| `JUNTA_DESIGNADA → JUNTA_DECIDIU`                          | Junta (3 profissionais)                       | art. 14 §3º              | decisão fundamentada; sem regra de quorum/desempate localizada — **(fonte pendente)**, mesma classe de gap já registrada para JARI/CETRAN em [WF-RAIT-003]                                       |
-| `JUNTA_DECIDIU → RECURSO_CETRAN_APRESENTADO`               | Candidato/condutor                            | art. 13                  | só cabe recurso se a Junta **manteve** a inaptidão permanente — resultado favorável encerra a trilha sem recurso                                                                                 |
-| `RECURSO_CETRAN_APRESENTADO → DOCUMENTOS_REMETIDOS_CETRAN` | Órgão executivo de trânsito                   | art. 14 §2º              | remessa de documentos, não a decisão em si                                                                                                                                                       |
-| `DOCUMENTOS_REMETIDOS_CETRAN → JUNTA_ESPECIAL_DESIGNADA`   | CETRAN/CONTRANDIFE                            | art. 15                  | **terceira instância** — colegiado técnico distinto do plenário administrativo do CETRAN; sem prazo numérico de designação localizado — **(fonte pendente)**                                     |
-| `JUNTA_ESPECIAL_DESIGNADA → JUNTA_ESPECIAL_DECIDIU`        | Junta Especial de Saúde (≥3, 2 especialistas) | art. 15, parágrafo único | sem prazo numérico próprio localizado — **(fonte pendente)**; decisão de modelagem: herdar o prazo de 30 dias da Junta de 1ª instância por analogia, ou deixar sem teto até confirmação de LEGAL |
+| Transição                                                  | Ator                                          | Base legal               | Nota                                                                                                                                                         |
+| ---------------------------------------------------------- | --------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `[*] → REQUERIMENTO_APRESENTADO`                           | Candidato/condutor                            | art. 12, _caput_         | requerimento cabe "independentemente do resultado" — não é exclusivo de resultado desfavorável                                                               |
+| `REQUERIMENTO_APRESENTADO → JUNTA_DESIGNADA`               | Órgão executivo de trânsito (DETRAN-AM)       | art. 14 §1º              | designa Junta Médica (3 médicos peritos/especialistas) ou Junta Psicológica (3 psicólogos peritos/especialistas), art. 12 §§1º-2º                            |
+| `JUNTA_DESIGNADA → JUNTA_DECIDIU`                          | Junta (3 profissionais)                       | art. 14 §3º              | decisão fundamentada; sem regra de quorum/desempate localizada — **(fonte pendente)**, mesma classe de gap já registrada para JARI/CETRAN em [WF-RAIT-003]   |
+| `JUNTA_DECIDIU → RECURSO_CETRAN_APRESENTADO`               | Candidato/condutor                            | art. 13                  | só cabe recurso se a Junta **manteve** a inaptidão permanente — resultado favorável encerra a trilha sem recurso                                             |
+| `RECURSO_CETRAN_APRESENTADO → DOCUMENTOS_REMETIDOS_CETRAN` | Órgão executivo de trânsito                   | art. 14 §2º              | remessa de documentos, não a decisão em si                                                                                                                   |
+| `DOCUMENTOS_REMETIDOS_CETRAN → JUNTA_ESPECIAL_DESIGNADA`   | CETRAN/CONTRANDIFE                            | art. 15                  | **terceira instância** — colegiado técnico distinto do plenário administrativo do CETRAN; sem prazo numérico de designação localizado — **(fonte pendente)** |
+| `JUNTA_ESPECIAL_DESIGNADA → JUNTA_ESPECIAL_DECIDIU`        | Junta Especial de Saúde (≥3, 2 especialistas) | art. 15, parágrafo único | sem prazo numérico próprio localizado — **(fonte pendente)**; o alvo deixa o prazo unset e não herda por analogia                                            |
 
 ## Estados — trilha implementada no PEC (mantida como estava, com anotações)
 
@@ -254,21 +253,17 @@ dias úteis (designar junta), 30 dias (junta decidir), 30 dias (recorrer ao CETR
 (remessa de documentos ao CETRAN). Dois prazos permanecem **(fonte pendente)**: designação e
 decisão da Junta Especial de Saúde (art. 15).
 
-## Decisões de modelagem pendentes
+## Decisões de modelagem e fontes ainda pendentes
 
-- **Implementação da correção de legitimado** — [RN-PEC-110] toma posição jurídica (requerente é
-  o candidato); falta a decisão de produto/engenharia de **como** corrigir `POST /juntas` para
-  capturar isso (novo campo de solicitante, novo ator no RBAC, ou substituição completa do canal
-  de entrada). Owner decide o desenho; a base jurídica já não está em aberto.
+- **Correção de legitimado aprovada** — o alvo registra separadamente o candidato requerente e o
+  operador autenticado que protocola o ato.
 - **A Junta de 2ª instância refaz o exame ou só revisa o dossiê?** — não resolvido nem por
   [RN-PEC-110] nem por esta revisão; tem efeito direto sobre se o caso de junta abre um novo
   `encounter` (com nova biometria) ou permanece só documental.
-- **Junta Especial de Saúde não modelada em nada do PEC** — a norma descreve um colegiado técnico
-  distinto (não o CETRAN administrativo) para julgar o recurso; o PEC trata `escalateToCetran`
-  como reforço de assinatura na mesma linha de decisão. Item de validação jurídica prioritária.
+- **Junta Especial de Saúde aprovada para o alvo** — colegiado técnico distinto, designado pelo
+  CETRAN, com membros, especialidades e decisão próprios.
 - (fonte pendente) Prazo de designação e de decisão da Junta Especial de Saúde (art. 15) — não
-  localizado nem por [RN-PEC-112]; candidato a herdar os prazos da Junta de 1ª instância por
-  analogia, sujeito a confirmação de LEGAL.
+  localizado nem por [RN-PEC-112]; o alvo deixa esses prazos explicitamente ausentes até fonte.
 - (fonte pendente) Regra de quorum/desempate da Junta e da Junta Especial de Saúde — mesma classe
   de gap já registrada para JARI/CETRAN em [WF-RAIT-003]; **não confirmado se o regimento
   interno do CETRAN-AM (também não localizado por essa rodada) disciplina este ponto**.
@@ -302,3 +297,6 @@ decisão da Junta Especial de Saúde (art. 15).
   para o administrado, SLA sem sanção para o órgão); `UNDER_REVIEW` ganhou significado normativo.
   Terceira instância (Junta Especial de Saúde), competência territorial e a pergunta sobre
   refazer-o-exame-ou-só-revisar seguem como itens de validação jurídica/decisão de produto.
+- **2026-08-31** — Owner reconciliou DT-025: o alvo registra candidato e operador separadamente,
+  implementa a Junta Especial como colegiado distinto designado pelo CETRAN e não inventa prazo
+  de designação/decisão sem fonte. A divergência da trilha de origem permanece apenas histórica.

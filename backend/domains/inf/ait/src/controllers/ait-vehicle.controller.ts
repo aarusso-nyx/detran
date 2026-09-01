@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAitVehicleDto } from '../dto/create-ait-vehicle.dto.js';
 import { AitVehicleService } from '../services/ait-vehicle.service.js';
 
-@Controller('v1/inf/aitvehicles')
+@Controller('v1/inf/ait/vehicles')
 @Resource('inf:ait-vehicle')
 export class AitVehicleController {
   constructor(private readonly service: AitVehicleService) {}

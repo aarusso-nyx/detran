@@ -5,7 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule.forRoot());
+  const app = await NestFactory.create(AppModule.forRoot(), { rawBody: true });
   app.enableShutdownHooks();
   await app.listen(Number(process.env.PORT ?? 3000));
 }

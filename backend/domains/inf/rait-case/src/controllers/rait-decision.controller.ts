@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitDecisionDto } from '../dto/create-rait-decision.dto.js';
 import { RaitDecisionService } from '../services/rait-decision.service.js';
 
-@Controller('v1/inf/raitdecisions')
+@Controller('v1/inf/rait/decisions')
 @Resource('inf:rait-decision')
 export class RaitDecisionController {
   constructor(private readonly service: RaitDecisionService) {}

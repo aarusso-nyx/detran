@@ -1,0 +1,143 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-TELEHEALTH-001",
+  "module": {
+    "name": "Telehealth",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "50-ch-telehealth.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-encounters": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "telehealth-lifecycle.service",
+      "telehealth-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "telehealth-commands.controller",
+        "symbol": "TelehealthCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "telehealth-lifecycle.service",
+        "symbol": "TelehealthLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Sessoes de telessaude com LFD obrigatorio por etapa. Persiste referencia externa opaca, nunca URL tokenizada ou credencial de acesso."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "TelehealthSession",
+        "table": "telehealth_session",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "professional_id", "type": "uuid" },
+          { "name": "appointment_id", "type": "uuid", "nullable": true },
+          { "name": "provider", "type": "varchar(64)" },
+          { "name": "external_session_id", "type": "varchar(255)" },
+          { "name": "lfd_required", "type": "boolean", "default": "true" },
+          {
+            "name": "lfd_passed",
+            "type": "boolean",
+            "default": "false",
+            "writable": false
+          },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'STARTED'",
+            "writable": false
+          },
+          {
+            "name": "started_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false
+          },
+          {
+            "name": "completed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "conclusion",
+            "type": "jsonb",
+            "default": "'{}'::jsonb",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_telehealth_external",
+            "columns": ["tenant_id", "provider", "external_session_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_ch_telehealth_encounter",
+            "columns": ["tenant_id", "encounter_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_telehealth_provider",
+            "expression": "provider ~ '^[A-Z][A-Z0-9_]{1,63}$'"
+          },
+          {
+            "name": "ck_ch_telehealth_external_id",
+            "expression": "external_session_id !~ '[/?#]' and length(trim(external_session_id)) > 0"
+          },
+          {
+            "name": "ck_ch_telehealth_status",
+            "expression": "status in ('STARTED','COMPLETED','CANCELLED')"
+          },
+          {
+            "name": "ck_ch_telehealth_completion",
+            "expression": "status <> 'COMPLETED' or (completed_at is not null and lfd_passed)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_telehealth_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_telehealth_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_telehealth_appointment",
+            "columns": ["appointment_id"],
+            "references": { "table": "ch.appointment", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/telehealth/",
+    "resources": [
+      {
+        "entity": "TelehealthSession",
+        "path": "sessions",
+        "resource": "telehealth-session",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

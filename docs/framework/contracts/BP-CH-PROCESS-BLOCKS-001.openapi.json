@@ -1,0 +1,166 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ProcessBlocks — BP-CH-PROCESS-BLOCKS-001",
+    "version": "1.0.0",
+    "description": "Bloqueios ativos e resolvidos do processo clinico. Cada dominio de origem define seu efeito; este modulo preserva apenas o registro auditable e idempotente sem inventar regras de negocio ausentes.",
+    "x-blueprint": "BP-CH-PROCESS-BLOCKS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/process-blocks/records": {
+      "get": {
+        "tags": ["process-block"],
+        "operationId": "listProcessBlock",
+        "summary": "List ProcessBlock (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcessBlock"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/process-blocks/records/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["process-block"],
+        "operationId": "getProcessBlock",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProcessBlock"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProcessBlock": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "block_kind": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "source_system": {
+            "type": "string",
+            "maxLength": 64,
+            "default": "'PEC'"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "resolved_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "encounter_id",
+          "block_kind",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateProcessBlockDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "block_kind": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "source_system": {
+            "type": "string",
+            "maxLength": 64,
+            "default": "'PEC'"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "active": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["encounter_id", "block_kind"]
+      }
+    }
+  }
+}

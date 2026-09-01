@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitCommunicationDto } from '../dto/create-rait-communication.dto.js';
 import { RaitCommunicationService } from '../services/rait-communication.service.js';
 
-@Controller('v1/inf/raitcommunications')
+@Controller('v1/inf/rait/communications')
 @Resource('inf:rait-communication')
 export class RaitCommunicationController {
   constructor(private readonly service: RaitCommunicationService) {}

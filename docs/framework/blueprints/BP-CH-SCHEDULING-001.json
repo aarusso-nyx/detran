@@ -1,0 +1,188 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-SCHEDULING-001",
+  "module": {
+    "name": "Scheduling",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "46-ch-scheduling.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-patients": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "appointment-distribution.service",
+      "scheduling-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "scheduling-commands.controller",
+        "symbol": "SchedulingCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "appointment-distribution.service",
+        "symbol": "AppointmentDistributionService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Agenda homologada e distribuicao P2 auditavel: candidato escolhe regiao e janela, nunca clinica ou perito."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "ProfessionalSchedule",
+        "table": "professional_schedule",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "professional_id", "type": "uuid" },
+          { "name": "clinic_id", "type": "uuid" },
+          { "name": "weekday", "type": "smallint" },
+          { "name": "start_time", "type": "time" },
+          { "name": "end_time", "type": "time" },
+          { "name": "valid_from", "type": "date" },
+          { "name": "valid_to", "type": "date", "nullable": true },
+          { "name": "is_active", "type": "boolean", "default": "true" },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_professional_schedule_lookup",
+            "columns": ["tenant_id", "clinic_id", "weekday", "is_active"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_professional_schedule_weekday",
+            "expression": "weekday between 0 and 6"
+          },
+          {
+            "name": "ck_ch_professional_schedule_time",
+            "expression": "start_time < end_time"
+          },
+          {
+            "name": "ck_ch_professional_schedule_period",
+            "expression": "valid_to is null or valid_to >= valid_from"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_professional_schedule_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_professional_schedule_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "AppointmentAssignmentDraw",
+        "table": "appointment_assignment_draw",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "appointment_id", "type": "uuid" },
+          { "name": "track", "type": "varchar(16)" },
+          { "name": "region_code", "type": "varchar(40)" },
+          { "name": "requested_at", "type": "timestamptz" },
+          { "name": "seed_hex", "type": "varchar(64)", "writable": false },
+          { "name": "considered_pool", "type": "jsonb", "writable": false },
+          { "name": "selected_clinic_id", "type": "uuid", "writable": false },
+          {
+            "name": "selected_professional_id",
+            "type": "uuid",
+            "writable": false
+          },
+          { "name": "reroll_of", "type": "uuid", "nullable": true },
+          { "name": "reroll_reason", "type": "text", "nullable": true },
+          {
+            "name": "superseded_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "drawn_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_appointment_assignment_track",
+            "columns": ["tenant_id", "appointment_id", "track"],
+            "unique": true,
+            "where": "superseded_at is null"
+          },
+          {
+            "name": "ix_ch_appointment_assignment_professional",
+            "columns": ["tenant_id", "selected_professional_id", "created_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_appointment_assignment_track",
+            "expression": "track in ('MEDICAL','PSYCH')"
+          },
+          {
+            "name": "ck_ch_appointment_assignment_seed",
+            "expression": "seed_hex ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_ch_appointment_assignment_reroll",
+            "expression": "reroll_of is null or (reroll_reason is not null and length(trim(reroll_reason)) > 0)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_appointment_assignment_appointment",
+            "columns": ["appointment_id"],
+            "references": { "table": "ch.appointment", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_appointment_assignment_clinic",
+            "columns": ["selected_clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_appointment_assignment_professional",
+            "columns": ["selected_professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_appointment_assignment_reroll",
+            "columns": ["reroll_of"],
+            "references": {
+              "table": "ch.appointment_assignment_draw",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/scheduling/",
+    "resources": [
+      {
+        "entity": "ProfessionalSchedule",
+        "path": "professional-schedules",
+        "resource": "schedule",
+        "operations": ["list", "get", "create", "update"]
+      },
+      {
+        "entity": "AppointmentAssignmentDraw",
+        "path": "assignment-draws",
+        "resource": "appointment-assignment",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitImpedimentDto } from '../dto/create-rait-impediment.dto.js';
 import { RaitImpedimentService } from '../services/rait-impediment.service.js';
 
-@Controller('v1/inf/raitimpediments')
+@Controller('v1/inf/rait/impediments')
 @Resource('inf:rait-impediment')
 export class RaitImpedimentController {
   constructor(private readonly service: RaitImpedimentService) {}

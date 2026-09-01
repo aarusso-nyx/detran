@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitCaseDto } from '../dto/create-rait-case.dto.js';
 import { RaitCaseService } from '../services/rait-case.service.js';
 
-@Controller('v1/inf/raitcases')
+@Controller('v1/inf/rait/cases')
 @Resource('inf:rait-case')
 export class RaitCaseController {
   constructor(private readonly service: RaitCaseService) {}

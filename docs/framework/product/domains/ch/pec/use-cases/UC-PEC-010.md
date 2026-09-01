@@ -9,7 +9,7 @@ sources:
   - RN-PEC-110
   - RN-PEC-111
   - RN-PEC-112
-updated: 2026-08-26
+updated: 2026-08-31
 ---
 
 ## Ator e objetivo
@@ -20,14 +20,9 @@ técnico distinto, com maioria de especialistas — para julgar o mérito do rec
 CONTRAN 927/2022 arts. 13 e 15. Ver [WF-PEC-002] §"Estados — trilha legal" para a máquina de
 estados completa.
 
-**Nota de modelagem herdada de [WF-PEC-002].** Este UC descreve o processo **normativo**
-(trilha legal). Não há, nos documentos de implementação do PEC capturados até agora, nenhuma
-rota, entidade ou papel que corresponda à Junta Especial de Saúde como colegiado distinto — a
-implementação atual trata `escalateToCetran` como reforço de assinatura na mesma linha de
-decisão de `pec.junta_decisions`. Este UC é escrito para o processo que a norma exige; se a
-prática real do DETRAN-AM já delega a decisão técnica ao mecanismo simplificado hoje
-implementado, esse é um ponto de validação jurídica prioritária, não uma correção silenciosa
-deste UC.
+**Decisão de modelagem aprovada.** O alvo implementa o processo normativo com Junta Especial
+distinta. O `escalateToCetran` da origem é apenas evidência de uma divergência histórica e não é
+um mecanismo permitido no alvo.
 
 ## Pré-condições
 

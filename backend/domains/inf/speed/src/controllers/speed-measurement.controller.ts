@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateSpeedMeasurementDto } from '../dto/create-speed-measurement.dto.js';
 import { SpeedMeasurementService } from '../services/speed-measurement.service.js';
 
-@Controller('v1/inf/speedmeasurements')
+@Controller('v1/inf/speed/measurements')
 @Resource('inf:speed-measurement')
 export class SpeedMeasurementController {
   constructor(private readonly service: SpeedMeasurementService) {}

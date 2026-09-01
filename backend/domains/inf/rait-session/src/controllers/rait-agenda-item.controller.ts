@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitAgendaItemDto } from '../dto/create-rait-agenda-item.dto.js';
 import { RaitAgendaItemService } from '../services/rait-agenda-item.service.js';
 
-@Controller('v1/inf/raitagenda-items')
+@Controller('v1/inf/rait/agenda-items')
 @Resource('inf:rait-agenda-item')
 export class RaitAgendaItemController {
   constructor(private readonly service: RaitAgendaItemService) {}

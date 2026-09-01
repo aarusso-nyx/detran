@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateBreathalyzerDto } from '../dto/create-breathalyzer.dto.js';
 import { BreathalyzerService } from '../services/breathalyzer.service.js';
 
-@Controller('v1/inf/alcoholbreathalyzers')
+@Controller('v1/inf/alcohol/breathalyzers')
 @Resource('inf:breathalyzer')
 export class BreathalyzerController {
   constructor(private readonly service: BreathalyzerService) {}

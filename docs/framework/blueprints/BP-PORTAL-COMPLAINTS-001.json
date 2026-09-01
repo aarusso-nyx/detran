@@ -1,0 +1,129 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-PORTAL-COMPLAINTS-001",
+  "module": {
+    "name": "Complaints",
+    "namespace": "portal",
+    "version": "1.0.0",
+    "ddlFile": "60-portal-complaints.sql",
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "complaint-lifecycle.service",
+      "complaint-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "complaint-commands.controller",
+        "symbol": "ComplaintCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "complaint-lifecycle.service",
+        "symbol": "ComplaintLifecycleService"
+      }
+    ],
+    "owners": ["detran-portal"],
+    "description": "Ouvidoria protocol intake and auditable triage owned by Portal. This is the reviewed UC-PORTAL-016 realization and the durable successor to PEC complaints; it does not create a competing CH aggregate."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Complaint",
+        "table": "complaint",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "protocol", "type": "varchar(80)", "writable": false },
+          {
+            "name": "complainant_name",
+            "type": "varchar(255)",
+            "nullable": true,
+            "pii": "personal",
+            "retention": "case+5y"
+          },
+          {
+            "name": "contact",
+            "type": "varchar(255)",
+            "nullable": true,
+            "pii": "personal",
+            "retention": "case+5y"
+          },
+          { "name": "category", "type": "varchar(80)" },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'OPEN'",
+            "writable": false
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "pii": "personal",
+            "retention": "case+5y"
+          },
+          {
+            "name": "payload",
+            "type": "jsonb",
+            "default": "'{}'::jsonb",
+            "pii": "personal",
+            "retention": "case+5y"
+          },
+          {
+            "name": "assigned_to",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "closed_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "closed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_complaint_protocol",
+            "columns": ["tenant_id", "protocol"],
+            "unique": true
+          },
+          {
+            "name": "ix_portal_complaint_status",
+            "columns": ["tenant_id", "status", "created_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_complaint_status",
+            "expression": "status in ('OPEN','TRIAGED','IN_REVIEW','CLOSED','REJECTED')"
+          },
+          {
+            "name": "ck_portal_complaint_closed",
+            "expression": "(status not in ('CLOSED','REJECTED') and closed_by is null and closed_at is null) or (status in ('CLOSED','REJECTED') and closed_by is not null and closed_at is not null)"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/portal/complaints/",
+    "resources": [
+      {
+        "entity": "Complaint",
+        "path": "records",
+        "resource": "complaint",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

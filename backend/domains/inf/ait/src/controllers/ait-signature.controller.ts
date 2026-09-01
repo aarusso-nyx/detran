@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAitSignatureDto } from '../dto/create-ait-signature.dto.js';
 import { AitSignatureService } from '../services/ait-signature.service.js';
 
-@Controller('v1/inf/aitsignatures')
+@Controller('v1/inf/ait/signatures')
 @Resource('inf:ait-signature')
 export class AitSignatureController {
   constructor(private readonly service: AitSignatureService) {}

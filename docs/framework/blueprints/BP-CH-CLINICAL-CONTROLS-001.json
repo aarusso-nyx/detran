@@ -1,0 +1,132 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-CLINICAL-CONTROLS-001",
+  "module": {
+    "name": "ClinicalControls",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "52-ch-clinical-controls.sql",
+    "dependencies": {
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-exams": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "clinical-control-lifecycle.service",
+      "clinical-control-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "clinical-control-commands.controller",
+        "symbol": "ClinicalControlCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "clinical-control-lifecycle.service",
+        "symbol": "ClinicalControlLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Eventos complementares do atendimento clinico, sempre vinculados ao encounter e com autoria auditavel. A participacao de estagiario nao transfere autoria pericial ou autoridade de assinatura."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "ClinicalControlEvent",
+        "table": "clinical_control_event",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "medical_exam_id", "type": "uuid", "nullable": true },
+          {
+            "name": "psychological_exam_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          { "name": "control_kind", "type": "varchar(32)" },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'RECORDED'",
+            "writable": false
+          },
+          {
+            "name": "payload",
+            "type": "jsonb",
+            "default": "'{}'::jsonb",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          { "name": "recorded_by", "type": "uuid", "writable": false },
+          {
+            "name": "recorded_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_clinical_control_encounter",
+            "columns": [
+              "tenant_id",
+              "encounter_id",
+              "control_kind",
+              "recorded_at"
+            ]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_clinical_control_kind",
+            "expression": "control_kind in ('OPHTHALMOLOGY','SLEEP','DEVOLUTIVE','SATISFACTION','INTERN_DOUBLE_VALIDATION')"
+          },
+          {
+            "name": "ck_ch_clinical_control_status",
+            "expression": "status = 'RECORDED'"
+          },
+          {
+            "name": "ck_ch_clinical_control_exam",
+            "expression": "num_nonnulls(medical_exam_id, psychological_exam_id) <= 1"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_clinical_control_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_clinical_control_medical_exam",
+            "columns": ["medical_exam_id"],
+            "references": { "table": "ch.medical_exam", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_clinical_control_psych_exam",
+            "columns": ["psychological_exam_id"],
+            "references": {
+              "table": "ch.psychological_exam",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/clinical-controls/",
+    "resources": [
+      {
+        "entity": "ClinicalControlEvent",
+        "path": "events",
+        "resource": "clinical-control-event",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

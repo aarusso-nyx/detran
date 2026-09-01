@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitPoolDto } from '../dto/create-rait-pool.dto.js';
 import { RaitPoolService } from '../services/rait-pool.service.js';
 
-@Controller('v1/inf/raitpools')
+@Controller('v1/inf/rait/pools')
 @Resource('inf:rait-pool')
 export class RaitPoolController {
   constructor(private readonly service: RaitPoolService) {}

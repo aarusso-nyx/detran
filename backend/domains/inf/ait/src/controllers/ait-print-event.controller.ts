@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAitPrintEventDto } from '../dto/create-ait-print-event.dto.js';
 import { AitPrintEventService } from '../services/ait-print-event.service.js';
 
-@Controller('v1/inf/aitprint-events')
+@Controller('v1/inf/ait/print-events')
 @Resource('inf:ait-print-event')
 export class AitPrintEventController {
   constructor(private readonly service: AitPrintEventService) {}

@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAdministrativeMeasureDto } from '../dto/create-administrative-measure.dto.js';
 import { AdministrativeMeasureService } from '../services/administrative-measure.service.js';
 
-@Controller('v1/inf/measuresadministrative-measures')
+@Controller('v1/inf/measures/administrative-measures')
 @Resource('inf:administrative-measure')
 export class AdministrativeMeasureController {
   constructor(private readonly service: AdministrativeMeasureService) {}

@@ -1,0 +1,439 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-JUNTAS-001",
+  "module": {
+    "name": "Juntas",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "55-ch-juntas.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-clinical-reports": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-patients": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "junta-signing.adapter",
+      "junta-lifecycle.service",
+      "junta-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "junta-commands.controller",
+        "symbol": "JuntaCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "junta-lifecycle.service",
+        "symbol": "JuntaLifecycleService"
+      },
+      {
+        "target": "junta-signing.adapter",
+        "symbol": "JuntaSigningAdapter"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Requerimento do candidato, juntas medica e psicologica, recurso formal e Junta Especial de Saude distinta designada pelo CETRAN."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "JuntaCase",
+        "table": "junta_case",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "applicant_patient_id", "type": "uuid" },
+          { "name": "track", "type": "varchar(16)" },
+          { "name": "reason_code", "type": "varchar(48)" },
+          {
+            "name": "reason_detail",
+            "type": "text",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          { "name": "result_known_at", "type": "timestamptz" },
+          { "name": "requested_at", "type": "timestamptz" },
+          {
+            "name": "request_deadline_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          {
+            "name": "status",
+            "type": "varchar(32)",
+            "default": "'SUBMITTED'",
+            "writable": false
+          },
+          { "name": "submitted_by", "type": "uuid", "writable": false },
+          {
+            "name": "finalized_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_junta_case_encounter",
+            "columns": ["tenant_id", "encounter_id", "status"]
+          },
+          {
+            "name": "ix_ch_junta_case_applicant",
+            "columns": ["tenant_id", "applicant_patient_id", "requested_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_junta_case_track",
+            "expression": "track in ('MEDICAL','PSYCH')"
+          },
+          {
+            "name": "ck_ch_junta_case_reason",
+            "expression": "reason_code in ('RESULT_DISAGREEMENT','PERMANENT_INAPTITUDE','CLINICAL_DIVERGENCE','OTHER_DOCUMENTED')"
+          },
+          {
+            "name": "ck_ch_junta_case_status",
+            "expression": "status in ('SUBMITTED','UNDER_REVIEW','AWAITING_COMPLEMENT','DECIDED','APPEALED','FINAL_DECIDED')"
+          },
+          {
+            "name": "ck_ch_junta_case_deadline",
+            "expression": "request_deadline_at = result_known_at + interval '30 days' and requested_at <= request_deadline_at"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_junta_case_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_junta_case_applicant",
+            "columns": ["applicant_patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "JuntaBoard",
+        "table": "junta_board",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "case_id", "type": "uuid" },
+          { "name": "instance", "type": "varchar(16)" },
+          { "name": "designated_by", "type": "varchar(16)" },
+          { "name": "designated_at", "type": "timestamptz" },
+          {
+            "name": "designation_deadline_rule",
+            "type": "varchar(32)",
+            "nullable": true
+          },
+          {
+            "name": "designation_deadline_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "decision_deadline_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'DESIGNATED'",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_junta_board_instance",
+            "columns": ["tenant_id", "case_id", "instance"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_junta_board_instance",
+            "expression": "instance in ('SECOND','SPECIAL')"
+          },
+          {
+            "name": "ck_ch_junta_board_designator",
+            "expression": "(instance = 'SECOND' and designated_by = 'DETRAN') or (instance = 'SPECIAL' and designated_by = 'CETRAN')"
+          },
+          {
+            "name": "ck_ch_junta_board_deadlines",
+            "expression": "(instance = 'SECOND' and designation_deadline_rule = '15_BUSINESS_DAYS' and decision_deadline_at = designated_at + interval '30 days') or (instance = 'SPECIAL' and designation_deadline_rule is null and designation_deadline_at is null and decision_deadline_at is null)"
+          },
+          {
+            "name": "ck_ch_junta_board_status",
+            "expression": "status in ('DESIGNATED','DECIDED')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_junta_board_case",
+            "columns": ["case_id"],
+            "references": { "table": "ch.junta_case", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "JuntaBoardMember",
+        "table": "junta_board_member",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "board_id", "type": "uuid" },
+          { "name": "professional_id", "type": "uuid" },
+          { "name": "role", "type": "varchar(16)", "default": "'MEMBER'" },
+          { "name": "specialist", "type": "boolean", "default": "false" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_junta_board_member",
+            "columns": ["tenant_id", "board_id", "professional_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_junta_member_role",
+            "expression": "role in ('CHAIR','MEMBER')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_junta_member_board",
+            "columns": ["board_id"],
+            "references": { "table": "ch.junta_board", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_junta_member_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "JuntaDecision",
+        "table": "junta_decision",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "case_id", "type": "uuid" },
+          { "name": "board_id", "type": "uuid" },
+          { "name": "outcome", "type": "varchar(32)" },
+          {
+            "name": "rationale",
+            "type": "text",
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "content_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          { "name": "storage_document_id", "type": "uuid", "writable": false },
+          {
+            "name": "artifact_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "signature_level",
+            "type": "varchar(24)",
+            "writable": false
+          },
+          {
+            "name": "signature_format",
+            "type": "varchar(24)",
+            "writable": false
+          },
+          { "name": "signed_at", "type": "timestamptz", "writable": false },
+          { "name": "tsa_time", "type": "timestamptz", "writable": false },
+          {
+            "name": "certificate_validation_source",
+            "type": "varchar(8)",
+            "writable": false
+          },
+          {
+            "name": "certificate_validation_status",
+            "type": "varchar(16)",
+            "writable": false
+          },
+          {
+            "name": "certificate_validated_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          { "name": "decided_at", "type": "timestamptz", "writable": false },
+          { "name": "recorded_by", "type": "uuid", "writable": false },
+          {
+            "name": "administrative_exhausted",
+            "type": "boolean",
+            "default": "false",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_junta_decision_board",
+            "columns": ["tenant_id", "board_id", "decided_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_junta_decision_outcome",
+            "expression": "outcome in ('REVERSED','UPHELD','COMPLEMENT_REQUIRED')"
+          },
+          {
+            "name": "ck_ch_junta_decision_signature",
+            "expression": "content_sha256 ~ '^[0-9a-f]{64}$' and artifact_sha256 ~ '^[0-9a-f]{64}$' and signature_format = 'PAdES-TSA' and signature_level in ('ADVANCED','QUALIFIED') and certificate_validation_source in ('OCSP','CRL') and certificate_validation_status = 'GOOD'"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_junta_decision_case",
+            "columns": ["case_id"],
+            "references": { "table": "ch.junta_case", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_junta_decision_board",
+            "columns": ["board_id"],
+            "references": { "table": "ch.junta_board", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "JuntaAppeal",
+        "table": "junta_appeal",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "case_id", "type": "uuid" },
+          { "name": "source_decision_id", "type": "uuid" },
+          { "name": "applicant_patient_id", "type": "uuid" },
+          { "name": "result_known_at", "type": "timestamptz" },
+          { "name": "filed_at", "type": "timestamptz" },
+          {
+            "name": "filing_deadline_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          {
+            "name": "forwarded_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "forwarding_deadline_rule",
+            "type": "varchar(32)",
+            "default": "'20_BUSINESS_DAYS'",
+            "writable": false
+          },
+          {
+            "name": "forwarding_deadline_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'FILED'",
+            "writable": false
+          },
+          { "name": "filed_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_junta_appeal_decision",
+            "columns": ["tenant_id", "source_decision_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_ch_junta_appeal_status",
+            "columns": ["tenant_id", "status", "forwarding_deadline_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_junta_appeal_deadlines",
+            "expression": "filing_deadline_at = result_known_at + interval '30 days' and filed_at <= filing_deadline_at and forwarding_deadline_rule = '20_BUSINESS_DAYS'"
+          },
+          {
+            "name": "ck_ch_junta_appeal_status",
+            "expression": "status in ('FILED','FORWARDED','DESIGNATED','DECIDED')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_junta_appeal_case",
+            "columns": ["case_id"],
+            "references": { "table": "ch.junta_case", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_junta_appeal_decision",
+            "columns": ["source_decision_id"],
+            "references": { "table": "ch.junta_decision", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_junta_appeal_applicant",
+            "columns": ["applicant_patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/juntas/",
+    "resources": [
+      {
+        "entity": "JuntaCase",
+        "path": "cases",
+        "resource": "junta",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "JuntaBoard",
+        "path": "boards",
+        "resource": "junta",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "JuntaBoardMember",
+        "path": "board-members",
+        "resource": "junta",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "JuntaDecision",
+        "path": "decisions",
+        "resource": "junta",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "JuntaAppeal",
+        "path": "appeals",
+        "resource": "junta",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

@@ -275,9 +275,10 @@ assinatura ([RN-PEC-140] a [RN-PEC-142]) e as regras do ato pericial ([RN-PEC-10
 para a posição P2 recomendada pelo LEGAL com os pontos que mudam sob P1/P3 marcados;
 [IU-PEC-001] promovido com 26 telas (3 novas), das quais 5 ficam bloqueadas por decisão pendente.
 
-[UC-PEC-012] **permanece `stub` deliberadamente** — escrever o fluxo presumiria a resposta à
-pergunta de escopo (DT-024). O stub foi afiado para descrever o que muda em cada ramo e qual
-única investigação decide entre eles.
+[UC-PEC-012] foi promovido a `reviewed` em 2026-08-31 após a reconciliação de DT-024: o PEC
+recebe do RENACH, pela fronteira SENATRAN, eventos autenticados e idempotentes de resultado
+toxicológico periódico; não fabrica encounter, não substitui o alerta da SENATRAN e registra de
+forma imutável resultado, suspensão e eventual liberação.
 
 10 `approved`, 9 `reviewed`; as 36 regras seguem `draft` (top-10 do advogado não respondido).
 
@@ -286,8 +287,9 @@ pergunta de escopo (DT-024). O stub foi afiado para descrever o que muda em cada
 - [ ] Faturamento estruturalmente errado (preço público IPCA, Lei 15.428/2026) — DT-100
 - [ ] Validade do exame 10/5/3 por faixa etária, não 5/3 da Res. 789/2020 — DT-101
 - [ ] `CONDICIONADO` exposto ao candidato, rótulo inexistente em norma — DT-102, DT-022
-- [ ] Escalonamento ao CETRAN não implementa a terceira instância — divergência construído ×
-      norma; hoje só reatribui o signatário na mesma linha de decisão — DT-025
+- [ ] Implementar a Junta Especial de Saúde como colegiado distinto designado pelo CETRAN,
+      substituindo no alvo a reatribuição de signatário da origem — DT-025 reconciliada em
+      2026-08-31
 
 ## Rodada de endurecimento de especificação — PORTAL (2026-08-26)
 

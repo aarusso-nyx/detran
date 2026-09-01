@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitOralArgumentDto } from '../dto/create-rait-oral-argument.dto.js';
 import { RaitOralArgumentService } from '../services/rait-oral-argument.service.js';
 
-@Controller('v1/inf/raitoral-arguments')
+@Controller('v1/inf/rait/oral-arguments')
 @Resource('inf:rait-oral-argument')
 export class RaitOralArgumentController {
   constructor(private readonly service: RaitOralArgumentService) {}

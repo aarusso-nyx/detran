@@ -1,0 +1,35 @@
+{
+  "name": "@detran/ch-process-blocks",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run --config vitest.config.ts",
+    "test:unit": "DETRAN_TEST_TIER=unit vitest run --config vitest.config.ts",
+    "test:integration": "DETRAN_TEST_TIER=integration vitest run --config vitest.config.ts",
+    "test:e2e": "DETRAN_TEST_TIER=e2e vitest run --config vitest.config.ts",
+    "test:real": "DETRAN_TEST_TIER=real vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@detran/shared": "workspace:*",
+    "@detran/ch-encounters": "workspace:*",
+    "@nestjs/common": "^11.1.28",
+    "@stynx-nyx/core": "1.1.1",
+    "@stynx-nyx/data": "1.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.7"
+  }
+}
