@@ -48,6 +48,7 @@ describe('PecCognitoAdminService', () => {
       .mockResolvedValueOnce({})
       .mockResolvedValueOnce({})
       .mockResolvedValueOnce({})
+      .mockResolvedValueOnce({})
       .mockResolvedValueOnce({
         Username: 'user-1',
         Enabled: true,
