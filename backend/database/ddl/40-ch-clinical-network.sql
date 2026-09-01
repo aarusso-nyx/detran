@@ -1,4 +1,4 @@
--- Generated from BP-CH-CLINICAL-NETWORK-001 v1.1.0 sha256:82e75f24c423a323e597e8da9f59db8f0ac0c54ce3edd34ae7e02895d71a176e
+-- Generated from BP-CH-CLINICAL-NETWORK-001 v1.1.1 sha256:cf3ec339cc0ca843606bd21a0fdf72f4b789898c5953117bfb9bf4fef54c191d
 
 -- Regenerable-only DDL for BP-CH-CLINICAL-NETWORK-001; request-path writes use role_app_backend.
 
