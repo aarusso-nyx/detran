@@ -1,6 +1,6 @@
 # PEC porting report
 
-Status: **NOT READY — full parity has not been demonstrated**
+Status: **NOT READY — implementation parity is nearly closed; external and unspecced behaviors remain**
 
 This report records the bounded PEC port from the legacy repository into the DETRAN monorepo. It
 is evidence and gap accounting, not a waiver of an acceptance criterion or an assertion that the
@@ -8,13 +8,13 @@ legacy product has been reproduced file-for-file.
 
 ## Reproducible snapshot
 
-| Item                                     | Value                                                                    |
-| ---------------------------------------- | ------------------------------------------------------------------------ |
-| Legacy origin                            | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753` |
-| DETRAN entry                             | `4b02785`                                                                |
-| Implemented candidate before this report | `274968e91258de3205bf314f83b7e1b34d8bdbba`                               |
-| Working branch                           | `codex/pec-port-mapping`                                                 |
-| Origin use                               | Read-only comparison input; no code is imported at runtime               |
+| Item                       | Value                                                                    |
+| -------------------------- | ------------------------------------------------------------------------ |
+| Legacy origin              | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753` |
+| DETRAN entry               | `4b02785`                                                                |
+| Latest committed candidate | `a87d25ed585c256424eacd3748035c742d52d077`                               |
+| Working branch             | `codex/pec-port-mapping`                                                 |
+| Origin use                 | Read-only comparison input; no code is imported at runtime               |
 
 The source of truth remains the reviewed PEC blueprints and Owner decisions in this repository.
 DEVAI remains the governance provider, STYNX remains the reusable platform substrate, and all
@@ -22,19 +22,22 @@ national-service access remains behind `packages/senatran-adapter`.
 
 ## Verdict against the requested definition of done
 
-| Requirement                                                                         | Result                             | Evidence                                                                                                                                      |
-| ----------------------------------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Account for all 30 legacy `pec` tables                                              | PASS                               | Table disposition below                                                                                                                       |
-| Record the target architecture before implementation                                | PASS                               | [ADR-0011](./adr/ADR-0011-pec-kernel-and-integration-mapping.md)                                                                              |
-| Repair all four named legacy defects                                                | **FAIL**                           | Three repaired; the distinct third-instance board is prohibited by DT-025                                                                     |
-| Keep build, typecheck, tests, contracts and boundary checks green                   | PASS                               | Gate evidence below                                                                                                                           |
-| Reach at least the legacy count of 611 spec files                                   | **FAIL**                           | The target has 48 spec files; count is not an honest proxy because 374 origin specs are `it.todo` placeholders and 122 are generated wrappers |
-| Preserve request-bound tenant/RLS enforcement and avoid runtime in-memory fallbacks | PASS for implemented request paths | RLS integration suite, persistent idempotency/rate limits, source scan                                                                        |
-| Use only legal candidate-facing vocabulary                                          | PASS for implemented paths         | `CONDICIONADO` is rejected; “apto com restrições” is emitted                                                                                  |
-| Produce a final porting report                                                      | PASS                               | This document                                                                                                                                 |
+| Requirement                                                                         | Result                             | Evidence                                                                                  |
+| ----------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------- |
+| Account for all 30 legacy `pec` tables                                              | PASS                               | Table disposition below                                                                   |
+| Record the target architecture before implementation                                | PASS                               | [ADR-0011](./adr/ADR-0011-pec-kernel-and-integration-mapping.md)                          |
+| Repair all four named legacy defects                                                | PASS                               | Billing, validity, vocabulary and distinct Junta Especial tests                           |
+| Keep build, typecheck, tests, contracts and boundary checks green                   | PASS                               | Gate evidence below                                                                       |
+| Satisfy the approved executable-evidence replacement for raw spec count             | PASS                               | PEC-PARITY-001; all 611 origin paths dispositioned and 75/76 reviewed criteria executable |
+| Preserve request-bound tenant/RLS enforcement and avoid runtime in-memory fallbacks | PASS for implemented request paths | RLS integration suite, persistent idempotency/rate limits, source scan                    |
+| Use only legal candidate-facing vocabulary                                          | PASS for implemented paths         | `CONDICIONADO` is rejected; “apto com restrições” is emitted                              |
+| Produce a final porting report                                                      | PASS                               | This document                                                                             |
 
-Because two explicit completion requirements fail and additional runtime boundaries remain open,
-the only supportable overall verdict is **NOT READY**.
+The approved reconciliation removed the raw-file-count and Junta conflicts. The remaining
+acceptance blocker is executed deletion: a fail-closed LTA capability contract now exists, but no
+real external preservation provider has demonstrated it. Twelve behavioral origin specs also
+remain deferred at explicit SEFAZ, BI, external-provider and real-environment boundaries. Under
+PEC-PARITY-001, the only supportable overall verdict therefore remains **NOT READY**.
 
 ## Legacy table disposition
 
@@ -57,10 +60,10 @@ more precisely; configuration and excluded workflows do not require one-for-one 
 | `documents`                  | `ch.clinical_document`                                                                      |
 | `process_blocks`             | `ch.process_block` plus `ch.registration_block_notice`                                      |
 | `process_parameters`         | Versioned tenant settings at `tenancy.tenant_settings.settings.ch.processParameters`        |
-| `junta_cases`                | Blocked: distinct Junta workflow is excluded by DT-025                                      |
-| `junta_reviews`              | Blocked: distinct Junta workflow is excluded by DT-025                                      |
-| `junta_review_members`       | Blocked: distinct Junta workflow is excluded by DT-025                                      |
-| `junta_decisions`            | Blocked: distinct Junta workflow is excluded by DT-025                                      |
+| `junta_cases`                | `ch.junta_case`                                                                             |
+| `junta_reviews`              | `ch.junta_board`                                                                            |
+| `junta_review_members`       | `ch.junta_board_member`                                                                     |
+| `junta_decisions`            | `ch.junta_decision`, with formal `ch.junta_appeal`                                          |
 | `restriction_codes`          | `ch.restriction_code`                                                                       |
 | `psych_instruments`          | `ch.psych_instrument`                                                                       |
 | `encounter_restrictions`     | `ch.encounter_restriction`                                                                  |
@@ -81,9 +84,9 @@ covered by RLS policy verification.
 
 ## Ported domain surface
 
-The port implements 15 CH packages: billing, biometrics, clinical controls, clinical network,
+The port implements 17 CH packages: billing, biometrics, clinical controls, clinical network,
 clinical reports, encounters, exams, inconsistencies, operational controls, patients, process
-blocks, restrictions, retention, scheduling and telehealth. The runtime also provides durable,
+blocks, restrictions, retention, scheduling, telehealth, juntas and toxicology. The runtime also provides durable,
 tenant-scoped idempotency and rate-limit state, audited process parameters, authenticated RENACH
 callbacks, and the SENATRAN adapter boundary.
 
@@ -93,23 +96,24 @@ Governance catalogs and generated checks remain DEVAI concerns.
 
 ## Acceptance coverage
 
-The reviewed use cases contain exactly 70 acceptance criteria. The repository has executable
-references for 54 and an explicit authority-backed blocker for the remaining 16.
+The reviewed use cases contain exactly 76 acceptance criteria after the Owner-approved
+`UC-PEC-012` design added six criteria. The repository has executable references for 75 and an
+explicit authority-backed deployment blocker for the remaining criterion.
 
 | Use case   | Executable | Blocked | Status                                               |
 | ---------- | ---------: | ------: | ---------------------------------------------------- |
 | UC-PEC-001 |        5/5 |       0 | Covered                                              |
 | UC-PEC-002 |        5/5 |       0 | Covered                                              |
 | UC-PEC-003 |        5/5 |       0 | Covered                                              |
-| UC-PEC-004 |        0/5 |       5 | DT-025 conflict                                      |
-| UC-PEC-005 |        0/5 |       5 | DT-025 conflict                                      |
+| UC-PEC-004 |        5/5 |       0 | Covered                                              |
+| UC-PEC-005 |        5/5 |       0 | Covered                                              |
 | UC-PEC-006 |        9/9 |       0 | Covered                                              |
 | UC-PEC-007 |        4/4 |       0 | Covered                                              |
 | UC-PEC-008 |        5/5 |       0 | Covered                                              |
 | UC-PEC-009 |        5/5 |       0 | Covered                                              |
-| UC-PEC-010 |        0/5 |       5 | DT-025 conflict                                      |
+| UC-PEC-010 |        5/5 |       0 | Covered                                              |
 | UC-PEC-011 |        6/6 |       0 | Covered                                              |
-| UC-PEC-012 |          0 |       0 | Stub; blocked on DT-024 design                       |
+| UC-PEC-012 |        6/6 |       0 | Covered under the Owner-approved event-driven design |
 | UC-PEC-013 |        5/5 |       0 | Covered under Owner-selected P2 distribution         |
 | UC-PEC-014 |        5/6 |       1 | Deletion execution prohibited by DT-023 prerequisite |
 
@@ -128,44 +132,40 @@ The read-only origin contains **611** `.spec.ts` files, not 610. Every path is d
 | Generated metadata/trace wrappers |   122 | Superseded by deterministic blueprint and contract generation/drift checks                    |
 | Behavioral specs                  |   115 | Individually mapped as ported, superseded, deferred or blocked in the ledger                  |
 
-Across all three kinds, the disposition totals are 54 ported mappings, 531 superseded artifacts,
-17 deferred tests and 9 blocked tests. These counts describe legacy-file disposition; they are
-not interchangeable with the 54 distinct acceptance criteria referenced by target tests.
+Across all three kinds, the disposition totals are 68 ported mappings, 531 superseded artifacts,
+12 deferred tests and no blocked tests. These counts describe legacy-file disposition; they are
+not interchangeable with the 75 distinct acceptance criteria referenced by target tests.
 
 The target intentionally does not create hundreds of placeholder files to satisfy a numeric
-threshold. Its 48 spec files are supplemented by database integration, API/e2e, contract,
-blueprint, RLS and boundary gates. This is stronger evidence, but it does not satisfy the literal
-“at least 611 spec files” completion condition; that condition remains failed rather than silently
-reinterpreted.
+threshold. Its executable specs are supplemented by database integration, API/e2e, contract,
+blueprint, RLS and boundary gates. PEC-PARITY-001 explicitly replaced the literal file-count
+threshold with that evidence model; the parity verifier now binds all 76 reviewed criteria and all
+611 origin paths.
 
 ## Named defect disposition
 
-| Legacy defect                                                                 | Result                                                                                                                          |
-| ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Billing price model not indexed as required                                   | Repaired: effective federal public-price versions require an annual IPCA reference and prevent overlapping validity periods     |
-| Exam validity uses superseded 5/3-year tiers                                  | Repaired: medical validity is calculated as 10/5/3 years by age band, with a separately motivated reduced-validity path         |
-| Candidate-facing `CONDICIONADO` vocabulary                                    | Repaired: the internal label is rejected and the legal “apto com restrições” label is used                                      |
-| Third instance implemented as signer reassignment rather than a distinct body | **Not repaired**: UC-PEC-004/005/010 require the distinct body, while Owner decision DT-025 explicitly says not to implement it |
+| Legacy defect                                                                 | Result                                                                                                                      |
+| ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Billing price model not indexed as required                                   | Repaired: effective federal public-price versions require an annual IPCA reference and prevent overlapping validity periods |
+| Exam validity uses superseded 5/3-year tiers                                  | Repaired: medical validity is calculated as 10/5/3 years by age band, with a separately motivated reduced-validity path     |
+| Candidate-facing `CONDICIONADO` vocabulary                                    | Repaired: the internal label is rejected and the legal “apto com restrições” label is used                                  |
+| Third instance implemented as signer reassignment rather than a distinct body | Repaired: formal candidate appeal, CETRAN designation, distinct three-member Junta Especial, signed decision and exhaustion |
 
 The additional origin defects were also evaluated. Encounters now have a reachable audited
-`CANCELLED` transition (DT-104), and signing the first report no longer forces the encounter to
-`SIGNED` before both required reports are signed (DT-105). DT-106 cannot be carried into the
-target because the entire Junta composition/review model is excluded by DT-025; it remains part
-of the same unresolved Owner conflict.
+`CANCELLED` transition (DT-104), signing the first report no longer forces the encounter to
+`SIGNED` before both required reports are signed (DT-105), and DT-106 is repaired by reachable
+`UNDER_REVIEW`/`AWAITING_COMPLEMENT` states plus persisted board membership.
 
 ## Open boundaries
 
-- **Junta Especial:** 15 acceptance criteria cannot be implemented without changing DT-025 or the
-  reviewed use cases. This is a product-authority conflict, not an engineering omission that may
-  be guessed around.
 - **Retention execution:** AC-PEC-014-3 remains blocked because DT-023 prohibits deletion until
-  PAdES-LTA or successive timestamp preservation exists.
-- **Periodic toxicology:** DT-024 places it in scope, but UC-PEC-012 is still a stub and does not
-  define the event, actor, driver-record effect or interaction with registration blocking.
-- **Session parity:** STYNX session wiring still needs a demonstrated Redis deployment/signing-key
-  contract and an approved reconciliation of single-session and strong-factor requirements.
-- **Trust integrations:** production PAdES-LTA/TSA validation, including operational trust and
-  revocation behavior, has not been demonstrated.
+  a real PAdES-LTA provider demonstrates long-term preservation. HTTPS configuration and the
+  startup capability probe are implemented, but a mock is not provider evidence.
+- **Session deployment:** the approved STYNX Redis/RSA/JWKS, strong-factor and single-session
+  contract is implemented and fails startup closed. A real Redis deployment and secret-backed key
+  set remain environment inputs rather than repository evidence.
+- **Trust integrations:** production PAdES-LTA/TSA validation, including operational certificate
+  chain and revocation behavior, has not been demonstrated against a real provider.
 - **SEFAZ and real external tests:** adapters and configured external environments are not present;
   the ledger marks these tests deferred rather than pretending local mocks prove production
   integration.
@@ -190,18 +190,14 @@ SENATRAN source and contract boundaries, and PEC parity accounting. The database
 tests use independent clients to demonstrate shared durable idempotency/rate-limit state and
 expiry behavior.
 
-Green engineering gates do not resolve the Owner conflicts above.
+Green engineering gates do not manufacture external-provider evidence or product authority for
+the remaining boundaries.
 
-## Decision required for full parity
+## Remaining requirements for full parity
 
-Full parity requires explicit Owner action, at minimum:
-
-1. reconcile DT-025 with UC-PEC-004/005/010 and the requested distinct third-instance body;
-2. approve the missing UC-PEC-012 toxicology behavior;
-3. decide whether the literal 611-file threshold is mandatory or replace it with an approved
-   executable-coverage requirement; and
-4. authorize/design the external trust and session prerequisites needed to close DT-023 and
-   session parity.
-
-Until those decisions and demonstrations exist, this port is materially advanced but **NOT
-READY for a full-parity declaration**.
+The four Owner decisions requested by the prior report are now reconciled and implemented. Full
+parity still requires (a) real-provider PAdES-LTA evidence before deletion can be enabled and
+AC-PEC-014-3 executed, and (b) disposition of the 12 deferred behavioral origin specs: four SEFAZ,
+three Dashboard-owned BI, and five explicitly real-environment tests. No repository-only change
+can honestly substitute for provider/environment evidence; SEFAZ and BI also require
+product-boundary authority rather than inference.

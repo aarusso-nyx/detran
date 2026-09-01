@@ -167,12 +167,35 @@ dispositionRows.forEach((row, index) => {
   }
 });
 
+const unresolvedBehavioral = dispositionRows.filter(
+  (row) =>
+    row[1] === 'behavioral' && (row[2] === 'blocked' || row[2] === 'deferred'),
+);
+const hasLedgerBlockers =
+  blockers.acceptanceBlockers.length > 0 ||
+  blockers.nonAcceptanceBlockers.length > 0;
+if (
+  (hasLedgerBlockers || unresolvedBehavioral.length > 0) &&
+  blockers.verdict !== 'NOT_READY'
+) {
+  failures.push(
+    'acceptance/non-acceptance blockers or unresolved behavioral origin specs require NOT_READY',
+  );
+}
+if (
+  !hasLedgerBlockers &&
+  unresolvedBehavioral.length === 0 &&
+  blockers.verdict !== 'READY'
+) {
+  failures.push('a fully closed parity ledger must have verdict READY');
+}
+
 if (failures.length) {
   console.error('PEC parity verification failed:');
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
   console.log(
-    `verify-pec-parity: ACCOUNTED / ${blockers.verdict} (${tested.size}/${accepted.size} tested, ${blocked.size}/${accepted.size} blocked, 611 origin specs dispositioned)`,
+    `verify-pec-parity: ACCOUNTED / ${blockers.verdict} (${tested.size}/${accepted.size} tested, ${blocked.size}/${accepted.size} blocked, ${unresolvedBehavioral.length} behavioral origin specs deferred/blocked, 611 origin specs dispositioned)`,
   );
 }
