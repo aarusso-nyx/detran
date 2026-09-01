@@ -8,13 +8,13 @@ legacy product has been reproduced file-for-file.
 
 ## Reproducible snapshot
 
-| Item                     | Value                                                                    |
-| ------------------------ | ------------------------------------------------------------------------ |
-| Legacy origin            | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753` |
-| DETRAN entry             | `4b02785`                                                                |
-| Candidate before refresh | `a87d25ed585c256424eacd3748035c742d52d077`                               |
-| Working branch           | `codex/pec-port-mapping`                                                 |
-| Origin use               | Read-only comparison input; no code is imported at runtime               |
+| Item                     | Value                                                                     |
+| ------------------------ | ------------------------------------------------------------------------- |
+| Legacy origin            | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753`  |
+| DETRAN current-main base | `46477771b02c8b51294e6bfa0f9461277f8cc5df`                                |
+| Verified implementation  | `f79160af0ebfa62241e63a40590bde084c8acfbb` plus this evidence-only update |
+| Working branch           | `codex/pec-port-mapping`                                                  |
+| Origin use               | Read-only comparison input; no code is imported at runtime                |
 
 The source of truth remains the reviewed PEC blueprints and Owner decisions in this repository.
 DEVAI remains the governance provider, STYNX remains the reusable platform substrate, and all
@@ -206,9 +206,8 @@ or production-environment evidence.
 ## Repository completion and deployment boundary
 
 All 76 acceptance criteria, 32 package directories, 50 active tables and 611 origin specs are
-accounted with
-no deferred or blocked source behavior. The provider search terms, wire contracts, mock cases and
-in-house inputs are recorded in
+accounted with no deferred or blocked source behavior. The provider search terms, wire contracts,
+mock cases and in-house inputs are recorded in
 [`pec-external-environment-contract.md`](./pec-external-environment-contract.md). Production
 enablement still requires the named external credentials/environments, and deletion remains
 disabled until PAdES-LTA preservation is proved. Those conditions do not reduce the established
