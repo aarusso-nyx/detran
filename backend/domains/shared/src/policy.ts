@@ -79,11 +79,6 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['tox', 'read', ['GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
   ['tox', 'write', ['GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
   ['sefaz', 'validate', ['GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR', 'SUPORTE']],
-  [
-    'ch:sefaz',
-    'validate',
-    ['GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR', 'SUPORTE'],
-  ],
   ['council', 'read', ['GESTOR', 'SUPERVISOR', 'SUPORTE']],
   ['council', 'write', ['GESTOR', 'SUPERVISOR', 'SUPORTE']],
   ['integration-biometric', 'read', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],
@@ -412,27 +407,6 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
   ],
   [
-    'portal:complaint',
-    'create',
-    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
-  ],
-  [
-    'portal:complaint',
-    'read',
-    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
-  ],
-  [
-    'portal:complaint',
-    'update',
-    ['DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
-  ],
-  ['platform:audit', 'read', ['AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
-  ['platform:audit', 'export', ['AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
-  ['platform:user', 'read', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
-  ['platform:user', 'create', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
-  ['platform:user', 'update', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
-  ['platform:user', 'delete', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
-  [
     'clinical-control',
     'read',
     ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR'],
@@ -455,6 +429,30 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
 ];
 
 const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
+  [
+    'portal',
+    'complaint',
+    'create',
+    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  [
+    'portal',
+    'complaint',
+    'read',
+    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  [
+    'portal',
+    'complaint',
+    'update',
+    ['DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  ['platform', 'audit', 'read', ['AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'audit', 'export', ['AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'read', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'create', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'update', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'delete', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
   ['inf', 'ait', 'finalize', ['field-agent']],
   ['inf', 'ait', 'science', ['field-agent']],
   ['inf', 'ait', 'queue-transmission', ['field-agent', 'integration-operator']],
