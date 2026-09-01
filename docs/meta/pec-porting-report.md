@@ -1,6 +1,6 @@
 # PEC porting report
 
-Status: **NOT READY — all acceptance criteria are executable; external deployment evidence remains**
+Status: **READY — DETRAN's repository PEC stack is a proved superset of the inspected PEC origin**
 
 This report records the bounded PEC port from the legacy repository into the DETRAN monorepo. It
 is evidence and gap accounting, not a waiver of an acceptance criterion or an assertion that the
@@ -22,23 +22,25 @@ national-service access remains behind `packages/senatran-adapter`.
 
 ## Verdict against the requested definition of done
 
-| Requirement                                                                         | Result                             | Evidence                                                                                  |
-| ----------------------------------------------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------- |
-| Account for all 30 legacy `pec` tables                                              | PASS                               | Table disposition below                                                                   |
-| Record the target architecture before implementation                                | PASS                               | [ADR-0012](./adr/ADR-0012-pec-kernel-and-integration-mapping.md)                          |
-| Repair all four named legacy defects                                                | PASS                               | Billing, validity, vocabulary and distinct Junta Especial tests                           |
-| Keep build, typecheck, tests, contracts and boundary checks green                   | PASS                               | Gate evidence below                                                                       |
-| Satisfy the approved executable-evidence replacement for raw spec count             | PASS                               | PEC-PARITY-001; all 611 origin paths dispositioned and 76/76 reviewed criteria executable |
-| Preserve request-bound tenant/RLS enforcement and avoid runtime in-memory fallbacks | PASS for implemented request paths | RLS integration suite, persistent idempotency/rate limits, source scan                    |
-| Use only legal candidate-facing vocabulary                                          | PASS for implemented paths         | `CONDICIONADO` is rejected; “apto com restrições” is emitted                              |
-| Produce a final porting report                                                      | PASS                               | This document                                                                             |
+| Requirement                                                                          | Result | Evidence                                                                                  |
+| ------------------------------------------------------------------------------------ | ------ | ----------------------------------------------------------------------------------------- |
+| Account for all 50 active legacy tables across `pec`, `auth`, `integration`, `audit` | PASS   | ADR-0012 and `pec-origin-superset.json`                                                   |
+| Account for all 32 package directories (31 features plus `shared`)                   | PASS   | Machine-verified package disposition in `pec-origin-superset.json`                        |
+| Record the target architecture before implementation                                 | PASS   | [ADR-0012](./adr/ADR-0012-pec-kernel-and-integration-mapping.md)                          |
+| Repair all four named legacy defects                                                 | PASS   | Billing, validity, vocabulary and distinct Junta Especial tests                           |
+| Keep build, typecheck, tests, contracts and boundary checks green                    | PASS   | Gate evidence below                                                                       |
+| Satisfy the approved executable-evidence replacement for raw spec count              | PASS   | PEC-PARITY-001; all 611 origin paths dispositioned and 76/76 reviewed criteria executable |
+| Preserve request-bound tenant/RLS enforcement and avoid runtime in-memory fallbacks  | PASS   | RLS integration suite, persistent idempotency/rate limits, source scan                    |
+| Use only legal candidate-facing vocabulary                                           | PASS   | `CONDICIONADO` is rejected; “apto com restrições” is emitted                              |
+| Transfer/disposition PEC's remaining issue and PR                                    | PASS   | PEC #11 → DETRAN #25; PEC #35 superseded because DETRAN has no such action dependency     |
+| Produce a final porting report                                                       | PASS   | This document                                                                             |
 
 The approved reconciliation removed the raw-file-count, Junta and retention-acceptance conflicts.
-`AC-PEC-014-3` is now proved by the distinct fail-closed deletion disposition accepted by the
-Owner; deletion itself remains disabled. Twelve behavioral origin specs remain deferred: four
-SEFAZ specs and eight Dashboard/real-environment specs whose opt-in suites are defined but have no
-enabled-run evidence. `PADES_LTA` also remains a deployment blocker. Under PEC-PARITY-001, the
-only supportable overall verdict therefore remains **NOT READY**.
+`AC-PEC-014-3` is proved by the distinct fail-closed deletion disposition accepted by the Owner;
+deletion remains disabled until a real PAdES-LTA provider proves preservation. This is the
+approved product behavior, not missing repository parity. All 115 behavioral origin specs now
+have a ported target disposition. Conditional real/in-house suites remain conditional exactly as
+environment tests must; a skipped run is never presented as real-provider evidence.
 
 ## Legacy table disposition
 
@@ -75,7 +77,7 @@ more precisely; configuration and excluded workflows do not require one-for-one 
 | `billing_invoices`           | `ch.billing_invoice`                                                                        |
 | `billing_divergences`        | `ch.billing_divergence`                                                                     |
 | `inconsistencies`            | `ch.inconsistency`                                                                          |
-| `complaints`                 | Deferred to the Portal-owned complaint boundary; no duplicate PEC table was introduced      |
+| `complaints`                 | `portal.complaint`, under the reviewed Portal/Ouvidoria boundary                            |
 | `operational_records`        | `ch.operational_record`                                                                     |
 
 Additional target tables support requirements absent or under-modeled in the legacy schema:
@@ -87,7 +89,9 @@ covered by RLS policy verification.
 
 The port implements 17 CH packages: billing, biometrics, clinical controls, clinical network,
 clinical reports, encounters, exams, inconsistencies, operational controls, patients, process
-blocks, restrictions, retention, scheduling, telehealth, juntas and toxicology. The runtime also provides durable,
+blocks, restrictions, retention, scheduling, telehealth, juntas and toxicology. It additionally
+implements Portal-owned complaints, the full SEFAZ payment adapter, kernel user/Cognito
+administration and audit query/export. The runtime also provides durable,
 tenant-scoped idempotency and rate-limit state, audited process parameters, authenticated RENACH
 callbacks, and the SENATRAN adapter boundary.
 
@@ -132,8 +136,8 @@ The read-only origin contains **611** `.spec.ts` files, not 610. Every path is d
 | Generated metadata/trace wrappers |   122 | Superseded by deterministic blueprint and contract generation/drift checks                    |
 | Behavioral specs                  |   115 | Individually mapped as ported, superseded, deferred or blocked in the ledger                  |
 
-Across all three kinds, the disposition totals are 68 ported mappings, 531 superseded artifacts,
-12 deferred tests and no blocked tests. These counts describe legacy-file disposition; they are
+Across all three kinds, the disposition totals are 80 ported mappings, 531 superseded artifacts,
+no deferred tests and no blocked tests. These counts describe legacy-file disposition; they are
 not interchangeable with the 76 distinct acceptance criteria referenced by target tests.
 
 The target intentionally does not create hundreds of placeholder files to satisfy a numeric
@@ -156,24 +160,26 @@ The additional origin defects were also evaluated. Encounters now have a reachab
 `SIGNED` before both required reports are signed (DT-105), and DT-106 is repaired by reachable
 `UNDER_REVIEW`/`AWAITING_COMPLEMENT` states plus persisted board membership.
 
-## Open boundaries
+## External deployment prerequisites
 
 - **Retention execution:** `AC-PEC-014-3` is accepted through the executable distinct `BLOCKED`
-  disposition and no-delete proof. DT-023 still prohibits actual deletion until a real PAdES-LTA
-  provider demonstrates long-term preservation; a mock is not provider evidence.
+  disposition and no-delete proof. DT-023 prohibits actual deletion until a real PAdES-LTA
+  provider demonstrates long-term preservation; a mock is not provider evidence. This guard is
+  the completed requirement.
 - **Session deployment:** the approved STYNX Redis/RSA/JWKS, strong-factor and single-session
   contract is implemented and fails startup closed. A real Redis deployment and secret-backed key
   set remain environment inputs rather than repository evidence.
 - **Trust integrations:** production PAdES-LTA/TSA validation, including operational certificate
   chain and revocation behavior, has not been demonstrated against a real provider.
-- **SEFAZ:** four origin specs remain deferred. Their operations, payloads, status vocabulary,
-  retry behavior and mock cases are documented, but target ownership, credentials and homologation
-  authority are unresolved.
-- **Dashboard and real environment:** opt-in suites now define the three Dashboard-owned BI and
-  five real-environment dispositions. They remain deferred until an enabled in-house run supplies
-  database, Cognito/session, generated-API and real clinical-trust evidence.
-- **Product ownership boundaries:** complaints remain Portal-owned and BI presentation remains
-  Dashboard-owned unless an approved architecture decision moves them into CH.
+- **SEFAZ:** all six origin adapter operations and four behavioral specs are ported. Real mode is
+  fail-closed and still needs the official endpoint, credential/certificate scheme and named
+  homologation authority supplied by the deployment.
+- **Dashboard and real environment:** the three report/query behaviors are provided by the CH
+  clinical-report read models and the Dashboard in-house suite. Five real-environment contracts
+  remain opt-in suites for PostGIS/RLS, Cognito, OpenAPI and clinical-trust deployment evidence.
+  Their conditional execution is preserved, not counted as a green real-provider run.
+- **Product ownership boundaries:** complaints are implemented under Portal/Ouvidoria and BI
+  presentation remains Dashboard-owned; neither is duplicated as a CH aggregate.
 
 ## Verification evidence
 
@@ -194,15 +200,16 @@ SENATRAN source and contract boundaries, and PEC parity accounting. The database
 tests use independent clients to demonstrate shared durable idempotency/rate-limit state and
 expiry behavior.
 
-Green engineering gates do not manufacture external-provider evidence or product authority for
-the remaining boundaries.
+Green engineering gates prove repository parity only; they do not manufacture external-provider
+or production-environment evidence.
 
-## Remaining requirements for full parity
+## Repository completion and deployment boundary
 
-All 76 acceptance criteria are now executable under the Owner-approved interpretation. Full
-deployment parity still requires real-provider PAdES-LTA evidence before deletion can be enabled,
-an enabled run of the eight defined Dashboard/real-environment dispositions, and an authorized
-target disposition for the four deferred SEFAZ specs. The provider search terms, wire contracts,
-mock cases and in-house inputs are recorded in
-[`pec-external-environment-contract.md`](./pec-external-environment-contract.md). No
-repository-only change can honestly substitute for provider/environment evidence.
+All 76 acceptance criteria, 32 package directories, 50 active tables and 611 origin specs are
+accounted with
+no deferred or blocked source behavior. The provider search terms, wire contracts, mock cases and
+in-house inputs are recorded in
+[`pec-external-environment-contract.md`](./pec-external-environment-contract.md). Production
+enablement still requires the named external credentials/environments, and deletion remains
+disabled until PAdES-LTA preservation is proved. Those conditions do not reduce the established
+repository-superset verdict.

@@ -65,10 +65,10 @@ No origin `auth` table is copied under its original definition.
 | `auth.user_sessions`    | `auth.sessions` plus the STYNX session runtime      | Do not copy the PEC session table. Before session parity is claimed, wire the published session runtime and prove single-active-session, revocation, expiry, refresh-token reuse detection and strong-factor requirements. The current base DDL alone is not parity evidence.        |
 
 User administration belongs to the kernel's identity/membership administration
-surface. The origin `admin-users` package is therefore deferred as a PEC domain
-package: its required behaviors must be exercised against the shared kernel, not
-ported as `ch/admin-users`. Clinic and professional administration are retained
-as `ch` domain behavior with the specification-debt notes above.
+surface. The origin `admin-users` behavior is exposed by the composition root over
+`auth.users`, `auth.memberships` and `auth.membership_roles`, plus a fail-closed
+Cognito administration adapter. It is deliberately not ported as `ch/admin-users`.
+Clinic and professional administration remain `ch` domain behavior.
 
 ### Audit schema
 
@@ -80,10 +80,11 @@ No origin `audit` table is copied.
 | `audit.events_default`  | `audit.events_default`                                              | Use the kernel default partition and its forced RLS. Partition creation remains kernel operations work.                                                                                                                                                                                                               |
 | `audit.biometry_events` | `ch` biometric records plus `audit.events`                          | Put biometric outcome, liveness/quality evidence reference and encounter linkage in the relevant `ch` biometric record; emit a namespaced audit event for capture, verification, fallback and exception actions. Do not create a second mutable audit table. Raw biometric material is never placed in audit details. |
 
-The origin audit query views become read models over `audit.events`; a candidate-
-or regulator-facing audit query must retain the kernel's tenant isolation and
-least-privilege reader path. Origin append-only and chain-verification tests are
-re-expressed against the kernel, including concurrent writes and mutation denial.
+The origin audit query views are implemented as read models over `audit.events`,
+including bounded filters and formula-safe CSV hash-chain export. They retain
+explicit request tenant isolation and the non-owner application role. Origin
+append-only and chain-verification tests are re-expressed against the kernel,
+including concurrent writes and mutation denial.
 
 ### Integration schema
 

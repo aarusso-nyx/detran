@@ -112,10 +112,11 @@ event-id/timestamp/signature headers over the raw body and must reject replay, s
 bad signatures and malformed events. The in-repo SENATRAN mock and seed manifest cover local
 contract behavior; only the homologation suite may prove a real surface.
 
-### SEFAZ-AM — deliberately deferred
+### SEFAZ-AM
 
-No SEFAZ adapter is added in this round. To locate or mock the legacy contract, search the origin
-for `SefazPaymentAdapter`, `SefazHttpAdapter` and `payment.dto.ts`. Its candidate interface is:
+Search `packages/sefaz-adapter`, `DETRAN_SEFAZ_PROVIDER`, `DETRAN_SEFAZ_MOCK_BASE_URL`,
+`DETRAN_SEFAZ_REAL_BASE_URL` and `DETRAN_SEFAZ_TIMEOUT_MS`. The target adapter preserves the full
+legacy interface and is composed into `POST /v1/ch/integrations/sefaz/payment/validate`:
 
 | Operation             | Wire shape under configurable prefix                                                                                                              |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -126,12 +127,17 @@ for `SefazPaymentAdapter`, `SefazHttpAdapter` and `payment.dto.ts`. Its candidat
 | refund request/status | `POST /sefaz/refunds` and `GET /sefaz/refunds/{id}`; returns id/status, optional decision times and request id                                    |
 
 Canonical statuses are `OPEN`, `ISSUED`, `PENDING`, `PAID`, `PARTIALLY_PAID`, `CANCELLED`,
-`EXPIRED`, `UNDER_REVIEW`, `APPROVED`, `REJECTED`, and `NOT_FOUND`. The origin used a 10-second
-timeout and two retries after the first attempt. A target mock should cover encoded references,
-idempotent request ids, paid/partial/expired/not-found normalization, non-retryable business
-errors, retryable 503, transport failure and timeout. Authentication, official SEFAZ-AM endpoint,
-certificate requirements, data ownership and homologation authority remain unresolved; therefore
-the four SEFAZ origin specs stay deferred.
+`EXPIRED`, `UNDER_REVIEW`, `APPROVED`, `REJECTED`, and `NOT_FOUND`. The adapter keeps the origin's
+10-second default timeout and two retries after the first attempt. Unit tests cover all six paths,
+encoded references, paid/partial/expired/not-found normalization, non-retryable envelopes,
+retryable 503, transport failure and timeout. Local mode defaults to the explicit mock provider;
+non-local mode defaults to `real` and fails startup without `DETRAN_SEFAZ_REAL_BASE_URL`.
+
+Repository parity does not assert an official endpoint or credential scheme that the origin did
+not contain. A real deployment must supply the authorized SEFAZ-AM endpoint, its authentication
+and certificate material through the deployment secret mechanism, named homologation authority,
+test identities and captured provider receipts. Those are environment prerequisites, not deferred
+source behavior.
 
 ## Evidence boundary
 

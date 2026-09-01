@@ -1,0 +1,317 @@
+{
+  "schemaVersion": "1.0.0",
+  "origin": {
+    "repository": "aarusso-nyx/pec",
+    "commit": "cfa8af2ff5349708e686305c7eb0a60d6276f753",
+    "packageCount": 32,
+    "tableCount": 50,
+    "specCount": 611
+  },
+  "packages": {
+    "admin-clinics": [
+      "ported",
+      "backend/domains/ch/clinical-network/src/index.ts"
+    ],
+    "admin-master-data": [
+      "ported",
+      "backend/domains/ch/restrictions/src/index.ts"
+    ],
+    "admin-operational-controls": [
+      "ported",
+      "backend/domains/ch/operational-controls/src/index.ts"
+    ],
+    "admin-process-parameters": [
+      "ported",
+      "backend/app/src/pec-process-parameters.controller.ts"
+    ],
+    "admin-professionals": [
+      "ported",
+      "backend/domains/ch/clinical-network/src/index.ts"
+    ],
+    "admin-users": ["ported", "backend/app/src/pec-user-admin.controller.ts"],
+    "appointments-scheduling": [
+      "ported",
+      "backend/domains/ch/scheduling/src/index.ts"
+    ],
+    "archive-runtime": ["ported", "backend/domains/ch/retention/src/index.ts"],
+    "audit-compliance": [
+      "ported",
+      "backend/app/src/pec-audit-query.controller.ts"
+    ],
+    "billing-billing": ["ported", "backend/domains/ch/billing/src/index.ts"],
+    "biometrics-biometric-capture": [
+      "ported",
+      "backend/domains/ch/biometrics/src/index.ts"
+    ],
+    "clinical-controls-clinical-controls": [
+      "ported",
+      "backend/domains/ch/clinical-controls/src/index.ts"
+    ],
+    "complaints-complaint-flow": [
+      "ported",
+      "backend/domains/portal/complaints/src/index.ts"
+    ],
+    "documents-document-mgmt": [
+      "ported",
+      "backend/domains/ch/clinical-reports/src/index.ts"
+    ],
+    "encounters-clinical-encounter": [
+      "ported",
+      "backend/domains/ch/encounters/src/index.ts"
+    ],
+    "exams-exam-orders": ["ported", "backend/domains/ch/exams/src/index.ts"],
+    "inconsistencies-data-quality": [
+      "ported",
+      "backend/domains/ch/inconsistencies/src/index.ts"
+    ],
+    "integration-biometric": [
+      "ported",
+      "backend/domains/ch/biometrics/src/biometric-commands.controller.ts"
+    ],
+    "integration-councils": [
+      "ported",
+      "backend/domains/ch/clinical-network/src/council-verification.http-adapter.ts"
+    ],
+    "integration-renach": [
+      "ported",
+      "backend/app/src/pec-renach-process.controller.ts"
+    ],
+    "integration-sefaz": ["ported", "packages/sefaz-adapter/src/index.ts"],
+    "integration-toxicology": [
+      "ported",
+      "backend/app/src/pec-toxicology-inbound.controller.ts"
+    ],
+    "integration-tsa": [
+      "ported",
+      "backend/domains/ch/clinical-reports/src/pades-signing.http-adapter.ts"
+    ],
+    "juntas-medical-board": [
+      "ported",
+      "backend/domains/ch/juntas/src/index.ts"
+    ],
+    "patients-patient-record": [
+      "ported",
+      "backend/domains/ch/patients/src/index.ts"
+    ],
+    "ports-external-ports": [
+      "superseded",
+      "docs/meta/pec-external-environment-contract.md"
+    ],
+    "process-blocks-workflow": [
+      "ported",
+      "backend/domains/ch/process-blocks/src/index.ts"
+    ],
+    "reports-bi-reports": [
+      "ported",
+      "backend/domains/ch/clinical-reports/src/index.ts"
+    ],
+    "shared": ["superseded", "backend/domains/shared/src/index.ts"],
+    "signature-digital-signature": [
+      "ported",
+      "backend/domains/ch/clinical-reports/src/pades-signing.http-adapter.ts"
+    ],
+    "telehealth-telemedicine": [
+      "ported",
+      "backend/domains/ch/telehealth/src/index.ts"
+    ],
+    "transmissions-detran-transmissions": [
+      "ported",
+      "backend/app/src/pec-renach-transmission.controller.ts"
+    ]
+  },
+  "tables": {
+    "audit.biometry_events": [
+      "ch.biometric_check + audit.events",
+      "backend/database/ddl/45-ch-biometrics.sql"
+    ],
+    "audit.events": ["audit.events", "backend/database/ddl/03-audit.sql"],
+    "audit.events_default": [
+      "audit.events_default",
+      "backend/database/ddl/03-audit.sql"
+    ],
+    "auth.clinics": [
+      "ch.clinic",
+      "backend/database/ddl/40-ch-clinical-network.sql"
+    ],
+    "auth.permissions": ["auth.perms", "backend/database/ddl/02-auth.sql"],
+    "auth.professionals": [
+      "ch.professional",
+      "backend/database/ddl/40-ch-clinical-network.sql"
+    ],
+    "auth.role_permissions": [
+      "auth.role_perms",
+      "backend/database/ddl/02-auth.sql"
+    ],
+    "auth.roles": ["auth.roles", "backend/database/ddl/02-auth.sql"],
+    "auth.stations": [
+      "ch.biometric_station",
+      "backend/database/ddl/40-ch-clinical-network.sql"
+    ],
+    "auth.tenants": ["auth.tenants", "backend/database/ddl/02-auth.sql"],
+    "auth.user_roles": [
+      "auth.membership_roles",
+      "backend/database/ddl/02-auth.sql"
+    ],
+    "auth.user_sessions": ["auth.sessions", "backend/database/ddl/02-auth.sql"],
+    "auth.users": [
+      "auth.users + auth.memberships",
+      "backend/database/ddl/02-auth.sql"
+    ],
+    "integration.crm_crp_cache": [
+      "integration.professional_council_cache",
+      "backend/database/ddl/04-integration-storage.sql"
+    ],
+    "integration.idempotency_keys": [
+      "integration.idempotency_keys",
+      "backend/database/ddl/04-integration-storage.sql"
+    ],
+    "integration.rate_limit_windows": [
+      "integration.rate_limit_windows",
+      "backend/database/ddl/04-integration-storage.sql"
+    ],
+    "integration.renach_acks": [
+      "integration.delivery_attempt",
+      "backend/database/ddl/04-integration-storage.sql"
+    ],
+    "integration.renach_inbox": [
+      "integration.inbox_receipt",
+      "backend/database/ddl/04-integration-storage.sql"
+    ],
+    "integration.renach_outbox": [
+      "integration.outbox",
+      "backend/database/ddl/04-integration-storage.sql"
+    ],
+    "integration.toxicology_cache": [
+      "ch.periodic_toxicology_result",
+      "backend/database/ddl/56-ch-toxicology.sql"
+    ],
+    "pec.appointments": [
+      "ch.appointment",
+      "backend/database/ddl/46-ch-scheduling.sql"
+    ],
+    "pec.billing_divergences": [
+      "ch.billing_divergence",
+      "backend/database/ddl/51-ch-billing.sql"
+    ],
+    "pec.billing_invoices": [
+      "ch.billing_invoice",
+      "backend/database/ddl/51-ch-billing.sql"
+    ],
+    "pec.billing_items": [
+      "ch.billing_item",
+      "backend/database/ddl/51-ch-billing.sql"
+    ],
+    "pec.biometric_checks": [
+      "ch.biometric_check",
+      "backend/database/ddl/45-ch-biometrics.sql"
+    ],
+    "pec.biometric_exceptions": [
+      "ch.biometric_exception",
+      "backend/database/ddl/45-ch-biometrics.sql"
+    ],
+    "pec.biometric_refs": [
+      "ch.biometric_reference",
+      "backend/database/ddl/45-ch-biometrics.sql"
+    ],
+    "pec.clinical_control_events": [
+      "ch.clinical_control_event",
+      "backend/database/ddl/52-ch-clinical-controls.sql"
+    ],
+    "pec.complaints": [
+      "portal.complaint",
+      "backend/database/ddl/60-portal-complaints.sql"
+    ],
+    "pec.documents": [
+      "ch.clinical_document",
+      "backend/database/ddl/44-ch-reports.sql"
+    ],
+    "pec.encounter_restrictions": [
+      "ch.encounter_restriction",
+      "backend/database/ddl/47-ch-restrictions.sql"
+    ],
+    "pec.encounters": [
+      "ch.encounter",
+      "backend/database/ddl/42-ch-encounters.sql"
+    ],
+    "pec.exams_medical": [
+      "ch.medical_exam",
+      "backend/database/ddl/43-ch-exams.sql"
+    ],
+    "pec.exams_psych": [
+      "ch.psychological_exam",
+      "backend/database/ddl/43-ch-exams.sql"
+    ],
+    "pec.federal_exam_public_prices": [
+      "ch.federal_exam_public_price",
+      "backend/database/ddl/51-ch-billing.sql"
+    ],
+    "pec.inconsistencies": [
+      "ch.inconsistency",
+      "backend/database/ddl/53-ch-inconsistencies.sql"
+    ],
+    "pec.junta_cases": [
+      "ch.junta_case",
+      "backend/database/ddl/55-ch-juntas.sql"
+    ],
+    "pec.junta_decisions": [
+      "ch.junta_decision",
+      "backend/database/ddl/55-ch-juntas.sql"
+    ],
+    "pec.junta_review_members": [
+      "ch.junta_board_member",
+      "backend/database/ddl/55-ch-juntas.sql"
+    ],
+    "pec.junta_reviews": [
+      "ch.junta_board",
+      "backend/database/ddl/55-ch-juntas.sql"
+    ],
+    "pec.operational_records": [
+      "ch.operational_record",
+      "backend/database/ddl/54-ch-operational-controls.sql"
+    ],
+    "pec.patients": ["ch.patient", "backend/database/ddl/41-ch-patients.sql"],
+    "pec.process_blocks": [
+      "ch.process_block",
+      "backend/database/ddl/49-ch-process-blocks.sql"
+    ],
+    "pec.process_parameters": [
+      "tenancy.tenant_settings",
+      "backend/database/ddl/02-auth.sql"
+    ],
+    "pec.professional_schedules": [
+      "ch.professional_schedule",
+      "backend/database/ddl/54-ch-operational-controls.sql"
+    ],
+    "pec.psych_instruments": [
+      "ch.psych_instrument",
+      "backend/database/ddl/43-ch-exams.sql"
+    ],
+    "pec.report_addenda": [
+      "ch.report_addendum",
+      "backend/database/ddl/44-ch-reports.sql"
+    ],
+    "pec.reports": ["ch.report", "backend/database/ddl/44-ch-reports.sql"],
+    "pec.restriction_codes": [
+      "ch.restriction_code",
+      "backend/database/ddl/47-ch-restrictions.sql"
+    ],
+    "pec.telehealth_sessions": [
+      "ch.telehealth_session",
+      "backend/database/ddl/50-ch-telehealth.sql"
+    ]
+  },
+  "transferredArtifacts": [
+    {
+      "origin": "aarusso-nyx/pec#11",
+      "target": "aarusso-nyx/detran#25",
+      "disposition": "ported",
+      "evidence": "packages/senatran-adapter/src/ports.ts"
+    },
+    {
+      "origin": "aarusso-nyx/pec#35",
+      "target": "DETRAN has no actions/upload-artifact dependency",
+      "disposition": "superseded",
+      "evidence": ".github/workflows/ci.yml"
+    }
+  ]
+}
