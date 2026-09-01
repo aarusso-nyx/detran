@@ -8,13 +8,13 @@ legacy product has been reproduced file-for-file.
 
 ## Reproducible snapshot
 
-| Item                       | Value                                                                    |
-| -------------------------- | ------------------------------------------------------------------------ |
-| Legacy origin              | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753` |
-| DETRAN entry               | `4b02785`                                                                |
-| Latest committed candidate | `a87d25ed585c256424eacd3748035c742d52d077`                               |
-| Working branch             | `codex/pec-port-mapping`                                                 |
-| Origin use                 | Read-only comparison input; no code is imported at runtime               |
+| Item                     | Value                                                                    |
+| ------------------------ | ------------------------------------------------------------------------ |
+| Legacy origin            | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753` |
+| DETRAN entry             | `4b02785`                                                                |
+| Candidate before refresh | `a87d25ed585c256424eacd3748035c742d52d077`                               |
+| Working branch           | `codex/pec-port-mapping`                                                 |
+| Origin use               | Read-only comparison input; no code is imported at runtime               |
 
 The source of truth remains the reviewed PEC blueprints and Owner decisions in this repository.
 DEVAI remains the governance provider, STYNX remains the reusable platform substrate, and all
