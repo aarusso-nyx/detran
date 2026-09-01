@@ -8,13 +8,13 @@ legacy product has been reproduced file-for-file.
 
 ## Reproducible snapshot
 
-| Item                     | Value                                                                     |
-| ------------------------ | ------------------------------------------------------------------------- |
-| Legacy origin            | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753`  |
-| DETRAN current-main base | `46477771b02c8b51294e6bfa0f9461277f8cc5df`                                |
-| Verified implementation  | `f79160af0ebfa62241e63a40590bde084c8acfbb` plus this evidence-only update |
-| Working branch           | `codex/pec-port-mapping`                                                  |
-| Origin use               | Read-only comparison input; no code is imported at runtime                |
+| Item                     | Value                                                                             |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| Legacy origin            | Read-only sibling `../pec` at `cfa8af2ff5349708e686305c7eb0a60d6276f753`          |
+| DETRAN current-main base | `46477771b02c8b51294e6bfa0f9461277f8cc5df`                                        |
+| Verified implementation  | `f79160af0ebfa62241e63a40590bde084c8acfbb` plus evidence/publication-only updates |
+| Working branch           | `codex/pec-port-mapping`                                                          |
+| Origin use               | Read-only comparison input; no code is imported at runtime                        |
 
 The source of truth remains the reviewed PEC blueprints and Owner decisions in this repository.
 DEVAI remains the governance provider, STYNX remains the reusable platform substrate, and all
@@ -121,14 +121,14 @@ The reviewed use cases contain exactly 76 acceptance criteria after the Owner-ap
 | UC-PEC-013 |        5/5 |       0 | Covered under Owner-selected P2 distribution                            |
 | UC-PEC-014 |        6/6 |       0 | Negative deletion-control evidence accepted; execution remains disabled |
 
-Machine-verifiable blocker details are in
-[`pec-parity-blockers.json`](./pec-parity-blockers.json). The parity gate rejects missing,
-duplicated or unreviewed acceptance IDs and verifies the complete origin test ledger.
+Machine-verifiable blocker details are in `docs/meta/pec-parity-blockers.json`. The parity gate
+rejects missing, duplicated or unreviewed acceptance IDs and verifies the complete origin test
+ledger.
 
 ## Legacy test disposition
 
 The read-only origin contains **611** `.spec.ts` files, not 610. Every path is dispositioned in
-[`pec-origin-test-disposition.csv`](./pec-origin-test-disposition.csv):
+`docs/meta/pec-origin-test-disposition.csv`:
 
 | Kind                              | Count | Interpretation                                                                                |
 | --------------------------------- | ----: | --------------------------------------------------------------------------------------------- |
