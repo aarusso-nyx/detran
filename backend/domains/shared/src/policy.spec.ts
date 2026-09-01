@@ -111,6 +111,22 @@ describe('DETRAN unified policy kit', () => {
     ).toBe(false);
   });
 
+  it('AC-PEC-011-6 confines candidate access to the ownership-checked dossier route', () => {
+    const candidate = { roles: ['CANDIDATO'], permissions: [] };
+    expect(
+      isDetranActionAllowed(candidate, 'ch:candidate-dossier', 'read'),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        candidate,
+        'ch:candidate-dossier',
+        'feedback-request',
+      ),
+    ).toBe(true);
+    expect(isDetranActionAllowed(candidate, 'ch:report', 'read')).toBe(false);
+    expect(isDetranActionAllowed(candidate, 'ch:patient', 'read')).toBe(false);
+  });
+
   it('always uses the app role for request-path transactions', async () => {
     const tx = vi.fn(
       async (work: (trx: never) => Promise<string>, options: unknown) => {

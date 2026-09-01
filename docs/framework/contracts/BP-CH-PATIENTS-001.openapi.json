@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Patients — BP-CH-PATIENTS-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Cadastro do candidato/condutor no PEC, sob o regime de dado pessoal sensivel e retencao minima de 20 anos a partir do ultimo registro.",
     "x-blueprint": "BP-CH-PATIENTS-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -142,6 +142,13 @@
             "format": "uuid",
             "nullable": true
           },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
           "national_id": {
             "type": "string",
             "maxLength": 11,
@@ -222,6 +229,13 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
           },
           "national_id": {
             "type": "string",

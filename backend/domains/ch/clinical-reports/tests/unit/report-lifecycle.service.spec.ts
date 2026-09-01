@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { PadesSigningHttpAdapter } from '../../src/pades-signing.http-adapter.js';
 import {
   contentSha256,
+  legalResultLabel,
   ReportLifecycleService,
 } from '../../src/report-lifecycle.service.js';
 
@@ -40,6 +41,16 @@ function subject(
 }
 
 describe('ReportLifecycleService', () => {
+  it('AC-PEC-011-1 exposes only the federal result labels', () => {
+    expect(legalResultLabel('APTO')).toBe('Apto');
+    expect(legalResultLabel('APTO_COM_RESTRICOES')).toBe('Apto com restrições');
+    expect(legalResultLabel('INAPTO_TEMPORARIO')).toBe('Inapto temporário');
+    expect(legalResultLabel('INAPTO')).toBe('Inapto');
+    expect(() => legalResultLabel('CONDICIONADO')).toThrow(
+      'Unsupported federal result',
+    );
+  });
+
   it('AC-PEC-006-6 hashes canonical content independently of property order', () => {
     expect(contentSha256({ b: 2, a: { d: 4, c: 3 } })).toBe(
       contentSha256({ a: { c: 3, d: 4 }, b: 2 }),
@@ -165,6 +176,55 @@ describe('ReportLifecycleService', () => {
     expect(statusSql).not.toContain("set status = 'SIGNED'");
   });
 
+  it('AC-PEC-011-5 delivers an immediate separate registration-block notice when an adverse report is signed', async () => {
+    const preflight = {
+      exam_id: 'exam-1',
+      exam_data: {},
+      exam_result: 'INAPTO_TEMPORARIO',
+      inaptitude_until: '2026-10-01',
+      professional_id: 'professional-1',
+      professional_name: 'Professional',
+      professional_council: 'CRM/1',
+      professional_user_id: 'user-1',
+      professional_biometric_passed: true,
+    };
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ rows: [preflight] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [{ id: 'report-1' }] })
+      .mockResolvedValueOnce({ rows: [{ id: 'notice-1' }] })
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] });
+    const signing = {
+      renderAndSign: vi.fn(async (request: { contentSha256: string }) => ({
+        ...receipt,
+        contentSha256: request.contentSha256,
+      })),
+    };
+
+    await subject(query, signing).service.create({
+      encounterId: 'encounter-1',
+      kind: 'MEDICAL',
+      templateVersion: 'v1',
+    });
+
+    expect(query.mock.calls[3]?.[0]).toContain('ch.registration_block_notice');
+    expect(query.mock.calls[3]?.[0]).toContain('INTERNAL_CASE_INBOX');
+    expect(query.mock.calls[3]?.[1]).toEqual([
+      'report-1',
+      null,
+      'encounter-1',
+      'professional-1',
+      'MEDICAL',
+      'INAPTO_TEMPORARIO',
+      'Inapto temporário',
+      '2026-10-01',
+      'user-1',
+    ]);
+    expect(query.mock.calls[4]?.[0]).toContain('integration.outbox');
+  });
+
   it('AC-PEC-007-2 requires Supervisor and Admin Clínica approvals by distinct actors', async () => {
     const requested = {
       id: 'addendum-1',
@@ -222,13 +282,17 @@ describe('ReportLifecycleService', () => {
       id: 'addendum-1',
       report_id: 'report-1',
       reason: 'Material correction',
-      content: { result: 'INAPTO_TEMPORARIO' },
+      content: {
+        result: 'INAPTO_TEMPORARIO',
+        inaptitudeUntil: '2026-10-01',
+      },
       content_sha256: 'a'.repeat(64),
       signer_professional_id: 'professional-1',
       signer_name: 'Professional',
       signer_council: 'CRM/SP 1234',
       professional_user_id: 'user-1',
       report_kind: 'MEDICAL',
+      encounter_id: 'encounter-1',
       report_artifact_sha256: 'b'.repeat(64),
     };
     const signed = {
@@ -240,6 +304,7 @@ describe('ReportLifecycleService', () => {
       .fn()
       .mockResolvedValueOnce({ rows: [source] })
       .mockResolvedValueOnce({ rows: [signed] })
+      .mockResolvedValueOnce({ rows: [{ id: 'notice-1' }] })
       .mockResolvedValueOnce({ rows: [] });
     const signing = {
       renderAndSign: vi.fn(async () => ({
@@ -262,12 +327,13 @@ describe('ReportLifecycleService', () => {
         minimumSignatureLevel: 'QUALIFIED',
       }),
     );
-    expect(query.mock.calls[2]?.[0]).toContain('integration.outbox');
-    expect(query.mock.calls[2]?.[1]).toEqual([
+    expect(query.mock.calls[2]?.[0]).toContain('ch.registration_block_notice');
+    expect(query.mock.calls[3]?.[0]).toContain('integration.outbox');
+    expect(query.mock.calls[3]?.[1]).toEqual([
       'addendum-1',
       'report-1',
       'MEDICAL',
     ]);
-    expect(query.mock.calls[2]?.[0]).toContain('ch.report-addendum:');
+    expect(query.mock.calls[3]?.[0]).toContain('ch.report-addendum:');
   });
 });

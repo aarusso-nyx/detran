@@ -4,7 +4,7 @@
   "module": {
     "name": "Patients",
     "namespace": "ch",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "41-ch-patients.sql",
     "dependencies": { "@detran/ch-clinical-network": "workspace:*" },
     "testAliases": [
@@ -27,6 +27,13 @@
           { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
           { "name": "tenant_id", "type": "uuid" },
           { "name": "clinic_id", "type": "uuid", "nullable": true },
+          {
+            "name": "user_id",
+            "type": "uuid",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
           {
             "name": "national_id",
             "type": "varchar(11)",
@@ -99,6 +106,12 @@
           {
             "name": "ix_ch_patient_clinic",
             "columns": ["tenant_id", "clinic_id"]
+          },
+          {
+            "name": "ux_ch_patient_user",
+            "columns": ["tenant_id", "user_id"],
+            "unique": true,
+            "where": "user_id is not null"
           }
         ],
         "checks": [
@@ -116,6 +129,11 @@
             "name": "fk_ch_patient_clinic",
             "columns": ["clinic_id"],
             "references": { "table": "ch.clinic", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_patient_user",
+            "columns": ["user_id"],
+            "references": { "table": "auth.users", "columns": ["id"] }
           }
         ]
       }

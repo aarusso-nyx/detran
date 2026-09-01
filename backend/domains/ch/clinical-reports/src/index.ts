@@ -1,4 +1,4 @@
-// Generated from BP-CH-REPORTS-001 v1.2.0 sha256:5045696b00b62bf7bd1c4ae7976e61f61de9954c392aed7987edaa45ba169501
+// Generated from BP-CH-REPORTS-001 v1.3.0 sha256:223e3b4e60807d8ac51bcd6d9e1294a65ca305509b8ff1dc2f93649c7f3aa1a5
 export * from './controllers/report.controller.js';
 export * from './dto/create-report.dto.js';
 export * from './entities/report.entity.js';
@@ -14,6 +14,16 @@ export * from './dto/create-report-addendum-approval.dto.js';
 export * from './entities/report-addendum-approval.entity.js';
 export * from './repositories/report-addendum-approval.repository.js';
 export * from './services/report-addendum-approval.service.js';
+export * from './controllers/registration-block-notice.controller.js';
+export * from './dto/create-registration-block-notice.dto.js';
+export * from './entities/registration-block-notice.entity.js';
+export * from './repositories/registration-block-notice.repository.js';
+export * from './services/registration-block-notice.service.js';
+export * from './controllers/feedback-request.controller.js';
+export * from './dto/create-feedback-request.dto.js';
+export * from './entities/feedback-request.entity.js';
+export * from './repositories/feedback-request.repository.js';
+export * from './services/feedback-request.service.js';
 export * from './controllers/episode-export.controller.js';
 export * from './dto/create-episode-export.dto.js';
 export * from './entities/episode-export.entity.js';
@@ -28,5 +38,7 @@ export * from './clinical-reports.module.js';
 export * from './pades-signing.http-adapter.js';
 export * from './report-lifecycle.service.js';
 export * from './report-commands.controller.js';
+export * from './candidate-dossier.service.js';
+export * from './candidate-dossier.controller.js';
 export * from './encounter-closure.service.js';
 export * from './encounter-closure.controller.js';

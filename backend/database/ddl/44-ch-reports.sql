@@ -1,4 +1,4 @@
--- Generated from BP-CH-REPORTS-001 v1.2.0 sha256:5045696b00b62bf7bd1c4ae7976e61f61de9954c392aed7987edaa45ba169501
+-- Generated from BP-CH-REPORTS-001 v1.3.0 sha256:223e3b4e60807d8ac51bcd6d9e1294a65ca305509b8ff1dc2f93649c7f3aa1a5
 
 -- Regenerable-only DDL for BP-CH-REPORTS-001; request-path writes use role_app_backend.
 
@@ -92,6 +92,78 @@ create unique index if not exists ux_ch_report_addendum_approval_actor on ch.rep
 create index if not exists ix_report_addendum_approval_tenant_id on ch.report_addendum_approval (tenant_id);
 create index if not exists ix_report_addendum_approval_report_addendum_id on ch.report_addendum_approval (report_addendum_id);
 
+create table if not exists ch.registration_block_notice (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  report_id uuid not null,
+  source_addendum_id uuid,
+  encounter_id uuid not null,
+  professional_id uuid not null,
+  track varchar(16) not null,
+  result varchar(32) not null,
+  legal_result_label varchar(80) not null,
+  inaptitude_until date,
+  recipients jsonb default '["MEDICAL_SECTOR","PSYCHOLOGICAL_SECTOR"]'::jsonb not null,
+  channel varchar(32) default 'INTERNAL_CASE_INBOX' not null,
+  status varchar(16) default 'DELIVERED' not null,
+  delivered_at timestamptz default now() not null,
+  created_by uuid not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_registration_block_notice primary key (id),
+  constraint ck_ch_registration_block_track check (track in ('MEDICAL','PSYCH')),
+  constraint ck_ch_registration_block_result check (result in ('INAPTO_TEMPORARIO','INAPTO')),
+  constraint ck_ch_registration_block_result_label check ((result = 'INAPTO_TEMPORARIO' and legal_result_label = 'Inapto temporário') or (result = 'INAPTO' and legal_result_label = 'Inapto')),
+  constraint ck_ch_registration_block_deadline check ((result = 'INAPTO_TEMPORARIO' and inaptitude_until is not null) or (result = 'INAPTO' and inaptitude_until is null)),
+  constraint ck_ch_registration_block_delivery check (status = 'DELIVERED' and channel = 'INTERNAL_CASE_INBOX' and recipients = '["MEDICAL_SECTOR", "PSYCHOLOGICAL_SECTOR"]'::jsonb),
+  constraint fk_ch_registration_block_report foreign key (report_id) references ch.report (id),
+  constraint fk_ch_registration_block_addendum foreign key (source_addendum_id) references ch.report_addendum (id),
+  constraint fk_ch_registration_block_encounter foreign key (encounter_id) references ch.encounter (id),
+  constraint fk_ch_registration_block_professional foreign key (professional_id) references ch.professional (id)
+);
+create unique index if not exists ux_ch_registration_block_report on ch.registration_block_notice (tenant_id, report_id) where source_addendum_id is null;
+create unique index if not exists ux_ch_registration_block_addendum on ch.registration_block_notice (tenant_id, source_addendum_id) where source_addendum_id is not null;
+create index if not exists ix_ch_registration_block_inbox on ch.registration_block_notice (tenant_id, status, delivered_at);
+create index if not exists ix_registration_block_notice_tenant_id on ch.registration_block_notice (tenant_id);
+create index if not exists ix_registration_block_notice_report_id on ch.registration_block_notice (report_id);
+create index if not exists ix_registration_block_notice_source_addendum_id on ch.registration_block_notice (source_addendum_id);
+create index if not exists ix_registration_block_notice_encounter_id on ch.registration_block_notice (encounter_id);
+create index if not exists ix_registration_block_notice_professional_id on ch.registration_block_notice (professional_id);
+
+create table if not exists ch.feedback_request (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  report_id uuid not null,
+  encounter_id uuid not null,
+  patient_id uuid not null,
+  professional_id uuid not null,
+  requested_by uuid not null,
+  legal_result_label varchar(80) not null,
+  status varchar(16) default 'REQUESTED' not null,
+  requested_at timestamptz default now() not null,
+  scheduled_at timestamptz,
+  completed_at timestamptz,
+  completion_summary text,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_feedback_request primary key (id),
+  constraint ck_ch_feedback_status check (status in ('REQUESTED','SCHEDULED','COMPLETED','CANCELLED')),
+  constraint ck_ch_feedback_schedule check (status = 'REQUESTED' or scheduled_at is not null),
+  constraint ck_ch_feedback_completion check (status <> 'COMPLETED' or (completed_at is not null and completion_summary is not null and length(trim(completion_summary)) > 0)),
+  constraint fk_ch_feedback_report foreign key (report_id) references ch.report (id),
+  constraint fk_ch_feedback_encounter foreign key (encounter_id) references ch.encounter (id),
+  constraint fk_ch_feedback_patient foreign key (patient_id) references ch.patient (id),
+  constraint fk_ch_feedback_professional foreign key (professional_id) references ch.professional (id),
+  constraint fk_ch_feedback_requester foreign key (requested_by) references auth.users (id)
+);
+create unique index if not exists ux_ch_feedback_request_active on ch.feedback_request (tenant_id, report_id) where status in ('REQUESTED','SCHEDULED');
+create index if not exists ix_ch_feedback_professional on ch.feedback_request (tenant_id, professional_id, status);
+create index if not exists ix_feedback_request_tenant_id on ch.feedback_request (tenant_id);
+create index if not exists ix_feedback_request_report_id on ch.feedback_request (report_id);
+create index if not exists ix_feedback_request_encounter_id on ch.feedback_request (encounter_id);
+create index if not exists ix_feedback_request_patient_id on ch.feedback_request (patient_id);
+create index if not exists ix_feedback_request_professional_id on ch.feedback_request (professional_id);
+
 create table if not exists ch.episode_export (
   id uuid default gen_random_uuid() not null,
   tenant_id uuid not null,
@@ -159,6 +231,10 @@ select auth.create_rls_policy('ch', 'report');
 select auth.create_rls_policy('ch', 'report_addendum');
 
 select auth.create_rls_policy('ch', 'report_addendum_approval');
+
+select auth.create_rls_policy('ch', 'registration_block_notice');
+
+select auth.create_rls_policy('ch', 'feedback_request');
 
 select auth.create_rls_policy('ch', 'episode_export');
 

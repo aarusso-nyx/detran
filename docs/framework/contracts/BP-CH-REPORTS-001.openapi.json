@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "ClinicalReports — BP-CH-REPORTS-001",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "description": "Laudos, adendos imutaveis e documentos clinicos com PAdES+TSA, validacao OCSP/CRL e artefatos sob custodia STYNX.",
     "x-blueprint": "BP-CH-REPORTS-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -160,6 +160,114 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ReportAddendumApproval"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/registration-block-notices": {
+      "get": {
+        "tags": ["registration-block-notice"],
+        "operationId": "listRegistrationBlockNotice",
+        "summary": "List RegistrationBlockNotice (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegistrationBlockNotice"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/registration-block-notices/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["registration-block-notice"],
+        "operationId": "getRegistrationBlockNotice",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationBlockNotice"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/feedback-requests": {
+      "get": {
+        "tags": ["feedback-request"],
+        "operationId": "listFeedbackRequest",
+        "summary": "List FeedbackRequest (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedbackRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/feedback-requests/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["feedback-request"],
+        "operationId": "getFeedbackRequest",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackRequest"
                 }
               }
             }
@@ -586,6 +694,200 @@
         ]
       },
       "CreateReportAddendumApprovalDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RegistrationBlockNotice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "report_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_addendum_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "track": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["MEDICAL", "PSYCH"]
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": ["INAPTO_TEMPORARIO", "INAPTO"],
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "legal_result_label": {
+            "type": "string",
+            "maxLength": 80,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "inaptitude_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "recipients": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[\"MEDICAL_SECTOR\",\"PSYCHOLOGICAL_SECTOR\"]'::jsonb"
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 32,
+            "default": "'INTERNAL_CASE_INBOX'"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "default": "'DELIVERED'"
+          },
+          "delivered_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "report_id",
+          "encounter_id",
+          "professional_id",
+          "track",
+          "result",
+          "legal_result_label",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateRegistrationBlockNoticeDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "FeedbackRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "report_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "legal_result_label": {
+            "type": "string",
+            "maxLength": 80,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["REQUESTED", "SCHEDULED", "COMPLETED", "CANCELLED"],
+            "default": "'REQUESTED'"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "scheduled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completion_summary": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "report_id",
+          "encounter_id",
+          "patient_id",
+          "professional_id",
+          "requested_by",
+          "legal_result_label",
+          "created_at"
+        ]
+      },
+      "CreateFeedbackRequestDto": {
         "type": "object",
         "properties": {}
       },

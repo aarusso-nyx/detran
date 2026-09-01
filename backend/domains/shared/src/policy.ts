@@ -274,6 +274,10 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['report', 'addendum-approve-supervisor', ['SUPERVISOR']],
   ['report', 'addendum-approve-clinic-admin', ['ADMIN_CLINICA']],
   ['report', 'addendum-sign', ['MEDICO', 'PSICOLOGO']],
+  ['candidate-dossier', 'read', ['CANDIDATO']],
+  ['candidate-dossier', 'feedback-request', ['CANDIDATO']],
+  ['candidate-dossier', 'feedback-schedule', ['PSICOLOGO']],
+  ['candidate-dossier', 'feedback-complete', ['PSICOLOGO']],
   [
     'report-addendum',
     'read',
@@ -283,6 +287,16 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     'report-addendum-approval',
     'read',
     ['SUPERVISOR', 'ADMIN_CLINICA', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  [
+    'registration-block-notice',
+    'read',
+    ['MEDICO', 'PSICOLOGO', 'AUDITOR', 'GESTOR_DETRAN'],
+  ],
+  [
+    'feedback-request',
+    'read',
+    ['PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR_DETRAN'],
   ],
   [
     'document',

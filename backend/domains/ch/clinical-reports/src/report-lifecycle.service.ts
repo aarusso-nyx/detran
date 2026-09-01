@@ -40,11 +40,20 @@ interface ReportPreflight {
   exam_id: string;
   exam_data: Record<string, unknown>;
   exam_result: string;
+  inaptitude_until: string | null;
   professional_id: string;
   professional_name: string;
   professional_council: string;
   professional_user_id: string | null;
   professional_biometric_passed: boolean | null;
+}
+
+interface SignedAddendumSource {
+  report_id: string;
+  encounter_id: string;
+  report_kind: 'MEDICAL' | 'PSYCH';
+  signer_professional_id: string;
+  content: Record<string, unknown>;
 }
 
 interface ExistingReport extends Report {
@@ -68,6 +77,23 @@ function canonicalJson(value: unknown): string {
 
 export function contentSha256(value: unknown): string {
   return createHash('sha256').update(canonicalJson(value)).digest('hex');
+}
+
+const LEGAL_RESULT_LABELS: Readonly<Record<string, string>> = Object.freeze({
+  APTO: 'Apto',
+  APTO_COM_RESTRICOES: 'Apto com restrições',
+  INAPTO_TEMPORARIO: 'Inapto temporário',
+  INAPTO: 'Inapto',
+});
+
+export function legalResultLabel(result: string): string {
+  const label = LEGAL_RESULT_LABELS[result];
+  if (!label) throw new BadRequestException('Unsupported federal result');
+  return label;
+}
+
+function isInaptitude(result: string): boolean {
+  return result === 'INAPTO_TEMPORARIO' || result === 'INAPTO';
 }
 
 @Injectable()
@@ -146,6 +172,17 @@ export class ReportLifecycleService {
       );
       const report = result.rows[0];
       if (!report) throw new Error('Report insert returned no row');
+      if (isInaptitude(preflight.exam_result)) {
+        await this.recordImmediateBlockNotice(tx, {
+          reportId: report.id,
+          encounterId: input.encounterId,
+          professionalId: preflight.professional_id,
+          track: input.kind,
+          result: preflight.exam_result,
+          inaptitudeUntil: preflight.inaptitude_until,
+          createdBy: actorId,
+        });
+      }
       await tx.query(
         `insert into integration.outbox
           (topic, aggregate_type, aggregate_id, payload,
@@ -264,13 +301,14 @@ export class ReportLifecycleService {
         signer_council: string;
         professional_user_id: string | null;
         report_kind: 'MEDICAL' | 'PSYCH';
+        encounter_id: string;
         report_artifact_sha256: string;
       }>(
         `select addendum.id, addendum.report_id, addendum.reason,
                 addendum.content, addendum.content_sha256,
                 report.signer_professional_id, report.signer_name,
                 report.signer_council,
-                report.kind as report_kind,
+                report.kind as report_kind, report.encounter_id,
                 report.artifact_sha256 as report_artifact_sha256,
                 professional.user_id as professional_user_id
            from ch.report_addendum addendum
@@ -287,7 +325,7 @@ export class ReportLifecycleService {
           'Addendum must be signed by the original report professional',
         );
       }
-      this.assertAmendedResult(row.report_kind, row.content.result);
+      this.assertAmendedResult(row.report_kind, row.content);
       return row;
     });
     const receipt = await this.signing.renderAndSign({
@@ -306,7 +344,7 @@ export class ReportLifecycleService {
       },
       minimumSignatureLevel: 'QUALIFIED',
     });
-    return this.persistSignedAddendum(id, receipt, source.report_kind);
+    return this.persistSignedAddendum(id, receipt, source);
   }
 
   private async preflight(
@@ -318,7 +356,7 @@ export class ReportLifecycleService {
       input.kind === 'MEDICAL' ? 'ch.medical_exam' : 'ch.psychological_exam';
     const result = await tx.query<ReportPreflight>(
       `select exam.id as exam_id, exam.data as exam_data,
-              exam.result as exam_result,
+              exam.result as exam_result, exam.inaptitude_until,
               professional.id as professional_id,
               professional.person_name as professional_name,
               professional.council_type || '/' || professional.council_number
@@ -412,7 +450,7 @@ export class ReportLifecycleService {
   private persistSignedAddendum(
     id: string,
     receipt: ClinicalArtifactReceipt,
-    reportKind: 'MEDICAL' | 'PSYCH',
+    source: SignedAddendumSource,
   ): Promise<ReportAddendum> {
     return this.reports.transaction(async (transaction) => {
       const tx = transaction as SqlTransaction;
@@ -441,6 +479,21 @@ export class ReportLifecycleService {
       if (!addendum)
         throw new ConflictException('Addendum is no longer signable');
       if (typeof addendum.content.result === 'string') {
+        if (isInaptitude(addendum.content.result)) {
+          await this.recordImmediateBlockNotice(tx, {
+            reportId: source.report_id,
+            sourceAddendumId: addendum.id,
+            encounterId: source.encounter_id,
+            professionalId: source.signer_professional_id,
+            track: source.report_kind,
+            result: addendum.content.result,
+            inaptitudeUntil:
+              typeof addendum.content.inaptitudeUntil === 'string'
+                ? addendum.content.inaptitudeUntil
+                : null,
+            createdBy: this.requireActorId(),
+          });
+        }
         await tx.query(
           `insert into integration.outbox
             (topic, aggregate_type, aggregate_id, payload,
@@ -449,14 +502,18 @@ export class ReportLifecycleService {
                    jsonb_build_object('reportId', $2, 'addendumId', $1, 'kind', $3),
                    'ch.report-addendum:' || $1, 'pending', now())
            on conflict (tenant_id, idempotency_key) do nothing`,
-          [addendum.id, addendum.report_id, reportKind],
+          [addendum.id, addendum.report_id, source.report_kind],
         );
       }
       return addendum;
     });
   }
 
-  private assertAmendedResult(kind: 'MEDICAL' | 'PSYCH', value: unknown): void {
+  private assertAmendedResult(
+    kind: 'MEDICAL' | 'PSYCH',
+    content: Record<string, unknown>,
+  ): void {
+    const value = content.result;
     if (value === undefined) return;
     const allowed =
       kind === 'MEDICAL'
@@ -467,6 +524,52 @@ export class ReportLifecycleService {
         `Invalid ${kind.toLowerCase()} result in addendum`,
       );
     }
+    if (
+      value === 'INAPTO_TEMPORARIO' &&
+      (typeof content.inaptitudeUntil !== 'string' ||
+        !content.inaptitudeUntil.trim())
+    ) {
+      throw new BadRequestException(
+        'Temporary inaptitude addendum requires an explicit end date',
+      );
+    }
+  }
+
+  private recordImmediateBlockNotice(
+    tx: SqlTransaction,
+    input: {
+      reportId: string;
+      sourceAddendumId?: string;
+      encounterId: string;
+      professionalId: string;
+      track: 'MEDICAL' | 'PSYCH';
+      result: string;
+      inaptitudeUntil: string | null;
+      createdBy: string;
+    },
+  ): Promise<{ rows: Record<string, unknown>[] }> {
+    return tx.query(
+      `insert into ch.registration_block_notice
+        (report_id, source_addendum_id, encounter_id, professional_id,
+         track, result, legal_result_label, inaptitude_until,
+         recipients, channel, status, delivered_at, created_by)
+       values ($1, $2, $3, $4, $5, $6, $7, $8,
+               '["MEDICAL_SECTOR","PSYCHOLOGICAL_SECTOR"]'::jsonb,
+               'INTERNAL_CASE_INBOX', 'DELIVERED', now(), $9)
+       on conflict do nothing
+       returning id`,
+      [
+        input.reportId,
+        input.sourceAddendumId ?? null,
+        input.encounterId,
+        input.professionalId,
+        input.track,
+        input.result,
+        legalResultLabel(input.result),
+        input.inaptitudeUntil,
+        input.createdBy,
+      ],
+    );
   }
 
   private requireActorId(): string {

@@ -4,12 +4,13 @@
   "module": {
     "name": "ClinicalReports",
     "namespace": "ch",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "ddlFile": "44-ch-reports.sql",
     "dependencies": {
       "@detran/ch-clinical-network": "workspace:*",
       "@detran/ch-encounters": "workspace:*",
-      "@detran/ch-exams": "workspace:*"
+      "@detran/ch-exams": "workspace:*",
+      "@detran/ch-patients": "workspace:*"
     },
     "testAliases": [
       { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
@@ -18,6 +19,8 @@
       "pades-signing.http-adapter",
       "report-lifecycle.service",
       "report-commands.controller",
+      "candidate-dossier.service",
+      "candidate-dossier.controller",
       "encounter-closure.service",
       "encounter-closure.controller"
     ],
@@ -25,6 +28,10 @@
       {
         "target": "report-commands.controller",
         "symbol": "ReportCommandsController"
+      },
+      {
+        "target": "candidate-dossier.controller",
+        "symbol": "CandidateDossierController"
       },
       {
         "target": "encounter-closure.controller",
@@ -39,6 +46,10 @@
       {
         "target": "report-lifecycle.service",
         "symbol": "ReportLifecycleService"
+      },
+      {
+        "target": "candidate-dossier.service",
+        "symbol": "CandidateDossierService"
       },
       {
         "target": "encounter-closure.service",
@@ -320,6 +331,251 @@
         ]
       },
       {
+        "name": "RegistrationBlockNotice",
+        "table": "registration_block_notice",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "report_id", "type": "uuid", "writable": false },
+          {
+            "name": "source_addendum_id",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "encounter_id", "type": "uuid", "writable": false },
+          {
+            "name": "professional_id",
+            "type": "uuid",
+            "writable": false
+          },
+          { "name": "track", "type": "varchar(16)", "writable": false },
+          {
+            "name": "result",
+            "type": "varchar(32)",
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "legal_result_label",
+            "type": "varchar(80)",
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "inaptitude_until",
+            "type": "date",
+            "nullable": true,
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "recipients",
+            "type": "jsonb",
+            "default": "'[\"MEDICAL_SECTOR\",\"PSYCHOLOGICAL_SECTOR\"]'::jsonb",
+            "writable": false
+          },
+          {
+            "name": "channel",
+            "type": "varchar(32)",
+            "default": "'INTERNAL_CASE_INBOX'",
+            "writable": false
+          },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'DELIVERED'",
+            "writable": false
+          },
+          {
+            "name": "delivered_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false
+          },
+          { "name": "created_by", "type": "uuid", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_registration_block_report",
+            "columns": ["tenant_id", "report_id"],
+            "unique": true,
+            "where": "source_addendum_id is null"
+          },
+          {
+            "name": "ux_ch_registration_block_addendum",
+            "columns": ["tenant_id", "source_addendum_id"],
+            "unique": true,
+            "where": "source_addendum_id is not null"
+          },
+          {
+            "name": "ix_ch_registration_block_inbox",
+            "columns": ["tenant_id", "status", "delivered_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_registration_block_track",
+            "expression": "track in ('MEDICAL','PSYCH')"
+          },
+          {
+            "name": "ck_ch_registration_block_result",
+            "expression": "result in ('INAPTO_TEMPORARIO','INAPTO')"
+          },
+          {
+            "name": "ck_ch_registration_block_result_label",
+            "expression": "(result = 'INAPTO_TEMPORARIO' and legal_result_label = 'Inapto temporário') or (result = 'INAPTO' and legal_result_label = 'Inapto')"
+          },
+          {
+            "name": "ck_ch_registration_block_deadline",
+            "expression": "(result = 'INAPTO_TEMPORARIO' and inaptitude_until is not null) or (result = 'INAPTO' and inaptitude_until is null)"
+          },
+          {
+            "name": "ck_ch_registration_block_delivery",
+            "expression": "status = 'DELIVERED' and channel = 'INTERNAL_CASE_INBOX' and recipients = '[\"MEDICAL_SECTOR\", \"PSYCHOLOGICAL_SECTOR\"]'::jsonb"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_registration_block_report",
+            "columns": ["report_id"],
+            "references": { "table": "ch.report", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_registration_block_addendum",
+            "columns": ["source_addendum_id"],
+            "references": {
+              "table": "ch.report_addendum",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_ch_registration_block_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_registration_block_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "FeedbackRequest",
+        "table": "feedback_request",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "report_id", "type": "uuid", "writable": false },
+          { "name": "encounter_id", "type": "uuid", "writable": false },
+          { "name": "patient_id", "type": "uuid", "writable": false },
+          {
+            "name": "professional_id",
+            "type": "uuid",
+            "writable": false
+          },
+          { "name": "requested_by", "type": "uuid", "writable": false },
+          {
+            "name": "legal_result_label",
+            "type": "varchar(80)",
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'REQUESTED'",
+            "writable": false
+          },
+          {
+            "name": "requested_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false
+          },
+          {
+            "name": "scheduled_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "completed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "completion_summary",
+            "type": "text",
+            "nullable": true,
+            "writable": false,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_feedback_request_active",
+            "columns": ["tenant_id", "report_id"],
+            "unique": true,
+            "where": "status in ('REQUESTED','SCHEDULED')"
+          },
+          {
+            "name": "ix_ch_feedback_professional",
+            "columns": ["tenant_id", "professional_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_feedback_status",
+            "expression": "status in ('REQUESTED','SCHEDULED','COMPLETED','CANCELLED')"
+          },
+          {
+            "name": "ck_ch_feedback_schedule",
+            "expression": "status = 'REQUESTED' or scheduled_at is not null"
+          },
+          {
+            "name": "ck_ch_feedback_completion",
+            "expression": "status <> 'COMPLETED' or (completed_at is not null and completion_summary is not null and length(trim(completion_summary)) > 0)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_feedback_report",
+            "columns": ["report_id"],
+            "references": { "table": "ch.report", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_feedback_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_feedback_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_feedback_professional",
+            "columns": ["professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_feedback_requester",
+            "columns": ["requested_by"],
+            "references": { "table": "auth.users", "columns": ["id"] }
+          }
+        ]
+      },
+      {
         "name": "EpisodeExport",
         "table": "episode_export",
         "primaryKey": ["id"],
@@ -496,6 +752,18 @@
         "entity": "ReportAddendumApproval",
         "path": "report-addendum-approvals",
         "resource": "report-addendum-approval",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "RegistrationBlockNotice",
+        "path": "registration-block-notices",
+        "resource": "registration-block-notice",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "FeedbackRequest",
+        "path": "feedback-requests",
+        "resource": "feedback-request",
         "operations": ["list", "get"]
       },
       {
