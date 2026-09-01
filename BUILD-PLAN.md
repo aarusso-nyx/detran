@@ -15,7 +15,9 @@ handoff plan; Decisions Ledger owner-confirmed 2026-08-23, binding):
 - **Phase 4** — PORTAL: gov.br federation, `domains/portal`, `apps/portal/web`.
 - **Phase 5** — `domains/est` + BOAT (`apps/boat/mobile`, real native layer).
 - **Phase 6** — `domains/ch` (pec's 29 domains), infra retirement, parity
-  checklists, origin archives, consolidated Docusaurus site.
+  checklists and origin archives. The independently bounded W6.3 consolidated
+  Docusaurus capability was advanced on 2026-08-31 under ADR-0011; this does not
+  represent completion of the remaining Phase 6 domain or retirement work.
 
 Dependency graph: `P0 → P2 → P3 → P4 → P5 → P6`, with P1 feeding P2/P3 (worklist,
 outbox) and P1.5 (mobile) blocking only P5. Gates per phase are law; see

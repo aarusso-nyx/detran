@@ -135,7 +135,7 @@ const moduleTargets = [
     'blocked',
     'DT-025; UC-PEC-004; UC-PEC-005; UC-PEC-010',
   ],
-  ['admin-users', 'blocked', 'ADR-0011 session parity gate'],
+  ['admin-users', 'blocked', 'ADR-0013 session parity gate'],
 ];
 
 function disposition(relative) {

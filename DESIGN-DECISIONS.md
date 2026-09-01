@@ -25,9 +25,14 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
 - **ADR-0010** — `detran/docs` is the single writable authority for the
   business/legal knowledge base; source provenance is immutable, and publication
   is status-gated and fail-closed.
-- **ADR-0011** — PEC auth, audit and integration concepts map onto the unified
+- **ADR-0011** — Phase 6 documentation capability: deterministic seven-section
+  Docusaurus projection, active Constitution publication, blocking CI validation,
+  and separately authorized local GitHub Pages publication.
+- **ADR-0012** — PEC auth, audit and integration concepts map onto the unified
   kernel, `ch` domain records and the sole SENATRAN adapter without parallel
   infrastructure.
+- **ADR-0013** — PEC parity closes on executable acceptance and origin-test
+  dispositions, with external trust/session deployment evidence remaining fail-closed.
 
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo

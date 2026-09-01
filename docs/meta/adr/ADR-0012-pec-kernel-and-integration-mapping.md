@@ -1,4 +1,4 @@
-# ADR-0011: PEC Auth, Audit and Integration Mapping
+# ADR-0012: PEC Auth, Audit and Integration Mapping
 
 ## Status
 

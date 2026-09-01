@@ -1,4 +1,4 @@
-# ADR-0012: PEC Parity Closure Contract
+# ADR-0013: PEC Parity Closure Contract
 
 ## Status
 

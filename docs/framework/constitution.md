@@ -3,9 +3,11 @@ title: Constitution
 sidebar_position: 1
 ---
 
-# DEVAI Constitution (vendored)
+# DEVAI Constitution (bound)
 
-The canonical vendored copy lives at the repository root:
-[`CONSTITUTION.md`](../../CONSTITUTION.md) (DEVAI Constitution 0.3.0). The docs
-sync (Phase 6 site consolidation) publishes it to this destination per the
-root-file allowlist in `docs/_ia/categories.json`.
+The canonical vendored copy lives at
+[`/.devai/pin/constitution.md`](../../.devai/pin/constitution.md) (DEVAI
+Constitution 1.0.0). The Docusaurus sync publishes the complete immutable text
+as `framework/constitution-text.md` per the allowlist in
+`docs/_ia/categories.json`; the binding receipt is published at
+`reference/law.md`.
