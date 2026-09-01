@@ -58,7 +58,7 @@ const moduleTargets = [
   [
     'audit-compliance',
     'ported',
-    'backend/app/tests/integration/audit-persistence.integration.spec.ts',
+    'backend/app/src/pec-audit-query.service.spec.ts; backend/app/tests/integration/audit-persistence.integration.spec.ts',
   ],
   ['billing-billing', 'ported', 'backend/domains/ch/billing'],
   [
@@ -97,7 +97,11 @@ const moduleTargets = [
     'backend/domains/ch/patients; backend/domains/ch/clinical-reports/tests/unit/candidate-dossier.service.spec.ts',
   ],
   ['process-blocks-workflow', 'ported', 'backend/domains/ch/process-blocks'],
-  ['reports-bi-reports', 'deferred', 'docs/meta/pec-specification-debt.md'],
+  [
+    'reports-bi-reports',
+    'ported',
+    'backend/domains/ch/clinical-reports/tests/unit; backend/app/tests/in-house/pec-dashboard.in-house.spec.ts',
+  ],
   [
     'transmissions-detran-transmissions',
     'ported',
@@ -116,26 +120,34 @@ const moduleTargets = [
   ],
   [
     'integration-sefaz',
-    'deferred',
-    'docs/meta/pec-porting-report.md#open-boundaries',
+    'ported',
+    'packages/sefaz-adapter/src; backend/app/src/pec-sefaz.service.spec.ts',
   ],
   [
     'integration-tsa',
-    'deferred',
-    'docs/meta/pec-porting-report.md#open-boundaries',
+    'ported',
+    'backend/domains/ch/clinical-reports/tests/unit/report-lifecycle.service.spec.ts',
   ],
   [
     'signature-digital-signature',
-    'deferred',
-    'docs/meta/pec-porting-report.md#open-boundaries',
+    'ported',
+    'backend/domains/ch/clinical-reports/tests/unit/report-lifecycle.service.spec.ts',
   ],
-  ['integration-toxicology', 'blocked', 'DT-024; UC-PEC-012'],
+  [
+    'integration-toxicology',
+    'ported',
+    'backend/app/src/pec-toxicology-inbound.spec.ts; backend/domains/ch/toxicology/tests/unit',
+  ],
   [
     'juntas-medical-board',
-    'blocked',
-    'DT-025; UC-PEC-004; UC-PEC-005; UC-PEC-010',
+    'ported',
+    'backend/domains/ch/juntas/tests/unit/junta-lifecycle.service.spec.ts',
   ],
-  ['admin-users', 'blocked', 'ADR-0013 session parity gate'],
+  [
+    'admin-users',
+    'ported',
+    'backend/app/src/pec-user-admin.service.spec.ts; backend/app/src/pec-cognito-admin.service.spec.ts',
+  ],
 ];
 
 function disposition(relative) {
@@ -158,9 +170,9 @@ function disposition(relative) {
   if (relative.startsWith('tests/real/')) {
     return [
       'behavioral',
-      'deferred',
-      'backend/app/tests/real; pnpm backend:test:real',
-      'requires explicitly configured real external environment',
+      'ported',
+      'backend/app/tests/real; backend/app/tests/in-house/pec-real-environment.in-house.spec.ts; pnpm backend:test:real; pnpm backend:test:in-house',
+      'conditional real-environment contract and in-house suite are retained; deployment execution is tracked separately from repository parity',
     ];
   }
   if (relative === 'apps/api/src/stynx-runtime.spec.ts') {
@@ -196,7 +208,7 @@ function disposition(relative) {
     ];
   return [
     'behavioral',
-    'deferred',
+    'blocked',
     'docs/meta/pec-porting-report.md#open-boundaries',
     'no safe target mapping',
   ];
