@@ -22,8 +22,10 @@ the phase plan and Decisions Ledger live in the orchestrator handoff plan and ar
    before the freeze is relied on; origin repos are archived at parity.
 4. **Gates are law:** never weaken a test to pass; never use `paths`/`paths-ignore`
    on content a required check consumes (an absent required check blocks merges
-   silently); keep the evidence chain (`.devai/state/evidence-chain.json`, tracked)
-   intact — it is hash-chained and CI-verified.
+   silently); keep the evidence chain intact — since DEVAI 1.4.5 the governed chain is
+   `record/proofs/chain.json` with per-round proof lines under `record/proofs/work/`
+   (round `R-0001`); `.devai/state/evidence-chain.json` is the pre-1.4.5 legacy chain,
+   kept tracked and read-only. Both are hash-chained and CI-verified.
 5. **Architecture boundaries:** no app or domain module calls SENATRAN directly —
    everything goes through `packages/senatran-adapter` (ADR-0003). Backend domain
    modules are workspace packages with explicit deps — no deep relative imports
