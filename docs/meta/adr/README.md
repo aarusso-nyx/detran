@@ -26,3 +26,4 @@ binding; supersede only by a new ADR.
 | [ADR-0016](ADR-0016-documents-and-signature-substrate.md)              | Documents rendered and signed by the STYNX substrate, templated by domains           |
 | [ADR-0017](ADR-0017-citizen-identity-and-request-lifecycle.md)         | Portal domain: identity levels, request lifecycle, inbox, ombudsman                  |
 | [ADR-0018](ADR-0018-read-models-and-projections.md)                    | Cross-app reads through owned projections fed by domain events                       |
+| [ADR-0019](ADR-0019-shared-parameter-store.md)                         | One shared, versioned parameter store (`ops.parameter`) for calibrations (Proposed)  |

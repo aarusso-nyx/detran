@@ -13,3 +13,6 @@ profiles, policy matrix and tenancy enforcement here.
 - TEAT (2026-09-13): [frontends mobile e web](./teat-frontends.md) · [contrato de rotas](./teat-route-contract.md) · [catálogo de erros](./teat-error-catalog.md) · [pacote de construção](./teat-build-pack.md).
 - PORTAL (2026-09-13): [frontend PWA](./portal-frontends.md) · [contrato de rotas](./portal-route-contract.md) · [catálogo de erros](./portal-error-catalog.md) · [pacote de construção](./portal-build-pack.md).
 - BOAT (2026-09-13): [frontends de sinistro](./boat-frontends.md) · [contrato de rotas](./boat-route-contract.md) · [catálogo de erros](./boat-error-catalog.md) · [pacote de construção](./boat-build-pack.md).
+- DASHBOARD (2026-09-13): [frontend de monitoramento](./dashboard-frontends.md) · [contrato de rotas](./dashboard-route-contract.md) · [catálogo de erros](./dashboard-error-catalog.md) · [pacote de construção](./dashboard-build-pack.md).
+- Portão de implementação (2026-09-13): [pontos de atenção e decisões abertas](../../meta/knowledge-base/implementation-gate-2026-09-13.md).
+- Fechamento de decisões (2026-09-13): [plano em três vias](../../meta/knowledge-base/decision-closure-plan.md) · [catálogo de parâmetros e flags](./parameter-catalogue.md) (ADR-0019) · [cédulas do Owner](../../meta/knowledge-base/owner-ballots/README.md).

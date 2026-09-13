@@ -405,3 +405,22 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       `boat-build-pack.md` (WP-B0…B5; 13 questões OD-B01…B13)
 - [ ] **BOAT — reconciliar `policy.ts` (`est:crash-record:*`) com o corpus e criar UC-BOAT-013** (dever de
       resposta ao titular, tela W-05); atualizar `use-cases/INDEX.md` (added 2026-09-13)
+- [x] **Pacote DASHBOARD (2026-09-13)**: `dashboard-frontends.md`, `dashboard-route-contract.md`,
+      `dashboard-error-catalog.md`, `dashboard-build-pack.md` (WP-D0…D5; 13 questões OD-D01…D13)
+- [ ] **DASHBOARD — papéis `dash-operator`/`dash-duty-owner`, política para alertas/deveres/exportação e
+      promoção dos ids de tela D-01…D-18 ao corpus** (added 2026-09-13)
+- [ ] **Portão de implementação (2026-09-13)**: `implementation-gate-2026-09-13.md` consolida os pontos de atenção das
+      cinco superfícies e as 7 decisões que bloqueiam o início; fechar pelo Owner na ordem sugerida
+- [x] **Plano de fechamento em três vias (2026-09-13)**: `decision-closure-plan.md`, `parameter-catalogue.md`,
+      ADR-0019 (`ops.parameter`), 8 cédulas em `owner-ballots/`, carta-modelo; pesquisa da via A capturou 8 REFs
+      (PN DETRAN-AM 001/2025 assinaturas; portarias LGPD 2026; CSAD; STJ Temas 1.293/1.294; ANPD; DETRAN-DF TTD;
+      Lei 10.741; calendário 2026) e reconciliou as respostas DT-010…031 nos registros OD
+- [x] **Owner respondeu as cédulas 01–08** em prompt interativo (steering §H.38–57, 2026-09-13)
+- [ ] **Owner envia as cartas** da `ask-letter-template.md` (55 autoridades, regimentos, RENAEST, jeton, CSAD, CETRAN,
+      portaria do selo prata, parecer jurídico único) (added 2026-09-13)
+- [ ] **Propagar H.38–57 ao código**: papéis `dash-*`, atributo `decision_body`, `ops/agency`, seeds do catálogo com
+      `status=vigente`, `teat.homologation.expired_behavior=warn`, retenção 5/5/10 (added 2026-09-13)
+- [ ] **Repetir Wayback para o Decreto AM 34.398/2014** (`Regimento-Interno-Cetran.pdf`, 404 no site, 429 no
+      archive.org em 2026-09-13) e capturar o Decreto Manaus 4.922/2020 (JARI do IMMU) como benchmark (added 2026-09-13)
+- [ ] **WP-A: `BP-OPS-PARAMETER-001`, DDL `15-ops-parameter.sql`, seed gerado do catálogo, gate
+      `verify:parameter-catalogue`, view de compatibilidade de `inf.normative_agency_parameter`** (ADR-0019) (added 2026-09-13)
