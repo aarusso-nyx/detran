@@ -1,5 +1,7 @@
 # Carta-modelo — pedido institucional de documentos
 
+**Ofícios redigidos em 2026-09-13** a partir deste modelo: ver `letters/README.md` (seis ofícios prontos para assinatura).
+
 Para uso do Owner. Um ofício por destinatário; anexar a esta pasta a resposta recebida e arquivar
 o documento em `docs/reference/institutional/` (ou `legal/`, quando for ato normativo).
 

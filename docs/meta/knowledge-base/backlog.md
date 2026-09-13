@@ -416,8 +416,8 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       (PN DETRAN-AM 001/2025 assinaturas; portarias LGPD 2026; CSAD; STJ Temas 1.293/1.294; ANPD; DETRAN-DF TTD;
       Lei 10.741; calendário 2026) e reconciliou as respostas DT-010…031 nos registros OD
 - [x] **Owner respondeu as cédulas 01–08** em prompt interativo (steering §H.38–57, 2026-09-13)
-- [ ] **Owner envia as cartas** da `ask-letter-template.md` (55 autoridades, regimentos, RENAEST, jeton, CSAD, CETRAN,
-      portaria do selo prata, parecer jurídico único) (added 2026-09-13)
+- [ ] **Owner assina e envia os seis ofícios** de `owner-ballots/letters/` (DETRAN-AM gabinete, CETRAN-AM, CSAD/CPPD,
+      SENATRAN, PGE-AM, Diretoria Técnica); registrar datas no `letters/README.md` (added 2026-09-13)
 - [ ] **Propagar H.38–57 ao código**: papéis `dash-*`, atributo `decision_body`, `ops/agency`, seeds do catálogo com
       `status=vigente`, `teat.homologation.expired_behavior=warn`, retenção 5/5/10 (added 2026-09-13)
 - [ ] **Repetir Wayback para o Decreto AM 34.398/2014** (`Regimento-Interno-Cetran.pdf`, 404 no site, 429 no

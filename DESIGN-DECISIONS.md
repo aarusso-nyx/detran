@@ -33,6 +33,9 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
   (0015), documents and signature as STYNX substrate (0016), `portal` domain for
   identity levels, request lifecycle, inbox and ombudsman (0017), projections as
   the only cross-app read path (0018).
+- **ADR-0019** (Proposed) — one shared, versioned parameter store `ops.parameter` for every calibration that is
+  not law; boolean switches in `@stynx-nyx/feature-flags`; catalogue in `docs/framework/arch/parameter-catalogue.md`;
+  decisions of the implementation gate recorded in `docs/meta/knowledge-base/steering.md` §H.
 
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo

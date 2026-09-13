@@ -18,7 +18,7 @@ módulos consomem datas prontas (`RN-RAIT-005`, `RN-RAIT-105`).
 - Pacote: `backend/domains/inf/rait-case/src/handwritten/deadlines/` (compartilhado com o futuro
   módulo `infraction` via `@detran/inf-rait-case`), exportado por `handwrittenExports`.
 - Entradas: catálogo (`infraction_timer_ref`), calendário (`rait_holiday`, WP-A), parâmetros
-  versionados (`rait_parameter`), eventos de domínio.
+  versionados (`ops.parameter`, ADR-0019), eventos de domínio.
 - Saídas: linhas em `rait_deadline` (caso) e `infraction_timer` (infração, WP-A); `rait_clock` +
   `rait_clock_alert` (risco); eventos `TIMER_VENCIDO`, `RISCO_PRESCRICAO_ALTERADO`; transições
   disparadas por comando interno (`system` principal).
