@@ -2,3 +2,11 @@
 
 Stub — Phase 2 (W2.1) documents the composition root, adapter kernel, runtime
 profiles, policy matrix and tenancy enforcement here.
+
+- [apps/rait/web — especificação do frontend](./rait-web-frontend.md) (2026-09-12, draft).
+- [apps/rait/web — diagramas de módulos, rotas e componentes](./rait-web-structure-diagrams.md) (2026-09-12, draft; SVGs em `./diagrams/`).
+- [apps/rait/web — jornadas por papel com diagramas](./rait-web-journeys/README.md) (2026-09-12, draft).
+- [RAIT — catálogo de erros](./rait-error-catalog.md) (2026-09-12, draft).
+- [RAIT — pacote de construção para a orquestra de agentes](./rait-build-pack.md) (2026-09-12, draft; WP-0…WP-F).
+- Questões pendentes de decisão (Owner, regimentos JARI/CETRAN, LEGAL): `docs/meta/knowledge-base/open-decisions-rait.md`.
+- Suporte à orquestra (2026-09-13): [manuais dos agentes](../../meta/agents/README.md) · [estratégia de testes](./rait-test-strategy.md) · [fixtures canônicas](./rait-fixtures.md) (`backend/database/seed/`) · [motor de prazos](./rait-deadline-engine.md) · [eventos e SSE](./rait-events-sse-contract.md) · [guia do kit @detran/ui](./detran-ui-guide.md) · [glossário i18n](./rait-i18n-glossary.md) (`./i18n/rait.pt-BR.json`) · [roteiro WP-0](./wp0-stynx-1-3-1-migration.md) · `CODESTYLE.md` e `.github/pull_request_template.md` na raiz.
