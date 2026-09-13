@@ -105,10 +105,12 @@ try {
     rls_forced: boolean;
     has_policy: boolean;
     has_trigger: boolean;
+    has_tenant_id: boolean;
   }>(
     `select tables.table_name,
             classes.relrowsecurity as rls_enabled,
             classes.relforcerowsecurity as rls_forced,
+            exists (select 1 from information_schema.columns columns where columns.table_schema = tables.table_schema and columns.table_name = tables.table_name and columns.column_name = 'tenant_id') as has_tenant_id,
             exists (select 1 from pg_policies policies where policies.schemaname = 'inf' and policies.tablename = tables.table_name and policies.policyname = 'tenant_isolation') as has_policy,
             exists (select 1 from pg_trigger triggers where triggers.tgrelid = classes.oid and triggers.tgname = 'enforce_tenant_id' and not triggers.tgisinternal) as has_trigger
        from information_schema.tables tables
@@ -117,12 +119,27 @@ try {
       where tables.table_schema = 'inf' and tables.table_type = 'BASE TABLE'
       order by tables.table_name`,
   );
-  if (infRls.rows.length !== 28) {
+  const infTenantTables = infRls.rows.filter((table) => table.has_tenant_id);
+  const infReferenceTables = infRls.rows.filter(
+    (table) => !table.has_tenant_id,
+  );
+  if (infTenantTables.length !== 52) {
     throw new Error(
-      `expected 28 inf tenant tables, found ${infRls.rows.length}`,
+      `expected 52 inf tenant tables, found ${infTenantTables.length}`,
     );
   }
-  const unprotected = infRls.rows.filter(
+  const badReference = infReferenceTables.filter(
+    (table) =>
+      !table.table_name.endsWith('_ref') ||
+      table.has_policy ||
+      table.has_trigger,
+  );
+  if (infReferenceTables.length !== 9 || badReference.length) {
+    throw new Error(
+      `inf reference tables must be exactly the nine tenant-less *_ref tables without tenant RLS; found ${infReferenceTables.length}, offending: ${badReference.map((table) => table.table_name).join(', ') || 'none'}`,
+    );
+  }
+  const unprotected = infTenantTables.filter(
     (table) =>
       !table.rls_enabled ||
       !table.rls_forced ||
@@ -147,7 +164,7 @@ try {
   await client.query('rollback');
 
   console.log(
-    'check-rls-smoke: OK (tenant isolation, 28 inf tables, ops RLS, SRID-4674 round-trip, audit persistence)',
+    `check-rls-smoke: OK (tenant isolation, ${infTenantTables.length} inf tenant tables + ${infReferenceTables.length} reference tables, ops RLS, SRID-4674 round-trip, audit persistence)`,
   );
 } finally {
   await client.end();
