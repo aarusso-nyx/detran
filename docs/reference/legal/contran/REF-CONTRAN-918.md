@@ -85,7 +85,7 @@ Aplica-se a: [APP-TEAT]; [RN-RAIT-104] (AIT que vale como NA — marco de ciênc
 > § 6º Para as NA expedidas antes de 12 de abril de 2021, o prazo de que trata o § 2º não será
 > inferior a 15 (quinze) dias.
 
-Aplica-se a: [RN-RAIT-101] (piso de 30 dias e regra de transição do §6º); [WF-INF-001].
+Aplica-se a: [RN-RAIT-101] (piso de 30 dias e regra de transição do §6º); [WF-INF-003].
 
 ## Art. 5º — Indicação do condutor infrator (síntese)
 

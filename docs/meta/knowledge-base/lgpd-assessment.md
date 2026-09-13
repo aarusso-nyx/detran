@@ -208,3 +208,18 @@ prioridade P1 independente do roadmap de produto.
 DT-122 atualizado (parcialmente resolvido, LGPD fechada). Nenhum item existente (DT-014, DT-029,
 DT-047, DT-048, DT-049) foi alterado em conteúdo — apenas referenciado; a análise de risco
 institucional do item 2 acima os reforça sem os reabrir.
+
+## Adendo 2026-09-13 — atos do DETRAN-AM localizados e decisões do Owner
+
+- O órgão já dispõe de Encarregado (Portarias 319/2023 e 841/2025), Comitê de Privacidade (PN
+  016/2026), regulamento de compartilhamento com inventário de bases e prazos de retenção (PN
+  002/2026, art. 28) e Comissão de Avaliação de Documentos (PN 015/2026) —
+  [REF-DETRANAM-PORTARIAS-LGPD-2026], [REF-DETRANAM-PORTARIA-NORMATIVA-015-2026]. DT-048 fica
+  respondido para o registro estadual (controlador).
+- DT-047: hipóteses art. 11, II, a/b e art. 13 aprovadas para o BAT (steering H.44), com base no
+  guia da ANPD ([REF-ANPD-GUIA-PODER-PUBLICO-2024]); publicação após revisão do CPPD.
+- DT-049: prazos adotados como vigentes (H.45): 5 anos para autos, BAT e campos de saúde (com
+  anonimização), 10 anos para AIT e evidências; bodycam pendente; benchmark
+  [REF-DETRANDF-INSTRUCAO-146-2023-TTD]. `retention: forever` eliminado do desenho.
+- Itens 10–15 da consulta jurídica única (`owner-ballots/letters/oficio-05-pge-am-parecer.md`)
+  cobrem o restante deste documento, inclusive o art. 14 (menores) do BOAT.

@@ -348,3 +348,81 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **RAIT: 32/43 regras citadas.** Oito nunca citadas de origem + três do bloco LGPD
       ([RN-RAIT-133..138]) acrescentado depois da rodada. O RAIT foi o primeiro app e a métrica de
       cobertura só passou a ser medida a partir do TEAT — lacuna da disciplina, não do corpus
+
+## Rodada de modelagem BPM do ciclo da infração (2026-09-12)
+
+- [x] **Decidir a substituição de [WF-INF-001] por [WF-INF-003]** — **DECIDIDO pelo Owner em
+      2026-09-12 (ADR-0014):** WF-INF-003 substitui WF-INF-001; ponteiro mantido, referências
+      atualizadas, WF-INF-003 promovido a `reviewed`. Runtime: agregado da infração ainda sem
+      blueprint (ver ADR-0014 §Consequências)
+- [ ] **Reconciliar a escada do relógio B** — [RN-RAIT-112] (4 degraus, crítico em 21 meses) ×
+      [WF-RAIT-002] §4.1 (5 degraus, crítico em 23 meses, aprovado em steering A.1) (added 2026-09-12)
+- [ ] **Desfecho de `T-NA-IND` vencido** (NA ao condutor indicado não expedida em 30 dias do protocolo
+      da indicação) — a norma dá o termo inicial, não a consequência; proposta em [WF-INF-002]
+      §Decisões pendentes, validar com LEGAL (added 2026-09-12)
+
+## Rodada de organização do trabalho RAIT (2026-09-12)
+
+- [ ] **Estatuto da Pessoa Idosa (Lei 10.741/2003) art. 71** — prioridade de tramitação; capturar
+      para ativar a prioridade legal na ordem de consumo das filas ([RN-RAIT-141]) (added 2026-09-12)
+- [ ] **Escala de assinatura das 55 autoridades investidas** — ato de investidura/delegação e
+      divisão de circunscrições ([RN-RAIT-143], [WF-RAIT-004] §3) — `institutional-ask` (added 2026-09-12)
+- [ ] **Taxa de recurso à JARI/CETRAN e throughput de sessão** (DT-064) — fecha o dimensionamento
+      de [WF-RAIT-004] §8 e o gatilho de nova turma ([RN-RAIT-139]) (added 2026-09-12)
+- [ ] **Blueprint BP-INF-RAIT-WORKLIST-001** — deltas de modelo de dados propostos em
+      [WF-RAIT-004] §10 (unidade/turma, escala, lote de sorteio, suplência, tipo de impedimento,
+      banca) — decisão do Architect (added 2026-09-12)
+
+## Rodada de definições para a orquestra de agentes — RAIT (2026-09-12)
+
+- [x] **Adoção de STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5** — decidida pelo Owner (steering G.34; ADR-0015);
+      migração dos pins no WP-0 de `docs/framework/arch/rait-build-pack.md`
+- [x] **Catálogo canônico de papéis estendido** com a família `rait-*` (steering G.35): `roles.ts`,
+      `policy.ts`, `05-role-catalog.sql`, `shared/actors.md`; gate `verify:role-catalog`
+- [x] **Vocabulário de [WF-INF-003] persistido** (`14-inf-lifecycle-vocabulary.sql`; steering G.36); gate
+      `verify:lifecycle-vocabulary`
+- [ ] **Questões pendentes compiladas** em `docs/meta/knowledge-base/open-decisions-rait.md` (OD-001…OD-308) —
+      cada uma com premissa de desenho; fechar por Owner / regimentos / LEGAL (added 2026-09-12)
+- [x] **`apply.sh` não lista os DDL gerados 34…37** — corrigido em 2026-09-13 junto com `seed.sh` e as
+      fixtures canônicas (validado em banco limpo)
+- [x] **Suporte à orquestra (2026-09-13)**: manuais por perfil (`docs/meta/agents/`, `.claude/agents/`),
+      `CODESTYLE.md`, template de PR, estratégia de testes, fixtures canônicas + `seed.sh`, motor de
+      prazos, contrato de eventos/SSE, guia do kit, glossário i18n + `rait.pt-BR.json`, roteiro WP-0
+- [ ] **Angular 22 — mudanças específicas** ainda não verificadas contra o guia oficial de atualização;
+      registrar em `wp0-stynx-1-3-1-migration.md` §7 durante o WP-0 (added 2026-09-13)
+- [ ] **Calendário de feriados 2026 (AM + Manaus)** das fixtures é referência de teste; validar com ato
+      oficial antes de virar parâmetro (added 2026-09-13)
+- [x] **Aceitar as ADRs de fronteira 0016…0020** (numeradas 0014…0018 até a fusão com `main`) — aceitas pelo Owner em 2026-09-13 (steering G.37)
+- [x] **Pacote TEAT (2026-09-13)**: `teat-frontends.md`, `teat-route-contract.md`, `teat-error-catalog.md`,
+      `teat-build-pack.md` (WP-T0…T6; 12 questões OD-T01…T12)
+- [ ] **Defeitos de base do TEAT** (WP-T0): prefixo de rota do gerador (`v1/inf/aitaits`), `AitModule` sem os
+      comandos, entidades de auditoria do `ops`, política × rotas — corrigir antes de gerar clientes (added 2026-09-13)
+- [ ] **Reconciliar `use-cases/INDEX.md` do TEAT** (status dos UCs e ausência do UC-TEAT-013) e a contagem
+      de regras (49 × 50) em `APP.md` (added 2026-09-13)
+- [x] **Pacote PORTAL (2026-09-13)**: `portal-frontends.md`, `portal-route-contract.md`, `portal-error-catalog.md`,
+      `portal-build-pack.md` (WP-P0…P6; 13 questões OD-P01…P13)
+- [ ] **Reconciliar `use-cases/INDEX.md` do PORTAL** (marca todos como `draft`; arquivos são `approved`/`reviewed`)
+      e registrar uma RN dedicada ao ato de adesão ao SNE (UC-PORTAL-007 cita "backlog BPO/LEGAL") (added 2026-09-13)
+- [x] **Pacote BOAT (2026-09-13)**: `boat-frontends.md`, `boat-route-contract.md`, `boat-error-catalog.md`,
+      `boat-build-pack.md` (WP-B0…B5; 13 questões OD-B01…B13)
+- [ ] **BOAT — reconciliar `policy.ts` (`est:crash-record:*`) com o corpus e criar UC-BOAT-013** (dever de
+      resposta ao titular, tela W-05); atualizar `use-cases/INDEX.md` (added 2026-09-13)
+- [x] **Pacote DASHBOARD (2026-09-13)**: `dashboard-frontends.md`, `dashboard-route-contract.md`,
+      `dashboard-error-catalog.md`, `dashboard-build-pack.md` (WP-D0…D5; 13 questões OD-D01…D13)
+- [ ] **DASHBOARD — papéis `dash-operator`/`dash-duty-owner`, política para alertas/deveres/exportação e
+      promoção dos ids de tela D-01…D-18 ao corpus** (added 2026-09-13)
+- [ ] **Portão de implementação (2026-09-13)**: `implementation-gate-2026-09-13.md` consolida os pontos de atenção das
+      cinco superfícies e as 7 decisões que bloqueiam o início; fechar pelo Owner na ordem sugerida
+- [x] **Plano de fechamento em três vias (2026-09-13)**: `decision-closure-plan.md`, `parameter-catalogue.md`,
+      ADR-0021 (`ops.parameter`), 8 cédulas em `owner-ballots/`, carta-modelo; pesquisa da via A capturou 8 REFs
+      (PN DETRAN-AM 001/2025 assinaturas; portarias LGPD 2026; CSAD; STJ Temas 1.293/1.294; ANPD; DETRAN-DF TTD;
+      Lei 10.741; calendário 2026) e reconciliou as respostas DT-010…031 nos registros OD
+- [x] **Owner respondeu as cédulas 01–08** em prompt interativo (steering §H.38–57, 2026-09-13)
+- [ ] **Owner assina e envia os seis ofícios** de `owner-ballots/letters/` (DETRAN-AM gabinete, CETRAN-AM, CSAD/CPPD,
+      SENATRAN, PGE-AM, Diretoria Técnica); registrar datas no `letters/README.md` (added 2026-09-13)
+- [ ] **Propagar H.38–57 ao código**: papéis `dash-*`, atributo `decision_body`, `ops/agency`, seeds do catálogo com
+      `status=vigente`, `teat.homologation.expired_behavior=warn`, retenção 5/5/10 (added 2026-09-13)
+- [ ] **Repetir Wayback para o Decreto AM 34.398/2014** (`Regimento-Interno-Cetran.pdf`, 404 no site, 429 no
+      archive.org em 2026-09-13) e capturar o Decreto Manaus 4.922/2020 (JARI do IMMU) como benchmark (added 2026-09-13)
+- [ ] **WP-A: `BP-OPS-PARAMETER-001`, DDL `15-ops-parameter.sql`, seed gerado do catálogo, gate
+      `verify:parameter-catalogue`, view de compatibilidade de `inf.normative_agency_parameter`** (ADR-0021) (added 2026-09-13)

@@ -49,6 +49,9 @@ para a linguagem do cidadão é responsabilidade do PORTAL, não do RAIT.
 circuito da autoridade ([UC-RAIT-008]) nem o registro de desistência pelo balcão
 ([UC-RAIT-012]), embora ambos os casos de uso existissem.
 
+Projeção destas telas em rotas, componentes e ações do app Angular: `docs/framework/arch/rait-web-frontend.md`
+(rodada de 2026-09-12; cobre também os UC-RAIT-013…043 acrescentados depois deste inventário).
+
 ## Requisitos transversais de tela
 
 Valem para todas as telas acima e são verificáveis em revisão de UI:

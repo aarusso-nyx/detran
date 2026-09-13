@@ -5,7 +5,7 @@ status: reviewed
 apps: [dashboard]
 sources:
   [REF-LEI-12527-2011, REF-LEI-13460-2017, REF-LEI-13709, REF-CONTRAN-918]
-updated: 2026-08-31
+updated: 2026-09-13
 ---
 
 Promovido de `_intake/ux-notes.md` §a na rodada de 2026-08-31. Nenhum painel tem artefato de
@@ -69,9 +69,9 @@ de prazo, é assumir um risco que não é do produto — é do órgão.
 
 ## E — Painéis dependentes de decisão pendente
 
-| Painel     | Depende de                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------ |
-| P-09       | DT-029 — limiar de célula, com parecer antes da primeira publicação                              |
-| P-08       | DT-066 — adesão do AM à Lei 14.129/2021, que condiciona parte do módulo público                  |
-| P-05       | DT-017 — periodicidade de transmissão ao RENAEST, hoje sem prazo vigente                         |
-| P-01, P-02 | limiares das escadas já propagados (DT-030, 2026-08-28); nota de capacidade do RAIT segue aberta |
+| Painel     | Depende de                                                                                                                                   |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| P-09       | DT-029 — limiar de célula, com parecer antes da primeira publicação — respondido: limiar 10 (H.54); P-09 destravado com supressão secundária |
+| P-08       | DT-066 — adesão do AM à Lei 14.129/2021, que condiciona parte do módulo público                                                              |
+| P-05       | DT-017 — periodicidade de transmissão ao RENAEST, hoje sem prazo vigente — respondido: mensal, SLA operacional (DT-017)                      |
+| P-01, P-02 | limiares das escadas já propagados (DT-030, 2026-08-28); nota de capacidade do RAIT segue aberta                                             |

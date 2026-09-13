@@ -12,7 +12,7 @@ sources:
     REF-CONTRAN-918,
     REF-LEI-13146-LBI,
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 Promovido de `_intake/ux-notes.md` §a na rodada de 2026-08-26. Nenhuma tela do PORTAL está
@@ -93,13 +93,13 @@ prazo do art. 47 do decreto exauriu-se em 2004-2005. Consequências concretas de
 
 ## F — Telas dependentes de decisão pendente
 
-| Tela                   | Depende de                                                                         |
-| ---------------------- | ---------------------------------------------------------------------------------- |
-| T-02, T-03, T-05, T-27 | DT-050 — portaria estadual de níveis de assinatura; sem ela a exigência é atacável |
-| T-13, T-23             | DT-026 — instrumento para colher a renúncia na faixa de 40%                        |
-| T-17                   | DT-027 — leitura de que exigibilidade suspensa não é débito                        |
-| T-21, T-22             | DT-051 — nível de assinatura da ouvidoria (LEGAL: nenhum; BPO/UX: simples)         |
-| T-01 a T-27            | DT-028 — declaração formal de WCAG 2.1 AA + eMAG                                   |
+| Tela                   | Depende de                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| T-02, T-03, T-05, T-27 | DT-050 — portaria estadual de níveis de assinatura; sem ela a exigência é atacável — fechado em 2026-09-13 (PN 001/2025; H.50) |
+| T-13, T-23             | DT-026 — instrumento para colher a renúncia na faixa de 40%                                                                    |
+| T-17                   | DT-027 — leitura de que exigibilidade suspensa não é débito                                                                    |
+| T-21, T-22             | DT-051 — nível de assinatura da ouvidoria (LEGAL: nenhum; BPO/UX: simples) — fechado em 2026-09-13 (H.51)                      |
+| T-01 a T-27            | DT-028 — declaração formal de WCAG 2.1 AA + eMAG                                                                               |
 
 Cinco grupos de telas dependem de decisões, e um deles (DT-028) incide sobre todas. Nenhuma bloqueia
 a construção do fluxo de apelação, que é o núcleo do app.

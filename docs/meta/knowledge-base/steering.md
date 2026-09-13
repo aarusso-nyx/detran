@@ -137,6 +137,90 @@ correspondentes e a seção "Pontos que a múltipla escolha não fechou" abaixo.
 
 ---
 
+## G. RAIT — plataforma, papéis e vocabulário persistido (2026-09-12)
+
+34. Substrato de plataforma do frontend e do backend: manter STYNX 1.1.1 / Angular 21 ou adotar
+    STYNX@latest? **Resposta: adotar STYNX 1.3.1 (latest), com o Angular correspondente (22.x)
+    e o DEVAI correspondente (1.4.5, já pinado).** Registro em ADR-0015; migração dos pins do
+    workspace no pacote de trabalho WP-0 (`docs/framework/arch/rait-build-pack.md`).
+35. Papéis do RAIT: manter só a visão agregada de `shared/actors.md` ou estender o catálogo
+    canônico? **Resposta: estender** — dez códigos `rait-*` em `roles.ts`, no DDL
+    (`auth.role_catalog`) e em `shared/actors.md` §Papéis granulares RAIT.
+36. Vocabulário da máquina de estados [WF-INF-003] no banco: só no futuro blueprint do agregado
+    ou já como referência persistida? **Resposta: já no DDL**, como tabelas de referência
+    (`inf.infraction_*_ref`, `14-inf-lifecycle-vocabulary.sql`) verificadas contra o workflow
+    (`pnpm verify:lifecycle-vocabulary`); o blueprint do agregado referencia-as por FK.
+
+---
+
+37. Fronteiras dos módulos transversais do escopo de infrações (ADR-0016 infração e
+    notificação; ADR-0017 arrecadação; ADR-0018 documentos e assinatura como substrato;
+    ADR-0019 domínio `portal`; ADR-0020 projeções): aceitar como propostas pelo Architect?
+    **Resposta: todas aceitas (2026-09-13).** Ordem de construção sugerida: 0014 e 0016, depois
+    0015 e 0018, e 0017 por último.
+
+## H. Portão de implementação — cédulas 01…08 respondidas em prompt interativo (2026-09-13)
+
+Registro das respostas do Owner às cédulas de `owner-ballots/`. Cada item aponta o parâmetro,
+flag ou edição de DDL/política que o propaga (`docs/framework/arch/parameter-catalogue.md`,
+`decision-closure-plan.md`).
+
+38. Cédula 01.1 (OD-D01): **dois papéis novos**, `dash-operator` e `dash-duty-owner`; ouvidor e
+    financeiro recebem `dash-duty-owner`. Propagar em `roles.ts`, `05-role-catalog.sql`,
+    `policy.ts`, `shared/actors.md` (WP-D0).
+39. Cédula 01.2 (OD-T01): **`traffic-authority` + atributo `decision_body`**; a rota de
+    cancelamento pós-final exige `addressed_to=board` e a política checa o atributo.
+40. Cédula 01.3 (OD-T02, OD-013): **módulo `ops/agency` mínimo** (unidade, circunscrição,
+    competência); convênios e o restante do `agency-context` ficam para depois.
+41. Cédula 02 (OD-020): **WP-0 já, em PR único**, com `@stynx-nyx/feature-flags` (ADR-0021) e
+    `engines.node >= 22`; nenhuma tela antes.
+42. Cédula 03.1 (OD-B11): **catálogos do protótipo**, `source_pending`, editáveis pelo
+    `agency-admin` até os Manuais RENAEST.
+43. Cédula 03.2 (OD-B06/DT-018): **regra de derivação aprovada** — gravidade do sinistro = pior
+    entre as vítimas; sem vítima = `SEM_VITIMA`; abertura provisória; divergência bloqueia o
+    fechamento. `est.severity.derivation=worst_victim` vigente.
+44. Cédula 03.3 (OD-B01/DT-047): **registrar o BAT no inventário do art. 28 da PN 002/2026 e
+    publicar as hipóteses** (art. 11, II, a e b; art. 13) na transparência do PORTAL, após revisão
+    do CPPD. A tela de vítimas deixa de estar bloqueada para produção por este motivo.
+45. Cédula 03.4 (OD-B02/DT-049): **defaults de retenção adotados como vigentes por decisão do
+    Owner** — BAT e autos encerrados 5 anos; campos de saúde 5 anos com anonimização ao fim; AIT e
+    evidências 10 anos; bodycam permanece pendente. A CSAD recebe a carta com esses valores como
+    proposta; a eliminação passa a operar com listagem de eliminação. Risco aceito: tabela oficial
+    posterior pode encurtar ou alongar os prazos.
+46. Cédula 04 (OD-301…305): **`T-PAR-3A` e `T-PRESC-5A` como relógios de alerta sem declaração
+    de ofício** (STJ Temas 1.293/1.294; [REF-STJ-1293-1294]); declaração depende de parecer
+    caso a caso ou lei estadual; `deadline.*.expiry_kind_override=alert_only`, `a_confirmar`.
+    O relógio do art. 289-A mantém a declaração de ofício (C.15).
+47. Cédula 05.1 (OD-001 residual): **30 dias** para o recurso da autoridade, contados da
+    publicação da decisão da JARI (`rait.timer.T-R2-AUTH=30`).
+48. Cédula 05.2 (OD-013): **premissa mantida** (roteamento por circunscrição + escala semanal) e
+    **carta ao DETRAN-AM** pedindo a relação das 55 autoridades e circunscrições.
+49. Cédula 05.3 (DT-050 residual): **mesma regra da PN 001/2025 para o recurso ao CETRAN-AM**,
+    confirmação pela carta (`portal.cetran_appeal_level=advanced`).
+50. Cédula 06.1 (OD-P02): **aceitar selo gov.br prata como assinatura avançada desde já**,
+    além de ouro, e-Notariado e qualificada. **Decisão do Owner contra a recomendação**: a
+    PN DETRAN-AM 001/2025 art. 1º menciona só o nível ouro; o Decreto 10.543/2020 admite prata.
+    Risco registrado: ato atacável por descumprir norma interna até que o órgão edite portaria
+    admitindo prata — pedido incluído na carta ao DETRAN-AM.
+51. Cédula 06.2 (OD-P06/DT-051): **anônimo para manifestar, simples para acompanhar**.
+52. Cédula 06.3 (OD-P10): **manter a categoria "solicitação"**, agrupada com "reclamação" no
+    relatório anual da Lei 13.460.
+53. Cédula 07 (OD-003/DT-012): **desconto de 40% fora do SNE desligado** até adesão ao SNE ou
+    parecer (`collection.discount_40_outside_sne=false`).
+54. Cédula 07 em bloco: **todos os 24 defaults de calibração aprovados** (OD-004…009, 014, 016,
+    017, 019, 103…112, T03 exceto valor, T07, D04…D09, D11, D13, P11, B07, B13): as linhas do
+    catálogo passam a `vigente` com `decision_ref=H.54`. `sync.concurrency_window_minutes`
+    segue sem valor (DT-016); jeton segue pendente de fonte.
+55. Cédula 07 (OD-T04): **homologação SENATRAN caducada só avisa e registra** — a lavratura
+    continua com flag de risco no AIT e a autoridade decide na homologação do auto
+    (`teat.homologation.expired_behavior=warn`). Decisão do Owner; risco de vício retroativo
+    transferido à retaguarda, alerta antecipado do DASHBOARD (IND-DASH-110) obrigatório.
+56. Cédula 07 (DT-042/DT-043): **parecer jurídico único** consolidado (RAIT 15, PORTAL 18,
+    DASHBOARD, Lei 9.873, desconto 40%, dado de saúde) — entra na carta institucional à PGE-AM.
+57. Cédula 08 (OD-101…112, OD-201…207): **premissas aprovadas agora como vigentes**; o regimento,
+    quando localizado, gera nova versão. O módulo `colegiado` nasce sem o rótulo "pendente
+    regimento"; jeton (OD-012/207) permanece pendente de fonte.
+
 ## Pontos que a múltipla escolha não fechou — precisam de mais uma rodada
 
 - **Item 16**: definido que o recurso da autoridade é _vinculado_, mas falta definir **qual

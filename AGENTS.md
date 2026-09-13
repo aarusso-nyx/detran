@@ -3,7 +3,9 @@
 This repository is the DETRAN consolidation monorepo. It is **DEVAI-governed**
 (`@aarusso-nyx/devai@1.4.5`, Constitution 1.0.0 pinned at
 `.devai/pin/constitution.md`; `.devai/` is the governance root) and built on the
-**STYNX 1.1.1** platform (`@stynx-nyx/*` from GitHub Packages). The program is
+**STYNX** platform (`@stynx-nyx/*` from GitHub Packages; target **1.3.1** with
+Angular 22 per ADR-0015 — workspace pins still resolve 1.1.1 until the ADR-0015
+migration merges). The program is
 executed in phases by an orchestrator with worker agents;
 the phase plan and Decisions Ledger live in the orchestrator handoff plan and are
 **binding** — do not re-litigate owner decisions.

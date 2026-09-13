@@ -42,7 +42,7 @@ distintos, nunca dois: **aceito**; **corrigido** (erro material, elemento não e
 ou irregularidade — decisão vinculada, ato da autoridade, registrado com fundamento no art. 281
 §1º, I). "Rejeitado" no vocabulário atual de [WF-TEAT-001] deve ser mapeado ao terceiro desfecho e
 carregar o fundamento legal, sob pena de o sistema produzir um estado sem correspondência
-normativa. O prazo de 30 dias do inciso II **corre fora do TEAT** ([WF-INF-001], [RN-RAIT-115]),
+normativa. O prazo de 30 dias do inciso II **corre fora do TEAT** ([WF-INF-003], [RN-RAIT-115]),
 mas o **relógio começa no cometimento**, registrado pelo TEAT — atraso de sincronização consome
 prazo alheio.
 

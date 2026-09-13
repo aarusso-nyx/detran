@@ -16,7 +16,7 @@ sources:
     REF-CTB-sinistro-cena-renaest,
     REF-SENATRAN-PORTARIA-139-2025,
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Missão
@@ -263,17 +263,17 @@ o núcleo aberto é justamente a base do tratamento de **dado sensível de saúd
 **Nenhum dos itens abaixo é de pesquisa** — a pesquisa foi feita e a lacuna é da norma ou da
 decisão institucional.
 
-| Item                                                            | Onde                              | Consequência de não decidir                                                                   |
-| --------------------------------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------- |
-| **Hipótese legal do dado de saúde da vítima, e sua publicação** | [RN-BOAT-123], [UC-BOAT-003]      | item nº1 do advogado; hoje o dever de publicidade está descumprido (DT-047)                   |
-| **Prazos de retenção** — BAT identificado e bodycam             | [RN-BOAT-125], [UC-BOAT-003]      | `retention: forever` é violação de LGPD e **não deve ir a produção** (DT-049)                 |
-| **Papel LGPD do DETRAN-AM** — controlador do registro estadual? | [RN-BOAT-127], [UC-BOAT-008]      | divergência interna da Portaria 139/2025 art.7º §3º (DT-048)                                  |
-| **Periodicidade de transmissão ao RENAEST**                     | [RN-BOAT-106], [UC-BOAT-011]      | prazo legal suprimido em 2023 e regulamentação nunca editada; SLA mensal é proposta (DT-017)  |
-| **Correção de registro nacional terminal**                      | [WF-BOAT-003] §Gap, [UC-BOAT-011] | vazio normativo; hoje só resta novo registro formal (DT-020)                                  |
-| **Derivação severity(vítima) ↔ gravidade(sinistro)**            | [UC-BOAT-003]                     | sem fonte normativa; regra própria a documentar (DT-018)                                      |
-| **Veículo removido com proprietário hospitalizado**             | [UC-BOAT-006]                     | prazo de 60d do art.328 sem suspensão prevista (DT-019)                                       |
-| **Manuais RENAEST e campos mínimos do BAT**                     | mapeamento campo-a-campo          | conteúdo não público; exige ofício DETRAN-AM→SENATRAN (DT-061)                                |
-| **Limiar de célula para publicação agregada**                   | [RN-DASH-161], [UC-BOAT-011]      | risco ALTO de reidentificação em municípios pequenos; parecer antes da 1ª publicação (DT-029) |
+| Item                                                            | Onde                              | Consequência de não decidir                                                                                                                                                                                  |
+| --------------------------------------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Hipótese legal do dado de saúde da vítima, e sua publicação** | [RN-BOAT-123], [UC-BOAT-003]      | item nº1 do advogado; hoje o dever de publicidade está descumprido (DT-047) — **fechado em 2026-09-13 (steering H.44)**: hipóteses art. 11, II, a/b e art. 13 a publicar via inventário da PN 002/2026       |
+| **Prazos de retenção** — BAT identificado e bodycam             | [RN-BOAT-125], [UC-BOAT-003]      | `retention: forever` é violação de LGPD e **não deve ir a produção** (DT-049) — **fechado em 2026-09-13 (H.45)**: 5 anos BAT e saúde (anonimização ao fim); bodycam pendente na CSAD                         |
+| **Papel LGPD do DETRAN-AM** — controlador do registro estadual? | [RN-BOAT-127], [UC-BOAT-008]      | divergência interna da Portaria 139/2025 art.7º §3º (DT-048)                                                                                                                                                 |
+| **Periodicidade de transmissão ao RENAEST**                     | [RN-BOAT-106], [UC-BOAT-011]      | prazo legal suprimido em 2023 e regulamentação nunca editada; SLA mensal é proposta (DT-017)                                                                                                                 |
+| **Correção de registro nacional terminal**                      | [WF-BOAT-003] §Gap, [UC-BOAT-011] | vazio normativo; hoje só resta novo registro formal (DT-020)                                                                                                                                                 |
+| **Derivação severity(vítima) ↔ gravidade(sinistro)**            | [UC-BOAT-003]                     | sem fonte normativa; regra própria a documentar (DT-018)                                                                                                                                                     |
+| **Veículo removido com proprietário hospitalizado**             | [UC-BOAT-006]                     | prazo de 60d do art.328 sem suspensão prevista (DT-019)                                                                                                                                                      |
+| **Manuais RENAEST e campos mínimos do BAT**                     | mapeamento campo-a-campo          | conteúdo não público; exige ofício DETRAN-AM→SENATRAN (DT-061)                                                                                                                                               |
+| **Limiar de célula para publicação agregada**                   | [RN-DASH-161], [UC-BOAT-011]      | risco ALTO de reidentificação em municípios pequenos; parecer antes da 1ª publicação (DT-029) — **respondido (DT-029, 2026-08-28)**: supressão abaixo de 10, com supressão secundária; parecer valida depois |
 
 **Gap de superfície identificado nesta rodada:** o dever de responder ao titular
 ([RN-BOAT-126] — acesso, correção, eliminação) não tinha caso de uso nem tela. A tela W-05 de

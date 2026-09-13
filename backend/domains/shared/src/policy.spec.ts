@@ -10,12 +10,71 @@ import { withTenantContext } from './tenant-context.js';
 
 describe('DETRAN unified policy kit', () => {
   it('deduplicates only TEAT auditor into the PEC AUDITOR role', () => {
-    expect(DETRAN_ROLES).toHaveLength(24);
+    expect(DETRAN_ROLES).toHaveLength(34);
     expect(ROLE_ALIASES.auditor).toBe('AUDITOR');
     expect(canonicalRoles(['auditor', 'AUDITOR', 'field-supervisor'])).toEqual([
       'AUDITOR',
       'field-supervisor',
     ]);
+  });
+
+  it('grants RAIT command and surface rules only to RAIT staff roles', () => {
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-analyst'], permissions: [] },
+        'inf:rait-case',
+        'claim-next',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-analyst'], permissions: [] },
+        'inf:rait-decision',
+        'sign',
+      ),
+    ).toBe(false);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-signing-authority'], permissions: [] },
+        'inf:rait-decision',
+        'sign',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-chair'], permissions: [] },
+        'inf:rait-session',
+        'proclaim',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-rapporteur'], permissions: [] },
+        'inf:rait-session',
+        'proclaim',
+      ),
+    ).toBe(false);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['field-agent'], permissions: [] },
+        'inf:rait-case',
+        'read',
+      ),
+    ).toBe(false);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['AUDITOR'], permissions: [] },
+        'inf:rait-case',
+        'read',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['AUDITOR'], permissions: [] },
+        'inf:rait-case',
+        'update',
+      ),
+    ).toBe(false);
   });
 
   it('keeps every policy key domain namespaced', () => {

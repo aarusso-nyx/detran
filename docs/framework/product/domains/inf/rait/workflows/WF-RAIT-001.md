@@ -12,7 +12,7 @@ sources:
     REF-LEI-9873-1999,
     REF-DETRANAM-SERVICOS,
   ]
-updated: 2026-08-26
+updated: 2026-09-12
 ---
 
 ## Parametrização do caso
@@ -30,7 +30,7 @@ Um mesmo AIT pode gerar **até três casos RAIT sucessivos** (defesa → recurso
 CETRAN), cada um com protocolo próprio, ligados por `ait_id` (todos) e `caso_origem_id` (do
 segundo em diante). O RAIT não trata isso como "reabertura" do mesmo caso — é um novo
 requerimento ([RN-RAIT-002]: um requerimento por AIT, mas nada impede requerimentos
-sucessivos sobre o mesmo AIT em instâncias diferentes). Ver "Ponte com [WF-INF-001]" abaixo
+sucessivos sobre o mesmo AIT em instâncias diferentes). Ver "Ponte com [WF-INF-003]" abaixo
 para como este diagrama se encaixa no ciclo de vida da infração.
 
 ## Estados
@@ -120,7 +120,7 @@ de SLA ([WF-RAIT-002]) existe para que nenhum dos três seja atingido na prátic
 
 | Relógio                                       | Prazo total                        | Conta a partir de                                           | Extingue                             | Base                                                                                                                                                                                                                 |
 | --------------------------------------------- | ---------------------------------- | ----------------------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Decadência do direito de aplicar a penalidade | 180d (360d com defesa prévia)      | cometimento da infração                                     | direito de aplicar a penalidade (NP) | CTB art.282 §§6º-7º — herdado de [WF-INF-001] T3/T3'; delimita o teto do 1º circuito (`DECIDIDO_AUTORIDADE`)                                                                                                         |
+| Decadência do direito de aplicar a penalidade | 180d (360d com defesa prévia)      | cometimento da infração                                     | direito de aplicar a penalidade (NP) | CTB art.282 §§6º-7º — herdado de [WF-INF-003] `T-DEC`; delimita o teto do 1º circuito (`DECIDIDO_AUTORIDADE`)                                                                                                        |
 | Prescrição por inércia do órgão julgador      | 24 meses                           | recebimento do recurso pelo órgão julgador (JARI ou CETRAN) | pretensão punitiva inteira           | CTB art.289-A c/c 285 §6º / 289 _caput_ — delimita o teto do 2º circuito (`ADMITIDO`→`JULGADO_SESSAO`) [RN-RAIT-110] (teto 1ª instância), [RN-RAIT-111] (teto 2ª instância), [RN-RAIT-112] (prescrição do art.289-A) |
 | Prescrição por paralisação processual         | 3 anos (36 meses) sem movimentação | último ato/movimentação registrada, em QUALQUER estado      | ação punitiva                        | Lei 9.873/1999 art.1º §1º — corre mesmo dentro do teto de 24 meses, se o caso ficar parado [RN-RAIT-113]                                                                                                             |
 
@@ -135,7 +135,7 @@ Ver [WF-RAIT-002] §SLA para a escada de alertas calibrada contra estes três te
 | T-R2      | 30 dias                                                                                                 | comunicação da decisão de 1ª instância (JARI)                | direito de recorrer ao CETRAN precluído (→ `TRANSITADO`)                                 | CTB art.288 [RN-RAIT-103]                                                                                                                                                                                                                           |
 | T-JUL-24M | 24 meses                                                                                                | recebimento do recurso pelo órgão julgador                   | prescrição da pretensão punitiva (art.289-A) — nunca deve ser alcançado operacionalmente | CTB art.285 §6º / art.289 _caput_ / art.289-A                                                                                                                                                                                                       |
 | T-PAR-3A  | 3 anos sem movimentação, em qualquer estado                                                             | último ato do processo                                       | prescrição por paralisação                                                               | Lei 9.873/1999 art.1º §1º                                                                                                                                                                                                                           |
-| T-DEC     | 180d (360d com defesa)                                                                                  | cometimento da infração                                      | decadência do direito de aplicar a penalidade — herdado de [WF-INF-001]                  | CTB art.282 §§6º-7º                                                                                                                                                                                                                                 |
+| T-DEC     | 180d (360d com defesa)                                                                                  | cometimento da infração                                      | decadência do direito de aplicar a penalidade — herdado de [WF-INF-003]                  | CTB art.282 §§6º-7º                                                                                                                                                                                                                                 |
 | Contagem  | dias consecutivos; exclui dia inicial da notificação/edital; inclui vencimento; prorroga ao 1º dia útil | —                                                            | —                                                                                        | [RN-RAIT-005]; CONTRAN-918 art.29                                                                                                                                                                                                                   |
 | Suspensão | prazos processuais NÃO se suspendem, salvo força maior regulamentada pelo CONTRAN                       | —                                                            | (regulamentação não localizada — CTB art.290-A)                                          | CTB art.290-A — (fonte pendente, handoff LEGAL). Owner decidiu (steering.md C.20, 2026-08-24): enquanto o regulamento não for localizado, suspensão só existe como **ato administrativo motivado e auditado**, nunca automática — ver [RN-RAIT-105] |
 
@@ -152,21 +152,22 @@ Ver [WF-RAIT-002] §SLA para a escada de alertas calibrada contra estes três te
 | Requerente (cidadão/procurador, via PORTAL ou balcão) | `[*]→PROTOCOLADO`, `COMUNICADO→REMETIDO_2A_INSTANCIA` (interpõe recurso), `*→ENCERRADO_DESISTENCIA`                      |
 | Gestor RAIT                                           | monitora relógios de extinção cross-cutting; força reatribuição/escalonamento ([UC-RAIT-010], [UC-RAIT-011])             |
 
-## Ponte com [WF-INF-001]
+## Ponte com [WF-INF-003]
 
-Este workflow é a máquina **operacional interna** do RAIT (filas, atores, SLA); [WF-INF-001]
-é a máquina de **estados legais** da infração, cruzando teat/rait/portal. Pontos de encaixe
-propostos (ver `bpo-notes.md` §1 para a proposta formal de atualização de WF-INF-001, fora do
-escopo de escrita direta do BPO):
+Este workflow é a máquina **operacional interna** do RAIT (filas, atores, SLA); [WF-INF-003]
+é a máquina de **estados legais** da infração, cruzando teat/rait/portal (substituiu
+[WF-INF-001] por decisão do Owner em 2026-09-12 — ADR-0014). Cada caso RAIT corresponde a um
+estado de fase da infração; os eventos desta máquina (§Eventos) são os gatilhos das transições
+de [WF-INF-003] §2.
 
-| Este workflow (instancia)                                  | Equivalente em [WF-INF-001]                                                                  |
-| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Caso `defesa_previa` completo (`PROTOCOLADO`→`COMUNICADO`) | `NOTIFICADO_AUTUACAO --DEFESA_APRESENTADA--> {AIT_CANCELADO \| PENALIDADE_APLICADA}`         |
-| Caso `jari` completo                                       | `PENALIDADE_APLICADA --RECURSO_JARI--> {PROVIDO_JARI \| NEGADO_JARI}`                        |
-| Caso `cetran` completo                                     | `{PROVIDO_JARI\|NEGADO_JARI} --RECURSO_2A--> {CANCELADO_DEFINITIVO \| ENCERRADO_DEFINITIVO}` |
-| `ENCERRADO_DESISTENCIA` (instancia=jari)                   | `RECURSO_JARI --ENCERRADO_DESISTENCIA-->` (já existe em WF-INF-001)                          |
-| `TRANSITADO` (instancia=cetran, negado)                    | `RECURSO_2A --ENCERRADO_DEFINITIVO-->`                                                       |
-| `TRANSITADO` (instancia=cetran, provido)                   | `RECURSO_2A --CANCELADO_DEFINITIVO-->`                                                       |
+| Este workflow (instancia)                                       | Estado da infração em [WF-INF-003]                                                                                   | Transição de saída em [WF-INF-003]                                                             |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Caso `defesa_previa` (`PROTOCOLADO`→`COMUNICADO`)               | `DEFESA_EM_JULGAMENTO`                                                                                               | acolhida → `AIT_CANCELADO`; indeferida / não conhecida / desistência → `PENALIDADE_A_APLICAR`  |
+| Caso `jari` (`PROTOCOLADO`→`COMUNICADO`)                        | `RECURSO_1A_INSTANCIA` (`EM_ADMISSIBILIDADE_1A` → `EM_REMESSA_JARI` → `EM_JULGAMENTO_JARI`)                          | decisão publicada → `AGUARDANDO_RECURSO_2A` (`PROVIDO_1A` \| `NEGADO_1A`)                      |
+| `NAO_CONHECIDO` ou `ENCERRADO_DESISTENCIA` (instancia=jari)     | `RECURSO_1A_INSTANCIA`                                                                                               | volta a `NOTIFICADO_PENALIDADE` se `T-NP-VENC` ainda corre; senão `INSTANCIA_ENCERRADA`        |
+| Caso `cetran` (`PROTOCOLADO`/`ADMITIDO`→`TRANSITADO`)           | `RECURSO_2A_INSTANCIA` (`EM_ADMISSIBILIDADE_2A` → `EM_JULGAMENTO_CETRAN`; recurso da autoridade nasce em julgamento) | penalidade mantida → `INSTANCIA_ENCERRADA`; favorável ao administrado → `CANCELADO_DEFINITIVO` |
+| `TRANSITADO` (instancia=jari, sem recurso em `T-R2`)            | `AGUARDANDO_RECURSO_2A`                                                                                              | `NEGADO_1A` → `INSTANCIA_ENCERRADA`; `PROVIDO_1A` → `CANCELADO_DEFINITIVO`                     |
+| `AGUARDANDO_REMESSA_JARI → DISTRIBUIDO` (recebimento pela JARI) | `EM_REMESSA_JARI` → `EM_JULGAMENTO_JARI`                                                                             | arma `T-JUL-24M` e `T-PAR-3A` na infração                                                      |
 
 ## Vocabulário canônico e reconciliações
 
@@ -176,28 +177,28 @@ os mesmos fatos. Este documento é a **autoridade** sobre nomes de estado; a tab
 as reconciliações feitas na rodada de endurecimento de especificação (2026-08-26) e vale como
 mapa de leitura para qualquer regra que ainda cite o nome antigo.
 
-| Nome cunhado alhures           | Onde apareceu | Estado/vocabulário canônico                                                   | Decisão                                                                                                                                                                                                                                             |
-| ------------------------------ | ------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AGUARDANDO_REMESSA_JARI`      | [RN-RAIT-107] | `AGUARDANDO_REMESSA_JARI`                                                     | **adotado** — estado novo entre `ADMITIDO` e `DISTRIBUIDO` para `instancia=jari`. Sem ele não há como marcar o início do relógio B, que corre do _recebimento pela JARI_ e não da admissão                                                          |
-| `ARQUIVADO_INTEMPESTIVO`       | [RN-RAIT-109] | `NAO_CONHECIDO` + `motivo_nao_conhecimento='intempestivo'` + `arquivado=true` | **não vira estado** — o arquivamento do art.285 §5º é consequência do não conhecimento por intempestividade, não um ramo próprio da máquina. O efeito jurídico distinto (sem efeito suspensivo desde a interposição) é atributo do caso, não estado |
-| `REMETIDO_CETRAN`              | [RN-RAIT-117] | `REMETIDO_2A_INSTANCIA`                                                       | renomeado — a máquina é genérica por instância                                                                                                                                                                                                      |
-| `ENCERRADO_POR_DESISTENCIA`    | [RN-RAIT-123] | `ENCERRADO_DESISTENCIA`                                                       | renomeado                                                                                                                                                                                                                                           |
-| `DECIDIDO`                     | [RN-RAIT-123] | `DECIDIDO_AUTORIDADE` (1º circuito) ou `JULGADO_SESSAO` (2º)                  | desambiguado — não existe estado "decidido" genérico                                                                                                                                                                                                |
-| `DECISAO_PUBLICADA`            | [RN-RAIT-130] | **evento**, não estado                                                        | permanece como evento de domínio disparado na transição `DECIDIDO_AUTORIDADE\|JULGADO_SESSAO → COMUNICADO`                                                                                                                                          |
-| `EM_RECURSO`                   | [RN-RAIT-108] | estado de [WF-INF-001]                                                        | pertence ao ciclo de vida da **infração**, não ao caso RAIT — o RAIT publica o evento que o provoca (efeito suspensivo), não o possui                                                                                                               |
-| `ABERTA` / `ENCERRADA(motivo)` | [RN-RAIT-119] | vocabulário da **instância administrativa**                                   | vocabulário próprio e legítimo, de granularidade distinta da máquina do caso — não conflita                                                                                                                                                         |
+| Nome cunhado alhures           | Onde apareceu | Estado/vocabulário canônico                                                                 | Decisão                                                                                                                                                                                                                                             |
+| ------------------------------ | ------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGUARDANDO_REMESSA_JARI`      | [RN-RAIT-107] | `AGUARDANDO_REMESSA_JARI`                                                                   | **adotado** — estado novo entre `ADMITIDO` e `DISTRIBUIDO` para `instancia=jari`. Sem ele não há como marcar o início do relógio B, que corre do _recebimento pela JARI_ e não da admissão                                                          |
+| `ARQUIVADO_INTEMPESTIVO`       | [RN-RAIT-109] | `NAO_CONHECIDO` + `motivo_nao_conhecimento='intempestivo'` + `arquivado=true`               | **não vira estado** — o arquivamento do art.285 §5º é consequência do não conhecimento por intempestividade, não um ramo próprio da máquina. O efeito jurídico distinto (sem efeito suspensivo desde a interposição) é atributo do caso, não estado |
+| `REMETIDO_CETRAN`              | [RN-RAIT-117] | `REMETIDO_2A_INSTANCIA`                                                                     | renomeado — a máquina é genérica por instância                                                                                                                                                                                                      |
+| `ENCERRADO_POR_DESISTENCIA`    | [RN-RAIT-123] | `ENCERRADO_DESISTENCIA`                                                                     | renomeado                                                                                                                                                                                                                                           |
+| `DECIDIDO`                     | [RN-RAIT-123] | `DECIDIDO_AUTORIDADE` (1º circuito) ou `JULGADO_SESSAO` (2º)                                | desambiguado — não existe estado "decidido" genérico                                                                                                                                                                                                |
+| `DECISAO_PUBLICADA`            | [RN-RAIT-130] | **evento**, não estado                                                                      | permanece como evento de domínio disparado na transição `DECIDIDO_AUTORIDADE\|JULGADO_SESSAO → COMUNICADO`                                                                                                                                          |
+| `EM_RECURSO`                   | [RN-RAIT-108] | `RECURSO_1A_INSTANCIA` / `RECURSO_2A_INSTANCIA` com `efeito_suspensivo=true` ([WF-INF-003]) | pertence ao ciclo de vida da **infração**, não ao caso RAIT — o RAIT publica o evento que o provoca (efeito suspensivo), não o possui                                                                                                               |
+| `ABERTA` / `ENCERRADA(motivo)` | [RN-RAIT-119] | vocabulário da **instância administrativa**                                                 | vocabulário próprio e legítimo, de granularidade distinta da máquina do caso — não conflita                                                                                                                                                         |
 
 ### Eventos de domínio publicados por esta máquina
 
-Consumidos por PORTAL, DASHBOARD e pelo ciclo de vida da infração ([WF-INF-001]):
+Consumidos por PORTAL, DASHBOARD e pelo ciclo de vida da infração ([WF-INF-003]):
 
 | Evento                              | Disparado em                                            | Consumidor principal                                  |
 | ----------------------------------- | ------------------------------------------------------- | ----------------------------------------------------- |
 | `RAIT_CASO_PROTOCOLADO`             | `[*] → PROTOCOLADO`                                     | PORTAL (acompanhamento), DASHBOARD                    |
-| `RAIT_EFEITO_SUSPENSIVO_INSTAURADO` | `TRIAGEM_ADMISSIBILIDADE → ADMITIDO`, quando tempestivo | [WF-INF-001] (bloqueio de restrições — [RN-RAIT-108]) |
+| `RAIT_EFEITO_SUSPENSIVO_INSTAURADO` | `TRIAGEM_ADMISSIBILIDADE → ADMITIDO`, quando tempestivo | [WF-INF-003] (bloqueio de restrições — [RN-RAIT-108]) |
 | `RAIT_RECURSO_RECEBIDO_JULGADOR`    | `AGUARDANDO_REMESSA_JARI → DISTRIBUIDO`                 | DASHBOARD (marco inicial do relógio B)                |
-| `RAIT_DECISAO_PUBLICADA`            | `DECIDIDO_AUTORIDADE\|JULGADO_SESSAO → COMUNICADO`      | PORTAL, [WF-INF-001], SNE ([RN-RAIT-125])             |
-| `RAIT_CASO_TRANSITADO`              | `COMUNICADO → TRANSITADO`                               | [WF-INF-001] (RENACH/pontuação — [RN-RAIT-131])       |
+| `RAIT_DECISAO_PUBLICADA`            | `DECIDIDO_AUTORIDADE\|JULGADO_SESSAO → COMUNICADO`      | PORTAL, [WF-INF-003], SNE ([RN-RAIT-125])             |
+| `RAIT_CASO_TRANSITADO`              | `COMUNICADO → TRANSITADO`                               | [WF-INF-003] (RENACH/pontuação — [RN-RAIT-131])       |
 | `RAIT_ALERTA_PRESCRICAO`            | mudança de bandeira em [WF-RAIT-002] §4                 | DASHBOARD, cadeia de escalonamento                    |
 
 ## Decisões de modelagem pendentes
@@ -210,7 +211,7 @@ Consumidos por PORTAL, DASHBOARD e pelo ciclo de vida da infração ([WF-INF-001
   suspensão automática, até o regulamento ser localizado.
 - Se um caso `instancia=defesa_previa` `NAO_CONHECIDO` gera, por si, direito a recurso próprio
   ao 2º circuito, ou se o não-conhecimento da defesa simplesmente segue o rito comum de
-  "sem defesa" em [WF-INF-001] (que já permite recurso JARI contra a penalidade resultante) —
+  "sem defesa" em [WF-INF-003] (que já permite recurso JARI contra a penalidade resultante) —
   tratado aqui como o segundo caminho (mais simples, sem duplicar direito recursal); confirmar
   com LEGAL. _(não coberto pela rodada de steering de 2026-08-24 — segue em aberto)_
 
@@ -219,3 +220,6 @@ Consumidos por PORTAL, DASHBOARD e pelo ciclo de vida da infração ([WF-INF-001
 - **2026-08-24** — Owner, em conversa de steering (`_meta/steering.md` A.7, C.20): T-DIL
   fixado em 15 dias úteis prorrogável 1x; suspensão de prazo só por ato motivado e auditado
   enquanto o regulamento CONTRAN de força maior não for localizado. Ver seções acima.
+- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0014). §Ponte reescrita
+  contra o novo vocabulário; consumidores dos eventos e o mapeamento de `EM_RECURSO` atualizados.
+  Sem alteração nos estados, transições ou prazos deste workflow.

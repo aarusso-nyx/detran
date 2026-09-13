@@ -4,7 +4,7 @@ title: Cidadão eleva o nível de assinatura/conta ao tentar um ato que exige n�
 status: reviewed
 apps: [portal]
 sources: [REF-DECRETO-10543-2020, REF-DECRETO-8936-2016]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Ator e objetivo
@@ -92,3 +92,7 @@ original retomado e concluível.
 - [REF-DECRETO-10543-2020] art.4º (matriz de nível exigido por ato)
 - [REF-DECRETO-10543-2020] art.5º (métodos de obtenção de cada nível)
 - Princípio "elevação guiada, nunca beco sem saída" ([WF-PORTAL-002])
+
+**Atualização (2026-09-13).** A base institucional dos níveis de assinatura passou a existir:
+Portaria Normativa DETRAN-AM 001/2025 ([REF-DETRANAM-PORTARIA-NORMATIVA-001-2025]); selo prata
+aceito por decisão do Owner (steering H.50). Ver [RN-PORTAL-101] §Fonte institucional.

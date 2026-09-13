@@ -33,6 +33,21 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
   infrastructure.
 - **ADR-0013** — PEC parity closes on executable acceptance and origin-test
   dispositions, with external trust/session deployment evidence remaining fail-closed.
+- **ADR-0014** — `WF-INF-003` is the canonical infraction lifecycle state machine
+  (Owner, 2026-09-12); `WF-INF-001` kept as a pointer; the infraction aggregate
+  awaits its own blueprint before any runtime implementation.
+- **ADR-0015** — STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 is the platform target
+  (Owner, 2026-09-12; workspace pins migrate in WP-0); the canonical role
+  catalogue gains the ten-code RAIT family, persisted in `auth.role_catalog`;
+  the `WF-INF-003` vocabulary is persisted as `inf.infraction_*_ref` tables.
+- **ADR-0016…0020** — boundary set (accepted by the Owner on 2026-09-13) for the infractions scope:
+  infraction aggregate + notification module (0016), collection/payment/refund
+  (0017), documents and signature as STYNX substrate (0018), `portal` domain for
+  identity levels, request lifecycle, inbox and ombudsman (0019), projections as
+  the only cross-app read path (0020).
+- **ADR-0021** (Proposed) — one shared, versioned parameter store `ops.parameter` for every calibration that is
+  not law; boolean switches in `@stynx-nyx/feature-flags`; catalogue in `docs/framework/arch/parameter-catalogue.md`;
+  decisions of the implementation gate recorded in `docs/meta/knowledge-base/steering.md` §H.
 
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo

@@ -10,8 +10,9 @@ sources:
     REF-CTB-extracts-raw,
     REF-LEI-9873-1999,
     REF-DETRANAM-SERVICOS,
+    REF-STJ-1293-1294,
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Estados
@@ -52,6 +53,9 @@ por pool — a escolha por pool é decisão do Owner, não uma imposição norma
 | `balanceamento por carga` | sistema atribui ao membro com menor carga aberta (contagem ponderada por complexidade/risco)      | pools heterogêneos em capacidade (analistas em regimes de trabalho distintos)                        |
 
 ## 3. Sorteio de relator (2º circuito — JARI/CETRAN)
+
+Detalhamento operacional (lotes, ata de sorteio, prazo de aceite, prevenção, suplentes) em
+[WF-RAIT-004] §5.
 
 Modelo de referência: **CETRAN-ES art.25** — "distribuição registrada, obedecido o critério de
 sorteio entre os Conselheiros" ([REF-CETRAN-PROCESSO-INTERNO]). Proposta: implementar como uma
@@ -108,7 +112,7 @@ de 24 meses se o caso ficar parado.
 ### 4.3 Relógio A — decadência do direito de aplicar a penalidade (180d/360d, CTB art.282 §§6º-7º)
 
 Aplica-se ao 1º circuito (`defesa_previa`) — delimita o teto para `DECIDIDO_AUTORIDADE` e
-emissão da NP. Herdado de [WF-INF-001] T3/T3'; ladder proposta (para a trilha de 180 dias —
+emissão da NP. Herdado de [WF-INF-003] `T-DEC`; ladder proposta (para a trilha de 180 dias —
 sem defesa prévia tempestiva — a trilha de 360 dias com defesa escala proporcionalmente):
 
 | Nível       | Marco (trilha 180d / trilha 360d) | Ação                                                       |
@@ -127,6 +131,10 @@ de atendimento ao cidadão, monitorado separadamente no dashboard (indicador "% 
 de 30 dias", distinto de "% em risco de prescrição").
 
 ## 5. Reatribuição, afastamento e impedimento
+
+Os estados abaixo são de **accountability**; a **disponibilidade** (escala, plantão, ausência
+programada) e a formação de bancas são detalhadas em [WF-RAIT-004] §3 e §6, e o rol de
+impedimentos e suspeições em [RN-RAIT-140].
 
 | Estado do responsável        | Gatilho                                                                                                                        | Efeito no caso                                                                                                                     |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
@@ -201,6 +209,18 @@ Todos os itens abaixo foram resolvidos em steering com o Owner (2026-08-24) — 
 
 ## Decisões
 
+- **2026-09-12** — rodada de organização do trabalho: filas/backlogs, escalas, plantão, sorteio em
+  lote, bancas e dimensionamento detalhados em [WF-RAIT-004]; regras [RN-RAIT-139]…[RN-RAIT-143];
+  casos de uso [UC-RAIT-013]…[UC-RAIT-015]. Sem alteração nos pools, estratégias ou escada de SLA.
+
 - **2026-08-24** — Owner, em conversa de steering (`_meta/steering.md` §A): aprovou os 4
   itens de calibração operacional acima (limiares de SLA, pools, sorteio, accountability,
   calendário). Promovido a `reviewed`.
+
+### Decisão 2026-09-13 (steering.md H.46) — relógios da Lei 9.873/1999
+
+Após STJ Temas 1.293/1.294 ([REF-STJ-1293-1294]), os relógios de paralisação (3 anos) e
+quinquenal (5 anos) de [RN-RAIT-113] passam a **alerta sem declaração de ofício**: a escada de §4
+continua a escalonar e o `CRITICO` continua a ser exibido, mas a extinção por prescrição por esses
+relógios depende de decisão do LEGAL caso a caso ou de lei estadual superveniente. O relógio B
+(art. 289-A) não muda.

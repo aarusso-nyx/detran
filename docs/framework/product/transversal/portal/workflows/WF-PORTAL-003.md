@@ -16,7 +16,7 @@ automático sobre prazo de decadência/prescrição e o outro não:
 1. **Notificação de infração via SNE** (Sistema de Notificação Eletrônica, [REF-CONTRAN-931]) —
    único meio tecnológico hábil para dar ciência de NA/NP/resultado de julgamento quando o cidadão
    aderiu (art.2º § único); produz **ciência ficta em 30 dias** com efeito jurídico direto sobre a
-   contagem de prazos do processo ([WF-INF-001], [WF-RAIT-001]).
+   contagem de prazos do processo ([WF-INF-003], [WF-RAIT-001]).
 2. **Notificação de andamento de processo** (RAIT, PEC, BOAT) — comunicação de resultado,
    diligência, pauta de sessão; é dever de comunicação do órgão (ex. 918 art.17), mas **não** tem
    regime de ciência ficta próprio identificado nesta rodada fora do SNE — é UX de acompanhamento,

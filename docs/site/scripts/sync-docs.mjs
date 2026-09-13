@@ -162,7 +162,11 @@ function rewriteLinks(content, source, target) {
       const mappedAsset = assetTargets.get(resolved);
       if (mappedAsset !== undefined) {
         const rel = toPosix(relative(join(siteRoot, 'static'), mappedAsset));
-        return `${open}/detran/${rel}${parts.suffix}${close}`;
+        // Static assets are not routes: a plain link would be reported as broken by
+        // Docusaurus' link checker, so anchors use the documented `pathname://`
+        // escape while images keep the plain URL.
+        const prefix = open.startsWith('!') ? '' : 'pathname://';
+        return `${open}${prefix}/detran/${rel}${parts.suffix}${close}`;
       }
       if (resolved.startsWith(repoRoot) && !resolved.startsWith(siteRoot)) {
         const repoRel = toPosix(relative(repoRoot, resolved));

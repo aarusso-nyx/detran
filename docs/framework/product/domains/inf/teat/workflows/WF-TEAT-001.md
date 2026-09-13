@@ -16,7 +16,7 @@ sources:
     'teat:law/invariants/INV-OFFLINE-001.json',
     'teat:law/invariants/INV-AIT-001.json',
   ]
-updated: 2026-08-26
+updated: 2026-09-12
 ---
 
 ## Revisão (2026-08-24, BPO)
@@ -67,7 +67,7 @@ stateDiagram-v2
     PENDENTE_CORRECAO --> CORRIGIDO : traffic-authority aprova\nAitCorrection (justificativa obrigatória)
     CORRIGIDO --> ACEITO : traffic-authority aceita
     REJEITADO --> PENDENTE_CORRECAO : solicitação de correção sobre rejeitado
-    ACEITO --> INTEGRADO : autoriza integração downstream\n(alimenta WF-INF-001 AIT_LAVRADO)
+    ACEITO --> INTEGRADO : autoriza integração downstream\n(alimenta WF-INF-003 AIT_LAVRADO)
     INTEGRADO --> PROCESSADO : processamento concluído
     PROCESSADO --> ARQUIVADO
     ARQUIVADO --> [*]
@@ -117,14 +117,14 @@ mesmo destino (ver [WF-RAIT-001] `ENCERRADO_DESISTENCIA`).
 
 ## Prazos e timers (base legal por prazo)
 
-| Timer                                           | Prazo                                                                  | Gatilho                                                                | Consequência                           | Base                             |
-| ----------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------- | -------------------------------- |
-| Vigência da reserva de numeração                | `valid_until` da `OfflineNumberingReservation`                         | (fonte pendente — parâmetro operacional, não legal; ver [WF-TEAT-002]) |
-| Retenção do AIT no equipamento para reimpressão | mínimo o dia da lavratura                                              | finalização                                                            | permite reimpressão sem duplicar o ato | [REF-SENATRAN-997] Anexo III, b) |
-| Emissão da NA a partir do cometimento           | 30 dias (fora do escopo TEAT — inicia em [WF-INF-001] após integração) | [REF-CONTRAN-918] art. 4º §1º                                          |
+| Timer                                           | Prazo                                                                        | Gatilho                                                                | Consequência                           | Base                             |
+| ----------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------- | -------------------------------- |
+| Vigência da reserva de numeração                | `valid_until` da `OfflineNumberingReservation`                               | (fonte pendente — parâmetro operacional, não legal; ver [WF-TEAT-002]) |
+| Retenção do AIT no equipamento para reimpressão | mínimo o dia da lavratura                                                    | finalização                                                            | permite reimpressão sem duplicar o ato | [REF-SENATRAN-997] Anexo III, b) |
+| Emissão da NA a partir do cometimento           | 30 dias (fora do escopo TEAT — `T-NA` de [WF-INF-003], armado na integração) | [REF-CONTRAN-918] art. 4º §1º                                          |
 
 TEAT não possui prazos legais próprios de lavratura — a contagem normativa (defesa, notificação,
-recurso) começa após o AIT sair de TEAT e entrar em [WF-INF-001]. As obrigações temporais internas
+recurso) começa após o AIT sair de TEAT e entrar em [WF-INF-003]. As obrigações temporais internas
 são técnicas: validade da reserva de numeração, validade da fila offline e o piso de retenção do
 AIT no equipamento para reimpressão (Anexo III, b) de [REF-SENATRAN-997]).
 
@@ -138,16 +138,19 @@ cancelamento pós-finalização); Diretoria de Fiscalização (decide cancelamen
 ator novo neste domínio, ver `_intake/bpo-notes.md` §Atores); auditor (apura suspeita de
 concorrência, junto com traffic-authority).
 
-## Ponte com [WF-INF-001]
+## Ponte com [WF-INF-003]
 
-`ACEITO → INTEGRADO` alimenta `WF-INF-001`/`AIT_LAVRADO`. Dois pontos de encaixe adicionais desta
-revisão, propostos para o owner (fora do escopo de escrita direta do BPO — ver
-`_intake/bpo-notes.md` §1):
+`ACEITO → INTEGRADO` emite `AIT_INTEGRADO`, que cria a infração em `AIT_LAVRADO` de
+[WF-INF-003] e arma `T-NA` e `T-DEC` (contados do cometimento, não da integração — atraso de
+sincronização consome prazo alheio, [RN-TEAT-119]). Os dois pontos de encaixe propostos na revisão
+de 2026-08-24 foram **adotados** na máquina da infração (Owner, 2026-09-12 — ADR-0014):
 
-| Este workflow                                                                         | Equivalente proposto em [WF-INF-001]                                                                                   |
-| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `CANCELADO_POSFINAL` (AIT já integrado quando cancelado)                              | novo estado terminal `CANCELADO_POS_INTEGRACAO`, distinto de `AIT_CANCELADO` (que hoje só cobre acolhimento de defesa) |
-| AIT gerado por violação de guarda monitorada ([WF-TEAT-004] `VIOLACAO_MONITORAMENTO`) | entra como um novo `[*] --> AIT_LAVRADO` comum — é um AIT como outro qualquer (art. 239 CTB), sem estado especial      |
+| Este workflow                                                                         | Em [WF-INF-003]                                                                                                                                                             |
+| ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `CANCELADO_POSFINAL` (AIT já integrado quando cancelado)                              | terminal `CANCELADO_POS_INTEGRACAO`, distinto de `AIT_CANCELADO` (acolhimento de defesa); admitido de `AIT_LAVRADO` até `NOTIFICADO_PENALIDADE`, antes da decisão de defesa |
+| `REJEITADO` com fundamento em inconsistência (CTB art. 281 §1º I)                     | `ARQUIVADO` com motivo `insubsistente` — a rejeição pela autoridade é o julgamento de consistência do AIT                                                                   |
+| AIT gerado por violação de guarda monitorada ([WF-TEAT-004] `VIOLACAO_MONITORAMENTO`) | entra como um novo `[*] --> AIT_LAVRADO` comum — é um AIT como outro qualquer (art. 239 CTB), sem estado especial                                                           |
+| AIT assinado pelo condutor-proprietário com data-limite de defesa impressa            | `AIT_LAVRADO → NOTIFICADO_AUTUACAO` sem NA separada (AIT vale como NA, 918 art. 3º §5º)                                                                                     |
 
 ## Decisões de modelagem pendentes
 
@@ -164,3 +167,9 @@ revisão, propostos para o owner (fora do escopo de escrita direta do BPO — ve
 - (novo) `Diretoria de Fiscalização` não tem papel de RBAC hoje em [APP-TEAT] (9 papéis
   existentes); mapeamento provisório para `traffic-authority` em nível hierárquico superior —
   decisão de escopo do Owner, ver `_intake/bpo-notes.md` §Atores.
+
+## Decisões
+
+- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0014). §Ponte reescrita
+  contra o novo vocabulário e os encaixes propostos em 2026-08-24 registrados como adotados. Sem
+  alteração nos estados, transições ou prazos deste workflow.

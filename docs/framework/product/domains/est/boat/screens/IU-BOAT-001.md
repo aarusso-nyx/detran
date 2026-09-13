@@ -10,7 +10,7 @@ sources:
     REF-CTB-sinistro-cena-renaest,
     REF-DETRANAM-TALAO-BODYCAM,
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 Promovido de `_intake/ux-notes.md` §a na rodada de endurecimento de 2026-08-26, com três correções
@@ -100,3 +100,8 @@ o mesmo direito. Decisão de produto pendente.
 - **S-12** cobre um UC recém-promovido de stub; o desenho não tem precedente no protótipo.
 - **W-04** exibe estados terminais nacionais sem caminho de correção — a tela precisa dizer isso
   explicitamente (AC-BOAT-011-5), o que é decisão de conteúdo, não de layout.
+
+**Atualização (2026-09-13, steering.md H.44, H.45).** As dependências de S-06 e W-05 registradas
+em §Pendências foram decididas: retenção de 5 anos com anonimização e hipóteses legais a publicar
+via inventário da PN 002/2026. As duas telas deixam de estar bloqueadas para produção por esses
+motivos; permanece a revisão do texto pelo Comitê de Privacidade antes da publicação.

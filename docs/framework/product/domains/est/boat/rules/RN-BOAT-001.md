@@ -10,7 +10,7 @@ sources:
     REF-CTB-sinistro-cena-renaest,
     REF-CONTRAN-808-2020,
   ]
-updated: 2026-08-24
+updated: 2026-09-13
 ---
 
 **Regra.** Todo registro de vítima (`CrashVictim`) exige o preenchimento do campo `severity`
@@ -58,3 +58,9 @@ versionado com vigência**, não `enum` de código ([RN-BOAT-111]).
 4. Acrescentado que `severity` é, ele próprio, **dado pessoal sensível de saúde**
    ([RN-BOAT-122]) — hoje não classificado como tal no blueprint, ao contrário de
    `hospital_destination` e `health_notes`.
+
+**Decisão do Owner (2026-09-13, steering.md H.43) — regra de derivação.** A gravidade do
+sinistro é **a pior gravidade entre as vítimas registradas** (fatal supera ferida); sem vítima
+registrada, `SEM_VITIMA`; a gravidade informada na abertura é provisória e é sobrescrita no
+fechamento; gravidade com vítima sem nenhuma vítima registrada **bloqueia o fechamento**. Proposta
+da equipe técnica aprovada conforme DT-018.

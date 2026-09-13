@@ -4,7 +4,7 @@ title: Atendimento e ouvidoria (Lei 13.460/2017) — manifestação, prazos de r
 status: reviewed
 apps: [portal, dashboard]
 sources: [REF-LEI-13460-2017, REF-LEI-14129-2021, REF-LEI-13709-2018]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Escopo e fronteira (leia primeiro)
@@ -109,3 +109,9 @@ Ver `_intake/bpo-notes.md` para a proposta formal ao Owner.
   partir dos arts. 9º-17 e 23 da Lei 13.460/2017, com a Carta de Serviços tratada como artefato
   vivo alimentado pela tabela de catálogo de [WF-PORTAL-001] — proposta de correção do gap de
   conformidade encaminhada ao Owner em `bpo-notes.md`.
+
+### Decisão 2026-09-13 (steering.md H.51, H.52)
+
+Nível de assinatura na ouvidoria: **nenhum para manifestar** (manifestação anônima admitida) e
+**simples para acompanhar** a resposta. A categoria operacional "solicitação" é mantida e agrupada
+com "reclamação" no relatório anual do art. 15 da Lei 13.460/2017.

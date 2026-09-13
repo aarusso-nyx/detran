@@ -10,7 +10,7 @@ sources:
     'teat:docs/framework/product/workflows/normative-catalog.md',
     'teat:law/invariants/INV-NORMATIVE-001.json',
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Revisão (2026-08-24, BPO)
@@ -155,3 +155,8 @@ sustenta em contencioso.
   campo — presume-se que o sistema não pode mais lavrar AIT válido sem homologação vigente, mas a
   fonte não descreve o mecanismo de bloqueio; decisão de arquitetura/produto a confirmar com o
   time técnico.
+
+### Decisão 2026-09-13 (steering.md H.55) — homologação SENATRAN caducada
+
+Mecanismo confirmado como **aviso e registro**, não bloqueio: ver [RN-TEAT-003] §Decisão. O
+pacote normativo expirado já seguia a mesma disciplina (DT-110).

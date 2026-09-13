@@ -3,8 +3,13 @@ id: RN-BOAT-126
 title: Acesso, auditoria, transparência e direitos do titular — o que o BOAT deve implementar por força da LGPD
 status: draft
 apps: [boat, portal]
-sources: [REF-LEI-13709-2018, REF-SENATRAN-PORTARIA-139-2025]
-updated: 2026-08-24
+sources:
+  [
+    REF-LEI-13709-2018,
+    REF-SENATRAN-PORTARIA-139-2025,
+    REF-DETRANAM-PORTARIAS-LGPD-2026,
+  ]
+updated: 2026-09-13
 ---
 
 **Regra.** O tratamento de dado de vítima pelo DETRAN-AM sujeita o órgão a um conjunto de deveres
@@ -76,9 +81,15 @@ Público remetem, por força do art. 23, § 3º, à Lei do Habeas Data, à Lei 9
 **três regimes distintos**, e nenhum deles é o prazo genérico de 15 dias que a LGPD prevê para o
 controlador privado. Qual prazo o DETRAN-AM deve praticar é questão aberta que merece definição
 formal do órgão. (b) O acesso do **próprio autuado ou interessado** ao registro de sinistro que
-instrui um AIT contra ele — necessário ao contraditório ([WF-INF-001]) — colide com a proteção do
+instrui um AIT contra ele — necessário ao contraditório ([WF-INF-003]) — colide com a proteção do
 dado de saúde de **terceiro** (a vítima) contido no mesmo registro. É a mesma tensão já identificada
 para a bodycam (item 43 de `inf/teat/_intake/legal-assessment.md`), aqui agravada por ser dado
 sensível. **Solução de trabalho:** fornecer o registro com **supressão dos campos de saúde de
 terceiros**, salvo requisição de autoridade; não negar o acesso ao registro inteiro. Item 4 de
 `_intake/legal-assessment.md`.
+
+**Atualização (2026-09-13).** O DETRAN-AM já dispõe de Encarregado, Comitê de Privacidade e
+regulamento de compartilhamento com inventário de bases, hipóteses e prazos (Portarias Normativas
+002/2026, 016/2026 e 018/2026 — [REF-DETRANAM-PORTARIAS-LGPD-2026]); os requisitos desta regra
+(finalidade declarada, trilha, publicidade, controles do art. 8º da PN 018/2026) apontam para
+esses instrumentos.

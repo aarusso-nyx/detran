@@ -4,7 +4,7 @@ title: Bodycam no atendimento a sinistro
 status: reviewed
 apps: [boat, teat]
 sources: [REF-DETRANAM-TALAO-BODYCAM, UC-TEAT-010]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Ator e objetivo
@@ -84,3 +84,6 @@ Mesma ressalva de [UC-TEAT-010]: adoção formal de bodycam como evidência de r
 confirmada como escopo do MVP** — achado local (DETRAN-AM), sem paralelo em norma federal. Este UC
 existe para que a lacuna já identificada pela rodada TEAT ("boat-adjacente, não escrito por regra
 de fronteira") não fique implícita no domínio de sinistro.
+
+**Atualização (2026-09-13, steering.md H.45).** Retenção do BAT e dos campos de saúde decidida
+(5 anos, anonimização ao término); bodycam permanece pendente na CSAD ([RN-TEAT-142]).

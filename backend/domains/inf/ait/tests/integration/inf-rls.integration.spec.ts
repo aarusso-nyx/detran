@@ -19,27 +19,46 @@ describe('inf database contract', () => {
       relforcerowsecurity: boolean;
       policy_count: string;
       trigger_count: string;
+      has_tenant_id: boolean;
     }>(
       `select tables.table_name, classes.relrowsecurity, classes.relforcerowsecurity,
               count(distinct policies.policyname)::text as policy_count,
-              count(distinct triggers.tgname) filter (where not triggers.tgisinternal)::text as trigger_count
+              count(distinct triggers.tgname) filter (where not triggers.tgisinternal)::text as trigger_count,
+              exists (select 1 from information_schema.columns columns
+                       where columns.table_schema = tables.table_schema
+                         and columns.table_name = tables.table_name
+                         and columns.column_name = 'tenant_id') as has_tenant_id
          from information_schema.tables tables
          join pg_namespace namespaces on namespaces.nspname = tables.table_schema
          join pg_class classes on classes.relnamespace = namespaces.oid and classes.relname = tables.table_name
          left join pg_policies policies on policies.schemaname = tables.table_schema and policies.tablename = tables.table_name and policies.policyname = 'tenant_isolation'
          left join pg_trigger triggers on triggers.tgrelid = classes.oid and triggers.tgname = 'enforce_tenant_id'
         where tables.table_schema = 'inf' and tables.table_type = 'BASE TABLE'
-        group by tables.table_name, classes.relrowsecurity, classes.relforcerowsecurity
+        group by tables.table_schema, tables.table_name, classes.relrowsecurity, classes.relforcerowsecurity
         order by tables.table_name`,
     );
-    expect(result.rows.length).toBeGreaterThan(0);
+    // Tenant tables: ait (9), normative (6), measures (9), alcohol (6), rait case/worklist/session (21),
+    // speed (3) — 14-inf-lifecycle-vocabulary.sql adds tenant-less reference tables (`*_ref`),
+    // which must never carry tenant RLS and must be the only unprotected tables in the schema.
+    const tenantTables = result.rows.filter((row) => row.has_tenant_id);
+    const referenceTables = result.rows.filter((row) => !row.has_tenant_id);
+    expect(tenantTables).toHaveLength(52);
+    expect(referenceTables).toHaveLength(9);
     expect(
-      result.rows.every(
+      tenantTables.every(
         (row) =>
           row.relrowsecurity &&
           row.relforcerowsecurity &&
           row.policy_count === '1' &&
           row.trigger_count === '1',
+      ),
+    ).toBe(true);
+    expect(
+      referenceTables.every(
+        (row) =>
+          row.table_name.endsWith('_ref') &&
+          row.policy_count === '0' &&
+          row.trigger_count === '0',
       ),
     ).toBe(true);
   });

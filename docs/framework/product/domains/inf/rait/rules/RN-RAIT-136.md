@@ -3,8 +3,13 @@ id: RN-RAIT-136
 title: Retenção e eliminação do caso RAIT — término do tratamento no encerramento; conservação ancorada no prazo de prescrição quinquenal, não indefinida
 status: draft
 apps: [rait, dashboard]
-sources: [REF-LEI-13709-2018, REF-LEI-9873-1999]
-updated: 2026-08-26
+sources:
+  [
+    REF-LEI-13709-2018,
+    REF-LEI-9873-1999,
+    REF-DETRANAM-PORTARIA-NORMATIVA-015-2026,
+  ]
+updated: 2026-09-13
 ---
 
 **Regra.** Nenhuma norma ou artefato deste corpus define por quanto tempo o RAIT deve conservar um
@@ -62,3 +67,11 @@ judicial posterior ao encerramento — horizonte tipicamente mais longo que 5 an
 brasileiro, e não pesquisado nesta rodada. Precisa de validação jurídica antes de qualquer
 implementação de expurgo automático. Ver `_meta/open-issues.md` (DT-052) e
 `_meta/lgpd-assessment.md` §RAIT.
+
+**Decisão do Owner (2026-09-13, steering.md H.45).** Prazo de retenção do caso encerrado fixado
+em **5 anos após o encerramento**, seguido de anonimização dos dados de terceiros e eliminação
+conforme a listagem de eliminação da Comissão Setorial de Avaliação de Documentos do DETRAN-AM
+([REF-DETRANAM-PORTARIA-NORMATIVA-015-2026]); valor de referência do DETRAN-DF
+([REF-DETRANDF-INSTRUCAO-146-2023-TTD], itens 411/412). Adotado como vigente por decisão do Owner,
+com pedido de Plano de Destinação à CSAD (ofício 03); uma tabela oficial posterior gera nova versão
+do parâmetro.

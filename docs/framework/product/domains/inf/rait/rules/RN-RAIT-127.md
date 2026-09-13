@@ -4,7 +4,7 @@ title: Descontos de 20% e de 40% — condições e a única hipótese em que pag
 status: reviewed
 apps: [portal, rait]
 sources: [REF-CTB-280-290, REF-CONTRAN-918, REF-CONTRAN-931]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 **Regra.** Há **duas** faixas de desconto, com pressupostos e consequências diferentes:
@@ -51,3 +51,7 @@ recente (CTB art. 284 §6º, pós-2023). ⚠️ O **procedimento operacional** p
 de arrecadação com esse desconto fora do SNE continua **indefinido** — a decisão de política foi
 tomada, mas falta desenhar o mecanismo técnico de emissão antes de implementar o cálculo. Ver
 `_meta/steering.md` §"Pontos que a múltipla escolha não fechou".
+
+**Decisão do Owner (2026-09-13, steering.md H.53).** A faixa de 40% **não é oferecida fora do
+SNE** enquanto o órgão não aderir ao SNE ou houver parecer que a autorize (item 6 da consulta
+jurídica única); o termo digital de renúncia (DT-026) fica pronto, desligado por parâmetro.

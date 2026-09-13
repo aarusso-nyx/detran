@@ -11,7 +11,7 @@ sources:
     REF-CONTRAN-931,
     REF-LEI-9784-1999,
   ]
-updated: 2026-08-28
+updated: 2026-09-13
 ---
 
 **Regra.** O recorrente **deve ser informado das decisões** dos recursos de 1ª e de 2ª instância. No
@@ -92,3 +92,8 @@ pontos, também sem parecer jurídico formal:
 **Ponto 3 (prazo aplicável) segue sem resposta** — nem a pergunta original de steering nem a
 rodada de 2026-08-28 o cobriram. O fluxo do recurso vinculado da autoridade em [WF-RAIT-001]
 "Reentrância" ainda não pode ser modelado por completo sem esse ponto.
+
+**Decisão do Owner (2026-09-13, steering.md H.47) — prazo.** O recurso vinculado da autoridade
+centralizada é interposto em **30 dias contados da publicação da decisão da JARI**, por isonomia
+com o art. 288 _caput_ do CTB; parâmetro operacional, revisável quando o DETRAN-AM responder ao
+ofício que pede a confirmação (item 3 do ofício 01).

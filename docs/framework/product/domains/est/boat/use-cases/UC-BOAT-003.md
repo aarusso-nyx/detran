@@ -10,7 +10,7 @@ sources:
     'teat:docs/framework/product/ux-parity/mobile-matrix.json',
     'senatran:docs/framework/contracts/openapi-transactional.yaml',
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Ator e objetivo
@@ -108,3 +108,7 @@ acesso reforçado; registro apto a compor a transmissão nacional ([UC-BOAT-005]
 - [RN-BOAT-001] (gravidade sempre obrigatória)
 - [RN-BOAT-002] (RENAEST exige dados de vítima quando gravidade indica vítima)
 - [RN-BOAT-003] (controle de acesso reforçado, independente da gravidade)
+
+**Atualização (2026-09-13, steering.md H.44, H.45).** Prazos de retenção e hipótese legal
+decididos pelo Owner ([RN-BOAT-123], [RN-BOAT-125]); a restrição de implantação registrada acima
+está atendida — o valor de retenção é 5 anos com anonimização, nunca permanente.

@@ -174,7 +174,7 @@ confidencialidade e autenticidade das informações coletadas"_.
 2. **O cidadão gravado e o autuado não constam do rol de acesso do art. 13.** O rol é fechado em
    Magistrados, MP, Defensoria e autoridades policiais/administrativas em investigação formal. O
    **interessado no processo administrativo de trânsito** — que pode precisar da gravação para
-   instruir defesa ou recurso ([WF-INF-001]) — não é legitimado. O art. 12 remete à LAI, mas vídeo
+   instruir defesa ou recurso ([WF-INF-003]) — não é legitimado. O art. 12 remete à LAI, mas vídeo
    com terceiros identificáveis é justamente hipótese de acesso restrito nela. Tensão real com o
    contraditório e a ampla defesa, não resolvida no texto.
 3. **A LGPD (Lei 13.709/2018) não é mencionada.** A Portaria invoca apenas a LAI, cita "respeito à
