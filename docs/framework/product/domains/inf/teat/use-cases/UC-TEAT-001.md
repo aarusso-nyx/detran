@@ -127,7 +127,7 @@ ativa ([WF-TEAT-002]).
 - **Dado** um AIT lavrado com abordagem e entregue ao condutor no ato
 - **Quando** as três condições cumulativas do regime se verificam
 - **Então** o sistema o marca como valendo por NA ([RN-TEAT-107]) e o registra assim para
-  [WF-INF-001]; faltando qualquer uma delas, a NA é expedida pela retaguarda e o AIT **não** é
+  [WF-INF-003]; faltando qualquer uma delas, a NA é expedida pela retaguarda e o AIT **não** é
   apresentado ao condutor como notificação
 
 **AC-TEAT-001-9 — o número vem da reserva, sempre**

@@ -38,7 +38,7 @@ Mesmas de [UC-TEAT-001]. Enquadramento selecionável deve admitir constatação 
    para colher ciência no ato).
 5. Sistema identifica condutor/proprietário por consulta de veículo, quando possível
    (`AitPerson.identified_by = "consulta_veicular"`), para fins de posterior notificação em
-   [WF-INF-001] — a identificação do condutor no ato, quando possível, é preceito de
+   [WF-INF-003] — a identificação do condutor no ato, quando possível, é preceito de
    [REF-CONTRAN-918] art. 3º §4º.
 
 ## Fluxos alternativos / exceções
@@ -87,7 +87,7 @@ exigido; sem registro de assinatura/recusa do condutor (não aplicável).
 - **Dado** um auto sem abordagem
 - **Quando** ele é finalizado
 - **Então** o sistema não o marca como valendo por Notificação da Autuação ([RN-TEAT-107]) — a NA
-  é expedida pela retaguarda em [WF-INF-001]
+  é expedida pela retaguarda em [WF-INF-003]
 
 ## Regras aplicáveis
 

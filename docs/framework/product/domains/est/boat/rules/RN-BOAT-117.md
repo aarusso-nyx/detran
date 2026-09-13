@@ -42,7 +42,7 @@ a AIT no TEAT — a associação `CrashRecord`↔AIT deixa de ser navegacional e
 
 **Controvérsia/risco.** _Severidade: média — é decisão de produto com efeito jurídico, não decisão
 técnica._ Enquanto a captura permanecer booleana, ocorrem dois efeitos: o auto lavrado a partir do
-registro carece do fato específico que o fundamenta (fragilidade na defesa — [WF-INF-001]), e a
+registro carece do fato específico que o fundamenta (fragilidade na defesa — [WF-INF-003]), e a
 estatística estadual não distingue as três condutas, que a lei distingue expressamente. A decisão de
 refinar o modelo é do BPO/Owner (handoff BPO nº 2 do `_intake/research-dossier.md`); esta regra
 fornece o recorte jurídico que essa decisão precisa respeitar, qualquer que seja o formato adotado.

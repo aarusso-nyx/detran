@@ -36,7 +36,7 @@ ato e torna-se **imutável** assim que seu `manifest_hash` é gerado.
 **Base legal.** **Gap parcialmente fechado.** Não há, ainda, excerto normativo federal específico
 sobre **cadeia de custódia digital de evidências de trânsito**: a mecânica de `CustodyEvent`/
 `ProbativePackage` continua decorrendo da exigência de defensabilidade probatória do
-AIT/medida/sinistro perante defesa e recurso (alimenta [WF-INF-001] e o julgamento no rait).
+AIT/medida/sinistro perante defesa e recurso (alimenta [WF-INF-003] e o julgamento no rait).
 Âncoras normativas parciais agora disponíveis:
 
 - **Integridade e criptografia da evidência em trânsito e em repouso** — [REF-SENATRAN-997] Anexo

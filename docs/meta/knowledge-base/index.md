@@ -8,7 +8,7 @@ dashboard). This in-repository corpus holds the **why and the law** beside the c
 - Cross-domain semantics live in the in-repository
   [glossary](../../framework/glossary/domain.md),
   [actor catalog](../../framework/product/shared/actors.md), and
-  [master workflows](../../framework/product/shared/workflows/WF-INF-001.md).
+  [master workflows](../../framework/product/shared/workflows/WF-INF-003.md).
 - Documentos institucionais (portfólio, casos de uso SENATRAN) em [entregaveis/](../../reference/institutional/README.md).
 - Research steering queue: [backlog.md](./backlog.md).
 

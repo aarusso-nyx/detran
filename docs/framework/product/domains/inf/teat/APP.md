@@ -43,7 +43,7 @@ paralelo ("teat:docs/meta/eng/stynx-boundary.md"):
 | **field-agent** (agente de trânsito)                | lavra o AIT, registra abordagem, coleta evidências (incl. bodycam contínua — ver [UC-TEAT-010]), aplica medida administrativa, conduz procedimento de etilômetro, opera offline |
 | **field-supervisor** (supervisor de campo)          | gerencia turno/equipe/viatura, reserva faixas de numeração, resolve conflitos de sincronização, libera retenção de veículo                                                      |
 | **processing-operator** (operador de processamento) | tramita o AIT após recebimento (validação, solicitação de correção), acompanha medidas administrativas e evidências na retaguarda                                               |
-| **traffic-authority** (autoridade de trânsito)      | aceita/rejeita o AIT, aprova correções, conclui medidas administrativas, encerra procedimento de etilômetro — inicia o ciclo [WF-INF-001]                                       |
+| **traffic-authority** (autoridade de trânsito)      | aceita/rejeita o AIT, aprova correções, conclui medidas administrativas, encerra procedimento de etilômetro — inicia o ciclo [WF-INF-003]                                       |
 | **agency-admin** (administrador do órgão)           | parametriza órgão/unidade/convênio/competência territorial, gerencia homologação de dispositivos e publica catálogo normativo                                                   |
 | **technical-admin** (administrador técnico)         | administra sincronização offline, resolve incidentes técnicos, publica pacote normativo mobile                                                                                  |
 | **auditor** (auditor/corregedor)                    | consulta trilha de auditoria, cadeia de custódia, exportações de dados; não edita                                                                                               |
@@ -236,7 +236,7 @@ tabela acima, mas não deve ser tratado como sazonalmente representativo sem mai
 
 ## Interfaces com outros apps/domínios
 
-AIT finalizado e aceito alimenta [WF-INF-001] (ciclo de vida da infração, retaguarda/rait/
+AIT finalizado e aceito alimenta [WF-INF-003] (ciclo de vida da infração, retaguarda/rait/
 portal); AIT gerado por violação de guarda monitorada (CTB art. 239, [WF-TEAT-004]) entra pelo
 mesmo caminho. Sinistros registrados alimentam [APP-BOAT] e a base nacional RENAEST. Consultas de
 veículo/condutor e envios usam adaptadores de integração auditados para RENAVAM, RENACH,

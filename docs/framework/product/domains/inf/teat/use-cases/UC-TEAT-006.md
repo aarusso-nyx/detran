@@ -40,7 +40,7 @@ approve` → grava `AitCorrection` completa (`operator_user_ref`, `changed_field
    `previous_value`, `new_value`, `justification`, `corrected_at`, `approved_by_user_ref`); AIT
    move para `corrected`; evento `ait.correction-approved`.
 5. Autoridade de trânsito aceita o AIT corrigido — `.../:id/accept` → move para `accepted`,
-   autorizando integração downstream ([WF-INF-001]).
+   autorizando integração downstream ([WF-INF-003]).
 
 ## Fluxos alternativos / exceções
 
@@ -56,7 +56,7 @@ approve` → grava `AitCorrection` completa (`operator_user_ref`, `changed_field
 ## Pós-condições
 
 AIT corrigido com trilha de auditoria completa da alteração, aceito e apto a integrar
-[WF-INF-001]; ou rejeitado com motivo e histórico preservados, sem exclusão do ato original.
+[WF-INF-003]; ou rejeitado com motivo e histórico preservados, sem exclusão do ato original.
 
 ## Critérios de aceitação
 

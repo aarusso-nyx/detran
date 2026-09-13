@@ -76,7 +76,7 @@ Público remetem, por força do art. 23, § 3º, à Lei do Habeas Data, à Lei 9
 **três regimes distintos**, e nenhum deles é o prazo genérico de 15 dias que a LGPD prevê para o
 controlador privado. Qual prazo o DETRAN-AM deve praticar é questão aberta que merece definição
 formal do órgão. (b) O acesso do **próprio autuado ou interessado** ao registro de sinistro que
-instrui um AIT contra ele — necessário ao contraditório ([WF-INF-001]) — colide com a proteção do
+instrui um AIT contra ele — necessário ao contraditório ([WF-INF-003]) — colide com a proteção do
 dado de saúde de **terceiro** (a vítima) contido no mesmo registro. É a mesma tensão já identificada
 para a bodycam (item 43 de `inf/teat/_intake/legal-assessment.md`), aqui agravada por ser dado
 sensível. **Solução de trabalho:** fornecer o registro com **supressão dos campos de saúde de

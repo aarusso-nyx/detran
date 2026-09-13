@@ -36,7 +36,7 @@ docs/
 | Screen inventory | `IU-<APP>-nnn`      | the screens one console needs, mapped to states/UCs, plus cross-cutting UI requirements | 1 per console    |
 | Legal ref        | `REF-<CORPUS>-<id>` | one statute/resolution/portaria: what it mandates for us                                | 1 per instrument |
 
-Cross-references use ids in brackets: `[REF-CTB-282]`, `[WF-INF-001]`, `[RN-RAIT-003]`.
+Cross-references use ids in brackets: `[REF-CTB-282]`, `[WF-INF-003]`, `[RN-RAIT-003]`.
 An id referenced before it exists is a **backlog marker**, not an error — grep for
 unresolved ids to find research debt.
 

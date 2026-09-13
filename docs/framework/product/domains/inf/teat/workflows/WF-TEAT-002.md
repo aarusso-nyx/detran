@@ -69,7 +69,7 @@ stateDiagram-v2
 
 Não há prazo legal aplicável à reserva de numeração em si — é controle técnico interno de TEAT
 para permitir emissão de números de AIT válidos e sem colisão durante operação offline. A
-integridade da numeração é, porém, pressuposto do [WF-INF-001] (o AIT precisa de `ait_number`
+integridade da numeração é, porém, pressuposto do [WF-INF-003] (o AIT precisa de `ait_number`
 válido e não duplicado antes de alimentar o ciclo de infração).
 
 ## Atores por transição

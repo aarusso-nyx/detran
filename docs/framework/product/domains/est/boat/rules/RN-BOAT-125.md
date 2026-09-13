@@ -40,7 +40,7 @@ camadas**, que atende à finalidade sem guardar dado sensível identificado para
    conservado enquanto **durar a obrigação legal** que fundamenta o tratamento ([RN-BOAT-123], base
    art. 11, II, "a"): tempo de validação e consolidação nacional, mais o período em que o registro
    pode ser exigido para instrução de processo administrativo relacionado (AIT vinculado, defesa,
-   recurso — [WF-INF-001]) ou requisição de autoridade. **Esse prazo precisa ser fixado por ato do
+   recurso — [WF-INF-003]) ou requisição de autoridade. **Esse prazo precisa ser fixado por ato do
    órgão**; nenhuma norma o fornece.
 2. **Camada estatística anonimizada** — findo o prazo da camada 1, o registro é **anonimizado** e
    conservado indefinidamente para a finalidade estatística, que é a finalidade permanente do

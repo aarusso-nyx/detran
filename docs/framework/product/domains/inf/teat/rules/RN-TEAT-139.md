@@ -37,7 +37,7 @@ a imagem é elemento **estrutural** do equipamento, não acessório.
 Implementação: quando `forma_de_lavratura` envolver medidor de velocidade ([RN-TEAT-106]), a
 finalização exige **pelo menos uma evidência de imagem** vinculada, com hash e cadeia de custódia
 ([RN-TEAT-002]), classificada como `IMAGEM_PLACA`. A mesma evidência deve compor o pacote
-probatório que instrui a defesa no [WF-INF-001] — sem ela, o órgão perde o litígio por vício
+probatório que instrui a defesa no [WF-INF-003] — sem ela, o órgão perde o litígio por vício
 formal, independentemente do mérito.
 
 **Controvérsia/risco.** A Res. 804/2020 **substituiu integralmente** a redação do art. 9º da Res.

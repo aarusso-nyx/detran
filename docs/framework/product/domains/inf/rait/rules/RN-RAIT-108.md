@@ -40,7 +40,7 @@ autoridade. Seu alcance é o seguinte:
   os recursos.
 
 **Verificação.** Ao admitir o recurso tempestivo, o RAIT publica `RAIT_EFEITO_SUSPENSIVO_INSTAURADO`
-([WF-RAIT-001] §Eventos) — que leva a infração a `EM_RECURSO` em [WF-INF-001] — bloqueando restrições ao
+([WF-RAIT-001] §Eventos) — que marca a infração com `efeito_suspensivo=true` em `RECURSO_1A_INSTANCIA` / `RECURSO_2A_INSTANCIA` ([WF-INF-003]) — bloqueando restrições ao
 sistema de registro de veículo e ao módulo de cobrança; o PORTAL exibe o estado "em recurso — sem
 restrição" com a base legal. O bloqueio só é liberado pelo evento de **encerramento da instância**
 ([RN-RAIT-119]).

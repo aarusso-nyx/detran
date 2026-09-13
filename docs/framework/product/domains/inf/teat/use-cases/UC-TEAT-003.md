@@ -51,7 +51,7 @@ uploaded → validated`.
 ## Pós-condições
 
 Evidência com hash, vínculo e ao menos um evento de custódia registrados; disponível para compor
-pacote probatório quando o ato for questionado em defesa/recurso ([WF-INF-001]).
+pacote probatório quando o ato for questionado em defesa/recurso ([WF-INF-003]).
 
 ## Critérios de aceitação
 
