@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitDocumentDto } from '../dto/create-rait-document.dto.js';
 import { RaitDocumentService } from '../services/rait-document.service.js';
 
-@Controller('v1/inf/raitdocuments')
+@Controller('v1/inf/rait/documents')
 @Resource('inf:rait-document')
 export class RaitDocumentController {
   constructor(private readonly service: RaitDocumentService) {}

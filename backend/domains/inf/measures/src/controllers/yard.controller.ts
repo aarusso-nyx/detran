@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateYardDto } from '../dto/create-yard.dto.js';
 import { YardService } from '../services/yard.service.js';
 
-@Controller('v1/inf/measuresyards')
+@Controller('v1/inf/measures/yards')
 @Resource('inf:yard')
 export class YardController {
   constructor(private readonly service: YardService) {}

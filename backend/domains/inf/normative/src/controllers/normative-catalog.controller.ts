@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateNormativeCatalogDto } from '../dto/create-normative-catalog.dto.js';
 import { NormativeCatalogService } from '../services/normative-catalog.service.js';
 
-@Controller('v1/inf/normativecatalogs')
+@Controller('v1/inf/normative/catalogs')
 @Resource('inf:normative-catalog')
 export class NormativeCatalogController {
   constructor(private readonly service: NormativeCatalogService) {}

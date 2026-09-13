@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAlcoholRefusalDto } from '../dto/create-alcohol-refusal.dto.js';
 import { AlcoholRefusalService } from '../services/alcohol-refusal.service.js';
 
-@Controller('v1/inf/alcoholrefusals')
+@Controller('v1/inf/alcohol/refusals')
 @Resource('inf:alcohol-refusal')
 export class AlcoholRefusalController {
   constructor(private readonly service: AlcoholRefusalService) {}

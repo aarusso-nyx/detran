@@ -6,6 +6,7 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { joinRoute } from '../blueprints/route.mjs';
 
 const root = process.cwd();
 const sourceDir = path.resolve(root, 'docs/framework/blueprints');
@@ -79,7 +80,7 @@ function schemaFor(entity, { create }) {
 }
 
 function documentFor(bp) {
-  const base = String(bp.api?.basePath ?? '/').replace(/\/$/u, '');
+  const base = bp.api?.basePath ?? '/';
   const byEntity = new Map(
     (bp.api?.resources ?? []).map((resource) => [resource.entity, resource]),
   );
@@ -90,7 +91,7 @@ function documentFor(bp) {
     schemas[`Create${entity.name}Dto`] = schemaFor(entity, { create: true });
     const resource = byEntity.get(entity.name);
     if (!resource) continue;
-    const collection = `${base}/${resource.path}`;
+    const collection = joinRoute(base, resource.path);
     const ref = `#/components/schemas/${entity.name}`;
     const createRef = `#/components/schemas/Create${entity.name}Dto`;
     const tag = resource.resource;

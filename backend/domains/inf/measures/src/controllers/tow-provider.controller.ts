@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateTowProviderDto } from '../dto/create-tow-provider.dto.js';
 import { TowProviderService } from '../services/tow-provider.service.js';
 
-@Controller('v1/inf/measurestow-providers')
+@Controller('v1/inf/measures/tow-providers')
 @Resource('inf:tow-provider')
 export class TowProviderController {
   constructor(private readonly service: TowProviderService) {}

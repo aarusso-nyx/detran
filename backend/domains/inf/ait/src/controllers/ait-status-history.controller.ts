@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateAitStatusHistoryDto } from '../dto/create-ait-status-history.dto.js';
 import { AitStatusHistoryService } from '../services/ait-status-history.service.js';
 
-@Controller('v1/inf/aitstatus-history')
+@Controller('v1/inf/ait/status-history')
 @Resource('inf:ait-status-history')
 export class AitStatusHistoryController {
   constructor(private readonly service: AitStatusHistoryService) {}

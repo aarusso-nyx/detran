@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitVoteDto } from '../dto/create-rait-vote.dto.js';
 import { RaitVoteService } from '../services/rait-vote.service.js';
 
-@Controller('v1/inf/raitvotes')
+@Controller('v1/inf/rait/votes')
 @Resource('inf:rait-vote')
 export class RaitVoteController {
   constructor(private readonly service: RaitVoteService) {}

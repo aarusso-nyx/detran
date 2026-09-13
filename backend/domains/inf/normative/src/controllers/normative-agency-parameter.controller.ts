@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateNormativeAgencyParameterDto } from '../dto/create-normative-agency-parameter.dto.js';
 import { NormativeAgencyParameterService } from '../services/normative-agency-parameter.service.js';
 
-@Controller('v1/inf/normativeagency-parameters')
+@Controller('v1/inf/normative/agency-parameters')
 @Resource('inf:agency-parameter')
 export class NormativeAgencyParameterController {
   constructor(private readonly service: NormativeAgencyParameterService) {}

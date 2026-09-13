@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateNormativeValidationRuleDto } from '../dto/create-normative-validation-rule.dto.js';
 import { NormativeValidationRuleService } from '../services/normative-validation-rule.service.js';
 
-@Controller('v1/inf/normativevalidation-rules')
+@Controller('v1/inf/normative/validation-rules')
 @Resource('inf:validation-rule')
 export class NormativeValidationRuleController {
   constructor(private readonly service: NormativeValidationRuleService) {}

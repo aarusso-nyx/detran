@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { joinRoute } from './route.mjs';
 
 const root = process.cwd();
 const sourceDir = path.resolve(
@@ -186,12 +187,10 @@ function controller(bp, sha, entity, module) {
     (resource) => resource.entity === entity.name,
   );
   const resource = `${module.namespace}:${api?.resource ?? kebab(entity.name)}`;
-  const route = `${String(bp.api?.basePath ?? '')
-    .replace(/^\//u, '')
-    .replace(/\/$/u, '')}${api?.path ?? `/${kebab(entity.name)}`}`.replace(
-    /^\//u,
-    '',
-  );
+  const route = joinRoute(
+    bp.api?.basePath ?? '',
+    api?.path ?? kebab(entity.name),
+  ).replace(/^\//u, '');
   return `${header(bp, sha)}\nimport { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';\nimport { Action, Audit, Resource } from '@detran/shared';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\nimport { ${entity.name}Service } from '../services/${kebab(entity.name)}.service.js';\n\n@Controller('${route}')\n@Resource('${resource}')\nexport class ${entity.name}Controller {\n  constructor(private readonly service: ${entity.name}Service) {}\n  @Get() @Action('read') list() { return this.service.findAll(); }\n  @Get(':id') @Action('read') get(@Param('id') id: string) { return this.service.findOne(id); }\n  @Post() @Action('create') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_CREATE', entity: '${module.namespace}.${entity.table}' }) create(@Body() dto: Create${entity.name}Dto) { return this.service.create(dto); }\n  @Patch(':id') @Action('update') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_UPDATE', entity: '${module.namespace}.${entity.table}' }) update(@Param('id') id: string, @Body() dto: Partial<Create${entity.name}Dto>) { return this.service.update(id, dto); }\n  @Delete(':id') @Action('delete') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_DELETE', entity: '${module.namespace}.${entity.table}' }) remove(@Param('id') id: string) { return this.service.remove(id); }\n}`;
 }
 function moduleFile(bp, sha, module, entities) {

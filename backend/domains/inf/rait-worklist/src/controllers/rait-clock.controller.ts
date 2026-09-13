@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitClockDto } from '../dto/create-rait-clock.dto.js';
 import { RaitClockService } from '../services/rait-clock.service.js';
 
-@Controller('v1/inf/raitclocks')
+@Controller('v1/inf/rait/clocks')
 @Resource('inf:rait-clock')
 export class RaitClockController {
   constructor(private readonly service: RaitClockService) {}

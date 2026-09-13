@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateVehicleInventoryDto } from '../dto/create-vehicle-inventory.dto.js';
 import { VehicleInventoryService } from '../services/vehicle-inventory.service.js';
 
-@Controller('v1/inf/measuresvehicle-inventories')
+@Controller('v1/inf/measures/vehicle-inventories')
 @Resource('inf:vehicle-inventory')
 export class VehicleInventoryController {
   constructor(private readonly service: VehicleInventoryService) {}

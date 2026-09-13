@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreatePsychomotorSignDto } from '../dto/create-psychomotor-sign.dto.js';
 import { PsychomotorSignService } from '../services/psychomotor-sign.service.js';
 
-@Controller('v1/inf/alcoholpsychomotor-signs')
+@Controller('v1/inf/alcohol/psychomotor-signs')
 @Resource('inf:psychomotor-sign')
 export class PsychomotorSignController {
   constructor(private readonly service: PsychomotorSignService) {}

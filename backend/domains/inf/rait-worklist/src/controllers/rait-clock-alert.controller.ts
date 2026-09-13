@@ -12,7 +12,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 import type { CreateRaitClockAlertDto } from '../dto/create-rait-clock-alert.dto.js';
 import { RaitClockAlertService } from '../services/rait-clock-alert.service.js';
 
-@Controller('v1/inf/raitclock-alerts')
+@Controller('v1/inf/rait/clock-alerts')
 @Resource('inf:rait-clock-alert')
 export class RaitClockAlertController {
   constructor(private readonly service: RaitClockAlertService) {}
