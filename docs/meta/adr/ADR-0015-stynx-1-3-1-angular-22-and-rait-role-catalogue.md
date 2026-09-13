@@ -96,3 +96,5 @@ infraction lifecycle vocabulary of `WF-INF-003` existed only in Markdown.
   the canonical fixtures (`rait-fixtures.md`).
 - Reference tables are global (no `tenant_id`), so `verify:rls-ddl` does not
   require RLS on them; they are read-only for `role_app_backend`.
+
+**Migration record.** WP-0 executed on 2026-09-13 on branch `build/stynx-1-3-1` (Owner decision, steering H.41): every `@stynx-nyx/*` pin 1.1.1 → 1.3.1 (14 manifests + blueprint generator), `@detran/ui` to Angular 22.1.6 / ng-packagr 22.1.1 / TypeScript 6.0.3 with peer `>=22.0.0 <23`, `@stynx-nyx/feature-flags` added to the backend app (ADR-0019). Adjustments found are recorded in `docs/framework/arch/wp0-stynx-1-3-1-migration.md` §7.

@@ -3,9 +3,8 @@
 This repository is the DETRAN consolidation monorepo. It is **DEVAI-governed**
 (`@aarusso-nyx/devai@1.4.5`, Constitution 1.0.0 pinned at
 `.devai/pin/constitution.md`; `.devai/` is the governance root) and built on the
-**STYNX** platform (`@stynx-nyx/*` from GitHub Packages; target **1.3.1** with
-Angular 22 per ADR-0015 — workspace pins still resolve 1.1.1 until the ADR-0015
-migration merges). The program is
+**STYNX** platform (`@stynx-nyx/*` **1.3.1** from GitHub Packages, Angular 22,
+per ADR-0015 — migrated in WP-0 on 2026-09-13). The program is
 executed in phases by an orchestrator with worker agents;
 the phase plan and Decisions Ledger live in the orchestrator handoff plan and are
 **binding** — do not re-litigate owner decisions.
@@ -23,8 +22,10 @@ the phase plan and Decisions Ledger live in the orchestrator handoff plan and ar
    before the freeze is relied on; origin repos are archived at parity.
 4. **Gates are law:** never weaken a test to pass; never use `paths`/`paths-ignore`
    on content a required check consumes (an absent required check blocks merges
-   silently); keep the evidence chain (`.devai/state/evidence-chain.json`, tracked)
-   intact — it is hash-chained and CI-verified.
+   silently); keep the evidence chain intact — since DEVAI 1.4.5 the governed chain is
+   `record/proofs/chain.json` with per-round proof lines under `record/proofs/work/`
+   (round `R-0001`); `.devai/state/evidence-chain.json` is the pre-1.4.5 legacy chain,
+   kept tracked and read-only. Both are hash-chained and CI-verified.
 5. **Architecture boundaries:** no app or domain module calls SENATRAN directly —
    everything goes through `packages/senatran-adapter` (ADR-0003). Backend domain
    modules are workspace packages with explicit deps — no deep relative imports
