@@ -397,3 +397,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       comandos, entidades de auditoria do `ops`, política × rotas — corrigir antes de gerar clientes (added 2026-09-13)
 - [ ] **Reconciliar `use-cases/INDEX.md` do TEAT** (status dos UCs e ausência do UC-TEAT-013) e a contagem
       de regras (49 × 50) em `APP.md` (added 2026-09-13)
+- [x] **Pacote PORTAL (2026-09-13)**: `portal-frontends.md`, `portal-route-contract.md`, `portal-error-catalog.md`,
+      `portal-build-pack.md` (WP-P0…P6; 13 questões OD-P01…P13)
+- [ ] **Reconciliar `use-cases/INDEX.md` do PORTAL** (marca todos como `draft`; arquivos são `approved`/`reviewed`)
+      e registrar uma RN dedicada ao ato de adesão ao SNE (UC-PORTAL-007 cita "backlog BPO/LEGAL") (added 2026-09-13)
