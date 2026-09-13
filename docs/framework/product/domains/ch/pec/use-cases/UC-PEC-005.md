@@ -1,6 +1,6 @@
 ---
 id: UC-PEC-005
-title: Registrar decisão da junta (com escalonamento a CETRAN)
+title: Registrar decisão da junta e formalizar recurso ao CETRAN
 status: reviewed
 apps: [pec]
 sources:
@@ -8,43 +8,41 @@ sources:
   - pec:domain/juntas-medical-board/api/src/juntas/dto/register-decision.dto.ts
   - pec:database/ddl/02-pec.sql
   - pec:docs/framework/pec/flows/junta-recursos.md
-updated: 2026-08-26
+updated: 2026-08-31
 ---
 
 ## Ator e objetivo
 
-Junta (ou CETRAN, em caso de recurso) registra o parecer/decisão formal sobre um caso
-submetido, assinado digitalmente. Origem: UCAP-UC-41 ("Registrar Parecer da Junta") e
+Junta Médica ou Psicológica registra o parecer formal sobre o caso; se mantida a inaptidão, o
+candidato pode interpor recurso dirigido ao CETRAN, que designará a Junta Especial descrita em
+[UC-PEC-010]. Origem: UCAP-UC-41 ("Registrar Parecer da Junta") e
 UCAP-UC-42 ("Registrar Recurso e Decisão CETRAN/CONTRANDIFE"). Ver [WF-PEC-002].
 
 ## Pré-condições
 
-- Caso de junta existente em `SUBMITTED` (ou `UNDER_REVIEW`, caminho documentado mas não
-  implementado — ver [WF-PEC-002]).
+- Caso de junta existente em `SUBMITTED` ou `UNDER_REVIEW`, com colegiado designado e composição
+  válida registrada.
 
 ## Fluxo principal
 
-1. Junta (ou CETRAN, ou Gestor DETRAN) analisa o dossiê do caso.
-2. Chama `POST /juntas/:id/decision` com `decision` (`APROVADA` | `NEGADA` |
-   `SOLICITAR_COMPLEMENTO`) e, opcionalmente, `escalateToCetran=true`.
-3. Sistema assina o parecer (PAdES) atribuindo `signerName`/`signerCr` a `'JUNTA'` — ou a
-   `'CETRAN'` se `escalateToCetran=true`.
-4. Caso passa a `status='DECIDED'`.
-5. A flag `escalatedToCetran` é publicada no evento de transmissão ao RENACH.
+1. O colegiado designado analisa o dossiê; cada membro e especialidade estão vinculados ao caso.
+2. Registra decisão fundamentada (`APROVADA`, `NEGADA` ou `SOLICITAR_COMPLEMENTO`) e seu recibo
+   de assinatura PAdES.
+3. `SOLICITAR_COMPLEMENTO` leva a `UNDER_REVIEW`; decisão conclusiva leva a `DECIDED`.
+4. Se a inaptidão permanente for mantida, a comunicação informa o prazo de 30 dias para recurso.
+5. Recurso tempestivo cria ato próprio, passa a `RECURSO_CETRAN_APRESENTADO` e inicia a remessa documental
+   ao CETRAN; nunca altera o signatário da decisão anterior.
 
 ## Fluxos alternativos / exceções
 
-- **Escalonamento a CETRAN**: não é um novo caso — é a mesma linha de decisão com a
-  assinatura reatribuída. Não há, nos documentos capturados, um segundo ato formal de "abrir
-  recurso" com prazo próprio.
-- **`SOLICITAR_COMPLEMENTO`**: a decisão final ainda ocorre (`status='DECIDED'`); não há, no
-  código, um caminho de reabertura automática do caso para acompanhar o complemento
-  solicitado — comportamento operacional pós-complemento não documentado (fonte pendente).
+- Recurso fora do prazo falha fechado e conserva a decisão anterior.
+- `SOLICITAR_COMPLEMENTO` não encerra o caso e não libera o gate do encounter.
 
 ## Pós-condições
 
-- Caso `DECIDED`, com decisão e assinatura persistidas.
-- Gate de encerramento do encounter associado deixa de listar "junta pendente".
+- Caso conclusivamente decidido, com decisão, composição e assinatura persistidas; ou caso em
+  recurso formal, ainda bloqueando o encounter até a decisão final.
+- O gate de encerramento só libera após decisão conclusiva sem recurso pendente.
 
 ## Critérios de aceitação
 

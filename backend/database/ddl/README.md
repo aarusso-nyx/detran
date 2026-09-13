@@ -1,12 +1,13 @@
 # Unified backend DDL
 
-Applied in numeric order by `../apply.sh`:
+Applied in lexical order by `../apply.sh` (every numbered file, `20-rls-policies.sql` last); the domain DDL 30…60 (`inf`, `ch`, `portal`) follow the foundations below:
 
 1. `00-extensions.sql` — pgcrypto, uuid-ossp, citext and PostGIS.
 2. `01-schemas.sql` — shared plus empty `inf`/`est`/`ch`/`ops` domain schemas.
 3. `02-auth.sql` — DETRAN tenants, identities, roles, memberships and sessions.
 4. `03-audit.sql` — partitioned append-only `audit.events`.
-5. `04-integration-storage.sql` — shared outbox and storage metadata foundations.
+5. `04-integration-storage.sql` — shared outbox, durable idempotency/rate-limit
+   stores and storage metadata foundations.
 6. `05-role-catalog.sql` — canonical DETRAN role catalogue (`auth.role_catalog`), seeded
    one-to-one with `backend/domains/shared/src/roles.ts` and enforced on `auth.roles.key`
    (`pnpm verify:role-catalog`).

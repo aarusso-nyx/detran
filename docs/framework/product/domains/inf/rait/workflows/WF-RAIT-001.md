@@ -156,7 +156,7 @@ Ver [WF-RAIT-002] §SLA para a escada de alertas calibrada contra estes três te
 
 Este workflow é a máquina **operacional interna** do RAIT (filas, atores, SLA); [WF-INF-003]
 é a máquina de **estados legais** da infração, cruzando teat/rait/portal (substituiu
-[WF-INF-001] por decisão do Owner em 2026-09-12 — ADR-0012). Cada caso RAIT corresponde a um
+[WF-INF-001] por decisão do Owner em 2026-09-12 — ADR-0014). Cada caso RAIT corresponde a um
 estado de fase da infração; os eventos desta máquina (§Eventos) são os gatilhos das transições
 de [WF-INF-003] §2.
 
@@ -220,6 +220,6 @@ Consumidos por PORTAL, DASHBOARD e pelo ciclo de vida da infração ([WF-INF-003
 - **2026-08-24** — Owner, em conversa de steering (`_meta/steering.md` A.7, C.20): T-DIL
   fixado em 15 dias úteis prorrogável 1x; suspensão de prazo só por ato motivado e auditado
   enquanto o regulamento CONTRAN de força maior não for localizado. Ver seções acima.
-- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0012). §Ponte reescrita
+- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0014). §Ponte reescrita
   contra o novo vocabulário; consumidores dos eventos e o mapeamento de `EM_RECURSO` atualizados.
   Sem alteração nos estados, transições ou prazos deste workflow.

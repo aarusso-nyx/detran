@@ -1,7 +1,7 @@
 # Portão de implementação — pontos de atenção e decisões abertas (2026-09-13)
 
 Consolidação de tudo o que a rodada de definições de 2026-09-12/13 levantou nas cinco superfícies
-(RAIT, TEAT, PORTAL, BOAT, DASHBOARD), no substrato (WP-0) e nas fronteiras (ADR-0013…0018).
+(RAIT, TEAT, PORTAL, BOAT, DASHBOARD), no substrato (WP-0) e nas fronteiras (ADR-0015…0020).
 Cada item aponta o documento onde está detalhado. A seção 1 é a lista curta: o que precisa de
 resposta **antes** de a orquestra começar. As demais seções são o inventário completo, por
 superfície, separando o que bloqueia de início, o que bloqueia um pacote específico e o que já
@@ -119,10 +119,10 @@ mais caro; os itens 4 a 7 travam módulos específicos, não a superfície intei
 | [PREMISSA] | OD-D03 (14.129), OD-D06 (auto-ocultação), OD-D07 (heartbeat), OD-D08 (finalidades N2), OD-D09 (5.000 linhas), OD-D10 (data do IND-202), OD-D11 (comunicação em `CRITICO_EXTINCAO`), OD-D12 (medidores), OD-D13 (recursos da origem mantidos) |
 | Corpus     | [IU-DASH-001] sem códigos de tela nem rotas (ids D-01…D-18 são proposta); README do app com vocabulário antigo; "9 deveres" × "14 linhas"                                                                                                    |
 
-### 4.6 Substrato e fronteiras (ADR-0013…0018, WP-0)
+### 4.6 Substrato e fronteiras (ADR-0015…0020, WP-0)
 
-- ADR-0013 aceita: STYNX 1.3.1 confirmado no registro (todos os símbolos importados existem); a única aresta de quebra é Angular 21 → 22.
-- ADR-0014…0018 aceitas (G.37): agregado da infração e notificação, cobrança e restituição, documentos e assinatura, identidade e ciclo de solicitação do cidadão, projeções. Consequências de engenharia ainda não iniciadas: `BP-INF-INFRACTION-001`, gate `verify:domain-boundaries` (WP-P do RAIT), projeções `portal.*`, `dashboard.*`, `integration.*`.
+- ADR-0015 aceita: STYNX 1.3.1 confirmado no registro (todos os símbolos importados existem); a única aresta de quebra é Angular 21 → 22.
+- ADR-0016…0020 aceitas (G.37): agregado da infração e notificação, cobrança e restituição, documentos e assinatura, identidade e ciclo de solicitação do cidadão, projeções. Consequências de engenharia ainda não iniciadas: `BP-INF-INFRACTION-001`, gate `verify:domain-boundaries` (WP-P do RAIT), projeções `portal.*`, `dashboard.*`, `integration.*`.
 - Fixtures canônicas (`seed.sh`) validadas em banco limpo; `apply.sh` corrigido para incluir os DDL 05, 14 e 34…37.
 - Diagramas (`docs/framework/arch/diagrams/`) fora do prettier por `.prettierignore`.
 

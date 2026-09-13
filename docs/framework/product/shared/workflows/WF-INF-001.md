@@ -24,5 +24,5 @@ preservado no histórico do repositório até este commit.
 
 ## Decisões
 
-- **2026-09-12** — Owner: [WF-INF-003] substitui este artefato. Registro em ADR-0012
+- **2026-09-12** — Owner: [WF-INF-003] substitui este artefato. Registro em ADR-0014
   (`docs/meta/adr/`).

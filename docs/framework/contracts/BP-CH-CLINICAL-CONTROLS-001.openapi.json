@@ -1,0 +1,184 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ClinicalControls — BP-CH-CLINICAL-CONTROLS-001",
+    "version": "1.0.0",
+    "description": "Eventos complementares do atendimento clinico, sempre vinculados ao encounter e com autoria auditavel. A participacao de estagiario nao transfere autoria pericial ou autoridade de assinatura.",
+    "x-blueprint": "BP-CH-CLINICAL-CONTROLS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/clinical-controls/events": {
+      "get": {
+        "tags": ["clinical-control-event"],
+        "operationId": "listClinicalControlEvent",
+        "summary": "List ClinicalControlEvent (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClinicalControlEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/clinical-controls/events/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["clinical-control-event"],
+        "operationId": "getClinicalControlEvent",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClinicalControlEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ClinicalControlEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "medical_exam_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "psychological_exam_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "control_kind": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "OPHTHALMOLOGY",
+              "SLEEP",
+              "DEVOLUTIVE",
+              "SATISFACTION",
+              "INTERN_DOUBLE_VALIDATION"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "default": "'RECORDED'"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'{}'::jsonb"
+          },
+          "recorded_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "encounter_id",
+          "control_kind",
+          "recorded_by",
+          "created_at"
+        ]
+      },
+      "CreateClinicalControlEventDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "medical_exam_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "psychological_exam_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "control_kind": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "OPHTHALMOLOGY",
+              "SLEEP",
+              "DEVOLUTIVE",
+              "SATISFACTION",
+              "INTERN_DOUBLE_VALIDATION"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": ["encounter_id", "control_kind"]
+      }
+    }
+  }
+}

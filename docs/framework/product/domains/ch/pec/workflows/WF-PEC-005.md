@@ -103,20 +103,15 @@ stateDiagram-v2
 | Resultado positivo → suspensão | Órgão executivo de trânsito                              | art. 16 (redação 1.009/2024) — suspensão de 3 meses                                                                                                                        |
 | Levantamento da suspensão      | Condutor (novo exame negativo) ou decurso do prazo       | art. 16                                                                                                                                                                    |
 
-## Pergunta de escopo de produto — o PEC participa da submáquina 2?
+## Submáquina 2 — decisão operacional aprovada
 
-**Não resolvido nesta rodada — recomendação explícita de investigação de produto**
-(`_intake/research-dossier.md` §6). O alerta de vencimento é emitido diretamente pela SENATRAN ao
-condutor (art. 10-B §1º), e a norma não menciona o órgão executivo estadual como intermediário
-nesse fluxo específico — é plausível que o ciclo periódico seja **100% externo ao PEC**
-(SENATRAN ↔ condutor ↔ laboratório, sem passar pela clínica credenciada nem pelo DETRAN-AM como
-sistema). Também é plausível que o resultado (positivo/negativo) chegue ao DETRAN-AM via RENACH e
-precise ser processado por algum sistema estadual — se esse sistema for o PEC, é um fluxo de
-negócio inteiro ausente de todo UC-PEC existente (nenhum encounter, nenhum papel do PEC hoje
-recebe ou processa esse evento). **Decisão do Owner necessária**: (a) tratar como inteiramente
-fora do escopo do PEC, apenas documentado aqui por completude legal; ou (b) abrir investigação de
-integração para confirmar se o RENACH publica esse evento a sistemas estaduais e, se sim,
-desenhar o UC de recepção (ver [UC-PEC-012], nova, com status `stub` até esta decisão).
+O Owner aprovou em 2026-08-31 a participação do PEC como consumidor estadual do resultado. O
+RENACH publica o evento pela fronteira SENATRAN; o PEC autentica e deduplica a recepção, associa
+o CPF a um condutor, registra um resultado periódico próprio e aplica a suspensão de três meses
+quando positivo. Resultado negativo posterior ou transição de expiração com fonte libera a
+suspensão sem alterar o resultado original. Evento inválido, vencido, de categoria diversa de
+C/D/E ou sem correspondência entra em exceção auditável. O PEC não cria encounter para esse
+fluxo, não chama laboratório e não assume o alerta ao condutor, que continua sendo da SENATRAN.
 
 ## Prazos e timers (base legal por prazo)
 

@@ -27,11 +27,14 @@ if [[ "$FULL" = 1 ]]; then
   "${PSQL[@]}" -d postgres -c "create database \"$DB\""
 fi
 
-DDL=(00-extensions 01-schemas 02-auth 03-audit 04-integration-storage \
-     05-role-catalog 10-postgis-functions 11-auth-functions 12-audit-functions \
-     13-ops-field-operations 14-inf-lifecycle-vocabulary 30-inf-normative 31-inf-ait \
-     32-inf-measures 33-inf-alcohol 34-inf-rait-case 35-inf-rait-worklist \
-     36-inf-rait-session 37-inf-speed 20-rls-policies)
+# Apply every numbered migration in lexical order, with the global policy/grant
+# pass deliberately last so new tenant tables cannot be omitted from a reset.
+DDL=()
+while IFS= read -r ddl_path; do
+  name="$(basename "$ddl_path" .sql)"
+  [[ "$name" = "20-rls-policies" ]] || DDL+=("$name")
+done < <(find "$DIR/ddl" -maxdepth 1 -type f -name '*.sql' | sort)
+DDL+=(20-rls-policies)
 for name in "${DDL[@]}"; do
   echo "ddl/$name.sql"
   "${PSQL[@]}" -d "$DB" -f "$DIR/ddl/$name.sql" >/dev/null

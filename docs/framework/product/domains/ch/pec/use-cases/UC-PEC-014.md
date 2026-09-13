@@ -85,6 +85,13 @@ item de validação jurídica prioritária nº 3 do dossiê.
 - **Então** existe trilha da própria eliminação, distinta da trilha de uso, resguardando
   intimidade e sigilo (art. 6º §3º)
 
+Interpretação do Owner (2026-09-01): para esta rodada, o critério é aceito pela prova executável
+negativa de que uma proposta de eliminação persiste uma disposição própria com estado bloqueado
+e não emite comando SQL de exclusão. A futura eliminação real continua desabilitada até um
+provedor PAdES-LTA real
+demonstrar preservação; quando habilitada, deverá produzir a trilha positiva distinta exigida
+acima. Esta aceitação não afirma que uma eliminação real já ocorreu.
+
 **AC-PEC-014-4 — DPO aprova o lote**
 
 - **Dado** uma eliminação em lote

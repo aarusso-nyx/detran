@@ -4,7 +4,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { joinRoute } from './route.mjs';
 
 const root = process.cwd();
 const sourceDir = path.resolve(
@@ -125,6 +124,7 @@ function tableSql(module, entity) {
 function dto(bp, sha, entity) {
   const fields = entity.fields.filter(
     (f) =>
+      f.writable !== false &&
       !['id', 'tenant_id', 'created_at', 'updated_at', 'deleted_at'].includes(
         f.name,
       ),
@@ -147,6 +147,7 @@ function repository(bp, sha, entity, module) {
   const writable = entity.fields
     .filter(
       (field) =>
+        field.writable !== false &&
         !['id', 'tenant_id', 'created_at', 'updated_at', 'deleted_at'].includes(
           field.name,
         ),
@@ -155,9 +156,9 @@ function repository(bp, sha, entity, module) {
     .join(', ');
   return [
     header(bp, sha),
-    `import { NotFoundException } from '@nestjs/common';`,
-    `import type { RequestContext } from '@stynx-nyx/core';`,
-    `import type { Database, Transaction } from '@stynx-nyx/data';`,
+    `import { Injectable, NotFoundException } from '@nestjs/common';`,
+    `import { RequestContext } from '@stynx-nyx/core';`,
+    `import { Database, type Transaction } from '@stynx-nyx/data';`,
     `import { withTenantContext } from '@detran/shared';`,
     `import type { ${dtoName} } from '../dto/create-${kebab(entity.name)}.dto.js';`,
     `import type { ${entity.name} } from '../entities/${kebab(entity.name)}.entity.js';`,
@@ -166,8 +167,9 @@ function repository(bp, sha, entity, module) {
     `const WRITABLE_FIELDS = new Set<string>([${writable}]);`,
     '',
     '/** SQL-only repository. Tenant identity is injected by the kernel trigger. */',
+    '@Injectable()',
     `export class ${name} {`,
-    `  constructor(private readonly database: Pick<Database, 'tx'>, private readonly requestContext: Pick<RequestContext, 'hasActiveContext' | 'snapshot'>) {}`,
+    `  constructor(private readonly database: Database, private readonly requestContext: RequestContext) {}`,
     `  transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> { return withTenantContext(this.database, this.requestContext, work); }`,
     `  findAll(transaction?: Transaction): Promise<${entity.name}[]> { return this.execute(transaction, async (tx) => (await tx.query<${entity.name} & Record<string, unknown>>('select * from ${module.namespace}.${entity.table} order by created_at desc limit 500')).rows); }`,
     `  async findOne(id: string, transaction?: Transaction): Promise<${entity.name}> { const result = await this.execute(transaction, (tx) => tx.query<${entity.name} & Record<string, unknown>>('select * from ${module.namespace}.${entity.table} where id = $1 limit 1', [id])); const row = result.rows[0]; if (!row) throw new NotFoundException('${entity.name} ' + id + ' not found'); return row; }`,
@@ -186,15 +188,60 @@ function controller(bp, sha, entity, module) {
   const api = (bp.api?.resources ?? []).find(
     (resource) => resource.entity === entity.name,
   );
+  const operations = new Set(
+    api?.operations ?? ['list', 'get', 'create', 'update', 'delete'],
+  );
   const resource = `${module.namespace}:${api?.resource ?? kebab(entity.name)}`;
-  const route = joinRoute(
-    bp.api?.basePath ?? '',
-    api?.path ?? kebab(entity.name),
-  ).replace(/^\//u, '');
-  return `${header(bp, sha)}\nimport { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';\nimport { Action, Audit, Resource } from '@detran/shared';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\nimport { ${entity.name}Service } from '../services/${kebab(entity.name)}.service.js';\n\n@Controller('${route}')\n@Resource('${resource}')\nexport class ${entity.name}Controller {\n  constructor(private readonly service: ${entity.name}Service) {}\n  @Get() @Action('read') list() { return this.service.findAll(); }\n  @Get(':id') @Action('read') get(@Param('id') id: string) { return this.service.findOne(id); }\n  @Post() @Action('create') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_CREATE', entity: '${module.namespace}.${entity.table}' }) create(@Body() dto: Create${entity.name}Dto) { return this.service.create(dto); }\n  @Patch(':id') @Action('update') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_UPDATE', entity: '${module.namespace}.${entity.table}' }) update(@Param('id') id: string, @Body() dto: Partial<Create${entity.name}Dto>) { return this.service.update(id, dto); }\n  @Delete(':id') @Action('delete') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_DELETE', entity: '${module.namespace}.${entity.table}' }) remove(@Param('id') id: string) { return this.service.remove(id); }\n}`;
+  const route = [
+    String(bp.api?.basePath ?? '')
+      .replace(/^\//u, '')
+      .replace(/\/$/u, ''),
+    String(api?.path ?? kebab(entity.name)).replace(/^\//u, ''),
+  ]
+    .filter(Boolean)
+    .join('/');
+  const methods = [
+    operations.has('list')
+      ? `  @Get() @Action('read') list() { return this.service.findAll(); }`
+      : '',
+    operations.has('get')
+      ? `  @Get(':id') @Action('read') get(@Param('id') id: string) { return this.service.findOne(id); }`
+      : '',
+    operations.has('create')
+      ? `  @Post() @Action('create') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_CREATE', entity: '${module.namespace}.${entity.table}' }) create(@Body() dto: Create${entity.name}Dto) { return this.service.create(dto); }`
+      : '',
+    operations.has('update')
+      ? `  @Patch(':id') @Action('update') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_UPDATE', entity: '${module.namespace}.${entity.table}' }) update(@Param('id') id: string, @Body() dto: Partial<Create${entity.name}Dto>) { return this.service.update(id, dto); }`
+      : '',
+    operations.has('delete')
+      ? `  @Delete(':id') @Action('delete') @Audit({ action: '${module.namespace.toUpperCase()}_${entity.table.toUpperCase()}_DELETE', entity: '${module.namespace}.${entity.table}' }) remove(@Param('id') id: string) { return this.service.remove(id); }`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+  return `${header(bp, sha)}\nimport { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';\nimport { Action, Audit, Resource } from '@detran/shared';\nimport type { Create${entity.name}Dto } from '../dto/create-${kebab(entity.name)}.dto.js';\nimport { ${entity.name}Service } from '../services/${kebab(entity.name)}.service.js';\n\n@Controller('${route}')\n@Resource('${resource}')\nexport class ${entity.name}Controller {\n  constructor(private readonly service: ${entity.name}Service) {}\n${methods}\n}`;
 }
 function moduleFile(bp, sha, module, entities) {
-  return `${header(bp, sha)}\nimport { Module } from '@nestjs/common';\n${entities.map((e) => `import { ${e.name}Controller } from './controllers/${kebab(e.name)}.controller.js';\nimport { ${e.name}Service } from './services/${kebab(e.name)}.service.js';\nimport { ${e.name}Repository } from './repositories/${kebab(e.name)}.repository.js';`).join('\n')}\n\n@Module({ controllers: [${entities.map((e) => `${e.name}Controller`).join(', ')}], providers: [${entities.flatMap((e) => [`${e.name}Service`, `${e.name}Repository`]).join(', ')}] })\nexport class ${pascal(module.name)}Module {}`;
+  const handwrittenControllers = module.handwrittenControllers ?? [];
+  const handwrittenProviders = module.handwrittenProviders ?? [];
+  const handwrittenImports = [
+    ...handwrittenControllers,
+    ...handwrittenProviders,
+  ]
+    .map(({ target, symbol }) => `import { ${symbol} } from './${target}.js';`)
+    .join('\n');
+  const controllers = [
+    ...entities.map((entity) => `${entity.name}Controller`),
+    ...handwrittenControllers.map(({ symbol }) => symbol),
+  ];
+  const providers = [
+    ...entities.flatMap((entity) => [
+      `${entity.name}Service`,
+      `${entity.name}Repository`,
+    ]),
+    ...handwrittenProviders.map(({ symbol }) => symbol),
+  ];
+  return `${header(bp, sha)}\nimport { Module } from '@nestjs/common';\n${entities.map((e) => `import { ${e.name}Controller } from './controllers/${kebab(e.name)}.controller.js';\nimport { ${e.name}Service } from './services/${kebab(e.name)}.service.js';\nimport { ${e.name}Repository } from './repositories/${kebab(e.name)}.repository.js';`).join('\n')}\n${handwrittenImports}\n\n@Module({ controllers: [${controllers.join(', ')}], providers: [${providers.join(', ')}] })\nexport class ${pascal(module.name)}Module {}`;
 }
 function packageFiles(bp, sha, module, entities) {
   const base = `backend/domains/${module.namespace}/${kebab(module.name)}`;

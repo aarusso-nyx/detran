@@ -66,6 +66,14 @@ export interface DriverProcess {
   openingResult?: 'OPENED' | 'ALREADY_OPEN';
 }
 
+export interface RenachExamEligibility {
+  renachNumber: string;
+  processType?: DriverProcessType;
+  medicalEligible: boolean;
+  psychologicalRequired: boolean;
+  reasons: string[];
+}
+
 export interface DriverLicenseValidationInput {
   cpf: string;
   licenseNumber: string;
@@ -75,6 +83,71 @@ export interface DriverLicenseValidationInput {
 export interface DriverLicenseValidation {
   valid: true;
   driver: DriverRecord;
+}
+
+export type RenachMedicalResult =
+  'APTO' | 'APTO_COM_RESTRICOES' | 'INAPTO_TEMPORARIO' | 'INAPTO';
+
+export type RenachPsychologicalResult = Exclude<
+  RenachMedicalResult,
+  'APTO_COM_RESTRICOES'
+>;
+
+export interface RenachExaminerIdentity {
+  cpf: string;
+  councilNumber: string;
+  state: string;
+}
+
+export interface RenachClinicIdentity {
+  code: string;
+  cnpj: string;
+}
+
+export interface RenachDigitalSignature {
+  hash: string;
+  signedAt: string;
+}
+
+export interface SubmitMedicalExamInput {
+  renachNumber: string;
+  appointmentId: string;
+  clinic: RenachClinicIdentity;
+  examiner: RenachExaminerIdentity;
+  driver: { cpf: string; name: string; birthDate: string };
+  process: {
+    type: DriverProcessType;
+    currentCategory?: string;
+    requestedCategory?: string;
+  };
+  performedAt: string;
+  result: RenachMedicalResult;
+  validUntil?: string;
+  restrictions?: Array<{ code: string; description?: string }>;
+  signature: RenachDigitalSignature;
+}
+
+export interface SubmitPsychologicalEvaluationInput {
+  renachNumber: string;
+  appointmentId: string;
+  clinic: RenachClinicIdentity;
+  examiner: RenachExaminerIdentity;
+  performedAt: string;
+  result: RenachPsychologicalResult;
+  validUntil?: string;
+  signature: RenachDigitalSignature;
+}
+
+export interface RenachExamReceipt {
+  protocol?: string;
+  examId?: string;
+  renachNumber?: string;
+  status?: string;
+  result?: RenachMedicalResult | 'ENCAMINHADO_JUNTA' | 'PENDENTE';
+  examType?: string;
+  performedAt?: string;
+  validUntil?: string;
+  restrictions?: Array<{ code?: string; description?: string }>;
 }
 
 export interface TrafficViolationInput {

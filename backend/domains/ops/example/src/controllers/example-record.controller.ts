@@ -22,25 +22,4 @@ export class ExampleRecordController {
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
   }
-  @Post()
-  @Action('create')
-  @Audit({ action: 'OPS_EXAMPLE_RECORD_CREATE', entity: 'ops.example_record' })
-  create(@Body() dto: CreateExampleRecordDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({ action: 'OPS_EXAMPLE_RECORD_UPDATE', entity: 'ops.example_record' })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateExampleRecordDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({ action: 'OPS_EXAMPLE_RECORD_DELETE', entity: 'ops.example_record' })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
-  }
 }

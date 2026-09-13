@@ -6,7 +6,7 @@ apps: [rait, teat, portal, dashboard, pec]
 updated: 2026-09-13
 ---
 
-# WP-0 — Migração do substrato (ADR-0013)
+# WP-0 — Migração do substrato (ADR-0015)
 
 **Executado em 2026-09-13** (branch `build/stynx-1-3-1`; `pnpm check` verde antes e depois; ver §7).
 
@@ -23,7 +23,7 @@ frontend precisarem de ajustes independentes (backend primeiro).
 | `ng-packagr` no workspace STYNX                               | **22.1.1**; `typescript` **6.0.3**; `vitest` **^4**; `jsdom` **^29**                                                                                                                                                                                        |
 | Peer NestJS dos pacotes backend                               | `@nestjs/common                                                                                                                                                                                                                                             | core ^11.1.19`(aqui:`^11.1.28`) — sem salto de major |
 | DEVAI pinado pelo workspace STYNX 1.3.1                       | `@aarusso-nyx/devai` **1.4.5** — igual ao daqui; nada muda                                                                                                                                                                                                  |
-| Símbolos importados pelo repositório                          | todos presentes nas typings 1.3.1 (lista em ADR-0013)                                                                                                                                                                                                       |
+| Símbolos importados pelo repositório                          | todos presentes nas typings 1.3.1 (lista em ADR-0015)                                                                                                                                                                                                       |
 | Mudanças adopter-visíveis (STYNX `packages-web/MIGRATING.md`) | APF/`ng-packagr` e subpath `./testing`; catálogos i18n ICU por pacote (`ui.*`, `auth.*`, `tenancy.*`, `i18n.*`) a **mesclar** no catálogo do app; `provideStynxDefaults` como entrada preferida; estado por signals (adapters observáveis são transitórios) |
 | Angular 22 — mudanças específicas                             | **não verificadas nesta rodada**: consultar `https://angular.dev/update-guide` (21→22) no passo 4 e registrar aqui                                                                                                                                          |
 
@@ -73,7 +73,7 @@ frontend precisarem de ajustes independentes (backend primeiro).
 
 - `AGENTS.md`, `README.md`, `CLAUDE.md`, `docs/start/index.md`, `packages/ui/README.md`,
   `apps/rait/web/README.md`: remover a ressalva "pins em 1.1.1 até WP-0" e "Angular 21".
-- ADR-0013 §Consequences: acrescentar "migrado em <data>, PR #n".
+- ADR-0015 §Consequences: acrescentar "migrado em <data>, PR #n".
 
 ## 5. Verificação final
 

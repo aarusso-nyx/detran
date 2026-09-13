@@ -67,7 +67,7 @@ dois níveis coexistem por decisão do Owner, nenhum substitui o outro.
 Dez papéis de RBAC do RAIT, extraídos de [WF-RAIT-004] (organização e distribuição do trabalho) e
 da especificação do frontend (`docs/framework/arch/rait-web-frontend.md` §3), adotados pelo Owner
 em 2026-09-12 e registrados no catálogo canônico (`backend/domains/shared/src/roles.ts`,
-`backend/database/ddl/05-role-catalog.sql`; ADR-0013). Refinam as linhas agregadas acima
+`backend/database/ddl/05-role-catalog.sql`; ADR-0015). Refinam as linhas agregadas acima
 ("Analista / Revisor", "Autoridade de trânsito", "JARI", "CETRAN") sem substituí-las. Um mesmo
 servidor pode acumular papéis (união, ADR-0005). Os papéis transversais já existentes
 (`auditor`, `agency-admin`, `integration-operator`, `DPO`) continuam valendo no RAIT.

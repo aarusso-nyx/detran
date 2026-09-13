@@ -1,0 +1,201 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Telehealth — BP-CH-TELEHEALTH-001",
+    "version": "1.0.0",
+    "description": "Sessoes de telessaude com LFD obrigatorio por etapa. Persiste referencia externa opaca, nunca URL tokenizada ou credencial de acesso.",
+    "x-blueprint": "BP-CH-TELEHEALTH-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/telehealth/sessions": {
+      "get": {
+        "tags": ["telehealth-session"],
+        "operationId": "listTelehealthSession",
+        "summary": "List TelehealthSession (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TelehealthSession"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/telehealth/sessions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["telehealth-session"],
+        "operationId": "getTelehealthSession",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelehealthSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TelehealthSession": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "provider": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "external_session_id": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "lfd_required": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "lfd_passed": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["STARTED", "COMPLETED", "CANCELLED"],
+            "default": "'STARTED'"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "conclusion": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'{}'::jsonb"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "encounter_id",
+          "professional_id",
+          "provider",
+          "external_session_id",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateTelehealthSessionDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "provider": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "external_session_id": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "lfd_required": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "conclusion": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": [
+          "encounter_id",
+          "professional_id",
+          "provider",
+          "external_session_id"
+        ]
+      }
+    }
+  }
+}

@@ -75,7 +75,7 @@ Colunas: código · status · quando ocorre · `context` · base · comandos/tel
 | Código                      | Status | Quando                                                         | `context`                     | Base                        | Onde                        |
 | --------------------------- | ------ | -------------------------------------------------------------- | ----------------------------- | --------------------------- | --------------------------- |
 | `RAIT.AUTH_REQUIRED`        | 401    | sem principal STYNX                                            | —                             | ADR-0005                    | todas                       |
-| `RAIT.FORBIDDEN_ACTION`     | 403    | `isDetranActionAllowed` falso para `inf:rait-<r>:<a>`          | `resource`, `action`, `roles` | ADR-0005; ADR-0013          | todas                       |
+| `RAIT.FORBIDDEN_ACTION`     | 403    | `isDetranActionAllowed` falso para `inf:rait-<r>:<a>`          | `resource`, `action`, `roles` | ADR-0005; ADR-0015          | todas                       |
 | `RAIT.FORBIDDEN_CASE_SCOPE` | 403    | caso não pertence ao pool/unidade/circunscrição do usuário     | `caseId`, `poolId`, `unitId`  | RN-RAIT-143; WF-RAIT-004 §1 | `/casos/:id`, `/assinatura` |
 | `RAIT.FORBIDDEN_ORGAO`      | 403    | papel de colegiado atuando no órgão errado (`jari` × `cetran`) | `orgao`, `memberBodies`       | RN-RAIT-141                 | `/colegiado/:orgao/*`       |
 | `RAIT.TENANT_MISMATCH`      | 404    | recurso de outro tenant (tratado como inexistente)             | —                             | ADR-0005 (RLS)              | todas                       |

@@ -11,7 +11,7 @@ updated: 2026-09-13
 Índice das definições para construir `backend/domains/dashboard` e `apps/dashboard/web`. Segue
 `rait-build-pack.md` §0 e os manuais de `docs/meta/agents/`. Fontes: [APP-DASHBOARD],
 [WF-DASH-001…003], [UC-DASH-001…008], [RN-DASH-101…173], [JRN-DASH-001…007], [IU-DASH-001];
-`dashboard-frontends.md`, `dashboard-route-contract.md`, `dashboard-error-catalog.md`; ADR-0018
+`dashboard-frontends.md`, `dashboard-route-contract.md`, `dashboard-error-catalog.md`; ADR-0020
 (projeções, gate `verify:domain-boundaries`), `rait-events-sse-contract.md`, `rait-deadline-engine.md`;
 origem: `BP-BI-REPORTING-001`, grupo `bi` da matriz web do TEAT (`UX-WEB-090…093`).
 
@@ -129,7 +129,7 @@ Opus/Terra: WP-D1, WP-D2.
 
 | Entregável | Definições                                                                                           |
 | ---------- | ---------------------------------------------------------------------------------------------------- |
-| A          | WP-D1; ADR-0018; [WF-DASH-001…003]; [APP-DASHBOARD] §Catálogo; origem `BP-BI-REPORTING-001`          |
+| A          | WP-D1; ADR-0020; [WF-DASH-001…003]; [APP-DASHBOARD] §Catálogo; origem `BP-BI-REPORTING-001`          |
 | B          | `dashboard-route-contract.md`; `policy.ts`; `rait-events-sse-contract.md`                            |
 | C          | `dashboard-route-contract.md` §2–§6; `dashboard-error-catalog.md`; contratos de dado por app (WP-D3) |
 | D          | [IU-DASH-001]; `dashboard-frontends.md` §4–§6; [JRN-DASH-001…007]                                    |

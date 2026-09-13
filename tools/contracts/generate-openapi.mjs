@@ -6,7 +6,6 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { joinRoute } from '../blueprints/route.mjs';
 
 const root = process.cwd();
 const sourceDir = path.resolve(root, 'docs/framework/blueprints');
@@ -49,7 +48,9 @@ function schemaFor(entity, { create }) {
   const enums = enumsFrom(entity);
   const generated = ['id', 'tenant_id', 'created_at', 'updated_at'];
   const fields = create
-    ? entity.fields.filter((f) => !generated.includes(f.name))
+    ? entity.fields.filter(
+        (f) => f.writable !== false && !generated.includes(f.name),
+      )
     : [
         ...entity.fields,
         ...(entity.fields.some((f) => f.name === 'created_at')
@@ -80,7 +81,7 @@ function schemaFor(entity, { create }) {
 }
 
 function documentFor(bp) {
-  const base = bp.api?.basePath ?? '/';
+  const base = String(bp.api?.basePath ?? '/').replace(/\/$/u, '');
   const byEntity = new Map(
     (bp.api?.resources ?? []).map((resource) => [resource.entity, resource]),
   );
@@ -91,12 +92,16 @@ function documentFor(bp) {
     schemas[`Create${entity.name}Dto`] = schemaFor(entity, { create: true });
     const resource = byEntity.get(entity.name);
     if (!resource) continue;
-    const collection = joinRoute(base, resource.path);
+    const operations = new Set(
+      resource.operations ?? ['list', 'get', 'create', 'update', 'delete'],
+    );
+    const collection = `${base}/${resource.path}`;
     const ref = `#/components/schemas/${entity.name}`;
     const createRef = `#/components/schemas/Create${entity.name}Dto`;
     const tag = resource.resource;
-    paths[collection] = {
-      get: {
+    const collectionOperations = {};
+    if (operations.has('list'))
+      collectionOperations.get = {
         tags: [tag],
         operationId: `list${entity.name}`,
         summary: `List ${entity.name} (most recent first, capped at 500)`,
@@ -110,8 +115,9 @@ function documentFor(bp) {
             },
           },
         },
-      },
-      post: {
+      };
+    if (operations.has('create'))
+      collectionOperations.post = {
         tags: [tag],
         operationId: `create${entity.name}`,
         requestBody: {
@@ -124,9 +130,10 @@ function documentFor(bp) {
             content: { 'application/json': { schema: { $ref: ref } } },
           },
         },
-      },
-    };
-    paths[`${collection}/{id}`] = {
+      };
+    if (Object.keys(collectionOperations).length)
+      paths[collection] = collectionOperations;
+    const itemOperations = {
       parameters: [
         {
           name: 'id',
@@ -135,7 +142,9 @@ function documentFor(bp) {
           schema: { type: 'string', format: 'uuid' },
         },
       ],
-      get: {
+    };
+    if (operations.has('get'))
+      itemOperations.get = {
         tags: [tag],
         operationId: `get${entity.name}`,
         responses: {
@@ -145,8 +154,9 @@ function documentFor(bp) {
           },
           404: { description: 'not found' },
         },
-      },
-      patch: {
+      };
+    if (operations.has('update'))
+      itemOperations.patch = {
         tags: [tag],
         operationId: `update${entity.name}`,
         requestBody: {
@@ -164,16 +174,18 @@ function documentFor(bp) {
           },
           404: { description: 'not found' },
         },
-      },
-      delete: {
+      };
+    if (operations.has('delete'))
+      itemOperations.delete = {
         tags: [tag],
         operationId: `remove${entity.name}`,
         responses: {
           200: { description: 'deleted' },
           404: { description: 'not found' },
         },
-      },
-    };
+      };
+    if (Object.keys(itemOperations).length > 1)
+      paths[`${collection}/{id}`] = itemOperations;
   }
   return {
     openapi: '3.1.0',

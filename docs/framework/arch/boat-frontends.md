@@ -141,7 +141,7 @@ Web (`apps/teat/web/features/sinistros/shared/`): `CrashStateBadge`, `CrashDetai
 
 Item `crash-record` na fila offline do TEAT (`teat-route-contract.md` §4.3), aplicado
 transacionalmente pelo módulo `est/crash`; evidências pelo protocolo de intenção do TEAT;
-recibos por item; projeções `dashboard.crashes` e `portal.crash_view` (ADR-0018); RENAEST via
+recibos por item; projeções `dashboard.crashes` e `portal.crash_view` (ADR-0020); RENAEST via
 outbox + `RenaestPort` (`submitCrash`, `complementCrash`, `correctCrash`, `getCrashByProtocol`).
 
 ## 10. Dependências de backend

@@ -1,0 +1,880 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Biometrics — BP-CH-BIOMETRICS-001",
+    "version": "1.1.0",
+    "description": "Referencias e validacoes biometricas, condicoes estruturadas por dedo e excecoes com aprovacao independente, prazo e escopo.",
+    "x-blueprint": "BP-CH-BIOMETRICS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/biometrics/references": {
+      "get": {
+        "tags": ["biometric"],
+        "operationId": "listBiometricReference",
+        "summary": "List BiometricReference (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BiometricReference"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/references/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["biometric"],
+        "operationId": "getBiometricReference",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricReference"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/finger-conditions": {
+      "get": {
+        "tags": ["biometric"],
+        "operationId": "listBiometricFingerCondition",
+        "summary": "List BiometricFingerCondition (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BiometricFingerCondition"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/finger-conditions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["biometric"],
+        "operationId": "getBiometricFingerCondition",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricFingerCondition"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/checks": {
+      "get": {
+        "tags": ["biometric"],
+        "operationId": "listBiometricCheck",
+        "summary": "List BiometricCheck (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BiometricCheck"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/checks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["biometric"],
+        "operationId": "getBiometricCheck",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricCheck"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/exceptions": {
+      "get": {
+        "tags": ["biometric-exception"],
+        "operationId": "listBiometricException",
+        "summary": "List BiometricException (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BiometricException"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/biometrics/exceptions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["biometric-exception"],
+        "operationId": "getBiometricException",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BiometricException"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BiometricReference": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["FACE", "FINGERPRINT", "SIGNATURE"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "provider_code": {
+            "type": "string",
+            "maxLength": 80,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "provider_reference": {
+            "type": "string",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "storage_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "quality_score": {
+            "type": "number",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "patient_id",
+          "kind",
+          "provider_code",
+          "provider_reference",
+          "storage_document_id",
+          "sha256",
+          "created_at"
+        ]
+      },
+      "CreateBiometricReferenceDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["FACE", "FINGERPRINT", "SIGNATURE"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "provider_code": {
+            "type": "string",
+            "maxLength": 80,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "provider_reference": {
+            "type": "string",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "storage_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "quality_score": {
+            "type": "number",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          }
+        },
+        "required": [
+          "patient_id",
+          "kind",
+          "provider_code",
+          "provider_reference",
+          "storage_document_id",
+          "sha256"
+        ]
+      },
+      "BiometricFingerCondition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "finger_code": {
+            "type": "string",
+            "maxLength": 8,
+            "enum": [
+              "LT",
+              "LI",
+              "LM",
+              "LR",
+              "LL",
+              "RT",
+              "RI",
+              "RM",
+              "RR",
+              "RL"
+            ],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "condition": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["AVAILABLE", "TEMP_UNAVAILABLE", "PERMANENT_ABSENT"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "recorded_by": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "patient_id",
+          "finger_code",
+          "condition",
+          "recorded_by",
+          "created_at"
+        ]
+      },
+      "CreateBiometricFingerConditionDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "finger_code": {
+            "type": "string",
+            "maxLength": 8,
+            "enum": [
+              "LT",
+              "LI",
+              "LM",
+              "LR",
+              "LL",
+              "RT",
+              "RI",
+              "RM",
+              "RR",
+              "RL"
+            ],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "condition": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["AVAILABLE", "TEMP_UNAVAILABLE", "PERMANENT_ABSENT"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "recorded_by": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          }
+        },
+        "required": ["patient_id", "finger_code", "condition", "recorded_by"]
+      },
+      "BiometricCheck": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "station_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "subject_patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "subject_professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "performed_at": {
+            "type": "string",
+            "format": "date-time",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y",
+            "default": "now()"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["CHECKIN", "MEDICAL", "PSYCH"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "modality": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["FINGERPRINT", "FACE"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "score": {
+            "type": "number",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "lfd_score": {
+            "type": "number",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "passed": {
+            "type": "boolean",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "evidence_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "evidence_sha256": {
+            "type": "string",
+            "maxLength": 64,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "created_by": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "clinic_id",
+          "station_id",
+          "kind",
+          "modality",
+          "passed",
+          "evidence_document_id",
+          "evidence_sha256",
+          "created_by",
+          "created_at"
+        ]
+      },
+      "CreateBiometricCheckDto": {
+        "type": "object",
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "station_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "subject_patient_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "subject_professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["CHECKIN", "MEDICAL", "PSYCH"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "modality": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["FINGERPRINT", "FACE"],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          }
+        },
+        "required": ["clinic_id", "station_id", "kind", "modality"]
+      },
+      "BiometricException": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "station_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "biometric_check_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 24,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "reason": {
+            "type": "string",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "attachment_document_ids": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y",
+            "default": "'[]'::jsonb"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": [
+              "REQUESTED",
+              "APPROVED",
+              "REJECTED",
+              "EXPIRED",
+              "CANCELLED"
+            ],
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y",
+            "default": "'REQUESTED'"
+          },
+          "approved_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "approved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "clinic_id",
+          "station_id",
+          "biometric_check_id",
+          "scope",
+          "requested_by",
+          "reason",
+          "expires_at",
+          "created_at"
+        ]
+      },
+      "CreateBiometricExceptionDto": {
+        "type": "object",
+        "properties": {
+          "appointment_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "clinic_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "station_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "biometric_check_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 24,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "reason": {
+            "type": "string",
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y"
+          },
+          "attachment_document_ids": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "biometric-sensitive",
+            "x-retention": "last-record+20y",
+            "default": "'[]'::jsonb"
+          }
+        },
+        "required": [
+          "clinic_id",
+          "station_id",
+          "biometric_check_id",
+          "scope",
+          "reason"
+        ]
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 -- Vocabulário canônico do ciclo de vida da infração (WF-INF-003, reviewed;
--- ADR-0012) e do catálogo unificado de timers (WF-INF-002 §9). Tabelas de
+-- ADR-0014) e do catálogo unificado de timers (WF-INF-002 §9). Tabelas de
 -- referência globais (sem tenant_id, sem RLS), lidas pelo agregado da infração
 -- (blueprint BP-INF-INFRACTION-001, pendente) e pelos consumidores portal,
 -- dashboard e senatran-adapter. Os blueprints gerados (ADR-0007) referenciam

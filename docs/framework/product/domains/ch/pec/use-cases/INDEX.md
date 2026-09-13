@@ -85,13 +85,13 @@ adendo, encerramento, transmissão RENACH):
 ### UC-PEC-010..014 — extensão BPO (rodada 2026-08-25, `_intake/research-dossier.md`)
 
 Cinco casos de uso novos, motivados por achados da rodada CRAWLER que não tinham cobertura em
-nenhum dos 9 UC originais. Dois são `stub` deliberado, condicionados a decisões do Owner ainda
-em aberto — ver os respectivos workflows para o desenho completo das alternativas.
+nenhum dos 9 UC originais. As decisões do Owner de 2026-08-31 fecharam o desenho da Junta
+Especial e do toxicológico periódico; os respectivos casos são agora contratos revisados.
 
 | id                            | Título                                                                 | Status   | Motivação                                                                                                    | Depende de                                |
 | ----------------------------- | ---------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
-| [UC-PEC-010](./UC-PEC-010.md) | Conduzir recurso à Junta Especial de Saúde (terceira instância)        | draft    | Res. CONTRAN 927/2022 art. 15 — instância recursal técnica não modelada em nada do PEC                       | [WF-PEC-002]                              |
+| [UC-PEC-010](./UC-PEC-010.md) | Conduzir recurso à Junta Especial de Saúde (terceira instância)        | reviewed | Res. CONTRAN 927/2022 art. 15 — colegiado técnico distinto designado pelo CETRAN                             | [WF-PEC-002]                              |
 | [UC-PEC-011](./UC-PEC-011.md) | Registrar resultado "apto com restrições" e emitir código de restrição | draft    | mapeamento de vocabulário de resultado (`CONDICIONADO` vs. rótulos legais) sinalizado como risco pelo dossiê | [RN-PEC-006]                              |
-| [UC-PEC-012](./UC-PEC-012.md) | Monitorar exame toxicológico periódico pós-CNH (2,5 anos)              | **stub** | escopo do PEC não decidido — ver [WF-PEC-005] §"Pergunta de escopo de produto"                               | [WF-PEC-005]                              |
+| [UC-PEC-012](./UC-PEC-012.md) | Processar resultado toxicológico periódico pós-CNH                     | reviewed | evento RENACH autenticado/idempotente, registro próprio e suspensão/liberação sem encounter fictício         | [WF-PEC-005]                              |
 | [UC-PEC-013](./UC-PEC-013.md) | Operar distribuição aleatória e impessoal de exames                    | **stub** | regime de distribuição não decidido — ver [WF-PEC-004] §"Decisão do Owner necessária"                        | [WF-PEC-004]                              |
 | [UC-PEC-014](./UC-PEC-014.md) | Gerenciar retenção e eliminação/devolução do prontuário                | draft    | Lei 13.787/2018 art. 6º (20 anos) — gap total de retenção no corpus PEC                                      | (nova `RN-PEC-1xx`, a produzir por LEGAL) |

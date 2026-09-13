@@ -20,10 +20,13 @@ import type {
   SneEnrollment,
   SneNotification,
   SneNotificationInput,
+  SubmitMedicalExamInput,
+  SubmitPsychologicalEvaluationInput,
   TrafficViolation,
   TrafficViolationInput,
   TrafficViolationRecord,
   VehicleRecord,
+  RenachExamReceipt,
 } from './domain.js';
 import type { ReadComponents, TransactionalComponents } from './wire.js';
 
@@ -40,7 +43,7 @@ const processTypeToWire: Record<
   CATEGORY_ADDITION: 'ADICAO_CATEGORIA',
 };
 
-const processTypeFromWire: Record<
+export const processTypeFromWire: Record<
   Transactional['TipoProcesso'],
   DriverProcessType
 > = {
@@ -157,6 +160,96 @@ export function mapDriverProcess(
           birthDate: wire.condutor.dataNascimento,
         })
       : undefined,
+  });
+}
+
+export function toMedicalExam(
+  input: SubmitMedicalExamInput,
+): Transactional['ExameMedicoRequest'] {
+  return compact({
+    idAgendamento: input.appointmentId,
+    clinica: {
+      codigoClinica: input.clinic.code,
+      cnpj: input.clinic.cnpj,
+    },
+    examinador: {
+      cpf: input.examiner.cpf,
+      conselho: 'CRM',
+      numeroConselho: input.examiner.councilNumber,
+      uf: input.examiner.state,
+    },
+    condutor: {
+      cpf: input.driver.cpf,
+      nome: input.driver.name,
+      dataNascimento: input.driver.birthDate,
+    },
+    processo: {
+      numeroRenach: input.renachNumber,
+      tipoProcesso: processTypeToWire[input.process.type],
+      categoriaAtual: input.process.currentCategory,
+      categoriaPretendida: input.process.requestedCategory,
+    },
+    exame: {
+      dataRealizacao: input.performedAt,
+      resultado: input.result,
+      dataValidade: input.validUntil,
+      restricoes: input.restrictions?.map((restriction) =>
+        compact({
+          codigo: restriction.code,
+          descricao: restriction.description,
+        }),
+      ),
+    },
+    assinaturaDigital: {
+      hash: input.signature.hash,
+      dataAssinatura: input.signature.signedAt,
+    },
+  });
+}
+
+export function toPsychologicalEvaluation(
+  input: SubmitPsychologicalEvaluationInput,
+): Transactional['AvaliacaoPsicologicaRequest'] {
+  return compact({
+    idAgendamento: input.appointmentId,
+    clinica: {
+      codigoClinica: input.clinic.code,
+      cnpj: input.clinic.cnpj,
+    },
+    examinador: {
+      cpf: input.examiner.cpf,
+      conselho: 'CRP',
+      numeroConselho: input.examiner.councilNumber,
+      uf: input.examiner.state,
+    },
+    avaliacao: {
+      dataRealizacao: input.performedAt,
+      resultado: input.result,
+      dataValidade: input.validUntil,
+    },
+    assinaturaDigital: {
+      hash: input.signature.hash,
+      dataAssinatura: input.signature.signedAt,
+    },
+  });
+}
+
+export function mapRenachExam(wire: Transactional['Exame']): RenachExamReceipt {
+  return compact({
+    protocol: wire.protocolo,
+    examId: wire.idExame,
+    renachNumber: wire.numeroRenach,
+    status: wire.situacao,
+    result: wire.resultado,
+    examType: wire.tipoExame,
+    performedAt: wire.dataRealizacao,
+    validUntil: wire.dataValidade,
+    restrictions: wire.restricoes?.map((restriction) =>
+      compact({
+        code: restriction.codigo,
+        description: restriction.descricao,
+      }),
+    ),
   });
 }
 

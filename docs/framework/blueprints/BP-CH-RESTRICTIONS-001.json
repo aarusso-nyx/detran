@@ -1,0 +1,136 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-RESTRICTIONS-001",
+  "module": {
+    "name": "Restrictions",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "47-ch-restrictions.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-clinical-reports": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-exams": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "restriction-lifecycle.service",
+      "restriction-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "restriction-commands.controller",
+        "symbol": "RestrictionCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "restriction-lifecycle.service",
+        "symbol": "RestrictionLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Catalogo versionado do Anexo XV e restricoes aplicadas ao encounter. Nenhum codigo e inventado enquanto o anexo autoritativo estiver ausente."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "RestrictionCode",
+        "table": "restriction_code",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "code", "type": "varchar(32)" },
+          { "name": "legal_label", "type": "varchar(255)" },
+          { "name": "annex_version", "type": "varchar(80)" },
+          { "name": "source_reference", "type": "text" },
+          { "name": "effective_from", "type": "date" },
+          { "name": "effective_to", "type": "date", "nullable": true },
+          { "name": "is_active", "type": "boolean", "default": "true" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_restriction_code_version",
+            "columns": ["tenant_id", "code", "annex_version"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_restriction_code_period",
+            "expression": "effective_to is null or effective_to >= effective_from"
+          }
+        ]
+      },
+      {
+        "name": "EncounterRestriction",
+        "table": "encounter_restriction",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "report_id", "type": "uuid", "nullable": true },
+          { "name": "restriction_code_id", "type": "uuid" },
+          { "name": "prescribed_by", "type": "uuid", "writable": false },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_encounter_restriction",
+            "columns": ["tenant_id", "encounter_id", "restriction_code_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_encounter_restriction_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_encounter_restriction_report",
+            "columns": ["report_id"],
+            "references": { "table": "ch.report", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_encounter_restriction_code",
+            "columns": ["restriction_code_id"],
+            "references": { "table": "ch.restriction_code", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_encounter_restriction_professional",
+            "columns": ["prescribed_by"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/restrictions/",
+    "resources": [
+      {
+        "entity": "RestrictionCode",
+        "path": "codes",
+        "resource": "restriction",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "EncounterRestriction",
+        "path": "applied",
+        "resource": "restriction",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

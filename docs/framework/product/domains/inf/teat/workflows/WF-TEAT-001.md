@@ -143,7 +143,7 @@ concorrência, junto com traffic-authority).
 `ACEITO → INTEGRADO` emite `AIT_INTEGRADO`, que cria a infração em `AIT_LAVRADO` de
 [WF-INF-003] e arma `T-NA` e `T-DEC` (contados do cometimento, não da integração — atraso de
 sincronização consome prazo alheio, [RN-TEAT-119]). Os dois pontos de encaixe propostos na revisão
-de 2026-08-24 foram **adotados** na máquina da infração (Owner, 2026-09-12 — ADR-0012):
+de 2026-08-24 foram **adotados** na máquina da infração (Owner, 2026-09-12 — ADR-0014):
 
 | Este workflow                                                                         | Em [WF-INF-003]                                                                                                                                                             |
 | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -170,6 +170,6 @@ de 2026-08-24 foram **adotados** na máquina da infração (Owner, 2026-09-12 �
 
 ## Decisões
 
-- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0012). §Ponte reescrita
+- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0014). §Ponte reescrita
   contra o novo vocabulário e os encaixes propostos em 2026-08-24 registrados como adotados. Sem
   alteração nos estados, transições ou prazos deste workflow.

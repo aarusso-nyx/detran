@@ -1,4 +1,6 @@
-import { SetMetadata } from '@nestjs/common';
+import { applyDecorators, SetMetadata } from '@nestjs/common';
+import { Idempotent } from '@stynx-nyx/idempotency';
+import { RateLimit } from '@stynx-nyx/ratelimit';
 export { Audit, type AuditMetadata } from '@stynx-nyx/backend';
 
 export const DETRAN_RESOURCE_METADATA_KEY = 'detran:resource';
@@ -11,8 +13,22 @@ export const Resource = (
 ): ClassDecorator & MethodDecorator =>
   SetMetadata(DETRAN_RESOURCE_METADATA_KEY, name);
 
-export const Action = (name: string): MethodDecorator =>
-  SetMetadata(DETRAN_ACTION_METADATA_KEY, name);
+const READ_ACTIONS = new Set(['read', 'list']);
+
+/**
+ * Every declared mutation inherits the shared durable replay and tenant rate
+ * controls. Public callbacks without @Action retain their provider-specific
+ * authentication and receipt deduplication contracts.
+ */
+export const Action = (name: string): MethodDecorator => {
+  const metadata = SetMetadata(DETRAN_ACTION_METADATA_KEY, name);
+  if (READ_ACTIONS.has(name)) return metadata;
+  return applyDecorators(
+    metadata,
+    Idempotent(),
+    RateLimit({ bucket: 'tenant', scope: `detran.${name}` }),
+  );
+};
 
 /** Public routes require their own authentication control (for example HMAC or mTLS). */
 export const Public = (): MethodDecorator & ClassDecorator =>

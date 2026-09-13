@@ -25,9 +25,13 @@ import type {
   OpenDriverProcessInput,
   PaymentQuote,
   PreliminaryDefenseInput,
+  RenachExamReceipt,
+  RenachExamEligibility,
   SneEnrollment,
   SneNotification,
   SneNotificationInput,
+  SubmitMedicalExamInput,
+  SubmitPsychologicalEvaluationInput,
   TrafficViolation,
   TrafficViolationInput,
   TrafficViolationRecord,
@@ -41,7 +45,9 @@ import {
   mapCrashReport,
   mapDriver,
   mapDriverProcess,
+  mapRenachExam,
   mapPaymentQuote,
+  processTypeFromWire,
   mapRecognition,
   mapSneEnrollment,
   mapSneNotification,
@@ -53,6 +59,8 @@ import {
   toCrashCorrection,
   toCrashReport,
   toOpenDriverProcess,
+  toMedicalExam,
+  toPsychologicalEvaluation,
   toPreliminaryDefense,
   toSneNotification,
   toTrafficViolation,
@@ -112,10 +120,22 @@ export interface RenachPort {
     renachNumber: string,
     context?: IntegrationContext,
   ): Promise<DriverProcess>;
+  getExamEligibility(
+    renachNumber: string,
+    context?: IntegrationContext,
+  ): Promise<RenachExamEligibility>;
   openProcess(
     input: OpenDriverProcessInput,
     context?: IntegrationContext,
   ): Promise<DriverProcess>;
+  submitMedicalExam(
+    input: SubmitMedicalExamInput,
+    context?: IntegrationContext,
+  ): Promise<RenachExamReceipt>;
+  submitPsychologicalEvaluation(
+    input: SubmitPsychologicalEvaluationInput,
+    context?: IntegrationContext,
+  ): Promise<RenachExamReceipt>;
 }
 
 export interface RenainfPort {
@@ -420,6 +440,36 @@ class RenachHttpPort implements RenachPort {
     return mapDriverProcess(response);
   }
 
+  async getExamEligibility(
+    renachNumber: string,
+    context?: IntegrationContext,
+  ): Promise<RenachExamEligibility> {
+    const response = await this.client.request<
+      Transactional['ElegibilidadeExameResponse']
+    >(
+      readRequest(
+        'renach',
+        'get-exam-eligibility',
+        `/v1/renach/processos/${segment(renachNumber)}/elegibilidade`,
+      ),
+      context,
+    );
+    if (response.numeroRenach && response.numeroRenach !== renachNumber) {
+      throw new Error(
+        'RENACH eligibility response changed the process identity',
+      );
+    }
+    return {
+      renachNumber,
+      ...(response.tipoProcesso
+        ? { processType: processTypeFromWire[response.tipoProcesso] }
+        : {}),
+      medicalEligible: response.elegivelExameMedico === true,
+      psychologicalRequired: response.exigeAvaliacaoPsicologica === true,
+      reasons: response.motivos ?? [],
+    };
+  }
+
   async openProcess(
     input: OpenDriverProcessInput,
     context?: IntegrationContext,
@@ -448,6 +498,40 @@ class RenachHttpPort implements RenachPort {
       }
       throw error;
     }
+  }
+
+  async submitMedicalExam(
+    input: SubmitMedicalExamInput,
+    context?: IntegrationContext,
+  ): Promise<RenachExamReceipt> {
+    assertExamResult(input.result, true);
+    const response = await this.client.request<Transactional['Exame']>(
+      writeRequest(
+        'renach',
+        'submit-medical-exam',
+        `/v1/renach/processos/${segment(input.renachNumber)}/examesMedicos`,
+        toMedicalExam(input),
+      ),
+      context,
+    );
+    return mapRenachExam(response);
+  }
+
+  async submitPsychologicalEvaluation(
+    input: SubmitPsychologicalEvaluationInput,
+    context?: IntegrationContext,
+  ): Promise<RenachExamReceipt> {
+    assertExamResult(input.result, false);
+    const response = await this.client.request<Transactional['Exame']>(
+      writeRequest(
+        'renach',
+        'submit-psychological-evaluation',
+        `/v1/renach/processos/${segment(input.renachNumber)}/avaliacoesPsicologicas`,
+        toPsychologicalEvaluation(input),
+      ),
+      context,
+    );
+    return mapRenachExam(response);
   }
 }
 
@@ -1176,4 +1260,13 @@ function writeRequest<T>(
 
 function segment(value: string): string {
   return encodeURIComponent(value);
+}
+
+function assertExamResult(result: string, medical: boolean): void {
+  const allowed = medical
+    ? ['APTO', 'APTO_COM_RESTRICOES', 'INAPTO_TEMPORARIO', 'INAPTO']
+    : ['APTO', 'INAPTO_TEMPORARIO', 'INAPTO'];
+  if (!allowed.includes(result)) {
+    throw new Error(`Unsupported RENACH exam result: ${result}`);
+  }
 }
