@@ -153,6 +153,12 @@ correspondentes e a seção "Pontos que a múltipla escolha não fechou" abaixo.
 
 ---
 
+37. Fronteiras dos módulos transversais do escopo de infrações (ADR-0014 infração e
+    notificação; ADR-0015 arrecadação; ADR-0016 documentos e assinatura como substrato;
+    ADR-0017 domínio `portal`; ADR-0018 projeções): aceitar como propostas pelo Architect?
+    **Resposta: todas aceitas (2026-09-13).** Ordem de construção sugerida: 0014 e 0016, depois
+    0015 e 0018, e 0017 por último.
+
 ## Pontos que a múltipla escolha não fechou — precisam de mais uma rodada
 
 - **Item 16**: definido que o recurso da autoridade é _vinculado_, mas falta definir **qual

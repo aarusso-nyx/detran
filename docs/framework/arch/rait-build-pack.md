@@ -169,3 +169,16 @@ de modelagem e guardas de estado).
   documento (Owner/Architect) e só depois pelo código.
 - Toda questão de `open-decisions-rait.md` tocada pelo pacote aparece como parâmetro "pendente de
   fonte" ou como premissa citada no código, nunca como constante silenciosa.
+
+## 5. Fronteiras transversais (ADR-0014…0018, aceitas pelo Owner em 2026-09-13)
+
+| ADR      | Módulo(s) que nascem                                                           | Entra em                   |
+| -------- | ------------------------------------------------------------------------------ | -------------------------- |
+| ADR-0014 | `inf/infraction`, `inf/notification`, `@detran/inf-deadlines`                  | WP-A, WP-B                 |
+| ADR-0015 | `inf/collection` + port bancário mock                                          | WP-A, WP-B                 |
+| ADR-0016 | facade `@detran/shared/documents`, `signature_policy`, templates               | WP-0 (montagem), WP-A      |
+| ADR-0017 | `portal/identity`, `portal/requests`, `portal/inbox`, `portal/citizen-service` | pacote do Portal (a criar) |
+| ADR-0018 | projeções por consumidor + gate `verify:domain-boundaries`                     | WP-P (novo, após WP-B)     |
+
+Com a aceitação, os módulos acima entram no escopo dos pacotes indicados; os blueprints são
+criados pelo Architect-blueprint na ordem ADR-0014 e 0016, depois 0015 e 0018, e 0017 por último.

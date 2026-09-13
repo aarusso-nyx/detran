@@ -28,6 +28,12 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
   catalogue gains the ten-code RAIT family, persisted in `auth.role_catalog`;
   the `WF-INF-003` vocabulary is persisted as `inf.infraction_*_ref` tables.
 
+- **ADR-0014…0018** — boundary set (accepted by the Owner on 2026-09-13) for the infractions scope:
+  infraction aggregate + notification module (0014), collection/payment/refund
+  (0015), documents and signature as STYNX substrate (0016), `portal` domain for
+  identity levels, request lifecycle, inbox and ombudsman (0017), projections as
+  the only cross-app read path (0018).
+
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo
 values, any license/visibility change, anything irreversible.

@@ -88,6 +88,15 @@ Eventos **consumidos** pela infração (produzidos fora): `AIT_INTEGRADO`, `AIT_
 (Portal), `PAGAMENTO_CONFIRMADO` (arrecadação) — schemas em `docs/framework/schemas/events/`
 (WP-A cria a partir desta tabela).
 
+### 2.5 Eventos das fronteiras (ADR-0014…0017)
+
+ADRs aceitas em 2026-09-13; nomes reservados: `NOTIFICACAO_EXPEDIDA`, `NOTIFICACAO_CIENCIA`
+(notificação); `PAGAMENTO_CONFIRMADO`, `PAGAMENTO_ESTORNADO`, `RESTITUICAO_ORDENADA`,
+`RESTITUICAO_PAGA`, `COBRANCA_ENCAMINHADA`, `DOCUMENTO_ARRECADACAO_EMITIDO` (arrecadação);
+`NIVEL_ASSINATURA_ELEVADO`, `SOLICITACAO_*`, `INBOX_LIDO`, `MANIFESTACAO_*`,
+`AVALIACAO_REGISTRADA` (portal). Payloads seguem o envelope da §1 e são detalhados quando o
+blueprint correspondente for escrito.
+
 ## 3. Fluxo SSE `GET /v1/inf/rait/stream`
 
 - Autenticação: sessão STYNX (bearer via `EventSource` polyfill com header, ou cookie de sessão);
