@@ -20,6 +20,13 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
 - **ADR-0011** — Phase 6 documentation capability: deterministic seven-section
   Docusaurus projection, active Constitution publication, blocking CI validation,
   and separately authorized local GitHub Pages publication.
+- **ADR-0012** — `WF-INF-003` is the canonical infraction lifecycle state machine
+  (Owner, 2026-09-12); `WF-INF-001` kept as a pointer; the infraction aggregate
+  awaits its own blueprint before any runtime implementation.
+- **ADR-0013** — STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 is the platform target
+  (Owner, 2026-09-12; workspace pins migrate in WP-0); the canonical role
+  catalogue gains the ten-code RAIT family, persisted in `auth.role_catalog`;
+  the `WF-INF-003` vocabulary is persisted as `inf.infraction_*_ref` tables.
 
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo

@@ -28,9 +28,10 @@ if [[ "$FULL" = 1 ]]; then
 fi
 
 DDL=(00-extensions 01-schemas 02-auth 03-audit 04-integration-storage \
-     10-postgis-functions 11-auth-functions 12-audit-functions \
-     13-ops-field-operations 30-inf-normative 31-inf-ait \
-     32-inf-measures 33-inf-alcohol 20-rls-policies)
+     05-role-catalog 10-postgis-functions 11-auth-functions 12-audit-functions \
+     13-ops-field-operations 14-inf-lifecycle-vocabulary 30-inf-normative 31-inf-ait \
+     32-inf-measures 33-inf-alcohol 34-inf-rait-case 35-inf-rait-worklist \
+     36-inf-rait-session 37-inf-speed 20-rls-policies)
 for name in "${DDL[@]}"; do
   echo "ddl/$name.sql"
   "${PSQL[@]}" -d "$DB" -f "$DIR/ddl/$name.sql" >/dev/null

@@ -789,6 +789,172 @@ const INF_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> =
     [resource, 'delete', ['technical-admin']],
   ]);
 
+/**
+ * RAIT (Recursos Administrativos de Infrações de Trânsito) — generated CRUD
+ * surfaces of BP-INF-RAIT-CASE-001, BP-INF-RAIT-WORKLIST-001 and
+ * BP-INF-RAIT-SESSION-001, plus the command surface of
+ * docs/framework/arch/rait-web-frontend.md §7. Roles: shared/actors.md
+ * §Papéis granulares RAIT (Owner, 2026-09-12).
+ */
+const RAIT_STAFF_ROLES: readonly DetranRole[] = [
+  'rait-analyst',
+  'rait-coordinator',
+  'rait-secretary',
+  'rait-signing-authority',
+  'rait-central-authority',
+  'rait-rapporteur',
+  'rait-chair',
+  'rait-manager',
+  'rait-hr',
+  'rait-finance',
+];
+const RAIT_READ_ROLES: readonly DetranRole[] = [
+  ...RAIT_STAFF_ROLES,
+  'agency-admin',
+  'AUDITOR',
+  'bi-analyst',
+  'integration-operator',
+  'traffic-authority',
+];
+const RAIT_CASE_WRITE_ROLES: readonly DetranRole[] = [
+  'rait-analyst',
+  'rait-secretary',
+  'rait-coordinator',
+  'rait-rapporteur',
+  'rait-chair',
+];
+const RAIT_SURFACE_WRITE_ROLES: Readonly<
+  Record<string, readonly DetranRole[]>
+> = {
+  'rait-case': RAIT_CASE_WRITE_ROLES,
+  'rait-party': ['rait-secretary', 'rait-analyst'],
+  'rait-document': RAIT_CASE_WRITE_ROLES,
+  'rait-admissibility': ['rait-analyst', 'rait-secretary'],
+  'rait-deadline': ['agency-admin'],
+  'rait-inquiry': ['rait-analyst', 'rait-rapporteur'],
+  'rait-decision': ['rait-signing-authority', 'rait-chair'],
+  'rait-communication': ['rait-secretary'],
+  'rait-case-event': ['agency-admin'],
+  'rait-pool': ['rait-coordinator', 'agency-admin'],
+  'rait-pool-member': ['rait-hr', 'rait-chair', 'rait-coordinator'],
+  'rait-assignment': [
+    'rait-analyst',
+    'rait-coordinator',
+    'rait-manager',
+    'rait-chair',
+    'rait-secretary',
+  ],
+  'rait-impediment': [
+    'rait-rapporteur',
+    'rait-chair',
+    'rait-secretary',
+    'rait-signing-authority',
+    'rait-analyst',
+  ],
+  'rait-clock': ['agency-admin'],
+  'rait-clock-alert': [
+    'rait-manager',
+    'rait-coordinator',
+    'rait-chair',
+    'rait-analyst',
+    'rait-rapporteur',
+  ],
+  'rait-session': ['rait-chair', 'rait-secretary'],
+  'rait-agenda-item': ['rait-chair', 'rait-secretary', 'rait-rapporteur'],
+  'rait-attendance': ['rait-secretary', 'rait-chair'],
+  'rait-vote': ['rait-rapporteur', 'rait-chair'],
+  'rait-oral-argument': ['rait-secretary', 'rait-chair'],
+  'rait-minutes': ['rait-secretary', 'rait-chair'],
+};
+const RAIT_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> =
+  Object.entries(RAIT_SURFACE_WRITE_ROLES).flatMap(([resource, writers]) => [
+    [resource, 'read', RAIT_READ_ROLES],
+    [resource, 'create', writers],
+    [resource, 'update', writers],
+    [resource, 'delete', ['technical-admin']],
+  ]);
+/** Command surface (state-guarded endpoints, rait-web-frontend.md §7). */
+const RAIT_COMMAND_RULES: Array<[string, string, readonly DetranRole[]]> = [
+  ['rait-case', 'protocol', ['rait-secretary']],
+  ['rait-case', 'claim-next', ['rait-analyst']],
+  ['rait-case', 'triage', ['rait-analyst', 'rait-secretary']],
+  ['rait-case', 'admit', ['rait-analyst']],
+  ['rait-case', 'reject', ['rait-analyst']],
+  ['rait-case', 'remit-jari', ['rait-secretary']],
+  ['rait-case', 'receive-judging-body', ['rait-secretary']],
+  ['rait-case', 'open-inquiry', ['rait-analyst', 'rait-rapporteur']],
+  ['rait-case', 'answer-inquiry', ['rait-analyst', 'rait-rapporteur']],
+  ['rait-case', 'extend-inquiry', ['rait-analyst', 'rait-rapporteur']],
+  ['rait-case', 'submit-draft', ['rait-analyst']],
+  ['rait-case', 'withdraw', ['rait-secretary']],
+  ['rait-case', 'redirect', ['rait-secretary']],
+  ['rait-case', 'resolve-pending-content', ['rait-secretary']],
+  ['rait-decision', 'sign', ['rait-signing-authority']],
+  ['rait-decision', 'return-draft', ['rait-signing-authority']],
+  ['rait-batch', 'open', ['rait-secretary']],
+  ['rait-batch', 'draw', ['rait-secretary']],
+  ['rait-batch', 'approve', ['rait-chair']],
+  ['rait-batch', 'accept', ['rait-rapporteur']],
+  ['rait-batch', 'impede', ['rait-rapporteur']],
+  ['rait-opinion', 'register', ['rait-rapporteur']],
+  ['rait-agenda', 'close', ['rait-chair']],
+  ['rait-session', 'open', ['rait-chair']],
+  ['rait-session', 'adjourn', ['rait-chair']],
+  ['rait-session', 'vote', ['rait-rapporteur', 'rait-chair']],
+  ['rait-session', 'casting-vote', ['rait-chair']],
+  ['rait-session', 'view-request', ['rait-rapporteur']],
+  ['rait-session', 'proclaim', ['rait-chair']],
+  ['rait-session', 'convene-extraordinary', ['rait-chair']],
+  ['rait-minutes', 'generate', ['rait-secretary']],
+  ['rait-minutes', 'sign', ['rait-secretary', 'rait-chair']],
+  ['rait-minutes', 'publish', ['rait-secretary']],
+  ['rait-appeal', 'authority-decide', ['rait-central-authority']],
+  ['rait-appeal', 'waive', ['rait-central-authority']],
+  [
+    'rait-assignment',
+    'reassign',
+    ['rait-coordinator', 'rait-manager', 'rait-chair'],
+  ],
+  [
+    'rait-impediment',
+    'declare',
+    ['rait-rapporteur', 'rait-signing-authority', 'rait-analyst'],
+  ],
+  ['rait-impediment', 'suspicion', ['rait-secretary']],
+  ['rait-schedule', 'publish', ['rait-coordinator', 'rait-chair']],
+  ['rait-member', 'mandate', ['rait-hr']],
+  ['rait-jeton', 'generate', ['rait-secretary']],
+  ['rait-jeton', 'approve', ['rait-chair']],
+  ['rait-unit', 'constitute', ['rait-manager']],
+  ['rait-unit', 'activate', ['rait-manager']],
+  [
+    'rait-clock',
+    'acknowledge-alert',
+    [
+      'rait-analyst',
+      'rait-rapporteur',
+      'rait-coordinator',
+      'rait-chair',
+      'rait-manager',
+    ],
+  ],
+  ['rait-extinction', 'declare', ['rait-signing-authority', 'rait-chair']],
+  ['rait-suspension-act', 'create', ['rait-signing-authority', 'rait-chair']],
+  ['rait-parameter', 'update', ['agency-admin']],
+  ['rait-export', 'create', ['AUDITOR']],
+  ['rait-quality-sample', 'review', ['rait-coordinator']],
+  ['rait-capacity-plan', 'publish', ['rait-coordinator', 'rait-manager']],
+  ['rait-incident', 'open', ['rait-manager', 'rait-coordinator', 'rait-chair']],
+  ['rait-integration', 'retry', ['integration-operator']],
+  ['rait-integration', 'reconcile', ['integration-operator', 'rait-manager']],
+  ['rait-collection', 'issue', ['rait-finance']],
+  ['rait-refund', 'order', ['rait-finance']],
+  ['rait-debt', 'handoff', ['rait-finance']],
+  ['rait-payment', 'reconcile', ['rait-finance']],
+  ['rait-archive', 'seal', ['rait-secretary']],
+  ['rait-archive', 'apply-retention', ['rait-secretary']],
+];
+
 export const DETRAN_POLICY_MATRIX: Readonly<
   Record<DetranPolicyKey, readonly DetranRole[]>
 > = Object.freeze(
@@ -806,6 +972,14 @@ export const DETRAN_POLICY_MATRIX: Readonly<
       roles,
     ]),
     ...INF_SURFACE_RULES.map(([resource, action, roles]) => [
+      teat('inf', resource, action),
+      roles,
+    ]),
+    ...RAIT_SURFACE_RULES.map(([resource, action, roles]) => [
+      teat('inf', resource, action),
+      roles,
+    ]),
+    ...RAIT_COMMAND_RULES.map(([resource, action, roles]) => [
       teat('inf', resource, action),
       roles,
     ]),

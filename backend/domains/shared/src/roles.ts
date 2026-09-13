@@ -48,6 +48,25 @@ export const ROLE_ALIASES = {
   'integration-operator': 'integration-operator',
 } as const;
 
+/**
+ * RAIT staff role codes (Owner decision 2026-09-12, recorded in
+ * docs/framework/product/shared/actors.md §Papéis granulares RAIT and
+ * ADR-0013). Codes are lowercase-kebab like the TEAT family; one person may
+ * accumulate several (union semantics, ADR-0005).
+ */
+export const RAIT_ROLES = [
+  'rait-analyst',
+  'rait-coordinator',
+  'rait-secretary',
+  'rait-signing-authority',
+  'rait-central-authority',
+  'rait-rapporteur',
+  'rait-chair',
+  'rait-manager',
+  'rait-hr',
+  'rait-finance',
+] as const;
+
 export const DETRAN_ROLES = [
   ...PEC_ROLES,
   'field-agent',
@@ -58,6 +77,7 @@ export const DETRAN_ROLES = [
   'technical-admin',
   'bi-analyst',
   'integration-operator',
+  ...RAIT_ROLES,
   'CIDADAO',
 ] as const;
 
