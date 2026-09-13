@@ -275,9 +275,10 @@ assinatura ([RN-PEC-140] a [RN-PEC-142]) e as regras do ato pericial ([RN-PEC-10
 para a posição P2 recomendada pelo LEGAL com os pontos que mudam sob P1/P3 marcados;
 [IU-PEC-001] promovido com 26 telas (3 novas), das quais 5 ficam bloqueadas por decisão pendente.
 
-[UC-PEC-012] **permanece `stub` deliberadamente** — escrever o fluxo presumiria a resposta à
-pergunta de escopo (DT-024). O stub foi afiado para descrever o que muda em cada ramo e qual
-única investigação decide entre eles.
+[UC-PEC-012] foi promovido a `reviewed` em 2026-08-31 após a reconciliação de DT-024: o PEC
+recebe do RENACH, pela fronteira SENATRAN, eventos autenticados e idempotentes de resultado
+toxicológico periódico; não fabrica encounter, não substitui o alerta da SENATRAN e registra de
+forma imutável resultado, suspensão e eventual liberação.
 
 10 `approved`, 9 `reviewed`; as 36 regras seguem `draft` (top-10 do advogado não respondido).
 
@@ -286,8 +287,9 @@ pergunta de escopo (DT-024). O stub foi afiado para descrever o que muda em cada
 - [ ] Faturamento estruturalmente errado (preço público IPCA, Lei 15.428/2026) — DT-100
 - [ ] Validade do exame 10/5/3 por faixa etária, não 5/3 da Res. 789/2020 — DT-101
 - [ ] `CONDICIONADO` exposto ao candidato, rótulo inexistente em norma — DT-102, DT-022
-- [ ] Escalonamento ao CETRAN não implementa a terceira instância — divergência construído ×
-      norma; hoje só reatribui o signatário na mesma linha de decisão — DT-025
+- [ ] Implementar a Junta Especial de Saúde como colegiado distinto designado pelo CETRAN,
+      substituindo no alvo a reatribuição de signatário da origem — DT-025 reconciliada em
+      2026-08-31
 
 ## Rodada de endurecimento de especificação — PORTAL (2026-08-26)
 
@@ -350,9 +352,9 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 ## Rodada de modelagem BPM do ciclo da infração (2026-09-12)
 
 - [x] **Decidir a substituição de [WF-INF-001] por [WF-INF-003]** — **DECIDIDO pelo Owner em
-      2026-09-12 (ADR-0012):** WF-INF-003 substitui WF-INF-001; ponteiro mantido, referências
+      2026-09-12 (ADR-0014):** WF-INF-003 substitui WF-INF-001; ponteiro mantido, referências
       atualizadas, WF-INF-003 promovido a `reviewed`. Runtime: agregado da infração ainda sem
-      blueprint (ver ADR-0012 §Consequências)
+      blueprint (ver ADR-0014 §Consequências)
 - [ ] **Reconciliar a escada do relógio B** — [RN-RAIT-112] (4 degraus, crítico em 21 meses) ×
       [WF-RAIT-002] §4.1 (5 degraus, crítico em 23 meses, aprovado em steering A.1) (added 2026-09-12)
 - [ ] **Desfecho de `T-NA-IND` vencido** (NA ao condutor indicado não expedida em 30 dias do protocolo
@@ -373,7 +375,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 
 ## Rodada de definições para a orquestra de agentes — RAIT (2026-09-12)
 
-- [x] **Adoção de STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5** — decidida pelo Owner (steering G.34; ADR-0013);
+- [x] **Adoção de STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5** — decidida pelo Owner (steering G.34; ADR-0015);
       migração dos pins no WP-0 de `docs/framework/arch/rait-build-pack.md`
 - [x] **Catálogo canônico de papéis estendido** com a família `rait-*` (steering G.35): `roles.ts`,
       `policy.ts`, `05-role-catalog.sql`, `shared/actors.md`; gate `verify:role-catalog`
@@ -390,7 +392,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       registrar em `wp0-stynx-1-3-1-migration.md` §7 durante o WP-0 (added 2026-09-13)
 - [ ] **Calendário de feriados 2026 (AM + Manaus)** das fixtures é referência de teste; validar com ato
       oficial antes de virar parâmetro (added 2026-09-13)
-- [x] **Aceitar as ADRs de fronteira 0014…0018** — aceitas pelo Owner em 2026-09-13 (steering G.37)
+- [x] **Aceitar as ADRs de fronteira 0016…0020** (numeradas 0014…0018 até a fusão com `main`) — aceitas pelo Owner em 2026-09-13 (steering G.37)
 - [x] **Pacote TEAT (2026-09-13)**: `teat-frontends.md`, `teat-route-contract.md`, `teat-error-catalog.md`,
       `teat-build-pack.md` (WP-T0…T6; 12 questões OD-T01…T12)
 - [ ] **Defeitos de base do TEAT** (WP-T0): prefixo de rota do gerador (`v1/inf/aitaits`), `AitModule` sem os
@@ -412,7 +414,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **Portão de implementação (2026-09-13)**: `implementation-gate-2026-09-13.md` consolida os pontos de atenção das
       cinco superfícies e as 7 decisões que bloqueiam o início; fechar pelo Owner na ordem sugerida
 - [x] **Plano de fechamento em três vias (2026-09-13)**: `decision-closure-plan.md`, `parameter-catalogue.md`,
-      ADR-0019 (`ops.parameter`), 8 cédulas em `owner-ballots/`, carta-modelo; pesquisa da via A capturou 8 REFs
+      ADR-0021 (`ops.parameter`), 8 cédulas em `owner-ballots/`, carta-modelo; pesquisa da via A capturou 8 REFs
       (PN DETRAN-AM 001/2025 assinaturas; portarias LGPD 2026; CSAD; STJ Temas 1.293/1.294; ANPD; DETRAN-DF TTD;
       Lei 10.741; calendário 2026) e reconciliou as respostas DT-010…031 nos registros OD
 - [x] **Owner respondeu as cédulas 01–08** em prompt interativo (steering §H.38–57, 2026-09-13)
@@ -423,4 +425,4 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **Repetir Wayback para o Decreto AM 34.398/2014** (`Regimento-Interno-Cetran.pdf`, 404 no site, 429 no
       archive.org em 2026-09-13) e capturar o Decreto Manaus 4.922/2020 (JARI do IMMU) como benchmark (added 2026-09-13)
 - [ ] **WP-A: `BP-OPS-PARAMETER-001`, DDL `15-ops-parameter.sql`, seed gerado do catálogo, gate
-      `verify:parameter-catalogue`, view de compatibilidade de `inf.normative_agency_parameter`** (ADR-0019) (added 2026-09-13)
+      `verify:parameter-catalogue`, view de compatibilidade de `inf.normative_agency_parameter`** (ADR-0021) (added 2026-09-13)

@@ -1,7 +1,7 @@
 // Generated from BP-INF-SPEED-001 v1.0.0 sha256:621c9dd37f71bc7fbb14a32b3df72d186e5f6f5d513de297d5559c3ac37ae44e
-import { NotFoundException } from '@nestjs/common';
-import type { RequestContext } from '@stynx-nyx/core';
-import type { Database, Transaction } from '@stynx-nyx/data';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RequestContext } from '@stynx-nyx/core';
+import { Database, type Transaction } from '@stynx-nyx/data';
 import { withTenantContext } from '@detran/shared';
 import type { CreateSpeedMeterCertificateDto } from '../dto/create-speed-meter-certificate.dto.js';
 import type { SpeedMeterCertificate } from '../entities/speed-meter-certificate.entity.js';
@@ -22,13 +22,11 @@ const WRITABLE_FIELDS = new Set<string>([
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */
+@Injectable()
 export class SpeedMeterCertificateRepository {
   constructor(
-    private readonly database: Pick<Database, 'tx'>,
-    private readonly requestContext: Pick<
-      RequestContext,
-      'hasActiveContext' | 'snapshot'
-    >,
+    private readonly database: Database,
+    private readonly requestContext: RequestContext,
   ) {}
   transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> {
     return withTenantContext(this.database, this.requestContext, work);

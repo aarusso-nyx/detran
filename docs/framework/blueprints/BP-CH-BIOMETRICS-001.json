@@ -1,0 +1,568 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-BIOMETRICS-001",
+  "module": {
+    "name": "Biometrics",
+    "namespace": "ch",
+    "version": "1.1.0",
+    "ddlFile": "45-ch-biometrics.sql",
+    "dependencies": {
+      "@detran/ch-clinical-network": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-patients": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "biometric-processing-policy",
+      "biometric-verification.http-adapter",
+      "biometric-lifecycle.service",
+      "biometric-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "biometric-commands.controller",
+        "symbol": "BiometricCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "biometric-verification.http-adapter",
+        "symbol": "BiometricVerificationHttpAdapter"
+      },
+      {
+        "target": "biometric-lifecycle.service",
+        "symbol": "BiometricLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Referencias e validacoes biometricas, condicoes estruturadas por dedo e excecoes com aprovacao independente, prazo e escopo."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "BiometricReference",
+        "table": "biometric_reference",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          {
+            "name": "patient_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(24)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "provider_code",
+            "type": "varchar(80)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "provider_reference",
+            "type": "text",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "storage_document_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "sha256",
+            "type": "varchar(64)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "quality_score",
+            "type": "numeric(5,2)",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_biometric_reference_kind",
+            "columns": ["tenant_id", "patient_id", "kind"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_biometric_reference_kind",
+            "expression": "kind in ('FACE','FINGERPRINT','SIGNATURE')"
+          },
+          {
+            "name": "ck_ch_biometric_reference_hash",
+            "expression": "sha256 ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_ch_biometric_reference_quality",
+            "expression": "quality_score is null or (quality_score >= 0 and quality_score <= 100)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_biometric_reference_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "BiometricFingerCondition",
+        "table": "biometric_finger_condition",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          {
+            "name": "patient_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "finger_code",
+            "type": "varchar(8)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "condition",
+            "type": "varchar(24)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "reason",
+            "type": "text",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "recorded_by",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_biometric_finger_condition",
+            "columns": ["tenant_id", "patient_id", "finger_code"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_biometric_finger_code",
+            "expression": "finger_code in ('LT','LI','LM','LR','LL','RT','RI','RM','RR','RL')"
+          },
+          {
+            "name": "ck_ch_biometric_finger_condition",
+            "expression": "condition in ('AVAILABLE','TEMP_UNAVAILABLE','PERMANENT_ABSENT')"
+          },
+          {
+            "name": "ck_ch_biometric_finger_reason",
+            "expression": "condition = 'AVAILABLE' or (reason is not null and length(trim(reason)) > 0)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_biometric_finger_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "BiometricCheck",
+        "table": "biometric_check",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          {
+            "name": "appointment_id",
+            "type": "uuid",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "encounter_id",
+            "type": "uuid",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "clinic_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "station_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "subject_patient_id",
+            "type": "uuid",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "subject_professional_id",
+            "type": "uuid",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "performed_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(16)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "modality",
+            "type": "varchar(24)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "score",
+            "type": "numeric(5,2)",
+            "nullable": true,
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "lfd_score",
+            "type": "numeric(5,2)",
+            "nullable": true,
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "passed",
+            "type": "boolean",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "evidence_document_id",
+            "type": "uuid",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "evidence_sha256",
+            "type": "varchar(64)",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "reason",
+            "type": "text",
+            "nullable": true,
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "created_by",
+            "type": "uuid",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_biometric_check_appointment",
+            "columns": ["tenant_id", "appointment_id", "kind", "performed_at"]
+          },
+          {
+            "name": "ix_ch_biometric_check_encounter",
+            "columns": ["tenant_id", "encounter_id", "kind", "performed_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_biometric_check_kind",
+            "expression": "kind in ('CHECKIN','MEDICAL','PSYCH')"
+          },
+          {
+            "name": "ck_ch_biometric_check_modality",
+            "expression": "modality in ('FINGERPRINT','FACE')"
+          },
+          {
+            "name": "ck_ch_biometric_check_scope",
+            "expression": "(kind = 'CHECKIN' and appointment_id is not null and encounter_id is null and subject_patient_id is not null and subject_professional_id is null) or (kind in ('MEDICAL','PSYCH') and encounter_id is not null and appointment_id is null and ((subject_patient_id is not null)::integer + (subject_professional_id is not null)::integer) = 1)"
+          },
+          {
+            "name": "ck_ch_biometric_check_hash",
+            "expression": "evidence_sha256 ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_ch_biometric_check_scores",
+            "expression": "(score is null or (score >= 0 and score <= 100)) and (lfd_score is null or (lfd_score >= 0 and lfd_score <= 100))"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_biometric_check_appointment",
+            "columns": ["appointment_id"],
+            "references": { "table": "ch.appointment", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_check_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_check_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_check_station",
+            "columns": ["station_id"],
+            "references": { "table": "ch.biometric_station", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_check_patient",
+            "columns": ["subject_patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_check_professional",
+            "columns": ["subject_professional_id"],
+            "references": { "table": "ch.professional", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "BiometricException",
+        "table": "biometric_exception",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          {
+            "name": "appointment_id",
+            "type": "uuid",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "encounter_id",
+            "type": "uuid",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "clinic_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "station_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "biometric_check_id",
+            "type": "uuid",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "scope",
+            "type": "varchar(24)",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "requested_by",
+            "type": "uuid",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "reason",
+            "type": "text",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "justification",
+            "type": "text",
+            "nullable": true,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "attachment_document_ids",
+            "type": "jsonb",
+            "default": "'[]'::jsonb",
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'REQUESTED'",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "approved_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "approved_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          },
+          {
+            "name": "expires_at",
+            "type": "timestamptz",
+            "writable": false,
+            "pii": "biometric-sensitive",
+            "retention": "last-record+20y"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_biometric_exception_status",
+            "columns": ["tenant_id", "status", "expires_at"]
+          },
+          {
+            "name": "ix_ch_biometric_exception_encounter",
+            "columns": ["tenant_id", "encounter_id"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_biometric_exception_scope",
+            "expression": "scope in ('CHECKIN','MEDICAL','PSYCH') and ((appointment_id is not null)::integer + (encounter_id is not null)::integer) = 1"
+          },
+          {
+            "name": "ck_ch_biometric_exception_status",
+            "expression": "status in ('REQUESTED','APPROVED','REJECTED','EXPIRED','CANCELLED')"
+          },
+          {
+            "name": "ck_ch_biometric_exception_approval",
+            "expression": "status not in ('APPROVED','REJECTED') or (approved_by is not null and approved_at is not null and approved_by <> requested_by)"
+          },
+          {
+            "name": "ck_ch_biometric_exception_expiry",
+            "expression": "expires_at > created_at"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_biometric_exception_appointment",
+            "columns": ["appointment_id"],
+            "references": { "table": "ch.appointment", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_exception_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_exception_clinic",
+            "columns": ["clinic_id"],
+            "references": { "table": "ch.clinic", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_exception_station",
+            "columns": ["station_id"],
+            "references": { "table": "ch.biometric_station", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_biometric_exception_check",
+            "columns": ["biometric_check_id"],
+            "references": { "table": "ch.biometric_check", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/biometrics/",
+    "resources": [
+      {
+        "entity": "BiometricReference",
+        "path": "references",
+        "resource": "biometric",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "BiometricFingerCondition",
+        "path": "finger-conditions",
+        "resource": "biometric",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "BiometricCheck",
+        "path": "checks",
+        "resource": "biometric",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "BiometricException",
+        "path": "exceptions",
+        "resource": "biometric-exception",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

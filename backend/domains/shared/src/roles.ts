@@ -51,7 +51,7 @@ export const ROLE_ALIASES = {
 /**
  * RAIT staff role codes (Owner decision 2026-09-12, recorded in
  * docs/framework/product/shared/actors.md §Papéis granulares RAIT and
- * ADR-0013). Codes are lowercase-kebab like the TEAT family; one person may
+ * ADR-0015). Codes are lowercase-kebab like the TEAT family; one person may
  * accumulate several (union semantics, ADR-0005).
  */
 export const RAIT_ROLES = [

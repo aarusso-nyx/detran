@@ -14,6 +14,18 @@
         "name": { "type": "string" },
         "namespace": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
         "version": { "type": "string" },
+        "handwrittenControllers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/handwrittenModuleMember" }
+        },
+        "handwrittenProviders": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/handwrittenModuleMember" }
+        },
+        "handwrittenExports": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
         "owners": { "type": "array", "items": { "type": "string" } },
         "description": { "type": "string" }
       }
@@ -31,6 +43,14 @@
     "ops": { "type": "object" }
   },
   "$defs": {
+    "handwrittenModuleMember": {
+      "type": "object",
+      "required": ["target", "symbol"],
+      "properties": {
+        "target": { "type": "string" },
+        "symbol": { "type": "string" }
+      }
+    },
     "entity": {
       "type": "object",
       "required": ["name", "table", "primaryKey", "fields"],
@@ -48,6 +68,7 @@
               "type": { "type": "string" },
               "nullable": { "type": "boolean" },
               "default": {},
+              "writable": { "type": "boolean" },
               "pii": { "type": "string" },
               "retention": { "type": "string" }
             }

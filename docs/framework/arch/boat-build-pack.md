@@ -13,7 +13,7 @@ campo (`apps/boat/mobile`), a retaguarda web e a integração RENAEST. Segue `ra
 e os manuais de `docs/meta/agents/`. Fontes: [APP-BOAT], [WF-BOAT-001…003], [UC-BOAT-001…012],
 [RN-BOAT-001…132], [JRN-BOAT-001…005], [IU-BOAT-001]; `boat-frontends.md`,
 `boat-route-contract.md`, `boat-error-catalog.md`; `teat-build-pack.md` (fila, evidência, shell
-de campo); ADR-0003/0008 (adapter), ADR-0016 (BAT em PDF/A), ADR-0018 (projeções); origem:
+de campo); ADR-0003/0008 (adapter), ADR-0018 (BAT em PDF/A), ADR-0020 (projeções); origem:
 `BP-CRASH-RECORDS-001`, `crash-records.md`, matriz `crash-*`, `RenaestPort` e mock RENAEST.
 
 ## 1. Estado de partida (verificado em 2026-09-13)
@@ -66,7 +66,7 @@ do TEAT (transação única, independência recíproca); gate gravidade × víti
 com `purpose` e auditoria; `transmit`/`rectify` via outbox + `RenaestPort` com mapeamento campo a
 campo documentado em `docs/framework/contracts/renaest-mapping.md` (marcando os campos que
 dependem dos Manuais RENAEST, DT-061); espelho da situação nacional; job `T-BOAT-TRANSM`; relatório
-preliminar/BAT em PDF/A (ADR-0016); projeções `portal.crash_view`, `dashboard.crashes` (com limiar
+preliminar/BAT em PDF/A (ADR-0018); projeções `portal.crash_view`, `dashboard.crashes` (com limiar
 de célula), `integration.renaest_mirror`; SSE. Gate: matriz de transições de `WF-BOAT-001` e
 `WF-BOAT-003`, testes de gravidade × vítimas, duplicidade por chave natural, terminal sem
 correção, `verify:senatran-boundary`, adapter e2e no mock.

@@ -1,0 +1,219 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-TOXICOLOGY-001",
+  "module": {
+    "name": "Toxicology",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "56-ch-toxicology.sql",
+    "dependencies": {
+      "@detran/ch-patients": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Resultados toxicologicos periodicos imutaveis recebidos do RENACH e suspensoes derivadas sem fabricar encounter clinico."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "PeriodicToxicologyResult",
+        "table": "periodic_toxicology_result",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          {
+            "name": "source_event_id",
+            "type": "varchar(160)",
+            "writable": false
+          },
+          {
+            "name": "payload_sha256",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          { "name": "patient_id", "type": "uuid", "writable": false },
+          {
+            "name": "driver_cpf",
+            "type": "varchar(11)",
+            "writable": false,
+            "pii": "direct"
+          },
+          { "name": "category", "type": "varchar(1)", "writable": false },
+          { "name": "result", "type": "varchar(16)", "writable": false },
+          { "name": "collected_at", "type": "timestamptz", "writable": false },
+          { "name": "valid_until", "type": "timestamptz", "writable": false },
+          { "name": "occurred_at", "type": "timestamptz", "writable": false },
+          {
+            "name": "laboratory_code",
+            "type": "varchar(80)",
+            "writable": false
+          },
+          {
+            "name": "source_reference",
+            "type": "varchar(160)",
+            "writable": false
+          },
+          {
+            "name": "driver_alert_status",
+            "type": "varchar(24)",
+            "writable": false
+          },
+          {
+            "name": "received_at",
+            "type": "timestamptz",
+            "default": "now()",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_toxicology_source_event",
+            "columns": ["tenant_id", "source_event_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_ch_toxicology_patient",
+            "columns": ["tenant_id", "patient_id", "occurred_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_toxicology_hash",
+            "expression": "payload_sha256 ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_ch_toxicology_cpf",
+            "expression": "driver_cpf ~ '^[0-9]{11}$'"
+          },
+          {
+            "name": "ck_ch_toxicology_category",
+            "expression": "category in ('C','D','E')"
+          },
+          {
+            "name": "ck_ch_toxicology_result",
+            "expression": "result in ('POSITIVE','NEGATIVE')"
+          },
+          {
+            "name": "ck_ch_toxicology_validity",
+            "expression": "valid_until = collected_at + interval '90 days' and occurred_at >= collected_at"
+          },
+          {
+            "name": "ck_ch_toxicology_alert_status",
+            "expression": "driver_alert_status in ('SENT','SCHEDULED','NOT_REQUIRED')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_toxicology_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "ToxicologySuspension",
+        "table": "toxicology_suspension",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "patient_id", "type": "uuid", "writable": false },
+          {
+            "name": "source_positive_result_id",
+            "type": "uuid",
+            "writable": false
+          },
+          { "name": "starts_at", "type": "timestamptz", "writable": false },
+          { "name": "ends_at", "type": "timestamptz", "writable": false },
+          {
+            "name": "status",
+            "type": "varchar(16)",
+            "default": "'ACTIVE'",
+            "writable": false
+          },
+          {
+            "name": "released_by_result_id",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "released_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_toxicology_active_suspension",
+            "columns": ["tenant_id", "patient_id"],
+            "unique": true,
+            "where": "status = 'ACTIVE'"
+          },
+          {
+            "name": "ix_ch_toxicology_suspension_patient",
+            "columns": ["tenant_id", "patient_id", "starts_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_toxicology_suspension_period",
+            "expression": "ends_at = starts_at + interval '3 months'"
+          },
+          {
+            "name": "ck_ch_toxicology_suspension_status",
+            "expression": "status in ('ACTIVE','RELEASED','EXPIRED')"
+          },
+          {
+            "name": "ck_ch_toxicology_suspension_release",
+            "expression": "(status = 'ACTIVE' and released_by_result_id is null and released_at is null) or (status = 'RELEASED' and released_by_result_id is not null and released_at is not null) or (status = 'EXPIRED' and released_by_result_id is null and released_at is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_toxicology_suspension_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          },
+          {
+            "name": "fk_ch_toxicology_suspension_positive",
+            "columns": ["source_positive_result_id"],
+            "references": {
+              "table": "ch.periodic_toxicology_result",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_ch_toxicology_suspension_release",
+            "columns": ["released_by_result_id"],
+            "references": {
+              "table": "ch.periodic_toxicology_result",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/toxicology/",
+    "resources": [
+      {
+        "entity": "PeriodicToxicologyResult",
+        "path": "results",
+        "resource": "tox",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "ToxicologySuspension",
+        "path": "suspensions",
+        "resource": "tox",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

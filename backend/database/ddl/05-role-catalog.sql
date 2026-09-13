@@ -1,4 +1,4 @@
--- Canonical DETRAN role catalogue (Owner decision 2026-09-12; ADR-0013).
+-- Canonical DETRAN role catalogue (Owner decision 2026-09-12; ADR-0015).
 -- Mirrors backend/domains/shared/src/roles.ts (DETRAN_ROLES) one-to-one:
 -- tools/check-role-catalog.ts fails `pnpm check` when the two drift.
 -- auth.roles.key (per-tenant role rows, STYNX auth model) must reference a

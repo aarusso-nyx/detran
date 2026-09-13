@@ -21,7 +21,7 @@ updated: 2026-09-12
 
 **Máquina de estados legais da infração** — vocabulário canônico do ciclo de vida da infração
 para teat, rait, portal e dashboard, derivada do modelo de processos [WF-INF-002]. **Substitui
-[WF-INF-001]** por decisão do Owner (2026-09-12; ADR-0012); o artefato antigo permanece apenas como
+[WF-INF-001]** por decisão do Owner (2026-09-12; ADR-0014); o artefato antigo permanece apenas como
 ponteiro, e a tabela de equivalência da §7 é o mapa de leitura para qualquer documento que ainda
 cite os nomes anteriores. Nada aqui altera [WF-RAIT-001] (máquina do **caso**) nem [WF-TEAT-001]
 (máquina técnica do **AIT no talão**): a infração é o agregado que **observa** essas duas máquinas
@@ -29,7 +29,7 @@ por eventos e reage a **timers próprios**.
 
 Consumo por engenharia: o backend ainda não implementa este agregado (os módulos gerados de
 `docs/framework/blueprints/` cobrem o AIT no talão e o caso RAIT). A implementação exige um
-blueprint próprio (ADR-0007) — ver ADR-0012 §Consequências.
+blueprint próprio (ADR-0007) — ver ADR-0014 §Consequências.
 
 Princípios de desenho:
 
@@ -333,4 +333,4 @@ intervalo recursal (`AGUARDANDO_RECURSO_2A`) nem o recurso da autoridade.
 - **2026-09-12** — **Owner: este artefato substitui [WF-INF-001]** como máquina de estados do ciclo
   de vida da infração. Promovido a `reviewed`; [WF-INF-001] reduzido a ponteiro; charter do domínio
   INF, [WF-RAIT-001] §Ponte, [WF-TEAT-001] §Ponte e demais referências atualizados; registro em
-  ADR-0012.
+  ADR-0014.

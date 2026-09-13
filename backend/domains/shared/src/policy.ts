@@ -21,6 +21,8 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
   ],
   ['clinic', 'write', ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['clinic', 'create', ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['clinic', 'update', ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE']],
   [
     'user',
     'read',
@@ -41,6 +43,19 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
     'write',
     ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
   ],
+  [
+    'professional',
+    'create',
+    ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
+  ],
+  [
+    'professional',
+    'update',
+    ['ADMIN', 'GESTOR', 'GESTOR_DETRAN', 'SUPORTE', 'ADMIN_CLINICA'],
+  ],
+  ['biometric-station', 'read', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],
+  ['biometric-station', 'create', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],
+  ['biometric-station', 'update', ['SUPERVISOR', 'ADMIN_CLINICA', 'SUPORTE']],
   [
     'process-parameter',
     'read',
@@ -100,7 +115,6 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ],
   ['patient', 'create', ['RECEPCAO', 'ADMIN_CLINICA']],
   ['patient', 'update', ['RECEPCAO', 'ADMIN_CLINICA']],
-  ['patient', 'delete', ['RECEPCAO', 'ADMIN_CLINICA']],
   [
     'encounter',
     'read',
@@ -130,8 +144,14 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['encounter', 'create', ['RECEPCAO']],
   ['encounter', 'update', ['RECEPCAO']],
   ['encounter', 'checkin', ['RECEPCAO', 'TECNICO_BIOMETRIA']],
+  ['encounter', 'cancel', ['RECEPCAO', 'SUPERVISOR', 'GESTOR']],
   ['encounter', 'sign', ['MEDICO', 'PSICOLOGO']],
   ['encounter', 'close', ['MEDICO', 'PSICOLOGO']],
+  [
+    'episode-export',
+    'read',
+    ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
   [
     'exam',
     'read',
@@ -161,6 +181,13 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['exam', 'create', ['MEDICO', 'PSICOLOGO', 'RECEPCAO']],
   ['exam', 'update', ['MEDICO', 'PSICOLOGO']],
   ['exam-result', 'write', ['MEDICO', 'PSICOLOGO']],
+  [
+    'psych-instrument',
+    'read',
+    ['PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  ['psych-instrument', 'create', ['SUPERVISOR', 'GESTOR', 'GESTOR_DETRAN']],
+  ['psych-instrument', 'update', ['SUPERVISOR', 'GESTOR', 'GESTOR_DETRAN']],
   [
     'biometric',
     'capture',
@@ -222,12 +249,55 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['appointment', 'create', ['RECEPCAO', 'ADMIN_CLINICA']],
   ['appointment', 'update', ['RECEPCAO', 'ADMIN_CLINICA']],
   ['appointment', 'delete', ['RECEPCAO', 'ADMIN_CLINICA']],
+  ['appointment', 'reroll', ['RECEPCAO', 'ADMIN_CLINICA', 'GESTOR']],
+  ['appointment', 'no-show', ['RECEPCAO', 'ADMIN_CLINICA']],
+  ['appointment', 'cancel', ['RECEPCAO', 'ADMIN_CLINICA']],
+  [
+    'schedule',
+    'read',
+    ['RECEPCAO', 'ADMIN_CLINICA', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  ['schedule', 'create', ['ADMIN_CLINICA', 'GESTOR', 'GESTOR_DETRAN']],
+  ['schedule', 'update', ['ADMIN_CLINICA', 'GESTOR', 'GESTOR_DETRAN']],
+  [
+    'appointment-assignment',
+    'read',
+    ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR'],
+  ],
   [
     'report',
     'read',
     ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
   ],
   ['report', 'create', ['MEDICO', 'PSICOLOGO']],
+  ['report', 'addendum-request', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
+  ['report', 'addendum-approve-supervisor', ['SUPERVISOR']],
+  ['report', 'addendum-approve-clinic-admin', ['ADMIN_CLINICA']],
+  ['report', 'addendum-sign', ['MEDICO', 'PSICOLOGO']],
+  ['candidate-dossier', 'read', ['CANDIDATO']],
+  ['candidate-dossier', 'feedback-request', ['CANDIDATO']],
+  ['candidate-dossier', 'feedback-schedule', ['PSICOLOGO']],
+  ['candidate-dossier', 'feedback-complete', ['PSICOLOGO']],
+  [
+    'report-addendum',
+    'read',
+    ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  [
+    'report-addendum-approval',
+    'read',
+    ['SUPERVISOR', 'ADMIN_CLINICA', 'AUDITOR', 'GESTOR', 'GESTOR_DETRAN'],
+  ],
+  [
+    'registration-block-notice',
+    'read',
+    ['MEDICO', 'PSICOLOGO', 'AUDITOR', 'GESTOR_DETRAN'],
+  ],
+  [
+    'feedback-request',
+    'read',
+    ['PSICOLOGO', 'SUPERVISOR', 'AUDITOR', 'GESTOR_DETRAN'],
+  ],
   [
     'document',
     'read',
@@ -260,14 +330,33 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['process-block', 'create', ['SUPERVISOR', 'GESTOR_DETRAN']],
   ['process-block', 'update', ['SUPERVISOR', 'GESTOR_DETRAN']],
   ['junta', 'create', ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN']],
-  ['junta', 'decide', ['JUNTA', 'CETRAN', 'GESTOR_DETRAN']],
-  ['junta', 'read', ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR']],
+  ['junta', 'designate', ['GESTOR_DETRAN']],
+  ['junta', 'designate-special', ['CETRAN', 'GESTOR_DETRAN']],
+  ['junta', 'decide', ['JUNTA', 'CETRAN']],
+  ['junta', 'appeal', ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN']],
+  ['junta', 'forward', ['GESTOR_DETRAN']],
+  [
+    'junta',
+    'read',
+    ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR', 'JUNTA', 'CETRAN'],
+  ],
+  [
+    'junta',
+    'list',
+    ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR', 'JUNTA', 'CETRAN'],
+  ],
   ['audit', 'read', ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN', 'SUPERVISOR']],
   ['restriction', 'read', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR', 'AUDITOR']],
   ['restriction', 'create', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
   ['restriction', 'update', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
   ['restriction', 'delete', ['MEDICO', 'PSICOLOGO', 'SUPERVISOR']],
+  ['retention', 'read', ['DPO', 'AUDITOR', 'GESTOR_DETRAN']],
+  ['retention', 'assess', ['DPO', 'GESTOR_DETRAN']],
+  ['retention', 'hold', ['DPO', 'GESTOR_DETRAN']],
+  ['retention', 'propose', ['DPO', 'GESTOR_DETRAN']],
+  ['retention', 'review', ['DPO']],
   ['transmission', 'read', ['AUDITOR', 'GESTOR', 'GESTOR_DETRAN']],
+  ['transmission', 'dispatch', ['GESTOR', 'GESTOR_DETRAN']],
   [
     'transmission',
     'enqueue',
@@ -340,6 +429,30 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
 ];
 
 const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
+  [
+    'portal',
+    'complaint',
+    'create',
+    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  [
+    'portal',
+    'complaint',
+    'read',
+    ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  [
+    'portal',
+    'complaint',
+    'update',
+    ['DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+  ],
+  ['platform', 'audit', 'read', ['AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'audit', 'export', ['AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'read', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'create', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'update', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
+  ['platform', 'user', 'delete', ['ADMIN_CLINICA', 'GESTOR_DETRAN', 'SUPORTE']],
   ['inf', 'ait', 'finalize', ['field-agent']],
   ['inf', 'ait', 'science', ['field-agent']],
   ['inf', 'ait', 'queue-transmission', ['field-agent', 'integration-operator']],
@@ -1028,6 +1141,12 @@ export function isDetranActionAllowed(
   if (!principal) return false;
   if (!resource || !action) return false;
   const key = policyKey(resource, action);
+  if (
+    key === 'ch:retention:review' &&
+    !canonicalRoles(principal.roles).includes('DPO')
+  ) {
+    return false;
+  }
   if (
     principal.permissions.includes('*') ||
     principal.permissions.includes(key) ||

@@ -29,9 +29,9 @@ de construção para a orquestra de agentes (`rait-build-pack.md`).
 
 | Item           | Decisão                                                                                                                                                                                                                                                                                                                              |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Framework      | Angular 22 (faixa peer do STYNX 1.3.1: `>=22.0.0 <23`; ADR-0013), componentes standalone, `ChangeDetectionStrategy.OnPush`, signals para estado local e de feature, `@angular/router` com rotas lazy por feature, Node `>=24 <25` (ADR-0006)                                                                                         |
+| Framework      | Angular 22 (faixa peer do STYNX 1.3.1: `>=22.0.0 <23`; ADR-0015), componentes standalone, `ChangeDetectionStrategy.OnPush`, signals para estado local e de feature, `@angular/router` com rotas lazy por feature, Node `>=24 <25` (ADR-0006)                                                                                         |
 | Kit            | `@detran/ui` (shell, breadcrumbs, feedback pt-BR, tema light/dark, re-exports STYNX table/pagination/empty/loading/toast, i18n) — ADR-0006. O app não reimplementa primitivos                                                                                                                                                        |
-| Plataforma     | `@stynx-nyx/angular` (defaults, interceptors de auth/request-id/tenant/erro), `angular-auth` (OIDC Cognito, sessão, `authGuard`/`permissionGuard`), `angular-tenancy` (tenant do órgão), `angular-i18n` (pt-BR), `angular-ui` (tabela, paginação, confirm-dialog, banner, toast); todos **`1.3.1`** exatos (ADR-0013). DEVAI `1.4.5` |
+| Plataforma     | `@stynx-nyx/angular` (defaults, interceptors de auth/request-id/tenant/erro), `angular-auth` (OIDC Cognito, sessão, `authGuard`/`permissionGuard`), `angular-tenancy` (tenant do órgão), `angular-i18n` (pt-BR), `angular-ui` (tabela, paginação, confirm-dialog, banner, toast); todos **`1.3.1`** exatos (ADR-0015). DEVAI `1.4.5` |
 | Bootstrap      | `provideDetranAuthenticatedApp({ angular, oidc, tenancy, i18n })` em `main.ts` (kit `@detran/ui` recompilado sobre Angular 22 / STYNX 1.3.1 em WP-0); nenhum provider de auth/tenant próprio                                                                                                                                         |
 | API            | somente o backend unificado (`/v1/inf/rait/*`, contratos gerados de `docs/framework/contracts/BP-INF-RAIT-*.openapi.json` — ADR-0009); **nenhuma** chamada a SENATRAN, RENAINF ou SNE a partir do browser (ADR-0003)                                                                                                                 |
 | Clientes HTTP  | gerados dos OpenAPI (`openapi-typescript` + wrapper `HttpClient`), um por módulo (`case`, `worklist`, `session`) mais os clientes dos módulos **pendentes** (§11)                                                                                                                                                                    |
@@ -68,7 +68,7 @@ e modelos gerados.
 
 ## 3. Papéis e permissões
 
-Os dez papéis abaixo são **canônicos** desde 2026-09-12 (Owner, steering G.35; ADR-0013): estão
+Os dez papéis abaixo são **canônicos** desde 2026-09-12 (Owner, steering G.35; ADR-0015): estão
 em `backend/domains/shared/src/roles.ts` (`RAIT_ROLES`), na matriz de política (`RAIT_SURFACE_RULES`
 e `RAIT_COMMAND_RULES`, chaves `inf:rait-<recurso>:<ação>`), no DDL (`auth.role_catalog`) e em
 `shared/actors.md` §Papéis granulares RAIT. As guardas de rota e a navegação usam exatamente
@@ -310,7 +310,7 @@ Cada jornada é a sequência rota → ação → chamada → efeito. Estados ent
 
 Cada ação tem recurso/ação de política, papel, pré-condição e chamada. A chave de política é
 `inf:rait-<recurso>:<ação>` (notação abreviada `rait.<recurso>:<ação>` na tabela); as chaves
-estão registradas em `RAIT_COMMAND_RULES` (`backend/domains/shared/src/policy.ts`, ADR-0013) e
+estão registradas em `RAIT_COMMAND_RULES` (`backend/domains/shared/src/policy.ts`, ADR-0015) e
 são as mesmas que o `DetranPolicyGuard` avalia no servidor. O backend gerado hoje expõe CRUD; as
 ações abaixo pressupõem **endpoints de comando** não gerados (ADR-0007 admite comportamento em
 arquivos não gerados) — listados em §11 como dependência e detalhados, com payloads e erros, em
@@ -422,10 +422,10 @@ cabível, à base legal. Formulários campo a campo, gates de transição e payl
 | Dependência                                                                                                       | Módulo FE afetado                         | Situação                                                                                       |
 | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | Endpoints de comando com guardas de estado (§7)                                                                   | todos                                     | pendente — hoje só CRUD gerado                                                                 |
-| Papéis do RAIT no catálogo canônico e na matriz de política (§3)                                                  | core, guardas                             | **feito** (ADR-0013; `roles.ts`, `policy.ts`, `05-role-catalog.sql`)                           |
+| Papéis do RAIT no catálogo canônico e na matriz de política (§3)                                                  | core, guardas                             | **feito** (ADR-0015; `roles.ts`, `policy.ts`, `05-role-catalog.sql`)                           |
 | Fluxo SSE `/v1/inf/rait/stream`                                                                                   | painel, sessão, radar                     | pendente (outbox/notifications do STYNX)                                                       |
 | Escala/plantão, lote de sorteio com ata, unidade/turma, suplência, tipo de impedimento, banca ([WF-RAIT-004] §10) | organizacao, colegiado                    | pendente no blueprint do worklist                                                              |
-| Agregado da infração ([WF-INF-003]) e módulo financeiro (arrecadação, restituição, cobrança)                      | financeiro, caso (prazos T-DEC/T-NP-VENC) | pendente (ADR-0012); vocabulário já persistido em `14-inf-lifecycle-vocabulary.sql` (ADR-0013) |
+| Agregado da infração ([WF-INF-003]) e módulo financeiro (arrecadação, restituição, cobrança)                      | financeiro, caso (prazos T-DEC/T-NP-VENC) | pendente (ADR-0014); vocabulário já persistido em `14-inf-lifecycle-vocabulary.sql` (ADR-0015) |
 | Painel de integrações (adapter/outbox: filas, recibos, divergências)                                              | integracoes                               | pendente                                                                                       |
 | Parâmetros versionados e calendário de feriados                                                                   | admin, timers                             | pendente                                                                                       |
 | Jeton (folha) e exportações assinadas                                                                             | organizacao, auditoria                    | pendente; regra local do AM sem fonte                                                          |

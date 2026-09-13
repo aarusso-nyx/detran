@@ -1,0 +1,120 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-PROCESS-BLOCKS-001",
+  "module": {
+    "name": "ProcessBlocks",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "49-ch-process-blocks.sql",
+    "dependencies": {
+      "@detran/ch-encounters": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "process-block-lifecycle.service",
+      "process-block-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "process-block-commands.controller",
+        "symbol": "ProcessBlockCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "process-block-lifecycle.service",
+        "symbol": "ProcessBlockLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch"],
+    "description": "Bloqueios ativos e resolvidos do processo clinico. Cada dominio de origem define seu efeito; este modulo preserva apenas o registro auditable e idempotente sem inventar regras de negocio ausentes."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "ProcessBlock",
+        "table": "process_block",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "encounter_id", "type": "uuid" },
+          { "name": "block_kind", "type": "varchar(64)" },
+          {
+            "name": "source_system",
+            "type": "varchar(64)",
+            "default": "'PEC'"
+          },
+          {
+            "name": "message",
+            "type": "text",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "last-record+20y"
+          },
+          { "name": "active", "type": "boolean", "default": "true" },
+          { "name": "created_by", "type": "uuid", "writable": false },
+          {
+            "name": "resolved_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "resolved_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_process_block_active_source",
+            "columns": [
+              "tenant_id",
+              "encounter_id",
+              "block_kind",
+              "source_system"
+            ],
+            "unique": true,
+            "where": "active"
+          },
+          {
+            "name": "ix_ch_process_block_encounter",
+            "columns": ["tenant_id", "encounter_id", "active"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_process_block_kind",
+            "expression": "block_kind ~ '^[A-Z][A-Z0-9_]{1,63}$'"
+          },
+          {
+            "name": "ck_ch_process_block_resolution",
+            "expression": "(active and resolved_by is null and resolved_at is null) or (not active and resolved_by is not null and resolved_at is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_process_block_encounter",
+            "columns": ["encounter_id"],
+            "references": { "table": "ch.encounter", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/process-blocks/",
+    "resources": [
+      {
+        "entity": "ProcessBlock",
+        "path": "records",
+        "resource": "process-block",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

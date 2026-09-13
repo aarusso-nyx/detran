@@ -32,6 +32,69 @@ importers:
 
   backend/app:
     dependencies:
+      '@aws-sdk/client-cognito-identity-provider':
+        specifier: 3.1052.0
+        version: 3.1052.0
+      '@detran/ch-billing':
+        specifier: workspace:*
+        version: link:../domains/ch/billing
+      '@detran/ch-biometrics':
+        specifier: workspace:*
+        version: link:../domains/ch/biometrics
+      '@detran/ch-clinical-controls':
+        specifier: workspace:*
+        version: link:../domains/ch/clinical-controls
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../domains/ch/clinical-network
+      '@detran/ch-clinical-reports':
+        specifier: workspace:*
+        version: link:../domains/ch/clinical-reports
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../domains/ch/encounters
+      '@detran/ch-exams':
+        specifier: workspace:*
+        version: link:../domains/ch/exams
+      '@detran/ch-inconsistencies':
+        specifier: workspace:*
+        version: link:../domains/ch/inconsistencies
+      '@detran/ch-juntas':
+        specifier: workspace:*
+        version: link:../domains/ch/juntas
+      '@detran/ch-operational-controls':
+        specifier: workspace:*
+        version: link:../domains/ch/operational-controls
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../domains/ch/patients
+      '@detran/ch-process-blocks':
+        specifier: workspace:*
+        version: link:../domains/ch/process-blocks
+      '@detran/ch-restrictions':
+        specifier: workspace:*
+        version: link:../domains/ch/restrictions
+      '@detran/ch-retention':
+        specifier: workspace:*
+        version: link:../domains/ch/retention
+      '@detran/ch-scheduling':
+        specifier: workspace:*
+        version: link:../domains/ch/scheduling
+      '@detran/ch-telehealth':
+        specifier: workspace:*
+        version: link:../domains/ch/telehealth
+      '@detran/ch-toxicology':
+        specifier: workspace:*
+        version: link:../domains/ch/toxicology
+      '@detran/portal-complaints':
+        specifier: workspace:*
+        version: link:../domains/portal/complaints
+      '@detran/sefaz-adapter':
+        specifier: workspace:*
+        version: link:../../packages/sefaz-adapter
+      '@detran/senatran-adapter':
+        specifier: workspace:*
+        version: link:../../packages/senatran-adapter
       '@detran/shared':
         specifier: workspace:*
         version: link:../domains/shared
@@ -74,6 +137,9 @@ importers:
       '@stynx-nyx/ratelimit':
         specifier: 1.1.1
         version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/sessions':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@stynx-nyx/storage':
         specifier: 1.1.1
         version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(pg@8.23.0)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -105,6 +171,548 @@ importers:
       supertest:
         specifier: ^7.2.2
         version: 7.2.2
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/billing:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-process-blocks':
+        specifier: workspace:*
+        version: link:../process-blocks
+      '@detran/ch-telehealth':
+        specifier: workspace:*
+        version: link:../telehealth
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/biometrics:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/clinical-controls:
+    dependencies:
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-exams':
+        specifier: workspace:*
+        version: link:../exams
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/clinical-network:
+    dependencies:
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/clinical-reports:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-exams':
+        specifier: workspace:*
+        version: link:../exams
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/encounters:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/exams:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/inconsistencies:
+    dependencies:
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/juntas:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-clinical-reports':
+        specifier: workspace:*
+        version: link:../clinical-reports
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/operational-controls:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/patients:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/process-blocks:
+    dependencies:
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/restrictions:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-clinical-reports':
+        specifier: workspace:*
+        version: link:../clinical-reports
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-exams':
+        specifier: workspace:*
+        version: link:../exams
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/retention:
+    dependencies:
+      '@detran/ch-clinical-reports':
+        specifier: workspace:*
+        version: link:../clinical-reports
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/scheduling:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/telehealth:
+    dependencies:
+      '@detran/ch-clinical-network':
+        specifier: workspace:*
+        version: link:../clinical-network
+      '@detran/ch-encounters':
+        specifier: workspace:*
+        version: link:../encounters
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  backend/domains/ch/toxicology:
+    dependencies:
+      '@detran/ch-patients':
+        specifier: workspace:*
+        version: link:../patients
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -485,6 +1093,31 @@ importers:
         specifier: ^4.1.7
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
 
+  backend/domains/portal/complaints:
+    dependencies:
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
   backend/domains/shared:
     dependencies:
       '@nestjs/common':
@@ -505,12 +1138,30 @@ importers:
       '@stynx-nyx/data':
         specifier: 1.1.1
         version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/idempotency':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/ratelimit':
+        specifier: 1.1.1
+        version: 1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
       rxjs:
         specifier: ^7.8.2
         version: 7.8.2
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.12)(yaml@2.9.0))
+
+  packages/sefaz-adapter:
     devDependencies:
       '@types/node':
         specifier: ^24.10.1
@@ -789,12 +1440,25 @@ packages:
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
 
+  '@aws-crypto/sha256-browser@5.2.0':
+    resolution: {integrity: sha512-AXfN/lGotSQwu6HNcEsIASo7kWXZ5HYWvfOmSNKDsEqC4OashTp8alTmaz+F7TC2L083SFv5RdB+qU3Vs1kZqw==}
+
+  '@aws-crypto/sha256-js@5.2.0':
+    resolution: {integrity: sha512-FFQQyu7edu4ufvIZ+OadFpHHOt+eSTBaYaki44c+akjg7qZg9oOQeLlk77F6tSYqjDAFClrHJk9tMf0HdVyOvA==}
+    engines: {node: '>=16.0.0'}
+
+  '@aws-crypto/supports-web-crypto@5.2.0':
+    resolution: {integrity: sha512-iAvUotm021kM33eCdNfwIN//F77/IADDSs58i+MDaOqFrVjZo9bAal0NK7HurRuWLLpF1iLX7gbWrjHjeo+YFg==}
+
+  '@aws-crypto/util@5.2.0':
+    resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
+
   '@aws-sdk/checksums@3.1000.29':
     resolution: {integrity: sha512-Dtu0gr4dnATZAPwEYbpCsG+MpLM7OAliy2gTepEFQwl1vZ6DL3QMH2FveMa3HLvPsOdhJsPRB3KtxVhph9T75A==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/client-cognito-identity-provider@3.1116.0':
-    resolution: {integrity: sha512-qJ6FXFXZK8sXMAVCMCJ7Oxv65BTcZ0hTSUn1bbQ+0k5x7zklB2rqrEF6N/RIWPZeKOvYKuD4E5Mzf0Y3FDcNqg==}
+  '@aws-sdk/client-cognito-identity-provider@3.1052.0':
+    resolution: {integrity: sha512-UcXO4Me2lcChenz3oq3Dpp7h2bHnaRfA+uwWAbf3xvqoLLmD8lDI4XeDyrx/oOgEiWZ/0H/gEdEvq8GfwsU0dw==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/client-s3@3.1116.0':
@@ -875,6 +1539,10 @@ packages:
 
   '@aws-sdk/types@3.974.5':
     resolution: {integrity: sha512-LkwLL2BLbC6wNNm4JaH9mbEqBMdOZCct6VAYqhdN4U1xrWM+fUJQEfbHwQgDypapOWTRtlk25akb5afM0P8CIQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/util-locate-window@3.965.10':
+    resolution: {integrity: sha512-ycwH6Zd2GhuSqdXX9ihbCjeGTB6xOJs+O3+Jb8/zDG9978XU80qs75dfkPJRMNKe5MvBZPuNeFpd4JZKPoUF4g==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/xml-builder@3.972.40':
@@ -2032,6 +2700,10 @@ packages:
     resolution: {integrity: sha512-nZyWTmSpJEXl6VtWVMBJve/7x12DZu6sIX1z1a+ZMaHlQQRs9Zpu6NbTe/gmxYXVRpkjxyDYpZ5gx2IM6f/Wkw==}
     engines: {node: '>=18.0.0'}
 
+  '@smithy/is-array-buffer@2.2.0':
+    resolution: {integrity: sha512-GGP3O9QFD24uGeAXYUjwSTXARoqpZykHadOmA8G5vfJPK0/DC67qa//0qvqrJzL1xc8WQWX7/yc7fwudjPHPhA==}
+    engines: {node: '>=14.0.0'}
+
   '@smithy/node-http-handler@4.11.3':
     resolution: {integrity: sha512-2jY1tSpERfPfWqyBV2pH+iGFaghVsIJszJNsT7hxtQYhVJpWDyc0LqOWI+nXOxOAHaEfZ4PXXtp1wW1TGpHhkA==}
     engines: {node: '>=18.0.0'}
@@ -2043,6 +2715,14 @@ packages:
   '@smithy/types@4.17.2':
     resolution: {integrity: sha512-FOKpVZob9MPTn2znRzGrnsMHv7BOsKVw3XiP/cOyYLDVZ9qKp4nifIiSCuUU/fIj5Vu0UOAxCFr+qRAtG0NUkA==}
     engines: {node: '>=18.0.0'}
+
+  '@smithy/util-buffer-from@2.2.0':
+    resolution: {integrity: sha512-IJdWBbTcMQ6DA0gdNhh/BwrLkDR+ADW5Kr1aZmd4k3DIF6ezMV4R2NIAmT08wQJ3yUK82thHWmC/TnK/wpMMIA==}
+    engines: {node: '>=14.0.0'}
+
+  '@smithy/util-utf8@2.3.0':
+    resolution: {integrity: sha512-R8Rdn8Hy72KKcebgLiv8jQcQkXoLMOGGv5uI1/k0l+snqkOzQ1R0ChUBCxWMlBsFMekWjq0wRudIweFs7sKT5A==}
+    engines: {node: '>=14.0.0'}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -4511,6 +5191,32 @@ snapshots:
 
   '@asamuzakjp/nwsapi@2.3.9': {}
 
+  '@aws-crypto/sha256-browser@5.2.0':
+    dependencies:
+      '@aws-crypto/sha256-js': 5.2.0
+      '@aws-crypto/supports-web-crypto': 5.2.0
+      '@aws-crypto/util': 5.2.0
+      '@aws-sdk/types': 3.974.5
+      '@aws-sdk/util-locate-window': 3.965.10
+      '@smithy/util-utf8': 2.3.0
+      tslib: 2.8.1
+
+  '@aws-crypto/sha256-js@5.2.0':
+    dependencies:
+      '@aws-crypto/util': 5.2.0
+      '@aws-sdk/types': 3.974.5
+      tslib: 2.8.1
+
+  '@aws-crypto/supports-web-crypto@5.2.0':
+    dependencies:
+      tslib: 2.8.1
+
+  '@aws-crypto/util@5.2.0':
+    dependencies:
+      '@aws-sdk/types': 3.974.5
+      '@smithy/util-utf8': 2.3.0
+      tslib: 2.8.1
+
   '@aws-sdk/checksums@3.1000.29':
     dependencies:
       '@aws-sdk/core': 3.977.9
@@ -4519,8 +5225,10 @@ snapshots:
       '@smithy/types': 4.17.2
       tslib: 2.8.1
 
-  '@aws-sdk/client-cognito-identity-provider@3.1116.0':
+  '@aws-sdk/client-cognito-identity-provider@3.1052.0':
     dependencies:
+      '@aws-crypto/sha256-browser': 5.2.0
+      '@aws-crypto/sha256-js': 5.2.0
       '@aws-sdk/core': 3.977.9
       '@aws-sdk/credential-provider-node': 3.972.81
       '@aws-sdk/types': 3.974.5
@@ -4736,6 +5444,10 @@ snapshots:
   '@aws-sdk/types@3.974.5':
     dependencies:
       '@smithy/types': 4.17.2
+      tslib: 2.8.1
+
+  '@aws-sdk/util-locate-window@3.965.10':
+    dependencies:
       tslib: 2.8.1
 
   '@aws-sdk/xml-builder@3.972.40':
@@ -5548,6 +6260,10 @@ snapshots:
       '@smithy/types': 4.17.2
       tslib: 2.8.1
 
+  '@smithy/is-array-buffer@2.2.0':
+    dependencies:
+      tslib: 2.8.1
+
   '@smithy/node-http-handler@4.11.3':
     dependencies:
       '@smithy/core': 3.33.3
@@ -5562,6 +6278,16 @@ snapshots:
 
   '@smithy/types@4.17.2':
     dependencies:
+      tslib: 2.8.1
+
+  '@smithy/util-buffer-from@2.2.0':
+    dependencies:
+      '@smithy/is-array-buffer': 2.2.0
+      tslib: 2.8.1
+
+  '@smithy/util-utf8@2.3.0':
+    dependencies:
+      '@smithy/util-buffer-from': 2.2.0
       tslib: 2.8.1
 
   '@standard-schema/spec@1.1.0': {}
@@ -5661,7 +6387,7 @@ snapshots:
 
   '@stynx-nyx/auth@1.1.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)':
     dependencies:
-      '@aws-sdk/client-cognito-identity-provider': 3.1116.0
+      '@aws-sdk/client-cognito-identity-provider': 3.1052.0
       '@aws-sdk/credential-providers': 3.1116.0
       '@aws-sdk/types': 3.974.5
       '@nestjs/common': 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)

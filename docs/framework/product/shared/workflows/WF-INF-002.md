@@ -788,5 +788,5 @@ Página consolidada com todos os diagramas embutidos (este documento e [WF-INF-0
 - **2026-09-12** — redação inicial (rodada de modelagem BPM, Owner). Sem decisões vinculantes; o
   documento propõe a costura dos workflows existentes e o catálogo unificado de timers, e serve de
   base à máquina de estados consolidada em [WF-INF-003].
-- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0012). Referências deste
+- **2026-09-12** — Owner: [WF-INF-003] substitui [WF-INF-001] (ADR-0014). Referências deste
   documento ao antigo artefato passam a ser históricas.

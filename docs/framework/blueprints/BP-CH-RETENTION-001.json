@@ -1,0 +1,236 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-CH-RETENTION-001",
+  "module": {
+    "name": "Retention",
+    "namespace": "ch",
+    "version": "1.0.0",
+    "ddlFile": "48-ch-retention.sql",
+    "dependencies": {
+      "@detran/ch-clinical-reports": "workspace:*",
+      "@detran/ch-encounters": "workspace:*",
+      "@detran/ch-patients": "workspace:*"
+    },
+    "testAliases": [
+      { "package": "@detran/shared", "target": "../../shared/src/index.ts" }
+    ],
+    "handwrittenExports": [
+      "retention-lifecycle.service",
+      "retention-commands.controller"
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "retention-commands.controller",
+        "symbol": "RetentionCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "retention-lifecycle.service",
+        "symbol": "RetentionLifecycleService"
+      }
+    ],
+    "owners": ["detran-ch", "detran-dpo"],
+    "description": "Inventario de custodia do prontuario pela plataforma, piso de vinte anos, retencoes juridicas e propostas de destino. Nao existe operacao de eliminacao enquanto preservacao PAdES-LTA estiver ausente."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "RetentionCase",
+        "table": "retention_case",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "patient_id", "type": "uuid" },
+          { "name": "custodian", "type": "varchar(24)", "writable": false },
+          {
+            "name": "last_record_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          { "name": "eligible_after", "type": "date", "writable": false },
+          {
+            "name": "preservation_status",
+            "type": "varchar(32)",
+            "writable": false
+          },
+          { "name": "status", "type": "varchar(32)", "writable": false },
+          { "name": "block_reasons", "type": "jsonb", "writable": false },
+          { "name": "assessed_by", "type": "uuid", "writable": false },
+          { "name": "assessed_at", "type": "timestamptz", "writable": false }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ch_retention_case_patient",
+            "columns": ["tenant_id", "patient_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_ch_retention_case_eligibility",
+            "columns": ["tenant_id", "status", "eligible_after"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_retention_case_custodian",
+            "expression": "custodian = 'PLATFORM'"
+          },
+          {
+            "name": "ck_ch_retention_case_preservation",
+            "expression": "preservation_status in ('PAdES_LTA_REQUIRED','PAdES_LTA_READY')"
+          },
+          {
+            "name": "ck_ch_retention_case_status",
+            "expression": "status in ('RETAINED','LEGAL_REVIEW','ELIGIBLE_BLOCKED')"
+          },
+          {
+            "name": "ck_ch_retention_case_period",
+            "expression": "eligible_after >= (last_record_at::date + interval '20 years')::date"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_retention_case_patient",
+            "columns": ["patient_id"],
+            "references": { "table": "ch.patient", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "RetentionHold",
+        "table": "retention_hold",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "retention_case_id", "type": "uuid" },
+          { "name": "reason", "type": "text", "pii": "legal-sensitive" },
+          { "name": "status", "type": "varchar(16)", "writable": false },
+          { "name": "imposed_by", "type": "uuid", "writable": false },
+          {
+            "name": "released_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "released_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_retention_hold_case",
+            "columns": ["tenant_id", "retention_case_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_retention_hold_status",
+            "expression": "status in ('ACTIVE','RELEASED')"
+          },
+          {
+            "name": "ck_ch_retention_hold_release",
+            "expression": "status <> 'RELEASED' or (released_by is not null and released_at is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_retention_hold_case",
+            "columns": ["retention_case_id"],
+            "references": { "table": "ch.retention_case", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "RetentionDisposition",
+        "table": "retention_disposition",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "retention_case_id", "type": "uuid" },
+          { "name": "destination", "type": "varchar(16)" },
+          { "name": "status", "type": "varchar(24)", "writable": false },
+          { "name": "justification", "type": "text", "pii": "legal-sensitive" },
+          { "name": "proposed_by", "type": "uuid", "writable": false },
+          { "name": "proposed_at", "type": "timestamptz", "writable": false },
+          {
+            "name": "return_offered_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          {
+            "name": "reviewed_by",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "reviewed_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_ch_retention_disposition_case",
+            "columns": ["tenant_id", "retention_case_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ch_retention_disposition_destination",
+            "expression": "destination in ('RETURN','EXTEND','DELETE')"
+          },
+          {
+            "name": "ck_ch_retention_disposition_status",
+            "expression": "status in ('PROPOSED','DPO_REVIEWED','BLOCKED')"
+          },
+          {
+            "name": "ck_ch_retention_disposition_return_first",
+            "expression": "return_offered_at <= proposed_at"
+          },
+          {
+            "name": "ck_ch_retention_disposition_review",
+            "expression": "status = 'PROPOSED' or (reviewed_by is not null and reviewed_at is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ch_retention_disposition_case",
+            "columns": ["retention_case_id"],
+            "references": { "table": "ch.retention_case", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ch/retention/",
+    "resources": [
+      {
+        "entity": "RetentionCase",
+        "path": "cases",
+        "resource": "retention",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "RetentionHold",
+        "path": "holds",
+        "resource": "retention",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "RetentionDisposition",
+        "path": "dispositions",
+        "resource": "retention",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

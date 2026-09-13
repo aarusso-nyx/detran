@@ -48,7 +48,7 @@ política (`policy.ts`) e as ações de auditoria. Convenções de payload: `rai
 | `offline-sync`                     |    31 | `/v1/ops/offline-sync/*`                     | `@stynx-nyx/offline-sync` + `BP-OPS-OFFLINE-SYNC-001` | pendente (política já existe)                                             |
 | `evidence-custody`                 |    40 | `/v1/ops/evidence/*`                         | `ops-evidence-custody` + `BP-OPS-EVIDENCE-001`        | handwritten parcial (5 rotas)                                             |
 | `external-snapshots`               |    25 | `/v1/ops/snapshots/*`                        | `ops-snapshots`                                       | handwritten parcial (5 rotas)                                             |
-| `traffic-integrations`             |    32 | `/v1/ops/integrations/*` (leitura da outbox) | `@stynx-nyx/outbox` + adapter                         | substituído pelo padrão de ADR-0018                                       |
+| `traffic-integrations`             |    32 | `/v1/ops/integrations/*` (leitura da outbox) | `@stynx-nyx/outbox` + adapter                         | substituído pelo padrão de ADR-0020                                       |
 | `agency-context`                   |    40 | `/v1/ops/agency/*`                           | ADR OD-T02                                            | pendente                                                                  |
 | `crash-records`                    |    32 | `/v1/est/boat/*`                             | BOAT                                                  | fora deste contrato                                                       |
 | `audit-governance`, `bi-reporting` |    38 | kernel STYNX (`/audit/*`), dashboard         | —                                                     | não portados                                                              |
@@ -157,7 +157,7 @@ driver_by_cpf\|driver_by_license, parameters{…}, purpose }` → adapter `Wsden
 `RenachPort` → snapshot congelado `{ snapshot_id, source, queried_at, result, divergence_recorded }`),
 `GET external-queries` (auditoria). Erros `TEAT.QUERY_UPSTREAM_UNAVAILABLE`, `TEAT.QUERY_NOT_FOUND`.
 
-### 4.6 Integrações (`/v1/ops/integrations`, projeção da outbox — ADR-0018)
+### 4.6 Integrações (`/v1/ops/integrations`, projeção da outbox — ADR-0020)
 
 `GET outbox?system=renainf|renach|renaest|sne&status=`, `POST outbox/{id}/retry`,
 `POST outbox/batches/{id}/retransmit`, `GET certificates` (validade mTLS), `GET health`.
@@ -214,7 +214,7 @@ replay conforme `rait-events-sse-contract.md` §1 e §3; filtro por papel e unid
 ## 8. Eventos de domínio publicados pelo TEAT (contrato do domínio)
 
 `AIT_FINALIZADO`, `AIT_RECEBIDO` (recibo), `AIT_SUSPEITO_CONCORRENCIA`, `AIT_ACEITO`,
-`AIT_REJEITADO`, `AIT_INTEGRADO` (→ infração, ADR-0014), `AIT_CANCELADO_POSFINAL` (→ infração),
+`AIT_REJEITADO`, `AIT_INTEGRADO` (→ infração, ADR-0016), `AIT_CANCELADO_POSFINAL` (→ infração),
 `MEDIDA_INICIADA`, `MEDIDA_CONCLUIDA`, `TERMO_EMITIDO`, `ALCOOLEMIA_TESTE_REGISTRADO`,
 `ALCOOLEMIA_RECUSA_REGISTRADA`, `EVIDENCIA_CAPTURADA`, `EVIDENCIA_VINCULADA`,
 `CUSTODIA_EVENTO`, `PACOTE_PROBATORIO_GERADO`, `NUMERACAO_RESERVADA`, `SYNC_ITEM_RECEBIDO`,

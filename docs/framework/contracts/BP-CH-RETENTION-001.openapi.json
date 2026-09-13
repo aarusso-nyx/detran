@@ -1,0 +1,427 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Retention — BP-CH-RETENTION-001",
+    "version": "1.0.0",
+    "description": "Inventario de custodia do prontuario pela plataforma, piso de vinte anos, retencoes juridicas e propostas de destino. Nao existe operacao de eliminacao enquanto preservacao PAdES-LTA estiver ausente.",
+    "x-blueprint": "BP-CH-RETENTION-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/retention/cases": {
+      "get": {
+        "tags": ["retention"],
+        "operationId": "listRetentionCase",
+        "summary": "List RetentionCase (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RetentionCase"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/cases/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["retention"],
+        "operationId": "getRetentionCase",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetentionCase"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/holds": {
+      "get": {
+        "tags": ["retention"],
+        "operationId": "listRetentionHold",
+        "summary": "List RetentionHold (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RetentionHold"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/holds/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["retention"],
+        "operationId": "getRetentionHold",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetentionHold"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/dispositions": {
+      "get": {
+        "tags": ["retention"],
+        "operationId": "listRetentionDisposition",
+        "summary": "List RetentionDisposition (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RetentionDisposition"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/retention/dispositions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["retention"],
+        "operationId": "getRetentionDisposition",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetentionDisposition"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RetentionCase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "custodian": {
+            "type": "string",
+            "maxLength": 24
+          },
+          "last_record_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "eligible_after": {
+            "type": "string",
+            "format": "date"
+          },
+          "preservation_status": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": ["PAdES_LTA_REQUIRED", "PAdES_LTA_READY"]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": ["RETAINED", "LEGAL_REVIEW", "ELIGIBLE_BLOCKED"]
+          },
+          "block_reasons": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "assessed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assessed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "patient_id",
+          "custodian",
+          "last_record_at",
+          "eligible_after",
+          "preservation_status",
+          "status",
+          "block_reasons",
+          "assessed_by",
+          "assessed_at",
+          "created_at"
+        ]
+      },
+      "CreateRetentionCaseDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["patient_id"]
+      },
+      "RetentionHold": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retention_case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "x-pii": "legal-sensitive"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["ACTIVE", "RELEASED"]
+          },
+          "imposed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "released_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "retention_case_id",
+          "reason",
+          "status",
+          "imposed_by",
+          "created_at"
+        ]
+      },
+      "CreateRetentionHoldDto": {
+        "type": "object",
+        "properties": {
+          "retention_case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "x-pii": "legal-sensitive"
+          }
+        },
+        "required": ["retention_case_id", "reason"]
+      },
+      "RetentionDisposition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retention_case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "destination": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["RETURN", "EXTEND", "DELETE"]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["PROPOSED", "DPO_REVIEWED", "BLOCKED"]
+          },
+          "justification": {
+            "type": "string",
+            "x-pii": "legal-sensitive"
+          },
+          "proposed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "proposed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "return_offered_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reviewed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "retention_case_id",
+          "destination",
+          "status",
+          "justification",
+          "proposed_by",
+          "proposed_at",
+          "return_offered_at",
+          "created_at"
+        ]
+      },
+      "CreateRetentionDispositionDto": {
+        "type": "object",
+        "properties": {
+          "retention_case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "destination": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["RETURN", "EXTEND", "DELETE"]
+          },
+          "justification": {
+            "type": "string",
+            "x-pii": "legal-sensitive"
+          }
+        },
+        "required": ["retention_case_id", "destination", "justification"]
+      }
+    }
+  }
+}

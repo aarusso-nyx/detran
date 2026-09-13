@@ -141,7 +141,7 @@ correspondentes e a seção "Pontos que a múltipla escolha não fechou" abaixo.
 
 34. Substrato de plataforma do frontend e do backend: manter STYNX 1.1.1 / Angular 21 ou adotar
     STYNX@latest? **Resposta: adotar STYNX 1.3.1 (latest), com o Angular correspondente (22.x)
-    e o DEVAI correspondente (1.4.5, já pinado).** Registro em ADR-0013; migração dos pins do
+    e o DEVAI correspondente (1.4.5, já pinado).** Registro em ADR-0015; migração dos pins do
     workspace no pacote de trabalho WP-0 (`docs/framework/arch/rait-build-pack.md`).
 35. Papéis do RAIT: manter só a visão agregada de `shared/actors.md` ou estender o catálogo
     canônico? **Resposta: estender** — dez códigos `rait-*` em `roles.ts`, no DDL
@@ -153,9 +153,9 @@ correspondentes e a seção "Pontos que a múltipla escolha não fechou" abaixo.
 
 ---
 
-37. Fronteiras dos módulos transversais do escopo de infrações (ADR-0014 infração e
-    notificação; ADR-0015 arrecadação; ADR-0016 documentos e assinatura como substrato;
-    ADR-0017 domínio `portal`; ADR-0018 projeções): aceitar como propostas pelo Architect?
+37. Fronteiras dos módulos transversais do escopo de infrações (ADR-0016 infração e
+    notificação; ADR-0017 arrecadação; ADR-0018 documentos e assinatura como substrato;
+    ADR-0019 domínio `portal`; ADR-0020 projeções): aceitar como propostas pelo Architect?
     **Resposta: todas aceitas (2026-09-13).** Ordem de construção sugerida: 0014 e 0016, depois
     0015 e 0018, e 0017 por último.
 
@@ -172,7 +172,7 @@ flag ou edição de DDL/política que o propaga (`docs/framework/arch/parameter-
     cancelamento pós-final exige `addressed_to=board` e a política checa o atributo.
 40. Cédula 01.3 (OD-T02, OD-013): **módulo `ops/agency` mínimo** (unidade, circunscrição,
     competência); convênios e o restante do `agency-context` ficam para depois.
-41. Cédula 02 (OD-020): **WP-0 já, em PR único**, com `@stynx-nyx/feature-flags` (ADR-0019) e
+41. Cédula 02 (OD-020): **WP-0 já, em PR único**, com `@stynx-nyx/feature-flags` (ADR-0021) e
     `engines.node >= 22`; nenhuma tela antes.
 42. Cédula 03.1 (OD-B11): **catálogos do protótipo**, `source_pending`, editáveis pelo
     `agency-admin` até os Manuais RENAEST.

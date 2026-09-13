@@ -1,6 +1,6 @@
 ---
 id: ARCH-PARAMETER-CATALOGUE
-title: Catálogo de parâmetros e flags — chaves, defaults, status, fonte e decisão vinculada (seed de ops.parameter, ADR-0019)
+title: Catálogo de parâmetros e flags — chaves, defaults, status, fonte e decisão vinculada (seed de ops.parameter, ADR-0021)
 status: draft
 apps: [rait, teat, portal, boat, dashboard]
 updated: 2026-09-13
@@ -8,7 +8,7 @@ updated: 2026-09-13
 
 # Catálogo de parâmetros e flags
 
-Uma linha por chave de `ops.parameter` (ADR-0019). `status` segue o vocabulário de
+Uma linha por chave de `ops.parameter` (ADR-0021). `status` segue o vocabulário de
 `infraction_timer_ref` (`vigente`, `a_confirmar`, `proposta`); `pend.` = `source_pending`;
 `legal` = `legal_readonly`; **F** = flag em `@stynx-nyx/feature-flags` com default aqui.
 Erro quando pendente e exigido: família `<SURFACE>.PARAMETER_SOURCE_PENDING`. Editor:

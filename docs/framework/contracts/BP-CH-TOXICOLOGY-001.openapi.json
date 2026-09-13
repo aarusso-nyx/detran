@@ -1,0 +1,291 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Toxicology — BP-CH-TOXICOLOGY-001",
+    "version": "1.0.0",
+    "description": "Resultados toxicologicos periodicos imutaveis recebidos do RENACH e suspensoes derivadas sem fabricar encounter clinico.",
+    "x-blueprint": "BP-CH-TOXICOLOGY-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/toxicology/results": {
+      "get": {
+        "tags": ["tox"],
+        "operationId": "listPeriodicToxicologyResult",
+        "summary": "List PeriodicToxicologyResult (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PeriodicToxicologyResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/toxicology/results/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["tox"],
+        "operationId": "getPeriodicToxicologyResult",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeriodicToxicologyResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/toxicology/suspensions": {
+      "get": {
+        "tags": ["tox"],
+        "operationId": "listToxicologySuspension",
+        "summary": "List ToxicologySuspension (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ToxicologySuspension"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/toxicology/suspensions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["tox"],
+        "operationId": "getToxicologySuspension",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToxicologySuspension"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PeriodicToxicologyResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_event_id": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "payload_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "driver_cpf": {
+            "type": "string",
+            "maxLength": 11,
+            "x-pii": "direct"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["C", "D", "E"]
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["POSITIVE", "NEGATIVE"]
+          },
+          "collected_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "laboratory_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "source_reference": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "driver_alert_status": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["SENT", "SCHEDULED", "NOT_REQUIRED"]
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "source_event_id",
+          "payload_sha256",
+          "patient_id",
+          "driver_cpf",
+          "category",
+          "result",
+          "collected_at",
+          "valid_until",
+          "occurred_at",
+          "laboratory_code",
+          "source_reference",
+          "driver_alert_status",
+          "created_at"
+        ]
+      },
+      "CreatePeriodicToxicologyResultDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "ToxicologySuspension": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patient_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_positive_result_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["ACTIVE", "RELEASED", "EXPIRED"],
+            "default": "'ACTIVE'"
+          },
+          "released_by_result_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "released_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "patient_id",
+          "source_positive_result_id",
+          "starts_at",
+          "ends_at",
+          "created_at"
+        ]
+      },
+      "CreateToxicologySuspensionDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}

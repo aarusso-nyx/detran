@@ -1,7 +1,7 @@
 // Generated from BP-OPS-EXAMPLE-001 v1.0.0 sha256:a70ca6e407f469de7c4926ee3eea5364795e84c1934982d0662dcaf70341cb29
-import { NotFoundException } from '@nestjs/common';
-import type { RequestContext } from '@stynx-nyx/core';
-import type { Database, Transaction } from '@stynx-nyx/data';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RequestContext } from '@stynx-nyx/core';
+import { Database, type Transaction } from '@stynx-nyx/data';
 import { withTenantContext } from '@detran/shared';
 import type { CreateExampleRecordDto } from '../dto/create-example-record.dto.js';
 import type { ExampleRecord } from '../entities/example-record.entity.js';
@@ -15,13 +15,11 @@ type SqlTransaction = Transaction & {
 const WRITABLE_FIELDS = new Set<string>(['label']);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */
+@Injectable()
 export class ExampleRecordRepository {
   constructor(
-    private readonly database: Pick<Database, 'tx'>,
-    private readonly requestContext: Pick<
-      RequestContext,
-      'hasActiveContext' | 'snapshot'
-    >,
+    private readonly database: Database,
+    private readonly requestContext: RequestContext,
   ) {}
   transaction<T>(work: (transaction: Transaction) => Promise<T>): Promise<T> {
     return withTenantContext(this.database, this.requestContext, work);

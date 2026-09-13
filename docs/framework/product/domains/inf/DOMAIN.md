@@ -13,7 +13,7 @@ CETRAN → encerramento da instância (RENACH, cobrança) ou extinção (cancela
 prescrição).
 
 - Máquina de estados canônica da infração: [WF-INF-003] (substitui [WF-INF-001] — decisão do Owner,
-  2026-09-12, ADR-0012).
+  2026-09-12, ADR-0014).
 - Modelo de processos (BPMN) e catálogo de timers automáticos: [WF-INF-002].
 - Máquina operacional do caso de defesa/recurso: [WF-RAIT-001] (distribuição em [WF-RAIT-002],
   sessão colegiada em [WF-RAIT-003]).

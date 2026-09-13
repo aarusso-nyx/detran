@@ -8,11 +8,11 @@ updated: 2026-09-13
 
 # Pacote de construção do Portal
 
-Índice das definições para construir `domains/portal` (ADR-0017), as projeções (ADR-0018) e o PWA
+Índice das definições para construir `domains/portal` (ADR-0019), as projeções (ADR-0020) e o PWA
 `apps/portal/web`. Segue as regras comuns do `rait-build-pack.md` §0 e os manuais de
 `docs/meta/agents/`. Fontes: [APP-PORTAL], [WF-PORTAL-001…004], [UC-PORTAL-001…019],
 [RN-PORTAL-101…128], [JRN-PORTAL-001…011], [IU-PORTAL-001]; `portal-frontends.md`,
-`portal-route-contract.md`, `portal-error-catalog.md`; ADR-0014…0018; portal e domínio
+`portal-route-contract.md`, `portal-error-catalog.md`; ADR-0016…0020; portal e domínio
 `appeals-administrative-appeals` do repositório de origem (somente leitura, referência).
 
 ## 1. Estado de partida (verificado em 2026-09-13)
@@ -22,7 +22,7 @@ updated: 2026-09-13
 | Corpus de produto                        | completo: trilha de apelação `approved`; 28 regras `draft`; 27 telas; catálogo de 15 serviços                                                                                                                                                                                                              |
 | Backend neste monorepo                   | nenhum módulo, blueprint ou DDL do Portal; política tem só `portal:appeal:create                                                                                                                                                                                                                           | read-own` |
 | Origem (`../teat`)                       | portal Angular com 27 rotas (9 telas reais, 15 stubs de catálogo, 3 estáticas/leitura), 12 endpoints `/v1/portal/*` não publicados no contrato, domínio `appeal.*` com caso próprio (a **não** portar: o caso é o do RAIT) e `portal.*`/`platform.*` (catálogo, vínculo, política de ato, marca, hostname) |
-| Identidade                               | origem usa pool Cognito com grupos `citizen`/`legal-representative` e claim `custom:teat_assurance_level`; **sem gov.br**; ADR-0017 exige federação gov.br                                                                                                                                                 |
+| Identidade                               | origem usa pool Cognito com grupos `citizen`/`legal-representative` e claim `custom:teat_assurance_level`; **sem gov.br**; ADR-0019 exige federação gov.br                                                                                                                                                 |
 | Integrações disponíveis                  | `CdtPort` (multas, veículos, CNH, cotação, reconhecimento), `SnePort`, `RenachPort`, RENAVAM leitura — mock-first (ADR-0008)                                                                                                                                                                               |
 | Decisões abertas que condicionam módulos | DT-050 (portaria de níveis), DT-026 (renúncia 40%), DT-027 (CRLV-e × recurso), DT-031 (cartão), DT-051 (nível da ouvidoria), DT-028 (declaração WCAG, adotada na origem em 2026-08-28), DT-066 (Lei 14.129)                                                                                                |
 
@@ -30,7 +30,7 @@ updated: 2026-09-13
 
 ### WP-P0 — Identidade federada (Architect → Engineer; ADR curta)
 
-Ler: ADR-0017 §1, [WF-PORTAL-002], `portal-rait-runtime-deployment.md` da origem, `@stynx-nyx/auth`.
+Ler: ADR-0019 §1, [WF-PORTAL-002], `portal-rait-runtime-deployment.md` da origem, `@stynx-nyx/auth`.
 Produzir: ADR "gov.br via Cognito" (IdP OIDC gov.br no pool do cidadão; mapeamento do nível de
 confiabilidade gov.br → `assurance_level` simples/avançada/qualificada como claim assinada; CPF
 como `sub` de negócio; grupos `CIDADAO`; representação como atributo); configuração do pool no
@@ -45,7 +45,7 @@ como `sub` de negócio; grupos `CIDADAO`; representação como atributo); config
 | `BP-PORTAL-REQUESTS-001`        | `portal.request` (máquina `WF-PORTAL-001`, `service_key`, alvo, `channel` FK canal, delegação: domínio, comando, id externo), `portal.request_draft` (jsonb versionado), `portal.request_attachment` (hash, intenção de upload), `portal.protocol` (número, data-hora, canal, hash do recibo), `portal.consequence_ack` (texto, versão, quando), `portal.evaluation` |
 | `BP-PORTAL-INBOX-001`           | `portal.inbox_item` (kind, source, evento de origem, lido em), `portal.acknowledgement_evidence` (hash do exibido, quando, assinado), `portal.sne_enrollment` (estado, canal, desde, cancelado em), `portal.push_subscription`                                                                                                                                       |
 | `BP-PORTAL-CITIZEN-SERVICE-001` | `portal.manifestation` (máquina `WF-PORTAL-004`, tipo, sigilo, anônimo), `portal.manifestation_extension` (justificativa), `portal.service_catalog` (11 campos, check de motivo), `portal.brand_profile`, `portal.public_hostname`                                                                                                                                   |
-| projeções (ADR-0018)            | `portal.infraction_view`, `portal.process_timeline`, `portal.points_view`, `portal.crash_view` (BOAT), `portal.exam_view` (PEC)                                                                                                                                                                                                                                      |
+| projeções (ADR-0020)            | `portal.infraction_view`, `portal.process_timeline`, `portal.points_view`, `portal.crash_view` (BOAT), `portal.exam_view` (PEC)                                                                                                                                                                                                                                      |
 
 Timers no motor de prazos (`owner='portal'`): `T-PROTOCOLO` (imediato), `T-OUV-RESPOSTA` (30+30),
 `T-OUV-INFO` (20+20, interno), `T-AVAL-CONVITE`, `T-SNE-CIENCIA` (30, lido do módulo de
@@ -56,7 +56,7 @@ disponíveis/2 parciais/4 indisponíveis com motivo. Gate: `blueprints:check`, `
 
 ### WP-P2 — Rotas, delegações e projeções (Engineer-backend)
 
-Ler: `portal-route-contract.md`, `portal-error-catalog.md`, ADR-0014/0015/0018, comandos do RAIT
+Ler: `portal-route-contract.md`, `portal-error-catalog.md`, ADR-0016/0015/0018, comandos do RAIT
 (`rait-build-pack.md` WP-B). Produzir: controladores `/v1/portal/*`; serviço de delegação (uma
 transação: protocolo → comando do domínio dono → estado `EM_ANDAMENTO_NO_ORGAO`; falha após o
 protocolo vira pendência interna, nunca perde o protocolo); projetores das cinco projeções a partir
@@ -105,7 +105,7 @@ WP-P0 ──► WP-P1 ──► WP-P2 ──► WP-P3 ──┐
                 └──► WP-P4 ──────────────┼──► WP-P5 ──► WP-P6
 ```
 
-WP-P2 depende dos comandos do RAIT (WP-B) e dos módulos de ADR-0014/0015 para as delegações de
+WP-P2 depende dos comandos do RAIT (WP-B) e dos módulos de ADR-0016/0015 para as delegações de
 defesa, indicação e pagamento; até lá, as rotas existem e devolvem `SERVICE_UNAVAILABLE` com
 motivo (o catálogo é dado). Sonnet: WP-P3, WP-P4; Opus/Terra: WP-P0, WP-P1, WP-P2.
 
@@ -131,8 +131,8 @@ motivo (o catálogo é dado). Sonnet: WP-P3, WP-P4; Opus/Terra: WP-P0, WP-P1, WP
 
 | Entregável            | Definições                                                                                                             |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| A (dados)             | WP-P1; ADR-0017/0018; [WF-PORTAL-001…004]; entidades `portal.*`/`platform.*` da origem como referência                 |
-| B (rotas)             | `portal-route-contract.md`; delegações ADR-0014/0015/RAIT; `policy.ts` (`portal:*`)                                    |
+| A (dados)             | WP-P1; ADR-0019/0018; [WF-PORTAL-001…004]; entidades `portal.*`/`platform.*` da origem como referência                 |
+| B (rotas)             | `portal-route-contract.md`; delegações ADR-0016/0015/RAIT; `policy.ts` (`portal:*`)                                    |
 | C (payloads)          | `portal-route-contract.md` §5.1; `rait-build-pack.md` §0; `portal-error-catalog.md`                                    |
 | D (telas)             | [IU-PORTAL-001]; `portal-frontends.md` §4–§6; [JRN-PORTAL-001…011]; catálogo de telas da origem (estados obrigatórios) |
 | E (formulários/gates) | `portal-frontends.md` §7; [WF-PORTAL-001/002]; [RN-PORTAL-*]; `portal-error-catalog.md`                                |

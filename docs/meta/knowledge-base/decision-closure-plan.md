@@ -2,7 +2,7 @@
 
 Índice vivo que sucede o retrato de `implementation-gate-2026-09-13.md`. Cada item do portão
 recebe **uma via primária** e, quando possível, uma **ponte C** (parâmetro ou flag de
-`docs/framework/arch/parameter-catalogue.md`, ADR-0019) que destrava a construção enquanto a
+`docs/framework/arch/parameter-catalogue.md`, ADR-0021) que destrava a construção enquanto a
 via principal não fecha.
 
 | Via   | Critério                                                           | Como fecha                                                                                   |

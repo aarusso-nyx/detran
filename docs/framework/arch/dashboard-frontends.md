@@ -19,7 +19,7 @@ painel BI), absorvidos aqui como telas de apoio. Companheiros: `dashboard-route-
 
 Fontes de verdade: [APP-DASHBOARD] (42 indicadores em quatro blocos), [WF-DASH-001] (ciclo do
 alerta), [WF-DASH-002] (calendário de deveres), [WF-DASH-003] (frescor), [UC-DASH-001]…[008],
-[RN-DASH-101]…[173] (31 regras), [JRN-DASH-001]…[007], [IU-DASH-001]; ADR-0018 (projeções);
+[RN-DASH-101]…[173] (31 regras), [JRN-DASH-001]…[007], [IU-DASH-001]; ADR-0020 (projeções);
 `rait-events-sse-contract.md`. Quando divergirem, vale o artefato de produto.
 
 ## 1. Stack, princípios e fronteiras
@@ -27,7 +27,7 @@ alerta), [WF-DASH-002] (calendário de deveres), [WF-DASH-003] (frescor), [UC-DA
 | Item        | Decisão                                                                                                                                                                                                                      |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | App         | Angular 22 standalone em `apps/dashboard/web`, bootstrap `provideDetranAuthenticatedApp` (OIDC, tenancy, i18n), kit `@detran/ui` (`DetranAppShellComponent`, tabela, paginação, toast, estados vazio/carregando/erro)        |
-| Dados       | só projeções `dashboard.*` (ADR-0018) e o estado próprio do painel (alertas, ciclos de dever, frescor, exportações); nenhuma leitura de tabela de outro domínio; nenhuma escrita em domínio                                  |
+| Dados       | só projeções `dashboard.*` (ADR-0020) e o estado próprio do painel (alertas, ciclos de dever, frescor, exportações); nenhuma leitura de tabela de outro domínio; nenhuma escrita em domínio                                  |
 | Tempo real  | SSE `GET /v1/dashboard/stream` (alertas, frescor, integrações) com fallback de polling de 30 s; cada leitura carrega `freshness` e `asOf`                                                                                    |
 | Fronteira   | **nenhum botão pratica ato de negócio** ([RN-DASH-101]): verbos permitidos são ver, filtrar, exportar e notificar um humano; toda ação de mérito é deep-link para o app de origem                                            |
 | Camadas     | Ação (cruzou limiar, precisa de dono agora, sempre com verbo) › Vigilância (acompanhamento periódico) › Contexto (sob demanda) — ordem fixa na tela e na navegação ([IU-DASH-001] §B)                                        |
@@ -128,7 +128,7 @@ nunca um), `DutyCalendar`, `DutyCycleStepper`, `EvidenceAttach` (protocolo/captu
 
 ## 8. Dados
 
-Projeções de ADR-0018 (`dashboard.prescription_risk`, `dashboard.production`,
+Projeções de ADR-0020 (`dashboard.prescription_risk`, `dashboard.production`,
 `dashboard.integration_health`, `dashboard.crashes`) mais as previstas em
 `dashboard-route-contract.md` §6 (`pec_deadlines`, `teat_measures`, `duty_evidence`,
 `portal_service_metrics`, `source_freshness`); estado próprio em `dashboard.alert`,

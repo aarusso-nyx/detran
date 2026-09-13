@@ -5,7 +5,7 @@ Read `AGENTS.md` — it is the canonical agent-facing constitution for this repo
 
 Quick facts: DEVAI-governed (`@aarusso-nyx/devai@1.4.5`, Constitution 1.0.0
 pinned at `.devai/pin/constitution.md`), STYNX platform substrate (target 1.3.1 /
-Angular 22 per ADR-0013; pins at 1.1.1 until WP-0 merges; `@stynx-nyx/*` via GitHub Packages; `NODE_AUTH_TOKEN="$(gh auth token)"` locally). Domain-first
+Angular 22 per ADR-0015; pins at 1.1.1 until WP-0 merges; `@stynx-nyx/*` via GitHub Packages; `NODE_AUTH_TOKEN="$(gh auth token)"` locally). Domain-first
 monorepo: `backend/` modular monolith (inf/est/ch/ops + portal/dashboard/shared),
 `apps/` frontends only, `packages/senatran-adapter` as the sole national-API
 boundary. Founding ADRs: `docs/meta/adr/ADR-0001…0004`.

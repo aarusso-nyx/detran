@@ -9,7 +9,7 @@ updated: 2026-09-13
 # Contrato de rotas do DASHBOARD
 
 Rotas do módulo `dashboard` no backend unificado. O DASHBOARD não tem base de negócio: lê
-projeções alimentadas por eventos (ADR-0018) e mantém apenas o **seu próprio estado** (ciclo do
+projeções alimentadas por eventos (ADR-0020) e mantém apenas o **seu próprio estado** (ciclo do
 alerta, ciclos de dever, catálogo de indicadores, frescor, registro de exportação, relatórios). Da
 origem (`BP-BI-REPORTING-001`) porta os três recursos `generated-report`, `indicator-config`,
 `bi-panel` e as cinco ações já presentes em `policy.ts`. Convenções: `rait-build-pack.md` §0;
@@ -90,7 +90,7 @@ Eventos `alert.changed`, `alert.escalated`, `duty.changed`, `source.freshness`,
 `integration.health`; mesmo protocolo de `rait-events-sse-contract.md` §3 (`Last-Event-ID`,
 retomada, fallback de polling em 30 s). O stream é visão viva das projeções, não segunda fonte.
 
-## 6. Projeções (ADR-0018) e eventos consumidos
+## 6. Projeções (ADR-0020) e eventos consumidos
 
 | Projeção                                      | Eventos de origem                                                                         | Indicadores                   |
 | --------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------- |

@@ -15,25 +15,37 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
 - **ADR-0005** — Unified backend kernel: exact registry pins, fail-closed
   profiles, role-union mapping, request-path tenancy, persisted audit chain and
   the Phase-2 backend CI gate.
-- **ADR-0010** — `detran/docs` is the single writable authority for the business/legal knowledge
-  base; source provenance is immutable, and publication is status-gated and fail-closed.
+- **ADR-0006** — Shared DETRAN Angular UI kit over STYNX.
+- **ADR-0006** — Field-operations port scope and offline-sync deferral.
+- **ADR-0007** — Blueprint JSON is the sole authority for generated backend
+  scaffolds and numbered domain DDL.
+- **ADR-0008** — SENATRAN provider configuration, English ports, feature flags,
+  resilience and generated wire contracts.
+- **ADR-0009** — OpenAPI contracts are generated from blueprints.
+- **ADR-0010** — `detran/docs` is the single writable authority for the
+  business/legal knowledge base; source provenance is immutable, and publication
+  is status-gated and fail-closed.
 - **ADR-0011** — Phase 6 documentation capability: deterministic seven-section
   Docusaurus projection, active Constitution publication, blocking CI validation,
   and separately authorized local GitHub Pages publication.
-- **ADR-0012** — `WF-INF-003` is the canonical infraction lifecycle state machine
+- **ADR-0012** — PEC auth, audit and integration concepts map onto the unified
+  kernel, `ch` domain records and the sole SENATRAN adapter without parallel
+  infrastructure.
+- **ADR-0013** — PEC parity closes on executable acceptance and origin-test
+  dispositions, with external trust/session deployment evidence remaining fail-closed.
+- **ADR-0014** — `WF-INF-003` is the canonical infraction lifecycle state machine
   (Owner, 2026-09-12); `WF-INF-001` kept as a pointer; the infraction aggregate
   awaits its own blueprint before any runtime implementation.
-- **ADR-0013** — STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 is the platform target
+- **ADR-0015** — STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5 is the platform target
   (Owner, 2026-09-12; workspace pins migrate in WP-0); the canonical role
   catalogue gains the ten-code RAIT family, persisted in `auth.role_catalog`;
   the `WF-INF-003` vocabulary is persisted as `inf.infraction_*_ref` tables.
-
-- **ADR-0014…0018** — boundary set (accepted by the Owner on 2026-09-13) for the infractions scope:
-  infraction aggregate + notification module (0014), collection/payment/refund
-  (0015), documents and signature as STYNX substrate (0016), `portal` domain for
-  identity levels, request lifecycle, inbox and ombudsman (0017), projections as
-  the only cross-app read path (0018).
-- **ADR-0019** (Proposed) — one shared, versioned parameter store `ops.parameter` for every calibration that is
+- **ADR-0016…0020** — boundary set (accepted by the Owner on 2026-09-13) for the infractions scope:
+  infraction aggregate + notification module (0016), collection/payment/refund
+  (0017), documents and signature as STYNX substrate (0018), `portal` domain for
+  identity levels, request lifecycle, inbox and ombudsman (0019), projections as
+  the only cross-app read path (0020).
+- **ADR-0021** (Proposed) — one shared, versioned parameter store `ops.parameter` for every calibration that is
   not law; boolean switches in `@stynx-nyx/feature-flags`; catalogue in `docs/framework/arch/parameter-catalogue.md`;
   decisions of the implementation gate recorded in `docs/meta/knowledge-base/steering.md` §H.
 

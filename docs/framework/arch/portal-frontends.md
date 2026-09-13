@@ -18,8 +18,8 @@ especificações do RAIT e do TEAT; companheiros: `portal-route-contract.md`,
 Fontes de verdade: [APP-PORTAL], [WF-PORTAL-001] (ciclo comum e catálogo de 15 serviços),
 [WF-PORTAL-002] (identidade e nível por ato), [WF-PORTAL-003] (notificações e SNE),
 [WF-PORTAL-004] (ouvidoria e avaliação), [UC-PORTAL-001]…[UC-PORTAL-019], [RN-PORTAL-101]…[128],
-[JRN-PORTAL-001]…[011], [IU-PORTAL-001] (27 telas); fronteiras ADR-0017 (domínio `portal`) e
-ADR-0018 (projeções); referência de implementação: o portal do repositório de origem (`../teat/apps/portal`,
+[JRN-PORTAL-001]…[011], [IU-PORTAL-001] (27 telas); fronteiras ADR-0019 (domínio `portal`) e
+ADR-0020 (projeções); referência de implementação: o portal do repositório de origem (`../teat/apps/portal`,
 27 rotas, 9 telas reais e 15 stubs de catálogo) e seu `portal-screen-catalog.md`. Quando divergirem,
 vale o artefato de produto.
 
@@ -27,11 +27,11 @@ vale o artefato de produto.
 
 | Item           | Decisão                                                                                                                                                                                                                                                                                |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework      | Angular 22 (ADR-0013), standalone, `OnPush`, signals; PWA (service worker, manifesto, instalável); **modo offline só para CNH-e e CRLV-e** ([UC-PORTAL-011] AC-4, [JRN-PORTAL-006]) via cache cifrado do documento                                                                     |
+| Framework      | Angular 22 (ADR-0015), standalone, `OnPush`, signals; PWA (service worker, manifesto, instalável); **modo offline só para CNH-e e CRLV-e** ([UC-PORTAL-011] AC-4, [JRN-PORTAL-006]) via cache cifrado do documento                                                                     |
 | Kit            | `@detran/ui` (feedback pt-BR, tema, primitivos STYNX) — o shell é próprio (`CitizenShell`: cabeçalho com marca do órgão, navegação de 5 destinos, rodapé com Carta de Serviços, canal presencial e acessibilidade); nenhum componente do RAIT ou do TEAT é reutilizado ([RN-RAIT-134]) |
-| Identidade     | Cognito federado ao **gov.br OIDC** (ADR-0017); papel `CIDADAO`; representação por procuração como atributo da sessão, não papel; nível de assinatura como claim assinada (`assurance_level`: `simples` \| `avancada` \| `qualificada`), nunca aceito do cliente                       |
+| Identidade     | Cognito federado ao **gov.br OIDC** (ADR-0019); papel `CIDADAO`; representação por procuração como atributo da sessão, não papel; nível de assinatura como claim assinada (`assurance_level`: `simples` \| `avancada` \| `qualificada`), nunca aceito do cliente                       |
 | Marca e tenant | tenant resolvido pelo `Host` no servidor (`platform.public_hostname`); `GET /v1/portal/brand` público; `runtime-config.js` só com `tenantId`, `oidcAuthority`, `clientId`                                                                                                              |
-| API            | somente `/v1/portal/*` (`portal-route-contract.md`), mesma origem; **nenhuma** chamada a sistemas nacionais, ao RAIT ou ao TEAT a partir do browser; o Portal lê **projeções** (ADR-0018) e emite **comandos delegados** (ADR-0017)                                                    |
+| API            | somente `/v1/portal/*` (`portal-route-contract.md`), mesma origem; **nenhuma** chamada a sistemas nacionais, ao RAIT ou ao TEAT a partir do browser; o Portal lê **projeções** (ADR-0020) e emite **comandos delegados** (ADR-0019)                                                    |
 | Estado         | signals + facades por feature; sem NgRx; rascunhos de pedido persistidos no servidor (`portal/requests` em `PEDIDO_EM_COMPOSICAO`), não em `localStorage`                                                                                                                              |
 | Idioma         | pt-BR, linguagem cidadã; catálogo `i18n/portal.pt-BR.json` com o **mapa de tradução** dos estados internos (RAIT/PEC/BOAT → situação cidadã) como única fonte                                                                                                                          |
 | Acessibilidade | WCAG 2.1 AA + eMAG (DT-028) em todas as 27 telas; guia e boleto acessíveis mediante solicitação ([RN-PORTAL-114]); skip link, `aria-live` em estados, sem remoção de foco                                                                                                              |
@@ -113,14 +113,14 @@ nível exigido, resolver e caso de uso.
 /conta                                   —     sessão, representação ativa, sair
 ```
 
-| Módulo         | Rotas                                                         | Backend (ADR-0017/0018)                                   |
+| Módulo         | Rotas                                                         | Backend (ADR-0019/0018)                                   |
 | -------------- | ------------------------------------------------------------- | --------------------------------------------------------- |
 | `core`         | `/`, `/auth/callback`, `/inicio`, `/conta`, `/acessibilidade` | `portal/identity`, `portal/brand`                         |
 | `catalogo`     | `/carta-servicos*`, `/pontuacao/como-funciona`                | `portal.service_catalog` (dados, não código)              |
 | `autos`        | `/autos*` (T-14, T-01)                                        | projeção `portal.infraction_view`                         |
 | `defesa`       | T-02, T-03, T-04                                              | `portal/requests` → delegação `inf:rait-case:protocol`    |
 | `indicacao`    | T-05                                                          | `portal/requests` → `inf:infraction:indicate-driver`      |
-| `pagamento`    | T-13, T-23                                                    | `portal/requests` → `inf:collection:issue` (ADR-0015)     |
+| `pagamento`    | T-13, T-23                                                    | `portal/requests` → `inf:collection:issue` (ADR-0017)     |
 | `processos`    | T-06, T-07, T-08, T-10, T-11                                  | `portal/requests` + projeção `portal.process_timeline`    |
 | `notificacoes` | T-12, preferências, T-09                                      | `portal/inbox`, `preferences`, `SnePort` via notificação  |
 | `documentos`   | T-16, T-17, `/veiculos`                                       | leituras via adapter cacheadas (RENACH, RENAVAM), coleção |
@@ -215,7 +215,7 @@ sempre com próximo passo e canal alternativo.
   fallback de polling de 60 s; push web via `@stynx-nyx/notifications` quando o cidadão optar.
 - Offline: só CNH-e/CRLV-e (cache cifrado com validade); qualquer outra rota mostra estado
   "sem conexão" sem prometer envio posterior.
-- Arquivos: upload por URL assinada do storage (ADR-0016); download de recibo, decisão e documentos.
+- Arquivos: upload por URL assinada do storage (ADR-0018); download de recibo, decisão e documentos.
 
 ## 9. Estrutura de pastas
 
@@ -232,9 +232,9 @@ apps/portal/web/src/app/
 
 | Dependência                                                                                            | Situação                                                                 |
 | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| Domínio `portal` (identity, requests, inbox, citizen-service) — ADR-0017                               | pendente (WP-P1/P2)                                                      |
-| Projeções `portal.*` — ADR-0018                                                                        | pendente (WP-P2)                                                         |
-| Comandos delegados no `inf` (`rait-case:protocol`, `infraction:indicate-driver`, `collection:issue`)   | pendentes (RAIT WP-B, ADR-0014/0015)                                     |
+| Domínio `portal` (identity, requests, inbox, citizen-service) — ADR-0019                               | pendente (WP-P1/P2)                                                      |
+| Projeções `portal.*` — ADR-0020                                                                        | pendente (WP-P2)                                                         |
+| Comandos delegados no `inf` (`rait-case:protocol`, `infraction:indicate-driver`, `collection:issue`)   | pendentes (RAIT WP-B, ADR-0016/0015)                                     |
 | gov.br federado no Cognito + claim de nível assinada                                                   | pendente; hoje só pool Cognito e `custom:teat_assurance_level` na origem |
 | Adapter: `SnePort`, `CdtPort` (multas, veículos, CNH, cotação, reconhecimento), RENACH/RENAVAM leitura | existem (mock-first)                                                     |
 | Projeções BOAT (BAT) e PEC (exames)                                                                    | pendentes nos respectivos domínios                                       |

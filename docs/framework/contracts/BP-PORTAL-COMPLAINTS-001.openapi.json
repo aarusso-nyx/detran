@@ -1,0 +1,191 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Complaints — BP-PORTAL-COMPLAINTS-001",
+    "version": "1.0.0",
+    "description": "Ouvidoria protocol intake and auditable triage owned by Portal. This is the reviewed UC-PORTAL-016 realization and the durable successor to PEC complaints; it does not create a competing CH aggregate.",
+    "x-blueprint": "BP-PORTAL-COMPLAINTS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/portal/complaints/records": {
+      "get": {
+        "tags": ["complaint"],
+        "operationId": "listComplaint",
+        "summary": "List Complaint (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Complaint"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/complaints/records/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["complaint"],
+        "operationId": "getComplaint",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Complaint"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Complaint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "complainant_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "personal",
+            "x-retention": "case+5y"
+          },
+          "contact": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "personal",
+            "x-retention": "case+5y"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 16,
+            "enum": ["OPEN", "TRIAGED", "IN_REVIEW", "CLOSED", "REJECTED"],
+            "default": "'OPEN'"
+          },
+          "description": {
+            "type": "string",
+            "x-pii": "personal",
+            "x-retention": "case+5y"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "personal",
+            "x-retention": "case+5y",
+            "default": "'{}'::jsonb"
+          },
+          "assigned_to": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "closed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "protocol",
+          "category",
+          "description",
+          "created_at"
+        ]
+      },
+      "CreateComplaintDto": {
+        "type": "object",
+        "properties": {
+          "complainant_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "personal",
+            "x-retention": "case+5y"
+          },
+          "contact": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "personal",
+            "x-retention": "case+5y"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "description": {
+            "type": "string",
+            "x-pii": "personal",
+            "x-retention": "case+5y"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "personal",
+            "x-retention": "case+5y",
+            "default": "'{}'::jsonb"
+          }
+        },
+        "required": ["category", "description"]
+      }
+    }
+  }
+}

@@ -1,0 +1,648 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Exams — BP-CH-EXAMS-001",
+    "version": "1.1.0",
+    "description": "Exames medico e psicologico do PEC com vocabulularios federais separados, validade legal 10/5/3 e instrumentos psicologicos favoraveis no SATEPSI.",
+    "x-blueprint": "BP-CH-EXAMS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ch/exams/psych-instruments": {
+      "get": {
+        "tags": ["psych-instrument"],
+        "operationId": "listPsychInstrument",
+        "summary": "List PsychInstrument (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PsychInstrument"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["psych-instrument"],
+        "operationId": "createPsychInstrument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePsychInstrumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PsychInstrument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/exams/psych-instruments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["psych-instrument"],
+        "operationId": "getPsychInstrument",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PsychInstrument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["psych-instrument"],
+        "operationId": "updatePsychInstrument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreatePsychInstrumentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PsychInstrument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/exams/medical": {
+      "get": {
+        "tags": ["exam"],
+        "operationId": "listMedicalExam",
+        "summary": "List MedicalExam (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MedicalExam"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/exams/medical/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["exam"],
+        "operationId": "getMedicalExam",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MedicalExam"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ch/exams/psychological": {
+      "get": {
+        "tags": ["exam"],
+        "operationId": "listPsychologicalExam",
+        "summary": "List PsychologicalExam (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PsychologicalExam"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ch/exams/psychological/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["exam"],
+        "operationId": "getPsychologicalExam",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PsychologicalExam"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PsychInstrument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "satepsi_status": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["FAVORABLE", "UNFAVORABLE", "SUSPENDED"]
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "source_reference": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "code",
+          "name",
+          "version",
+          "satepsi_status",
+          "valid_from",
+          "source_reference",
+          "created_at"
+        ]
+      },
+      "CreatePsychInstrumentDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "satepsi_status": {
+            "type": "string",
+            "maxLength": 24,
+            "enum": ["FAVORABLE", "UNFAVORABLE", "SUSPENDED"]
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "source_reference": {
+            "type": "string"
+          },
+          "is_active": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "version",
+          "satepsi_status",
+          "valid_from",
+          "source_reference"
+        ]
+      },
+      "MedicalExam": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "performed_at": {
+            "type": "string",
+            "format": "date-time",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "now()"
+          },
+          "statutory_valid_until": {
+            "type": "string",
+            "format": "date",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "inaptitude_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "validity_reduction_reason": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "APTO",
+              "APTO_COM_RESTRICOES",
+              "INAPTO_TEMPORARIO",
+              "INAPTO"
+            ],
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "encounter_id",
+          "professional_id",
+          "statutory_valid_until",
+          "valid_until",
+          "data",
+          "result",
+          "created_at"
+        ]
+      },
+      "CreateMedicalExamDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "performed_at": {
+            "type": "string",
+            "format": "date-time",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "now()"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": [
+              "APTO",
+              "APTO_COM_RESTRICOES",
+              "INAPTO_TEMPORARIO",
+              "INAPTO"
+            ],
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          }
+        },
+        "required": ["encounter_id", "professional_id", "data", "result"]
+      },
+      "PsychologicalExam": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "instrument_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "performed_at": {
+            "type": "string",
+            "format": "date-time",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "now()"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "inaptitude_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "validity_reduction_reason": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": ["APTO", "INAPTO_TEMPORARIO", "INAPTO"],
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "encounter_id",
+          "professional_id",
+          "instrument_id",
+          "data",
+          "result",
+          "created_at"
+        ]
+      },
+      "CreatePsychologicalExamDto": {
+        "type": "object",
+        "properties": {
+          "encounter_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "professional_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "instrument_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "performed_at": {
+            "type": "string",
+            "format": "date-time",
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y",
+            "default": "now()"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "inaptitude_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "validity_reduction_reason": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 32,
+            "enum": ["APTO", "INAPTO_TEMPORARIO", "INAPTO"],
+            "x-pii": "sensitive-health",
+            "x-retention": "last-record+20y"
+          }
+        },
+        "required": [
+          "encounter_id",
+          "professional_id",
+          "instrument_id",
+          "data",
+          "result"
+        ]
+      }
+    }
+  }
+}
