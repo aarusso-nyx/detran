@@ -5,3 +5,6 @@ review, work distribution among reviewers (@stynx-nyx/worklist) and 2nd-tier JAR
 appeal boards. Angular 21, angular-flow + packages/ui.
 
 **Built in Phase 3 (W3.4)**, on the RAIT backend modules of backend/domains/inf.
+
+Especificação completa do frontend (módulos, rotas, componentes, jornadas, ações, dependências de
+backend): [docs/framework/arch/rait-web-frontend.md](../../../docs/framework/arch/rait-web-frontend.md).

@@ -346,3 +346,47 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **RAIT: 32/43 regras citadas.** Oito nunca citadas de origem + três do bloco LGPD
       ([RN-RAIT-133..138]) acrescentado depois da rodada. O RAIT foi o primeiro app e a métrica de
       cobertura só passou a ser medida a partir do TEAT — lacuna da disciplina, não do corpus
+
+## Rodada de modelagem BPM do ciclo da infração (2026-09-12)
+
+- [x] **Decidir a substituição de [WF-INF-001] por [WF-INF-003]** — **DECIDIDO pelo Owner em
+      2026-09-12 (ADR-0012):** WF-INF-003 substitui WF-INF-001; ponteiro mantido, referências
+      atualizadas, WF-INF-003 promovido a `reviewed`. Runtime: agregado da infração ainda sem
+      blueprint (ver ADR-0012 §Consequências)
+- [ ] **Reconciliar a escada do relógio B** — [RN-RAIT-112] (4 degraus, crítico em 21 meses) ×
+      [WF-RAIT-002] §4.1 (5 degraus, crítico em 23 meses, aprovado em steering A.1) (added 2026-09-12)
+- [ ] **Desfecho de `T-NA-IND` vencido** (NA ao condutor indicado não expedida em 30 dias do protocolo
+      da indicação) — a norma dá o termo inicial, não a consequência; proposta em [WF-INF-002]
+      §Decisões pendentes, validar com LEGAL (added 2026-09-12)
+
+## Rodada de organização do trabalho RAIT (2026-09-12)
+
+- [ ] **Estatuto da Pessoa Idosa (Lei 10.741/2003) art. 71** — prioridade de tramitação; capturar
+      para ativar a prioridade legal na ordem de consumo das filas ([RN-RAIT-141]) (added 2026-09-12)
+- [ ] **Escala de assinatura das 55 autoridades investidas** — ato de investidura/delegação e
+      divisão de circunscrições ([RN-RAIT-143], [WF-RAIT-004] §3) — `institutional-ask` (added 2026-09-12)
+- [ ] **Taxa de recurso à JARI/CETRAN e throughput de sessão** (DT-064) — fecha o dimensionamento
+      de [WF-RAIT-004] §8 e o gatilho de nova turma ([RN-RAIT-139]) (added 2026-09-12)
+- [ ] **Blueprint BP-INF-RAIT-WORKLIST-001** — deltas de modelo de dados propostos em
+      [WF-RAIT-004] §10 (unidade/turma, escala, lote de sorteio, suplência, tipo de impedimento,
+      banca) — decisão do Architect (added 2026-09-12)
+
+## Rodada de definições para a orquestra de agentes — RAIT (2026-09-12)
+
+- [x] **Adoção de STYNX 1.3.1 / Angular 22 / DEVAI 1.4.5** — decidida pelo Owner (steering G.34; ADR-0013);
+      migração dos pins no WP-0 de `docs/framework/arch/rait-build-pack.md`
+- [x] **Catálogo canônico de papéis estendido** com a família `rait-*` (steering G.35): `roles.ts`,
+      `policy.ts`, `05-role-catalog.sql`, `shared/actors.md`; gate `verify:role-catalog`
+- [x] **Vocabulário de [WF-INF-003] persistido** (`14-inf-lifecycle-vocabulary.sql`; steering G.36); gate
+      `verify:lifecycle-vocabulary`
+- [ ] **Questões pendentes compiladas** em `docs/meta/knowledge-base/open-decisions-rait.md` (OD-001…OD-308) —
+      cada uma com premissa de desenho; fechar por Owner / regimentos / LEGAL (added 2026-09-12)
+- [x] **`apply.sh` não lista os DDL gerados 34…37** — corrigido em 2026-09-13 junto com `seed.sh` e as
+      fixtures canônicas (validado em banco limpo)
+- [x] **Suporte à orquestra (2026-09-13)**: manuais por perfil (`docs/meta/agents/`, `.claude/agents/`),
+      `CODESTYLE.md`, template de PR, estratégia de testes, fixtures canônicas + `seed.sh`, motor de
+      prazos, contrato de eventos/SSE, guia do kit, glossário i18n + `rait.pt-BR.json`, roteiro WP-0
+- [ ] **Angular 22 — mudanças específicas** ainda não verificadas contra o guia oficial de atualização;
+      registrar em `wp0-stynx-1-3-1-migration.md` §7 durante o WP-0 (added 2026-09-13)
+- [ ] **Calendário de feriados 2026 (AM + Manaus)** das fixtures é referência de teste; validar com ato
+      oficial antes de virar parâmetro (added 2026-09-13)

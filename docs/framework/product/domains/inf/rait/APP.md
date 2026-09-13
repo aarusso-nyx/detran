@@ -26,11 +26,25 @@ defesa prévia/instrução) e 2º circuito (julgamento colegiado — JARI; 2ª i
 ## Atores
 
 Analista/revisor; presidente e membros de JARI; secretaria; autoridade de trânsito; CETRAN.
+Organização interna (coordenador e subcoordenador da defesa prévia, autoridade signatária por
+circunscrição, autoridade centralizada do recurso vinculado, suplentes, secretaria de sessão,
+coordenador de JARIs quando houver mais de uma), filas, escalas, plantão, sorteio e bancas:
+[WF-RAIT-004].
+
+Códigos de RBAC canônicos (Owner, 2026-09-12; `shared/actors.md` §Papéis granulares RAIT):
+`rait-analyst`, `rait-coordinator`, `rait-secretary`, `rait-signing-authority`,
+`rait-central-authority`, `rait-rapporteur`, `rait-chair`, `rait-manager`, `rait-hr`,
+`rait-finance`; transversais reaproveitados: `auditor`, `agency-admin`, `integration-operator`,
+`DPO`.
 
 ## Escopo (dentro / fora)
 
 Dentro: intake (via portal e balcão), distribuição, prazos, pautas, votos, decisões
 assinadas, comunicação de resultado. Fora: interposição pelo cidadão (portal), cobrança.
+Fronteiras modeladas como casos de uso de handoff (2026-09-12): integração RENAINF/RENACH pelo
+senatran-adapter ([UC-RAIT-029]…[UC-RAIT-031]), arrecadação, restituição e entrega à cobrança/dívida
+ativa ([UC-RAIT-032]…[UC-RAIT-035]), remuneração por sessão e mandatos com o RH/gabinete
+([UC-RAIT-036], [UC-RAIT-037]).
 
 ## Âncoras legais
 

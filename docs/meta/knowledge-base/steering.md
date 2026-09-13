@@ -137,6 +137,22 @@ correspondentes e a seção "Pontos que a múltipla escolha não fechou" abaixo.
 
 ---
 
+## G. RAIT — plataforma, papéis e vocabulário persistido (2026-09-12)
+
+34. Substrato de plataforma do frontend e do backend: manter STYNX 1.1.1 / Angular 21 ou adotar
+    STYNX@latest? **Resposta: adotar STYNX 1.3.1 (latest), com o Angular correspondente (22.x)
+    e o DEVAI correspondente (1.4.5, já pinado).** Registro em ADR-0013; migração dos pins do
+    workspace no pacote de trabalho WP-0 (`docs/framework/arch/rait-build-pack.md`).
+35. Papéis do RAIT: manter só a visão agregada de `shared/actors.md` ou estender o catálogo
+    canônico? **Resposta: estender** — dez códigos `rait-*` em `roles.ts`, no DDL
+    (`auth.role_catalog`) e em `shared/actors.md` §Papéis granulares RAIT.
+36. Vocabulário da máquina de estados [WF-INF-003] no banco: só no futuro blueprint do agregado
+    ou já como referência persistida? **Resposta: já no DDL**, como tabelas de referência
+    (`inf.infraction_*_ref`, `14-inf-lifecycle-vocabulary.sql`) verificadas contra o workflow
+    (`pnpm verify:lifecycle-vocabulary`); o blueprint do agregado referencia-as por FK.
+
+---
+
 ## Pontos que a múltipla escolha não fechou — precisam de mais uma rodada
 
 - **Item 16**: definido que o recurso da autoridade é _vinculado_, mas falta definir **qual

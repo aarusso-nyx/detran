@@ -10,7 +10,7 @@ sources:
     REF-CONTRAN-985-1003-MBFT,
     REF-DETRANAM-TALAO-BODYCAM,
   ]
-updated: 2026-08-27
+updated: 2026-09-12
 ---
 
 Visão AGREGADA e multi-app, complementada pela seção de papéis granulares do TEAT abaixo.
@@ -55,12 +55,38 @@ dois níveis coexistem por decisão do Owner, nenhum substitui o outro.
 | `field-agent` (agente de trânsito)                | lavra o AIT, registra abordagem, coleta evidências (incl. bodycam contínua), aplica medida administrativa, conduz procedimento de etilômetro, opera offline | teat |
 | `field-supervisor` (supervisor de campo)          | gerencia turno/equipe/viatura, reserva faixas de numeração, resolve conflitos de sincronização, libera retenção de veículo                                  | teat |
 | `processing-operator` (operador de processamento) | tramita o AIT após recebimento (validação, solicitação de correção), acompanha medidas administrativas e evidências na retaguarda                           | teat |
-| `traffic-authority` (autoridade de trânsito)      | aceita/rejeita o AIT, aprova correções, conclui medidas administrativas, encerra procedimento de etilômetro — inicia o ciclo [WF-INF-001]                   | teat |
+| `traffic-authority` (autoridade de trânsito)      | aceita/rejeita o AIT, aprova correções, conclui medidas administrativas, encerra procedimento de etilômetro — inicia o ciclo [WF-INF-003]                   | teat |
 | `agency-admin` (administrador do órgão)           | parametriza órgão/unidade/convênio/competência territorial, gerencia homologação de dispositivos e publica catálogo normativo                               | teat |
 | `technical-admin` (administrador técnico)         | administra sincronização offline, resolve incidentes técnicos, publica pacote normativo mobile                                                              | teat |
 | `auditor` (auditor/corregedor)                    | consulta trilha de auditoria, cadeia de custódia, exportações de dados; não edita                                                                           | teat |
 | `bi-analyst` (analista de BI/inteligência)        | consome projeções e relatórios operacionais (fora do escopo direto de lavratura)                                                                            | teat |
 | `integration-operator` (operador de integração)   | acompanha e retransmite falhas de integração com sistemas nacionais/estaduais (RENAVAM, RENACH, RENAINF, RENAEST, SNE/CDT)                                  | teat |
+
+### Papéis granulares RAIT (decisão do Owner, 2026-09-12)
+
+Dez papéis de RBAC do RAIT, extraídos de [WF-RAIT-004] (organização e distribuição do trabalho) e
+da especificação do frontend (`docs/framework/arch/rait-web-frontend.md` §3), adotados pelo Owner
+em 2026-09-12 e registrados no catálogo canônico (`backend/domains/shared/src/roles.ts`,
+`backend/database/ddl/05-role-catalog.sql`; ADR-0013). Refinam as linhas agregadas acima
+("Analista / Revisor", "Autoridade de trânsito", "JARI", "CETRAN") sem substituí-las. Um mesmo
+servidor pode acumular papéis (união, ADR-0005). Os papéis transversais já existentes
+(`auditor`, `agency-admin`, `integration-operator`, `DPO`) continuam valendo no RAIT.
+
+| Papel                                                        | Atuação central                                                                                                                                 | Fontes                                                          |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `rait-analyst` (analista / revisor da defesa prévia)         | puxa casos da fila coletiva, faz a triagem de admissibilidade, instrui, abre diligências e redige a minuta — nunca assina                       | [JRN-RAIT-001], [UC-RAIT-002], [UC-RAIT-003]                    |
+| `rait-coordinator` (coordenador / subcoordenador)            | dono do pool `defesa_previa`: escala, limite de casos simultâneos, reatribuição, plantão de risco, amostragem de qualidade, plano de capacidade | [WF-RAIT-004] §3-4, [UC-RAIT-013], [UC-RAIT-025], [UC-RAIT-038] |
+| `rait-secretary` (secretaria do órgão e dos colegiados)      | intake multicanal e digitalização, pendências, remessas, desistências, sorteio em lote, banca, ata, publicação, jeton, arquivo                  | [JRN-RAIT-003], [UC-RAIT-001], [UC-RAIT-014], [UC-RAIT-020]     |
+| `rait-signing-authority` (autoridade de trânsito signatária) | autoridade investida que decide a defesa prévia na sua circunscrição e assina digitalmente; pode devolver a minuta uma vez                      | [RN-RAIT-143], [UC-RAIT-016]                                    |
+| `rait-central-authority` (autoridade centralizada)           | decide, dentro de `T-R2`, recorrer ao CETRAN-AM contra provimento da JARI, ou declara que não recorre (recurso vinculado)                       | [RN-RAIT-130], [UC-RAIT-008]                                    |
+| `rait-rapporteur` (membro / conselheiro relator)             | titular ou suplente da JARI-AM ou do CETRAN-AM: aceita lote, declara impedimento, redige parecer e voto, vota em sessão, pede vista             | [JRN-RAIT-002], [UC-RAIT-004], [UC-RAIT-019]                    |
+| `rait-chair` (presidente JARI-AM / CETRAN-AM)                | homologa sorteios, monta e fecha a pauta, confirma a banca, abre e conduz a sessão, desempata, proclama, convoca extraordinária, aprova o jeton | [WF-RAIT-003], [UC-RAIT-005], [UC-RAIT-006], [UC-RAIT-021]      |
+| `rait-manager` (gestor RAIT)                                 | radar de prescrição, produção e metas, capacidade, constituição de turmas, incidentes e extinções; leitura de integrações                       | [JRN-RAIT-004], [UC-RAIT-010], [UC-RAIT-039], [UC-RAIT-040]     |
+| `rait-hr` (RH / gabinete)                                    | mandatos dos membros (nomeação, posse, recondução, perda) e apoio à folha de jeton                                                              | [UC-RAIT-036], [UC-RAIT-037]                                    |
+| `rait-finance` (financeiro / tesouraria)                     | documentos de arrecadação por fase, restituições, cobrança e dívida ativa, conciliação bancária                                                 | [UC-RAIT-032]…[UC-RAIT-035]                                     |
+
+Regra de espelhamento: os três registros do catálogo (código, DDL e este documento) são
+verificados por `pnpm verify:role-catalog`; um papel novo exige os três no mesmo PR.
 
 ## Clínico (ch)
 
