@@ -401,3 +401,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       `portal-build-pack.md` (WP-P0…P6; 13 questões OD-P01…P13)
 - [ ] **Reconciliar `use-cases/INDEX.md` do PORTAL** (marca todos como `draft`; arquivos são `approved`/`reviewed`)
       e registrar uma RN dedicada ao ato de adesão ao SNE (UC-PORTAL-007 cita "backlog BPO/LEGAL") (added 2026-09-13)
+- [x] **Pacote BOAT (2026-09-13)**: `boat-frontends.md`, `boat-route-contract.md`, `boat-error-catalog.md`,
+      `boat-build-pack.md` (WP-B0…B5; 13 questões OD-B01…B13)
+- [ ] **BOAT — reconciliar `policy.ts` (`est:crash-record:*`) com o corpus e criar UC-BOAT-013** (dever de
+      resposta ao titular, tela W-05); atualizar `use-cases/INDEX.md` (added 2026-09-13)
