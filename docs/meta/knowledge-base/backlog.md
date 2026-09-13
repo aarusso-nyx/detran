@@ -390,3 +390,10 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       registrar em `wp0-stynx-1-3-1-migration.md` §7 durante o WP-0 (added 2026-09-13)
 - [ ] **Calendário de feriados 2026 (AM + Manaus)** das fixtures é referência de teste; validar com ato
       oficial antes de virar parâmetro (added 2026-09-13)
+- [x] **Aceitar as ADRs de fronteira 0014…0018** — aceitas pelo Owner em 2026-09-13 (steering G.37)
+- [x] **Pacote TEAT (2026-09-13)**: `teat-frontends.md`, `teat-route-contract.md`, `teat-error-catalog.md`,
+      `teat-build-pack.md` (WP-T0…T6; 12 questões OD-T01…T12)
+- [ ] **Defeitos de base do TEAT** (WP-T0): prefixo de rota do gerador (`v1/inf/aitaits`), `AitModule` sem os
+      comandos, entidades de auditoria do `ops`, política × rotas — corrigir antes de gerar clientes (added 2026-09-13)
+- [ ] **Reconciliar `use-cases/INDEX.md` do TEAT** (status dos UCs e ausência do UC-TEAT-013) e a contagem
+      de regras (49 × 50) em `APP.md` (added 2026-09-13)
