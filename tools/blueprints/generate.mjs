@@ -228,8 +228,8 @@ function packageFiles(bp, sha, module, entities) {
           '@detran/shared': 'workspace:*',
           ...(module.dependencies ?? {}),
           '@nestjs/common': '^11.1.28',
-          '@stynx-nyx/core': '1.1.1',
-          '@stynx-nyx/data': '1.1.1',
+          '@stynx-nyx/core': '1.3.1',
+          '@stynx-nyx/data': '1.3.1',
         },
         devDependencies: {
           '@types/node': '^24.10.1',

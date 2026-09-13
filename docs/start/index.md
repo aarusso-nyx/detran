@@ -11,7 +11,7 @@ traffic systems (`inf`/RENAINF, `est`/RENAEST, `ch`/RENACH, `ops` cross-domain;
 `vam`/RENAVAM reserved), frontend apps only under `apps/` (TEAT, BOAT, RAIT, PORTAL,
 DASHBOARD), the `senatran-mock` national-API mock and the `senatran-adapter` sole
 integration boundary. DEVAI-governed (`@aarusso-nyx/devai@1.4.5`, Constitution
-1.0.0) on the STYNX platform substrate (target 1.3.1 / Angular 22, ADR-0013).
+1.0.0) on the STYNX 1.3.1 platform substrate (Angular 22, ADR-0013).
 
 ## Status
 

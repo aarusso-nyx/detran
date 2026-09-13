@@ -1,6 +1,6 @@
 # @detran/ui
 
-Shared Angular 21 application foundation for TEAT, RAIT, PORTAL, DASHBOARD and BOAT.
+Shared Angular 22 application foundation for TEAT, RAIT, PORTAL, DASHBOARD and BOAT.
 It composes the registry-pinned STYNX Angular packages; it does not replace them or
 define product screens.
 
