@@ -11,7 +11,7 @@ sources:
     REF-SENATRAN-997,
     REF-CONTRAN-918,
   ]
-updated: 2026-08-24
+updated: 2026-09-13
 ---
 
 > **Nota de revisão (2026-08-24, especialista LEGAL).** Regra **confirmada** e com o
@@ -63,3 +63,10 @@ vinculada", registrada como gap, **permanece aberta e agora é mais grave**: à 
 Portaria, operar talão eletrônico com software não homologado não é tolerância operacional — é
 inconformidade normativa. Ver [RN-TEAT-117] e [RN-TEAT-143] (parque de dispositivos de corporação
 conveniada está sujeito ao mesmo controle).
+
+**Decisão do Owner (2026-09-13, steering.md H.55) — homologação do software vencida.** A
+lavratura **não é bloqueada** quando a homologação da SENATRAN caduca: o aplicativo avisa, o AIT
+recebe marca de risco de homologação e a autoridade decide na homologação do auto; o DASHBOARD
+alerta com antecedência (IND-DASH-110). Parâmetro `teat.homologation.expired_behavior=warn`. A
+validade dos autos lavrados nessa condição integra a consulta jurídica única (item 19). O
+segundo nível de homologação (dispositivo e versão pelo órgão) continua bloqueante.

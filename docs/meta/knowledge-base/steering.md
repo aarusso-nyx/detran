@@ -188,7 +188,7 @@ flag ou edição de DDL/política que o propaga (`docs/framework/arch/parameter-
     proposta; a eliminação passa a operar com listagem de eliminação. Risco aceito: tabela oficial
     posterior pode encurtar ou alongar os prazos.
 46. Cédula 04 (OD-301…305): **`T-PAR-3A` e `T-PRESC-5A` como relógios de alerta sem declaração
-    de ofício** (STJ Temas 1.293/1.294; [REF-STJ-TEMAS-1293-1294]); declaração depende de parecer
+    de ofício** (STJ Temas 1.293/1.294; [REF-STJ-1293-1294]); declaração depende de parecer
     caso a caso ou lei estadual; `deadline.*.expiry_kind_override=alert_only`, `a_confirmar`.
     O relógio do art. 289-A mantém a declaração de ofício (C.15).
 47. Cédula 05.1 (OD-001 residual): **30 dias** para o recurso da autoridade, contados da

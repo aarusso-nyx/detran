@@ -4,7 +4,7 @@ title: Cidadão registra manifestação na ouvidoria (reclamação, denúncia, s
 status: reviewed
 apps: [portal]
 sources: [REF-LEI-13460-2017]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Ator e objetivo
@@ -96,3 +96,6 @@ cidadão convidado a avaliar.
 - [REF-LEI-13460-2017] art.11 (proibição de recusa de recebimento)
 - [REF-LEI-13460-2017] art.12 §ú (ciclo completo: recepção, comprovante, análise, decisão, ciência)
 - [REF-LEI-13460-2017] art.16 (prazo de resposta 30+30 dias)
+
+**Atualização (2026-09-13, steering.md H.51).** Pendência DT-051 fechada: nenhum nível para
+manifestar; simples para acompanhar.

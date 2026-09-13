@@ -9,8 +9,9 @@ sources:
     REF-LEI-13146-2015-acessibilidade,
     REF-CETRAN-PROCESSO-INTERNO,
     REF-CONTRAN-357,
+    REF-LEI-10741-2003,
   ]
-updated: 2026-09-12
+updated: 2026-09-13
 ---
 
 **Regra.** A escolha de quem trabalha cada caso e de qual caso é trabalhado primeiro é feita pelo
@@ -28,7 +29,9 @@ Desvio da ordem exige motivo tipado e fica no histórico do caso.
 - [REF-LEI-13146-2015-acessibilidade] art. 9º, VII: _"tramitação processual e procedimentos
   judiciais e administrativos em que for parte ou interessada, em todos os atos e diligências"_ —
   atendimento prioritário à pessoa com deficiência.
-- Estatuto da Pessoa Idosa (Lei 10.741/2003, art. 71) — **(fonte pendente)**, não capturado.
+- [REF-LEI-10741-2003] art. 71, §§3º e 5º: prioridade estendida aos processos e procedimentos na
+  Administração Pública, mediante requerimento com prova da idade; **prioridade especial para
+  maiores de 80 anos** — capturado em 2026-09-13; a ordem única usa dois pesos (60+ e 80+).
 - [REF-CETRAN-PROCESSO-INTERNO] CETRAN-ES art. 25 (distribuição registrada, por sorteio) — benchmark
   adotado como desenho de fato (steering A.3, A.4).
 - [REF-CONTRAN-357] item 8.3 (publicidade das decisões) — a ata de distribuição é parte da

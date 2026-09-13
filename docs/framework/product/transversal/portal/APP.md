@@ -10,7 +10,7 @@ sources:
     REF-DECRETO-10543-2020,
     REF-DECRETO-8936-2016,
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Missão
@@ -112,16 +112,16 @@ O PORTAL entrou nesta rodada com **zero das suas 28 regras citadas** por qualque
 workflow: a rodada LEGAL correu em paralelo à do BPO e seu resultado nunca foi incorporado. Todas
 foram ancoradas agora.
 
-| Item                                                     | Onde                                              | Por que importa                                                                                                                                             |
-| -------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Portaria estadual de níveis de assinatura**            | [RN-PORTAL-101], [UC-PORTAL-019]                  | o Decreto 10.543/2020 é **federal**; sem ato estadual, exigir "avançada" é atacável (Lei 13.460 art.5º IV). Custo baixo, efeito total (DT-050)              |
-| **Adesão do AM à Lei 14.129/2021**                       | 12 regras                                         | condiciona o fundamento de boa parte do app; obter ou registrar formalmente a inexistência (DT-066)                                                         |
-| **Instrumento da renúncia na faixa de 40%**              | [RN-PORTAL-128], [UC-PORTAL-015]                  | não há forma normativa para colher a declaração (DT-026)                                                                                                    |
-| **CRLV-e × multa sob recurso suspensivo**                | [RN-PORTAL-116], [UC-PORTAL-012]                  | tratar exigibilidade suspensa como débito é coação indireta ao pagamento (DT-027)                                                                           |
-| **Declarar WCAG 2.1 AA + eMAG**                          | [RN-PORTAL-113], todas as telas                   | obrigação de resultado sem cláusula de adesão; risco de MP/ACP, custo quase nulo (DT-028)                                                                   |
-| **Nível de assinatura da ouvidoria**                     | [RN-PORTAL-101], [UC-PORTAL-016]                  | LEGAL conclui que nenhum é exigível; BPO/UX assumiram "simples" — divergência a alinhar (DT-051)                                                            |
-| **Autorização do órgão máximo para cartão/parcelamento** | [RN-PORTAL-126], [UC-PORTAL-015]                  | pré-condição de existência do módulo (DT-031)                                                                                                               |
-| **Cartas de serviço com exigências sem base legal**      | [RN-PORTAL-104], [RN-PORTAL-106], [UC-PORTAL-003] | especificação corrigida: endosso cartorial é vedado e parecer/conclusão da JARI segue de ofício; a publicação no CMS institucional é ação externa ao corpus |
+| Item                                                     | Onde                                              | Por que importa                                                                                                                                                                                                                                             |
+| -------------------------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Portaria estadual de níveis de assinatura**            | [RN-PORTAL-101], [UC-PORTAL-019]                  | o Decreto 10.543/2020 é **federal**; sem ato estadual, exigir "avançada" é atacável (Lei 13.460 art.5º IV). Custo baixo, efeito total (DT-050) — **fechado em 2026-09-13**: PN DETRAN-AM 001/2025 localizada; selo prata aceito por decisão do Owner (H.50) |
+| **Adesão do AM à Lei 14.129/2021**                       | 12 regras                                         | condiciona o fundamento de boa parte do app; obter ou registrar formalmente a inexistência (DT-066)                                                                                                                                                         |
+| **Instrumento da renúncia na faixa de 40%**              | [RN-PORTAL-128], [UC-PORTAL-015]                  | não há forma normativa para colher a declaração (DT-026)                                                                                                                                                                                                    |
+| **CRLV-e × multa sob recurso suspensivo**                | [RN-PORTAL-116], [UC-PORTAL-012]                  | tratar exigibilidade suspensa como débito é coação indireta ao pagamento (DT-027)                                                                                                                                                                           |
+| **Declarar WCAG 2.1 AA + eMAG**                          | [RN-PORTAL-113], todas as telas                   | obrigação de resultado sem cláusula de adesão; risco de MP/ACP, custo quase nulo (DT-028)                                                                                                                                                                   |
+| **Nível de assinatura da ouvidoria**                     | [RN-PORTAL-101], [UC-PORTAL-016]                  | LEGAL conclui que nenhum é exigível; BPO/UX assumiram "simples" — divergência a alinhar (DT-051) — **fechado em 2026-09-13 (H.51)**: nenhum para manifestar, simples para acompanhar                                                                        |
+| **Autorização do órgão máximo para cartão/parcelamento** | [RN-PORTAL-126], [UC-PORTAL-015]                  | pré-condição de existência do módulo (DT-031)                                                                                                                                                                                                               |
+| **Cartas de serviço com exigências sem base legal**      | [RN-PORTAL-104], [RN-PORTAL-106], [UC-PORTAL-003] | especificação corrigida: endosso cartorial é vedado e parecer/conclusão da JARI segue de ofício; a publicação no CMS institucional é ação externa ao corpus                                                                                                 |
 
 **Duas contradições corrigidas nesta rodada**, ambas afirmações falsas que teriam virado código:
 

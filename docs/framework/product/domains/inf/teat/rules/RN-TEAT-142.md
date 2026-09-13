@@ -3,8 +3,8 @@ id: RN-TEAT-142
 title: Registros de bodycam — acesso restrito por requisição, limites de divulgação e ausência de prazo de retenção
 status: draft
 apps: [teat]
-sources: [REF-DETRANAM-TALAO-BODYCAM]
-updated: 2026-08-24
+sources: [REF-DETRANAM-TALAO-BODYCAM, REF-DETRANAM-PORTARIA-NORMATIVA-015-2026]
+updated: 2026-09-13
 ---
 
 **Regra (DETRAN-AM).** O acesso aos registros audiovisuais **observará a Lei nº 12.527/2011 (Lei de
@@ -64,3 +64,8 @@ custódia") precisa ser expressamente **limitado a metadados** quanto a bodycam,
    terceiros em via pública. É a lacuna mais relevante do instrumento.
    Itens 41 a 43 de `_intake/legal-assessment.md`; a matéria cabe expressamente nos "casos omissos"
    do art. 16, a serem disciplinados por Portaria complementar ainda não editada.
+
+**Atualização (2026-09-13, steering.md H.45).** O prazo de retenção da bodycam **permanece sem
+valor** — único conjunto documental excluído da decisão de prazos do Owner — e foi pedido à
+Comissão Setorial de Avaliação de Documentos ([REF-DETRANAM-PORTARIA-NORMATIVA-015-2026]) no
+ofício 03; o parâmetro `teat.bodycam.retention_days` fica pendente de fonte.

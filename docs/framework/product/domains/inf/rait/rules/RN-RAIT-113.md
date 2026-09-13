@@ -3,8 +3,8 @@ id: RN-RAIT-113
 title: Prescrição quinquenal e prescrição por paralisação superior a 3 anos (Lei 9.873/1999)
 status: approved
 apps: [rait, dashboard]
-sources: [REF-LEI-9873-1999, REF-CONTRAN-918]
-updated: 2026-08-26
+sources: [REF-LEI-9873-1999, REF-CONTRAN-918, REF-STJ-1293-1294]
+updated: 2026-09-13
 ---
 
 **Regra.** Aplicam-se ao processo administrativo de infração de trânsito os prazos prescricionais da
@@ -72,3 +72,15 @@ jurídico formal:
   Mesma decisão registrada em [RN-RAIT-111].
 - **Ponto 2 (procedimento uniforme não editado) e ponto 3 (interrupção pela decisão
   recorrível)** seguem em aberto — não cobertos pela pergunta de steering.
+
+**Decisão do Owner (2026-09-13, steering.md H.46) e jurisprudência superveniente.** O STJ fixou
+nos Temas repetitivos 1.293 (12/03/2025) e 1.294 (19/12/2025) que a Lei 9.873/1999 tem aplicação
+restrita à administração pública federal e que o Decreto 20.910/1932 não pode fundar prescrição
+intercorrente em processos de Estados e Municípios ([REF-STJ-1293-1294]). Não foi localizada
+lei estadual do Amazonas sobre prescrição da ação punitiva; a única ponte é o art. 36 da Res.
+918/2022, cujos procedimentos uniformes nunca foram editados. **Enquanto não houver parecer ou lei
+estadual, os dois relógios desta regra (`T-PAR-3A`, `T-PRESC-5A`) operam como relógios de alerta
+sem declaração de ofício**: escalonam no DASHBOARD ([WF-RAIT-002] §4), mas a transição de extinção
+por prescrição depende de decisão do LEGAL caso a caso. O relógio de 24 meses do art. 289-A
+([RN-RAIT-112]) não é afetado e mantém a declaração de ofício (steering C.15). A questão integra a
+consulta jurídica única (item 1).

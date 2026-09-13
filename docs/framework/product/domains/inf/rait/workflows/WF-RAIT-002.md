@@ -10,8 +10,9 @@ sources:
     REF-CTB-extracts-raw,
     REF-LEI-9873-1999,
     REF-DETRANAM-SERVICOS,
+    REF-STJ-1293-1294,
   ]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Estados
@@ -215,3 +216,11 @@ Todos os itens abaixo foram resolvidos em steering com o Owner (2026-08-24) — 
 - **2026-08-24** — Owner, em conversa de steering (`_meta/steering.md` §A): aprovou os 4
   itens de calibração operacional acima (limiares de SLA, pools, sorteio, accountability,
   calendário). Promovido a `reviewed`.
+
+### Decisão 2026-09-13 (steering.md H.46) — relógios da Lei 9.873/1999
+
+Após STJ Temas 1.293/1.294 ([REF-STJ-1293-1294]), os relógios de paralisação (3 anos) e
+quinquenal (5 anos) de [RN-RAIT-113] passam a **alerta sem declaração de ofício**: a escada de §4
+continua a escalonar e o `CRITICO` continua a ser exibido, mas a extinção por prescrição por esses
+relógios depende de decisão do LEGAL caso a caso ou de lei estadual superveniente. O relógio B
+(art. 289-A) não muda.

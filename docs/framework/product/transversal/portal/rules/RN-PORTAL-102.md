@@ -10,7 +10,7 @@ sources:
     REF-LEI-14063-2020,
     REF-MP-2200-2-2001,
   ]
-updated: 2026-08-24
+updated: 2026-09-13
 ---
 
 **Regra.** São **dois eixos distintos**, e o PORTAL deve mantê-los separados no código, na UX e na
@@ -79,3 +79,9 @@ não prova de inexistência**: é possível que exista Portaria ou Instrução N
 Governo Digital não localizada. Ainda que exista, seria ato **federal** de organização da própria
 Plataforma — não criaria requisito oponível ao administrado perante uma autarquia estadual. A regra
 acima é, portanto, robusta aos dois cenários. Item 4 de `_intake/legal-assessment.md`.
+
+**Atualização (2026-09-13, steering.md H.50).** A regra permanece: a cor do selo não é norma.
+Operacionalmente, o Owner decidiu que o PORTAL trata os selos **ouro e prata** como satisfazendo o
+nível avançado exigido por [RN-PORTAL-101] (Decreto 10.543/2020, art. 4º), e bronze como
+insuficiente, enquanto o DETRAN-AM não edita portaria própria sobre o selo prata (a PN 001/2025
+menciona só o ouro). A heurística de orientação desta regra continua valendo na interface.

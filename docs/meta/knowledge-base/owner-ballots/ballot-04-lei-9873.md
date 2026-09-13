@@ -3,7 +3,7 @@
 Bloqueia: transições `EXTINTO_PRESCRICAO` por `T-PAR-3A` e `T-PRESC-5A` (steering C.13
 `[BLOQUEIA]`); IND-DASH-104/105.
 
-Fato novo ([REF-STJ-TEMAS-1293-1294]): STJ Tema 1.293 (03/2025) e Tema 1.294 (12/2025) — a Lei
+Fato novo ([REF-STJ-1293-1294]): STJ Tema 1.293 (03/2025) e Tema 1.294 (12/2025) — a Lei
 9.873/1999 é restrita à administração federal; Estados e Municípios precisam de lei própria;
 o Decreto 20.910/1932 não supre. Nenhuma lei do Amazonas sobre prescrição da ação punitiva foi
 localizada. A única ponte é a Res. CONTRAN 918/2022 art. 36 (ato infralegal), cujos

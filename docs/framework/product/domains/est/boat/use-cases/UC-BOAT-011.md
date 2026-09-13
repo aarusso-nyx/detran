@@ -4,7 +4,7 @@ title: Sistema transmite à RENAEST e acompanha pendência de validação
 status: reviewed
 apps: [boat]
 sources: [REF-CONTRAN-808-2020, WF-BOAT-001, WF-BOAT-003]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Ator e objetivo
@@ -94,3 +94,6 @@ retificações rastreável; ou em acompanhamento ativo, com pendência explícit
 - [RN-BOAT-105] (Coordenador de RENAEST, herdada de [UC-BOAT-009])
 - [RN-BOAT-106] (ausência de prazo legal por sinistro — periodicidade mensal como parâmetro do
   órgão, base do SLA `T-BOAT-TRANSM`)
+
+**Atualização (2026-09-13).** Limiar de célula respondido pelo Owner (DT-029: supressão abaixo
+de 10, com supressão secundária; [RN-DASH-161]); Manuais RENAEST pedidos à SENATRAN (ofício 04).

@@ -3,8 +3,14 @@ id: RN-BOAT-125
 title: Retenção permanente ("forever") de dado de saúde da vítima é juridicamente insustentável — eliminação é a regra, conservação exige enquadramento
 status: draft
 apps: [boat]
-sources: [REF-LEI-13709-2018, REF-CONTRAN-808-2020]
-updated: 2026-08-24
+sources:
+  [
+    REF-LEI-13709-2018,
+    REF-CONTRAN-808-2020,
+    REF-DETRANAM-PORTARIA-NORMATIVA-015-2026,
+    REF-DETRANDF-INSTRUCAO-146-2023-TTD,
+  ]
+updated: 2026-09-13
 ---
 
 **Regra.** A marcação `"retention": "forever"` hoje aplicada a `hospital_destination` e
@@ -68,3 +74,11 @@ contraria a necessidade. (b) A anonimização de sinistro é tecnicamente delica
 reidentificação por cruzamento (local + instante + veículo). (c) A fixação do prazo é **decisão do
 órgão, com apoio do Encarregado e do CPPD** — não pode ser inferida pelo produto nem herdada de
 outro domínio. Item 2 de `_intake/legal-assessment.md`.
+
+**Decisão do Owner (2026-09-13, steering.md H.45).** `retention: forever` eliminado do desenho.
+Prazos adotados como vigentes: **BAT identificado, 5 anos após o encerramento**; **campos de saúde
+da vítima, 5 anos com anonimização ao término**; estatística agregada, guarda permanente. Dono
+institucional do prazo definitivo: Comissão Setorial de Avaliação de Documentos
+([REF-DETRANAM-PORTARIA-NORMATIVA-015-2026]), a quem se pede Plano de Destinação (ofício 03) com o
+benchmark [REF-DETRANDF-INSTRUCAO-146-2023-TTD]; a eliminação gera a listagem prevista no art. 3º,
+V, daquela portaria.

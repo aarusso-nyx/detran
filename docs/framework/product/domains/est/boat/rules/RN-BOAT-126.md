@@ -3,8 +3,13 @@ id: RN-BOAT-126
 title: Acesso, auditoria, transparência e direitos do titular — o que o BOAT deve implementar por força da LGPD
 status: draft
 apps: [boat, portal]
-sources: [REF-LEI-13709-2018, REF-SENATRAN-PORTARIA-139-2025]
-updated: 2026-08-24
+sources:
+  [
+    REF-LEI-13709-2018,
+    REF-SENATRAN-PORTARIA-139-2025,
+    REF-DETRANAM-PORTARIAS-LGPD-2026,
+  ]
+updated: 2026-09-13
 ---
 
 **Regra.** O tratamento de dado de vítima pelo DETRAN-AM sujeita o órgão a um conjunto de deveres
@@ -82,3 +87,9 @@ para a bodycam (item 43 de `inf/teat/_intake/legal-assessment.md`), aqui agravad
 sensível. **Solução de trabalho:** fornecer o registro com **supressão dos campos de saúde de
 terceiros**, salvo requisição de autoridade; não negar o acesso ao registro inteiro. Item 4 de
 `_intake/legal-assessment.md`.
+
+**Atualização (2026-09-13).** O DETRAN-AM já dispõe de Encarregado, Comitê de Privacidade e
+regulamento de compartilhamento com inventário de bases, hipóteses e prazos (Portarias Normativas
+002/2026, 016/2026 e 018/2026 — [REF-DETRANAM-PORTARIAS-LGPD-2026]); os requisitos desta regra
+(finalidade declarada, trilha, publicidade, controles do art. 8º da PN 018/2026) apontam para
+esses instrumentos.

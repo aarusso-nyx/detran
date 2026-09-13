@@ -9,8 +9,10 @@ sources:
     REF-CONTRAN-808-2020,
     REF-SENATRAN-PORTARIA-139-2025,
     REF-CTB-sinistro-cena-renaest,
+    REF-ANPD-GUIA-PODER-PUBLICO-2024,
+    REF-DETRANAM-PORTARIAS-LGPD-2026,
   ]
-updated: 2026-08-24
+updated: 2026-09-13
 ---
 
 **Regra.** **Nenhuma norma localizada — CTB, Lei 13.614/2018, Res. CONTRAN 808/2020, Portaria
@@ -98,3 +100,13 @@ institucional existente, sem tratamento do caso de uso sensível específico. Re
 **Relatório de Impacto à Proteção de Dados** ([REF-LEI-13709-2018] art. 38) e consulta ao Comitê de
 Privacidade (CPPD) e ao Encarregado do DETRAN-AM **antes** de consolidar o modelo de dados de
 vítima. Item 1 de `_intake/legal-assessment.md`.
+
+**Decisão do Owner (2026-09-13, steering.md H.44).** Hipóteses adotadas e a publicar: **art. 11,
+II, "a"** (cumprimento de obrigação legal — CTB art. 326-A, [REF-CONTRAN-808-2020]) para o registro
+e a transmissão ao RENAEST; **art. 11, II, "b"** (execução de política pública de segurança viária,
+Pnatrans) para o uso estatístico interno; **art. 13** para a publicação agregada com supressão de
+célula ([RN-DASH-161]). Fundamento interpretativo: [REF-ANPD-GUIA-PODER-PUBLICO-2024]. Veículo de
+publicidade: inventário de bases de dados do art. 28 da Portaria Normativa DETRAN-AM 002/2026
+([REF-DETRANAM-PORTARIAS-LGPD-2026]), após revisão do Comitê de Privacidade (ofício 03), e página
+de transparência do PORTAL. O dever de publicidade apontado como descumprido passa a ter caminho
+institucional; a confirmação jurídica integra a consulta única (item 10).

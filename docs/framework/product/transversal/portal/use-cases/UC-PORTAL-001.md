@@ -4,7 +4,7 @@ title: Cidadão interpõe defesa da autuação (1º circuito)
 status: approved
 apps: [portal, rait]
 sources: [REF-CONTRAN-900, REF-CONTRAN-918]
-updated: 2026-08-26
+updated: 2026-09-13
 ---
 
 ## Ator e objetivo
@@ -104,3 +104,7 @@ resposta a diligência ([UC-PORTAL-009]).
 - [RN-RAIT-002] (um AIT por requerimento, conteúdo mínimo)
 - [RN-RAIT-003] (vedado exigir documento do próprio órgão)
 - [RN-RAIT-005] (contagem de prazos)
+
+**Atualização (2026-09-13).** A base institucional dos níveis de assinatura passou a existir:
+Portaria Normativa DETRAN-AM 001/2025 ([REF-DETRANAM-PORTARIA-NORMATIVA-001-2025]); selo prata
+aceito por decisão do Owner (steering H.50). Ver [RN-PORTAL-101] §Fonte institucional.

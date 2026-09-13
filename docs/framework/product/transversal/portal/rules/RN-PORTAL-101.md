@@ -11,8 +11,9 @@ sources:
     REF-CONTRAN-900,
     REF-CONTRAN-918,
     REF-CTB-280-290,
+    REF-DETRANAM-PORTARIA-NORMATIVA-001-2025,
   ]
-updated: 2026-08-24
+updated: 2026-09-13
 ---
 
 **Regra.** Todo ato que o cidadão pratica no PORTAL declara, no seu caso de uso, um **nível mínimo de
@@ -110,3 +111,13 @@ elevação sob o art. 4º, § 1º e depende de ato da autoridade máxima do DETR
    é norma.
 
 Itens 2, 3 e 6 de `_intake/legal-assessment.md`.
+
+**Fonte institucional localizada e decisão do Owner (2026-09-13).** A Portaria Normativa
+DETRAN-AM 001/2025 ([REF-DETRANAM-PORTARIA-NORMATIVA-001-2025]) admite, para defesas, recursos,
+indicação de condutor, procurações, declarações de residência e requerimentos, as assinaturas
+gov.br de nível comprovado (ouro), e-Notariado e qualificada — confirmando as linhas 5 a 8 da
+matriz como **avançada** com base em ato do próprio órgão. **Decisão do Owner (steering H.50):**
+o PORTAL aceita também o selo gov.br **prata** como assinatura avançada, com fundamento no
+Decreto 10.543/2020, embora a portaria só mencione o nível ouro; o órgão foi instado a editar
+portaria que o admita (ofício 01) e a questão integra a consulta jurídica única (item 8). O
+recurso ao CETRAN-AM segue a mesma regra por adoção administrativa, a confirmar (H.49).

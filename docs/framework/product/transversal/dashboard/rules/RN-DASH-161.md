@@ -5,7 +5,7 @@ status: draft
 apps: [dashboard, boat]
 sources:
   [REF-LEI-13709-2018, REF-SENATRAN-PORTARIA-139-2025, REF-CONTRAN-808-2020]
-updated: 2026-08-24
+updated: 2026-09-13
 ---
 
 **Regra.** No domínio do sinistro de trânsito o risco de reidentificação é **estruturalmente alto**,
@@ -75,3 +75,8 @@ legal, **apurado por Estado** e comparativo — o que cria demanda por recortes 
 conhecimento local, o que a torna indetectável por qualquer controle técnico. A mitigação sustentável é
 **generalização geográfica como padrão**, com desagregação municipal apenas onde o denominador
 populacional a suporte. Recomenda-se parecer formal antes da primeira publicação.
+
+**Decisão do Owner (2026-08-28, DT-029; confirmada em 2026-09-13, steering.md H.54).** Limiar
+mínimo de célula **10**, com supressão primária e secundária, aplicado antes da renderização e da
+exportação; parâmetro `dashboard.cell_threshold` vigente. O parecer sobre o limiar valida o
+número depois (consulta jurídica única, item 14); não bloqueia a primeira publicação.

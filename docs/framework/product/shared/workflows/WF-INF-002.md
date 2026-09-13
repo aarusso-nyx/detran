@@ -18,7 +18,7 @@ sources:
     REF-SENATRAN-997,
     REF-DETRANAM-TALAO-BODYCAM,
   ]
-updated: 2026-09-12
+updated: 2026-09-13
 ---
 
 ## O que este documento é
@@ -765,7 +765,7 @@ Página consolidada com todos os diagramas embutidos (este documento e [WF-INF-0
 - **Desfecho de `T-NA-IND` vencido** (NA ao condutor indicado não expedida em 30 dias) — a norma dá o
   termo inicial, não a consequência; proposta: a indicação perde efeito quanto ao condutor e a
   responsabilidade retorna ao proprietário, **sem** reabrir `T-NA` do AIT original. Validar com LEGAL.
-- **Prazo e cargo do recurso vinculado da autoridade** ([RN-RAIT-130], DT-010) — natureza e
+- **Prazo e cargo do recurso vinculado da autoridade** ([RN-RAIT-130], DT-010; prazo de 30 dias decidido em 2026-09-13, steering H.47) — natureza e
   ausência de contrarrazões já decididas pelo Owner; prazo próprio e setor competente seguem
   abertos; o desenho usa a janela de 30 dias do art. 288 contada da publicação.
 - **Escada do relógio B**: [RN-RAIT-112] fixa quatro degraus (crítico em 21 meses) e [WF-RAIT-002]

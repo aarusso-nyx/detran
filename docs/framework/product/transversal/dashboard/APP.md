@@ -29,7 +29,7 @@ sources:
     WF-TEAT-004,
     WF-TEAT-005,
   ]
-updated: 2026-08-31
+updated: 2026-09-13
 ---
 
 ## Missão
@@ -273,13 +273,13 @@ aparece** no DASHBOARD.
 
 ### Pendências
 
-| Item                                          | Onde                                 | Efeito                                                                                 |
-| --------------------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------- |
-| **Limiar de célula para publicação agregada** | [RN-DASH-161], P-09 de [IU-DASH-001] | risco ALTO de reidentificação; exige parecer **antes** da primeira publicação (DT-029) |
-| **Adesão do AM à Lei 14.129/2021**            | [RN-DASH-150], [UC-DASH-007]         | condiciona parte do módulo público (DT-066)                                            |
-| **Periodicidade de transmissão ao RENAEST**   | [RN-DASH-113], [RN-DASH-133]         | dever sem relógio vigente; o painel exibe a lacuna em vez de inventar prazo (DT-017)   |
-| **Endpoint de ACK nos apps de origem**        | [WF-DASH-001], AC-DASH-002-5         | sem ele o reconhecimento é manual, e assim deve ser rotulado                           |
-| **Parque de medidores**                       | [RN-DASH-173], AC-DASH-008-7         | o dever de publicidade é vigiável; o parque não foi levantado (DT-063)                 |
+| Item                                          | Onde                                 | Efeito                                                                                                                                                                            |
+| --------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Limiar de célula para publicação agregada** | [RN-DASH-161], P-09 de [IU-DASH-001] | risco ALTO de reidentificação; exige parecer **antes** da primeira publicação (DT-029) — **respondido (DT-029; H.54)**: limiar 10 com supressão secundária; parecer valida depois |
+| **Adesão do AM à Lei 14.129/2021**            | [RN-DASH-150], [UC-DASH-007]         | condiciona parte do módulo público (DT-066)                                                                                                                                       |
+| **Periodicidade de transmissão ao RENAEST**   | [RN-DASH-113], [RN-DASH-133]         | dever sem relógio vigente; o painel exibe a lacuna em vez de inventar prazo (DT-017)                                                                                              |
+| **Endpoint de ACK nos apps de origem**        | [WF-DASH-001], AC-DASH-002-5         | sem ele o reconhecimento é manual, e assim deve ser rotulado                                                                                                                      |
+| **Parque de medidores**                       | [RN-DASH-173], AC-DASH-008-7         | o dever de publicidade é vigiável; o parque não foi levantado (DT-063) — **resolvido (DT-063)**: não utilizados hoje; indicador catalogado com fonte desconectada                 |
 
 [UC-DASH-005] e [UC-DASH-007] ficaram em `reviewed` por dependerem do limiar de célula e da adesão
 à 14.129 — o núcleo de vigilância (radar, alerta, deveres, trilha, integrações, calendário) está

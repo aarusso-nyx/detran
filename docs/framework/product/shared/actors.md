@@ -10,7 +10,7 @@ sources:
     REF-CONTRAN-985-1003-MBFT,
     REF-DETRANAM-TALAO-BODYCAM,
   ]
-updated: 2026-09-12
+updated: 2026-09-13
 ---
 
 Visão AGREGADA e multi-app, complementada pela seção de papéis granulares do TEAT abaixo.
@@ -101,18 +101,33 @@ verificados por `pnpm verify:role-catalog`; um papel novo exige os três no mesm
 
 ## Transversais
 
-| Ator                      | Descrição                                  | Apps            |
-| ------------------------- | ------------------------------------------ | --------------- |
-| Gestor DETRAN             | visão cross-tenant do órgão                | todos           |
-| Auditor / DPO             | trilhas de auditoria; proteção de dados    | todos           |
-| Operador de monitoramento | acompanha operações e indicadores internos | dashboard       |
-| Administração técnica     | saúde técnica, homologações, integrações   | dashboard, teat |
+| Ator                      | Descrição                                                                                                                    | Apps            |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Gestor DETRAN             | visão cross-tenant do órgão                                                                                                  | todos           |
+| Auditor / DPO             | trilhas de auditoria; proteção de dados                                                                                      | todos           |
+| Operador de monitoramento | acompanha operações e indicadores internos — papel RBAC `dash-operator` (steering H.38)                                      | dashboard       |
+| Dono de dever periódico   | avança o ciclo do dever e anexa a evidência (ouvidor, financeiro, coordenador RENAEST) — papel RBAC `dash-duty-owner` (H.38) | dashboard       |
+| Administração técnica     | saúde técnica, homologações, integrações                                                                                     | dashboard, teat |
 
 **Decisão do Owner (2026-08-24, steering.md F.32):** os papéis de protótipo sem RBAC próprio no
 MVP — Suporte (técnico), Fiscal de contrato e Encarregado de dados/DPO (distinto do papel
 agregado "Auditor / DPO" acima, que hoje cobre trilha de auditoria/LGPD em nível de sistema) —
 estão **confirmados no escopo**, para **ondas futuras** de RBAC, não descartados (fonte:
 `inf/teat/_intake/proposals.md`, `est/boat/_intake/proposals.md`).
+
+### Papéis granulares DASHBOARD (decisão do Owner, steering.md H.38, 2026-09-13)
+
+| Papel                                       | Atuação                                                                                                                                                               | Camada ([RN-DASH-170]) |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `dash-operator` (operador de monitoramento) | triagem do turno, ciência (`ack`) em nome do dono, encerramento de alertas da trilha de irregularidade após verificação; nunca pratica ato de negócio ([RN-DASH-101]) | N1                     |
+| `dash-duty-owner` (dono de dever periódico) | abre, prepara, submete e comprova os ciclos do calendário de deveres ([WF-DASH-002]); atribuído ao ouvidor, ao financeiro e ao coordenador de RENAEST                 | N1                     |
+
+Os gestores de área continuam representados pelos papéis dos domínios de origem (`rait-manager`,
+`rait-coordinator`, `rait-chair`, `traffic-authority`); o Gestor DETRAN por `agency-admin`; a
+Administração técnica por `technical-admin` e `integration-operator`; o Auditor por `auditor`.
+
+**Diretoria de Fiscalização (TEAT).** Não recebe papel próprio: é `traffic-authority` com o
+atributo `decision_body`, exigido pela rota de cancelamento pós-finalização (steering H.39).
 
 ## Decisões
 
@@ -121,3 +136,7 @@ granulares de RBAC do TEAT, mantendo a visão agregada; (F.32) confirmar Suporte
 contrato e DPO como papéis de ondas futuras de RBAC, não fora de escopo. Ver `_meta/steering.md`
 itens F.30 e F.32. Promove este arquivo de `draft` para `reviewed` — era seu único item de
 decisão de escopo em aberto.
+
+**2026-09-13 (steering.md H.38, H.39).** Owner decidiu criar `dash-operator` e `dash-duty-owner`
+no catálogo canônico (`roles.ts`, `auth.role_catalog`, `policy.ts`) e representar a Diretoria de
+Fiscalização por atributo de `traffic-authority`. Propagação em código no pacote WP-D0.
