@@ -472,18 +472,6 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
     'initiate-upload',
     ['field-agent', 'processing-operator'],
   ],
-  [
-    'ops',
-    'evidence',
-    'complete-upload',
-    ['field-agent', 'processing-operator'],
-  ],
-  [
-    'ops',
-    'evidence',
-    'validate',
-    ['processing-operator', 'AUDITOR', 'technical-admin'],
-  ],
   ['ops', 'evidence', 'link', ['field-agent', 'processing-operator']],
   [
     'ops',
@@ -566,12 +554,17 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
   ['est', 'crash-record', 'add-vehicle', ['field-agent']],
   ['est', 'crash-record', 'add-person', ['field-agent']],
   ['est', 'crash-record', 'add-victim', ['field-agent']],
-  ['est', 'crash-record', 'attach-sketch', ['field-agent']],
+  [
+    'est',
+    'crash-record',
+    'attach-sketch',
+    ['field-agent', 'processing-operator'],
+  ],
   [
     'est',
     'crash-record',
     'validate',
-    ['field-supervisor', 'processing-operator'],
+    ['processing-operator', 'traffic-authority'],
   ],
   ['est', 'crash-record', 'close', ['field-supervisor', 'traffic-authority']],
   [
@@ -748,7 +741,33 @@ const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
       'technical-admin',
     ],
   ],
+  [
+    'homologation',
+    'read',
+    [
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'agency-admin',
+      'technical-admin',
+      'integration-operator',
+      'AUDITOR',
+    ],
+  ],
   ['homologation', 'create', ['agency-admin', 'technical-admin']],
+  [
+    'application-version',
+    'read',
+    [
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'agency-admin',
+      'technical-admin',
+      'integration-operator',
+      'AUDITOR',
+    ],
+  ],
   ['application-version', 'create', ['agency-admin', 'technical-admin']],
   [
     'snapshot-person',
@@ -851,6 +870,8 @@ const INF_ADMIN_RESOURCES = new Set([
   'measure-type',
   'tow-provider',
   'yard',
+  'speed-meter',
+  'speed-meter-certificate',
 ]);
 const INF_RESOURCES = [
   'ait',
@@ -881,6 +902,9 @@ const INF_RESOURCES = [
   'alcohol-refusal',
   'psychomotor-sign',
   'alcohol-forwarding',
+  'speed-meter',
+  'speed-meter-certificate',
+  'speed-measurement',
 ] as const;
 const INF_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> =
   INF_RESOURCES.flatMap((resource) => [

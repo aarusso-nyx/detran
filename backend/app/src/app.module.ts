@@ -61,6 +61,14 @@ import { SchedulingModule } from '@detran/ch-scheduling';
 import { TelehealthModule } from '@detran/ch-telehealth';
 import { ToxicologyModule } from '@detran/ch-toxicology';
 import { ComplaintsModule } from '@detran/portal-complaints';
+import { AitModule } from '@detran/inf-ait';
+import { AlcoholModule } from '@detran/inf-alcohol';
+import { MeasuresModule } from '@detran/inf-measures';
+import { NormativeModule } from '@detran/inf-normative';
+import { RaitCaseModule } from '@detran/inf-rait-case';
+import { RaitSessionModule } from '@detran/inf-rait-session';
+import { RaitWorklistModule } from '@detran/inf-rait-worklist';
+import { SpeedModule } from '@detran/inf-speed';
 
 import {
   DetranPersistedAuditSink,
@@ -79,6 +87,7 @@ import {
   detranSessionsOptions,
   detranTokenVerifier,
   detranRuntimeProfile,
+  detranFeatureFlagSet,
   isLocalRuntimeProfile,
 } from './detran-runtime.js';
 import {
@@ -331,6 +340,20 @@ export class AppModule {
         RestrictionsModule,
         RetentionModule,
         ComplaintsModule,
+        // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
+        // handwritten AIT lifecycle commands (WP-T0).
+        NormativeModule,
+        AitModule,
+        MeasuresModule,
+        AlcoholModule,
+        RaitCaseModule,
+        RaitWorklistModule,
+        RaitSessionModule,
+        // Speed meters stay behind the `teat.speed_meters` flag (steering H.54:
+        // the agency does not operate meters today).
+        ...(detranFeatureFlagSet().flags['teat.speed_meters']?.default === true
+          ? [SpeedModule]
+          : []),
       ],
       controllers: [
         PecProcessParametersController,

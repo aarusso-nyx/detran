@@ -15,3 +15,17 @@ Every generated file includes the exact SHA-256 of its source blueprint. `pnpm
 blueprints:check` regenerates all blueprints into a temporary directory and fails
 on any missing, changed, or extra generated file. It runs as part of root
 `pnpm check` and the `backend-kernel` CI job.
+
+## Handwritten members and module wiring (since 2026-09-13)
+
+| Key (`module.*`)         | Shape                   | Effect in the generated `<name>.module.ts`                         |
+| ------------------------ | ----------------------- | ------------------------------------------------------------------ |
+| `handwrittenControllers` | `[{ target, symbol }]`  | `import { symbol } from './target.js'` + `controllers: [...]`      |
+| `handwrittenProviders`   | `[{ target, symbol }]`  | idem, `providers: [...]` (symbol may be a factory provider object) |
+| `handwrittenExports`     | `['file-basename']`     | `export * from './file-basename.js'` in `index.ts`                 |
+| `moduleImports`          | `[{ package, symbol }]` | `import { symbol } from 'package'` + `imports: [...]`              |
+| `moduleExports`          | `['Symbol']`            | `exports: [...]`                                                   |
+
+Example: `BP-INF-AIT-001` imports `NormativeModule` from `@detran/inf-normative` and registers
+`AitCommandsController` and `AIT_LIFECYCLE_PROVIDER`; `BP-INF-NORMATIVE-001` exports
+`NormativeLifecycleService`.

@@ -33,6 +33,8 @@ ADR-0018 (impressão e assinatura via substrato), ADR-0020 (projeções).
 
 ### WP-T0 — Correções de base (Engineer; Architect revisa) — antes de tudo
 
+**Executado em 2026-09-13** (branch `fix/wp-t0-base-defects`): (1) junção de rotas já corrigida em `main`; (2) `AitModule` monta `AitCommandsController` e `AitLifecycleService` via `handwrittenControllers`/`handwrittenProviders` do blueprint (provedor de fábrica `AIT_LIFECYCLE_PROVIDER`), com `NormativeModule` importado e exportando `NormativeLifecycleService` — o gerador ganhou `moduleImports`/`moduleExports`; (3) entidades de auditoria do `ops` alinhadas às tabelas `ops.ops_*`; (4) política: `ops:homologation:read`, `ops:application-version:read` (com rotas `GET`), `inf:speed-*` (superfície CRUD, módulo atrás da flag), `ops:evidence:complete-upload|validate` removidas até o WP-T2, `est:crash-record` reconciliado (H.39, corpus BOAT); (5) WP-0 mergeado. Além do previsto: os oito módulos `inf` passaram a ser montados no `AppModule` e um e2e HTTP cobre `POST /v1/inf/ait/aits/{id}/finalize`. Pendente para WP-T1/T2: módulos Nest para `ops/*`, comandos de medidas e alcoolemia montados, entidades do item 6.
+
 Ler: `tools/blueprints/generate.mjs`, `tools/contracts/generate-openapi.mjs`, `AitModule`,
 `ops/*` controllers, `policy.ts`, `teat-route-contract.md` §9.
 Produzir: (1) gerador emitindo `@Controller('v1/inf/ait/aits')` (join com barra) e teste de

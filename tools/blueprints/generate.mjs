@@ -224,11 +224,18 @@ function controller(bp, sha, entity, module) {
 function moduleFile(bp, sha, module, entities) {
   const handwrittenControllers = module.handwrittenControllers ?? [];
   const handwrittenProviders = module.handwrittenProviders ?? [];
+  const moduleImports = module.moduleImports ?? [];
+  const moduleExports = module.moduleExports ?? [];
   const handwrittenImports = [
     ...handwrittenControllers,
     ...handwrittenProviders,
   ]
     .map(({ target, symbol }) => `import { ${symbol} } from './${target}.js';`)
+    .concat(
+      moduleImports.map(
+        ({ package: pkg, symbol }) => `import { ${symbol} } from '${pkg}';`,
+      ),
+    )
     .join('\n');
   const controllers = [
     ...entities.map((entity) => `${entity.name}Controller`),
@@ -241,7 +248,7 @@ function moduleFile(bp, sha, module, entities) {
     ]),
     ...handwrittenProviders.map(({ symbol }) => symbol),
   ];
-  return `${header(bp, sha)}\nimport { Module } from '@nestjs/common';\n${entities.map((e) => `import { ${e.name}Controller } from './controllers/${kebab(e.name)}.controller.js';\nimport { ${e.name}Service } from './services/${kebab(e.name)}.service.js';\nimport { ${e.name}Repository } from './repositories/${kebab(e.name)}.repository.js';`).join('\n')}\n${handwrittenImports}\n\n@Module({ controllers: [${controllers.join(', ')}], providers: [${providers.join(', ')}] })\nexport class ${pascal(module.name)}Module {}`;
+  return `${header(bp, sha)}\nimport { Module } from '@nestjs/common';\n${entities.map((e) => `import { ${e.name}Controller } from './controllers/${kebab(e.name)}.controller.js';\nimport { ${e.name}Service } from './services/${kebab(e.name)}.service.js';\nimport { ${e.name}Repository } from './repositories/${kebab(e.name)}.repository.js';`).join('\n')}\n${handwrittenImports}\n\n@Module({${moduleImports.length ? ` imports: [${moduleImports.map(({ symbol }) => symbol).join(', ')}],` : ''} controllers: [${controllers.join(', ')}], providers: [${providers.join(', ')}]${moduleExports.length ? `, exports: [${moduleExports.join(', ')}]` : ''} })\nexport class ${pascal(module.name)}Module {}`;
 }
 function packageFiles(bp, sha, module, entities) {
   const base = `backend/domains/${module.namespace}/${kebab(module.name)}`;

@@ -395,7 +395,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [x] **Aceitar as ADRs de fronteira 0016…0020** (numeradas 0014…0018 até a fusão com `main`) — aceitas pelo Owner em 2026-09-13 (steering G.37)
 - [x] **Pacote TEAT (2026-09-13)**: `teat-frontends.md`, `teat-route-contract.md`, `teat-error-catalog.md`,
       `teat-build-pack.md` (WP-T0…T6; 12 questões OD-T01…T12)
-- [ ] **Defeitos de base do TEAT** (WP-T0): prefixo de rota do gerador (`v1/inf/aitaits`), `AitModule` sem os
+- [x] **Defeitos de base do TEAT** (WP-T0, 2026-09-13, branch `fix/wp-t0-base-defects`; ver `teat-build-pack.md` §WP-T0): prefixo de rota do gerador (`v1/inf/aitaits`), `AitModule` sem os
       comandos, entidades de auditoria do `ops`, política × rotas — corrigir antes de gerar clientes (added 2026-09-13)
 - [ ] **Reconciliar `use-cases/INDEX.md` do TEAT** (status dos UCs e ausência do UC-TEAT-013) e a contagem
       de regras (49 × 50) em `APP.md` (added 2026-09-13)
@@ -426,3 +426,6 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       archive.org em 2026-09-13) e capturar o Decreto Manaus 4.922/2020 (JARI do IMMU) como benchmark (added 2026-09-13)
 - [ ] **WP-A: `BP-OPS-PARAMETER-001`, DDL `15-ops-parameter.sql`, seed gerado do catálogo, gate
       `verify:parameter-catalogue`, view de compatibilidade de `inf.normative_agency_parameter`** (ADR-0021) (added 2026-09-13)
+- [ ] **WP-T1/T2 — achados do WP-T0**: `ops/*` (operations, evidence-custody, snapshots) sem módulo Nest e com serviços
+      não injetáveis; `MeasureLifecycleService`/`AlcoholLifecycleService` e seus comandos ainda não montados; as sete
+      entidades da origem (item 6 de `teat-route-contract.md` §9); `ops:evidence:complete-upload|validate` voltam com rotas (added 2026-09-13)

@@ -86,6 +86,42 @@ describe('DETRAN unified policy kit', () => {
     ).toBe(true);
   });
 
+  it('closes the WP-T0 policy gaps: ops read surfaces, speed catalogue and BOAT decisions', () => {
+    const allowed = (roles: string[], resource: string, action: string) =>
+      isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+    expect(allowed(['field-supervisor'], 'ops:homologation', 'read')).toBe(
+      true,
+    );
+    expect(allowed(['field-agent'], 'ops:homologation', 'read')).toBe(false);
+    expect(
+      allowed(['integration-operator'], 'ops:application-version', 'read'),
+    ).toBe(true);
+    // complete-upload and validate return with their routes in WP-T2
+    expect(
+      allowed(['processing-operator'], 'ops:evidence', 'complete-upload'),
+    ).toBe(false);
+    expect(allowed(['AUDITOR'], 'ops:evidence', 'validate')).toBe(false);
+    expect(allowed(['agency-admin'], 'inf:speed-meter', 'create')).toBe(true);
+    expect(allowed(['field-agent'], 'inf:speed-meter', 'create')).toBe(false);
+    expect(allowed(['field-agent'], 'inf:speed-measurement', 'create')).toBe(
+      true,
+    );
+    expect(allowed(['bi-analyst'], 'inf:speed-measurement', 'read')).toBe(true);
+    // steering H.39/BOAT corpus: validate by processing-operator or traffic-authority
+    expect(
+      allowed(['processing-operator'], 'est:crash-record', 'validate'),
+    ).toBe(true);
+    expect(allowed(['traffic-authority'], 'est:crash-record', 'validate')).toBe(
+      true,
+    );
+    expect(allowed(['field-supervisor'], 'est:crash-record', 'validate')).toBe(
+      false,
+    );
+    expect(
+      allowed(['processing-operator'], 'est:crash-record', 'attach-sketch'),
+    ).toBe(true);
+  });
+
   it('preserves PEC, TEAT, and citizen decisions', () => {
     expect(
       isDetranActionAllowed(
