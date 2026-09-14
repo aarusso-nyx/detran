@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/inf.infraction.penalty-final.schema.json",
+  "title": "inf.infraction.penalty-final",
+  "description": "Penalidade definitiva — pontuacao no RENACH via senatran-adapter (rait-events-sse-contract secao 2.4; [REF-CONTRAN-918] art. 18).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ULID do envelope; ordena por tempo dentro do tenant (rait-events-sse-contract secao 1)."
+    },
+    "type": {
+      "const": "inf.infraction.penalty-final"
+    },
+    "domainEvent": {
+      "const": "PENALIDADE_DEFINITIVA",
+      "description": "Token canonico de inf.infraction_event_ref (14-inf-lifecycle-vocabulary.sql)."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Usado para roteamento; nunca exposto no SSE."
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "requestId do comando que gerou o evento."
+    },
+    "causationId": {
+      "type": "string",
+      "description": "id do evento que causou este; ausente no evento raiz."
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "infraction"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ETag pos-transicao (inf.infraction.version)."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "description": "Emitido na entrada de INSTANCIA_ENCERRADA ([WF-INF-003] secao 5 invariante 2).",
+      "additionalProperties": false,
+      "required": ["infractionId", "aitId", "finalOn", "points", "amountTier"],
+      "properties": {
+        "infractionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "aitId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "finalOn": {
+          "type": "string",
+          "format": "date"
+        },
+        "points": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "amountTier": {
+          "type": "string",
+          "enum": [
+            "nenhum",
+            "desconto_80",
+            "desconto_60_reconhecimento",
+            "desconto_40_fora_sne",
+            "integral_juros",
+            "restituido"
+          ],
+          "description": "inf.infraction_payment_tier_ref.code."
+        }
+      }
+    }
+  }
+}

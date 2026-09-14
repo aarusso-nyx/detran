@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/inf.timer.expired.schema.json",
+  "title": "inf.timer.expired",
+  "description": "Vencimento de relogio legal — consumido pela auditoria (rait-events-sse-contract secao 2.4; [WF-INF-002] secao 9).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ULID do envelope; ordena por tempo dentro do tenant (rait-events-sse-contract secao 1)."
+    },
+    "type": {
+      "const": "inf.timer.expired"
+    },
+    "domainEvent": {
+      "const": "TIMER_VENCIDO",
+      "description": "Token canonico de inf.infraction_event_ref (14-inf-lifecycle-vocabulary.sql)."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Usado para roteamento; nunca exposto no SSE."
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "requestId do comando que gerou o evento."
+    },
+    "causationId": {
+      "type": "string",
+      "description": "id do evento que causou este; ausente no evento raiz."
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "case",
+            "infraction",
+            "session",
+            "batch",
+            "clock",
+            "assignment",
+            "agenda-item",
+            "outbox"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ETag pos-transicao (inf.infraction.version)."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "description": "Emitido uma vez por timer vencido — a varredura e idempotente (rait-deadline-engine secao 5).",
+      "additionalProperties": false,
+      "required": ["ownerKind", "ownerId", "timerCode", "dueOn", "effect"],
+      "properties": {
+        "ownerKind": {
+          "type": "string",
+          "enum": ["case", "infraction", "session"]
+        },
+        "ownerId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "timerCode": {
+          "type": "string",
+          "enum": [
+            "T-NA",
+            "T-SNE-CIENCIA",
+            "T-DEF",
+            "T-IND",
+            "T-NA-IND",
+            "T-DEC",
+            "T-NP-VENC",
+            "T-REM10",
+            "T-JUL-24M",
+            "T-DIL",
+            "T-R2",
+            "T-PAR-3A",
+            "T-PRESC-5A",
+            "T-VOTO",
+            "T-CONV",
+            "T-ASS",
+            "T-CLAIM",
+            "SLA-30"
+          ],
+          "description": "inf.infraction_timer_ref.code."
+        },
+        "dueOn": {
+          "type": "string",
+          "format": "date"
+        },
+        "effect": {
+          "type": "string",
+          "enum": ["transicao", "alerta", "marco", "regra"],
+          "description": "expiry_kind efetivo do catalogo; guarda e indicador nunca vencem (rait-deadline-engine secao 3). Timers a_confirmar (T-NA-IND, T-PAR-3A, T-PRESC-5A) vencem como alerta ate deadline.<codigo>.expiry_kind_override (H.46, OD-301/OD-304)."
+        }
+      }
+    }
+  }
+}

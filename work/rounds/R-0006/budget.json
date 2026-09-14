@@ -1,10 +1,10 @@
 {
   "round": "R-0006",
-  "window": 1,
+  "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 520000,
-  "estimated_output_total": 51000,
+  "estimated_input_total": 705000,
+  "estimated_output_total": 124000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -33,9 +33,172 @@
     {
       "kind": "worker",
       "id": "TASK-0001",
-      "input_tokens": 120000,
-      "output_tokens": 15000,
-      "status": "in_progress"
+      "input_tokens": 80000,
+      "output_tokens": 18000,
+      "status": "completed",
+      "note": "subagent_tokens 318k (84 tool uses, 28 min); counted as ~80k unique input per the R-0003 convention (cached re-reads excluded)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "input_tokens": 90000,
+      "output_tokens": 22000,
+      "status": "completed",
+      "note": "subagent_tokens 363k (78 tool uses, 30 min); ~90k unique input"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "input_tokens": 85000,
+      "output_tokens": 25000,
+      "status": "completed",
+      "note": "subagent_tokens 305k (110 tool uses, 45 min); ~85k unique input"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001",
+      "input_tokens": 70000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-2",
+      "input_tokens": 70000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0006-W2",
+      "input_tokens": 40000,
+      "output_tokens": 8000,
+      "status": "completed",
+      "note": "mini-triad TASK-0009…0011 after the human chose option (ii)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3",
+      "input_tokens": 50000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-4",
+      "input_tokens": 50000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5",
+      "input_tokens": 50000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-6",
+      "input_tokens": 50000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "4th cycle authorized by the human (option a)",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7",
+      "input_tokens": 50000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "5th cycle authorized by the human",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "input_tokens": 45000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "dispatched without prompt-review PASS by human decision (exception to §5); subagent_tokens 160k (49 tool uses)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010",
+      "input_tokens": 50000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "subagent_tokens 195k (44 tool uses)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0011",
+      "input_tokens": 55000,
+      "output_tokens": 14000,
+      "status": "completed",
+      "note": "subagent_tokens 182k (49 tool uses)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-3",
+      "input_tokens": 70000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0006-M15",
+      "input_tokens": 15000,
+      "output_tokens": 5000,
+      "status": "completed"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0012",
+      "input_tokens": 35000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "note": "subagent_tokens 134k (14 tool uses)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0013",
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "subagent_tokens 124k (32 tool uses)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0012-iteration-2",
+      "input_tokens": 15000,
+      "output_tokens": 2000,
+      "status": "completed"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-4",
+      "input_tokens": 60000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "PASS"
     }
-  ]
+  ],
+  "note": "Convention (as R-0003): worker input_tokens = unique reading, not raw subagent_tokens (which include cached context re-reads). At 570k after TASK-0002 = 81% of the window: checkpoint recorded in plan.md §Retomada; CTG-0001 is finished (TASK-0003 + delivery review + PR) and the window closes there. Raw subagent totals: TASK-0001 318k, TASK-0002 363k. Window closed after delivery-review-2 FAIL (escalated): ~705k unique input (101% of the 700k window); raw subagent totals 986k. Window 2: mini-triad prompts reviewed 3 times (REVIEW, REVIEW, FAIL) — stopped per maestro prompt §5; ~190k input, no worker dispatched.",
+  "windows": [
+    {
+      "window": 1,
+      "estimated_input_total": 705000,
+      "estimated_output_total": 124000
+    }
+  ],
+  "window2_input_budget": 700000,
+  "window2_estimated_input": 760000
 }

@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0001",
   "round_id": "R-0006",
-  "status": "in_progress",
+  "status": "completed",
   "discipline": "architect",
   "discipline_specialization": "architect-blueprint",
   "title": "Define infraction and notification blueprints, event schemas and CTG-0001 contract",
@@ -28,8 +28,21 @@
   "coupled_pipeline_position": "architect",
   "upstream_task_id": null,
   "db_isolation": "database",
-  "iteration_count": 0,
-  "iteration_trail": [],
+  "iteration_count": 3,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "policy-issue",
+      "finding": "delivery-review-1: generated PATCH/DELETE on the append-only trail inf.infraction_event (and notice_acknowledgement, notice_delivery_attempt). Fix by the maestro (Architect): api.resources[].operations = list,get,create; blueprints v1.1.1 regenerated.",
+      "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "delivery-review-2: contract §3.3 count 42 → 43 vigente rows corrected by the maestro (Architect).",
+      "status": "completed"
+    }
+  ],
   "max_iterations": 2,
   "priority": 1,
   "tags": ["wp-a", "infraction", "notification", "blueprint"],

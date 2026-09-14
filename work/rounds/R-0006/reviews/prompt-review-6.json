@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "work/rounds/R-0006/prompts/TASK-0009.md",
+      "line": 43,
+      "claim": "A fronteira de escrita manda marcar `suspensionActId?` na tabela canônica, contradizendo M14: o campo é obrigatório e anulável, sem `?`.",
+      "fix": "Substituir por `suspensionActId (obrigatório, anulável)`; preservar `type: ['string','null']` e inclusão em `required`."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0006/prompts/TASK-0011.md",
+      "line": 39,
+      "claim": "A emenda obriga alterar o JSON Schema publicado, mas o espelho Zod e o teste de sincronização de `@detran/inf-infraction` continuarão exigindo `suspensionActId: string` e não conhecem `reason`; TASK-0011 proíbe tocar nesse pacote, embora seu critério exija os testes unitários dele verdes.",
+      "fix": "Reabrir a mini-tríade com locks explícitos para o espelho de eventos da infração: Inspector atualiza o teste de esquema, Engineer atualiza `backend/domains/inf/infraction/src/handwritten/events.ts`, e os critérios verificam a sincronização com o JSON Schema alterado."
+    }
+  ],
+  "notes": []
+}

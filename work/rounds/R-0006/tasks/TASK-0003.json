@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0003",
   "round_id": "R-0006",
-  "status": "queued",
+  "status": "escalated",
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
   "title": "Implement @detran/inf-deadlines, infraction guards and events, notification marks, and module wiring",
@@ -26,8 +26,21 @@
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0002",
   "db_isolation": "database",
-  "iteration_count": 0,
-  "iteration_trail": [],
+  "iteration_count": 2,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "policy-issue",
+      "finding": "delivery-review-1: mounting InfractionModule/NotificationModule in AppModule exposes generated routes before R-0007. Fix by the maestro (Engineer): AppModule and backend/app/package.json restored to main; root test scripts kept; pnpm install re-run.",
+      "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "delivery-review-2 FAIL: (a) contract §3.3 says 42 vigente rows, DDL has 43 — fixed by the maestro (Architect); (b) reschedule does not emit TIMER_REPROGRAMADO (contract API §5 has no event port; both workers flagged it as contract gap 1); (c) no extend operation limiting T-DIL to one extension (deferred to R-0007 by the Engineer as a command). (b) and (c) need a contract amendment, new Inspector tests and Engineer work: escalated to the human (second FAIL, window budget exhausted).",
+      "status": "escalated"
+    }
+  ],
   "max_iterations": 2,
   "priority": 1,
   "tags": ["wp-a", "infraction", "deadlines", "engineer"],

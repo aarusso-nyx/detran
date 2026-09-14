@@ -38,11 +38,13 @@ describe('inf database contract', () => {
         order by tables.table_name`,
     );
     // Tenant tables: ait (9), normative (6), measures (9), alcohol (6), rait case/worklist/session (21),
-    // speed (3) — 14-inf-lifecycle-vocabulary.sql adds tenant-less reference tables (`*_ref`),
-    // which must never carry tenant RLS and must be the only unprotected tables in the schema.
+    // speed (3), infraction (3: infraction, infraction_timer, infraction_event — DDL 38) and
+    // notification (3: notice, notice_acknowledgement, notice_delivery_attempt — DDL 59) —
+    // 14-inf-lifecycle-vocabulary.sql adds tenant-less reference tables (`*_ref`), which must
+    // never carry tenant RLS and must be the only unprotected tables in the schema.
     const tenantTables = result.rows.filter((row) => row.has_tenant_id);
     const referenceTables = result.rows.filter((row) => !row.has_tenant_id);
-    expect(tenantTables).toHaveLength(52);
+    expect(tenantTables).toHaveLength(58);
     expect(referenceTables).toHaveLength(9);
     expect(
       tenantTables.every(

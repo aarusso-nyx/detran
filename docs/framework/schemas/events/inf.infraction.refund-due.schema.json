@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/inf.infraction.refund-due.schema.json",
+  "title": "inf.infraction.refund-due",
+  "description": "Restituicao devida ao administrado — consumido pelo financeiro (rait-events-sse-contract secao 2.4; CTB art. 286 par. 2o).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ULID do envelope; ordena por tempo dentro do tenant (rait-events-sse-contract secao 1)."
+    },
+    "type": {
+      "const": "inf.infraction.refund-due"
+    },
+    "domainEvent": {
+      "const": "RESTITUICAO_DEVIDA",
+      "description": "Token canonico de inf.infraction_event_ref (14-inf-lifecycle-vocabulary.sql)."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Usado para roteamento; nunca exposto no SSE."
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "requestId do comando que gerou o evento."
+    },
+    "causationId": {
+      "type": "string",
+      "description": "id do evento que causou este; ausente no evento raiz."
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "infraction"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ETag pos-transicao (inf.infraction.version)."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "description": "Emitido em CANCELADO_DEFINITIVO ou extincao com paid=true ([WF-INF-003] secao 5 invariante 8).",
+      "additionalProperties": false,
+      "required": ["infractionId", "paymentId", "amount", "reason"],
+      "properties": {
+        "infractionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "paymentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "amount": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "reason": {
+          "type": "string",
+          "description": "Motivo textual curto do estorno; sem dados de terceiros."
+        }
+      }
+    }
+  }
+}

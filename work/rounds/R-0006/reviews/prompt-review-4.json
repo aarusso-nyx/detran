@@ -1,0 +1,19 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0006",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0006/prompts/TASK-0009.md",
+      "line": 70,
+      "claim": "O prompt altera o schema de `inf.timer.rescheduled` para incluir `reason` e aceitar `suspensionActId: null`, mas manda apenas deixar uma nota para atualizar a definição canônica em `rait-events-sse-contract.md` no R-0007. A tabela §2.4 é fonte do schema no WP-A; isso deixa contrato canônico e schema implementado divergentes antes da entrega.",
+      "fix": "Incluir `docs/framework/arch/rait-events-sse-contract.md` §2.4 na fronteira e em `MOD-schemas-events`, atualizando a linha do evento na mesma tríade; se a alteração realmente não puder entrar agora, registrar uma OD explícita que autorize a divergência e bloqueie a publicação até sua resolução."
+    }
+  ],
+  "notes": [
+    "Os três prompts mantêm a ordem Architect → Inspector → Engineer, fronteiras de escrita disjuntas e proíbem git para workers.",
+    "A conta do caso 20 está consistente com o calendário: 08/12 e 25/12 são feriados, enquanto 24/12 é ponto facultativo e conta como dia útil."
+  ]
+}

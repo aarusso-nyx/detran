@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0006",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0006/prompts/TASK-0009.md",
+      "line": 73,
+      "claim": "O prompt fixa `due_on` em 2026-12-29, mas 15 dias úteis após 2026-12-07, contando 24/12 como dia útil e excluindo 08/12 e 25/12, resulta em 2026-12-30.",
+      "fix": "Substituir a data por 2026-12-30 e explicitar a contagem canônica no caso 20."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0006/prompts/TASK-0009.md",
+      "line": 25,
+      "claim": "A lista fechada omite `docs/framework/arch/fixtures/calendar-2026.json`, embora a tarefa obrigue o Architect a calcular e registrar a data do caso 20 a partir dele.",
+      "fix": "Incluir o calendário na leitura obrigatória de TASK-0009."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0006/prompts/TASK-0010.md",
+      "line": 65,
+      "claim": "O critério exige 23 casos, mas o arquivo possui 18 e o escopo manda acrescentar somente os casos 19–22, enquanto a emenda do caso 12 é uma asserção no teste existente; o total verificável é 22.",
+      "fix": "Corrigir o resultado esperado para 22 casos, ou declarar e especificar um quinto teste novo separado para a emenda do caso 12."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0006/plan.md",
+      "line": 82,
+      "claim": "TASK-0009 é emenda de contrato de comando, mas está planejada como `Opus / médio`; a escada de modelos exige esforço alto para blueprint, guardas e contrato de comando.",
+      "fix": "Alterar TASK-0009 para `Opus / alto` antes do disparo."
+    }
+  ],
+  "notes": []
+}

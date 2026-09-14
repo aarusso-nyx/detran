@@ -52,20 +52,23 @@ git); prompt em `prompts/00-maestro.md`. Reviewer: GPT-5.6 Terra via `tools/orch
 
 ## Decisões do maestro (Architect, 2026-09-14) — reconciliação build pack × ADRs aceitas
 
-| #   | Decisão                                                                                                                                                                                                                                                                                                                                                                                                                 | Fonte                                                        |
-| --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
-| M1  | Avisos (NA/NP/decisão) **não** são entidade do agregado (`infraction_notice` do build pack): vivem em `inf.notice*` do módulo `inf/notification`. O agregado guarda apenas `infraction_timer` e `infraction_event`.                                                                                                                                                                                                     | ADR-0016 §1 (aceita 2026-09-13, posterior ao build pack)     |
-| M2  | Pagamentos **não** são entidade do agregado (`infraction_payment`): `inf.payment` pertence a `inf/collection`; o agregado só carrega `paid`/`payment_tier`. Blueprint financeiro chama-se `BP-INF-COLLECTION-001` com tabelas `collection_document`, `payment`, `refund_order`, `debt_handoff` (sem prefixo `rait_`).                                                                                                   | ADR-0017 §1                                                  |
-| M3  | `@detran/inf-deadlines` é pacote **manuscrito** em `backend/domains/inf/deadlines` (glob `backend/domains/*/*` do workspace), consumido por `infraction`, `notification` e `rait-case`. `rait-deadline-engine.md` §1 (que o punha em `rait-case`) é corrigido em TASK-0008.                                                                                                                                             | ADR-0016 §2                                                  |
-| M4  | Sem edição de `14-inf-lifecycle-vocabulary.sql`: todos os `*_ref` exigidos já estão seedados (15 estados, 12 sub-estados, 46 transições, 18 timers, 6 faixas, 6 canais). O lock com `ops-agency` fica virtual; se um worker achar lacuna, reporta em vez de editar.                                                                                                                                                     | `verify:lifecycle-vocabulary` OK na base d8fe83a             |
-| M5  | `suspended_by_act_id` em `infraction_timer` (DDL 38) referencia `rait_suspension_act` (DDL 39) **sem FK** (ordem lexicográfica impede), como já faz `rait_deadline.suspended_by_act_id`.                                                                                                                                                                                                                                | `apply.sh`; BP-INF-RAIT-CASE-001                             |
-| M6  | Fixtures SQL são escritas pelo **Inspector** (manual `inspector-tests.md` §Pode tocar), no mesmo grupo do blueprint (`rait-fixtures.md` §8): `30-fixtures-infraction.sql` em TASK-0002; org/finance/integration e ajustes do `20-fixtures-rait.sql` em TASK-0006.                                                                                                                                                       | manual do Inspector; `rait-fixtures.md` §8                   |
-| M7  | Pacotes novos (gerados ou manuscritos) exigem `pnpm install` (lockfile). Workers não instalam; o **maestro** roda `pnpm install` no checkpoint de cada tarefa que cria pacote e commita `chore(deps)`. Antes de TASK-0002/0003 o maestro cria o esqueleto de `@detran/inf-deadlines` (package.json, tsconfig, vitest) já linkado.                                                                                       | `AGENTS.md` regra 6; template do worker                      |
-| M8  | Guarda de transição da infração nasce nesta rodada como **código puro** (`src/handwritten/guards/`, espelho de `infraction_transition_ref`) sem rotas; o teste de matriz lê o bloco `INSERT` do DDL 14 e exige cobertura de 100 % das linhas `vigente`.                                                                                                                                                                 | `rait-test-strategy.md` §3; ADR-0016 §1                      |
-| M9  | Sem paralelismo entre tarefas que regeneram blueprints ou aplicam DDL: `pnpm blueprints:generate` reescreve a árvore gerada inteira e `apply.sh` lê todos os DDL. A frente roda em pipeline estrito (TASK-0001 → 0002 → 0003 → PR CTG-0001 → 0004 → 0005 → 0006 → 0007 → 0008).                                                                                                                                         | `tools/blueprints/generate.mjs`; `apply.sh`                  |
-| M10 | Migração de `rait_communication` para projeção de `inf.notice` (ADR-0016 §4) e **toda** projeção por consumidor (ADR-0020), inclusive a projeção da `integration.outbox` por sistema que o build pack punha em `BP-INF-RAIT-INTEGRATION-001`, ficam **fora** desta rodada: projeções nascem em WP-P (após WP-B). `BP-INF-RAIT-INTEGRATION-001` nasce só com `rait_reconciliation`. Registrado em §Fora de escopo do PR. | ADR-0020 §Consequências; build pack §5                       |
-| M11 | Esquemas JSON dos cinco eventos publicados do agregado (`rait-events-sse-contract.md` §2.4) nascem em `docs/framework/schemas/events/` (WP-A cria a partir da tabela). Eventos consumidos não ganham esquema aqui (donos são outros módulos).                                                                                                                                                                           | `rait-events-sse-contract.md` §2.4                           |
-| M12 | Vocabulários que nenhum workflow fixa (status do timer, status do aviso, tipo de evidência de ciência) são decisões de modelagem do Architect derivadas de `rait-deadline-engine.md` §3 e ADR-0016 §1, em minúsculas (padrão dos enums não canônicos, ex.: `rait_pool.strategy`), documentadas no contrato; não são tokens canônicos.                                                                                   | `CODESTYLE.md` §Naming; padrão de `BP-INF-RAIT-WORKLIST-001` |
+| #   | Decisão                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                | Fonte                                                        |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| M1  | Avisos (NA/NP/decisão) **não** são entidade do agregado (`infraction_notice` do build pack): vivem em `inf.notice*` do módulo `inf/notification`. O agregado guarda apenas `infraction_timer` e `infraction_event`.                                                                                                                                                                                                                                                                                                    | ADR-0016 §1 (aceita 2026-09-13, posterior ao build pack)     |
+| M2  | Pagamentos **não** são entidade do agregado (`infraction_payment`): `inf.payment` pertence a `inf/collection`; o agregado só carrega `paid`/`payment_tier`. Blueprint financeiro chama-se `BP-INF-COLLECTION-001` com tabelas `collection_document`, `payment`, `refund_order`, `debt_handoff` (sem prefixo `rait_`).                                                                                                                                                                                                  | ADR-0017 §1                                                  |
+| M3  | `@detran/inf-deadlines` é pacote **manuscrito** em `backend/domains/inf/deadlines` (glob `backend/domains/*/*` do workspace), consumido por `infraction`, `notification` e `rait-case`. `rait-deadline-engine.md` §1 (que o punha em `rait-case`) é corrigido em TASK-0008.                                                                                                                                                                                                                                            | ADR-0016 §2                                                  |
+| M4  | Sem edição de `14-inf-lifecycle-vocabulary.sql`: todos os `*_ref` exigidos já estão seedados (15 estados, 12 sub-estados, 46 transições, 18 timers, 6 faixas, 6 canais). O lock com `ops-agency` fica virtual; se um worker achar lacuna, reporta em vez de editar.                                                                                                                                                                                                                                                    | `verify:lifecycle-vocabulary` OK na base d8fe83a             |
+| M5  | `suspended_by_act_id` em `infraction_timer` (DDL 38) referencia `rait_suspension_act` (DDL 39) **sem FK** (ordem lexicográfica impede), como já faz `rait_deadline.suspended_by_act_id`.                                                                                                                                                                                                                                                                                                                               | `apply.sh`; BP-INF-RAIT-CASE-001                             |
+| M6  | Fixtures SQL são escritas pelo **Inspector** (manual `inspector-tests.md` §Pode tocar), no mesmo grupo do blueprint (`rait-fixtures.md` §8): `30-fixtures-infraction.sql` em TASK-0002; org/finance/integration e ajustes do `20-fixtures-rait.sql` em TASK-0006.                                                                                                                                                                                                                                                      | manual do Inspector; `rait-fixtures.md` §8                   |
+| M7  | Pacotes novos (gerados ou manuscritos) exigem `pnpm install` (lockfile). Workers não instalam; o **maestro** roda `pnpm install` no checkpoint de cada tarefa que cria pacote e commita `chore(deps)`. Antes de TASK-0002/0003 o maestro cria o esqueleto de `@detran/inf-deadlines` (package.json, tsconfig, vitest) já linkado.                                                                                                                                                                                      | `AGENTS.md` regra 6; template do worker                      |
+| M8  | Guarda de transição da infração nasce nesta rodada como **código puro** (`src/handwritten/guards/`, espelho de `infraction_transition_ref`) sem rotas; o teste de matriz lê o bloco `INSERT` do DDL 14 e exige cobertura de 100 % das linhas `vigente`.                                                                                                                                                                                                                                                                | `rait-test-strategy.md` §3; ADR-0016 §1                      |
+| M9  | Sem paralelismo entre tarefas que regeneram blueprints ou aplicam DDL: `pnpm blueprints:generate` reescreve a árvore gerada inteira e `apply.sh` lê todos os DDL. A frente roda em pipeline estrito (TASK-0001 → 0002 → 0003 → PR CTG-0001 → 0004 → 0005 → 0006 → 0007 → 0008).                                                                                                                                                                                                                                        | `tools/blueprints/generate.mjs`; `apply.sh`                  |
+| M10 | Migração de `rait_communication` para projeção de `inf.notice` (ADR-0016 §4) e **toda** projeção por consumidor (ADR-0020), inclusive a projeção da `integration.outbox` por sistema que o build pack punha em `BP-INF-RAIT-INTEGRATION-001`, ficam **fora** desta rodada: projeções nascem em WP-P (após WP-B). `BP-INF-RAIT-INTEGRATION-001` nasce só com `rait_reconciliation`. Registrado em §Fora de escopo do PR.                                                                                                | ADR-0020 §Consequências; build pack §5                       |
+| M11 | Esquemas JSON dos cinco eventos publicados do agregado (`rait-events-sse-contract.md` §2.4) nascem em `docs/framework/schemas/events/` (WP-A cria a partir da tabela). Eventos consumidos não ganham esquema aqui (donos são outros módulos).                                                                                                                                                                                                                                                                          | `rait-events-sse-contract.md` §2.4                           |
+| M13 | Nesta rodada os módulos `inf/infraction` e `inf/notification` **não** são montados no `AppModule`: a superfície HTTP (leituras geradas + comandos) entra em R-0007 junto com a política `inf:infraction:*`/`inf:notice:*`. Entidades append-only (`infraction_event`, `notice_acknowledgement`, `notice_delivery_attempt`) não geram `update`/`delete` (`api.resources[].operations`). A exposição de `PATCH` sobre `infraction.state` pela rota gerada é OD para R-0007 (política deve negar até existirem comandos). | delivery-review-CTG-0001; ADR-0016 §1                        |
+| M14 | Envelope reduzido da biblioteca de prazos usa `aggregate.kind: 'clock'` (§1 do contrato de eventos). `data.reason` de `inf.timer.rescheduled` tem os tokens **`suspensao`** \| **`prorrogacao`** (decisão do Owner, 2026-09-14, em resposta ao prompt-review-5); `suspensionActId` é obrigatório e anulável (nulo na prorrogação) no contrato, na tabela §2.4 e no JSON Schema.                                                                                                                                        | Owner 2026-09-14; `rait-events-sse-contract.md` §1           |
+| M15 | O motivo do chamador em `extend(id, reason)` é retido em `Deadline.extensionReason` (string, nulo até a prorrogação), persistido pela porta `TimerStore`; o envelope de `inf.timer.rescheduled` não muda (`data.reason` = token `prorrogacao`). Proposta do maestro após delivery-review-3; vigora com a decisão do humano.                                                                                                                                                                                            | delivery-review-CTG-0001-3; contrato §5.2                    |
+| M12 | Vocabulários que nenhum workflow fixa (status do timer, status do aviso, tipo de evidência de ciência) são decisões de modelagem do Architect derivadas de `rait-deadline-engine.md` §3 e ADR-0016 §1, em minúsculas (padrão dos enums não canônicos, ex.: `rait_pool.strategy`), documentadas no contrato; não são tokens canônicos.                                                                                                                                                                                  | `CODESTYLE.md` §Naming; padrão de `BP-INF-RAIT-WORKLIST-001` |
 
 ## Tarefas
 
@@ -78,9 +81,15 @@ git); prompt em `prompts/00-maestro.md`. Reviewer: GPT-5.6 Terra via `tools/orch
 | TASK-0005 | Architect    | architect-blueprint | Opus / alto    | `MOD-bp-rait-org`, `MOD-bp-collection`, `MOD-bp-rait-integration`, `MOD-ddl-39`, `MOD-ddl-57`, `MOD-ddl-58`, `MOD-generated-tree`                                      | TASK-0004            | três blueprints novos, gerados, `contracts/CTG-0002-modules.md` (entidades, port bancário, especificação da fachada de documentos, ids de fixture)                                                                                             |
 | TASK-0006 | Inspector    | inspector-tests     | Sonnet / médio | `MOD-rait-tests`, `MOD-seed-20`, `MOD-seed-40-60`, `MOD-fixtures-json`, `MOD-inf-ait-rls-count`, `MOD-shared-documents-tests`                                          | TASK-0005            | testes de integração (RLS, checks, FKs, unicidade de lote/escala), fixtures novas e ajustadas, teste de tipos da fachada                                                                                                                       |
 | TASK-0007 | Engineer     | engineer-backend    | Sonnet / médio | `MOD-inf-collection-handwritten`, `MOD-inf-rait-org-handwritten`, `MOD-inf-rait-integration-handwritten`, `MOD-shared-documents`, `MOD-app-module`, `MOD-root-scripts` | TASK-0006            | wiring dos módulos novos, port bancário + mock, fachada de documentos (tipos) em `@detran/shared`, scripts raiz; testes de TASK-0006 verdes                                                                                                    |
+| TASK-0009 | Architect    | architect-blueprint | Opus / alto    | `MOD-contract-ctg-0001`, `MOD-schemas-events`, `MOD-arch-events-contract`                                                                                              | TASK-0003            | contrato §5.2 (porta `DeadlineEvents`, `extend`, casos 19–22, emenda do caso 12), esquema `inf.timer.rescheduled`                                                                                                                              |
+| TASK-0010 | Inspector    | inspector-tests     | Sonnet / médio | `MOD-inf-deadlines-tests`                                                                                                                                              | TASK-0009            | testes dos casos 19–22 e da emenda do 12 (vermelhos)                                                                                                                                                                                           |
+| TASK-0011 | Engineer     | engineer-backend    | Sonnet / médio | `MOD-inf-deadlines`                                                                                                                                                    | TASK-0010            | porta de eventos, emissão idempotente, `extend`; testes verdes                                                                                                                                                                                 |
+| TASK-0012 | Inspector    | inspector-tests     | Sonnet / médio | `MOD-inf-deadlines-tests`                                                                                                                                              | TASK-0011            | caso 23 (retenção do motivo de `extend`, M15)                                                                                                                                                                                                  |
+| TASK-0013 | Engineer     | engineer-backend    | Sonnet / médio | `MOD-inf-deadlines`                                                                                                                                                    | TASK-0012            | `Deadline.extensionReason` persistido; 23 casos verdes                                                                                                                                                                                         |
 | TASK-0008 | Owner deleg. | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                                                                                                                                             | TASK-0007            | build pack §WP-A, `blueprints/README.md`, `rait-fixtures.md`, `rait-deadline-engine.md` §1, backlog                                                                                                                                            |
 
-CTG-0001 = TASK-0001…0003 (infração, notificação, prazos); CTG-0002 = TASK-0004…0008 (RAIT). Um PR por CTG.
+CTG-0001 = TASK-0001…0003 (infração, notificação, prazos) + mini-tríade TASK-0009…0011 (janela 2: porta de eventos e
+prorrogação de `T-DIL`, decisão do humano após delivery-review-2); CTG-0002 = TASK-0004…0008 (RAIT). Um PR por CTG.
 Paralelismo: nenhum (M9); TASK-0008 só depois do relatório de TASK-0007. O número do PR de CTG-0001 é
 anotado pelo maestro em §Concorrência após o merge; o PR de CTG-0002 é referido como "pendente" pela
 documentação e atualizado pelo maestro no fechamento.
@@ -131,13 +140,67 @@ documentação e atualizado pelo maestro no fechamento.
   em `main`** e o branch local `orchestra/param-store` está em d8fe83a (sem commits próprios); **`ops-agency`** (R-0005) idem
   (bafae6d, sem commits próprios). Não há PRs abertos de outras frentes.
 - CTG-0001: **liberado para merge** (nenhum upstream; DDL 14 intocado).
-- CTG-0002: desenvolvido sobre o mesmo branch depois do merge de CTG-0001; **PR só quando `orchestra/param-store` estiver
-  em `main`** (§0). Sem base empilhada por ora (upstream sem commits); se `param-store` publicar antes do PR de CTG-0002,
+- CTG-0002: desenvolvido sobre o mesmo branch depois do merge de CTG-0001. **`param-store` (R-0004) entrou em `main` em
+  2026-09-14 (PR #37, fechamento #38)**: o PR de CTG-0002 fica liberado quando o grupo concluir. Sem base empilhada por ora (upstream sem commits); se `param-store` publicar antes do PR de CTG-0002,
   integrar com `git merge --no-edit origin/main` (branch já publicado).
 - `pnpm exec devai round plan --scaffold --round R-0006` → `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31); nada a criar.
 
 ## Triagem
 
+- 2026-09-14 (janela 2) mini-tríade concluída: TASK-0009 (Opus, ~160 k), TASK-0010 (Sonnet, ~195 k), TASK-0011 (Sonnet,
+  ~182 k), todos os critérios PASS; motor com porta de eventos, `extend` e 22 casos verdes; espelho zod da infração
+  sincronizado (88 testes). Gates do grupo: `apply`+`seed` OK, `rls-smoke` OK, `backend:test:ci` exit 0 (`pnpm check` em
+  curso). delivery-review-CTG-0001-3: **FAIL**, 1 achado novo (`policy-issue`): `extend(id, _reason)` descarta o motivo
+  que o contrato §5.2 diz "registrado para auditoria". Correção proposta (M15): `Deadline.extensionReason: string | null`
+  persistido pela porta `TimerStore` em `extend`; teste do Inspector prova a retenção; sem mudança no envelope/esquema
+  (`data.reason` segue `'prorrogacao'`). **Decisão do humano (2026-09-14): mini-iteração + delivery-review ciclo 4** — contrato §5.2.9 (maestro, Architect),
+  TASK-0012 (Inspector, Sonnet, caso 23) → TASK-0013 (Engineer, Sonnet); sem prompt-review (exceção já autorizada).
+  TASK-0012 e TASK-0013 entregues (23/23 verdes); triagem `sensor-error`: TS2352 no cast da linha 768 do teste do caso 23
+  (`extended as Record<string, unknown>`) quebra o typecheck — 1 nova tentativa do Inspector com o achado (§7) — corrigida (leitura direta do campo), typecheck e 23/23 verdes.
+  delivery-review-CTG-0001-4: **PASS** (sem achados). Gates pós-M15: `apply`+`seed` OK, `rls-smoke` OK, `backend:test:ci`
+  exit 0, `pnpm check` exit 0. `origin/main` avançou (PR #37 `param-store`, PR #38 fechamento R-0004): rebase antes do
+  push (branch não publicado) e gates de novo.
+- 2026-09-14 (janela 2) prompt-review-3 (mini-tríade): **REVIEW**, 4 achados corrigidos pelo maestro: data do caso 20
+  (2026-12-29 → **2026-12-30**, conta explícita), calendário na leitura de TASK-0009, total de casos de TASK-0010 (23 → 22),
+  TASK-0009 Opus/alto. prompt-review-4: **REVIEW**, 1 achado — TASK-0009 passa a atualizar a linha de
+  `inf.timer.rescheduled` em `rait-events-sse-contract.md` §2.4 (lock `MOD-arch-events-contract`) em vez de deixar nota
+  para R-0007. prompt-review-6 (ciclo 4, autorizado pelo humano): **FAIL**, 2 achados: resíduo `suspensionActId?` na
+  fronteira de TASK-0009 (corrigido) e — achado real — o espelho zod `events.ts` e `events.schema.spec.ts` de
+  `@detran/inf-infraction` precisam acompanhar o esquema alterado: TASK-0010 ganha `MOD-inf-infraction-tests` (só os `it`
+  de `inf.timer.rescheduled`), TASK-0011 ganha `MOD-inf-infraction-handwritten` (só o esquema zod). Correções aplicadas;
+  **5º ciclo autorizado pelo humano (2026-09-14)** — `prompt-review-7`; segunda exceção ao máximo do §5, registrada.
+  prompt-review-7 (ciclo 5, autorizado): **REVIEW**, 3 achados novos (build pack na leitura dos três prompts; `it` de
+  rejeição sem `suspensionActId`; regra 2 de TASK-0011 contradizia a fronteira) — corrigidos. Sete ciclos de prompt-review
+  na rodada; cada ciclo levanta itens novos sobre texto inalterado. **Decisão do humano (2026-09-14): disparar sem novo ciclo** — exceção ao §5 (prompts com PASS) registrada; a
+  delivery-review (ciclo 3) continua obrigatória antes do PR. `prompt-review-8.md` fica preparado e não executado.
+  prompt-review-5 (ciclo 3, último admitido pelo §5): **FAIL**, 3 achados novos sobre trechos não alterados nos
+  ciclos anteriores: `aggregate.kind: 'timer'` × token canônico `clock` (§1 do contrato de eventos); `reason:
+'suspension'|'extension'` sem fonte canônica (M12 não cobre payload de evento); `suspensionActId?` (opcional) × casos
+  19/20 (obrigatório e nulo). **Parada por §5 do prompt do maestro** (FAIL/terceiro ciclo) — ver §Bloqueios.
+- 2026-09-14 TASK-0001 concluída (Opus, ~318 k tokens, 84 ferramentas): 11/11 critérios PASS; maestro fez o
+  wiring M7 (blueprints v1.0.1 com `@detran/inf-deadlines` e `zod ^4.6.5`, regeneração, `pnpm install`); gates
+  verdes (140 tabelas de tenant). Commit do grupo aguarda a delivery-review (§8).
+- 2026-09-14 TASK-0002 concluída (Opus, ~363 k tokens): 10/10 critérios PASS; sensor `inf-rls` 52 → 58; gates do
+  maestro reproduzidos (apply/seed/integration verdes, 18 unit vermelhos por implementação ausente). Propostas do
+  Inspector (7) registradas no relatório; a (4) — qualifiers por linha, ambiguidade 22 × 25 — fica resolvida
+  pelos tokens usados nos testes (`prazo_aberto`/`prazo_vencido`/`provido`…), que vinculam TASK-0003; o contrato
+  §6.1 é corrigido na janela 2 (Architect).
+- 2026-09-14 TASK-0003 concluída (Opus, ~305 k tokens): 11/11 PASS; maestro: `pnpm install` (deps do app), bump dos
+  blueprints a v1.1.0. Gates do grupo: `apply`+`seed`, `rls-smoke` OK (102 tabelas), `backend:test:ci` verde, `pnpm check`
+  verde (`verify-pec-superset` PASS).
+- 2026-09-14 delivery-review-CTG-0001 (GPT-5.6 Terra): **FAIL**, 2 achados `high`, ambos `policy-issue`: (1) módulos
+  montados no `AppModule` expõem rotas geradas antes de R-0007 → `AppModule` e `backend/app/package.json` restaurados a
+  `main` (montagem fica para R-0007 com os comandos; scripts de teste da raiz mantidos); (2) `infraction_event` (e
+  `notice_acknowledgement`, `notice_delivery_attempt`) append-only com PATCH/DELETE gerados → `api.resources[].operations =
+list,get,create` nos blueprints (v1.1.1), regenerados; `verify:decorators` 526 handlers. Correções pelo maestro
+  (Architect no blueprint, Engineer no wiring) sem novo worker; ciclo 2 solicitado. Um segundo FAIL escala ao humano.
+- 2026-09-14 delivery-review-CTG-0001-2 (GPT-5.6 Terra): **FAIL**, 3 achados `high` novos sobre código idêntico ao do
+  ciclo 1 (o ciclo 1 não os levantou): (a) contrato §3.3 "42 linhas vigentes" × 43 no DDL → `reference-gap`, corrigido
+  pelo maestro (Architect) no contrato; (b) `reschedule` não emite `TIMER_REPROGRAMADO` → `reference-gap` do contrato
+  (API §5 sem porta de eventos; lacuna 1 apontada por TASK-0001, TASK-0002 e TASK-0003); (c) sem operação de
+  prorrogação com `extension_count ≤ 1` → `reference-gap` (API §5 sem verbo; adiado a R-0007 por TASK-0003). (b) e (c)
+  exigem emenda do contrato (Architect), testes novos (Inspector) e implementação (Engineer) — nova tríade que o
+  orçamento da janela não cobre. **Segundo FAIL → `escalated`** (§8, README §6); gates verdes registrados abaixo.
 - 2026-09-14 prompt-review-1 (GPT-5.6 Terra): **FAIL** com 4 achados `high` — todos defeitos de consistência do
   plano (`policy-issue`): fachada de documentos escrita por Architect (Art. 10) → movida para TASK-0007;
   projeção do outbox em TASK-0005 contradizia M10 → `BP-INF-RAIT-INTEGRATION-001` reduzido a
@@ -147,11 +210,53 @@ documentação e atualizado pelo maestro no fechamento.
 
 ## Bloqueios
 
-(nenhum)
+**BLOQUEIO 2 — resolvido (2026-09-14): o humano autorizou a opção (a)** — correções aplicadas em TASK-0009…0011 (M14) e um
+4º ciclo de prompt-review (`prompt-review-6`) **autorizado expressamente** além do máximo do §5.
+
+Registro do bloqueio:
+Os três achados são mecânicos e o maestro propõe estas correções em TASK-0009: (1) envelope reduzido com
+`aggregate.kind: 'clock'` (token da §1); (2) `reason` marcado `source_pending` com OD nova ("tokens de motivo de
+reprogramação: suspensão × prorrogação") **ou** decisão do Architect/Owner fixando `suspensao` | `prorrogacao`
+(vocabulário em português, CODESTYLE); (3) `suspensionActId` obrigatório e anulável no contrato, na tabela §2.4 e no
+JSON Schema (sem `?`). Opções: (a) autorizar as três correções e o disparo da tríade com um 4º ciclo de prompt-review
+(excede o máximo do §5 — exige sua autorização expressa); (b) autorizar as correções e o disparo **sem** novo
+prompt-review, registrando a exceção; (c) encerrar CTG-0001 sem a mini-tríade e reemitir a delivery-review com a
+premissa de que emissão de eventos e prorrogação são comandos de R-0007. Recomendação: (a).
+
+**Decisão do humano (2026-09-14): opção (ii) — mini-tríade na janela 2** (TASK-0009 Architect → TASK-0010 Inspector →
+TASK-0011 Engineer), depois delivery-review ciclo 3. Registro da escalada: delivery-review de CTG-0001 com FAIL em dois ciclos (achados distintos). Decisão
+pedida ao Architect/Owner: (i) aceitar que a emissão de `TIMER_REPROGRAMADO` e a prorrogação única de `T-DIL` são
+comandos de R-0007 (o motor devolve o `Deadline` reprogramado; a publicação no outbox e o verbo de prorrogação nascem
+com as rotas) e reemitir a delivery-review com essa premissa registrada como M14; ou (ii) abrir uma mini-tríade na
+janela 2 (emenda do contrato §5 com porta `EventSink` e verbo `extend`, testes do Inspector para o envelope e para a
+segunda prorrogação negada, implementação do Engineer) antes do PR. Recomendação do maestro: (ii) — custo de uma
+tríade pequena (~150 k) e fecha as duas lacunas que os três workers apontaram; até lá o grupo fica commitado como
+checkpoint em branch não publicado. Demais lacunas (não bloqueantes) — lacunas achadas por TASK-0001 (contrato `CTG-0001.md` §9), carregadas como premissa e a
+decidir fora desta rodada: (1) `TIMER_REPROGRAMADO` não existe em `inf.infraction_event_ref` → nesta rodada o
+evento vive só na `integration.outbox`; a linha nova no DDL 14 é da rodada dona do lock (`ops-agency`) ou de
+R-0007 (OD proposta). (2) Entrada em `INSTANCIA_ENCERRADA` com `paid=true` cai em `PENDENTE_PAGAMENTO` pela
+tabela §2; a passagem a `QUITADA` pela linha 39 é composição de comando (R-0007), a guarda pura segue a tabela
+(OD proposta). (3) Assimetria da admissão em 2ª instância (linha 32) registrada como intencional. (4) Fixture
+0014 (`EXTINTO_PRESCRICAO`) usa `committed_on` em 2024 sobre `AM-2026-000014`: aceito como dado de teste (o
+Inspector segue a especificação §7).
 
 ## Retomada
 
-(vazio)
+**Checkpoint 2026-09-14 (janela 2, ~190 k; parada por §5 — ver BLOQUEIO 2 em §Bloqueios).** Prompts TASK-0009…0011
+escritos e revisados três vezes (REVIEW, REVIEW, FAIL); tarefas `blocked`; nenhum worker disparado; árvore = checkpoint
+`2fe9337` + bookkeeping da janela 2. Ao retomar com a decisão: aplicar as correções de §Bloqueios em `prompts/TASK-0009.md`
+(recalcular `compositions.json`), disparar TASK-0009 → 0010 → 0011, gates, delivery-review ciclo 3, commit definitivo.
+
+**Checkpoint anterior (fim da janela 1, ~101 % do orçamento).** Branch `orchestra/rait-model` **não publicado**;
+commits: `f27f6e5` (planejamento + esqueleto), `chore(infraction): checkpoint CTG-0001` (entrega completa de
+TASK-0001…0003 com as correções do ciclo 1 da delivery-review; histórico pode ser reescrito antes do primeiro push).
+Concluídas: TASK-0001, TASK-0002, TASK-0003 (esta `escalated` pela delivery-review). Pendentes: decisão do humano em
+§Bloqueios; depois delivery-review ciclo 3 (ou mini-tríade + review), commit definitivo por CODESTYLE (`feat(infraction): …`,
+squash do checkpoint), evidência `evidence-CTG-0001.json` + `devai evidence record`, push, PR (corpo pronto em
+`work/rounds/R-0006/pr-ctg-0001.md`), CI, merge, `audit observe`. CTG-0002 (TASK-0004…0008) na janela 2; PR só com
+`param-store` em `main`. Estado dos gates no checkpoint: `apply`+`seed`×2 OK, `rls-smoke` OK, `backend:test:ci` exit 0,
+`pnpm check` exit 0 (árvore corrigida, 2026-09-14). Últimos vereditos: prompt-review-2 PASS; delivery-review-CTG-0001 FAIL; -2 FAIL.
+Ao retomar: ler §Bloqueios, `reviews/delivery-review-CTG-0001-2.json`, `reports/TASK-000{1,2,3}.md`; não replanejar.
 
 ## Leitura
 
