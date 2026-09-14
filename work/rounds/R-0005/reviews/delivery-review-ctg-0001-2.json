@@ -1,0 +1,55 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "docs/framework/contracts/BP-OPS-FIELD-001.openapi.json",
+      "line": 11,
+      "claim": "The four remediated OPS contracts publish 64 paths with a doubled slash (FIELD 26, EVIDENCE 14, OFFLINE-SYNC 14, SNAPSHOTS 10), for example /v1/ops/field//agent-profiles, because api.basePath omits the trailing slash while api.resources[].path keeps a leading one and tools/contracts/generate-openapi.mjs line 84 joins them literally instead of using joinRoute from tools/blueprints/route.mjs; the generated controllers mount v1/ops/field/agent-profiles, so not one published OPS path matches runtime. contracts:check cannot see it because it compares the generator to its own output, and teat-route-contract.md section 1 item 3 orders exactly this concatenation defect corrected before any client is generated. BP-OPS-AGENCY-001 and every INF and CH contract are clean, so previous high 5 is closed for AGENCY only.",
+      "fix": "Adopt the BP-OPS-AGENCY-001 and BP-INF-AIT-001 convention in the four blueprints (basePath ending in a slash, resource paths without a leading slash) or make generate-openapi.mjs join through joinRoute; then regenerate the five contracts and re-run contracts:check."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "docs/framework/blueprints/BP-OPS-FIELD-001.json",
+      "line": 31,
+      "claim": "The four blueprints omit api.resources[].resource on all 32 entries (FIELD 13, EVIDENCE 7, OFFLINE-SYNC 7, SNAPSHOTS 5), so generate-openapi.mjs line 101 reads undefined and every operation in the four published contracts carries tags with a single null element (see BP-OPS-FIELD-001.openapi.json line 13), which is not a valid OpenAPI tag and drops the ops resource identity that teat-route-contract.md section 1 item 4 requires in the published contract. BP-OPS-AGENCY-001 declares the field and emits agency-unit, agency-jurisdiction and agency-competence correctly.",
+      "fix": "Declare explicit resource identifiers for the 32 OPS resources in the four blueprints and regenerate the contracts."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "docs/framework/blueprints/BP-OPS-OFFLINE-SYNC-001.json",
+      "line": 16,
+      "claim": "Four generated identifiers diverge from the closed route contract: path ait-numbering-ranges and controller resource ops:ait-numbering-range against numbering-ranges and numbering-range in section 4.3; sync-receipts against receipts in the same table; and agent-profiles and operational-devices against agents and devices in section 4.2. WP-T2 wires policy against these keys, and teat-route-contract.md still names the retired ops-operations and ops-evidence-custody packages in section 2.",
+      "fix": "Align the four names with teat-route-contract.md sections 4.2 and 4.3, or record the rename and amend that contract in the same PR."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0005/reports/TASK-0001-delivery-iteration-1.md",
+      "line": 23,
+      "claim": "The Architect remediation wrote backend/domains/ops/agency/**, backend/database/ddl/13-ops-agency.sql and tools/blueprints/generated-files.json, which sit in the Engineer lock MOD-ops-modules rather than in the declared MOD-bp-ops-agency and MOD-adr; the same holds for TASK-0002 iteration 2. No collision occurred because the remediation ran sequentially and orchestra README section 4 item 4 requires blueprint and regeneration to be committed together.",
+      "fix": "Extend the Architect task locks to the generated outputs of the blueprints they own so the locks and the regenerate-and-commit-together rule agree."
+    }
+  ],
+  "notes": [
+    "Previous high 1 closed: Evidence.location_geom is a nullable geometry(Point,4674) with gist_ops_evidence_location, emitted at 17-ops-evidence.sql lines 25 and 33.",
+    "Previous high 2 closed: the five FIELD geometries (OperationalDevice.last_location_geom, DeviceEvent.location_geom, Shift.start_location_geom and end_location_geom, Approach.location_geom) and gist_ops_device_location are present in the blueprint and in 13-ops-field-operations.sql lines 41, 47, 106, 230, 231 and 264.",
+    "Previous high 3 closed on reported evidence: tools/check-rls-smoke.ts lines 92 to 104 insert into ops.evidence_evidence with detran_jsonb_point_4674 and assert the SRID-4674 round trip, which is what the lost column broke; TASK-0003 iteration 2 reports PASS after reset. Not re-executed here because the sensor writes to the database and this review is read only.",
+    "Previous high 4 closed: the Evidence index on (tenant_id, hash_value) is unique in the blueprint and emitted as ux_evidence_evidence_tenant_id_hash_value, and ops-model.integration.spec.ts line 196 asserts SQLSTATE 23505 on the duplicate hash.",
+    "Previous high 5 partially closed: all five blueprints declare an explicit api under /v1/ops/{agency,field,snapshots,evidence,offline-sync}, 35 controllers mount the canonical prefixes, and five OpenAPI files exist; the e2e now requires HTTP 200 on the eight canonical reads. What is not closed is the published path and tag content of four of those five contracts, reported above.",
+    "Previous high 6 closed: ADR-0006 carries an in-place amendment dated 2026-09-14 covering the new package names, the WP-T1 generated offline-sync persistence and CRUD boundary, the deferral of handwritten protocol and command controllers, and mandatory SRID-4674 and GiST coverage. The amendment does not contradict the assembly: the generated CRUD controllers are mounted now and only the handwritten commands are deferred. docs/meta/adr/README.md lists ADR-0022 and ADR-0023 inside the table and the duplicated trailing ADR-0022 row was removed.",
+    "Previous low on the e2e is closed: ops-modules.e2e.spec.ts requires status 200 on all eight canonical reads, seeds ops.agency_unit under tenant 00000000-0000-7000-8000-000000000302, queries with the authorized local tenant and asserts an empty body with no conditional.",
+    "backend/domains/ops/README.md and the absence of package-local specs are treated as recorded lows outside CTG-0001 per the maestro instruction; backend:test:unit still has no filter for the five new packages and coverage is deliberately through the app integration and e2e suites.",
+    "RLS stays fail closed: 20-rls-policies.sql dropped its 21 manual ops policies, but the five generated DDLs emit auth.create_rls_policy for all 35 tenant tables plus auth.install_tenant_triggers, and tools/check-rls-ddl.ts derives coverage from every create table with tenant_id, so a missing policy fails the gate.",
+    "No handwritten behavior was lost: field-operations and evidence-custody controllers, providers and services and the frozen-snapshot trio live under src/handwritten, are reexported by the generated indexes, are registered in the generated modules, and no handwritten path appears among the 889 entries of tools/blueprints/generated-files.json. The only deltas against the baseline are import paths, formatting and one dropped Phase 5 TODO comment. The retired packages held no tests.",
+    "Authorization is fail closed for the new surface: isDetranActionAllowed returns false for any key absent from DETRAN_POLICY_MATRIX, and no ops key is declared, so the 35 generated CRUD routes are reachable only by a global admin role. The e2e proves mounting and tenant isolation with DETRAN_LOCAL_ROLES=ADMIN, not a grant matrix; item 13 positive and negative role coverage for ops belongs to WP-T2 with policy.ts, which this front correctly did not touch.",
+    "No SENATRAN boundary violation: the only senatran tokens in the new modules are the homologation date columns senatran_notificado_em and senatran_prazo_notificacao; no adapter call crosses the boundary.",
+    "git diff --check is clean. Gate results for db:reset, rls-smoke, backend:test:ci and pnpm check are accepted as reported; they were not re-executed because they mutate the database or write temporary trees.",
+    "Escalation budget: orchestra README section 5 allows at most two REVIEW cycles per item before escalating to the human. The OPS route and contract item has now consumed both, so a third failure on the published contract must go to the Owner rather than to another worker iteration."
+  ]
+}

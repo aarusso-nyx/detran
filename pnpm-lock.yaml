@@ -110,9 +110,24 @@ importers:
       '@detran/inf-speed':
         specifier: workspace:*
         version: link:../domains/inf/speed
+      '@detran/ops-agency':
+        specifier: workspace:*
+        version: link:../domains/ops/agency
+      '@detran/ops-evidence':
+        specifier: workspace:*
+        version: link:../domains/ops/evidence
+      '@detran/ops-field':
+        specifier: workspace:*
+        version: link:../domains/ops/field
+      '@detran/ops-offline-sync':
+        specifier: workspace:*
+        version: link:../domains/ops/offline-sync
       '@detran/ops-parameter':
         specifier: workspace:*
         version: link:../domains/ops/parameter
+      '@detran/ops-snapshots':
+        specifier: workspace:*
+        version: link:../domains/ops/snapshots
       '@detran/portal-complaints':
         specifier: workspace:*
         version: link:../domains/portal/complaints
@@ -1010,6 +1025,31 @@ importers:
         specifier: ^4.1.7
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
 
+  backend/domains/ops/agency:
+    dependencies:
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
+
   backend/domains/ops/core:
     dependencies:
       '@detran/shared':
@@ -1032,7 +1072,7 @@ importers:
         specifier: ^4.1.7
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
 
-  backend/domains/ops/evidence-custody:
+  backend/domains/ops/evidence:
     dependencies:
       '@detran/ops-core':
         specifier: workspace:*
@@ -1043,6 +1083,12 @@ importers:
       '@nestjs/common':
         specifier: ^11.1.28
         version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
     devDependencies:
       '@types/node':
         specifier: ^24.10.1
@@ -1079,7 +1125,7 @@ importers:
         specifier: ^4.1.7
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
 
-  backend/domains/ops/operations:
+  backend/domains/ops/field:
     dependencies:
       '@detran/ops-core':
         specifier: workspace:*
@@ -1090,6 +1136,40 @@ importers:
       '@nestjs/common':
         specifier: ^11.1.28
         version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
+
+  backend/domains/ops/offline-sync:
+    dependencies:
+      '@detran/ops-core':
+        specifier: workspace:*
+        version: link:../core
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
     devDependencies:
       '@types/node':
         specifier: ^24.10.1
@@ -1137,6 +1217,12 @@ importers:
       '@nestjs/common':
         specifier: ^11.1.28
         version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
     devDependencies:
       '@types/node':
         specifier: ^24.10.1

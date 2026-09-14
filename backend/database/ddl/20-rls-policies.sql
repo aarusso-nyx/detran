@@ -16,30 +16,6 @@ SELECT auth.create_rls_policy('integration', 'rate_limit_windows');
 SELECT auth.create_rls_policy('integration', 'professional_council_cache');
 SELECT auth.create_rls_policy('storage', 'objects');
 
--- W2.3 field operations port. Keep every ported tenant table explicit here so
--- the DDL coverage check and the live RLS smoke test fail closed on additions.
-SELECT auth.create_rls_policy('ops', 'ops_agent_profile');
-SELECT auth.create_rls_policy('ops', 'ops_operational_device');
-SELECT auth.create_rls_policy('ops', 'ops_application_version');
-SELECT auth.create_rls_policy('ops', 'ops_homologation');
-SELECT auth.create_rls_policy('ops', 'ops_device_event');
-SELECT auth.create_rls_policy('ops', 'ops_operation');
-SELECT auth.create_rls_policy('ops', 'ops_team');
-SELECT auth.create_rls_policy('ops', 'ops_team_agent');
-SELECT auth.create_rls_policy('ops', 'ops_patrol_vehicle');
-SELECT auth.create_rls_policy('ops', 'ops_shift');
-SELECT auth.create_rls_policy('ops', 'ops_approach');
-SELECT auth.create_rls_policy('ops', 'snapshots_person');
-SELECT auth.create_rls_policy('ops', 'snapshots_person_document');
-SELECT auth.create_rls_policy('ops', 'snapshots_vehicle');
-SELECT auth.create_rls_policy('ops', 'snapshots_vehicle_snapshot');
-SELECT auth.create_rls_policy('ops', 'snapshots_external_query');
-SELECT auth.create_rls_policy('ops', 'evidence_evidence');
-SELECT auth.create_rls_policy('ops', 'evidence_link');
-SELECT auth.create_rls_policy('ops', 'evidence_custody_event');
-SELECT auth.create_rls_policy('ops', 'evidence_probative_package');
-SELECT auth.create_rls_policy('ops', 'evidence_probative_package_item');
-
 ALTER TABLE auth.tenants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE auth.tenants FORCE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS tenant_isolation ON auth.tenants;

@@ -1,153 +1,331 @@
--- W2.3: TEAT field operations port. Cross-domain references deliberately remain
--- UUID values: their owning domains port later. All tenant isolation is applied
--- centrally in 20-rls-policies.sql by auth.create_rls_policy/install_tenant_triggers.
+-- Generated from BP-OPS-FIELD-001 v1.0.0 sha256:b5a54db524ac2a7fb0bb450442e2aef89132ee0ff1592f87be4837294e197177
 
-CREATE TABLE IF NOT EXISTS ops.ops_agent_profile (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL,
-  traffic_agency_id uuid NOT NULL, user_ref uuid NOT NULL, operational_unit_id uuid,
-  registration_number varchar(60) NOT NULL, credential_number varchar(80),
-  functional_status varchar(40) NOT NULL DEFAULT 'active', credential_valid_until date,
-  trained_at timestamptz, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  UNIQUE (tenant_id, traffic_agency_id, registration_number)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_operational_device (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL,
-  traffic_agency_id uuid NOT NULL, hardware_identifier_hash varchar(128) NOT NULL,
-  model varchar(120), manufacturer varchar(120), os_name varchar(40) NOT NULL,
-  os_version varchar(80), status varchar(40) NOT NULL DEFAULT 'authorized', app_version varchar(80),
-  last_seen_at timestamptz, last_location_json jsonb, tamper_flag boolean NOT NULL DEFAULT false,
-  created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  last_location_geom geometry(Point, 4674), UNIQUE (tenant_id, hardware_identifier_hash)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_homologation (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL,
-  traffic_agency_id uuid NOT NULL, homologation_number varchar(100) NOT NULL,
-  scope text NOT NULL, issued_at date NOT NULL, valid_until date, document_uri text,
-  status varchar(40) NOT NULL DEFAULT 'active', created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  UNIQUE (tenant_id, traffic_agency_id, homologation_number)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_application_version (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL,
-  app_type varchar(40) NOT NULL, version varchar(80) NOT NULL, build_number varchar(80),
-  status varchar(40) NOT NULL DEFAULT 'allowed', homologation_id uuid, valid_from date NOT NULL,
-  valid_to date, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  UNIQUE (tenant_id, app_type, version)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_device_event (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, device_id uuid NOT NULL,
-  agent_id uuid, event_type varchar(80) NOT NULL, event_at timestamptz NOT NULL DEFAULT now(),
-  location_json jsonb, details_json jsonb, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  location_geom geometry(Point, 4674)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_operation (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  name varchar(255) NOT NULL, operation_type varchar(80) NOT NULL, description text,
-  planned_start_at timestamptz, planned_end_at timestamptz, status varchar(40) NOT NULL DEFAULT 'planned',
-  objectives text, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.ops_team (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  operational_unit_id uuid, name varchar(120) NOT NULL, supervisor_agent_id uuid,
-  status varchar(40) NOT NULL DEFAULT 'active', created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  UNIQUE (tenant_id, traffic_agency_id, name)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_team_agent (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, team_id uuid NOT NULL,
-  agent_id uuid NOT NULL, role varchar(60) NOT NULL, valid_from date NOT NULL, valid_to date,
-  created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  UNIQUE (tenant_id, team_id, agent_id)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_patrol_vehicle (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  prefix varchar(60) NOT NULL, plate varchar(10) NOT NULL, vehicle_type varchar(60) NOT NULL,
-  status varchar(40) NOT NULL DEFAULT 'active', created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  UNIQUE (tenant_id, traffic_agency_id, prefix)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_shift (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  agent_id uuid NOT NULL, device_id uuid NOT NULL, operational_unit_id uuid, team_id uuid, patrol_vehicle_id uuid,
-  operation_id uuid, started_at timestamptz NOT NULL, ended_at timestamptz,
-  start_location_json jsonb, end_location_json jsonb, status varchar(40) NOT NULL DEFAULT 'open',
-  offline_periods_count integer NOT NULL DEFAULT 0, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  start_location_geom geometry(Point, 4674), end_location_geom geometry(Point, 4674)
-);
-CREATE TABLE IF NOT EXISTS ops.ops_approach (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  shift_id uuid NOT NULL, operation_id uuid, agent_id uuid NOT NULL, approached_at timestamptz NOT NULL,
-  location_json jsonb, approach_type varchar(60) NOT NULL, result varchar(80) NOT NULL, notes text,
-  created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz, location_geom geometry(Point, 4674)
-);
+-- Regenerable-only DDL for BP-OPS-FIELD-001; request-path writes use role_app_backend.
 
--- Frozen external lookups are owned by ops while later inf/est modules consume IDs.
-CREATE TABLE IF NOT EXISTS ops.snapshots_person (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, person_type varchar(40) NOT NULL,
-  name varchar(255), cpf varchar(11), cnpj varchar(14), birth_date date, mother_name varchar(255),
-  source varchar(60) NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.snapshots_person_document (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, person_id uuid NOT NULL,
-  document_type varchar(40) NOT NULL, document_number varchar(80) NOT NULL, issuing_uf varchar(2),
-  valid_until date, license_category varchar(20), status varchar(60), source varchar(60) NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.snapshots_vehicle (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, plate varchar(10) NOT NULL,
-  renavam varchar(20), chassis varchar(40), uf varchar(2), municipality_code varchar(20), make_model varchar(255),
-  species varchar(80), category varchar(80), color varchar(60), source varchar(60) NOT NULL,
-  created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.snapshots_external_query (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  user_ref uuid NOT NULL, agent_id uuid, device_id uuid, external_system_id uuid NOT NULL,
-  query_type varchar(80) NOT NULL, parameters_hash varchar(128) NOT NULL, purpose varchar(80) NOT NULL,
-  queried_at timestamptz NOT NULL DEFAULT now(), status varchar(40) NOT NULL, protocol varchar(120),
-  result_summary text, result_snapshot_json jsonb, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.snapshots_vehicle_snapshot (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, vehicle_id uuid,
-  plate_snapshot varchar(10) NOT NULL, renavam_snapshot varchar(20), make_model_snapshot varchar(255),
-  species_snapshot varchar(80), category_snapshot varchar(80), color_snapshot varchar(60), data_source varchar(80) NOT NULL,
-  external_query_id uuid, divergence_recorded boolean NOT NULL DEFAULT false, payload_json jsonb,
-  created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
+create schema if not exists ops;
 
-CREATE TABLE IF NOT EXISTS ops.evidence_evidence (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  evidence_type varchar(60) NOT NULL, origin varchar(60) NOT NULL, storage_uri text NOT NULL, mime_type varchar(120) NOT NULL,
-  size_bytes bigint NOT NULL, hash_algorithm varchar(40) NOT NULL, hash_value varchar(128) NOT NULL,
-  captured_by_user_ref uuid, agent_id uuid, device_id uuid, captured_at timestamptz NOT NULL, location_json jsonb,
-  status varchar(60) NOT NULL DEFAULT 'captured', metadata_json jsonb, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  location_geom geometry(Point, 4674), UNIQUE (tenant_id, hash_value)
+create table if not exists ops.ops_agent_profile (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  user_ref uuid not null,
+  operational_unit_id uuid,
+  registration_number varchar(60) not null,
+  credential_number varchar(80),
+  functional_status varchar(40) default 'active' not null,
+  credential_valid_until date,
+  trained_at timestamptz,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_agent_profile primary key (id)
 );
-CREATE TABLE IF NOT EXISTS ops.evidence_link (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, evidence_id uuid NOT NULL,
-  entity_type varchar(60) NOT NULL, entity_id uuid NOT NULL, role varchar(80) NOT NULL, mandatory boolean NOT NULL DEFAULT false,
-  created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.evidence_custody_event (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, evidence_id uuid NOT NULL,
-  event_type varchar(80) NOT NULL, event_at timestamptz NOT NULL DEFAULT now(), user_ref uuid, system_name varchar(80),
-  details_json jsonb, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.evidence_probative_package (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, traffic_agency_id uuid NOT NULL,
-  entity_type varchar(60) NOT NULL, entity_id uuid NOT NULL, generated_by_user_ref uuid NOT NULL,
-  generated_at timestamptz NOT NULL DEFAULT now(), manifest_hash varchar(128) NOT NULL, package_uri text NOT NULL,
-  purpose varchar(80) NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz
-);
-CREATE TABLE IF NOT EXISTS ops.evidence_probative_package_item (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), tenant_id uuid NOT NULL, package_id uuid NOT NULL,
-  item_type varchar(60) NOT NULL, evidence_id uuid, entity_type varchar(60), entity_id uuid,
-  item_hash varchar(128) NOT NULL, sequence integer NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), updated_at timestamptz,
-  UNIQUE (tenant_id, package_id, sequence)
-);
+create unique index if not exists ux_ops_agent_profile_tenant_id_traffic_agency_id_registration_number on ops.ops_agent_profile (tenant_id, traffic_agency_id, registration_number);
+create index if not exists ix_ops_agent_profile_tenant_id on ops.ops_agent_profile (tenant_id);
+create index if not exists ix_ops_agent_profile_traffic_agency_id on ops.ops_agent_profile (traffic_agency_id);
+create index if not exists ix_ops_agent_profile_operational_unit_id on ops.ops_agent_profile (operational_unit_id);
 
-CREATE INDEX IF NOT EXISTS ix_ops_device_event_tenant_event ON ops.ops_device_event (tenant_id, device_id, event_at);
-CREATE INDEX IF NOT EXISTS ix_ops_shift_tenant_agent ON ops.ops_shift (tenant_id, agent_id, started_at);
-CREATE INDEX IF NOT EXISTS ix_ops_approach_tenant_shift ON ops.ops_approach (tenant_id, shift_id, approached_at);
-CREATE INDEX IF NOT EXISTS ix_ops_snapshot_query_tenant ON ops.snapshots_external_query (tenant_id, purpose, queried_at);
-CREATE INDEX IF NOT EXISTS ix_ops_evidence_tenant_captured ON ops.evidence_evidence (tenant_id, captured_at);
-CREATE INDEX IF NOT EXISTS ix_ops_evidence_link_polymorphic ON ops.evidence_link (tenant_id, entity_type, entity_id);
-CREATE INDEX IF NOT EXISTS ix_ops_custody_tenant_evidence ON ops.evidence_custody_event (tenant_id, evidence_id, event_at);
-CREATE INDEX IF NOT EXISTS gist_ops_device_location ON ops.ops_operational_device USING gist (last_location_geom);
-CREATE INDEX IF NOT EXISTS gist_ops_evidence_location ON ops.evidence_evidence USING gist (location_geom);
+create table if not exists ops.ops_operational_device (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  hardware_identifier_hash varchar(128) not null,
+  model varchar(120),
+  manufacturer varchar(120),
+  os_name varchar(40) not null,
+  os_version varchar(80),
+  status varchar(40) default 'authorized' not null,
+  app_version varchar(80),
+  last_seen_at timestamptz,
+  last_location_json jsonb,
+  tamper_flag boolean default false not null,
+  last_location_geom geometry(Point,4674),
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_operational_device primary key (id)
+);
+create unique index if not exists ux_ops_operational_device_tenant_id_hardware_identifier_hash on ops.ops_operational_device (tenant_id, hardware_identifier_hash);
+create index if not exists gist_ops_device_location on ops.ops_operational_device using gist (last_location_geom);
+create index if not exists ix_ops_operational_device_tenant_id on ops.ops_operational_device (tenant_id);
+create index if not exists ix_ops_operational_device_traffic_agency_id on ops.ops_operational_device (traffic_agency_id);
+
+create table if not exists ops.ops_homologation (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  homologation_number varchar(100) not null,
+  scope text not null,
+  issued_at date not null,
+  valid_until date,
+  document_uri text,
+  status varchar(40) default 'active' not null,
+  laudo_emitido_em date,
+  laudo_valido_ate date,
+  emissor_independente varchar(255),
+  descricao_publicada_em date,
+  descricao_publicacao_local text,
+  senatran_notificado_em date,
+  senatran_prazo_notificacao date,
+  cancelled_reason text,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_homologation primary key (id)
+);
+create unique index if not exists ux_ops_homologation_tenant_id_traffic_agency_id_homologation_number on ops.ops_homologation (tenant_id, traffic_agency_id, homologation_number);
+create index if not exists ix_ops_homologation_tenant_id on ops.ops_homologation (tenant_id);
+create index if not exists ix_ops_homologation_traffic_agency_id on ops.ops_homologation (traffic_agency_id);
+
+create table if not exists ops.ops_application_version (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  app_type varchar(40) not null,
+  version varchar(80) not null,
+  build_number varchar(80),
+  status varchar(40) default 'allowed' not null,
+  homologation_id uuid,
+  altera_funcionalidade boolean default false not null,
+  valid_from date not null,
+  valid_to date,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_application_version primary key (id),
+  constraint fk_ops_application_version_homologation foreign key (homologation_id) references ops.ops_homologation (id)
+);
+create unique index if not exists ux_ops_application_version_tenant_id_app_type_version on ops.ops_application_version (tenant_id, app_type, version);
+create index if not exists ix_ops_application_version_tenant_id on ops.ops_application_version (tenant_id);
+create index if not exists ix_ops_application_version_homologation_id on ops.ops_application_version (homologation_id);
+
+create table if not exists ops.ops_device_event (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  device_id uuid not null,
+  agent_id uuid,
+  event_type varchar(80) not null,
+  event_at timestamptz default now() not null,
+  location_json jsonb,
+  details_json jsonb,
+  location_geom geometry(Point,4674),
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_device_event primary key (id),
+  constraint fk_ops_device_event_device foreign key (device_id) references ops.ops_operational_device (id),
+  constraint fk_ops_device_event_agent foreign key (agent_id) references ops.ops_agent_profile (id)
+);
+create index if not exists ix_ops_device_event_tenant_id_device_id_event_at on ops.ops_device_event (tenant_id, device_id, event_at);
+create index if not exists ix_ops_device_event_tenant_id on ops.ops_device_event (tenant_id);
+create index if not exists ix_ops_device_event_device_id on ops.ops_device_event (device_id);
+create index if not exists ix_ops_device_event_agent_id on ops.ops_device_event (agent_id);
+
+create table if not exists ops.ops_operation (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  name varchar(255) not null,
+  operation_type varchar(80) not null,
+  description text,
+  planned_start_at timestamptz,
+  planned_end_at timestamptz,
+  status varchar(40) default 'planned' not null,
+  objectives text,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_operation primary key (id)
+);
+create index if not exists ix_ops_operation_tenant_id_traffic_agency_id_status on ops.ops_operation (tenant_id, traffic_agency_id, status);
+create index if not exists ix_ops_operation_tenant_id on ops.ops_operation (tenant_id);
+create index if not exists ix_ops_operation_traffic_agency_id on ops.ops_operation (traffic_agency_id);
+
+create table if not exists ops.ops_team (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  operational_unit_id uuid,
+  name varchar(120) not null,
+  supervisor_agent_id uuid,
+  status varchar(40) default 'active' not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_team primary key (id),
+  constraint fk_ops_team_supervisor_agent foreign key (supervisor_agent_id) references ops.ops_agent_profile (id)
+);
+create unique index if not exists ux_ops_team_tenant_id_traffic_agency_id_name on ops.ops_team (tenant_id, traffic_agency_id, name);
+create index if not exists ix_ops_team_tenant_id on ops.ops_team (tenant_id);
+create index if not exists ix_ops_team_traffic_agency_id on ops.ops_team (traffic_agency_id);
+create index if not exists ix_ops_team_operational_unit_id on ops.ops_team (operational_unit_id);
+create index if not exists ix_ops_team_supervisor_agent_id on ops.ops_team (supervisor_agent_id);
+
+create table if not exists ops.ops_team_agent (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  team_id uuid not null,
+  agent_id uuid not null,
+  role varchar(60) not null,
+  valid_from date not null,
+  valid_to date,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_team_agent primary key (id),
+  constraint fk_ops_team_agent_team foreign key (team_id) references ops.ops_team (id),
+  constraint fk_ops_team_agent_agent foreign key (agent_id) references ops.ops_agent_profile (id)
+);
+create unique index if not exists ux_ops_team_agent_tenant_id_team_id_agent_id on ops.ops_team_agent (tenant_id, team_id, agent_id);
+create index if not exists ix_ops_team_agent_tenant_id on ops.ops_team_agent (tenant_id);
+create index if not exists ix_ops_team_agent_team_id on ops.ops_team_agent (team_id);
+create index if not exists ix_ops_team_agent_agent_id on ops.ops_team_agent (agent_id);
+
+create table if not exists ops.ops_patrol_vehicle (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  prefix varchar(60) not null,
+  plate varchar(10) not null,
+  vehicle_type varchar(60) not null,
+  status varchar(40) default 'active' not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_patrol_vehicle primary key (id)
+);
+create unique index if not exists ux_ops_patrol_vehicle_tenant_id_traffic_agency_id_prefix on ops.ops_patrol_vehicle (tenant_id, traffic_agency_id, prefix);
+create index if not exists ix_ops_patrol_vehicle_tenant_id on ops.ops_patrol_vehicle (tenant_id);
+create index if not exists ix_ops_patrol_vehicle_traffic_agency_id on ops.ops_patrol_vehicle (traffic_agency_id);
+
+create table if not exists ops.ops_measurement_instrument (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  instrument_type varchar(40) not null,
+  serial_number varchar(120) not null,
+  brand varchar(120) not null,
+  model varchar(120) not null,
+  inmetro_model_approval varchar(120) not null,
+  verification_certificate_number varchar(120),
+  initial_verification_at date,
+  last_verification_at date,
+  verification_valid_until date,
+  status varchar(40) default 'approved' not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_measurement_instrument primary key (id)
+);
+create unique index if not exists ux_ops_measurement_instrument_tenant_id_instrument_type_serial_number on ops.ops_measurement_instrument (tenant_id, instrument_type, serial_number);
+create index if not exists ix_ops_measurement_instrument_tenant_id_traffic_agency_id_status on ops.ops_measurement_instrument (tenant_id, traffic_agency_id, status);
+create index if not exists ix_ops_measurement_instrument_tenant_id on ops.ops_measurement_instrument (tenant_id);
+create index if not exists ix_ops_measurement_instrument_traffic_agency_id on ops.ops_measurement_instrument (traffic_agency_id);
+
+create table if not exists ops.ops_shift (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  agent_id uuid not null,
+  device_id uuid not null,
+  operational_unit_id uuid,
+  team_id uuid,
+  patrol_vehicle_id uuid,
+  operation_id uuid,
+  started_at timestamptz not null,
+  ended_at timestamptz,
+  start_location_json jsonb,
+  end_location_json jsonb,
+  status varchar(40) default 'open' not null,
+  offline_periods_count integer default 0 not null,
+  start_location_geom geometry(Point,4674),
+  end_location_geom geometry(Point,4674),
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_shift primary key (id),
+  constraint fk_ops_shift_agent foreign key (agent_id) references ops.ops_agent_profile (id),
+  constraint fk_ops_shift_device foreign key (device_id) references ops.ops_operational_device (id),
+  constraint fk_ops_shift_team foreign key (team_id) references ops.ops_team (id),
+  constraint fk_ops_shift_vehicle foreign key (patrol_vehicle_id) references ops.ops_patrol_vehicle (id),
+  constraint fk_ops_shift_operation foreign key (operation_id) references ops.ops_operation (id)
+);
+create index if not exists ix_ops_shift_tenant_id_agent_id_started_at on ops.ops_shift (tenant_id, agent_id, started_at);
+create index if not exists ix_ops_shift_tenant_id_status on ops.ops_shift (tenant_id, status);
+create index if not exists ix_ops_shift_tenant_id on ops.ops_shift (tenant_id);
+create index if not exists ix_ops_shift_traffic_agency_id on ops.ops_shift (traffic_agency_id);
+create index if not exists ix_ops_shift_agent_id on ops.ops_shift (agent_id);
+create index if not exists ix_ops_shift_device_id on ops.ops_shift (device_id);
+create index if not exists ix_ops_shift_operational_unit_id on ops.ops_shift (operational_unit_id);
+create index if not exists ix_ops_shift_team_id on ops.ops_shift (team_id);
+create index if not exists ix_ops_shift_patrol_vehicle_id on ops.ops_shift (patrol_vehicle_id);
+create index if not exists ix_ops_shift_operation_id on ops.ops_shift (operation_id);
+
+create table if not exists ops.ops_approach (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  shift_id uuid not null,
+  operation_id uuid,
+  agent_id uuid not null,
+  approached_at timestamptz not null,
+  location_json jsonb,
+  approach_type varchar(60) not null,
+  result varchar(80) not null,
+  notes text,
+  location_geom geometry(Point,4674),
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_approach primary key (id),
+  constraint fk_ops_approach_shift foreign key (shift_id) references ops.ops_shift (id),
+  constraint fk_ops_approach_operation foreign key (operation_id) references ops.ops_operation (id),
+  constraint fk_ops_approach_agent foreign key (agent_id) references ops.ops_agent_profile (id)
+);
+create index if not exists ix_ops_approach_tenant_id_shift_id_approached_at on ops.ops_approach (tenant_id, shift_id, approached_at);
+create index if not exists ix_ops_approach_tenant_id on ops.ops_approach (tenant_id);
+create index if not exists ix_ops_approach_traffic_agency_id on ops.ops_approach (traffic_agency_id);
+create index if not exists ix_ops_approach_shift_id on ops.ops_approach (shift_id);
+create index if not exists ix_ops_approach_operation_id on ops.ops_approach (operation_id);
+create index if not exists ix_ops_approach_agent_id on ops.ops_approach (agent_id);
+
+create table if not exists ops.ops_session_handoff (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  shift_id uuid not null,
+  from_agent_id uuid not null,
+  to_agent_id uuid not null,
+  handed_off_at timestamptz not null,
+  details_json jsonb,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ops_session_handoff primary key (id),
+  constraint fk_ops_session_handoff_shift foreign key (shift_id) references ops.ops_shift (id),
+  constraint fk_ops_session_handoff_from_agent foreign key (from_agent_id) references ops.ops_agent_profile (id),
+  constraint fk_ops_session_handoff_to_agent foreign key (to_agent_id) references ops.ops_agent_profile (id)
+);
+create index if not exists ix_ops_session_handoff_tenant_id on ops.ops_session_handoff (tenant_id);
+create index if not exists ix_ops_session_handoff_shift_id on ops.ops_session_handoff (shift_id);
+create index if not exists ix_ops_session_handoff_from_agent_id on ops.ops_session_handoff (from_agent_id);
+create index if not exists ix_ops_session_handoff_to_agent_id on ops.ops_session_handoff (to_agent_id);
+
+select auth.create_rls_policy('ops', 'ops_agent_profile');
+
+select auth.create_rls_policy('ops', 'ops_operational_device');
+
+select auth.create_rls_policy('ops', 'ops_homologation');
+
+select auth.create_rls_policy('ops', 'ops_application_version');
+
+select auth.create_rls_policy('ops', 'ops_device_event');
+
+select auth.create_rls_policy('ops', 'ops_operation');
+
+select auth.create_rls_policy('ops', 'ops_team');
+
+select auth.create_rls_policy('ops', 'ops_team_agent');
+
+select auth.create_rls_policy('ops', 'ops_patrol_vehicle');
+
+select auth.create_rls_policy('ops', 'ops_measurement_instrument');
+
+select auth.create_rls_policy('ops', 'ops_shift');
+
+select auth.create_rls_policy('ops', 'ops_approach');
+
+select auth.create_rls_policy('ops', 'ops_session_handoff');
+
+select auth.install_tenant_triggers();
+
+grant usage on schema ops to role_app_backend;
+
+grant select, insert, update, delete on all tables in schema ops to role_app_backend;
+
+grant usage, select on all sequences in schema ops to role_app_backend;

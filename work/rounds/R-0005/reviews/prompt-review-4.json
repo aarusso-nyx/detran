@@ -1,0 +1,64 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0005",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0005/prompts/TASK-0004.md",
+      "line": 60,
+      "claim": "TASK-0004 exige pnpm typecheck, backend:test:ci e pnpm check verdes depois de a geracao criar quatro pacotes de workspace novos (ops/agency, ops/field, ops/evidence, ops/offline-sync), mas nenhuma tarefa pode rodar pnpm install: a linha 4 proibe instalar pacotes e a linha 54 registra que pnpm install --lockfile-only nao instala nem liga node_modules. O node_modules da raiz tem apenas 15 entradas e nenhuma de @nestjs, @stynx-nyx ou @detran, logo tsc --noEmit nos pacotes novos nao resolve os imports, pnpm typecheck roda em todos os pacotes por -r --if-present e backend/app nao consegue resolver os cinco aliases novos nem no tsc nem no vitest, cuja resolucao parte do diretorio do arquivo importado. Os criterios ficam inalcancaveis dentro da fronteira do worker.",
+      "fix": "Acrescentar ao plano e ao prompt do maestro um passo de pnpm install logo apos a primeira execucao de blueprints:generate que cria pacotes novos, ou autorizar explicitamente em TASK-0004 a execucao de pnpm install restrita a ligacao dos pacotes de workspace, antes dos criterios de typecheck e teste."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0005/prompts/TASK-0004.md",
+      "line": 24,
+      "claim": "A fronteira de escrita autoriza apenas os src manuscritos de core, operations, snapshots e evidence-custody, mas a migracao da Meta 2 move field-operations.controller.ts para ops/field e evidence-custody.controller.ts para ops/evidence, aposentando dois pacotes de workspace inteiros. Os manifestos backend/domains/ops/operations/package.json, tsconfig.json e tsconfig.build.json e os equivalentes de evidence-custody nao estao em Pode tocar nem em Nao pode tocar. Se o Engineer esvaziar src e deixar os manifestos, tsc falha com nenhuma entrada encontrada no tsconfig e sobram dois pacotes mortos; se remover os manifestos, sai da fronteira declarada.",
+      "fix": "Incluir em Pode tocar a remocao completa dos diretorios backend/domains/ops/operations e backend/domains/ops/evidence-custody sob o lock MOD-ops-modules, com a atualizacao do lock por pnpm install --lockfile-only apos a remocao."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0005/prompts/TASK-0004.md",
+      "line": 62,
+      "claim": "O criterio pnpm backend:db:reset nao declara alvo de banco: o script e apply.sh --full e o apply.sh usa o banco padrao detran, enquanto o banco declarado da rodada e detran_r5 em plan.md linhas 77 a 80 e em TASK-0008 linhas 37 a 41. TASK-0004 tambem nao fixa DETRAN_TEST_DATABASE_URL para os criterios de integration e e2e das linhas 64 e 65, de modo que os DDLs novos podem ir para detran enquanto os testes leem detran_r5. E o mesmo defeito de alvo divergente que foi corrigido em TASK-0008 nesta iteracao.",
+      "fix": "Prefixar o criterio com DB_NAME=detran_r5 DB_PASSWORD=postgres e declarar DETRAN_TEST_DATABASE_URL apontando para detran_r5 nos criterios de backend:test:ci, igual a TASK-0008."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "work/rounds/R-0005/prompts/TASK-0006.md",
+      "line": 19,
+      "claim": "A fronteira autoriza criar tools/check-lifecycle-vocabulary.spec.ts, mas nenhum runner executa esse caminho: a raiz nao tem script de teste nem configuracao de vitest, o vitest.config.ts de backend/app inclui apenas src e tests do proprio pacote e os configs gerados dos pacotes inf incluem apenas src e tests locais. O spec seria um teste orfao, nunca executado, e o criterio da linha 39 nao o cobre.",
+      "fix": "Trocar por um spec dentro de um pacote que o execute, por exemplo backend/domains/inf/ait/tests/unit, ou declarar no prompt o comando exato que executa o sensor e incluir esse comando nos criterios."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "docs/meta/agents/orchestra/waves.md",
+      "line": 55,
+      "claim": "Reincidente das iteracoes 2 e 3 e ainda nao endereçado: a linha R-0005 da secao Historico continua com todas as colunas vazias. O model-ladder exige, nas linhas 3 e 33, registrar ali o ajuste de heuristica que usa reviewer de nivel medio numa frente que cria cinco DDL e regenera contratos, caso em que a escada pede nivel grande, alem dos quatro ciclos de revisao e da excecao de budget autorizada em 2026-09-14.",
+      "fix": "Preencher a linha R-0005 do Historico com os quatro ciclos de prompt-review, a excecao humana de budget, o desvio de nivel do reviewer e sua razao, no fechamento da rodada."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "docs/meta/agents/orchestra/waves.md",
+      "line": 24,
+      "claim": "A lista canonica de frentes declara onda 1 como upstream de R-0005, enquanto plan.md linha 6 e linhas 126 e 127 registram decisao do Owner de 2026-09-14 removendo qualquer upstream obrigatorio e abrindo em paralelo a onda 1. O metodo determina em orchestra/README.md linha 14 que os upstreams de cada grupo acoplado vivem em waves.md, logo a fonte canonica esta divergente do plano da rodada.",
+      "fix": "Atualizar a coluna de upstream da linha de ops-agency em waves.md para sem upstream obrigatorio, citando a decisao do Owner de 2026-09-14, e manter plan.md como espelho."
+    }
+  ],
+  "notes": [
+    "O high de prompt-review-3 esta eliminado. O commit 98fcf67 renomeia frozen-snapshot.controller.ts e extrai FrozenSnapshotService para backend/domains/ops/snapshots/src/handwritten, deixando src/index.ts apenas com dois reexports, sem mudanca de comportamento. As funcoes write e packageFiles de tools/blueprints/generate.mjs escrevem somente package.json, tsconfig.json, tsconfig.build.json, vitest.config.ts, src/<modulo>.module.ts, src/index.ts, src/entities, src/dto, src/repositories, src/services, src/controllers e o ddlFile: nenhum alvo cai sob src/handwritten, portanto o corpo manuscrito nao pode mais ser sobrescrito pela geracao.",
+    "A colisao era exclusiva de snapshots e nao se repete: operations gera para backend/domains/ops/field e evidence-custody para backend/domains/ops/evidence, com module.name Field e Evidence fixados em TASK-0002 linhas 51 a 53, e core nao tem blueprint. Tambem nao ha colisao de DDL: 13-ops-agency.sql, 16-ops-snapshots.sql, 17-ops-evidence.sql e 18-ops-offline-sync.sql nao existem hoje, e 14-inf-lifecycle-vocabulary.sql e 20-rls-policies.sql nao constam de generated-files.json, logo continuam manuscritos e estao nas fronteiras certas de TASK-0005 e TASK-0004.",
+    "Nenhuma nova violacao de fronteira, de codigo gerado ou de wiring Nest foi introduzida. TASK-0004 linhas 39 a 42 agora declaram package.json, tsconfig, tsconfig.build e vitest.config dos pacotes gerados como saidas geradas e mandam reportar lacuna de blueprint; TASK-0006 linhas 20 e 21 proibem editar vitest.config.ts; os globs BP-OPS e BP-INF ja aparecem entre crases, sem corrupcao de prettier; backend/app/package.json e pnpm-lock.yaml estao separados, com o lock restrito a pnpm install --lockfile-only.",
+    "O wiring Nest e satisfazivel no padrao citado: moduleFile importa cada handwrittenProvider por simbolo e o injeta em providers, de modo que um objeto de provider exportado no estilo AIT_LIFECYCLE_PROVIDER e valido; as tres classes hoje sem Injectable recebem em TASK-0002 linhas 61 a 63 a exigencia de classe injetavel ou provider de fabrica, e TASK-0004 linhas 22, 23, 48 e 49 atribuem ao Engineer apenas completar esse provider sem mover ou reescrever os arquivos relocados.",
+    "Hashes reconferidos: os nove sha256 de compositions.json batem byte a byte com os prompts em disco e os pc_id de tasks/TASK-0001.json a TASK-0009.json derivam deles. A tabela de locks de plan.md linhas 60 e 61 agora coincide com target_modules de TASK-0004.json, que inclui MOD-app-vitest e MOD-ddl-20-rls, e de TASK-0005.json, que inclui MOD-seed-timers; TASK-0008.json fica com MOD-seed e o prompt exclui o arquivo de timers.",
+    "Triades e Art. 10 corretos em CTG-0001 e CTG-0002: Architect define, Inspector escreve os testes antes, Engineer implementa; nenhum Engineer edita testes, nenhum Inspector edita producao, nenhum worker executa git, e a origem TEAT permanece somente leitura em TASK-0002 linhas 28 a 31 e 43. Steering intacto: H.40 amarrado em TASK-0001 linha 50 com convenios explicitamente fora, H.39, H.45, H.54 e H.55 nao reabertos, policy.ts e roles.ts fora de toda fronteira, e SENATRAN aparece apenas como campo de laudo e homologacao sob verify:senatran-boundary.",
+    "Veredito PASS: nenhum finding high remanescente, o disparo de CTG-0001 esta liberado. Os seis lows sao corrigiveis sem mudar o plano canonico; recomendo aplicar os tres de TASK-0004 e TASK-0006 antes do disparo, com recalculo de sha256 e pc_id, e os dois de waves.md no fechamento da rodada."
+  ]
+}

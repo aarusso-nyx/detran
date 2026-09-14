@@ -1,0 +1,322 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-OPS-OFFLINE-SYNC-001",
+  "module": {
+    "name": "OfflineSync",
+    "namespace": "ops",
+    "version": "1.0.0",
+    "ddlFile": "18-ops-offline-sync.sql",
+    "dependencies": { "@detran/ops-core": "workspace:*" },
+    "owners": ["detran-ops"],
+    "description": "Offline numbering and durable synchronization from WF-TEAT-002 and INV-OFFLINE-001; no WP-T2 controller is mounted in this round."
+  },
+  "api": {
+    "basePath": "/v1/ops/offline-sync/",
+    "resources": [
+      {
+        "entity": "AitNumberingRange",
+        "path": "numbering-ranges",
+        "resource": "numbering-range"
+      },
+      {
+        "entity": "NumberingReservation",
+        "path": "numbering-reservations",
+        "resource": "numbering-reservation"
+      },
+      {
+        "entity": "NumberingConsumption",
+        "path": "numbering-consumptions",
+        "resource": "numbering-consumption"
+      },
+      {
+        "entity": "SyncBatch",
+        "path": "sync-batches",
+        "resource": "sync-batch"
+      },
+      {
+        "entity": "SyncQueueItem",
+        "path": "sync-queue-items",
+        "resource": "sync-queue-item"
+      },
+      {
+        "entity": "SyncReceipt",
+        "path": "receipts",
+        "resource": "sync-receipt"
+      },
+      {
+        "entity": "SyncConflict",
+        "path": "sync-conflicts",
+        "resource": "sync-conflict"
+      }
+    ]
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "AitNumberingRange",
+        "table": "ait_numbering_range",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "series", "type": "varchar(40)" },
+          { "name": "start_number", "type": "bigint" },
+          { "name": "end_number", "type": "bigint" },
+          { "name": "next_number", "type": "bigint" },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" },
+          { "name": "usage_mode", "type": "varchar(40)" }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "traffic_agency_id", "series"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ops_ait_numbering_range_bounds",
+            "expression": "start_number <= end_number and next_number between start_number and end_number"
+          }
+        ]
+      },
+      {
+        "name": "NumberingReservation",
+        "table": "numbering_reservation",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "range_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "agent_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "shift_id", "type": "uuid", "nullable": true },
+          {
+            "name": "idempotency_key",
+            "type": "varchar(160)",
+            "nullable": true
+          },
+          { "name": "start_number", "type": "bigint" },
+          { "name": "end_number", "type": "bigint" },
+          { "name": "reserved_at", "type": "timestamptz", "default": "now()" },
+          { "name": "valid_until", "type": "timestamptz" },
+          { "name": "status", "type": "varchar(40)", "default": "'reserved'" },
+          { "name": "reconciliation_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "agent_id", "device_id", "status"] },
+          {
+            "columns": ["tenant_id", "idempotency_key"],
+            "unique": true,
+            "where": "idempotency_key is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_numbering_reservation_range",
+            "columns": ["range_id"],
+            "references": {
+              "table": "ops.ait_numbering_range",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "NumberingConsumption",
+        "table": "numbering_consumption",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "reservation_id", "type": "uuid" },
+          { "name": "range_id", "type": "uuid" },
+          { "name": "number", "type": "bigint" },
+          { "name": "local_entity_id", "type": "uuid" },
+          { "name": "idempotency_key", "type": "varchar(160)" },
+          { "name": "server_entity_id", "type": "uuid" },
+          { "name": "finalized_at", "type": "timestamptz" },
+          {
+            "name": "reconciled_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          { "name": "status", "type": "varchar(40)", "default": "'applied'" },
+          { "name": "details_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "range_id", "number"], "unique": true },
+          { "columns": ["tenant_id", "local_entity_id"], "unique": true },
+          { "columns": ["tenant_id", "idempotency_key"], "unique": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_numbering_consumption_reservation",
+            "columns": ["reservation_id"],
+            "references": {
+              "table": "ops.numbering_reservation",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_ops_numbering_consumption_range",
+            "columns": ["range_id"],
+            "references": {
+              "table": "ops.ait_numbering_range",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "SyncBatch",
+        "table": "sync_batch",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "agent_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "device_batch_id", "type": "varchar(160)" },
+          { "name": "batch_sequence", "type": "bigint", "nullable": true },
+          { "name": "submitted_at", "type": "timestamptz", "default": "now()" },
+          { "name": "accepted_items", "type": "integer", "default": "0" },
+          { "name": "receipts_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "device_id", "device_batch_id"],
+            "unique": true
+          },
+          {
+            "columns": ["tenant_id", "device_id", "batch_sequence"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ops_sync_batch_sequence_positive",
+            "expression": "batch_sequence is null or batch_sequence >= 1"
+          },
+          {
+            "name": "ck_ops_sync_batch_accepted_items_non_negative",
+            "expression": "accepted_items >= 0"
+          }
+        ]
+      },
+      {
+        "name": "SyncQueueItem",
+        "table": "sync_queue_item",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "agent_id", "type": "uuid" },
+          { "name": "entity_type", "type": "varchar(60)" },
+          { "name": "local_entity_id", "type": "uuid" },
+          { "name": "server_entity_id", "type": "uuid", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'pending'" },
+          { "name": "attempts", "type": "integer", "default": "0" },
+          { "name": "created_locally_at", "type": "timestamptz" },
+          { "name": "sent_at", "type": "timestamptz", "nullable": true },
+          { "name": "received_at", "type": "timestamptz", "nullable": true },
+          { "name": "idempotency_key", "type": "varchar(160)" },
+          { "name": "payload_hash", "type": "varchar(128)" },
+          { "name": "payload_json", "type": "jsonb" },
+          { "name": "error_code", "type": "varchar(80)", "nullable": true },
+          { "name": "error_message", "type": "text", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "device_id", "status"] },
+          { "columns": ["tenant_id", "idempotency_key"], "unique": true }
+        ]
+      },
+      {
+        "name": "SyncReceipt",
+        "table": "sync_receipt",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "sync_queue_item_id", "type": "uuid" },
+          { "name": "idempotency_key", "type": "varchar(160)" },
+          { "name": "entity_type", "type": "varchar(60)" },
+          { "name": "local_entity_id", "type": "uuid" },
+          { "name": "server_entity_id", "type": "uuid", "nullable": true },
+          { "name": "accepted_hash", "type": "varchar(128)" },
+          { "name": "status", "type": "varchar(40)" },
+          { "name": "reason_code", "type": "varchar(80)", "nullable": true },
+          { "name": "applied_at", "type": "timestamptz", "nullable": true },
+          { "name": "details_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "idempotency_key"], "unique": true },
+          { "columns": ["tenant_id", "sync_queue_item_id"], "unique": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_sync_receipt_queue_item",
+            "columns": ["sync_queue_item_id"],
+            "references": { "table": "ops.sync_queue_item", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "SyncConflict",
+        "table": "sync_conflict",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "sync_queue_item_id", "type": "uuid" },
+          { "name": "conflict_type", "type": "varchar(80)" },
+          {
+            "name": "reason_code",
+            "type": "varchar(80)",
+            "default": "'SYNC_CONFLICT'"
+          },
+          {
+            "name": "safe_message",
+            "type": "varchar(240)",
+            "default": "'Divergência de negócio requer análise.'"
+          },
+          {
+            "name": "correlation_id",
+            "type": "varchar(120)",
+            "default": "gen_random_uuid()::text"
+          },
+          { "name": "local_hash", "type": "varchar(128)", "nullable": true },
+          { "name": "server_hash", "type": "varchar(128)", "nullable": true },
+          { "name": "retryable", "type": "boolean", "default": "false" },
+          {
+            "name": "allowed_resolution_actions",
+            "type": "jsonb",
+            "default": "'[]'::jsonb"
+          },
+          { "name": "description", "type": "text" },
+          { "name": "status", "type": "varchar(40)", "default": "'open'" },
+          { "name": "resolved_by_user_ref", "type": "uuid", "nullable": true },
+          { "name": "resolved_at", "type": "timestamptz", "nullable": true },
+          { "name": "resolution_action", "type": "text", "nullable": true },
+          {
+            "name": "resolution_details_json",
+            "type": "jsonb",
+            "nullable": true
+          }
+        ],
+        "indexes": [{ "columns": ["tenant_id", "status"] }],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_sync_conflict_queue_item",
+            "columns": ["sync_queue_item_id"],
+            "references": { "table": "ops.sync_queue_item", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  }
+}
