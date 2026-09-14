@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.0.0 sha256:2297f42351909b6ac68f4a18e7c8b535508fa219dfdaa0f9b087f1ca3b745234
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -21,6 +21,8 @@ const WRITABLE_FIELDS = new Set<string>([
   'mandate_ends_on',
   'late_opinion_count',
   'unjustified_absence_count',
+  'is_substitute',
+  'jurisdiction',
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */

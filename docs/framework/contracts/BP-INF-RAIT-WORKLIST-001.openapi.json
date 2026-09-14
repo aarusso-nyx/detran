@@ -2,12 +2,138 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RaitWorklist — BP-INF-RAIT-WORKLIST-001",
-    "version": "1.0.0",
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento.",
+    "version": "1.1.0",
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao.",
     "x-blueprint": "BP-INF-RAIT-WORKLIST-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
   },
   "paths": {
+    "/v1/inf/rait/units": {
+      "get": {
+        "tags": ["rait-unit"],
+        "operationId": "listRaitUnit",
+        "summary": "List RaitUnit (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitUnit"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-unit"],
+        "operationId": "createRaitUnit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitUnitDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitUnit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/units/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-unit"],
+        "operationId": "getRaitUnit",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitUnit"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-unit"],
+        "operationId": "updateRaitUnit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitUnitDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitUnit"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-unit"],
+        "operationId": "removeRaitUnit",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
     "/v1/inf/rait/pools": {
       "get": {
         "tags": ["rait-pool"],
@@ -260,6 +386,510 @@
         }
       }
     },
+    "/v1/inf/rait/schedules": {
+      "get": {
+        "tags": ["rait-schedule"],
+        "operationId": "listRaitSchedule",
+        "summary": "List RaitSchedule (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitSchedule"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-schedule"],
+        "operationId": "createRaitSchedule",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitScheduleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSchedule"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/schedules/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-schedule"],
+        "operationId": "getRaitSchedule",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSchedule"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-schedule"],
+        "operationId": "updateRaitSchedule",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitScheduleDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSchedule"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-schedule"],
+        "operationId": "removeRaitSchedule",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/schedule-slots": {
+      "get": {
+        "tags": ["rait-schedule-slot"],
+        "operationId": "listRaitScheduleSlot",
+        "summary": "List RaitScheduleSlot (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitScheduleSlot"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-schedule-slot"],
+        "operationId": "createRaitScheduleSlot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitScheduleSlotDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitScheduleSlot"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/schedule-slots/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-schedule-slot"],
+        "operationId": "getRaitScheduleSlot",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitScheduleSlot"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-schedule-slot"],
+        "operationId": "updateRaitScheduleSlot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitScheduleSlotDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitScheduleSlot"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-schedule-slot"],
+        "operationId": "removeRaitScheduleSlot",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/batches": {
+      "get": {
+        "tags": ["rait-batch"],
+        "operationId": "listRaitBatch",
+        "summary": "List RaitBatch (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitBatch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-batch"],
+        "operationId": "createRaitBatch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitBatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/batches/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-batch"],
+        "operationId": "getRaitBatch",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-batch"],
+        "operationId": "updateRaitBatch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitBatchDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-batch"],
+        "operationId": "removeRaitBatch",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/batch-items": {
+      "get": {
+        "tags": ["rait-batch-item"],
+        "operationId": "listRaitBatchItem",
+        "summary": "List RaitBatchItem (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitBatchItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-batch-item"],
+        "operationId": "createRaitBatchItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitBatchItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBatchItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/batch-items/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-batch-item"],
+        "operationId": "getRaitBatchItem",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBatchItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-batch-item"],
+        "operationId": "updateRaitBatchItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitBatchItemDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBatchItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-batch-item"],
+        "operationId": "removeRaitBatchItem",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
     "/v1/inf/rait/assignments": {
       "get": {
         "tags": ["rait-assignment"],
@@ -502,6 +1132,258 @@
       "delete": {
         "tags": ["rait-impediment"],
         "operationId": "removeRaitImpediment",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/substitute-duties": {
+      "get": {
+        "tags": ["rait-substitute-duty"],
+        "operationId": "listRaitSubstituteDuty",
+        "summary": "List RaitSubstituteDuty (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitSubstituteDuty"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-substitute-duty"],
+        "operationId": "createRaitSubstituteDuty",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitSubstituteDutyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSubstituteDuty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/substitute-duties/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-substitute-duty"],
+        "operationId": "getRaitSubstituteDuty",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSubstituteDuty"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-substitute-duty"],
+        "operationId": "updateRaitSubstituteDuty",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitSubstituteDutyDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSubstituteDuty"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-substitute-duty"],
+        "operationId": "removeRaitSubstituteDuty",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/benches": {
+      "get": {
+        "tags": ["rait-bench"],
+        "operationId": "listRaitBench",
+        "summary": "List RaitBench (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitBench"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-bench"],
+        "operationId": "createRaitBench",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitBenchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBench"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/benches/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-bench"],
+        "operationId": "getRaitBench",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBench"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-bench"],
+        "operationId": "updateRaitBench",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitBenchDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitBench"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-bench"],
+        "operationId": "removeRaitBench",
         "responses": {
           "200": {
             "description": "deleted"
@@ -767,6 +1649,77 @@
   },
   "components": {
     "schemas": {
+      "RaitUnit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "judging_body": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["jari", "cetran"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["TURMA_ATIVA", "TURMA_EM_CONSTITUICAO", "TURMA_SUSPENSA"],
+            "default": "'TURMA_ATIVA'"
+          },
+          "coordinator_member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "name", "judging_body", "created_at"],
+        "description": "Unidade de julgamento (turma / JARI) — WF-RAIT-004 secao 7 e secao 10. Estados TURMA_* da secao 9; hoje uma unica JARI-AM (steering B.9) e coordenador exigido apenas quando houver mais de uma (Res. 357 itens 2.2-2.3)."
+      },
+      "CreateRaitUnitDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "judging_body": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["jari", "cetran"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["TURMA_ATIVA", "TURMA_EM_CONSTITUICAO", "TURMA_SUSPENSA"],
+            "default": "'TURMA_ATIVA'"
+          },
+          "coordinator_member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["name", "judging_body"]
+      },
       "RaitPool": {
         "type": "object",
         "properties": {
@@ -800,6 +1753,17 @@
             "type": "boolean",
             "default": "true"
           },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "priority_policy": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ordem_unica"],
+            "default": "'ordem_unica'"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -818,7 +1782,7 @@
           "strategy",
           "created_at"
         ],
-        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2)."
+        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2). v1.1.0: unit_id liga o pool a uma turma/JARI (WF-RAIT-004 secao 10) e priority_policy registra a ordem unica de consumo das filas (secao 2, RN-RAIT-141)."
       },
       "CreateRaitPoolDto": {
         "type": "object",
@@ -843,6 +1807,17 @@
           "active": {
             "type": "boolean",
             "default": "true"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "priority_policy": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ordem_unica"],
+            "default": "'ordem_unica'"
           }
         },
         "required": ["name", "instance", "circuit", "strategy"]
@@ -908,6 +1883,15 @@
             "type": "integer",
             "default": "0"
           },
+          "is_substitute": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "jurisdiction": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -925,7 +1909,7 @@
           "member_role",
           "created_at"
         ],
-        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116)."
+        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48)."
       },
       "CreateRaitPoolMemberDto": {
         "type": "object",
@@ -978,9 +1962,500 @@
           "unjustified_absence_count": {
             "type": "integer",
             "default": "0"
+          },
+          "is_substitute": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "jurisdiction": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
           }
         },
         "required": ["pool_id", "person_id", "member_role"]
+      },
+      "RaitSchedule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "escala_semanal",
+              "plantao_risco",
+              "escala_assinatura",
+              "escala_balcao"
+            ]
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["DISPONIVEL", "EM_PLANTAO", "AUSENTE_PROGRAMADO"],
+            "default": "'DISPONIVEL'"
+          },
+          "wip_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "absence_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ferias", "licenca", "curso", "sessao_externa"],
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "published_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "pool_id",
+          "member_id",
+          "kind",
+          "period_start",
+          "period_end",
+          "created_at"
+        ],
+        "description": "Escala e plantao do membro — WF-RAIT-004 secao 3 e secao 10. Disponibilidade DISPONIVEL/EM_PLANTAO/AUSENTE_PROGRAMADO (secao 9); wip_limit nulo usa o parametro rait.wip.limit (ops.parameter, ADR-0021) e ausencia programada rebaixa o limite a zero."
+      },
+      "CreateRaitScheduleDto": {
+        "type": "object",
+        "properties": {
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "escala_semanal",
+              "plantao_risco",
+              "escala_assinatura",
+              "escala_balcao"
+            ]
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["DISPONIVEL", "EM_PLANTAO", "AUSENTE_PROGRAMADO"],
+            "default": "'DISPONIVEL'"
+          },
+          "wip_limit": {
+            "type": "integer",
+            "nullable": true
+          },
+          "absence_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ferias", "licenca", "curso", "sessao_externa"],
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "published_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "pool_id",
+          "member_id",
+          "kind",
+          "period_start",
+          "period_end"
+        ]
+      },
+      "RaitScheduleSlot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schedule_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slot_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["DISPONIVEL", "EM_PLANTAO", "AUSENTE_PROGRAMADO"],
+            "default": "'DISPONIVEL'"
+          },
+          "absence_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ferias", "licenca", "curso", "sessao_externa"],
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "schedule_id", "slot_on", "created_at"],
+        "description": "Dia coberto pela escala — WF-RAIT-004 secao 3. Disponibilidade efetiva por dia (base de RAIT.SCHEDULE_NO_DUTY_MEMBER, que informa a data); o turno nao tem vocabulario fixado por fonte e fica como OD, por isso o grao e o dia."
+      },
+      "CreateRaitScheduleSlotDto": {
+        "type": "object",
+        "properties": {
+          "schedule_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "slot_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["DISPONIVEL", "EM_PLANTAO", "AUSENTE_PROGRAMADO"],
+            "default": "'DISPONIVEL'"
+          },
+          "absence_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["ferias", "licenca", "curso", "sessao_externa"],
+            "nullable": true
+          }
+        },
+        "required": ["schedule_id", "slot_on"]
+      },
+      "RaitBatch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["semanal", "extraordinario"],
+            "default": "'semanal'"
+          },
+          "week_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["LOTE_ABERTO", "LOTE_SORTEADO", "LOTE_ACEITO"],
+            "default": "'LOTE_ABERTO'"
+          },
+          "seed": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "opened_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "drawn_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "minutes_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "homologated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "homologated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "pool_id", "week_start", "created_at"],
+        "description": "Lote de sorteio de relator — WF-RAIT-004 secao 5 e secao 10. Estados LOTE_* da secao 9; semente e ordem auditaveis, ata do sorteio assinada pelo presidente (PAdES+TSA, steering A.8); lote semanal ou extraordinario (passos 1 e 7)."
+      },
+      "CreateRaitBatchDto": {
+        "type": "object",
+        "properties": {
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["semanal", "extraordinario"],
+            "default": "'semanal'"
+          },
+          "week_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["LOTE_ABERTO", "LOTE_SORTEADO", "LOTE_ACEITO"],
+            "default": "'LOTE_ABERTO'"
+          },
+          "seed": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "opened_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "drawn_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "minutes_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "homologated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "homologated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["pool_id", "week_start"]
+      },
+      "RaitBatchItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "claim_due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "declined_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decline_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["impedimento", "suspeicao"],
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "batch_id",
+          "case_id",
+          "position",
+          "created_at"
+        ],
+        "description": "Item do lote de sorteio — WF-RAIT-004 secao 5 passos 4-5. Posicao na ordem sorteada, relator designado, claim_due_on do T-CLAIM (rait.timer.T-CLAIM, 2 dias uteis) e recusa por impedimento ou suspeicao, que redistribui ao proximo da ordem no mesmo lote."
+      },
+      "CreateRaitBatchItemDto": {
+        "type": "object",
+        "properties": {
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "claim_due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "declined_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "decline_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["impedimento", "suspeicao"],
+            "nullable": true
+          }
+        },
+        "required": ["batch_id", "case_id", "position"]
       },
       "RaitAssignment": {
         "type": "object",
@@ -1037,6 +2512,16 @@
             "type": "boolean",
             "default": "true"
           },
+          "claim_due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1054,7 +2539,7 @@
           "member_id",
           "created_at"
         ],
-        "description": "Atribuicao de caso a membro. Reatribuir preserva estado e dossie (AC-RAIT-011-1); motivo e obrigatorio e tipado (AC-RAIT-011-2)."
+        "description": "Atribuicao de caso a membro. Reatribuir preserva estado e dossie (AC-RAIT-011-1); motivo e obrigatorio e tipado (AC-RAIT-011-2). v1.1.0: claim_due_at e o vencimento do T-CLAIM e batch_id liga a atribuicao ao lote de sorteio (WF-RAIT-004 secao 5 e secao 10)."
       },
       "CreateRaitAssignmentDto": {
         "type": "object",
@@ -1101,6 +2586,16 @@
           "active": {
             "type": "boolean",
             "default": "true"
+          },
+          "claim_due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           }
         },
         "required": ["case_id", "pool_id", "member_id"]
@@ -1134,6 +2629,22 @@
             "format": "date-time",
             "default": "now()"
           },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["impedimento", "suspeicao"],
+            "default": "'impedimento'"
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "decided_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1151,7 +2662,7 @@
           "basis",
           "created_at"
         ],
-        "description": "Impedimento declarado por caso (RN-RAIT-116; CONTRAN-357 5.1.c). Impede redistribuicao ao mesmo membro (AC-RAIT-011-3)."
+        "description": "Impedimento declarado por caso (RN-RAIT-116; CONTRAN-357 5.1.c). Impede redistribuicao ao mesmo membro (AC-RAIT-011-3). v1.1.0: kind distingue impedimento de suspeicao e legal_basis registra o artigo (Lei 9.784 arts. 18-20), com decided_by de quem decidiu a declaracao (WF-RAIT-004 secao 10)."
       },
       "CreateRaitImpedimentDto": {
         "type": "object",
@@ -1172,9 +2683,197 @@
             "type": "string",
             "format": "date-time",
             "default": "now()"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["impedimento", "suspeicao"],
+            "default": "'impedimento'"
+          },
+          "legal_basis": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "decided_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           }
         },
         "required": ["case_id", "member_id", "basis"]
+      },
+      "RaitSubstituteDuty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "designated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "designated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "convened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "session_id", "member_id", "created_at"],
+        "description": "Plantao de suplencia por sessao — WF-RAIT-004 secao 3 (linha \"Plantao de suplencia\") e secao 6 regra (a): o suplente de plantao e convocado antes de qualquer outro quando a banca fica BANCA_INSUFICIENTE (RN-RAIT-142). session_id sem FK: inf.rait_session nasce no DDL 36, posterior ao 35."
+      },
+      "CreateRaitSubstituteDutyDto": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "designated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "designated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "convened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["session_id", "member_id"]
+      },
+      "RaitBench": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "BANCA_PREVISTA",
+              "BANCA_CONFIRMADA",
+              "BANCA_INSUFICIENTE"
+            ],
+            "default": "'BANCA_PREVISTA'"
+          },
+          "confirmed_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "parity_observed": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "confirmed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "insufficient_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "session_id", "created_at"],
+        "description": "Banca da sessao — WF-RAIT-004 secao 6. Estados BANCA_* da secao 9, contagem de confirmacoes contra o quorum e paridade observada do CETRAN (parametro session.quorum.cetran_parity, ops.parameter). session_id sem FK: inf.rait_session nasce no DDL 36, posterior ao 35."
+      },
+      "CreateRaitBenchDto": {
+        "type": "object",
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "BANCA_PREVISTA",
+              "BANCA_CONFIRMADA",
+              "BANCA_INSUFICIENTE"
+            ],
+            "default": "'BANCA_PREVISTA'"
+          },
+          "confirmed_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "parity_observed": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "confirmed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "insufficient_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["session_id"]
       },
       "RaitClock": {
         "type": "object",

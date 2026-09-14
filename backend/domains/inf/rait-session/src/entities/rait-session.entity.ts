@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-SESSION-001 v1.0.0 sha256:dc1bce75baacc50799dc941fd01f8c5ccd3ca217522ca280f4fbea215d197a05
+// Generated from BP-INF-RAIT-SESSION-001 v1.1.0 sha256:24f07dd684f9142de9db5e84913c3e2899499e68aebd1d6ac33dc0a03c5eca01
 export interface RaitSession {
   id: string;
   tenant_id: string;
@@ -15,6 +15,8 @@ export interface RaitSession {
   adjourned_reason?: string | null;
   extraordinary: boolean;
   short_notice_ack_by?: string | null;
+  modality: string;
+  short_notice_ack: boolean;
   created_at: string;
   updated_at?: string | null;
 }

@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-CASE-001 v1.0.0 sha256:9d98d9786bc2f4b27bd75cb5516d4a00b6d74e520f3dbc52c39f33effb27f60e
+-- Generated from BP-INF-RAIT-CASE-001 v1.1.0 sha256:f85c2f343d3739d77786d05e0f2f98d07e00de6ca63aa3aaa743b5b949714f62
 
 -- Regenerable-only DDL for BP-INF-RAIT-CASE-001; request-path writes use role_app_backend.
 
@@ -28,6 +28,9 @@ create table if not exists inf.rait_case (
   withdrawal_document_id uuid,
   last_movement_at timestamptz default now() not null,
   pending_completion boolean default false not null,
+  legal_priority varchar(30),
+  unit_id uuid,
+  version integer default 1 not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_rait_case primary key (id),
@@ -51,6 +54,7 @@ create index if not exists ix_rait_case_tenant_id on inf.rait_case (tenant_id);
 create index if not exists ix_rait_case_ait_id on inf.rait_case (ait_id);
 create index if not exists ix_rait_case_origin_case_id on inf.rait_case (origin_case_id);
 create index if not exists ix_rait_case_withdrawal_document_id on inf.rait_case (withdrawal_document_id);
+create index if not exists ix_rait_case_unit_id on inf.rait_case (unit_id);
 
 create table if not exists inf.rait_party (
   id uuid default gen_random_uuid() not null,
@@ -98,6 +102,57 @@ create table if not exists inf.rait_document (
 create index if not exists ix_inf_rait_document_case on inf.rait_document (tenant_id, case_id, kind);
 create index if not exists ix_rait_document_tenant_id on inf.rait_document (tenant_id);
 create index if not exists ix_rait_document_case_id on inf.rait_document (case_id);
+
+create table if not exists inf.rait_pending_content (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid not null,
+  missing_items jsonb not null,
+  due_on date not null,
+  opened_at timestamptz default now() not null,
+  opened_by uuid not null,
+  closed_at timestamptz,
+  outcome varchar(20),
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_pending_content primary key (id),
+  constraint ck_inf_rait_pending_content_outcome check (outcome is null or outcome in ('atendida','nao_atendida')),
+  constraint ck_inf_rait_pending_content_closure_complete check ((closed_at is null and outcome is null) or (closed_at is not null and outcome is not null)),
+  constraint fk_inf_rait_pending_content_case foreign key (case_id) references inf.rait_case (id)
+);
+create unique index if not exists ux_inf_rait_pending_content_open on inf.rait_pending_content (tenant_id, case_id) where closed_at is null;
+create index if not exists ix_inf_rait_pending_content_due on inf.rait_pending_content (tenant_id, due_on) where closed_at is null;
+create index if not exists ix_rait_pending_content_tenant_id on inf.rait_pending_content (tenant_id);
+create index if not exists ix_rait_pending_content_case_id on inf.rait_pending_content (case_id);
+
+create table if not exists inf.rait_redirect (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid,
+  direction varchar(10) not null,
+  reason varchar(30) not null,
+  protocol_number varchar(40) not null,
+  ait_number varchar(40),
+  counterpart_agency varchar(120) not null,
+  counterpart_renainf_code varchar(20),
+  origin_protocolled_on date,
+  deadline_restored boolean default false not null,
+  receipt_document_id uuid,
+  redirected_at timestamptz default now() not null,
+  redirected_by uuid not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_redirect primary key (id),
+  constraint ck_inf_rait_redirect_direction check (direction in ('entrada','saida')),
+  constraint ck_inf_rait_redirect_reason check (reason in ('outro_orgao_autuador','orgao_incompetente')),
+  constraint ck_inf_rait_redirect_inbound_has_case check (direction <> 'entrada' or case_id is not null),
+  constraint fk_inf_rait_redirect_case foreign key (case_id) references inf.rait_case (id)
+);
+create unique index if not exists ux_inf_rait_redirect_protocol on inf.rait_redirect (tenant_id, direction, protocol_number);
+create index if not exists ix_inf_rait_redirect_case on inf.rait_redirect (tenant_id, case_id);
+create index if not exists ix_rait_redirect_tenant_id on inf.rait_redirect (tenant_id);
+create index if not exists ix_rait_redirect_case_id on inf.rait_redirect (case_id);
+create index if not exists ix_rait_redirect_receipt_document_id on inf.rait_redirect (receipt_document_id);
 
 create table if not exists inf.rait_admissibility (
   id uuid default gen_random_uuid() not null,
@@ -169,6 +224,36 @@ create table if not exists inf.rait_inquiry (
 create index if not exists ix_inf_rait_inquiry_open on inf.rait_inquiry (tenant_id, due_on) where answered_at is null;
 create index if not exists ix_rait_inquiry_tenant_id on inf.rait_inquiry (tenant_id);
 create index if not exists ix_rait_inquiry_case_id on inf.rait_inquiry (case_id);
+
+create table if not exists inf.rait_draft (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid not null,
+  version integer not null,
+  author_id uuid not null,
+  document_id uuid,
+  content_hash varchar(128) not null,
+  status varchar(20) default 'rascunho' not null,
+  submitted_at timestamptz,
+  returned_at timestamptz,
+  return_guidance text,
+  return_count integer default 0 not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_draft primary key (id),
+  constraint ck_inf_rait_draft_status check (status in ('rascunho','submetida','devolvida','assinada')),
+  constraint ck_inf_rait_draft_version_positive check (version >= 1),
+  constraint ck_inf_rait_draft_single_return check (return_count <= 1),
+  constraint ck_inf_rait_draft_return_complete check (status <> 'devolvida' or (returned_at is not null and return_guidance is not null)),
+  constraint ck_inf_rait_draft_submitted_required check (status = 'rascunho' or submitted_at is not null),
+  constraint fk_inf_rait_draft_case foreign key (case_id) references inf.rait_case (id)
+);
+create unique index if not exists ux_inf_rait_draft_version on inf.rait_draft (tenant_id, case_id, version);
+create index if not exists ix_inf_rait_draft_status on inf.rait_draft (tenant_id, case_id, status);
+create index if not exists ix_rait_draft_tenant_id on inf.rait_draft (tenant_id);
+create index if not exists ix_rait_draft_case_id on inf.rait_draft (case_id);
+create index if not exists ix_rait_draft_author_id on inf.rait_draft (author_id);
+create index if not exists ix_rait_draft_document_id on inf.rait_draft (document_id);
 
 create table if not exists inf.rait_decision (
   id uuid default gen_random_uuid() not null,
@@ -246,11 +331,17 @@ select auth.create_rls_policy('inf', 'rait_party');
 
 select auth.create_rls_policy('inf', 'rait_document');
 
+select auth.create_rls_policy('inf', 'rait_pending_content');
+
+select auth.create_rls_policy('inf', 'rait_redirect');
+
 select auth.create_rls_policy('inf', 'rait_admissibility');
 
 select auth.create_rls_policy('inf', 'rait_deadline');
 
 select auth.create_rls_policy('inf', 'rait_inquiry');
+
+select auth.create_rls_policy('inf', 'rait_draft');
 
 select auth.create_rls_policy('inf', 'rait_decision');
 
