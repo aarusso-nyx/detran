@@ -429,3 +429,10 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **WP-T1/T2 — achados do WP-T0**: `ops/*` (operations, evidence-custody, snapshots) sem módulo Nest e com serviços
       não injetáveis; `MeasureLifecycleService`/`AlcoholLifecycleService` e seus comandos ainda não montados; as sete
       entidades da origem (item 6 de `teat-route-contract.md` §9); `ops:evidence:complete-upload|validate` voltam com rotas (added 2026-09-13)
+- [x] **Meta-orquestração definida (2026-09-14, ADR-0022)**: método em `docs/meta/agents/orchestra/`, escada de
+      modelos, plano de ondas (14 frentes, R-0003…R-0016), templates de maestro/reviewer/worker, ponte
+      `tools/orchestra/bridge.sh`; rodadas R-0003 (`dash-roles`) e R-0004 (`param-store`) prontas para abrir
+- [ ] **Abrir a onda 1**: colar `work/rounds/R-0003/prompts/00-maestro.md` numa sessão Claude Code (Fable) e
+      `work/rounds/R-0004/prompts/00-maestro.md` numa sessão Codex (Sol), cada uma na sua worktree; confirmar os ids
+      de modelo Codex (`gpt-5.6-terra`/`-luna`/`-sol`) antes da primeira ponte (added 2026-09-14)
+- [ ] **Corrigir gates dos build packs** que citam comandos inexistentes (`orchestra/README.md` §9) antes da onda 2 (added 2026-09-14)
