@@ -160,6 +160,15 @@ documentação e atualizado pelo maestro no fechamento.
   delivery-review-CTG-0001-4: **PASS** (sem achados). Gates pós-M15: `apply`+`seed` OK, `rls-smoke` OK, `backend:test:ci`
   exit 0, `pnpm check` exit 0. `origin/main` avançou (PR #37 `param-store`, PR #38 fechamento R-0004): rebase antes do
   push (branch não publicado) e gates de novo.
+- 2026-09-14 rebase sobre `origin/main` (34062b5): conflito só em `package.json` (listas de scripts unidas). `backend:test:ci`
+  **vermelho** após o rebase: `05-parameters.sql` (R-0004) insere em `ops.parameter` sem `app.tenant_id`, `enforce_tenant_id`
+  levanta "Tenant context is required", `seed.sh` (`set -e`) aborta antes de `10/20/30` e as fixtures não carregam.
+  Triagem: `plant-bug` upstream (a rodada R-0004 declarou "seed.sh já autodetecta o novo arquivo" sem testar sob `seed.sh`;
+  o CI nunca executa `seed.sh`, por isso `main` está verde). Correção do maestro (Engineer): o gerador
+  `tools/parameters/generate-seed.mjs` passa a emitir os dois `set_config` no topo do seed (regenerado, `parameters:test`
+  17/17, `verify:parameter-catalogue` OK, 87 parâmetros carregados) e o job `backend-kernel` do CI ganha o passo
+  `bash backend/database/seed.sh` após `backend:db:reset` (`rait-test-strategy.md` §7, entregável de WP-A). Mudança
+  infra fora do diff revisado; registrada no PR sem novo ciclo de delivery-review (julgamento do maestro).
 - 2026-09-14 (janela 2) prompt-review-3 (mini-tríade): **REVIEW**, 4 achados corrigidos pelo maestro: data do caso 20
   (2026-12-29 → **2026-12-30**, conta explícita), calendário na leitura de TASK-0009, total de casos de TASK-0010 (23 → 22),
   TASK-0009 Opus/alto. prompt-review-4: **REVIEW**, 1 achado — TASK-0009 passa a atualizar a linha de
