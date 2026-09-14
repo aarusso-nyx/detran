@@ -439,3 +439,8 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       na sua worktree; confirmar os ids de modelo Codex (`gpt-5.6-terra`/`-luna`/`-sol`) antes da primeira
       ponte (added 2026-09-14)
 - [ ] **Corrigir gates dos build packs** que citam comandos inexistentes (`orchestra/README.md` §9) antes da onda 2 (added 2026-09-14)
+- [x] **Rodadas R-0005…R-0016 instanciadas (2026-09-14)**: `work/rounds/R-00nn/{plan.md,prompts/00-maestro.md}` para as
+      doze frentes restantes de `waves.md` (ondas 2–7), com metas, tríades, critérios em comandos existentes, numeração
+      real de DDL (ver `orchestra/README.md` §9) e ajuste do baseline do KB nas frentes que criam fichas de tela
+- [ ] **Abrir a onda 2** (`ops-agency` R-0005 em Codex/Sol, `rait-model` R-0006 em Claude/Fable) assim que a onda 1
+      estiver em `main`; a partir da onda 3, abrir a próxima frente de uma família quando a anterior daquela família mesclar (added 2026-09-14)
