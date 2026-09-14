@@ -1,0 +1,65 @@
+{
+  "action": "Bind CTG-0001 to the published-branch merge of origin/main after PR #39",
+  "round": "R-0005",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "candidate": {
+    "integrated_main": "1fefb32f2ca4cadaca8c6d3ff9885885b5eb245c",
+    "merge_commit": "d94fbd22fb49de8db4d86fe03aab6e1c84e1ac37",
+    "own_tip_before_merge": "c62e98e25c463c9d5b1b245ae222bcaad7264dbf"
+  },
+  "prior_chain_head": "d3952623cad2d2f10ebb74eabee3c976807599e1e133805a7fa91f788c61d60d",
+  "normative_links": {
+    "decisions": ["OD-T02", "OD-013"],
+    "requirements": ["RN-TEAT-003", "RN-TEAT-142"],
+    "invariants": ["INV-EVIDENCE-001", "INV-OFFLINE-001"]
+  },
+  "artifacts": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "bdf39bcd5ae0ef0c375aac607acf2ba63b7865f584343c6ca5a44af6a3d2de32"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-ci-correction.json",
+      "sha256": "7baa503d36182cc1482684a827971d5d94969c477b0fc2aeff3813ad7719cd66"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-ci-correction.bridge.json",
+      "sha256": "8b1fd636fe0058df889080c05713a1ec08bc9642b77a52ba6bcda7e9ca7ba0b9"
+    }
+  ],
+  "gates": [
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "result": "PASS; all 44 workspace projects linked"
+    },
+    {
+      "command": "DB_NAME=detran_r5 DB_PASSWORD=postgres pnpm backend:db:reset followed by backend/database/seed.sh",
+      "result": "PASS; unified DDL and canonical fixtures from integrated main applied"
+    },
+    {
+      "command": "pnpm backend:test:ci with separated owner/app/reader URLs after canonical seed",
+      "result": "PASS; all pre-existing and integrated R-0006 unit, integration, and e2e tiers green; app e2e 12/12"
+    },
+    {
+      "command": "pnpm check",
+      "result": "PASS; 44 workspaces, 704 handlers, 155 tenant tables, catalogue 87/18, blueprints/contracts synchronized"
+    },
+    {
+      "command": "cross-family focused CI-correction review repeated with formatted prompt",
+      "result": "PASS with zero high findings"
+    },
+    {
+      "command": "pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
+      "result": "PASS before this append; prior head d3952623cad2d2f10ebb74eabee3c976807599e1e133805a7fa91f788c61d60d"
+    }
+  ],
+  "sensor_notes": [
+    "The first post-merge backend test attempt omitted the newly required canonical seed and failed only the three fixture-dependent R-0006 integration assertions; it is classified as sensor-error and not as PASS.",
+    "After seed.sh the complete tier passed without changing code or tests."
+  ],
+  "notes": [
+    "The proof chain was rebuilt from origin/main and the five governed R-0005 inputs, preserving the new R-0006 ancestry.",
+    "No CTG-0002 worker has been started."
+  ]
+}

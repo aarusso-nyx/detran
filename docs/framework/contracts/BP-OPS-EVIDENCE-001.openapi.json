@@ -1,0 +1,1724 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Evidence — BP-OPS-EVIDENCE-001",
+    "version": "1.0.0",
+    "description": "Evidence metadata, custody and formal access from TEAT evidence workflow and INV-EVIDENCE-001; binary storage remains a STYNX seam.",
+    "x-blueprint": "BP-OPS-EVIDENCE-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ops/evidence/evidence": {
+      "get": {
+        "tags": ["evidence"],
+        "operationId": "listEvidence",
+        "summary": "List Evidence (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Evidence"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["evidence"],
+        "operationId": "createEvidence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvidenceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evidence"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/evidence/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["evidence"],
+        "operationId": "getEvidence",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evidence"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["evidence"],
+        "operationId": "updateEvidence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateEvidenceDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Evidence"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["evidence"],
+        "operationId": "removeEvidence",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/links": {
+      "get": {
+        "tags": ["evidence-link"],
+        "operationId": "listEvidenceLink",
+        "summary": "List EvidenceLink (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EvidenceLink"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["evidence-link"],
+        "operationId": "createEvidenceLink",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvidenceLinkDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceLink"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/links/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["evidence-link"],
+        "operationId": "getEvidenceLink",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceLink"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["evidence-link"],
+        "operationId": "updateEvidenceLink",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateEvidenceLinkDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceLink"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["evidence-link"],
+        "operationId": "removeEvidenceLink",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/custody-events": {
+      "get": {
+        "tags": ["custody-event"],
+        "operationId": "listCustodyEvent",
+        "summary": "List CustodyEvent (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustodyEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["custody-event"],
+        "operationId": "createCustodyEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustodyEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustodyEvent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/custody-events/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["custody-event"],
+        "operationId": "getCustodyEvent",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustodyEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["custody-event"],
+        "operationId": "updateCustodyEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCustodyEventDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustodyEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["custody-event"],
+        "operationId": "removeCustodyEvent",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/probative-packages": {
+      "get": {
+        "tags": ["probative-package"],
+        "operationId": "listProbativePackage",
+        "summary": "List ProbativePackage (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProbativePackage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["probative-package"],
+        "operationId": "createProbativePackage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProbativePackageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbativePackage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/probative-packages/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["probative-package"],
+        "operationId": "getProbativePackage",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbativePackage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["probative-package"],
+        "operationId": "updateProbativePackage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateProbativePackageDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbativePackage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["probative-package"],
+        "operationId": "removeProbativePackage",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/probative-package-items": {
+      "get": {
+        "tags": ["probative-package-item"],
+        "operationId": "listProbativePackageItem",
+        "summary": "List ProbativePackageItem (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProbativePackageItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["probative-package-item"],
+        "operationId": "createProbativePackageItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProbativePackageItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbativePackageItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/probative-package-items/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["probative-package-item"],
+        "operationId": "getProbativePackageItem",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbativePackageItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["probative-package-item"],
+        "operationId": "updateProbativePackageItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateProbativePackageItemDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProbativePackageItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["probative-package-item"],
+        "operationId": "removeProbativePackageItem",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/evidence-access-requests": {
+      "get": {
+        "tags": ["evidence-access-request"],
+        "operationId": "listEvidenceAccessRequest",
+        "summary": "List EvidenceAccessRequest (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EvidenceAccessRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["evidence-access-request"],
+        "operationId": "createEvidenceAccessRequest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvidenceAccessRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceAccessRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/evidence-access-requests/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["evidence-access-request"],
+        "operationId": "getEvidenceAccessRequest",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceAccessRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["evidence-access-request"],
+        "operationId": "updateEvidenceAccessRequest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateEvidenceAccessRequestDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvidenceAccessRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["evidence-access-request"],
+        "operationId": "removeEvidenceAccessRequest",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/storage-intents": {
+      "get": {
+        "tags": ["storage-intent"],
+        "operationId": "listStorageIntent",
+        "summary": "List StorageIntent (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StorageIntent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["storage-intent"],
+        "operationId": "createStorageIntent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStorageIntentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StorageIntent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/evidence/storage-intents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["storage-intent"],
+        "operationId": "getStorageIntent",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StorageIntent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["storage-intent"],
+        "operationId": "updateStorageIntent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateStorageIntentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StorageIntent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["storage-intent"],
+        "operationId": "removeStorageIntent",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Evidence": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evidence_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "storage_uri": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "hash_algorithm": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "hash_value": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "captured_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "captured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "pending_upload",
+              "uploaded",
+              "validated",
+              "linked",
+              "packaged",
+              "archived",
+              "rejected",
+              "quarantined",
+              "superseded"
+            ],
+            "default": "'pending_upload'"
+          },
+          "metadata_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "evidence_type",
+          "origin",
+          "storage_uri",
+          "mime_type",
+          "size_bytes",
+          "hash_algorithm",
+          "hash_value",
+          "captured_at",
+          "created_at"
+        ]
+      },
+      "CreateEvidenceDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evidence_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "storage_uri": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "hash_algorithm": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "hash_value": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "captured_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "captured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "pending_upload",
+              "uploaded",
+              "validated",
+              "linked",
+              "packaged",
+              "archived",
+              "rejected",
+              "quarantined",
+              "superseded"
+            ],
+            "default": "'pending_upload'"
+          },
+          "metadata_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "location_geom": {
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "evidence_type",
+          "origin",
+          "storage_uri",
+          "mime_type",
+          "size_bytes",
+          "hash_algorithm",
+          "hash_value",
+          "captured_at"
+        ]
+      },
+      "EvidenceLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "mandatory": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "evidence_id",
+          "entity_type",
+          "entity_id",
+          "role",
+          "created_at"
+        ]
+      },
+      "CreateEvidenceLinkDto": {
+        "type": "object",
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "mandatory": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": ["evidence_id", "entity_type", "entity_id", "role"]
+      },
+      "CustodyEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "system_name": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "evidence_id", "event_type", "created_at"]
+      },
+      "CreateCustodyEventDto": {
+        "type": "object",
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "system_name": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["evidence_id", "event_type"]
+      },
+      "ProbativePackage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "generated_by_user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "package_uri": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "entity_type",
+          "entity_id",
+          "generated_by_user_ref",
+          "manifest_hash",
+          "package_uri",
+          "purpose",
+          "created_at"
+        ]
+      },
+      "CreateProbativePackageDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "generated_by_user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "package_uri": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 80
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "entity_type",
+          "entity_id",
+          "generated_by_user_ref",
+          "manifest_hash",
+          "package_uri",
+          "purpose"
+        ]
+      },
+      "ProbativePackageItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "item_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "entity_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "item_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "sequence": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "package_id",
+          "item_type",
+          "item_hash",
+          "sequence",
+          "created_at"
+        ]
+      },
+      "CreateProbativePackageItemDto": {
+        "type": "object",
+        "properties": {
+          "package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "item_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "entity_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "item_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "sequence": {
+            "type": "integer"
+          }
+        },
+        "required": ["package_id", "item_type", "item_hash", "sequence"]
+      },
+      "EvidenceAccessRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requester_name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "requester_role": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "magistrado",
+              "ministerio-publico",
+              "defensoria-publica",
+              "autoridade-policial",
+              "autoridade-administrativa"
+            ]
+          },
+          "investigation_ref": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "legal_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requested", "approved", "denied", "delivered"],
+            "default": "'requested'"
+          },
+          "delivery_media_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "decided_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "delivered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "evidence_id",
+          "requester_name",
+          "requester_role",
+          "investigation_ref",
+          "purpose",
+          "created_at"
+        ]
+      },
+      "CreateEvidenceAccessRequestDto": {
+        "type": "object",
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requester_name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "requester_role": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "magistrado",
+              "ministerio-publico",
+              "defensoria-publica",
+              "autoridade-policial",
+              "autoridade-administrativa"
+            ]
+          },
+          "investigation_ref": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "legal_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["requested", "approved", "denied", "delivered"],
+            "default": "'requested'"
+          },
+          "delivery_media_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "decided_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "delivered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "evidence_id",
+          "requester_name",
+          "requester_role",
+          "investigation_ref",
+          "purpose"
+        ]
+      },
+      "StorageIntent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "local_evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "object_key": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accepted_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "evidence_id",
+          "idempotency_key",
+          "local_evidence_id",
+          "object_key",
+          "expires_at",
+          "status",
+          "created_at"
+        ]
+      },
+      "CreateStorageIntentDto": {
+        "type": "object",
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "local_evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "object_key": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accepted_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          }
+        },
+        "required": [
+          "evidence_id",
+          "idempotency_key",
+          "local_evidence_id",
+          "object_key",
+          "expires_at",
+          "status"
+        ]
+      }
+    }
+  }
+}

@@ -1,20 +1,30 @@
-import { OpsTenantRepository } from '@detran/ops-core';
-
-export class FrozenSnapshotService {
-  constructor(
-    private readonly repositories: Record<string, OpsTenantRepository>,
-  ) {}
-  list(surface: string) {
-    return (
-      this.repositories[surface]?.list() ??
-      Promise.reject(new Error(`Unbound snapshot surface: ${surface}`))
-    );
-  }
-  create(surface: string, dto: Record<string, unknown>) {
-    const repository = this.repositories[surface];
-    if (!repository) throw new Error(`Unbound snapshot surface: ${surface}`);
-    return repository.create(dto);
-  }
-}
-
-export * from './frozen-snapshot.controller.js';
+// Generated from BP-OPS-SNAPSHOTS-001 v1.0.0 sha256:bebc10f45ae4f8887acc821ee7211894780dd9bd4b5a67d1edfbd371f54a21c4
+export * from './controllers/person.controller.js';
+export * from './dto/create-person.dto.js';
+export * from './entities/person.entity.js';
+export * from './repositories/person.repository.js';
+export * from './services/person.service.js';
+export * from './controllers/person-document.controller.js';
+export * from './dto/create-person-document.dto.js';
+export * from './entities/person-document.entity.js';
+export * from './repositories/person-document.repository.js';
+export * from './services/person-document.service.js';
+export * from './controllers/vehicle.controller.js';
+export * from './dto/create-vehicle.dto.js';
+export * from './entities/vehicle.entity.js';
+export * from './repositories/vehicle.repository.js';
+export * from './services/vehicle.service.js';
+export * from './controllers/external-query.controller.js';
+export * from './dto/create-external-query.dto.js';
+export * from './entities/external-query.entity.js';
+export * from './repositories/external-query.repository.js';
+export * from './services/external-query.service.js';
+export * from './controllers/vehicle-snapshot.controller.js';
+export * from './dto/create-vehicle-snapshot.dto.js';
+export * from './entities/vehicle-snapshot.entity.js';
+export * from './repositories/vehicle-snapshot.repository.js';
+export * from './services/vehicle-snapshot.service.js';
+export * from './snapshots.module.js';
+export * from './handwritten/frozen-snapshot.controller.js';
+export * from './handwritten/frozen-snapshot.provider.js';
+export * from './handwritten/frozen-snapshot.service.js';

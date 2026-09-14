@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0005",
+  "round_id": "R-0005",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Define TEAT inf model deltas and lifecycle vocabulary",
+  "description": "Version the four inf blueprints and canonical AIT state and timer data from the approved workflows.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-bp-inf-ait",
+    "MOD-bp-inf-normative",
+    "MOD-bp-inf-measures",
+    "MOD-bp-inf-alcohol",
+    "MOD-ddl-14",
+    "MOD-seed-timers"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": ["WF-TEAT-001", "WF-TEAT-004", "WF-TEAT-005"],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-t1", "inf-model"],
+  "branch": "orchestra/ops-agency",
+  "worktree_id": "WT-ops-agency",
+  "prompt_composition_id": "PC-9da7ddfeadf987ff",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:lifecycle-vocabulary"]
+  ],
+  "created_at": "2026-09-14T05:15:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-9da7ddfeadf987ff",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

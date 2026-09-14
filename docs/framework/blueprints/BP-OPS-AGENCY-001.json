@@ -1,0 +1,203 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-OPS-AGENCY-001",
+  "module": {
+    "name": "Agency",
+    "namespace": "ops",
+    "version": "1.0.0",
+    "ddlFile": "13-ops-agency.sql",
+    "owners": ["detran-ops"],
+    "description": "Minimum institutional context for TEAT mobile bootstrap and jurisdiction routing (teat-route-contract.md §4.1; steering H.40; OD-T02/OD-013)."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "AgencyUnit",
+        "table": "agency_unit",
+        "primaryKey": ["id"],
+        "description": "Unidade institucional mínima do órgão de trânsito. O identificador externo é opcional até a fonte institucional ser recebida (OD-013).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(255)"
+          },
+          {
+            "name": "external_code",
+            "type": "varchar(80)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ops_agency_unit_scope_id",
+            "columns": ["tenant_id", "traffic_agency_id", "id"],
+            "unique": true
+          },
+          {
+            "name": "ux_ops_agency_unit_name",
+            "columns": ["tenant_id", "traffic_agency_id", "name"],
+            "unique": true
+          },
+          {
+            "name": "ux_ops_agency_unit_external_code",
+            "columns": ["tenant_id", "traffic_agency_id", "external_code"],
+            "unique": true,
+            "where": "external_code is not null"
+          }
+        ]
+      },
+      {
+        "name": "AgencyJurisdiction",
+        "table": "agency_jurisdiction",
+        "primaryKey": ["id"],
+        "description": "Circunscrição institucional mínima para roteamento. O identificador externo é opcional até a fonte institucional ser recebida (OD-013).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(255)"
+          },
+          {
+            "name": "external_code",
+            "type": "varchar(80)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ops_agency_jurisdiction_scope_id",
+            "columns": ["tenant_id", "traffic_agency_id", "id"],
+            "unique": true
+          },
+          {
+            "name": "ux_ops_agency_jurisdiction_name",
+            "columns": ["tenant_id", "traffic_agency_id", "name"],
+            "unique": true
+          },
+          {
+            "name": "ux_ops_agency_jurisdiction_external_code",
+            "columns": ["tenant_id", "traffic_agency_id", "external_code"],
+            "unique": true,
+            "where": "external_code is not null"
+          }
+        ]
+      },
+      {
+        "name": "AgencyCompetence",
+        "table": "agency_competence",
+        "primaryKey": ["id"],
+        "description": "Vínculo mínimo de competência entre unidade e circunscrição para roteamento; não representa convênio, delegação, autoridade ou escala (H.40; OD-T02/OD-013).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "agency_unit_id",
+            "type": "uuid"
+          },
+          {
+            "name": "agency_jurisdiction_id",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_ops_agency_competence_scope",
+            "columns": [
+              "tenant_id",
+              "traffic_agency_id",
+              "agency_unit_id",
+              "agency_jurisdiction_id"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ix_ops_agency_competence_jurisdiction",
+            "columns": [
+              "tenant_id",
+              "traffic_agency_id",
+              "agency_jurisdiction_id"
+            ]
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_agency_competence_unit_scope",
+            "columns": ["tenant_id", "traffic_agency_id", "agency_unit_id"],
+            "references": {
+              "table": "ops.agency_unit",
+              "columns": ["tenant_id", "traffic_agency_id", "id"]
+            }
+          },
+          {
+            "name": "fk_ops_agency_competence_jurisdiction_scope",
+            "columns": [
+              "tenant_id",
+              "traffic_agency_id",
+              "agency_jurisdiction_id"
+            ],
+            "references": {
+              "table": "ops.agency_jurisdiction",
+              "columns": ["tenant_id", "traffic_agency_id", "id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ops/agency/",
+    "resources": [
+      {
+        "entity": "AgencyUnit",
+        "path": "units",
+        "resource": "agency-unit"
+      },
+      {
+        "entity": "AgencyJurisdiction",
+        "path": "jurisdictions",
+        "resource": "agency-jurisdiction"
+      },
+      {
+        "entity": "AgencyCompetence",
+        "path": "competences",
+        "resource": "agency-competence"
+      }
+    ]
+  }
+}

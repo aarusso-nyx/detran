@@ -1,0 +1,1886 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OfflineSync — BP-OPS-OFFLINE-SYNC-001",
+    "version": "1.0.0",
+    "description": "Offline numbering and durable synchronization from WF-TEAT-002 and INV-OFFLINE-001; no WP-T2 controller is mounted in this round.",
+    "x-blueprint": "BP-OPS-OFFLINE-SYNC-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ops/offline-sync/numbering-ranges": {
+      "get": {
+        "tags": ["numbering-range"],
+        "operationId": "listAitNumberingRange",
+        "summary": "List AitNumberingRange (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitNumberingRange"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["numbering-range"],
+        "operationId": "createAitNumberingRange",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitNumberingRangeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitNumberingRange"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/numbering-ranges/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["numbering-range"],
+        "operationId": "getAitNumberingRange",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitNumberingRange"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["numbering-range"],
+        "operationId": "updateAitNumberingRange",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitNumberingRangeDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitNumberingRange"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["numbering-range"],
+        "operationId": "removeAitNumberingRange",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/numbering-reservations": {
+      "get": {
+        "tags": ["numbering-reservation"],
+        "operationId": "listNumberingReservation",
+        "summary": "List NumberingReservation (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NumberingReservation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["numbering-reservation"],
+        "operationId": "createNumberingReservation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNumberingReservationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumberingReservation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/numbering-reservations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["numbering-reservation"],
+        "operationId": "getNumberingReservation",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumberingReservation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["numbering-reservation"],
+        "operationId": "updateNumberingReservation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNumberingReservationDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumberingReservation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["numbering-reservation"],
+        "operationId": "removeNumberingReservation",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/numbering-consumptions": {
+      "get": {
+        "tags": ["numbering-consumption"],
+        "operationId": "listNumberingConsumption",
+        "summary": "List NumberingConsumption (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NumberingConsumption"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["numbering-consumption"],
+        "operationId": "createNumberingConsumption",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNumberingConsumptionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumberingConsumption"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/numbering-consumptions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["numbering-consumption"],
+        "operationId": "getNumberingConsumption",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumberingConsumption"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["numbering-consumption"],
+        "operationId": "updateNumberingConsumption",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNumberingConsumptionDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NumberingConsumption"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["numbering-consumption"],
+        "operationId": "removeNumberingConsumption",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/sync-batches": {
+      "get": {
+        "tags": ["sync-batch"],
+        "operationId": "listSyncBatch",
+        "summary": "List SyncBatch (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncBatch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["sync-batch"],
+        "operationId": "createSyncBatch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSyncBatchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncBatch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/sync-batches/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["sync-batch"],
+        "operationId": "getSyncBatch",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["sync-batch"],
+        "operationId": "updateSyncBatch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSyncBatchDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncBatch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["sync-batch"],
+        "operationId": "removeSyncBatch",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/sync-queue-items": {
+      "get": {
+        "tags": ["sync-queue-item"],
+        "operationId": "listSyncQueueItem",
+        "summary": "List SyncQueueItem (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncQueueItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["sync-queue-item"],
+        "operationId": "createSyncQueueItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSyncQueueItemDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncQueueItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/sync-queue-items/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["sync-queue-item"],
+        "operationId": "getSyncQueueItem",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncQueueItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["sync-queue-item"],
+        "operationId": "updateSyncQueueItem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSyncQueueItemDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncQueueItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["sync-queue-item"],
+        "operationId": "removeSyncQueueItem",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/receipts": {
+      "get": {
+        "tags": ["sync-receipt"],
+        "operationId": "listSyncReceipt",
+        "summary": "List SyncReceipt (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncReceipt"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["sync-receipt"],
+        "operationId": "createSyncReceipt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSyncReceiptDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReceipt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/receipts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["sync-receipt"],
+        "operationId": "getSyncReceipt",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReceipt"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["sync-receipt"],
+        "operationId": "updateSyncReceipt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSyncReceiptDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncReceipt"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["sync-receipt"],
+        "operationId": "removeSyncReceipt",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/sync-conflicts": {
+      "get": {
+        "tags": ["sync-conflict"],
+        "operationId": "listSyncConflict",
+        "summary": "List SyncConflict (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SyncConflict"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["sync-conflict"],
+        "operationId": "createSyncConflict",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSyncConflictDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncConflict"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/offline-sync/sync-conflicts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["sync-conflict"],
+        "operationId": "getSyncConflict",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncConflict"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["sync-conflict"],
+        "operationId": "updateSyncConflict",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSyncConflictDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncConflict"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["sync-conflict"],
+        "operationId": "removeSyncConflict",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AitNumberingRange": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "series": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "start_number": {
+            "type": "integer"
+          },
+          "end_number": {
+            "type": "integer"
+          },
+          "next_number": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "usage_mode": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "series",
+          "start_number",
+          "end_number",
+          "next_number",
+          "usage_mode",
+          "created_at"
+        ]
+      },
+      "CreateAitNumberingRangeDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "series": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "start_number": {
+            "type": "integer"
+          },
+          "end_number": {
+            "type": "integer"
+          },
+          "next_number": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "usage_mode": {
+            "type": "string",
+            "maxLength": 40
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "series",
+          "start_number",
+          "end_number",
+          "next_number",
+          "usage_mode"
+        ]
+      },
+      "NumberingReservation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "range_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "start_number": {
+            "type": "integer"
+          },
+          "end_number": {
+            "type": "integer"
+          },
+          "reserved_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'reserved'"
+          },
+          "reconciliation_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "range_id",
+          "traffic_agency_id",
+          "agent_id",
+          "device_id",
+          "start_number",
+          "end_number",
+          "valid_until",
+          "created_at"
+        ]
+      },
+      "CreateNumberingReservationDto": {
+        "type": "object",
+        "properties": {
+          "range_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "start_number": {
+            "type": "integer"
+          },
+          "end_number": {
+            "type": "integer"
+          },
+          "reserved_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'reserved'"
+          },
+          "reconciliation_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "range_id",
+          "traffic_agency_id",
+          "agent_id",
+          "device_id",
+          "start_number",
+          "end_number",
+          "valid_until"
+        ]
+      },
+      "NumberingConsumption": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "range_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "integer"
+          },
+          "local_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "server_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "finalized_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reconciled_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'applied'"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "reservation_id",
+          "range_id",
+          "number",
+          "local_entity_id",
+          "idempotency_key",
+          "server_entity_id",
+          "finalized_at",
+          "created_at"
+        ]
+      },
+      "CreateNumberingConsumptionDto": {
+        "type": "object",
+        "properties": {
+          "reservation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "range_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "integer"
+          },
+          "local_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "server_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "finalized_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reconciled_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'applied'"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "reservation_id",
+          "range_id",
+          "number",
+          "local_entity_id",
+          "idempotency_key",
+          "server_entity_id",
+          "finalized_at"
+        ]
+      },
+      "SyncBatch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_batch_id": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "batch_sequence": {
+            "type": "integer",
+            "nullable": true
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "accepted_items": {
+            "type": "integer",
+            "default": "0"
+          },
+          "receipts_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "agent_id",
+          "device_id",
+          "device_batch_id",
+          "created_at"
+        ]
+      },
+      "CreateSyncBatchDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_batch_id": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "batch_sequence": {
+            "type": "integer",
+            "nullable": true
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "accepted_items": {
+            "type": "integer",
+            "default": "0"
+          },
+          "receipts_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "agent_id",
+          "device_id",
+          "device_batch_id"
+        ]
+      },
+      "SyncQueueItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "local_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "server_entity_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'pending'"
+          },
+          "attempts": {
+            "type": "integer",
+            "default": "0"
+          },
+          "created_locally_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "payload_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "payload_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "error_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "device_id",
+          "agent_id",
+          "entity_type",
+          "local_entity_id",
+          "created_locally_at",
+          "idempotency_key",
+          "payload_hash",
+          "payload_json",
+          "created_at"
+        ]
+      },
+      "CreateSyncQueueItemDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "local_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "server_entity_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'pending'"
+          },
+          "attempts": {
+            "type": "integer",
+            "default": "0"
+          },
+          "created_locally_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "payload_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "payload_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "error_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "device_id",
+          "agent_id",
+          "entity_type",
+          "local_entity_id",
+          "created_locally_at",
+          "idempotency_key",
+          "payload_hash",
+          "payload_json"
+        ]
+      },
+      "SyncReceipt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sync_queue_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "local_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "server_entity_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "accepted_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "sync_queue_item_id",
+          "idempotency_key",
+          "entity_type",
+          "local_entity_id",
+          "accepted_hash",
+          "status",
+          "created_at"
+        ]
+      },
+      "CreateSyncReceiptDto": {
+        "type": "object",
+        "properties": {
+          "sync_queue_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "entity_type": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "local_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "server_entity_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "accepted_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "sync_queue_item_id",
+          "idempotency_key",
+          "entity_type",
+          "local_entity_id",
+          "accepted_hash",
+          "status"
+        ]
+      },
+      "SyncConflict": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sync_queue_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "conflict_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'SYNC_CONFLICT'"
+          },
+          "safe_message": {
+            "type": "string",
+            "maxLength": 240,
+            "default": "'Divergência de negócio requer análise.'"
+          },
+          "correlation_id": {
+            "type": "string",
+            "maxLength": 120,
+            "default": "gen_random_uuid()::text"
+          },
+          "local_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "server_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "retryable": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "allowed_resolution_actions": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'open'"
+          },
+          "resolved_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resolution_action": {
+            "type": "string",
+            "nullable": true
+          },
+          "resolution_details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "sync_queue_item_id",
+          "conflict_type",
+          "description",
+          "created_at"
+        ]
+      },
+      "CreateSyncConflictDto": {
+        "type": "object",
+        "properties": {
+          "sync_queue_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "conflict_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'SYNC_CONFLICT'"
+          },
+          "safe_message": {
+            "type": "string",
+            "maxLength": 240,
+            "default": "'Divergência de negócio requer análise.'"
+          },
+          "correlation_id": {
+            "type": "string",
+            "maxLength": 120,
+            "default": "gen_random_uuid()::text"
+          },
+          "local_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "server_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "retryable": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "allowed_resolution_actions": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'open'"
+          },
+          "resolved_by_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "resolved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "resolution_action": {
+            "type": "string",
+            "nullable": true
+          },
+          "resolution_details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["sync_queue_item_id", "conflict_type", "description"]
+      }
+    }
+  }
+}

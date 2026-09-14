@@ -1,0 +1,85 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "docs/framework/blueprints/BP-OPS-EVIDENCE-001.json",
+      "line": 51,
+      "claim": "Evidence lost location_geom geometry(Point,4674) and its GiST index from the replaced manual DDL; backend:rls-smoke fails with SQLSTATE 42703.",
+      "fix": "Restore the nullable geometry field and GiST index in the blueprint, regenerate, and run backend:rls-smoke."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "docs/framework/blueprints/BP-OPS-FIELD-001.json",
+      "line": 92,
+      "claim": "The FIELD blueprint lost five nullable geometry(Point,4674) columns and the operational-device GiST index from the replaced manual DDL.",
+      "fix": "Restore the five geometry fields and GiST index in the blueprint and regenerate."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0005/plan.md",
+      "line": 76,
+      "claim": "The post-generation backend:rls-smoke acceptance command was not executed and the runnable sensor is red.",
+      "fix": "Run backend:rls-smoke against detran_r5 after reset and triage any failure."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "docs/framework/blueprints/BP-OPS-EVIDENCE-001.json",
+      "line": 60,
+      "claim": "The Evidence tenant_id/hash_value index is no longer unique, losing the prior same-tenant content-hash identity guarantee.",
+      "fix": "Restore unique=true and cover duplicate rejection with SQLSTATE 23505 in integration tests."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "backend/domains/ops/field/src/controllers/agent-profile.controller.ts",
+      "line": 15,
+      "claim": "All five OPS blueprints omit api metadata, so generated controllers are mounted at unversioned root paths and no OpenAPI is emitted, contrary to the canonical /v1/ops paths.",
+      "fix": "Declare canonical api.basePath and resources in all five blueprints, regenerate modules and OpenAPI, and update e2e paths."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "docs/meta/adr/ADR-0006-ops-field-operations-port.md",
+      "line": 27,
+      "claim": "Accepted ADR-0006 is contradicted by package renames, the WP-T1 offline-sync model, and lost spatial coverage, without an amendment or superseding ADR.",
+      "fix": "Amend or supersede ADR-0006 and update the ADR index if needed."
+    },
+    {
+      "severity": "low",
+      "item": 13,
+      "file": "backend/app/tests/e2e/ops-modules.e2e.spec.ts",
+      "line": 47,
+      "claim": "The cross-tenant e2e conditionally checks an optional 200 response and otherwise passes on non-404, so it does not prove a positive grant.",
+      "fix": "Assert the expected 200 and empty body without a conditional; defer the complete role matrix explicitly to WP-T2 if outside scope."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "backend/domains/ops/README.md",
+      "line": 8,
+      "claim": "The domain README still describes the old packages and says offline sync is deferred.",
+      "fix": "Update the README or explicitly assign it to TASK-0009 and record it as out of scope for CTG-0001."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "package.json",
+      "line": 32,
+      "claim": "The new OPS package test scripts are not included in backend:test:unit; current coverage is entirely through the app suites.",
+      "fix": "Add package filters when WP-T2 adds package-local tests or explicitly document app-level coverage."
+    }
+  ],
+  "notes": [
+    "Recovered mechanically from the complete second bridge stderr payload after the bridge rejected surrounding markdown fences; no semantic finding was added or removed.",
+    "RLS remains fail-closed and generated artifacts match their blueprints.",
+    "The Architect-Inspector-Engineer order was preserved and the TASK-0003 fixture correction did not weaken uniqueness coverage.",
+    "No SENATRAN boundary violation was found."
+  ]
+}

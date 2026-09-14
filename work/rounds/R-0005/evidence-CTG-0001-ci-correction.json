@@ -1,0 +1,53 @@
+{
+  "action": "Correct the PR #40 backend-kernel sensor so request-path pools exercise RLS as role_app_backend",
+  "round": "R-0005",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "candidate": {
+    "base": "34062b552a205b31b095a2594b7815959efc24ef",
+    "head_before_correction": "35034fa1bb0b8748caf6c2a141956751480fd6a7"
+  },
+  "normative_links": {
+    "decisions": ["OD-T02", "OD-013"],
+    "requirements": ["RN-TEAT-003", "RN-TEAT-142"],
+    "invariants": ["INV-EVIDENCE-001", "INV-OFFLINE-001"]
+  },
+  "ci_observation": {
+    "pull_request": 40,
+    "run_id": 34900620022,
+    "job_id": 104165432437,
+    "result": "FAIL",
+    "failing_test": "backend/app/tests/e2e/ops-modules.e2e.spec.ts cross-tenant read",
+    "observed": "The app pool inherited the postgres superuser DATABASE_URL and returned the other tenant row because the superuser bypasses RLS",
+    "classification": "sensor-error"
+  },
+  "correction": {
+    "path": ".github/workflows/ci.yml",
+    "sha256": "6305822f42fa45c75ba0ea44244c7ca3284bc8558aa1b4e7728fbb28e0b8e0a8",
+    "owner": "postgres connection",
+    "app_and_reader": "postgres session connections with options=-c role=role_app_backend",
+    "tests_or_rls_weakened": false
+  },
+  "gates": [
+    {
+      "command": "pnpm --filter @detran/app test:e2e with separated owner/app/reader URLs",
+      "result": "PASS; app e2e 12/12 including unconditional cross-tenant isolation"
+    },
+    {
+      "command": "pnpm backend:test:ci with separated owner/app/reader URLs",
+      "result": "PASS; all unit, integration, and e2e tiers green, including app e2e 12/12"
+    },
+    {
+      "command": "pnpm exec prettier --write .github/workflows/ci.yml",
+      "result": "PASS; unchanged after formatting"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "notes": [
+    "The first CI failure is preserved as a failed sensor configuration, not reclassified as a passing test.",
+    "The correction makes CI reproduce the already documented and locally passing RLS gate topology."
+  ]
+}

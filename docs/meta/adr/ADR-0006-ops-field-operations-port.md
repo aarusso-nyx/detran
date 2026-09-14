@@ -4,6 +4,14 @@
 
 Accepted for Phase 2 W2.3 implementation (2026-08-24).
 
+**Amended 2026-09-14 (R-0005/WP-T1).** The regenerable package boundaries are
+`@detran/ops-field`, `@detran/ops-snapshots` and `@detran/ops-evidence`; the
+old `ops-operations` and `ops-evidence-custody` names are superseded. WP-T1 now
+introduces `@detran/ops-offline-sync` as the generated persistence and CRUD
+boundary, while its handwritten WP-T2 protocol/command controllers remain
+deferred. The field/device and evidence SRID-4674 geometry columns and GiST
+coverage remain mandatory.
+
 ## Context
 
 TEAT owns field-agent profiles, operational devices, teams, shifts, approaches,
@@ -15,8 +23,8 @@ offline-sync server is being promoted separately into STYNX.
 ## Decision
 
 Port the field-operation, snapshot and evidence-custody surfaces as the explicit
-workspace packages `@detran/ops-operations`, `@detran/ops-snapshots` and
-`@detran/ops-evidence-custody`, sharing only `@detran/ops-core`. All their DDL
+workspace packages `@detran/ops-field`, `@detran/ops-snapshots` and
+`@detran/ops-evidence`, sharing only `@detran/ops-core`. All their DDL
 lives in `ops.*`; external references remain UUIDs until their owning domains
 are ported. Evidence links retain the `entity_type`/`entity_id` polymorphism.
 
@@ -24,8 +32,10 @@ All SQL enters through `withTenantContext` and the app connection. The kernel
 installs forced RLS and `enforce_tenant_id` triggers for every new tenant table.
 Point locations use the kernel SRID-4674 JSON/GeoJSON helper path.
 
-Do not port offline-sync controllers or tables in this phase. Leave only an
-explicit Phase 5 seam which consumes `@stynx-nyx/offline-sync` once the parallel
+WP-T1 ports the generated offline numbering and durable sync tables and CRUD
+controllers as `@detran/ops-offline-sync`; do not port its handwritten protocol
+and command controllers in this phase. Those commands remain an explicit Phase
+5 seam consuming `@stynx-nyx/offline-sync` once the parallel
 `feat/p1-mobile-runtime` extraction is published.
 
 ## Consequences

@@ -1,0 +1,353 @@
+{
+  "round": "R-0005",
+  "front": "ops-agency",
+  "current_window": 8,
+  "window_input_budget": 800000,
+  "checkpoint_at_input": 640000,
+  "token_budget_exception": {
+    "authorized_at": "2026-09-14T16:44:46.000Z",
+    "scope": "prompt-review-4 only",
+    "instruction": "Ignore token budget for this exceptional Opus 5 review"
+  },
+  "windows": [
+    {
+      "id": 1,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T05:08:00.000Z",
+      "reason": "Planning and prompt-review-1"
+    },
+    {
+      "id": 2,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T05:34:00.000Z",
+      "reason": "User requested resume; prompt-review-2 then CTG-0001 after PASS"
+    },
+    {
+      "id": 3,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T11:48:00.000Z",
+      "reason": "Human explicitly authorized exceptional prompt-review-3"
+    },
+    {
+      "id": 4,
+      "status": "checkpointed",
+      "authorized_at": "2026-09-14T16:32:35.000Z",
+      "reason": "Human authorized blocker correction and required stop before any further review"
+    },
+    {
+      "id": 5,
+      "status": "completed",
+      "authorized_at": "2026-09-14T16:44:46.000Z",
+      "reason": "Human explicitly authorized exceptional prompt-review-4 with token budget ignored for this call"
+    },
+    {
+      "id": 6,
+      "status": "checkpointed",
+      "authorized_at": "2026-09-14T17:06:52.000Z",
+      "reason": "Human instructed incorporation of reviewer lows and worker dispatch; checkpointed after CTG-0001 remediation exceeded the estimated input threshold and before any third delivery review"
+    },
+    {
+      "id": 7,
+      "status": "completed",
+      "authorized_at": "2026-09-14T20:51:56.000Z",
+      "reason": "Owner explicitly authorized the exceptional third CTG-0001 delivery review"
+    },
+    {
+      "id": 8,
+      "status": "active",
+      "authorized_at": "2026-09-14T21:10:00.000Z",
+      "reason": "Owner authorized the recommended CTG-0001 commit, rebase, revalidation, PR, merge, and readiness sequence before CTG-0002"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-1",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 220000,
+      "estimated_output_tokens": 45000,
+      "status": "completed"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-1",
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_input_tokens": 1910865,
+      "actual_output_tokens": 28652,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "bridge_record": "work/rounds/R-0005/reviews/prompt-review-1.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-2",
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_input_tokens": 1656926,
+      "actual_output_tokens": 20961,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "bridge_record": "work/rounds/R-0005/reviews/prompt-review-2.bridge.json",
+      "window": 2
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-3",
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_input_tokens": 2266746,
+      "actual_output_tokens": 35141,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "bridge_record": "work/rounds/R-0005/reviews/prompt-review-3.bridge.json",
+      "window": 3
+    },
+    {
+      "kind": "maestro-correction",
+      "id": "CORRECTION-SNAPSHOTS-1",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "window": 4
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-4",
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_usage_available": false,
+      "usage_note": "The hardened bridge normalizes the reviewer payload and does not expose token usage",
+      "status": "completed",
+      "verdict": "PASS",
+      "bridge_record": "work/rounds/R-0005/reviews/prompt-review-4.bridge.json",
+      "window": 5,
+      "budget_exception": true,
+      "attempts": 2,
+      "sensor_failures": 1
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0001",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 90000,
+      "estimated_output_tokens": 18000,
+      "status": "completed",
+      "window": 6,
+      "started_at": "2026-09-14T17:06:52.000Z",
+      "result": "PASS"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0002",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 150000,
+      "estimated_output_tokens": 30000,
+      "status": "completed",
+      "window": 6,
+      "started_at": "2026-09-14T17:24:00.000Z",
+      "result": "PASS after iteration 1 forward-FK ordering fix"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0003",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "window": 6,
+      "started_at": "2026-09-14T17:54:24.000Z",
+      "result": "PASS after iteration 1 fixture correction; integration 10/10"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0004",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 80000,
+      "estimated_output_tokens": 16000,
+      "status": "completed",
+      "window": 6,
+      "started_at": "2026-09-14T18:00:00.000Z",
+      "result": "PASS after iteration 2; full backend:test:ci and pnpm check green"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0001",
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "status": "completed",
+      "window": 6,
+      "verdict": "REVIEW",
+      "attempts": 2,
+      "sensor_failures": 2,
+      "actual_usage_available": false,
+      "usage_note": "Both Opus bridge responses were semantically complete but rejected by JSON normalization; the second payload was recovered mechanically from stderr"
+    },
+    {
+      "kind": "worker-task-remediation",
+      "id": "TASK-0001-delivery-1",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 6000,
+      "status": "completed",
+      "window": 6,
+      "result": "PASS; Agency API metadata and OpenAPI generated"
+    },
+    {
+      "kind": "worker-task-remediation",
+      "id": "TASK-0002-delivery-2",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "window": 6,
+      "result": "PASS; routes, spatial parity, Evidence uniqueness, and ADR-0006 amendment"
+    },
+    {
+      "kind": "worker-task-remediation",
+      "id": "TASK-0003-delivery-2",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 40000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "window": 6,
+      "result": "PASS; RLS smoke, Evidence uniqueness test, canonical e2e routes and cross-tenant isolation"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0001-2",
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "status": "completed",
+      "window": 6,
+      "verdict": "REVIEW",
+      "attempts": 1,
+      "actual_usage_available": false,
+      "usage_note": "The bridge does not expose token usage",
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-2.bridge.json"
+    },
+    {
+      "kind": "worker-task-escalation",
+      "id": "CTG-0001-contract-escalation",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "window": 6,
+      "result": "PASS; corrected four OpenAPI route joins and resource identities, aligned canonical route names, expanded TASK-0001/TASK-0002 generated-output locks, and regenerated artifacts"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0001-3",
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "status": "completed",
+      "window": 7,
+      "exception": "Owner-authorized third delivery-review cycle",
+      "verdict": "PASS",
+      "attempts": 1,
+      "actual_usage_available": false,
+      "usage_note": "The bridge does not expose token usage",
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-3.bridge.json"
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "CTG-0001-integration",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 120000,
+      "estimated_output_tokens": 24000,
+      "status": "in_progress",
+      "window": 8
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0001-post-rebase",
+      "model": "claude-opus",
+      "estimated_input_tokens": 40000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "window": 8,
+      "scope": "Focused review of semantic conflict resolution and regenerated candidate after rebase",
+      "verdict": "REVIEW",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-post-rebase.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0001-post-rebase-2",
+      "model": "claude-opus",
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 6000,
+      "status": "completed",
+      "window": 8,
+      "scope": "Confirm append-only evidence correction and absence of remaining post-rebase highs",
+      "verdict": "PASS",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-post-rebase-2.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0001-ci-correction",
+      "model": "claude-opus",
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 6000,
+      "status": "completed",
+      "window": 8,
+      "scope": "Focused review of PR #40 backend-kernel RLS pool correction and append-only evidence",
+      "exception": "Owner authorized Opus 5 review without token-budget enforcement",
+      "verdict": "PASS",
+      "attempts": 2,
+      "actual_usage_available": false,
+      "usage_note": "The bridge does not expose token usage",
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-ci-correction.bridge.json"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0005",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 150000,
+      "estimated_output_tokens": 30000,
+      "status": "window-2"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0006",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 12000,
+      "status": "window-2"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0007",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 80000,
+      "estimated_output_tokens": 16000,
+      "status": "window-2"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0008",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 50000,
+      "estimated_output_tokens": 10000,
+      "status": "window-2"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0009",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 40000,
+      "estimated_output_tokens": 8000,
+      "status": "window-2"
+    }
+  ]
+}

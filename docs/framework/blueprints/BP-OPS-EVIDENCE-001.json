@@ -1,0 +1,301 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-OPS-EVIDENCE-001",
+  "module": {
+    "name": "Evidence",
+    "namespace": "ops",
+    "version": "1.0.0",
+    "ddlFile": "17-ops-evidence.sql",
+    "dependencies": { "@detran/ops-core": "workspace:*" },
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/evidence-custody.controller",
+        "symbol": "EvidenceCustodyController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/evidence-custody.provider",
+        "symbol": "EVIDENCE_CUSTODY_PROVIDER"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/evidence-custody.controller",
+      "handwritten/evidence-custody.provider",
+      "handwritten/evidence-custody.service"
+    ],
+    "owners": ["detran-ops"],
+    "description": "Evidence metadata, custody and formal access from TEAT evidence workflow and INV-EVIDENCE-001; binary storage remains a STYNX seam."
+  },
+  "api": {
+    "basePath": "/v1/ops/evidence/",
+    "resources": [
+      { "entity": "Evidence", "path": "evidence", "resource": "evidence" },
+      {
+        "entity": "EvidenceLink",
+        "path": "links",
+        "resource": "evidence-link"
+      },
+      {
+        "entity": "CustodyEvent",
+        "path": "custody-events",
+        "resource": "custody-event"
+      },
+      {
+        "entity": "ProbativePackage",
+        "path": "probative-packages",
+        "resource": "probative-package"
+      },
+      {
+        "entity": "ProbativePackageItem",
+        "path": "probative-package-items",
+        "resource": "probative-package-item"
+      },
+      {
+        "entity": "EvidenceAccessRequest",
+        "path": "evidence-access-requests",
+        "resource": "evidence-access-request"
+      },
+      {
+        "entity": "StorageIntent",
+        "path": "storage-intents",
+        "resource": "storage-intent"
+      }
+    ]
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Evidence",
+        "table": "evidence_evidence",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "evidence_type", "type": "varchar(60)" },
+          { "name": "origin", "type": "varchar(60)" },
+          { "name": "storage_uri", "type": "text" },
+          { "name": "mime_type", "type": "varchar(120)" },
+          { "name": "size_bytes", "type": "bigint" },
+          { "name": "hash_algorithm", "type": "varchar(40)" },
+          { "name": "hash_value", "type": "varchar(128)" },
+          { "name": "captured_by_user_ref", "type": "uuid", "nullable": true },
+          { "name": "agent_id", "type": "uuid", "nullable": true },
+          { "name": "device_id", "type": "uuid", "nullable": true },
+          { "name": "captured_at", "type": "timestamptz" },
+          { "name": "location_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "status",
+            "type": "varchar(60)",
+            "default": "'pending_upload'"
+          },
+          { "name": "metadata_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "location_geom",
+            "type": "geometry(Point,4674)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "hash_value"], "unique": true },
+          { "columns": ["tenant_id", "captured_at"] },
+          {
+            "name": "gist_ops_evidence_location",
+            "columns": ["location_geom"],
+            "method": "gist"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_ops_evidence_status",
+            "expression": "status in ('pending_upload', 'uploaded', 'validated', 'linked', 'packaged', 'archived', 'rejected', 'quarantined', 'superseded')"
+          }
+        ]
+      },
+      {
+        "name": "EvidenceLink",
+        "table": "evidence_link",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "evidence_id", "type": "uuid" },
+          { "name": "entity_type", "type": "varchar(60)" },
+          { "name": "entity_id", "type": "uuid" },
+          { "name": "role", "type": "varchar(80)" },
+          { "name": "mandatory", "type": "boolean", "default": "false" }
+        ],
+        "indexes": [{ "columns": ["tenant_id", "entity_type", "entity_id"] }],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_evidence_link_evidence",
+            "columns": ["evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "CustodyEvent",
+        "table": "evidence_custody_event",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "evidence_id", "type": "uuid" },
+          { "name": "event_type", "type": "varchar(80)" },
+          { "name": "event_at", "type": "timestamptz", "default": "now()" },
+          { "name": "user_ref", "type": "uuid", "nullable": true },
+          { "name": "system_name", "type": "varchar(80)", "nullable": true },
+          { "name": "details_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [{ "columns": ["tenant_id", "evidence_id", "event_at"] }],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_custody_event_evidence",
+            "columns": ["evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ProbativePackage",
+        "table": "evidence_probative_package",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "entity_type", "type": "varchar(60)" },
+          { "name": "entity_id", "type": "uuid" },
+          { "name": "generated_by_user_ref", "type": "uuid" },
+          { "name": "generated_at", "type": "timestamptz", "default": "now()" },
+          { "name": "manifest_hash", "type": "varchar(128)" },
+          { "name": "package_uri", "type": "text" },
+          { "name": "purpose", "type": "varchar(80)" }
+        ],
+        "indexes": [{ "columns": ["tenant_id", "entity_type", "entity_id"] }]
+      },
+      {
+        "name": "ProbativePackageItem",
+        "table": "evidence_probative_package_item",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "package_id", "type": "uuid" },
+          { "name": "item_type", "type": "varchar(60)" },
+          { "name": "evidence_id", "type": "uuid", "nullable": true },
+          { "name": "entity_type", "type": "varchar(60)", "nullable": true },
+          { "name": "entity_id", "type": "uuid", "nullable": true },
+          { "name": "item_hash", "type": "varchar(128)" },
+          { "name": "sequence", "type": "integer" }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "package_id", "sequence"], "unique": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_package_item_package",
+            "columns": ["package_id"],
+            "references": {
+              "table": "ops.evidence_probative_package",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_ops_package_item_evidence",
+            "columns": ["evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "EvidenceAccessRequest",
+        "table": "evidence_access_request",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "evidence_id", "type": "uuid" },
+          { "name": "requester_name", "type": "varchar(160)" },
+          { "name": "requester_role", "type": "varchar(40)" },
+          { "name": "investigation_ref", "type": "varchar(160)" },
+          { "name": "purpose", "type": "text" },
+          { "name": "legal_basis", "type": "text", "nullable": true },
+          { "name": "status", "type": "varchar(20)", "default": "'requested'" },
+          { "name": "delivery_media_ref", "type": "text", "nullable": true },
+          { "name": "decided_by_user_ref", "type": "uuid", "nullable": true },
+          { "name": "delivered_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "evidence_id"] },
+          { "columns": ["tenant_id", "status"] }
+        ],
+        "checks": [
+          {
+            "name": "ck_ops_evidence_access_requester_role",
+            "expression": "requester_role in ('magistrado', 'ministerio-publico', 'defensoria-publica', 'autoridade-policial', 'autoridade-administrativa')"
+          },
+          {
+            "name": "ck_ops_evidence_access_status",
+            "expression": "status in ('requested', 'approved', 'denied', 'delivered')"
+          },
+          {
+            "name": "ck_ops_evidence_access_delivered_complete",
+            "expression": "status <> 'delivered' or (delivery_media_ref is not null and delivered_at is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_evidence_access_evidence",
+            "columns": ["evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "StorageIntent",
+        "table": "storage_intent",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "evidence_id", "type": "uuid" },
+          { "name": "idempotency_key", "type": "varchar(160)" },
+          { "name": "local_evidence_id", "type": "uuid" },
+          { "name": "object_key", "type": "text" },
+          { "name": "expires_at", "type": "timestamptz" },
+          { "name": "accepted_hash", "type": "varchar(128)", "nullable": true },
+          { "name": "status", "type": "varchar(40)" }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "idempotency_key"], "unique": true },
+          { "columns": ["tenant_id", "local_evidence_id"], "unique": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_storage_intent_evidence",
+            "columns": ["evidence_id"],
+            "references": {
+              "table": "ops.evidence_evidence",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

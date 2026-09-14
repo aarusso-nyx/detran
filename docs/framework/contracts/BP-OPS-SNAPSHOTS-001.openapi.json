@@ -1,0 +1,1273 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Snapshots — BP-OPS-SNAPSHOTS-001",
+    "version": "1.0.0",
+    "description": "Frozen external lookup snapshots preserved for legal acts, migrated from TEAT BP-EXTERNAL-SNAPSHOTS-001.",
+    "x-blueprint": "BP-OPS-SNAPSHOTS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ops/snapshots/people": {
+      "get": {
+        "tags": ["person"],
+        "operationId": "listPerson",
+        "summary": "List Person (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Person"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["person"],
+        "operationId": "createPerson",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePersonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/people/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["person"],
+        "operationId": "getPerson",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["person"],
+        "operationId": "updatePerson",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreatePersonDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Person"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["person"],
+        "operationId": "removePerson",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/person-documents": {
+      "get": {
+        "tags": ["person-document"],
+        "operationId": "listPersonDocument",
+        "summary": "List PersonDocument (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PersonDocument"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["person-document"],
+        "operationId": "createPersonDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePersonDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/person-documents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["person-document"],
+        "operationId": "getPersonDocument",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["person-document"],
+        "operationId": "updatePersonDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreatePersonDocumentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["person-document"],
+        "operationId": "removePersonDocument",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/vehicles": {
+      "get": {
+        "tags": ["vehicle"],
+        "operationId": "listVehicle",
+        "summary": "List Vehicle (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Vehicle"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["vehicle"],
+        "operationId": "createVehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVehicleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/vehicles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["vehicle"],
+        "operationId": "getVehicle",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["vehicle"],
+        "operationId": "updateVehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateVehicleDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Vehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["vehicle"],
+        "operationId": "removeVehicle",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/external-queries": {
+      "get": {
+        "tags": ["external-query"],
+        "operationId": "listExternalQuery",
+        "summary": "List ExternalQuery (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalQuery"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["external-query"],
+        "operationId": "createExternalQuery",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExternalQueryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuery"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/external-queries/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["external-query"],
+        "operationId": "getExternalQuery",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuery"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["external-query"],
+        "operationId": "updateExternalQuery",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateExternalQueryDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalQuery"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["external-query"],
+        "operationId": "removeExternalQuery",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/vehicle-snapshots": {
+      "get": {
+        "tags": ["vehicle-snapshot"],
+        "operationId": "listVehicleSnapshot",
+        "summary": "List VehicleSnapshot (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VehicleSnapshot"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["vehicle-snapshot"],
+        "operationId": "createVehicleSnapshot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateVehicleSnapshotDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleSnapshot"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/snapshots/vehicle-snapshots/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["vehicle-snapshot"],
+        "operationId": "getVehicleSnapshot",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleSnapshot"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["vehicle-snapshot"],
+        "operationId": "updateVehicleSnapshot",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateVehicleSnapshotDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VehicleSnapshot"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["vehicle-snapshot"],
+        "operationId": "removeVehicleSnapshot",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Person": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "cpf": {
+            "type": "string",
+            "maxLength": 11,
+            "nullable": true
+          },
+          "cnpj": {
+            "type": "string",
+            "maxLength": 14,
+            "nullable": true
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "mother_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "person_type", "source", "created_at"]
+      },
+      "CreatePersonDto": {
+        "type": "object",
+        "properties": {
+          "person_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "cpf": {
+            "type": "string",
+            "maxLength": 11,
+            "nullable": true
+          },
+          "cnpj": {
+            "type": "string",
+            "maxLength": 14,
+            "nullable": true
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "mother_name": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 60
+          }
+        },
+        "required": ["person_type", "source"]
+      },
+      "PersonDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "issuing_uf": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "license_category": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "person_id",
+          "document_type",
+          "document_number",
+          "source",
+          "created_at"
+        ]
+      },
+      "CreatePersonDocumentDto": {
+        "type": "object",
+        "properties": {
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "issuing_uf": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "license_category": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 60
+          }
+        },
+        "required": ["person_id", "document_type", "document_number", "source"]
+      },
+      "Vehicle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "plate": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "renavam": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "chassis": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "uf": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "make_model": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "species": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "plate", "source", "created_at"]
+      },
+      "CreateVehicleDto": {
+        "type": "object",
+        "properties": {
+          "plate": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "renavam": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "chassis": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "uf": {
+            "type": "string",
+            "maxLength": 2,
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "make_model": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "species": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 60
+          }
+        },
+        "required": ["plate", "source"]
+      },
+      "ExternalQuery": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "external_system_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "query_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "parameters_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "queried_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "result_summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "result_snapshot_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "user_ref",
+          "external_system_id",
+          "query_type",
+          "parameters_hash",
+          "purpose",
+          "status",
+          "created_at"
+        ]
+      },
+      "CreateExternalQueryDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "external_system_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "query_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "parameters_hash": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "queried_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "result_summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "result_snapshot_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "user_ref",
+          "external_system_id",
+          "query_type",
+          "parameters_hash",
+          "purpose",
+          "status"
+        ]
+      },
+      "VehicleSnapshot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "plate_snapshot": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "renavam_snapshot": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "make_model_snapshot": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "species_snapshot": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "category_snapshot": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "color_snapshot": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "data_source": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "external_query_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "divergence_recorded": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "payload_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "plate_snapshot", "data_source", "created_at"]
+      },
+      "CreateVehicleSnapshotDto": {
+        "type": "object",
+        "properties": {
+          "vehicle_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "plate_snapshot": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "renavam_snapshot": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "make_model_snapshot": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "species_snapshot": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "category_snapshot": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "color_snapshot": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "data_source": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "external_query_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "divergence_recorded": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "payload_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["plate_snapshot", "data_source"]
+      }
+    }
+  }
+}

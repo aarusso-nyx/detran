@@ -28,7 +28,8 @@ binding; supersede only by a new ADR.
 | [ADR-0018](ADR-0018-documents-and-signature-substrate.md)              | Documents rendered and signed by the STYNX substrate, templated by domains           |
 | [ADR-0019](ADR-0019-citizen-identity-and-request-lifecycle.md)         | Portal domain: identity levels, request lifecycle, inbox, ombudsman                  |
 | [ADR-0020](ADR-0020-read-models-and-projections.md)                    | Cross-app reads through owned projections fed by domain events                       |
-| [ADR-0021](ADR-0021-shared-parameter-store.md)                         | One shared, versioned parameter store (`ops.parameter`) for calibrations (Proposed)  |
+| [ADR-0021](ADR-0021-shared-parameter-store.md)                         | One shared, versioned parameter store (`ops.parameter`) for calibrations (Accepted)  |
+| [ADR-0022](ADR-0022-orchestra-execution-model.md)                      | Execution of the implementation backlog by dedicated agent orchestras (Proposed)     |
+| [ADR-0023](ADR-0023-minimum-ops-agency-context.md)                     | Minimum `ops/agency` institutional context (unit, jurisdiction, competence)          |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
-| [ADR-0022](ADR-0022-orchestra-execution-model.md) | Execution of the implementation backlog by dedicated agent orchestras (Proposed) |
