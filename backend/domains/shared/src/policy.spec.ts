@@ -335,6 +335,14 @@ describe('DASHBOARD roles, dashboard:* policy matrix and access layers (WP-D0, C
     'integration-operator',
     'bi-analyst',
   ];
+  // CTG-0001 §7 — these roles receive every key through GLOBAL_ADMIN_ROLES,
+  // even when omitted from an individual static grant list.
+  const GLOBAL_ADMIN_ROLE_GRANTS = [
+    'ADMIN',
+    'GESTOR_DETRAN',
+    'SUPORTE',
+    'technical-admin',
+  ];
   const DASHBOARD_PERMISSION_MATRIX: Record<string, readonly string[]> = {
     'dashboard:alert:read': [
       'dash-operator',
@@ -526,6 +534,23 @@ describe('DASHBOARD roles, dashboard:* policy matrix and access layers (WP-D0, C
             action,
           ),
         ).toBe(true);
+      }
+    }
+  });
+
+  it('denies every dashboard permission to every canonical role omitted from its effective grant (CTG-0001 §7, §8.2)', () => {
+    for (const [key, grantedRoles] of Object.entries(
+      DASHBOARD_PERMISSION_MATRIX,
+    )) {
+      const [, resource, action] = key.split(':');
+      const granted = new Set([...grantedRoles, ...GLOBAL_ADMIN_ROLE_GRANTS]);
+      for (const role of DETRAN_ROLES) {
+        if (!granted.has(role)) {
+          expect(
+            allowed([role], `dashboard:${resource}`, action),
+            `${role} unexpectedly holds ${key}`,
+          ).toBe(false);
+        }
       }
     }
   });

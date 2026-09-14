@@ -61,6 +61,12 @@ O detalhe está em `maestro-prompt.template.md`.
    papel declarado e evidência DEVAI.
 7. **Vocabulário canônico**: estados, timers, papéis e erros vêm dos catálogos e workflows; a UI só
    traduz rótulos.
+8. **Política prova presença e ausência**: toda matriz de grants tem testes positivos para os
+   papéis listados e negativos para todos os papéis canônicos omitidos. Grants derivados por
+   analogia são proibidos; qualquer ampliação exige fonte canônica ou decisão do Owner.
+9. **Histórico publicado não se reescreve**: rebase é permitido somente antes do primeiro push.
+   Depois de publicar o branch, integre avanços do upstream ou de `main` com merge normal, rode de
+   novo os gates e faça push sem força. `--force`, `--force-with-lease` e equivalentes são proibidos.
 
 ## 5. Parcimônia de tokens
 
@@ -105,7 +111,9 @@ A cadeia governada é `record/proofs/chain.json`; nunca editar à mão.
 `tools/orchestra/bridge.sh <codex|claude> <modelo> <prompt.md> <saida.json> [<worktree>]` invoca a
 CLI da outra família de forma não interativa e somente leitura, grava a saída em
 `work/rounds/R-nnnn/reviews/` com o hash do prompt e do resultado. É o único caminho pelo qual o
-reviewer entra na orquestra. Sem tokens no repositório: a autenticação é a da CLI instalada.
+reviewer entra na orquestra. Antes de calcular o hash, a ponte valida e normaliza o JSON com o
+Prettier; saída inválida falha sem criar o registro `.bridge.json`. Sem tokens no repositório: a
+autenticação é a da CLI instalada.
 
 ## 9. Correções pendentes nos build packs (PR próprio, antes da onda 2)
 

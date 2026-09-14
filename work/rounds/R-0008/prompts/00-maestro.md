@@ -60,16 +60,19 @@ Se a worktree ou o branch não existirem, crie-os a partir de `origin/main`:
 `git worktree add -b orchestra/teat-backend /Volumes/Thiamat II/stech/detran-worktrees/teat-backend origin/main`.
 
 **Base empilhada** (só para grupos que precisam de código de um upstream ainda não mesclado):
-`git fetch origin && git rebase origin/orchestra/<upstream>` no seu branch (ou crie a worktree já a
-partir de `origin/orchestra/<upstream>`). Quando o upstream mesclar, `git rebase origin/main`. Nunca
-traga commits do upstream para o seu PR: o PR contra `main` só abre depois de o upstream estar em
-`main` e do rebase; um branch empilhado pode ser enviado (`git push -u origin orchestra/teat-backend`) sem PR para
-que outras frentes empilhem sobre ele.
+num branch ainda não publicado, `git fetch origin && git rebase origin/orchestra/<upstream>` (ou
+crie a worktree já a partir desse upstream). Depois do primeiro push, nunca reescreva o histórico:
+integre novas revisões do upstream com `git merge --no-edit origin/orchestra/<upstream>`. Quando o
+upstream mesclar, integre `origin/main` pela regra do parágrafo seguinte. O PR contra `main` só abre
+depois de o upstream estar em `main`; um branch empilhado pode ser enviado
+(`git push -u origin orchestra/teat-backend`) sem PR para que outras frentes empilhem sobre ele.
 
 **Avanços do `main` durante a rodada.** Outras frentes mesclam enquanto você trabalha. No início de
 cada janela, em cada checkpoint (§7) e antes de cada PR (§9): `git fetch -q origin` e
-`git log --oneline HEAD..origin/main`; se houver commits novos, `git rebase origin/main` e rode de
-novo os gates do grupo. Ao resolver conflitos: arquivo **gerado** (`backend/domains/**/src/generated`,
+`git log --oneline HEAD..origin/main`; se houver commits novos, use `git rebase origin/main` somente
+se o branch nunca foi publicado. Caso contrário, use `git merge --no-edit origin/main`. Nunca use
+`--force`, `--force-with-lease` ou equivalente. Depois da integração, rode de novo os gates do
+grupo. Ao resolver conflitos: arquivo **gerado** (`backend/domains/**/src/generated`,
 contratos `*.openapi.json` gerados, `ddl/*.sql` de blueprint) → nunca edite à mão, aceite qualquer
 lado, formate o blueprint com prettier e `pnpm blueprints:generate` + `pnpm contracts:openapi`;
 `record/proofs/chain.json` ou `record/proofs/work/generic/*.jsonl` → aceite a versão de `main` e
@@ -175,8 +178,9 @@ commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `es
    `pnpm exec devai evidence record --kind generic --round R-0008 --repo-root . --as-role engineer --input <arquivo> --write --format human`;
    depois `evidence verify`. Commit "chore(devai): …".
 3. Confirme que todo upstream do grupo está em `main` e rebaseie (`git rebase origin/main`;
-   `git push --force-with-lease` se o branch já estava publicado); então `git push -u origin orchestra/teat-backend`
-   e `gh pr create --base main` com o corpo pelo
+   somente se o branch nunca foi publicado); em branch publicado, use
+   `git merge --no-edit origin/main`. Rode novamente os gates, faça somente push normal com
+   `git push -u origin orchestra/teat-backend` e então `gh pr create --base main` com o corpo pelo
    `.github/pull_request_template.md` (papel, WP e fontes, o que muda, verificação, OD tocadas,
    fora de escopo, linha final de atribuição).
 4. Acompanhe o CI (`gh pr checks <n>`); falha de infraestrutura (pull do Docker, registro) →
