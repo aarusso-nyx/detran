@@ -1,6 +1,6 @@
 {
   "round": "R-0006",
-  "window": 2,
+  "window": 3,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
   "estimated_input_total": 705000,
@@ -197,6 +197,21 @@
       "output_tokens": 0,
       "status": "completed",
       "note": "EV-b1a79752263c5493"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0006-W3",
+      "input_tokens": 20000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "window 3 opening; method docs adjusted"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "input_tokens": 90000,
+      "output_tokens": 20000,
+      "status": "in_progress"
     }
   ],
   "note": "Convention (as R-0003): worker input_tokens = unique reading, not raw subagent_tokens (which include cached context re-reads). At 570k after TASK-0002 = 81% of the window: checkpoint recorded in plan.md §Retomada; CTG-0001 is finished (TASK-0003 + delivery review + PR) and the window closes there. Raw subagent totals: TASK-0001 318k, TASK-0002 363k. Window closed after delivery-review-2 FAIL (escalated): ~705k unique input (101% of the 700k window); raw subagent totals 986k. Window 2: mini-triad prompts reviewed 3 times (REVIEW, REVIEW, FAIL) — stopped per maestro prompt §5; ~190k input, no worker dispatched. Window 2 total ~790k unique input (mini-triad, M15 iteration, 7 reviews, rebase and seed fix).",
@@ -205,8 +220,13 @@
       "window": 1,
       "estimated_input_total": 705000,
       "estimated_output_total": 124000
+    },
+    {
+      "window": 2,
+      "estimated_input_total": 790000
     }
   ],
   "window2_input_budget": 700000,
-  "window2_estimated_input": 790000
+  "window2_estimated_input": 790000,
+  "window3_estimated_input": 110000
 }

@@ -252,6 +252,11 @@ Inspector segue a especificação §7).
 
 ## Retomada
 
+**Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
+adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
+README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de
+prompt-review-2; delivery-review de CTG-0002 com o escopo por ciclo.
+
 **Checkpoint 2026-09-14 (fim da janela 2).** CTG-0001 completo: mini-tríade TASK-0009…0011 + iteração M15
 (TASK-0012/0013) entregues; delivery-review ciclo 4 PASS; rebase sobre `main` (PR #37 `param-store` mesclado);
 correção do seed de parâmetros + passo `seed.sh` no CI (`fix(ops)`); evidência `R-0006.jsonl` seq. 1; **PR #39 aberto**

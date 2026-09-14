@@ -64,9 +64,13 @@ O detalhe está em `maestro-prompt.template.md`.
 8. **Política prova presença e ausência**: toda matriz de grants tem testes positivos para os
    papéis listados e negativos para todos os papéis canônicos omitidos. Grants derivados por
    analogia são proibidos; qualquer ampliação exige fonte canônica ou decisão do Owner.
-9. **Histórico publicado não se reescreve**: rebase é permitido somente antes do primeiro push.
-   Depois de publicar o branch, integre avanços do upstream ou de `main` com merge normal, rode de
-   novo os gates e faça push sem força. `--force`, `--force-with-lease` e equivalentes são proibidos.
+9. **Fixtures provadas no CI**: toda rodada que entrega fixtures (`backend/database/seed/*.sql`) prova
+   `bash backend/database/seed.sh` em banco limpo **e** o job `backend-kernel` executa `seed.sh` após o
+   reset (passo criado em R-0006); um seed novo que não carrega sob `seed.sh` é `plant-bug` da rodada que
+   o criou (R-0004: `05-parameters.sql` sem contexto de tenant abortava o seed e o CI não percebia).
+10. **Histórico publicado não se reescreve**: rebase é permitido somente antes do primeiro push.
+    Depois de publicar o branch, integre avanços do upstream ou de `main` com merge normal, rode de
+    novo os gates e faça push sem força. `--force`, `--force-with-lease` e equivalentes são proibidos.
 
 ## 5. Parcimônia de tokens
 
@@ -79,7 +83,9 @@ O detalhe está em `maestro-prompt.template.md`.
 - **Workers pequenos por padrão**; médio só para modelagem, guardas de estado e frontend com
   STYNX/Angular; grande nunca como worker.
 - **Esforço baixo para transcrição, alto só para decisão**; o reviewer roda uma vez por prompt e
-  uma vez por entrega (máximo dois ciclos de REVIEW por item; depois escala ao humano).
+  uma vez por entrega (máximo dois ciclos de REVIEW por item; depois escala ao humano). O primeiro
+  ciclo é exaustivo; os seguintes ficam **restritos aos itens corrigidos** (R-0006: sete ciclos de
+  prompt-review com achados novos sobre texto inalterado a cada ciclo).
 - **Corte por janela**: se o orçamento da janela acabar, o maestro grava `checkpoint` (estado das
   tarefas em `plan.md` §Retomada) e para; a próxima sessão retoma pelo mesmo prompt.
 - **Nunca reler o que já está em `plan.md`**: o plano é a memória da orquestra.
