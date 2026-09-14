@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0003",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Encode dashboard policy and layer acceptance tests",
+  "description": "Extend the shared policy tests and role-catalog gate so the Architect contract is executable before production implementation.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-shared-policy-spec", "MOD-role-gate"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["RN-DASH-170", "RN-DASH-171", "OD-D01"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 2,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "reference-gap",
+      "finding": "Update Inspector expectations after Architect excludes read-only AUDITOR and DPO from dashboard:export:create.",
+      "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "Assert integration-operator cannot read dashboard alerts.",
+      "status": "completed"
+    }
+  ],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-d0", "dashboard", "tests", "policy"],
+  "branch": "orchestra/dash-roles",
+  "worktree_id": "WT-dash-roles",
+  "prompt_composition_id": "PC-62747d7a93dbdf81",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "verify:role-catalog"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-14T03:28:53.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "claude-sonnet-5" },
+    "prompt_composition_id": "PC-62747d7a93dbdf81",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

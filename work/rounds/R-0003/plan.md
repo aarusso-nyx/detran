@@ -1,7 +1,7 @@
 # R-0003 — frente `dash-roles` (WP-D0 do DASHBOARD)
 
-**Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
-(prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
+**Status:** entrega aceita em 2026-09-14; aguardando commit/evidência/PR pelo maestro. Reviewer:
+GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
 
 ## Metas
 
@@ -29,14 +29,15 @@
 
 ## Tarefas (tríade por grupo acoplado)
 
-| Tarefa    | Papel          | Perfil              | Modelo/esforço | Lock                                    | Depende de | Entrega                                                                                                                                                   |
-| --------- | -------------- | ------------------- | -------------- | --------------------------------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect      | architect-blueprint | Opus / alto    | `MOD-shared-roles`, `MOD-ddl-05`        | —          | tabela de regras `dashboard:*` × papéis (fonte: contrato §2–§4), mapa papel→camada, critérios em comandos; DDL `05-role-catalog.sql` (restrição + linhas) |
-| TASK-0002 | Inspector      | inspector-tests     | Sonnet / médio | `MOD-shared-policy-spec`                | TASK-0001  | `policy.spec.ts` estendido (36 papéis, regras, camadas, N3 negado); pode falhar até TASK-0003                                                             |
-| TASK-0003 | Engineer       | engineer-backend    | Sonnet / médio | `MOD-shared-roles`, `MOD-shared-policy` | TASK-0002  | `roles.ts`, `policy.ts` (regras + camadas), `tools/check-role-catalog.ts`; testes verdes                                                                  |
-| TASK-0004 | Owner delegado | transcriber-docs    | Sonnet / baixo | `MOD-docs-arch`                         | TASK-0003  | build pack §WP-D0 executado, `decision-closure-plan.md`, `backlog.md`                                                                                     |
+| Tarefa    | Papel          | Perfil              | Modelo/esforço | Lock                                      | Depende de | Entrega                                                                                                       |
+| --------- | -------------- | ------------------- | -------------- | ----------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect      | architect-blueprint | Opus / alto    | `MOD-shared-roles`, `MOD-ddl-05`          | —          | contrato executável de regras/camadas; DDL `05-role-catalog.sql` (restrição idempotente + duas linhas)        |
+| TASK-0002 | Inspector      | inspector-tests     | Sonnet / médio | `MOD-shared-policy-spec`, `MOD-role-gate` | TASK-0001  | `policy.spec.ts` e `check-role-catalog.ts` estendidos; falha esperada apenas pela implementação ainda ausente |
+| TASK-0003 | Engineer       | engineer-backend    | Sonnet / médio | `MOD-shared-roles`, `MOD-shared-policy`   | TASK-0002  | `roles.ts`, `policy.ts` (regras + camadas); testes e gate verdes                                              |
+| TASK-0004 | Owner delegado | transcriber-docs    | Sonnet / baixo | `MOD-docs-arch`, `MOD-dashboard-readme`   | TASK-0003  | build pack §WP-D0 executado, README alinhado a blocos/camadas, `decision-closure-plan.md`, `backlog.md`       |
 
-CTG-0001 = TASK-0001…0003. TASK-0004 é simples.
+CTG-0001 = TASK-0001…0003, em ordem estrita. TASK-0004 é simples e só inicia após o CTG.
+Não há paralelismo útil nesta frente porque todas as tarefas estão encadeadas.
 
 ## Critérios de aceitação (comandos → resultado)
 
@@ -45,6 +46,8 @@ CTG-0001 = TASK-0001…0003. TASK-0004 é simples.
 - `pnpm verify:rls-ddl` → OK (tabela de catálogo é referência sem tenant).
 - `DB_NAME=detran_r3 bash backend/database/apply.sh --full` em banco limpo → `apply.sh: done`; `psql -c "select count(*) from auth.role_catalog"` → 36.
 - `pnpm check` → verde.
+- `pnpm backend:test:unit` → verde; é o tier indicado para o WP-D0, que altera somente catálogo
+  compartilhado, política e DDL, sem rotas de integração/e2e.
 - `node tools/docs/kb/check.mjs` → 521 artefatos, 446 tokens (nenhum documento de produto editado).
 
 ## Mapa entregável → definições
@@ -69,10 +72,44 @@ CTG-0001 = TASK-0001…0003. TASK-0004 é simples.
 
 (nenhum)
 
+## Triagem
+
+- TASK-0001 checkpoint: `sensor-error` — Prettier não infere parser para `.sql`; o DDL já é
+  ignorado pelo gate e foi inspecionado separadamente. Reexecutar Prettier somente nos Markdown e
+  manter `pnpm format:check` como sensor canônico.
+- TASK-0001 checkpoint: `sensor-error` — a ponte grava o JSON do reviewer sem a formatação do
+  repositório; normalizados os dois JSONs com Prettier e recalculados os `output_sha256` nos
+  registros da ponte antes de reexecutar o gate.
+- CTG-0001 checkpoint após TASK-0003: `reference-gap` — o contrato incluiu `AUDITOR`/`DPO` no
+  conjunto derivado de `export:create`, mas simultaneamente fixa auditor/DPO como somente leitura;
+  o teste confirmou a contradição em `dashboard:export:create`. Retorno à tríade, iteração 2, sem
+  alterar o princípio canônico: auditor e DPO permanecem read-only.
+- Delivery review ciclo 1: `reference-gap` — reviewer `FAIL` identificou ampliação não autorizada
+  de `dashboard:alert:read` para `integration-operator`. A última iteração da tríade removeu a
+  inferência no contrato, codificou o negativo no teste e retirou somente esse grant da política.
+  Gates completos voltaram a verde; delivery review ciclo 2: `PASS`, sem findings.
+
 ## Retomada
 
 (vazio — preenchido pelo maestro em `checkpoint`)
 
 ## Leitura
 
-(preenchido pelo maestro: sha de `main`, arquivos lidos)
+Leitura concluída pelo maestro Architect sobre `7b1e5526e5f8b1f8082709b8fca380e594a5ec4d`
+(`origin/main` confirmado no mesmo commit antes da abertura da worktree):
+
+- `AGENTS.md`; `CODESTYLE.md`; `docs/meta/agents/README.md`.
+- `docs/meta/agents/orchestra/README.md`; `model-ladder.md`; `waves.md`.
+- `docs/framework/arch/dashboard-build-pack.md` inteiro.
+- Definições do WP-D0: `dashboard-route-contract.md` §1–§4;
+  `dashboard-frontends.md` §3; `dashboard-error-catalog.md` §3;
+  `docs/framework/product/shared/actors.md` §Papéis granulares DASHBOARD;
+  `RN-DASH-170.md`; `RN-DASH-171.md`.
+- `docs/framework/arch/parameter-catalogue.md` inteiro;
+  `docs/meta/knowledge-base/decision-closure-plan.md` inteiro;
+  `docs/meta/knowledge-base/steering.md` §H.
+- `docs/meta/agents/{architect-blueprint,engineer-backend,engineer-frontend,inspector-tests,transcriber-docs}.md`.
+- `work/rounds/R-0003/plan.md`; templates `task.template.json`,
+  `worker-prompt.template.md`, `reviewer-prompt.template.md`; superfícies atuais
+  `roles.ts`, `policy.ts`, `policy.spec.ts`, `05-role-catalog.sql`,
+  `check-role-catalog.ts` e comandos existentes em `package.json`.

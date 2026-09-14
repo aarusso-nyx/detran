@@ -409,8 +409,9 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       resposta ao titular, tela W-05); atualizar `use-cases/INDEX.md` (added 2026-09-13)
 - [x] **Pacote DASHBOARD (2026-09-13)**: `dashboard-frontends.md`, `dashboard-route-contract.md`,
       `dashboard-error-catalog.md`, `dashboard-build-pack.md` (WP-D0…D5; 13 questões OD-D01…D13)
-- [ ] **DASHBOARD — papéis `dash-operator`/`dash-duty-owner`, política para alertas/deveres/exportação e
-      promoção dos ids de tela D-01…D-18 ao corpus** (added 2026-09-13)
+- [x] **DASHBOARD — papéis `dash-operator`/`dash-duty-owner`, política para alertas/deveres/exportação**
+      (WP-D0, `R-0003`/`dash-roles`, concluída 2026-09-14; OD-D01) (added 2026-09-13)
+- [ ] **DASHBOARD — promoção dos ids de tela D-01…D-18 ao corpus** (WP-D4, ainda aberta) (added 2026-09-13)
 - [ ] **Portão de implementação (2026-09-13)**: `implementation-gate-2026-09-13.md` consolida os pontos de atenção das
       cinco superfícies e as 7 decisões que bloqueiam o início; fechar pelo Owner na ordem sugerida
 - [x] **Plano de fechamento em três vias (2026-09-13)**: `decision-closure-plan.md`, `parameter-catalogue.md`,
@@ -432,9 +433,11 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [x] **Meta-orquestração definida (2026-09-14, ADR-0022)**: método em `docs/meta/agents/orchestra/`, escada de
       modelos, plano de ondas (14 frentes, R-0003…R-0016), templates de maestro/reviewer/worker, ponte
       `tools/orchestra/bridge.sh`; rodadas R-0003 (`dash-roles`) e R-0004 (`param-store`) prontas para abrir
-- [ ] **Abrir a onda 1**: colar `work/rounds/R-0003/prompts/00-maestro.md` numa sessão Claude Code (Fable) e
-      `work/rounds/R-0004/prompts/00-maestro.md` numa sessão Codex (Sol), cada uma na sua worktree; confirmar os ids
-      de modelo Codex (`gpt-5.6-terra`/`-luna`/`-sol`) antes da primeira ponte (added 2026-09-14)
+- [x] **Frente `dash-roles` (`R-0003`) concluída em 2026-09-14**: WP-D0 executado (papéis, política
+      `dashboard:*`, camadas N0…N3; ver backlog DASHBOARD acima e `dashboard-build-pack.md`)
+- [ ] **Abrir a onda 1 restante**: colar `work/rounds/R-0004/prompts/00-maestro.md` numa sessão Codex (Sol)
+      na sua worktree; confirmar os ids de modelo Codex (`gpt-5.6-terra`/`-luna`/`-sol`) antes da primeira
+      ponte (added 2026-09-14)
 - [ ] **Corrigir gates dos build packs** que citam comandos inexistentes (`orchestra/README.md` §9) antes da onda 2 (added 2026-09-14)
 - [x] **Rodadas R-0005…R-0016 instanciadas (2026-09-14)**: `work/rounds/R-00nn/{plan.md,prompts/00-maestro.md}` para as
       doze frentes restantes de `waves.md` (ondas 2–7), com metas, tríades, critérios em comandos existentes, numeração

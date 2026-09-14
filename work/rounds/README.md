@@ -10,7 +10,7 @@ backlog (`docs/meta/agents/orchestra/waves.md`, ADR-0022). Evidence lives in
 | ------ | ------------------------------------------------- | --------------------------------------------- |
 | R-0001 | definition round, WP-0, WP-T0 (evidence seq. 1–4) | closed by merges #27, #28, #29                |
 | R-0002 | PEC port                                          | see `record/proofs/work/generic/R-0002.jsonl` |
-| R-0003 | `dash-roles` — WP-D0                              | planned; maestro Fable 5.1                    |
+| R-0003 | `dash-roles` — WP-D0                              | delivery PASS; PR #32 open                    |
 | R-0004 | `param-store` — ADR-0021 / WP-A parameters        | planned; maestro GPT-5.6 Sol                  |
 | R-0005 | `ops-agency` — WP-T1 (TEAT), `ops/agency` mínimo  | planned; maestro GPT-5.6 Sol                  |
 | R-0006 | `rait-model` — WP-A restante (RAIT)               | planned; maestro Fable 5.1                    |

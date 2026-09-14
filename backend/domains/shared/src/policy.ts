@@ -1,6 +1,6 @@
 import type { Principal } from '@stynx-nyx/contracts';
 
-import { canonicalRoles, type DetranRole } from './roles.js';
+import { DETRAN_ROLES, canonicalRoles, type DetranRole } from './roles.js';
 
 export type DetranPolicyKey = `${string}:${string}:${string}`;
 
@@ -1092,6 +1092,138 @@ const RAIT_COMMAND_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['rait-archive', 'apply-retention', ['rait-secretary']],
 ];
 
+/**
+ * DASHBOARD (WP-D0, CTG-0001 §2) — role sets used by the `dashboard:*`
+ * matrix below. Names and membership are fixed by the contract; do not
+ * widen them without an updated CTG.
+ */
+const DASH_AREA_MANAGERS: readonly DetranRole[] = [
+  'rait-manager',
+  'rait-coordinator',
+  'rait-chair',
+  'traffic-authority',
+  'GESTOR',
+];
+const DASH_TECH: readonly DetranRole[] = [
+  'technical-admin',
+  'integration-operator',
+];
+const DASH_ALERT_OWNERS: readonly DetranRole[] = [
+  ...DASH_AREA_MANAGERS,
+  'agency-admin',
+  ...DASH_TECH,
+];
+const DASH_N0_ROLES: readonly DetranRole[] = DETRAN_ROLES.filter(
+  (role) => role !== 'CANDIDATO' && role !== 'CIDADAO',
+);
+const DASH_EXPORT_ROLES: readonly DetranRole[] = [
+  'agency-admin',
+  'GESTOR_DETRAN',
+  ...DASH_AREA_MANAGERS,
+  'dash-operator',
+  'dash-duty-owner',
+  ...DASH_TECH,
+  'bi-analyst',
+];
+
+/**
+ * `dashboard:*` matrix, CTG-0001 §3. The five `(=)` rules
+ * (indicator-config:publish, bi-panel:publish, generated-report:request/
+ * complete/fail) already exist in TEAT_RULES above and are preserved
+ * there verbatim; only the 27 new permissions are added here.
+ */
+const DASHBOARD_RULES: Array<[string, string, string, readonly DetranRole[]]> =
+  [
+    [
+      'dashboard',
+      'alert',
+      'read',
+      [
+        'dash-operator',
+        ...DASH_AREA_MANAGERS,
+        'agency-admin',
+        'technical-admin',
+        'AUDITOR',
+      ],
+    ],
+    ['dashboard', 'alert', 'ack', ['dash-operator', ...DASH_ALERT_OWNERS]],
+    ['dashboard', 'alert', 'treat', DASH_ALERT_OWNERS],
+    ['dashboard', 'alert', 'close', ['dash-operator']],
+    ['dashboard', 'alert', 'annotate', DASH_TECH],
+    [
+      'dashboard',
+      'incident',
+      'read',
+      [...DASH_AREA_MANAGERS, 'agency-admin', 'AUDITOR'],
+    ],
+    ['dashboard', 'duty', 'read', DASH_N0_ROLES],
+    ['dashboard', 'duty-cycle', 'read', DASH_N0_ROLES],
+    ['dashboard', 'duty-cycle', 'start', ['dash-duty-owner', 'agency-admin']],
+    ['dashboard', 'duty-cycle', 'prepare', ['dash-duty-owner', 'agency-admin']],
+    ['dashboard', 'duty-cycle', 'submit', ['dash-duty-owner', 'agency-admin']],
+    ['dashboard', 'duty-cycle', 'prove', ['dash-duty-owner', 'agency-admin']],
+    ['dashboard', 'duty-cycle', 'archive', ['dash-operator', 'agency-admin']],
+    ['dashboard', 'indicator', 'read', DASH_N0_ROLES],
+    [
+      'dashboard',
+      'indicator-config',
+      'read',
+      ['bi-analyst', 'agency-admin', 'technical-admin', 'AUDITOR'],
+    ],
+    [
+      'dashboard',
+      'indicator-config',
+      'update',
+      ['bi-analyst', 'agency-admin', 'technical-admin'],
+    ],
+    [
+      'dashboard',
+      'bi-panel',
+      'read',
+      ['bi-analyst', 'agency-admin', 'technical-admin', 'AUDITOR'],
+    ],
+    [
+      'dashboard',
+      'generated-report',
+      'read',
+      ['bi-analyst', 'agency-admin', 'technical-admin', 'AUDITOR'],
+    ],
+    [
+      'dashboard',
+      'source',
+      'read',
+      ['technical-admin', 'integration-operator', 'dash-operator', 'AUDITOR'],
+    ],
+    ['dashboard', 'export', 'create', DASH_EXPORT_ROLES],
+    ['dashboard', 'export', 'approve', ['agency-admin']],
+    [
+      'dashboard',
+      'audit-trail',
+      'read',
+      ['AUDITOR', 'DPO', 'agency-admin', ...DASH_AREA_MANAGERS],
+    ],
+    [
+      'dashboard',
+      'comparison',
+      'read',
+      ['agency-admin', ...DASH_AREA_MANAGERS, 'bi-analyst', 'AUDITOR'],
+    ],
+    [
+      'dashboard',
+      'transparency-audit',
+      'read',
+      ['technical-admin', 'agency-admin', 'AUDITOR'],
+    ],
+    [
+      'dashboard',
+      'transparency-audit',
+      'audit',
+      ['technical-admin', 'agency-admin'],
+    ],
+    ['dashboard', 'dataset', 'read', DASH_N0_ROLES],
+    ['dashboard', 'kpi', 'read', ['agency-admin', 'dash-operator', 'AUDITOR']],
+  ];
+
 export const DETRAN_POLICY_MATRIX: Readonly<
   Record<DetranPolicyKey, readonly DetranRole[]>
 > = Object.freeze(
@@ -1118,6 +1250,10 @@ export const DETRAN_POLICY_MATRIX: Readonly<
     ]),
     ...RAIT_COMMAND_RULES.map(([resource, action, roles]) => [
       teat('inf', resource, action),
+      roles,
+    ]),
+    ...DASHBOARD_RULES.map(([domain, resource, action, roles]) => [
+      teat(domain, resource, action),
       roles,
     ]),
     ['portal:appeal:create', ['CIDADAO']],
@@ -1182,4 +1318,60 @@ export function isDetranActionAllowed(
   if (roles.some((role) => GLOBAL_ADMIN_ROLES.has(role))) return true;
   const allowed = DETRAN_POLICY_MATRIX[key];
   return Boolean(allowed?.some((role) => roles.includes(role)));
+}
+
+/**
+ * DASHBOARD access layers (RN-DASH-170, CTG-0001 §4-§5). `dashboardLayerFor`
+ * returns a ceiling, never a grant: authorization is
+ * `isDetranActionAllowed` AND the layer AND the dynamic checks of CTG-0001
+ * §6 (domain scoping, `X-Purpose`, owner checks) — none of which live here.
+ */
+export type DashboardLayer = 'N0' | 'N1' | 'N2';
+export type DashboardLayerRequirement = DashboardLayer | 'N3';
+
+const DASHBOARD_LAYER_RANK: Readonly<Record<DashboardLayer, number>> = {
+  N0: 0,
+  N1: 1,
+  N2: 2,
+};
+
+const DASHBOARD_LAYER_BY_ROLE: Readonly<
+  Partial<Record<DetranRole, DashboardLayer>>
+> = {
+  'agency-admin': 'N2',
+  GESTOR_DETRAN: 'N2',
+  AUDITOR: 'N2',
+  DPO: 'N2',
+  'rait-manager': 'N2',
+  'rait-coordinator': 'N2',
+  'rait-chair': 'N2',
+  'traffic-authority': 'N2',
+  GESTOR: 'N2',
+  'dash-operator': 'N1',
+  'dash-duty-owner': 'N1',
+  'technical-admin': 'N1',
+  'integration-operator': 'N1',
+  'bi-analyst': 'N1',
+};
+
+export function dashboardLayerFor(roles: readonly string[]): DashboardLayer {
+  let max: DashboardLayer = 'N0';
+  for (const role of canonicalRoles(roles)) {
+    const layer = DASHBOARD_LAYER_BY_ROLE[role];
+    if (layer && DASHBOARD_LAYER_RANK[layer] > DASHBOARD_LAYER_RANK[max]) {
+      max = layer;
+    }
+  }
+  return max;
+}
+
+export function dashboardLayerAllows(
+  roles: readonly string[],
+  required: DashboardLayerRequirement,
+): boolean {
+  if (required === 'N3') return false;
+  return (
+    DASHBOARD_LAYER_RANK[dashboardLayerFor(roles)] >=
+    DASHBOARD_LAYER_RANK[required]
+  );
 }
