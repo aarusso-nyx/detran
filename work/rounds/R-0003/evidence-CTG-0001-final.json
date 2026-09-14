@@ -1,0 +1,32 @@
+{
+  "action": "Revalidate R-0003 after integrating origin/main and normalize the final reviewer artifact",
+  "round": "R-0003",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "commit": "b812ebb",
+  "supersedes_artifact_hash_only": "work/rounds/R-0003/reviews/delivery-review-2.json",
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0003/reviews/delivery-review-2.json",
+      "sha256": "cc3fcdd162bc76c97208495ad80250b863f43d42c67e177e8d469a624c6b12d5"
+    },
+    {
+      "path": "work/rounds/R-0003/reviews/delivery-review-2.bridge.json",
+      "sha256": "ef7ac953c04cab097c617e2c26aa7f214b7da60286a327b4ef55b2eb15b33ac9"
+    }
+  ],
+  "gates": [
+    {
+      "command": "pnpm check",
+      "result": "PASS on merge of origin/main@80d705a"
+    },
+    {
+      "command": "pnpm exec devai evidence verify --scope chain",
+      "result": "PASS before append; sequence 1 head e2ace3c715ea33db4f7388e35c4d142958078cc9f7172fc88a43f7637d4b0465"
+    },
+    { "command": "git diff --cached --check", "result": "PASS" }
+  ],
+  "notes": [
+    "Sequence 1 remains immutable and valid; this entry records the Prettier-normalized bytes and merged-tree validation."
+  ]
+}
