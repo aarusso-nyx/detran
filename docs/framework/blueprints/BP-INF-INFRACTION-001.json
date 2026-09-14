@@ -1,0 +1,573 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-INFRACTION-001",
+  "module": {
+    "name": "Infraction",
+    "namespace": "inf",
+    "version": "1.1.1",
+    "ddlFile": "38-inf-infraction.sql",
+    "dependencies": {
+      "@detran/inf-ait": "workspace:*",
+      "@detran/inf-deadlines": "workspace:*",
+      "zod": "^4.6.5"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-ait",
+        "target": "../ait/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../deadlines/src/index.ts"
+      }
+    ],
+    "handwrittenExports": ["handwritten/index"],
+    "owners": ["detran-inf"],
+    "description": "Agregado da infracao (ADR-0016 Decision 1; [WF-INF-003] secoes 1-6): unico escritor de state/substate, sujeito passivo, efeito suspensivo, pagamento, pontuacao e motivo de encerramento, dos relogios legais (secao 3) e da trilha de eventos (secao 6). O vocabulario canonico (15 estados, 12 sub-estados, 46 transicoes, 18 timers) vive em 14-inf-lifecycle-vocabulary.sql e e referenciado por FK."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Infraction",
+        "table": "infraction",
+        "primaryKey": ["id"],
+        "description": "Agregado da infracao — unico escritor do estado legal (ADR-0016 Decision 1; [WF-INF-003] secao 1 estados, secao 4 atributos ortogonais, secao 5 invariantes). Uma infracao por AIT integrado; state e substate por FK ao vocabulario de 14-inf-lifecycle-vocabulary.sql.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "ait_id",
+            "type": "uuid"
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)",
+            "default": "'AIT_LAVRADO'"
+          },
+          {
+            "name": "substate",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "subject_kind",
+            "type": "varchar(40)",
+            "default": "'proprietario'"
+          },
+          {
+            "name": "suspensive_effect",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "paid",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "payment_tier",
+            "type": "varchar(40)",
+            "default": "'nenhum'"
+          },
+          {
+            "name": "points_registered",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "closure_motive",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "risk_flag",
+            "type": "varchar(30)",
+            "default": "'SEM_RISCO'"
+          },
+          {
+            "name": "committed_on",
+            "type": "date"
+          },
+          {
+            "name": "flagrant",
+            "type": "boolean"
+          },
+          {
+            "name": "known_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "state_changed_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "last_transition_id",
+            "type": "smallint",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_infraction_ait",
+            "columns": ["tenant_id", "ait_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_infraction_state",
+            "columns": ["tenant_id", "state", "substate"]
+          },
+          {
+            "name": "ix_inf_infraction_risk_flag",
+            "columns": ["tenant_id", "risk_flag"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_infraction_state",
+            "expression": "state in ('AIT_LAVRADO','NOTIFICADO_AUTUACAO','DEFESA_EM_JULGAMENTO','PENALIDADE_A_APLICAR','NOTIFICADO_PENALIDADE','RECURSO_1A_INSTANCIA','AGUARDANDO_RECURSO_2A','RECURSO_2A_INSTANCIA','INSTANCIA_ENCERRADA','ARQUIVADO','CANCELADO_POS_INTEGRACAO','AIT_CANCELADO','EXTINTO_DECADENCIA','EXTINTO_PRESCRICAO','CANCELADO_DEFINITIVO')"
+          },
+          {
+            "name": "ck_inf_infraction_substate",
+            "expression": "substate is null or substate in ('PRAZO_DEFESA_ABERTO','INDICACAO_EM_PROCESSAMENTO','EM_ADMISSIBILIDADE_1A','EM_REMESSA_JARI','EM_JULGAMENTO_JARI','PROVIDO_1A','NEGADO_1A','EM_ADMISSIBILIDADE_2A','EM_JULGAMENTO_CETRAN','PENDENTE_PAGAMENTO','QUITADA','EM_COBRANCA')"
+          },
+          {
+            "name": "ck_inf_infraction_subject_kind",
+            "expression": "subject_kind in ('proprietario','principal_condutor','condutor_identificado','possuidor_equiparado','embarcador','transportador')"
+          },
+          {
+            "name": "ck_inf_infraction_payment_tier",
+            "expression": "payment_tier in ('nenhum','desconto_80','desconto_60_reconhecimento','desconto_40_fora_sne','integral_juros','restituido')"
+          },
+          {
+            "name": "ck_inf_infraction_closure_motive",
+            "expression": "closure_motive is null or closure_motive in ('nao_interposicao_1a','nao_interposicao_2a','julgamento_2a','reconhecimento','desistencia','nao_conhecimento_intempestivo','na_nao_expedida','insubsistente')"
+          },
+          {
+            "name": "ck_inf_infraction_risk_flag",
+            "expression": "risk_flag in ('SEM_RISCO','ALERTA_N1','ALERTA_N2','ALERTA_N3','CRITICO','PRESCRITO_OPERACIONAL')"
+          },
+          {
+            "name": "ck_inf_infraction_suspensive_effect_instance",
+            "expression": "suspensive_effect = false or state in ('RECURSO_1A_INSTANCIA','RECURSO_2A_INSTANCIA')"
+          },
+          {
+            "name": "ck_inf_infraction_points_only_closed",
+            "expression": "points_registered = false or state = 'INSTANCIA_ENCERRADA'"
+          },
+          {
+            "name": "ck_inf_infraction_closure_motive_state",
+            "expression": "closure_motive is null or state in ('INSTANCIA_ENCERRADA','ARQUIVADO')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_infraction_ait",
+            "columns": ["ait_id"],
+            "references": {
+              "table": "inf.ait_ait",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_state",
+            "columns": ["state"],
+            "references": {
+              "table": "inf.infraction_state_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_substate",
+            "columns": ["substate"],
+            "references": {
+              "table": "inf.infraction_substate_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_subject_kind",
+            "columns": ["subject_kind"],
+            "references": {
+              "table": "inf.infraction_subject_kind_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_payment_tier",
+            "columns": ["payment_tier"],
+            "references": {
+              "table": "inf.infraction_payment_tier_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_closure_motive",
+            "columns": ["closure_motive"],
+            "references": {
+              "table": "inf.infraction_closure_motive_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_last_transition",
+            "columns": ["last_transition_id"],
+            "references": {
+              "table": "inf.infraction_transition_ref",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "InfractionTimer",
+        "table": "infraction_timer",
+        "primaryKey": ["id"],
+        "description": "Relogio legal da infracao ([WF-INF-003] secao 3; [WF-INF-002] secao 9.2). due_on ja vem prorrogado ao 1o dia util e nunca antecipa (rait-deadline-engine secao 2). Um relogio T-JUL-24M por instance (jari|cetran). suspended_by_act_id referencia inf.rait_suspension_act (DDL 39) sem FK — ordem lexicografica de apply.sh, como rait_deadline.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "infraction_id",
+            "type": "uuid"
+          },
+          {
+            "name": "timer_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "instance",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "start_basis",
+            "type": "text"
+          },
+          {
+            "name": "started_on",
+            "type": "date"
+          },
+          {
+            "name": "raw_due_on",
+            "type": "date"
+          },
+          {
+            "name": "due_on",
+            "type": "date"
+          },
+          {
+            "name": "ceiling_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "business_days",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "satisfied_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "expired_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "cancel_reason",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "suspended_by_act_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "suspended_days",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "extension_count",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "legal_basis",
+            "type": "text"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_infraction_timer_arm",
+            "columns": [
+              "tenant_id",
+              "infraction_id",
+              "timer_code",
+              "started_on"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_infraction_timer_due",
+            "columns": ["tenant_id", "due_on"],
+            "where": "status = 'armado'"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_infraction_timer_code",
+            "expression": "timer_code in ('T-NA','T-SNE-CIENCIA','T-DEF','T-IND','T-NA-IND','T-DEC','T-NP-VENC','T-REM10','T-JUL-24M','T-DIL','T-R2','T-PAR-3A','T-PRESC-5A','T-VOTO','T-CONV','T-ASS','T-CLAIM','SLA-30')"
+          },
+          {
+            "name": "ck_inf_infraction_timer_instance",
+            "expression": "instance is null or instance in ('jari','cetran')"
+          },
+          {
+            "name": "ck_inf_infraction_timer_status",
+            "expression": "status in ('armado','satisfeito','cancelado','vencido')"
+          },
+          {
+            "name": "ck_inf_infraction_timer_rounding_forward",
+            "expression": "due_on >= raw_due_on"
+          },
+          {
+            "name": "ck_inf_infraction_timer_due_not_before_start",
+            "expression": "due_on >= started_on"
+          },
+          {
+            "name": "ck_inf_infraction_timer_single_extension",
+            "expression": "extension_count <= 1"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_infraction_timer_infraction",
+            "columns": ["infraction_id"],
+            "references": {
+              "table": "inf.infraction",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_timer_code",
+            "columns": ["timer_code"],
+            "references": {
+              "table": "inf.infraction_timer_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "InfractionEvent",
+        "table": "infraction_event",
+        "primaryKey": ["id"],
+        "description": "Trilha append-only de transicoes e eventos publicados ([WF-INF-003] secao 6; rait-events-sse-contract secao 2.4). Nunca atualizada: updated_at existe por construcao do gerador e nao tem semantica. transition_id/rule_ref ligam a linha a inf.infraction_transition_ref; outbox_id liga ao envelope da integration.outbox.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "infraction_id",
+            "type": "uuid"
+          },
+          {
+            "name": "transition_id",
+            "type": "smallint",
+            "nullable": true
+          },
+          {
+            "name": "rule_ref",
+            "type": "smallint",
+            "nullable": true
+          },
+          {
+            "name": "from_state",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "to_state",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "from_substate",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "to_substate",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "trigger_kind",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "trigger_code",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "event_code",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "occurred_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "actor_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "actor_kind",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "payload",
+            "type": "jsonb"
+          },
+          {
+            "name": "outbox_id",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_infraction_event_infraction",
+            "columns": ["tenant_id", "infraction_id", "occurred_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_infraction_event_trigger_kind",
+            "expression": "trigger_kind in ('evento','timer','ato','sistema')"
+          },
+          {
+            "name": "ck_inf_infraction_event_actor_kind",
+            "expression": "actor_kind in ('user','system')"
+          },
+          {
+            "name": "ck_inf_infraction_event_code",
+            "expression": "event_code in ('INFRACAO_ESTADO_ALTERADO','PENALIDADE_DEFINITIVA','RESTITUICAO_DEVIDA','TIMER_VENCIDO','RISCO_PRESCRICAO_ALTERADO')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_infraction_event_infraction",
+            "columns": ["infraction_id"],
+            "references": {
+              "table": "inf.infraction",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_event_transition",
+            "columns": ["transition_id"],
+            "references": {
+              "table": "inf.infraction_transition_ref",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_event_from_state",
+            "columns": ["from_state"],
+            "references": {
+              "table": "inf.infraction_state_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_event_to_state",
+            "columns": ["to_state"],
+            "references": {
+              "table": "inf.infraction_state_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_infraction_event_code",
+            "columns": ["event_code"],
+            "references": {
+              "table": "inf.infraction_event_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/infraction/",
+    "resources": [
+      {
+        "entity": "Infraction",
+        "path": "infractions",
+        "resource": "infraction"
+      },
+      {
+        "entity": "InfractionTimer",
+        "path": "timers",
+        "resource": "infraction-timer"
+      },
+      {
+        "entity": "InfractionEvent",
+        "path": "events",
+        "resource": "infraction-event",
+        "operations": ["list", "get", "create"]
+      }
+    ]
+  },
+  "auth": {
+    "source": "RAIT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

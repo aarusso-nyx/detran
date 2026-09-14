@@ -1,0 +1,357 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-NOTIFICATION-001",
+  "module": {
+    "name": "Notification",
+    "namespace": "inf",
+    "version": "1.1.1",
+    "ddlFile": "59-inf-notification.sql",
+    "dependencies": {
+      "@detran/inf-infraction": "workspace:*",
+      "@detran/inf-deadlines": "workspace:*",
+      "zod": "^4.6.5"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-infraction",
+        "target": "../infraction/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../deadlines/src/index.ts"
+      }
+    ],
+    "handwrittenExports": ["handwritten/index"],
+    "owners": ["detran-inf"],
+    "description": "Modulo de notificacao (ADR-0016 Decision 1 e 3; [WF-INF-002] secao 2 P2 Notificar): unico escritor de avisos (NA, NP, decisao, diligencia, edital), da ciencia efetiva ou ficta e das tentativas de entrega. Publica NOTIFICACAO_EXPEDIDA e NOTIFICACAO_CIENCIA; nunca decide nada sobre a infracao. Marco por canal em inf.notification_channel_ref ([RN-RAIT-104])."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Notice",
+        "table": "notice",
+        "primaryKey": ["id"],
+        "description": "Aviso expedido pelo orgao — NA, NP, decisao, diligencia ou edital (ADR-0016 Decision 1; [WF-INF-002] secao 2 P2 Notificar). Dois marcos sempre separados: expedicao (dispatched_at/dispatched_on, prazo do orgao) e ciencia (inf.notice_acknowledgement, prazo do administrado). case_id referencia inf.rait_case sem FK — outro modulo. addressee_ref e referencia opaca, sem PII.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "infraction_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "addressee_kind",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "addressee_ref",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "channel",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "issued_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "dispatched_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "dispatched_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "printed_deadline_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "supersedes_notice_id",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_notice_infraction",
+            "columns": ["tenant_id", "infraction_id", "kind", "issued_at"]
+          },
+          {
+            "name": "ix_inf_notice_status",
+            "columns": ["tenant_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_notice_kind",
+            "expression": "kind in ('NA','NP','DECISAO','DILIGENCIA','EDITAL')"
+          },
+          {
+            "name": "ck_inf_notice_addressee_kind",
+            "expression": "addressee_kind in ('proprietario','principal_condutor','condutor_identificado','possuidor_equiparado','embarcador','transportador')"
+          },
+          {
+            "name": "ck_inf_notice_channel",
+            "expression": "channel in ('sne','postal','pessoal','edital','portal','balcao')"
+          },
+          {
+            "name": "ck_inf_notice_status",
+            "expression": "status in ('solicitada','expedida','publicada','devolvida','falha','eficaz')"
+          },
+          {
+            "name": "ck_inf_notice_printed_deadline_required",
+            "expression": "kind not in ('NA','NP') or status = 'solicitada' or printed_deadline_on is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_notice_infraction",
+            "columns": ["infraction_id"],
+            "references": {
+              "table": "inf.infraction",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_notice_addressee_kind",
+            "columns": ["addressee_kind"],
+            "references": {
+              "table": "inf.infraction_subject_kind_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_notice_channel",
+            "columns": ["channel"],
+            "references": {
+              "table": "inf.notification_channel_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_notice_supersedes",
+            "columns": ["supersedes_notice_id"],
+            "references": {
+              "table": "inf.notice",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "NoticeAcknowledgement",
+        "table": "notice_acknowledgement",
+        "primaryKey": ["id"],
+        "description": "Ciencia efetiva ou ficta de um aviso (ADR-0016 Decision 1; [RN-RAIT-104]; inf.notification_channel_ref). Uma por aviso: effective_on e o marco a partir do qual correm os prazos do administrado (T-DEF, T-NP-VENC). fictitious=true no SNE quando vale a disponibilizacao + 30 dias (T-SNE-CIENCIA).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "notice_id",
+            "type": "uuid"
+          },
+          {
+            "name": "effective_on",
+            "type": "date"
+          },
+          {
+            "name": "fictitious",
+            "type": "boolean"
+          },
+          {
+            "name": "evidence_kind",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "evidence_ref",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "registered_at",
+            "type": "timestamptz"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_notice_acknowledgement_notice",
+            "columns": ["tenant_id", "notice_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_notice_acknowledgement_evidence_kind",
+            "expression": "evidence_kind in ('ar_postal','recibo_sne','publicacao_edital','assinatura','registro_balcao')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_notice_acknowledgement_notice",
+            "columns": ["notice_id"],
+            "references": {
+              "table": "inf.notice",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "NoticeDeliveryAttempt",
+        "table": "notice_delivery_attempt",
+        "primaryKey": ["id"],
+        "description": "Tentativa de entrega de um aviso por canal (ADR-0016 Decision 1 e 3; [WF-INF-002] secao 2: retorno da remessa entregue | devolvida | falha). Refazimento do ato gera novo aviso com supersedes_notice_id, nunca reescreve a tentativa. outbox_id liga a entrega ao envelope da integration.outbox.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "notice_id",
+            "type": "uuid"
+          },
+          {
+            "name": "channel",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "attempted_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "outcome",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "provider_ref",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "error_code",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "outbox_id",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_notice_delivery_attempt_notice",
+            "columns": ["tenant_id", "notice_id", "attempted_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_notice_delivery_attempt_channel",
+            "expression": "channel in ('sne','postal','pessoal','edital','portal','balcao')"
+          },
+          {
+            "name": "ck_inf_notice_delivery_attempt_outcome",
+            "expression": "outcome in ('entregue','devolvida','falha')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_notice_delivery_attempt_notice",
+            "columns": ["notice_id"],
+            "references": {
+              "table": "inf.notice",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_notice_delivery_attempt_channel",
+            "columns": ["channel"],
+            "references": {
+              "table": "inf.notification_channel_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/notification/",
+    "resources": [
+      {
+        "entity": "Notice",
+        "path": "notices",
+        "resource": "notice"
+      },
+      {
+        "entity": "NoticeAcknowledgement",
+        "path": "acknowledgements",
+        "resource": "notice-acknowledgement",
+        "operations": ["list", "get", "create"]
+      },
+      {
+        "entity": "NoticeDeliveryAttempt",
+        "path": "delivery-attempts",
+        "resource": "notice-delivery-attempt",
+        "operations": ["list", "get", "create"]
+      }
+    ]
+  },
+  "auth": {
+    "source": "RAIT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

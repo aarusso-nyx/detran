@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0006",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Wire org, collection and integration modules, add the mock bank port and write the documents facade types",
+  "description": "Register the three new modules in AppModule and root scripts, implement BankPort with a deterministic mock under collection/src/handwritten/ports/bank (ADR-0017 §4), transcribe the documents facade types specified in the contract into @detran/shared (ADR-0018) until the Inspector test passes, and bring every CTG-0002 gate to green without touching tests.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-inf-collection-handwritten",
+    "MOD-inf-rait-org-handwritten",
+    "MOD-inf-rait-integration-handwritten",
+    "MOD-shared-documents",
+    "MOD-app-module",
+    "MOD-root-scripts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": ["ADR-0017 §4", "ADR-0003"],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "iteration_trail": [],
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-a", "rait", "collection", "engineer"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-fe87d39c963a2a4b",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "verify:senatran-boundary"],
+    ["pnpm", "format:check"],
+    ["pnpm", "backend:test:unit"],
+    ["pnpm", "--filter", "@detran/shared", "test"]
+  ],
+  "created_at": "2026-09-14T17:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-fe87d39c963a2a4b",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

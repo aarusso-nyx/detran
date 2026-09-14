@@ -1,0 +1,26 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/app/src/app.module.ts",
+      "line": 357,
+      "claim": "A entrega ativa InfractionModule e NotificationModule no AppModule, expondo os controllers CRUD gerados; isto contradiz a meta explícita de que rotas só entram em R-0007.",
+      "fix": "Não registrar esses módulos/controllers no AppModule nesta rodada; manter a biblioteca e os artefatos de dados sem superfície HTTP até R-0007, ou escalar uma alteração formal da decisão M8."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "backend/domains/inf/infraction/src/controllers/infraction-event.controller.ts",
+      "line": 34,
+      "claim": "O controller expõe PATCH e DELETE para inf.infraction_event, embora o plano e o blueprint definam a trilha como append-only; o repositório efetivamente executa UPDATE e DELETE.",
+      "fix": "Modelar infraction_event como append-only no blueprint/gerador, sem operações update/delete nem rotas correspondentes, e regenerar a árvore."
+    }
+  ],
+  "notes": [
+    "TASK-0003 declara rotas fora de escopo em R-0007, mas a entrega as torna ativas via AppModule."
+  ]
+}

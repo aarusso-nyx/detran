@@ -1,0 +1,1060 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Infraction — BP-INF-INFRACTION-001",
+    "version": "1.1.1",
+    "description": "Agregado da infracao (ADR-0016 Decision 1; [WF-INF-003] secoes 1-6): unico escritor de state/substate, sujeito passivo, efeito suspensivo, pagamento, pontuacao e motivo de encerramento, dos relogios legais (secao 3) e da trilha de eventos (secao 6). O vocabulario canonico (15 estados, 12 sub-estados, 46 transicoes, 18 timers) vive em 14-inf-lifecycle-vocabulary.sql e e referenciado por FK.",
+    "x-blueprint": "BP-INF-INFRACTION-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/infraction/infractions": {
+      "get": {
+        "tags": ["infraction"],
+        "operationId": "listInfraction",
+        "summary": "List Infraction (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Infraction"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["infraction"],
+        "operationId": "createInfraction",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInfractionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Infraction"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/infraction/infractions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["infraction"],
+        "operationId": "getInfraction",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Infraction"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["infraction"],
+        "operationId": "updateInfraction",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateInfractionDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Infraction"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["infraction"],
+        "operationId": "removeInfraction",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/infraction/timers": {
+      "get": {
+        "tags": ["infraction-timer"],
+        "operationId": "listInfractionTimer",
+        "summary": "List InfractionTimer (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InfractionTimer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["infraction-timer"],
+        "operationId": "createInfractionTimer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInfractionTimerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InfractionTimer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/infraction/timers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["infraction-timer"],
+        "operationId": "getInfractionTimer",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InfractionTimer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["infraction-timer"],
+        "operationId": "updateInfractionTimer",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateInfractionTimerDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InfractionTimer"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["infraction-timer"],
+        "operationId": "removeInfractionTimer",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/infraction/events": {
+      "get": {
+        "tags": ["infraction-event"],
+        "operationId": "listInfractionEvent",
+        "summary": "List InfractionEvent (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InfractionEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["infraction-event"],
+        "operationId": "createInfractionEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInfractionEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InfractionEvent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/infraction/events/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["infraction-event"],
+        "operationId": "getInfractionEvent",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InfractionEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Infraction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": ["INSTANCIA_ENCERRADA", "ARQUIVADO"],
+            "default": "'AIT_LAVRADO'"
+          },
+          "substate": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PRAZO_DEFESA_ABERTO",
+              "INDICACAO_EM_PROCESSAMENTO",
+              "EM_ADMISSIBILIDADE_1A",
+              "EM_REMESSA_JARI",
+              "EM_JULGAMENTO_JARI",
+              "PROVIDO_1A",
+              "NEGADO_1A",
+              "EM_ADMISSIBILIDADE_2A",
+              "EM_JULGAMENTO_CETRAN",
+              "PENDENTE_PAGAMENTO",
+              "QUITADA",
+              "EM_COBRANCA"
+            ],
+            "nullable": true
+          },
+          "subject_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "principal_condutor",
+              "condutor_identificado",
+              "possuidor_equiparado",
+              "embarcador",
+              "transportador"
+            ],
+            "default": "'proprietario'"
+          },
+          "suspensive_effect": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "paid": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "payment_tier": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nenhum",
+              "desconto_80",
+              "desconto_60_reconhecimento",
+              "desconto_40_fora_sne",
+              "integral_juros",
+              "restituido"
+            ],
+            "default": "'nenhum'"
+          },
+          "points_registered": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "closure_motive": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nao_interposicao_1a",
+              "nao_interposicao_2a",
+              "julgamento_2a",
+              "reconhecimento",
+              "desistencia",
+              "nao_conhecimento_intempestivo",
+              "na_nao_expedida",
+              "insubsistente"
+            ],
+            "nullable": true
+          },
+          "risk_flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "committed_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flagrant": {
+            "type": "boolean"
+          },
+          "known_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "state_changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_transition_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "ait_id",
+          "committed_on",
+          "flagrant",
+          "state_changed_at",
+          "created_at"
+        ],
+        "description": "Agregado da infracao — unico escritor do estado legal (ADR-0016 Decision 1; [WF-INF-003] secao 1 estados, secao 4 atributos ortogonais, secao 5 invariantes). Uma infracao por AIT integrado; state e substate por FK ao vocabulario de 14-inf-lifecycle-vocabulary.sql."
+      },
+      "CreateInfractionDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": ["INSTANCIA_ENCERRADA", "ARQUIVADO"],
+            "default": "'AIT_LAVRADO'"
+          },
+          "substate": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PRAZO_DEFESA_ABERTO",
+              "INDICACAO_EM_PROCESSAMENTO",
+              "EM_ADMISSIBILIDADE_1A",
+              "EM_REMESSA_JARI",
+              "EM_JULGAMENTO_JARI",
+              "PROVIDO_1A",
+              "NEGADO_1A",
+              "EM_ADMISSIBILIDADE_2A",
+              "EM_JULGAMENTO_CETRAN",
+              "PENDENTE_PAGAMENTO",
+              "QUITADA",
+              "EM_COBRANCA"
+            ],
+            "nullable": true
+          },
+          "subject_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "principal_condutor",
+              "condutor_identificado",
+              "possuidor_equiparado",
+              "embarcador",
+              "transportador"
+            ],
+            "default": "'proprietario'"
+          },
+          "suspensive_effect": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "paid": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "payment_tier": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nenhum",
+              "desconto_80",
+              "desconto_60_reconhecimento",
+              "desconto_40_fora_sne",
+              "integral_juros",
+              "restituido"
+            ],
+            "default": "'nenhum'"
+          },
+          "points_registered": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "closure_motive": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nao_interposicao_1a",
+              "nao_interposicao_2a",
+              "julgamento_2a",
+              "reconhecimento",
+              "desistencia",
+              "nao_conhecimento_intempestivo",
+              "na_nao_expedida",
+              "insubsistente"
+            ],
+            "nullable": true
+          },
+          "risk_flag": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "SEM_RISCO",
+              "ALERTA_N1",
+              "ALERTA_N2",
+              "ALERTA_N3",
+              "CRITICO",
+              "PRESCRITO_OPERACIONAL"
+            ],
+            "default": "'SEM_RISCO'"
+          },
+          "committed_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "flagrant": {
+            "type": "boolean"
+          },
+          "known_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "state_changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_transition_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["ait_id", "committed_on", "flagrant", "state_changed_at"]
+      },
+      "InfractionTimer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-NA",
+              "T-SNE-CIENCIA",
+              "T-DEF",
+              "T-IND",
+              "T-NA-IND",
+              "T-DEC",
+              "T-NP-VENC",
+              "T-REM10",
+              "T-JUL-24M",
+              "T-DIL",
+              "T-R2",
+              "T-PAR-3A",
+              "T-PRESC-5A",
+              "T-VOTO",
+              "T-CONV",
+              "T-ASS",
+              "T-CLAIM",
+              "SLA-30"
+            ]
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["jari", "cetran"],
+            "nullable": true
+          },
+          "start_basis": {
+            "type": "string"
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["armado", "satisfeito", "cancelado", "vencido"]
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "expired_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "suspended_by_act_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "suspended_days": {
+            "type": "integer",
+            "default": "0"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "legal_basis": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "infraction_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "status",
+          "legal_basis",
+          "created_at"
+        ],
+        "description": "Relogio legal da infracao ([WF-INF-003] secao 3; [WF-INF-002] secao 9.2). due_on ja vem prorrogado ao 1o dia util e nunca antecipa (rait-deadline-engine secao 2). Um relogio T-JUL-24M por instance (jari|cetran). suspended_by_act_id referencia inf.rait_suspension_act (DDL 39) sem FK — ordem lexicografica de apply.sh, como rait_deadline."
+      },
+      "CreateInfractionTimerDto": {
+        "type": "object",
+        "properties": {
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "T-NA",
+              "T-SNE-CIENCIA",
+              "T-DEF",
+              "T-IND",
+              "T-NA-IND",
+              "T-DEC",
+              "T-NP-VENC",
+              "T-REM10",
+              "T-JUL-24M",
+              "T-DIL",
+              "T-R2",
+              "T-PAR-3A",
+              "T-PRESC-5A",
+              "T-VOTO",
+              "T-CONV",
+              "T-ASS",
+              "T-CLAIM",
+              "SLA-30"
+            ]
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["jari", "cetran"],
+            "nullable": true
+          },
+          "start_basis": {
+            "type": "string"
+          },
+          "started_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "raw_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "business_days": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["armado", "satisfeito", "cancelado", "vencido"]
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "expired_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "suspended_by_act_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "suspended_days": {
+            "type": "integer",
+            "default": "0"
+          },
+          "extension_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "legal_basis": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "infraction_id",
+          "timer_code",
+          "start_basis",
+          "started_on",
+          "raw_due_on",
+          "due_on",
+          "status",
+          "legal_basis"
+        ]
+      },
+      "InfractionEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transition_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "rule_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "from_substate": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_substate": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "trigger_kind": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["evento", "timer", "ato", "sistema"]
+          },
+          "trigger_code": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "event_code": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "INFRACAO_ESTADO_ALTERADO",
+              "PENALIDADE_DEFINITIVA",
+              "RESTITUICAO_DEVIDA",
+              "TIMER_VENCIDO",
+              "RISCO_PRESCRICAO_ALTERADO"
+            ]
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "actor_kind": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["user", "system"]
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "outbox_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "infraction_id",
+          "trigger_kind",
+          "trigger_code",
+          "event_code",
+          "occurred_at",
+          "actor_kind",
+          "payload",
+          "created_at"
+        ],
+        "description": "Trilha append-only de transicoes e eventos publicados ([WF-INF-003] secao 6; rait-events-sse-contract secao 2.4). Nunca atualizada: updated_at existe por construcao do gerador e nao tem semantica. transition_id/rule_ref ligam a linha a inf.infraction_transition_ref; outbox_id liga ao envelope da integration.outbox."
+      },
+      "CreateInfractionEventDto": {
+        "type": "object",
+        "properties": {
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "transition_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "rule_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "from_substate": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "to_substate": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "trigger_kind": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["evento", "timer", "ato", "sistema"]
+          },
+          "trigger_code": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "event_code": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "INFRACAO_ESTADO_ALTERADO",
+              "PENALIDADE_DEFINITIVA",
+              "RESTITUICAO_DEVIDA",
+              "TIMER_VENCIDO",
+              "RISCO_PRESCRICAO_ALTERADO"
+            ]
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "actor_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "actor_kind": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["user", "system"]
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "outbox_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "infraction_id",
+          "trigger_kind",
+          "trigger_code",
+          "event_code",
+          "occurred_at",
+          "actor_kind",
+          "payload"
+        ]
+      }
+    }
+  }
+}

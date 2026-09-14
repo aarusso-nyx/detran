@@ -170,6 +170,9 @@ jobs:
       - name: Apply unified backend DDL
         run: pnpm backend:db:reset
 
+      - name: Load canonical fixtures (rait-fixtures.md; WP-A)
+        run: bash backend/database/seed.sh
+
       - name: Verify controller decorators
         run: pnpm verify:decorators
 

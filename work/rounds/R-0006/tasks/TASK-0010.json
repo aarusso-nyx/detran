@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0006",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Write the deadline event-port and extension tests (cases 19–22, case 12 amendment)",
+  "description": "Encode contract §5.2 as red tests in @detran/inf-deadlines without weakening the 18 existing cases.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-deadlines-tests", "MOD-inf-infraction-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["contract CTG-0001 §5.2"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0009",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "iteration_trail": [],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "deadlines", "delivery-review-2"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-e86f1318be0540f8",
+  "acceptance_commands": [
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "backend/domains/inf/deadlines/tests"
+    ]
+  ],
+  "created_at": "2026-09-14T22:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-e86f1318be0540f8",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

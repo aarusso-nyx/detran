@@ -1,0 +1,35 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0006/contracts/CTG-0001.md",
+      "line": 436,
+      "claim": "O contrato exige cobertura de 42 linhas vigentes, mas o DDL canônico tem 43: 46 totais menos as linhas 27 e 38 (`a_confirmar`) e 41 (`nao_modelada`).",
+      "fix": "Corrigir o contrato para 43 linhas vigentes e manter a contagem e a matriz de testes coerentes."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/deadlines/src/engine.ts",
+      "line": 308,
+      "claim": "`reschedule` somente atualiza o timer; não emite `TIMER_REPROGRAMADO`, embora o caso obrigatório 10 do contrato exija esse evento.",
+      "fix": "Adicionar uma porta de publicação/outbox ao motor, emitir o evento na mesma operação de reprogramação e testar o envelope."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/deadlines/src/engine.ts",
+      "line": 291,
+      "claim": "A reprogramação não incrementa nem limita `extensionCount`; portanto T-DIL pode ser prorrogado repetidamente, contrariando a regra canônica de uma única prorrogação.",
+      "fix": "Implementar a operação de prorrogação com incremento e bloqueio após uma ocorrência, preservando a suspensão como operação distinta, e cobrir a tentativa negativa."
+    }
+  ],
+  "notes": [
+    "Os papéis dos três relatórios estão declarados e a ordem Architect → Inspector → Engineer foi observada.",
+    "As correções de AppModule e das operações append-only atendem aos dois achados do ciclo anterior."
+  ]
+}

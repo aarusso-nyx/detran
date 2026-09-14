@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0006",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Define infraction and notification blueprints, event schemas and CTG-0001 contract",
+  "description": "Create BP-INF-INFRACTION-001 and BP-INF-NOTIFICATION-001 (ADR-0016), generate modules, DDL 38/59 and OpenAPI, write the five published-event JSON schemas and the executable contract (transition guards per infraction_transition_ref row, deadline-engine API, fixture ids) that the Inspector and Engineer implement.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-bp-inf-infraction",
+    "MOD-bp-inf-notification",
+    "MOD-ddl-38",
+    "MOD-ddl-59",
+    "MOD-schemas-events",
+    "MOD-generated-tree"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [
+    "WF-INF-003",
+    "WF-INF-002 §9.2",
+    "ADR-0016",
+    "OD-301",
+    "OD-304"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 3,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "policy-issue",
+      "finding": "delivery-review-1: generated PATCH/DELETE on the append-only trail inf.infraction_event (and notice_acknowledgement, notice_delivery_attempt). Fix by the maestro (Architect): api.resources[].operations = list,get,create; blueprints v1.1.1 regenerated.",
+      "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "delivery-review-2: contract §3.3 count 42 → 43 vigente rows corrected by the maestro (Architect).",
+      "status": "completed"
+    }
+  ],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "infraction", "notification", "blueprint"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-87011ad23ebf15eb",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "verify:lifecycle-vocabulary"]
+  ],
+  "created_at": "2026-09-14T17:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-87011ad23ebf15eb",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

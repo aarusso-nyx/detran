@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/inf.timer.rescheduled.schema.json",
+  "title": "inf.timer.rescheduled",
+  "description": "Reprogramacao de relogio por ato de suspensao — consumido pela auditoria e pelo SSE (rait-events-sse-contract secao 2.4; rait-deadline-engine secao 3). TIMER_REPROGRAMADO ainda nao existe em inf.infraction_event_ref (lacuna reportada, ver work/rounds/R-0006/contracts/CTG-0001.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ULID do envelope; ordena por tempo dentro do tenant (rait-events-sse-contract secao 1)."
+    },
+    "type": {
+      "const": "inf.timer.rescheduled"
+    },
+    "domainEvent": {
+      "const": "TIMER_REPROGRAMADO",
+      "description": "Token canonico de inf.infraction_event_ref (14-inf-lifecycle-vocabulary.sql)."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Usado para roteamento; nunca exposto no SSE."
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "requestId do comando que gerou o evento."
+    },
+    "causationId": {
+      "type": "string",
+      "description": "id do evento que causou este; ausente no evento raiz."
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "case",
+            "infraction",
+            "session",
+            "batch",
+            "clock",
+            "assignment",
+            "agenda-item",
+            "outbox"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ETag pos-transicao (inf.infraction.version)."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "description": "Duas origens (CTG-0001 secao 5.2): suspensao por ato — nunca automatica, so ato motivado e auditado ([RN-RAIT-105]), vedada sobre T-DEC, T-JUL-24M, T-PAR-3A e T-PRESC-5A (RAIT.SUSPENSION_LEGAL_TIMER) — e prorrogacao unica de T-DIL (mesmo prazo, extension_count <= 1; Res. 900/2022 art. 9o, [RN-RAIT-004]), em que suspensionActId e nulo.",
+      "additionalProperties": false,
+      "required": [
+        "ownerId",
+        "timerCode",
+        "oldDueOn",
+        "newDueOn",
+        "suspensionActId",
+        "reason"
+      ],
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "timerCode": {
+          "type": "string",
+          "enum": [
+            "T-NA",
+            "T-SNE-CIENCIA",
+            "T-DEF",
+            "T-IND",
+            "T-NA-IND",
+            "T-DEC",
+            "T-NP-VENC",
+            "T-REM10",
+            "T-JUL-24M",
+            "T-DIL",
+            "T-R2",
+            "T-PAR-3A",
+            "T-PRESC-5A",
+            "T-VOTO",
+            "T-CONV",
+            "T-ASS",
+            "T-CLAIM",
+            "SLA-30"
+          ],
+          "description": "inf.infraction_timer_ref.code."
+        },
+        "oldDueOn": {
+          "type": "string",
+          "format": "date"
+        },
+        "newDueOn": {
+          "type": "string",
+          "format": "date"
+        },
+        "suspensionActId": {
+          "type": ["string", "null"],
+          "format": "uuid",
+          "description": "inf.rait_suspension_act (DDL 39); referencia sem FK. Obrigatorio e anulavel: o ato existe na suspensao e e nulo na prorrogacao (CTG-0001 secao 5.2)."
+        },
+        "reason": {
+          "type": "string",
+          "enum": ["suspensao", "prorrogacao"],
+          "description": "Origem da reprogramacao; tokens em portugues fixados pelo Owner em 2026-09-14 (decisao M14, work/rounds/R-0006/plan.md)."
+        }
+      }
+    }
+  }
+}
