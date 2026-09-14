@@ -1,7 +1,8 @@
 # R-0003 — frente `dash-roles` (WP-D0 do DASHBOARD)
 
-**Status:** entrega aceita em 2026-09-14; aguardando commit/evidência/PR pelo maestro. Reviewer:
-GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
+**Status:** fechada em 2026-09-14 como `PC-0001`, após entrega aceita e mesclada pelo PR #32
+(`cf8f475eaf1951fa2ebb3c42d24f725c6581ea0e`) e observação pós-merge. Reviewer: GPT-5.6 Terra
+via `tools/orchestra/bridge.sh codex`.
 
 ## Metas
 
@@ -91,7 +92,13 @@ Não há paralelismo útil nesta frente porque todas as tarefas estão encadeada
 
 ## Retomada
 
-(vazio — preenchido pelo maestro em `checkpoint`)
+- Concluídas: TASK-0001…TASK-0004, dois ciclos de prompt review, dois ciclos de delivery review,
+  evidência CTG-0001, conciliação com `origin/main`, PR #32, CI e merge.
+- Último veredito: delivery review ciclo 2 `PASS`, sem findings.
+- Observação pós-merge: `EV-c02e644fc87284b3` no SHA
+  `cf8f475eaf1951fa2ebb3c42d24f725c6581ea0e`; não promotora.
+- Fechamento: `PC-0001`; resta integrar por PR os artefatos pós-merge, porque `main` é protegido e
+  eles não podiam fazer parte do PR de entrega já integrado.
 
 ## Leitura
 

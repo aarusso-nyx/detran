@@ -48,19 +48,19 @@ ficam ativas ao mesmo tempo (ondas 5 e 6).
 
 ## Histórico (preencher a cada rodada)
 
-| Rodada | Frente              | Abertura | Merge | Tarefas | Ciclos de REVIEW | Escaladas | Tokens estimados | Ajustes ao método |
-| ------ | ------------------- | -------- | ----- | ------- | ---------------- | --------- | ---------------- | ----------------- |
-| R-0003 | `dash-roles`        | —        | —     | —       | —                | —         | —                | —                 |
-| R-0004 | `param-store`       | —        | —     | —       | —                | —         | —                | —                 |
-| R-0005 | `ops-agency`        | —        | —     | —       | —                | —         | —                | —                 |
-| R-0006 | `rait-model`        | —        | —     | —       | —                | —         | —                | —                 |
-| R-0007 | `rait-backend`      | —        | —     | —       | —                | —         | —                | —                 |
-| R-0008 | `teat-backend`      | —        | —     | —       | —                | —         | —                | —                 |
-| R-0009 | `portal-backend`    | —        | —     | —       | —                | —         | —                | —                 |
-| R-0010 | `boat-backend`      | —        | —     | —       | —                | —         | —                | —                 |
-| R-0011 | `dashboard-backend` | —        | —     | —       | —                | —         | —                | —                 |
-| R-0012 | `rait-web`          | —        | —     | —       | —                | —         | —                | —                 |
-| R-0013 | `teat-frontends`    | —        | —     | —       | —                | —         | —                | —                 |
-| R-0014 | `portal-pwa`        | —        | —     | —       | —                | —         | —                | —                 |
-| R-0015 | `boat-mobile`       | —        | —     | —       | —                | —         | —                | —                 |
-| R-0016 | `dashboard-console` | —        | —     | —       | —                | —         | —                | —                 |
+| Rodada | Frente              | Abertura   | Merge              | Tarefas | Ciclos de REVIEW      | Escaladas | Tokens estimados         | Ajustes ao método                                                                                     |
+| ------ | ------------------- | ---------- | ------------------ | ------- | --------------------- | --------- | ------------------------ | ----------------------------------------------------------------------------------------------------- |
+| R-0003 | `dash-roles`        | 2026-09-14 | 2026-09-14, PR #32 | 4       | 2 prompt + 2 delivery | 1         | 550k entrada / 91k saída | Normalizar JSON da ponte antes do gate de formato; manter negativos explícitos para grants derivados. |
+| R-0004 | `param-store`       | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0005 | `ops-agency`        | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0006 | `rait-model`        | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0007 | `rait-backend`      | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0008 | `teat-backend`      | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0009 | `portal-backend`    | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0010 | `boat-backend`      | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0011 | `dashboard-backend` | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0012 | `rait-web`          | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0013 | `teat-frontends`    | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0014 | `portal-pwa`        | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0015 | `boat-mobile`       | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
+| R-0016 | `dashboard-console` | —          | —                  | —       | —                     | —         | —                        | —                                                                                                     |
