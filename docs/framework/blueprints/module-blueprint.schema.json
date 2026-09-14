@@ -5,77 +5,165 @@
   "type": "object",
   "required": ["schemaVersion", "id", "module", "database"],
   "properties": {
-    "schemaVersion": { "const": "1.0.0" },
-    "id": { "type": "string", "pattern": "^BP-[A-Z0-9-]+$" },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^BP-[A-Z0-9-]+$"
+    },
     "module": {
       "type": "object",
       "required": ["name", "namespace", "version"],
       "properties": {
-        "name": { "type": "string" },
-        "namespace": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
-        "version": { "type": "string" },
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "version": {
+          "type": "string"
+        },
         "handwrittenControllers": {
           "type": "array",
-          "items": { "$ref": "#/$defs/handwrittenModuleMember" }
+          "items": {
+            "$ref": "#/$defs/handwrittenModuleMember"
+          }
         },
         "handwrittenProviders": {
           "type": "array",
-          "items": { "$ref": "#/$defs/handwrittenModuleMember" }
+          "items": {
+            "$ref": "#/$defs/handwrittenModuleMember"
+          }
         },
         "handwrittenExports": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "owners": { "type": "array", "items": { "type": "string" } },
-        "description": { "type": "string" }
+        "owners": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "moduleImports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["package", "symbol"],
+            "properties": {
+              "package": {
+                "type": "string"
+              },
+              "symbol": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "moduleExports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       }
     },
     "database": {
       "type": "object",
       "required": ["entities"],
       "properties": {
-        "entities": { "type": "array", "items": { "$ref": "#/$defs/entity" } }
+        "entities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/entity"
+          }
+        }
       }
     },
-    "api": { "type": "object" },
-    "auth": { "type": "object" },
-    "audit": { "type": "object" },
-    "ops": { "type": "object" }
+    "api": {
+      "type": "object"
+    },
+    "auth": {
+      "type": "object"
+    },
+    "audit": {
+      "type": "object"
+    },
+    "ops": {
+      "type": "object"
+    }
   },
   "$defs": {
     "handwrittenModuleMember": {
       "type": "object",
       "required": ["target", "symbol"],
       "properties": {
-        "target": { "type": "string" },
-        "symbol": { "type": "string" }
+        "target": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        }
       }
     },
     "entity": {
       "type": "object",
       "required": ["name", "table", "primaryKey", "fields"],
       "properties": {
-        "name": { "type": "string" },
-        "table": { "type": "string" },
-        "primaryKey": { "type": "array", "items": { "type": "string" } },
+        "name": {
+          "type": "string"
+        },
+        "table": {
+          "type": "string"
+        },
+        "primaryKey": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "fields": {
           "type": "array",
           "items": {
             "type": "object",
             "required": ["name", "type"],
             "properties": {
-              "name": { "type": "string" },
-              "type": { "type": "string" },
-              "nullable": { "type": "boolean" },
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "nullable": {
+                "type": "boolean"
+              },
               "default": {},
-              "writable": { "type": "boolean" },
-              "pii": { "type": "string" },
-              "retention": { "type": "string" }
+              "writable": {
+                "type": "boolean"
+              },
+              "pii": {
+                "type": "string"
+              },
+              "retention": {
+                "type": "string"
+              }
             }
           }
         },
-        "relations": { "type": "array" },
-        "indexes": { "type": "array" }
+        "relations": {
+          "type": "array"
+        },
+        "indexes": {
+          "type": "array"
+        }
       }
     }
   }

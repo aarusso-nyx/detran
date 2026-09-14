@@ -1,4 +1,4 @@
-// Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:8f7f7c36486cc7f2062f87bdfda6722994b3aff5dc8e5b80183ffea196fad19f
+// Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:9312d2d0009dca8a9a345b86aa4cda330d2bed8e98072f5036909160f5017d1c
 import { Module } from '@nestjs/common';
 import { NormativeCatalogController } from './controllers/normative-catalog.controller.js';
 import { NormativeCatalogService } from './services/normative-catalog.service.js';
@@ -18,6 +18,8 @@ import { NormativeDocumentTemplateRepository } from './repositories/normative-do
 import { MobileNormativePackageController } from './controllers/mobile-normative-package.controller.js';
 import { MobileNormativePackageService } from './services/mobile-normative-package.service.js';
 import { MobileNormativePackageRepository } from './repositories/mobile-normative-package.repository.js';
+import { NormativeCommandsController } from './normative-commands.controller.js';
+import { NormativeLifecycleService } from './normative-lifecycle.service.js';
 
 @Module({
   controllers: [
@@ -27,6 +29,7 @@ import { MobileNormativePackageRepository } from './repositories/mobile-normativ
     NormativeAgencyParameterController,
     NormativeDocumentTemplateController,
     MobileNormativePackageController,
+    NormativeCommandsController,
   ],
   providers: [
     NormativeCatalogService,
@@ -41,6 +44,8 @@ import { MobileNormativePackageRepository } from './repositories/mobile-normativ
     NormativeDocumentTemplateRepository,
     MobileNormativePackageService,
     MobileNormativePackageRepository,
+    NormativeLifecycleService,
   ],
+  exports: [NormativeLifecycleService],
 })
 export class NormativeModule {}

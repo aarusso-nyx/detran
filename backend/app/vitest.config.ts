@@ -75,6 +75,30 @@ export default defineConfig({
       '@detran/ch-toxicology': fileURLToPath(
         new URL('../domains/ch/toxicology/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-ait': fileURLToPath(
+        new URL('../domains/inf/ait/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-normative': fileURLToPath(
+        new URL('../domains/inf/normative/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-measures': fileURLToPath(
+        new URL('../domains/inf/measures/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-alcohol': fileURLToPath(
+        new URL('../domains/inf/alcohol/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-rait-case': fileURLToPath(
+        new URL('../domains/inf/rait-case/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-rait-worklist': fileURLToPath(
+        new URL('../domains/inf/rait-worklist/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-rait-session': fileURLToPath(
+        new URL('../domains/inf/rait-session/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-speed': fileURLToPath(
+        new URL('../domains/inf/speed/src/index.ts', import.meta.url),
+      ),
       '@detran/senatran-adapter': fileURLToPath(
         new URL(
           '../../packages/senatran-adapter/src/index.ts',

@@ -10,7 +10,7 @@ export class FieldOperationsController {
   @Post('agents')
   @Resource('ops:agent-profile')
   @Action('create')
-  @Audit({ action: 'OPS_AGENT_CREATE', entity: 'ops.agent_profile' })
+  @Audit({ action: 'OPS_AGENT_CREATE', entity: 'ops.ops_agent_profile' })
   createAgent(@Body() dto: Record<string, unknown>) {
     return this.service.create('agents', dto);
   }
@@ -23,7 +23,7 @@ export class FieldOperationsController {
   @Post('devices')
   @Resource('ops:operational-device')
   @Action('create')
-  @Audit({ action: 'OPS_DEVICE_CREATE', entity: 'ops.operational_device' })
+  @Audit({ action: 'OPS_DEVICE_CREATE', entity: 'ops.ops_operational_device' })
   createDevice(@Body() dto: Record<string, unknown>) {
     return this.service.create('devices', dto);
   }
@@ -33,7 +33,7 @@ export class FieldOperationsController {
   @Post('teams')
   @Resource('ops:team')
   @Action('create')
-  @Audit({ action: 'OPS_TEAM_CREATE', entity: 'ops.team' })
+  @Audit({ action: 'OPS_TEAM_CREATE', entity: 'ops.ops_team' })
   createTeam(@Body() dto: Record<string, unknown>) {
     return this.service.create('teams', dto);
   }
@@ -45,23 +45,35 @@ export class FieldOperationsController {
   @Post('shifts')
   @Resource('ops:shift')
   @Action('create')
-  @Audit({ action: 'OPS_SHIFT_CREATE', entity: 'ops.shift' })
+  @Audit({ action: 'OPS_SHIFT_CREATE', entity: 'ops.ops_shift' })
   createShift(@Body() dto: Record<string, unknown>) {
     return this.service.create('shifts', dto);
+  }
+  @Get('homologations')
+  @Resource('ops:homologation')
+  @Action('read')
+  homologations() {
+    return this.service.list('homologations');
   }
   @Post('homologations')
   @Resource('ops:homologation')
   @Action('create')
-  @Audit({ action: 'OPS_HOMOLOGATION_CREATE', entity: 'ops.homologation' })
+  @Audit({ action: 'OPS_HOMOLOGATION_CREATE', entity: 'ops.ops_homologation' })
   createHomologation(@Body() dto: Record<string, unknown>) {
     return this.service.create('homologations', dto);
+  }
+  @Get('app-versions')
+  @Resource('ops:application-version')
+  @Action('read')
+  applicationVersions() {
+    return this.service.list('app-versions');
   }
   @Post('app-versions')
   @Resource('ops:application-version')
   @Action('create')
   @Audit({
     action: 'OPS_APP_VERSION_CREATE',
-    entity: 'ops.application_version',
+    entity: 'ops.ops_application_version',
   })
   createApplicationVersion(@Body() dto: Record<string, unknown>) {
     return this.service.create('app-versions', dto);

@@ -4,9 +4,9 @@ import type { Transaction } from '@stynx-nyx/data';
 import type { MobileNormativePackage } from './entities/mobile-normative-package.entity.js';
 import type { NormativeCatalog } from './entities/normative-catalog.entity.js';
 import type { NormativeFraming } from './entities/normative-framing.entity.js';
-import type { MobileNormativePackageRepository } from './repositories/mobile-normative-package.repository.js';
-import type { NormativeCatalogRepository } from './repositories/normative-catalog.repository.js';
-import type { NormativeFramingRepository } from './repositories/normative-framing.repository.js';
+import { MobileNormativePackageRepository } from './repositories/mobile-normative-package.repository.js';
+import { NormativeCatalogRepository } from './repositories/normative-catalog.repository.js';
+import { NormativeFramingRepository } from './repositories/normative-framing.repository.js';
 
 export interface NormativeReferencePort {
   assertActive(

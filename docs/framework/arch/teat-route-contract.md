@@ -223,6 +223,8 @@ replay conforme `rait-events-sse-contract.md` §1 e §3; filtro por papel e unid
 
 ## 9. Divergências a corrigir antes de gerar clientes
 
+**Estado em 2026-09-13 (WP-T0, branch `fix/wp-t0-base-defects`):** itens 1–5 corrigidos; item 6 vai ao WP-T1; item 7 é documental (contrato unificado). Achado adicional: o app unificado **não montava nenhum módulo `inf`** e os pacotes `ops/*` não têm módulo Nest — os módulos `inf` passaram a ser montados em `AppModule` (speed atrás da flag `teat.speed_meters`); os `ops/*` ganham módulos no WP-T1/T2.
+
 1. Gerador concatena `basePath` + `path` sem barra (`v1/inf/aitaits`).
 2. `AitCommandsController` e `AitLifecycleService` não estão em `AitModule`.
 3. Auditoria do `ops` cita tabelas inexistentes (`ops.agent_profile`).

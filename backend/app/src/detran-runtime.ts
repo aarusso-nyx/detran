@@ -51,6 +51,10 @@ import {
 import type { StynxStorageModuleOptions } from '@stynx-nyx/storage';
 
 import { isDetranActionAllowed, permissionsForRoles } from '@detran/shared';
+import {
+  InMemoryFeatureFlagProvider,
+  type FlagSet,
+} from '@stynx-nyx/feature-flags';
 
 export type DetranRuntimeProfile =
   'local-sandbox' | 'test' | 'staging-like' | 'production';
@@ -719,4 +723,32 @@ export function detranPipelineOptions() {
       backend: detranIdempotencyBackend,
     },
   };
+}
+
+/**
+ * Static feature-flag set of the backend (ADR-0021, `@stynx-nyx/feature-flags`
+ * contract). Boolean switches decided by the Owner default to the catalogue
+ * value (`docs/framework/arch/parameter-catalogue.md`) and can be turned on per
+ * environment with `DETRAN_FEATURE_<NAME>=on`.
+ */
+export function detranFeatureFlagSet(): FlagSet {
+  const on = (name: string, fallback: boolean): boolean => {
+    const raw = process.env[`DETRAN_FEATURE_${name}`];
+    if (raw === undefined || raw === '') return fallback;
+    return raw === 'on' || raw === 'true' || raw === '1';
+  };
+  return {
+    flags: {
+      'teat.speed_meters': {
+        default: on('SPEED_METERS', false),
+        description:
+          'Speed meter catalogue and measurements (inf/speed); off until the agency operates meters (steering H.54).',
+        owner: 'teat',
+      },
+    },
+  };
+}
+
+export function detranFeatureFlagProvider(): InMemoryFeatureFlagProvider {
+  return new InMemoryFeatureFlagProvider(detranFeatureFlagSet());
 }

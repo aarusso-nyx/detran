@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.0.0 sha256:ef69813e9ad97641c04b7bbbdb8110fe97446523d552fdf17da429d55de0b510
+// Generated from BP-INF-AIT-001 v1.0.0 sha256:1b2717e37821dbaa07fe8909762b132a11e1f71514ca40a196fb04a8053d5e77
 import { Module } from '@nestjs/common';
 import { AitController } from './controllers/ait.controller.js';
 import { AitService } from './services/ait.service.js';
@@ -21,8 +21,12 @@ import { AitSignatureRepository } from './repositories/ait-signature.repository.
 import { AitPrintEventController } from './controllers/ait-print-event.controller.js';
 import { AitPrintEventService } from './services/ait-print-event.service.js';
 import { AitPrintEventRepository } from './repositories/ait-print-event.repository.js';
+import { AitCommandsController } from './ait-commands.controller.js';
+import { AIT_LIFECYCLE_PROVIDER } from './ait-lifecycle.provider.js';
+import { NormativeModule } from '@detran/inf-normative';
 
 @Module({
+  imports: [NormativeModule],
   controllers: [
     AitController,
     AitVehicleController,
@@ -31,6 +35,7 @@ import { AitPrintEventRepository } from './repositories/ait-print-event.reposito
     AitCorrectionController,
     AitSignatureController,
     AitPrintEventController,
+    AitCommandsController,
   ],
   providers: [
     AitService,
@@ -47,6 +52,7 @@ import { AitPrintEventRepository } from './repositories/ait-print-event.reposito
     AitSignatureRepository,
     AitPrintEventService,
     AitPrintEventRepository,
+    AIT_LIFECYCLE_PROVIDER,
   ],
 })
 export class AitModule {}

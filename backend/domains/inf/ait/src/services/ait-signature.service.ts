@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.0.0 sha256:ef69813e9ad97641c04b7bbbdb8110fe97446523d552fdf17da429d55de0b510
+// Generated from BP-INF-AIT-001 v1.0.0 sha256:1b2717e37821dbaa07fe8909762b132a11e1f71514ca40a196fb04a8053d5e77
 import { Injectable } from '@nestjs/common';
 import { AitSignatureRepository } from '../repositories/ait-signature.repository.js';
 import type { AitSignature } from '../entities/ait-signature.entity.js';

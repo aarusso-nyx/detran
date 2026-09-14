@@ -36,9 +36,9 @@ admitindo selo prata, parecer jurídico único).
 | Item  | Via | Ação                                                                                                                                                       | Dono      |
 | ----- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
 | E1    | —   | `pnpm install --frozen-lockfile` com token, `pnpm exec devai evidence record`, commit separado                                                             | usuário   |
-| E2    | —   | tarefa `task_4332c5ce`; confirmar no PR de base                                                                                                            | Engineer  |
-| E3–E7 | —   | PR único "WP-T0 base defects" (`teat-route-contract.md` §9)                                                                                                | Engineer  |
-| E8    | —   | reconciliar `policy.ts` (`est:*`, `dashboard:*`) no mesmo PR de E2–E7                                                                                      | Engineer  |
+| E2    | —   | **fechado**: junção corrigida em `main` (gerador com `filter(Boolean).join`)                                                                               | Engineer  |
+| E3–E7 | —   | **E3–E6 fechados** no branch `fix/wp-t0-base-defects` (módulo AIT, auditoria `ops`, política × rotas, speed atrás de flag); **E7** vai ao WP-T1            | Engineer  |
+| E8    | —   | `est:*` reconciliado no WP-T0; `dashboard:*` fica para o WP-D0 (papéis novos)                                                                              | Engineer  |
 | E9    | C   | contratos de dado propostos em WP-D3; ACK manual até existir (`dashboard.ack` rotulado)                                                                    | Architect |
 | E10   | A→B | RENAINF real e Manuais RENAEST: **esgotado online** (Portaria 587/2024 é de preços; página oficial sem anexos) → carta                                     | Owner     |
 | E11   | A   | **capturado**: Angular 22 em `wp0-stynx-1-3-1-migration.md` §7; feriados em [REF-CALENDARIO-2026-AM-MANAUS] (fixture corrigida: 04/06 é feriado municipal) | —         |
