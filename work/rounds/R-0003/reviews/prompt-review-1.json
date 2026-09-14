@@ -1,0 +1,19 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0003",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "work/rounds/R-0003/prompts/TASK-0004.md",
+      "line": 32,
+      "claim": "A fronteira documental omite `apps/dashboard/web/README.md`, cuja atualização é explicitamente parte do WP-D0 no build pack.",
+      "fix": "Adicionar `apps/dashboard/web/README.md` à leitura e aos caminhos permitidos de TASK-0004, instruir a correção para blocos A–D e camadas sem ampliar escopo, e incluí-lo na inspeção do diff."
+    }
+  ],
+  "notes": [
+    "Hashes SHA-256 e `prompt_composition_id` dos quatro prompts conferem com `compositions.json` e com os JSONs das tarefas.",
+    "A tríade CTG-0001, dependências, papéis, comandos e proibição de git estão coerentes."
+  ]
+}

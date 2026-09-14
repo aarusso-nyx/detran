@@ -67,6 +67,15 @@ export const RAIT_ROLES = [
   'rait-finance',
 ] as const;
 
+/**
+ * DASHBOARD staff role codes (Owner decision 2026-09-13, steering H.38,
+ * OD-D01, recorded in docs/framework/product/shared/actors.md §Papéis
+ * granulares DASHBOARD). Exactly two codes; job titles (ouvidor,
+ * financeiro, coordenador de RENAEST) map onto `dash-duty-owner` rather
+ * than becoming new codes.
+ */
+export const DASHBOARD_ROLES = ['dash-operator', 'dash-duty-owner'] as const;
+
 export const DETRAN_ROLES = [
   ...PEC_ROLES,
   'field-agent',
@@ -78,6 +87,7 @@ export const DETRAN_ROLES = [
   'bi-analyst',
   'integration-operator',
   ...RAIT_ROLES,
+  ...DASHBOARD_ROLES,
   'CIDADAO',
 ] as const;
 

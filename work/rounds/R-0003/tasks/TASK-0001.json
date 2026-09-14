@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0003",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Define dashboard roles, policy, and layer contract",
+  "description": "Materialize the Owner-approved dashboard role catalogue DDL and define the executable contract that constrains the Inspector and Engineer.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-shared-roles", "MOD-ddl-05"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["RN-DASH-170", "RN-DASH-171", "OD-D01"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "reference-gap",
+      "finding": "DASH_EXPORT_ROLES contradicted the read-only Auditor/DPO rule by granting dashboard:export:create.",
+      "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "Remove unauthorized integration-operator grant from dashboard:alert:read.",
+      "status": "completed"
+    }
+  ],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-d0", "dashboard", "roles", "policy"],
+  "branch": "orchestra/dash-roles",
+  "worktree_id": "WT-dash-roles",
+  "prompt_composition_id": "PC-474251a1dc3eec51",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "verify:rls-ddl"]
+  ],
+  "created_at": "2026-09-14T03:28:53.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "claude-opus-5" },
+    "prompt_composition_id": "PC-474251a1dc3eec51",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

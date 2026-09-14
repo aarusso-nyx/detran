@@ -1,0 +1,19 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0003",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/domains/shared/src/policy.ts",
+      "line": 1145,
+      "claim": "`integration-operator` foi incluído em `dashboard:alert:read`, mas o contrato canônico de rotas lista apenas `dash-operator`, gestores, `agency-admin`, `technical-admin` e `AUDITOR` para essa leitura. CTG-0001 registra a ampliação como inferência, sem decisão Owner/OD que a autorize.",
+      "fix": "Remover `integration-operator` de `dashboard:alert:read` e alinhar contrato/testes; ou registrar decisão explícita do Owner em OD/steering antes de conceder essa permissão."
+    }
+  ],
+  "notes": [
+    "A correção da iteração 2 convergiu: `AUDITOR` e `DPO` estão fora de `dashboard:export:create`, com conjunto de 12 papéis e testes negativos preservados.",
+    "Não há alteração observada que relaxe gates, introduza skip/todo, edite código gerado ou atravesse a fronteira SENATRAN."
+  ]
+}

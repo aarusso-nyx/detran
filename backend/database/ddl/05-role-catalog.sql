@@ -1,4 +1,6 @@
 -- Canonical DETRAN role catalogue (Owner decision 2026-09-12; ADR-0015).
+-- The `dashboard` family was added by the Owner decision of 2026-09-13
+-- (steering.md H.38, OD-D01) and carries `dash-operator`/`dash-duty-owner`.
 -- Mirrors backend/domains/shared/src/roles.ts (DETRAN_ROLES) one-to-one:
 -- tools/check-role-catalog.ts fails `pnpm check` when the two drift.
 -- auth.roles.key (per-tenant role rows, STYNX auth model) must reference a
@@ -8,7 +10,8 @@
 CREATE TABLE IF NOT EXISTS auth.role_catalog (
   key text PRIMARY KEY,
   family text NOT NULL
-    CHECK (family IN ('pec', 'teat', 'rait', 'citizen')),
+    CONSTRAINT role_catalog_family_check
+    CHECK (family IN ('pec', 'teat', 'rait', 'dashboard', 'citizen')),
   name text NOT NULL,
   description text NOT NULL,
   apps text[] NOT NULL,
@@ -21,6 +24,18 @@ CREATE TABLE IF NOT EXISTS auth.role_catalog (
 
 COMMENT ON TABLE auth.role_catalog IS
   'Catálogo canônico de papéis (RBAC) do ecossistema DETRAN. Fonte: backend/domains/shared/src/roles.ts; docs/framework/product/shared/actors.md.';
+
+-- Family set is re-established on every run so that a database created before
+-- a family was added (here: `dashboard`, 2026-09-13) accepts the new rows
+-- without a manual migration. CREATE TABLE IF NOT EXISTS above is a no-op on an
+-- existing catalogue, so the constraint has to be replaced explicitly. The
+-- column-level CHECK of a fresh database carries the same name, which makes the
+-- DROP/ADD pair idempotent in both directions.
+ALTER TABLE auth.role_catalog
+  DROP CONSTRAINT IF EXISTS role_catalog_family_check;
+ALTER TABLE auth.role_catalog
+  ADD CONSTRAINT role_catalog_family_check
+  CHECK (family IN ('pec', 'teat', 'rait', 'dashboard', 'citizen'));
 
 INSERT INTO auth.role_catalog (key, family, name, description, apps, is_staff, source, introduced_on) VALUES
   -- PEC (ch) — códigos preservados verbatim (roles.ts PEC_ROLES)
@@ -59,6 +74,9 @@ INSERT INTO auth.role_catalog (key, family, name, description, apps, is_staff, s
   ('rait-manager', 'rait', 'Gestor RAIT', 'Radar de prescrição, produção e metas, capacidade, constituição de turmas, incidentes e extinções; leitura de integrações.', ARRAY['rait','dashboard'], true, 'shared/actors.md §Papéis granulares RAIT; JRN-RAIT-004', '2026-09-12'),
   ('rait-hr', 'rait', 'RH / gabinete', 'Mandatos dos membros (nomeação, posse, recondução, perda) e apoio à folha de jeton.', ARRAY['rait'], true, 'shared/actors.md §Papéis granulares RAIT; UC-RAIT-037', '2026-09-12'),
   ('rait-finance', 'rait', 'Financeiro / tesouraria', 'Documentos de arrecadação por fase, restituições, cobrança e dívida ativa, conciliação bancária.', ARRAY['rait'], true, 'shared/actors.md §Papéis granulares RAIT; UC-RAIT-032…035', '2026-09-12'),
+  -- DASHBOARD — 2 papéis granulares (Owner 2026-09-13; steering H.38, OD-D01; shared/actors.md §Papéis granulares DASHBOARD)
+  ('dash-operator', 'dashboard', 'Operador de monitoramento', 'Triagem do turno, ciência (ack) em nome do dono e encerramento de alertas da trilha de irregularidade após verificação; nunca pratica ato de negócio (RN-DASH-101). Camada máxima N1.', ARRAY['dashboard'], true, 'shared/actors.md §Papéis granulares DASHBOARD; steering H.38', '2026-09-13'),
+  ('dash-duty-owner', 'dashboard', 'Dono de dever periódico', 'Abre, prepara, submete e comprova os ciclos do calendário de deveres periódicos (WF-DASH-002); atribuído ao ouvidor, ao financeiro e ao coordenador de RENAEST. Camada máxima N1.', ARRAY['dashboard'], true, 'shared/actors.md §Papéis granulares DASHBOARD; steering H.38', '2026-09-13'),
   -- Cidadão
   ('CIDADAO', 'citizen', 'Cidadão', 'Condutor, proprietário ou procurador no Portal público: consulta, indicação, defesa e recurso próprios.', ARRAY['portal'], false, 'shared/actors.md §Cidadãos e partes', '2026-08-24')
 ON CONFLICT (key) DO UPDATE SET

@@ -1,16 +1,23 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { DETRAN_ROLES, ROLE_ALIASES, canonicalRoles } from './roles.js';
+import {
+  DETRAN_ROLES,
+  ROLE_ALIASES,
+  DASHBOARD_ROLES,
+  canonicalRoles,
+} from './roles.js';
 import {
   DETRAN_POLICY_MATRIX,
   isDetranActionAllowed,
   permissionsForRoles,
+  dashboardLayerFor,
+  dashboardLayerAllows,
 } from './policy.js';
 import { withTenantContext } from './tenant-context.js';
 
 describe('DETRAN unified policy kit', () => {
   it('deduplicates only TEAT auditor into the PEC AUDITOR role', () => {
-    expect(DETRAN_ROLES).toHaveLength(34);
+    expect(DETRAN_ROLES).toHaveLength(36);
     expect(ROLE_ALIASES.auditor).toBe('AUDITOR');
     expect(canonicalRoles(['auditor', 'AUDITOR', 'field-supervisor'])).toEqual([
       'AUDITOR',
@@ -256,5 +263,533 @@ describe('DETRAN unified policy kit', () => {
       ),
     ).rejects.toThrow('active request context');
     expect(tx).not.toHaveBeenCalled();
+  });
+});
+
+describe('DASHBOARD roles, dashboard:* policy matrix and access layers (WP-D0, CTG-0001)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  // CTG-0001 §5 — exhaustive role -> maximum layer table (36 roles).
+  const N2_TRANSVERSAL = ['agency-admin', 'GESTOR_DETRAN', 'AUDITOR', 'DPO'];
+  const N2_OWN_AREA = [
+    'rait-manager',
+    'rait-coordinator',
+    'rait-chair',
+    'traffic-authority',
+    'GESTOR',
+  ];
+  const N1_ROLES = [
+    'dash-operator',
+    'dash-duty-owner',
+    'technical-admin',
+    'integration-operator',
+    'bi-analyst',
+  ];
+  const N0_ROLES = [
+    'ADMIN',
+    'ADMIN_CLINICA',
+    'MEDICO',
+    'PSICOLOGO',
+    'RECEPCAO',
+    'TECNICO_BIOMETRIA',
+    'SUPERVISOR',
+    'JUNTA',
+    'CETRAN',
+    'SUPORTE',
+    'CANDIDATO',
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'rait-analyst',
+    'rait-secretary',
+    'rait-signing-authority',
+    'rait-central-authority',
+    'rait-rapporteur',
+    'rait-hr',
+    'rait-finance',
+    'CIDADAO',
+  ];
+  const ROLE_LAYER: Record<string, 'N0' | 'N1' | 'N2'> = Object.fromEntries([
+    ...N2_TRANSVERSAL.map((role) => [role, 'N2'] as const),
+    ...N2_OWN_AREA.map((role) => [role, 'N2'] as const),
+    ...N1_ROLES.map((role) => [role, 'N1'] as const),
+    ...N0_ROLES.map((role) => [role, 'N0'] as const),
+  ]);
+
+  // CTG-0001 §3 — the 32 dashboard:<resource>:<action> permissions after WP-D0.
+  const DASH_N0_ROLES = DETRAN_ROLES.filter(
+    (role) => role !== 'CANDIDATO' && role !== 'CIDADAO',
+  );
+  const DASH_EXPORT_ROLES = [
+    'agency-admin',
+    'GESTOR_DETRAN',
+    'rait-manager',
+    'rait-coordinator',
+    'rait-chair',
+    'traffic-authority',
+    'GESTOR',
+    'dash-operator',
+    'dash-duty-owner',
+    'technical-admin',
+    'integration-operator',
+    'bi-analyst',
+  ];
+  const DASHBOARD_PERMISSION_MATRIX: Record<string, readonly string[]> = {
+    'dashboard:alert:read': [
+      'dash-operator',
+      'rait-manager',
+      'rait-coordinator',
+      'rait-chair',
+      'traffic-authority',
+      'GESTOR',
+      'agency-admin',
+      'technical-admin',
+      'AUDITOR',
+    ],
+    'dashboard:alert:ack': [
+      'dash-operator',
+      'rait-manager',
+      'rait-coordinator',
+      'rait-chair',
+      'traffic-authority',
+      'GESTOR',
+      'agency-admin',
+      'technical-admin',
+      'integration-operator',
+    ],
+    'dashboard:alert:treat': [
+      'rait-manager',
+      'rait-coordinator',
+      'rait-chair',
+      'traffic-authority',
+      'GESTOR',
+      'agency-admin',
+      'technical-admin',
+      'integration-operator',
+    ],
+    'dashboard:alert:close': ['dash-operator'],
+    'dashboard:alert:annotate': ['technical-admin', 'integration-operator'],
+    'dashboard:incident:read': [
+      'rait-manager',
+      'rait-coordinator',
+      'rait-chair',
+      'traffic-authority',
+      'GESTOR',
+      'agency-admin',
+      'AUDITOR',
+    ],
+    'dashboard:duty:read': DASH_N0_ROLES,
+    'dashboard:duty-cycle:read': DASH_N0_ROLES,
+    'dashboard:duty-cycle:start': ['dash-duty-owner', 'agency-admin'],
+    'dashboard:duty-cycle:prepare': ['dash-duty-owner', 'agency-admin'],
+    'dashboard:duty-cycle:submit': ['dash-duty-owner', 'agency-admin'],
+    'dashboard:duty-cycle:prove': ['dash-duty-owner', 'agency-admin'],
+    'dashboard:duty-cycle:archive': ['dash-operator', 'agency-admin'],
+    'dashboard:indicator:read': DASH_N0_ROLES,
+    'dashboard:indicator-config:read': [
+      'bi-analyst',
+      'agency-admin',
+      'technical-admin',
+      'AUDITOR',
+    ],
+    'dashboard:indicator-config:update': [
+      'bi-analyst',
+      'agency-admin',
+      'technical-admin',
+    ],
+    'dashboard:indicator-config:publish': [
+      'bi-analyst',
+      'agency-admin',
+      'technical-admin',
+    ],
+    'dashboard:bi-panel:read': [
+      'bi-analyst',
+      'agency-admin',
+      'technical-admin',
+      'AUDITOR',
+    ],
+    'dashboard:bi-panel:publish': [
+      'bi-analyst',
+      'agency-admin',
+      'technical-admin',
+    ],
+    'dashboard:generated-report:read': [
+      'bi-analyst',
+      'agency-admin',
+      'technical-admin',
+      'AUDITOR',
+    ],
+    'dashboard:generated-report:request': [
+      'bi-analyst',
+      'agency-admin',
+      'technical-admin',
+    ],
+    'dashboard:generated-report:complete': ['bi-analyst', 'technical-admin'],
+    'dashboard:generated-report:fail': ['bi-analyst', 'technical-admin'],
+    'dashboard:source:read': [
+      'technical-admin',
+      'integration-operator',
+      'dash-operator',
+      'AUDITOR',
+    ],
+    'dashboard:export:create': DASH_EXPORT_ROLES,
+    'dashboard:export:approve': ['agency-admin'],
+    'dashboard:audit-trail:read': [
+      'AUDITOR',
+      'DPO',
+      'agency-admin',
+      'rait-manager',
+      'rait-coordinator',
+      'rait-chair',
+      'traffic-authority',
+      'GESTOR',
+    ],
+    'dashboard:comparison:read': [
+      'agency-admin',
+      'rait-manager',
+      'rait-coordinator',
+      'rait-chair',
+      'traffic-authority',
+      'GESTOR',
+      'bi-analyst',
+      'AUDITOR',
+    ],
+    'dashboard:transparency-audit:read': [
+      'technical-admin',
+      'agency-admin',
+      'AUDITOR',
+    ],
+    'dashboard:transparency-audit:audit': ['technical-admin', 'agency-admin'],
+    'dashboard:dataset:read': DASH_N0_ROLES,
+    'dashboard:kpi:read': ['agency-admin', 'dash-operator', 'AUDITOR'],
+  };
+  // CTG-0001 §3, the five `(=)` rules preserved verbatim from before WP-D0.
+  const PRESERVED_RULE_KEYS = [
+    'dashboard:indicator-config:publish',
+    'dashboard:bi-panel:publish',
+    'dashboard:generated-report:request',
+    'dashboard:generated-report:complete',
+    'dashboard:generated-report:fail',
+  ];
+
+  it('catalogs the two DASHBOARD roles inside DETRAN_ROLES (CTG-0001 §1)', () => {
+    expect(DASHBOARD_ROLES).toEqual(['dash-operator', 'dash-duty-owner']);
+    expect(DETRAN_ROLES).toContain('dash-operator');
+    expect(DETRAN_ROLES).toContain('dash-duty-owner');
+  });
+
+  it('canonicalizes dash-operator and dash-duty-owner as themselves (CTG-0001 §8.1.2)', () => {
+    expect(canonicalRoles(['dash-operator'])).toEqual(['dash-operator']);
+    expect(canonicalRoles(['dash-duty-owner'])).toEqual(['dash-duty-owner']);
+  });
+
+  it('preserves the auditor alias alongside a DASHBOARD role (CTG-0001 §8.1.3)', () => {
+    expect(canonicalRoles(['auditor', 'dash-operator'])).toEqual([
+      'AUDITOR',
+      'dash-operator',
+    ]);
+  });
+
+  it('defines the dashboard:* matrix exactly as CTG-0001 §3 (32 permissions)', () => {
+    for (const [key, roles] of Object.entries(DASHBOARD_PERMISSION_MATRIX)) {
+      expect(new Set(DETRAN_POLICY_MATRIX[key as never])).toEqual(
+        new Set(roles),
+      );
+    }
+    const dashboardKeys = Object.keys(DETRAN_POLICY_MATRIX).filter((key) =>
+      key.startsWith('dashboard:'),
+    );
+    expect(dashboardKeys.sort()).toEqual(
+      Object.keys(DASHBOARD_PERMISSION_MATRIX).sort(),
+    );
+    expect(dashboardKeys).toHaveLength(32);
+  });
+
+  it('keeps the five pre-existing dashboard rules unchanged (CTG-0001 §8.1.6)', () => {
+    for (const key of PRESERVED_RULE_KEYS) {
+      expect(new Set(DETRAN_POLICY_MATRIX[key as never])).toEqual(
+        new Set(DASHBOARD_PERMISSION_MATRIX[key]),
+      );
+    }
+  });
+
+  it('grants every (role, permission) pair of CTG-0001 §3 through isDetranActionAllowed (CTG-0001 §8.1.7)', () => {
+    for (const [key, roles] of Object.entries(DASHBOARD_PERMISSION_MATRIX)) {
+      const [, resource, action] = key.split(':');
+      for (const role of roles) {
+        const permissions = permissionsForRoles([role]);
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions },
+            `dashboard:${resource}`,
+            action,
+          ),
+        ).toBe(true);
+      }
+    }
+  });
+
+  it('dash-operator holds exactly its granted dashboard actions (CTG-0001 §8.1.8)', () => {
+    const granted: Array<[string, string]> = [
+      ['dashboard:alert', 'read'],
+      ['dashboard:alert', 'ack'],
+      ['dashboard:alert', 'close'],
+      ['dashboard:duty-cycle', 'archive'],
+      ['dashboard:source', 'read'],
+      ['dashboard:kpi', 'read'],
+      ['dashboard:duty', 'read'],
+      ['dashboard:duty-cycle', 'read'],
+      ['dashboard:indicator', 'read'],
+      ['dashboard:dataset', 'read'],
+      ['dashboard:export', 'create'],
+    ];
+    for (const [resource, action] of granted) {
+      expect(allowed(['dash-operator'], resource, action)).toBe(true);
+    }
+  });
+
+  it('dash-duty-owner holds exactly its granted dashboard actions (CTG-0001 §8.1.9)', () => {
+    const granted: Array<[string, string]> = [
+      ['dashboard:duty-cycle', 'start'],
+      ['dashboard:duty-cycle', 'prepare'],
+      ['dashboard:duty-cycle', 'submit'],
+      ['dashboard:duty-cycle', 'prove'],
+      ['dashboard:duty', 'read'],
+      ['dashboard:duty-cycle', 'read'],
+      ['dashboard:indicator', 'read'],
+      ['dashboard:dataset', 'read'],
+      ['dashboard:export', 'create'],
+    ];
+    for (const [resource, action] of granted) {
+      expect(allowed(['dash-duty-owner'], resource, action)).toBe(true);
+    }
+  });
+
+  it('AUDITOR holds every dashboard:<resource>:read permission of CTG-0001 §3 (CTG-0001 §8.1.10)', () => {
+    const readKeys = Object.keys(DASHBOARD_PERMISSION_MATRIX).filter((key) =>
+      key.endsWith(':read'),
+    );
+    for (const key of readKeys) {
+      const [, resource, action] = key.split(':');
+      expect(allowed(['AUDITOR'], `dashboard:${resource}`, action)).toBe(true);
+    }
+  });
+
+  it('computes the maximum layer per role over the exhaustive CTG-0001 §5 table', () => {
+    for (const [role, layer] of Object.entries(ROLE_LAYER)) {
+      expect(dashboardLayerFor([role])).toBe(layer);
+    }
+  });
+
+  it('accumulates the highest layer across combined roles (CTG-0001 §8.1.12, ADR-0005)', () => {
+    expect(dashboardLayerFor(['dash-operator', 'agency-admin'])).toBe('N2');
+  });
+
+  it('defaults to N0 for empty, unknown or non-staff role lists and never throws (CTG-0001 §8.1.13)', () => {
+    expect(dashboardLayerFor([])).toBe('N0');
+    expect(dashboardLayerFor(['papel-inexistente'])).toBe('N0');
+    expect(dashboardLayerFor(['CIDADAO'])).toBe('N0');
+    expect(() => dashboardLayerFor(['papel-inexistente'])).not.toThrow();
+  });
+
+  it('canonicalizes the auditor alias before computing the layer (CTG-0001 §8.1.14)', () => {
+    expect(dashboardLayerFor(['auditor'])).toBe('N2');
+  });
+
+  it('allows dash-operator at N0 and N1 (CTG-0001 §8.1.15)', () => {
+    expect(dashboardLayerAllows(['dash-operator'], 'N0')).toBe(true);
+    expect(dashboardLayerAllows(['dash-operator'], 'N1')).toBe(true);
+  });
+
+  it('allows rait-manager at N2 (CTG-0001 §8.1.16)', () => {
+    expect(dashboardLayerAllows(['rait-manager'], 'N2')).toBe(true);
+  });
+
+  it('never grants N3, for any single role or the union of all 36 roles (CTG-0001 §8.2.17)', () => {
+    for (const role of DETRAN_ROLES) {
+      expect(dashboardLayerAllows([role], 'N3')).toBe(false);
+    }
+    expect(dashboardLayerAllows([...DETRAN_ROLES], 'N3')).toBe(false);
+  });
+
+  it('never computes N3 as a layer, for any role, the empty list or an unknown role (CTG-0001 §8.2.18)', () => {
+    for (const role of DETRAN_ROLES) {
+      expect(dashboardLayerFor([role])).not.toBe('N3');
+    }
+    expect(dashboardLayerFor([])).not.toBe('N3');
+    expect(dashboardLayerFor(['papel-inexistente'])).not.toBe('N3');
+  });
+
+  it('denies layers above each role ceiling (CTG-0001 §8.2.19)', () => {
+    expect(dashboardLayerAllows(['dash-operator'], 'N2')).toBe(false);
+    expect(dashboardLayerAllows(['dash-duty-owner'], 'N2')).toBe(false);
+    expect(dashboardLayerAllows(['bi-analyst'], 'N2')).toBe(false);
+    expect(dashboardLayerAllows(['integration-operator'], 'N2')).toBe(false);
+    expect(dashboardLayerAllows(['field-agent'], 'N1')).toBe(false);
+    expect(dashboardLayerAllows(['CIDADAO'], 'N1')).toBe(false);
+  });
+
+  it('denies dash-operator every action outside its grant (CTG-0001 §8.2.20)', () => {
+    const denied: Array<[string, string]> = [
+      ['dashboard:alert', 'treat'],
+      ['dashboard:alert', 'annotate'],
+      ['dashboard:duty-cycle', 'start'],
+      ['dashboard:duty-cycle', 'prepare'],
+      ['dashboard:duty-cycle', 'submit'],
+      ['dashboard:duty-cycle', 'prove'],
+      ['dashboard:export', 'approve'],
+      ['dashboard:indicator-config', 'read'],
+      ['dashboard:indicator-config', 'update'],
+      ['dashboard:indicator-config', 'publish'],
+      ['dashboard:bi-panel', 'read'],
+      ['dashboard:bi-panel', 'publish'],
+      ['dashboard:generated-report', 'read'],
+      ['dashboard:generated-report', 'request'],
+      ['dashboard:generated-report', 'complete'],
+      ['dashboard:generated-report', 'fail'],
+      ['dashboard:transparency-audit', 'read'],
+      ['dashboard:transparency-audit', 'audit'],
+      ['dashboard:audit-trail', 'read'],
+      ['dashboard:comparison', 'read'],
+      ['dashboard:incident', 'read'],
+    ];
+    for (const [resource, action] of denied) {
+      expect(allowed(['dash-operator'], resource, action)).toBe(false);
+    }
+  });
+
+  it('denies dash-duty-owner every action outside its grant (CTG-0001 §8.2.21)', () => {
+    const denied: Array<[string, string]> = [
+      ['dashboard:alert', 'read'],
+      ['dashboard:alert', 'ack'],
+      ['dashboard:alert', 'treat'],
+      ['dashboard:alert', 'close'],
+      ['dashboard:alert', 'annotate'],
+      ['dashboard:incident', 'read'],
+      ['dashboard:duty-cycle', 'archive'],
+      ['dashboard:export', 'approve'],
+      ['dashboard:audit-trail', 'read'],
+      ['dashboard:comparison', 'read'],
+      ['dashboard:kpi', 'read'],
+      ['dashboard:source', 'read'],
+    ];
+    for (const [resource, action] of denied) {
+      expect(allowed(['dash-duty-owner'], resource, action)).toBe(false);
+    }
+  });
+
+  it('denies AUDITOR every dashboard mutation (CTG-0001 §8.2.22)', () => {
+    const denied: Array<[string, string]> = [
+      ['dashboard:alert', 'ack'],
+      ['dashboard:alert', 'treat'],
+      ['dashboard:alert', 'close'],
+      ['dashboard:alert', 'annotate'],
+      ['dashboard:duty-cycle', 'start'],
+      ['dashboard:duty-cycle', 'prepare'],
+      ['dashboard:duty-cycle', 'submit'],
+      ['dashboard:duty-cycle', 'prove'],
+      ['dashboard:duty-cycle', 'archive'],
+      ['dashboard:indicator-config', 'update'],
+      ['dashboard:indicator-config', 'publish'],
+      ['dashboard:bi-panel', 'publish'],
+      ['dashboard:generated-report', 'request'],
+      ['dashboard:generated-report', 'complete'],
+      ['dashboard:generated-report', 'fail'],
+      ['dashboard:export', 'create'],
+      ['dashboard:export', 'approve'],
+      ['dashboard:transparency-audit', 'audit'],
+    ];
+    for (const [resource, action] of denied) {
+      expect(allowed(['AUDITOR'], resource, action)).toBe(false);
+    }
+  });
+
+  it('denies DPO the dashboard export permissions, read-only by CTG-0001 §8.2.22', () => {
+    expect(allowed(['DPO'], 'dashboard:export', 'create')).toBe(false);
+    expect(allowed(['DPO'], 'dashboard:export', 'approve')).toBe(false);
+  });
+
+  it('denies bi-analyst and integration-operator the actions CTG-0001 §8.2.23 names', () => {
+    expect(allowed(['bi-analyst'], 'dashboard:export', 'approve')).toBe(false);
+    expect(allowed(['bi-analyst'], 'dashboard:alert', 'read')).toBe(false);
+    expect(allowed(['bi-analyst'], 'dashboard:alert', 'ack')).toBe(false);
+    expect(allowed(['bi-analyst'], 'dashboard:incident', 'read')).toBe(false);
+    expect(allowed(['integration-operator'], 'dashboard:alert', 'read')).toBe(
+      false,
+    );
+    expect(allowed(['integration-operator'], 'dashboard:alert', 'close')).toBe(
+      false,
+    );
+    expect(
+      allowed(['integration-operator'], 'dashboard:incident', 'read'),
+    ).toBe(false);
+    expect(
+      allowed(['integration-operator'], 'dashboard:audit-trail', 'read'),
+    ).toBe(false);
+    for (const action of ['start', 'prepare', 'submit', 'prove', 'archive']) {
+      expect(
+        allowed(['integration-operator'], 'dashboard:duty-cycle', action),
+      ).toBe(false);
+    }
+  });
+
+  it('denies every dashboard mutation to non-DASHBOARD roles, and denies org-only reads to non-staff roles (CTG-0001 §8.2.24)', () => {
+    const noDomainRoles = [
+      'field-agent',
+      'MEDICO',
+      'rait-analyst',
+      'CANDIDATO',
+      'CIDADAO',
+    ];
+    const mutationKeys = Object.keys(DASHBOARD_PERMISSION_MATRIX).filter(
+      (key) => !key.endsWith(':read'),
+    );
+    for (const role of noDomainRoles) {
+      for (const key of mutationKeys) {
+        const [, resource, action] = key.split(':');
+        expect(allowed([role], `dashboard:${resource}`, action)).toBe(false);
+      }
+    }
+    for (const role of ['CANDIDATO', 'CIDADAO']) {
+      expect(allowed([role], 'dashboard:duty', 'read')).toBe(false);
+      expect(allowed([role], 'dashboard:duty-cycle', 'read')).toBe(false);
+      expect(allowed([role], 'dashboard:indicator', 'read')).toBe(false);
+      expect(allowed([role], 'dashboard:dataset', 'read')).toBe(false);
+    }
+  });
+
+  it('confines every dashboard:* key to the 15 CTG-0001 resources and never writes another domain (CTG-0001 §8.2.25)', () => {
+    const allowedResources = new Set([
+      'alert',
+      'incident',
+      'duty',
+      'duty-cycle',
+      'indicator',
+      'indicator-config',
+      'bi-panel',
+      'generated-report',
+      'source',
+      'export',
+      'audit-trail',
+      'comparison',
+      'transparency-audit',
+      'dataset',
+      'kpi',
+    ]);
+    const dashboardKeys = Object.keys(DETRAN_POLICY_MATRIX).filter((key) =>
+      key.startsWith('dashboard:'),
+    );
+    for (const key of dashboardKeys) {
+      const [, resource] = key.split(':');
+      expect(allowedResources.has(resource as string)).toBe(true);
+    }
+    expect(
+      Object.keys(DETRAN_POLICY_MATRIX).some((key) =>
+        ['inf:', 'ch:', 'est:', 'ops:', 'portal:'].some(
+          (prefix) => key.startsWith(prefix) && key.includes('dashboard'),
+        ),
+      ),
+    ).toBe(false);
   });
 });

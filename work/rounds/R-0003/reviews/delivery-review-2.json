@@ -1,0 +1,11 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0003",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "O achado do ciclo 1 foi eliminado: a rota, CTG §3.1 e policy.ts convergem nos nove papéis de dashboard:alert:read, sem integration-operator.",
+    "policy.spec.ts codifica tanto o conjunto exato quanto a negação explícita para integration-operator; a implementação nega a leitura e preserva alert:annotate e source:read.",
+    "A inspeção das regras confirma alert:ack, alert:treat, alert:annotate, source:read, camadas e exportação preservados; os relatórios da Iteração 3 registram a mesma fronteira."
+  ]
+}

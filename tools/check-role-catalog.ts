@@ -4,6 +4,7 @@ import path from 'node:path';
 import {
   DETRAN_ROLES,
   RAIT_ROLES,
+  DASHBOARD_ROLES,
 } from '../backend/domains/shared/src/roles.ts';
 
 // The canonical role catalogue lives in three places that must agree:
@@ -22,7 +23,7 @@ const actors = fs.readFileSync(
 const seeded = new Set<string>();
 const insertBlock = ddl.slice(ddl.indexOf('INSERT INTO auth.role_catalog'));
 for (const match of insertBlock.matchAll(
-  /^\s*\('([^']+)',\s*'(pec|teat|rait|citizen)'/gm,
+  /^\s*\('([^']+)',\s*'(pec|teat|rait|dashboard|citizen)'/gm,
 )) {
   seeded.add(match[1] ?? '');
 }
@@ -41,6 +42,11 @@ for (const key of seeded)
 for (const key of RAIT_ROLES)
   if (!actors.includes(`\`${key}\``))
     problems.push(`- ${key}: RAIT role not documented in shared/actors.md`);
+for (const key of DASHBOARD_ROLES)
+  if (!actors.includes(`\`${key}\``))
+    problems.push(
+      `- ${key}: DASHBOARD role not documented in shared/actors.md`,
+    );
 
 if (problems.length > 0) {
   console.error('check-role-catalog: role catalogue drift');
@@ -48,6 +54,6 @@ if (problems.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `check-role-catalog: OK (${runtime.size} roles, ${RAIT_ROLES.length} RAIT)`,
+    `check-role-catalog: OK (${runtime.size} roles, ${RAIT_ROLES.length} RAIT, ${DASHBOARD_ROLES.length} dashboard)`,
   );
 }

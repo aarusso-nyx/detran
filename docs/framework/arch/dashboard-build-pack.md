@@ -29,7 +29,7 @@ origem: `BP-BI-REPORTING-001`, grupo `bi` da matriz web do TEAT (`UX-WEB-090…0
 
 ## 2. Pacotes de trabalho
 
-### WP-D0 — Papéis, política e catálogo (Engineer; Owner para papéis)
+### WP-D0 — Papéis, política e catálogo (Engineer; Owner para papéis) — **executado em 2026-09-14** (`R-0003`/`dash-roles`)
 
 Adicionar `dash-operator` e `dash-duty-owner` ao catálogo de papéis (`roles.ts`,
 `05-role-catalog.sql`, `shared/actors.md`) ou decidir mapeamento em papéis existentes (OD-D01);
@@ -38,6 +38,10 @@ regras `dashboard:alert:*`, `duty-cycle:*`, `source:read`, `export:*`, `audit-tr
 `policy.ts` (camada por papel e domínio). Seed do catálogo de 42 indicadores em
 `dashboard.indicator` (bloco, fonte, limiar, dono, classificação, latência) a partir de
 [APP-DASHBOARD] §Catálogo. Gate: `policy.spec.ts`, `verify:role-catalog`, `docs:kb:check`.
+
+Executado: os dois papéis, as regras `dashboard:*` e `dashboardLayerFor`/`dashboardLayerAllows`
+(N0…N2, N3 sempre negado) estão em `roles.ts`/`policy.ts` (OD-D01). O seed dos 42 indicadores em
+`dashboard.indicator` fica para o WP-D1 (depende do blueprint `BP-DASH-MONITOR-001`).
 
 ### WP-D1 — Projeções e estado próprio (Architect-blueprint)
 
@@ -120,7 +124,7 @@ Opus/Terra: WP-D1, WP-D2.
 
 ## 5. Inconsistências do corpus a corrigir
 
-1. `apps/dashboard/web/README.md` fala em "worklist metrics, outbox health, adapter telemetry"; o corpus organiza por blocos A–D e camadas. Atualizar no WP-D0.
+1. **Corrigido no WP-D0 (2026-09-14)**: `apps/dashboard/web/README.md` falava em "worklist metrics, outbox health, adapter telemetry"; agora resume os blocos A–D e as camadas N0…N3 do corpus.
 2. `policy.ts` mantém vocabulário da origem (`bi-panel`, `generated-report`) sem regra do corpus que o sustente; mantido por decisão OD-D13.
 3. [IU-DASH-001] não tem códigos de tela nem rotas (greenfield); os ids D-01…D-18 deste pacote são a proposta a ser promovida ao corpus.
 4. [RN-DASH-120] cita 14 deveres e o APP "9 deveres do bloco B": o bloco B do catálogo tem 9 indicadores, a tabela-mestra 14 linhas (inclui SLA e Pnatrans). Nomear os dois conjuntos nas telas D-08/D-14.
