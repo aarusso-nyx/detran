@@ -252,10 +252,12 @@ Inspector segue a especificação §7).
 
 ## Retomada
 
-**Checkpoint 2026-09-14 (janela 2, ~190 k; parada por §5 — ver BLOQUEIO 2 em §Bloqueios).** Prompts TASK-0009…0011
-escritos e revisados três vezes (REVIEW, REVIEW, FAIL); tarefas `blocked`; nenhum worker disparado; árvore = checkpoint
-`2fe9337` + bookkeeping da janela 2. Ao retomar com a decisão: aplicar as correções de §Bloqueios em `prompts/TASK-0009.md`
-(recalcular `compositions.json`), disparar TASK-0009 → 0010 → 0011, gates, delivery-review ciclo 3, commit definitivo.
+**Checkpoint 2026-09-14 (fim da janela 2).** CTG-0001 completo: mini-tríade TASK-0009…0011 + iteração M15
+(TASK-0012/0013) entregues; delivery-review ciclo 4 PASS; rebase sobre `main` (PR #37 `param-store` mesclado);
+correção do seed de parâmetros + passo `seed.sh` no CI (`fix(ops)`); evidência `R-0006.jsonl` seq. 1; **PR #39 aberto**
+(branch publicado: daqui em diante só `git merge --no-edit origin/main`). Pendentes: CI de #39 → `gh pr merge 39 --merge`
+→ `devai audit observe --at <sha>`; depois CTG-0002 (TASK-0004…0008; `param-store` já em `main`, PR liberado ao
+concluir). ADR-0016 ganhou "Implementação: PR #39"; ADR-0017/0018 recebem a linha no PR de CTG-0002.
 
 **Checkpoint anterior (fim da janela 1, ~101 % do orçamento).** Branch `orchestra/rait-model` **não publicado**;
 commits: `f27f6e5` (planejamento + esqueleto), `chore(infraction): checkpoint CTG-0001` (entrega completa de
