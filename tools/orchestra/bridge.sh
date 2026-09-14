@@ -16,7 +16,8 @@ fi
 [[ -d "$cwd" ]] || { echo "bridge: worktree não encontrada: $cwd" >&2; exit 2; }
 mkdir -p "$(dirname "$out")"
 raw_out="$(mktemp "${out}.raw.XXXXXX")"
-trap 'rm -f "$raw_out"' EXIT
+formatted_out="$(mktemp "${out}.formatted.XXXXXX")"
+trap 'rm -f "$raw_out" "$formatted_out"' EXIT
 
 started="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 case "$family" in
@@ -33,12 +34,12 @@ esac
 ended="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 command -v pnpm >/dev/null || { echo "bridge: pnpm ausente; não foi possível normalizar a saída" >&2; exit 3; }
-raw_out_abs="$(cd "$(dirname "$raw_out")" && pwd)/$(basename "$raw_out")"
-if ! pnpm --dir "$cwd" exec prettier --parser json --write "$raw_out_abs" >/dev/null; then
+if ! pnpm --dir "$cwd" exec prettier --parser json < "$raw_out" > "$formatted_out"; then
   echo "bridge: saída do reviewer não é JSON válido: $out" >&2
   exit 4
 fi
-mv "$raw_out" "$out"
+mv "$formatted_out" "$out"
+rm -f "$raw_out"
 trap - EXIT
 
 sha() { shasum -a 256 "$1" | cut -d' ' -f1; }
