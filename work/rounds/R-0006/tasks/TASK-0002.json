@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0006",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Write infraction transition matrix, deadline-engine and database tests plus infraction fixtures",
+  "description": "Encode contracts/CTG-0001.md as tests: matrix over every infraction_transition_ref row, the 18 deadline-engine cases, event schemas, acknowledgement marks, RLS/check/FK/uniqueness integration tests; write seed 30-fixtures-infraction.sql (one infraction per state) and update the inf tenant-table count sensor.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-inf-infraction-tests",
+    "MOD-inf-notification-tests",
+    "MOD-inf-deadlines-tests",
+    "MOD-seed-30",
+    "MOD-inf-ait-rls-count"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [
+    "WF-INF-003 §2",
+    "rait-deadline-engine §7",
+    "rait-test-strategy §3"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "iteration_trail": [],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "infraction", "tests", "fixtures"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-40519a30bb18d27c",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["bash", "backend/database/apply.sh", "--full"],
+    ["bash", "backend/database/seed.sh"],
+    ["pnpm", "--filter", "@detran/inf-ait", "test:integration"]
+  ],
+  "created_at": "2026-09-14T17:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-40519a30bb18d27c",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

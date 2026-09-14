@@ -1,0 +1,41 @@
+{
+  "round": "R-0006",
+  "window": 1,
+  "window_input_budget": 700000,
+  "checkpoint_threshold": 560000,
+  "estimated_input_total": 520000,
+  "estimated_output_total": 51000,
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0006-W1",
+      "input_tokens": 280000,
+      "output_tokens": 30000,
+      "status": "completed",
+      "note": "bootstrap, mandatory reading, plan, 8 task JSONs, 8 prompts"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1",
+      "input_tokens": 60000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2",
+      "input_tokens": 60000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "input_tokens": 120000,
+      "output_tokens": 15000,
+      "status": "in_progress"
+    }
+  ]
+}
