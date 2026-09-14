@@ -653,6 +653,8 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
  * governance work; spelling them out keeps the unified matrix authoritative.
  */
 const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
+  ['parameter', 'read', ['agency-admin']],
+  ['parameter', 'update', ['agency-admin']],
   [
     'agent-profile',
     'read',
@@ -1315,6 +1317,9 @@ export function isDetranActionAllowed(
     return true;
   }
   const roles = canonicalRoles(principal.roles);
+  if (key === 'ops:parameter:update' || key === 'ops:parameter:read') {
+    return roles.includes('agency-admin');
+  }
   if (roles.some((role) => GLOBAL_ADMIN_ROLES.has(role))) return true;
   const allowed = DETRAN_POLICY_MATRIX[key];
   return Boolean(allowed?.some((role) => roles.includes(role)));

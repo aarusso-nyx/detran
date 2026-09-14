@@ -1,0 +1,185 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-OPS-PARAMETER-001",
+  "module": {
+    "name": "Parameter",
+    "namespace": "ops",
+    "version": "1.0.0",
+    "ddlFile": "15-ops-parameter.sql",
+    "owners": ["detran-ops"],
+    "description": "Shared versioned parameter store from ADR-0021 Decision 1; command discipline follows UC-RAIT-043 §Fluxo principal.",
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/parameter-command.controller",
+        "symbol": "ParameterCommandController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/parameter.service",
+        "symbol": "OpsParameterService"
+      },
+      {
+        "target": "handwritten/parameter.service",
+        "symbol": "SystemParameterClock"
+      },
+      {
+        "target": "handwritten/parameter.service",
+        "symbol": "NullParameterCache"
+      },
+      {
+        "target": "handwritten/parameter.service",
+        "symbol": "SqlParameterOutbox"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/parameter-command.controller",
+      "handwritten/parameter.service"
+    ],
+    "moduleExports": ["OpsParameterService"],
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      }
+    ]
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Parameter",
+        "table": "parameter",
+        "primaryKey": ["id"],
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "scope",
+            "type": "text"
+          },
+          {
+            "name": "surface",
+            "type": "text"
+          },
+          {
+            "name": "key",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "value_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "value_type",
+            "type": "text"
+          },
+          {
+            "name": "status",
+            "type": "text"
+          },
+          {
+            "name": "source_pending",
+            "type": "boolean"
+          },
+          {
+            "name": "legal_readonly",
+            "type": "boolean"
+          },
+          {
+            "name": "decision_ref",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "legal_basis",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "reason",
+            "type": "text"
+          },
+          {
+            "name": "version",
+            "type": "int"
+          },
+          {
+            "name": "effective_from",
+            "type": "date"
+          },
+          {
+            "name": "effective_to",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "changed_by",
+            "type": "uuid"
+          },
+          {
+            "name": "created_at",
+            "type": "timestamptz",
+            "default": "now()"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_parameter_scope",
+            "expression": "scope in ('tenant', 'agency', 'surface')"
+          },
+          {
+            "name": "ck_parameter_surface",
+            "expression": "surface in ('rait', 'teat', 'portal', 'est', 'dashboard', 'shared')"
+          },
+          {
+            "name": "ck_parameter_status",
+            "expression": "status in ('vigente', 'a_confirmar', 'proposta')"
+          },
+          {
+            "name": "ck_parameter_version_positive",
+            "expression": "version > 0"
+          },
+          {
+            "name": "ck_parameter_effective_range",
+            "expression": "effective_to is null or effective_to >= effective_from"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_parameter_tenant_agency_surface_key_effective_from",
+            "unique": true,
+            "columns": [
+              "tenant_id",
+              "coalesce(traffic_agency_id, '00000000-0000-0000-0000-000000000000'::uuid)",
+              "surface",
+              "key",
+              "effective_from"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ops/",
+    "resources": [
+      {
+        "entity": "Parameter",
+        "path": "parameters",
+        "resource": "parameter",
+        "operations": ["list", "get"]
+      }
+    ]
+  }
+}

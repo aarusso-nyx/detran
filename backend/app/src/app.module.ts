@@ -69,6 +69,7 @@ import { RaitCaseModule } from '@detran/inf-rait-case';
 import { RaitSessionModule } from '@detran/inf-rait-session';
 import { RaitWorklistModule } from '@detran/inf-rait-worklist';
 import { SpeedModule } from '@detran/inf-speed';
+import { ParameterModule } from '@detran/ops-parameter';
 
 import {
   DetranPersistedAuditSink,
@@ -343,6 +344,7 @@ export class AppModule {
         // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
         // handwritten AIT lifecycle commands (WP-T0).
         NormativeModule,
+        ParameterModule,
         AitModule,
         MeasuresModule,
         AlcoholModule,
