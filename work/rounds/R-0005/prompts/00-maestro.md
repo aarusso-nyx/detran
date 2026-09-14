@@ -18,8 +18,8 @@
   `work/rounds/R-0005/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
-- Dependências que precisam estar em `main` antes de começar: **onda 1 (`dash-roles` R-0003 e `param-store` R-0004, PRs mesclados) — confirmar em `git log` os commits de merge das duas rodadas**. Verifique com
-  `git log --oneline -20 origin/main`; se faltar alguma, pare e reporte.
+- Dependências que precisam estar em `main` antes de começar: **nenhuma frente. Decisão do Owner (2026-09-14): R-0005 abre em paralelo à onda 1 (R-0003 `dash-roles` em curso, R-0004 `param-store` pausada), porque não toca `policy.ts`, `roles.ts` nem `ops/parameter`. Exigido apenas `origin/main` ≥ 80d705a (PR #31). Pontos de rebase esperados com R-0004: `backend/app/src/app.module.ts` e `docs/framework/blueprints/BP-INF-NORMATIVE-001.json` — registre-os em `plan.md` §Riscos e rebaseie sobre `main` antes de cada PR. Se R-0004 retomar na janela Sol, grave `checkpoint` ao fim do CTG-0001 e ceda a janela**. Verifique com
+  `git log --oneline -20 origin/main`; se `main` estiver atrás de 80d705a, pare e reporte.
 
 ## 1. Bootstrap (Engineer)
 
