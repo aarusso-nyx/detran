@@ -139,7 +139,8 @@ documentação e atualizado pelo maestro no fechamento.
 - Upstreams em `main`: `dash-roles` (R-0003, PRs #32/#35) e método (#30, #31, #34, #36). **`param-store` (R-0004) não está
   em `main`** e o branch local `orchestra/param-store` está em d8fe83a (sem commits próprios); **`ops-agency`** (R-0005) idem
   (bafae6d, sem commits próprios). Não há PRs abertos de outras frentes.
-- CTG-0001: **liberado para merge** (nenhum upstream; DDL 14 intocado).
+- CTG-0001: **liberado para merge** (nenhum upstream; DDL 14 intocado). **PR #39** aberto em 2026-09-14
+  (`https://github.com/aarusso-nyx/detran/pull/39`), branch publicado a partir daqui (sem rebase; integrar com merge).
 - CTG-0002: desenvolvido sobre o mesmo branch depois do merge de CTG-0001. **`param-store` (R-0004) entrou em `main` em
   2026-09-14 (PR #37, fechamento #38)**: o PR de CTG-0002 fica liberado quando o grupo concluir. Sem base empilhada por ora (upstream sem commits); se `param-store` publicar antes do PR de CTG-0002,
   integrar com `git merge --no-edit origin/main` (branch já publicado).

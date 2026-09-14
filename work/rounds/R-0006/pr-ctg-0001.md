@@ -26,7 +26,7 @@ WP-A de `docs/framework/arch/rait-build-pack.md` (agregado da infração, notifi
 - [x] `pnpm exec devai evidence record …` (referência abaixo)
 - [x] nenhum arquivo gerado editado à mão; blueprint e gerados no mesmo PR
 
-Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): prompt-review-1 FAIL → corrigido → prompt-review-2 PASS; delivery-review-CTG-0001: **DELIVERY_VERDICT**. Evidência DEVAI: **EVIDENCE**.
+Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): prompt-review-1 FAIL → corrigido → prompt-review-2 PASS; delivery-review-CTG-0001: ciclos 1–3 FAIL corrigidos (M13/M14/M15), ciclo 4 **PASS**. Evidência DEVAI: `record/proofs/work/generic/R-0006.jsonl` sequência 1, cadeia `record/proofs/chain.json` head `f2d316e9d4e2f976dfe8994aad35350cc5fa2876552c7d5fd6953d5fec7a88bd` (`devai evidence verify`: valid).
 
 ## Questões abertas tocadas
 
