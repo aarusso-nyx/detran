@@ -255,8 +255,9 @@ Inspector segue a especificação §7).
 **Checkpoint 2026-09-14 (fim da janela 2).** CTG-0001 completo: mini-tríade TASK-0009…0011 + iteração M15
 (TASK-0012/0013) entregues; delivery-review ciclo 4 PASS; rebase sobre `main` (PR #37 `param-store` mesclado);
 correção do seed de parâmetros + passo `seed.sh` no CI (`fix(ops)`); evidência `R-0006.jsonl` seq. 1; **PR #39 aberto**
-(branch publicado: daqui em diante só `git merge --no-edit origin/main`). Pendentes: CI de #39 → `gh pr merge 39 --merge`
-→ `devai audit observe --at <sha>`; depois CTG-0002 (TASK-0004…0008; `param-store` já em `main`, PR liberado ao
+(branch publicado: daqui em diante só `git merge --no-edit origin/main`). **PR #39 mesclado em 2026-09-14 (merge 1fefb32f2ca4cadaca8c6d3ff9885885b5eb245c; CI: foundation, backend-kernel,
+evidence-gate, senatran-mock, senatran-mock-tests verdes); `audit observe` EV-b1a79752263c5493 commitado no branch
+(vai com o PR de CTG-0002).** Pendente: CTG-0002 (TASK-0004…0008; `param-store` já em `main`, PR liberado ao
 concluir). ADR-0016 ganhou "Implementação: PR #39"; ADR-0017/0018 recebem a linha no PR de CTG-0002.
 
 **Checkpoint anterior (fim da janela 1, ~101 % do orçamento).** Branch `orchestra/rait-model` **não publicado**;
