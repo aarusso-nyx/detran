@@ -14,6 +14,12 @@ pode tocar**, **como verificar** e **como entregar**. Os manuais não criam gove
 | Inspector-tests     | Inspector               | Sonnet / Opus   | testes de todos os WPs          | [inspector-tests.md](./inspector-tests.md)         |
 | Transcriber-docs    | Owner (delegado) / Eng. | Sonnet          | WP-C, WP-D, i18n, fichas        | [transcriber-docs.md](./transcriber-docs.md)       |
 
+## Orquestras de execução
+
+A execução do backlog por orquestras dedicadas (maestro grande, reviewer da outra família,
+workers da mesma família), com ondas, rodadas DEVAI e templates de prompt, está em
+[orchestra/README.md](./orchestra/README.md) (ADR-0022).
+
 ## Regras comuns a todos os perfis
 
 1. **Declare o papel** na primeira linha da sua resposta ou do PR ("Papel: Engineer").
