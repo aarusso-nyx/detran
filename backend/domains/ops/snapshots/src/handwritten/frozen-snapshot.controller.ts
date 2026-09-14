@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Audit, Action, Resource } from '@detran/shared';
-import { FrozenSnapshotService } from './index.js';
+import { Action, Audit, Resource } from '@detran/shared';
+
+import { FrozenSnapshotService } from './frozen-snapshot.service.js';
+
 @Controller('ops/snapshots')
 export class FrozenSnapshotController {
   constructor(private readonly service: FrozenSnapshotService) {}
