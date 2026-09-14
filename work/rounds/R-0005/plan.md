@@ -219,6 +219,11 @@ Checkpoint da janela 1 em 2026-09-14:
   principal efetivo/dedicar LOGINs, tornar URLs de test profile fail-closed e separar um reader
   least-privilege foram roteados para o hardening de ambiente/testes de R-0008 / WP-T2; nao
   alteram o gate atual, que efetivamente executa como `role_app_backend`.
+- `origin/main`/PR #39 foi integrado na branch publicada pelo merge
+  `d94fbd22fb49de8db4d86fe03aab6e1c84e1ac37`. A cadeia foi reconstruida sobre a nova
+  ancestralidade; `backend:test:ci` e `pnpm check` passaram no candidato combinado. Proximo passo:
+  anexar a evidencia dessa integracao, push normal, CI verde e merge do PR #40. CTG-0002 continua
+  sem workers.
 
 ## Triagem
 
