@@ -1,10 +1,11 @@
 # R-0004 — frente `param-store` (ADR-0021; parte de parâmetros do WP-A do RAIT)
 
-**Status:** as seis tasks foram concluídas, os gates locais estão verdes e os delivery reviews
-finais dos dois CTGs retornaram `PASS` com Fable 5.1, sem achados remanescentes. Os highs e lows
-encontrados nas tentativas anteriores foram corrigidos em emendas únicas por grupo e reavaliados.
-Maestro GPT-5.6 Sol; reviewer Fable 5.1 via `tools/orchestra/bridge.sh claude fable`. Nenhum
-commit, push ou PR desta rodada foi feito até este checkpoint.
+**Status:** fechada em 2026-09-14 como `PC-0002`, após entrega aceita e mesclada pelo PR #37 no
+commit `a7e5e93398dee6d3dd6a979d04dc5bd9e3b9d913`. As seis tasks foram concluídas, os gates locais e
+de CI ficaram verdes e os delivery reviews finais dos dois CTGs retornaram `PASS` com Fable 5.1,
+sem achados remanescentes. Os highs e lows anteriores foram corrigidos em emendas únicas por grupo
+e reavaliados. Maestro GPT-5.6 Sol; reviewer Fable 5.1 via
+`tools/orchestra/bridge.sh claude fable`.
 
 ## Metas
 
@@ -269,9 +270,8 @@ Checkpoint `2026-09-14` pós-evidência local:
 - Concluídos os commits locais `ece68c0` (CTG-0001), `a26e9d0` (CTG-0002) e `2ad067f`
   (histórico governado), além dos registros de evidência `generic` sequências 1 e 2. A cadeia está
   válida no head `5b8fcdac500fa651f7df5b7eb7bd134c13054378471e9cedeb6286564af33bce`.
-- Branch publicada por push normal e PR #37 aberto contra `main`; acompanhamento do CI e merge
-  foram autorizados pelo Owner. Observação Auditor e fechamento da rodada permanecem posteriores
-  ao merge.
+- PR #37 mesclado em `a7e5e93398dee6d3dd6a979d04dc5bd9e3b9d913` após os cinco jobs do CI
+  passarem; observação Auditor `EV-d69f475e1ba8d2c9`; rodada fechada como `PC-0002`.
 - Últimos vereditos: `reviews/delivery-review-CTG-0001-3.json` e
   `reviews/delivery-review-CTG-0002-2.json`, ambos `PASS` sem findings, com registros de bridge e
   hashes válidos.
