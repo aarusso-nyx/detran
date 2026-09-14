@@ -1,0 +1,80 @@
+{
+  "action": "Append exact post-rebase validation evidence for R-0005 CTG-0001 without changing the immutable sequence 1 record",
+  "round": "R-0005",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "candidate": {
+    "base": "34062b552a205b31b095a2594b7815959efc24ef",
+    "head": "0b8e9c4aa53c37ef67f01955bfb85969e5a36619",
+    "commits": [
+      "541f9181d6c061a7ebdab0ddb435a6a3a0ee6319",
+      "ffe1979702ebfc08455257c145c59fb5e254baa8",
+      "0b8e9c4aa53c37ef67f01955bfb85969e5a36619"
+    ]
+  },
+  "supersedes_gate_results_only": "work/rounds/R-0005/evidence-CTG-0001.json",
+  "artifacts": [
+    {
+      "path": "backend/app/src/app.module.ts",
+      "sha256": "f758773d0826fdc618a33fc7b6bf9ace4d2d1183fb93c29d426bc1619647a5fd"
+    },
+    {
+      "path": "backend/app/vitest.config.ts",
+      "sha256": "334c9c6ba2287ec2027b55d03a94ac31014b1f07262ad476dc104dd9c2128ae7"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "115c2f0f4108ab73edccfbb8fe4b2f4e3b9dc39a378a5062acc3a6d30bca8dd5"
+    },
+    {
+      "path": "tools/blueprints/generated-files.json",
+      "sha256": "17f56e7bcff5aa52f930c22ed82903d87b17750020ea28a2955c8c597719f61f"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-post-rebase.json",
+      "sha256": "9a48367ae44a07ca9ee64a9da300b5d4538bfd9430e0d610b01117a8b668c4cd"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-post-rebase.bridge.json",
+      "sha256": "cd37370f90c475803bc9a9ab02de9e00a730d3fe8619f4c3cbe41cef01505003"
+    }
+  ],
+  "gates": [
+    {
+      "command": "DB_NAME=detran_r5 DB_PASSWORD=postgres pnpm backend:db:reset",
+      "result": "PASS on rebased candidate; apply.sh done"
+    },
+    {
+      "command": "DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r5 pnpm backend:rls-smoke",
+      "result": "PASS on rebased candidate; tenant isolation, 96 inf/ch tables, OPS RLS, SRID-4674 round-trip, and audit persistence"
+    },
+    {
+      "command": "pnpm backend:test:ci before full workspace linking",
+      "result": "SENSOR_ERROR; @detran/ops-parameter could not resolve vitest because pnpm install --lockfile-only had not materialized local workspace links; no PASS or FAIL inferred"
+    },
+    {
+      "command": "pnpm install --frozen-lockfile",
+      "result": "PASS; lockfile current and all 41 workspace projects linked"
+    },
+    {
+      "command": "pnpm backend:test:ci with owner database pools and role_app_backend application pools",
+      "result": "PASS on full reexecution; ops-parameter unit 57/57, ops-parameter integration 1/1, app unit 54/54, app integration 11/11, inf-ait integration 2/2, app e2e 12/12, inf-ait e2e 1/1, and all other package tests green"
+    },
+    {
+      "command": "pnpm check",
+      "result": "PASS on rebased candidate; parameters:test 17/17, verify:parameter-catalogue 87 entries and 18 flags, 33 blueprints and contracts synchronized, typecheck, UI, decorators 680, RLS 149 tables, roles, vocabulary, SENATRAN, and PEC green"
+    },
+    {
+      "command": "cross-family focused post-rebase delivery review",
+      "result": "REVIEW; code and generated artifacts preserved, one correctable evidence-accuracy high requiring this append-only record"
+    },
+    {
+      "command": "git diff --check origin/main...HEAD",
+      "result": "PASS"
+    }
+  ],
+  "notes": [
+    "Sequence 1 remains immutable. This sequence corrects only its gate-result description for the exact rebased candidate.",
+    "R-0004 ops/parameter and the five CTG-0001 OPS modules coexist in AppModule, Vitest aliases, the lockfile, and the regenerated manifest."
+  ]
+}

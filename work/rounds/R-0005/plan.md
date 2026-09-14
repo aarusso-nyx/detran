@@ -1,8 +1,9 @@
 # R-0005 — frente `ops-agency` (WP-T1 do TEAT: modelo de dados de `ops/*` e deltas dos blueprints `inf`)
 
-**Status:** CTG-0001 implementado e corrigido localmente; a terceira delivery-review excepcional,
-autorizada pelo Owner, retornou PASS em 2026-09-14 com zero highs e quatro lows. Nenhum commit,
-push ou PR. Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
+**Status:** CTG-0001 implementado, rebaseado sobre `origin/main@34062b5` e validado. A revisão
+focal pós-rebase retornou REVIEW apenas por evidência imprecisa; a correção append-only foi
+confirmada no ciclo 2 com PASS e zero highs. Ainda sem push ou PR. Reviewer: Opus 5 via
+`tools/orchestra/bridge.sh claude`.
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — nenhum upstream para grupo algum (decisão do Owner, 2026-09-14: abre em paralelo à onda 1). Pontos de rebase com R-0004 `param-store`: `backend/app/src/app.module.ts` e `docs/framework/blueprints/BP-INF-NORMATIVE-001.json`; se R-0004 retomar na janela Sol, grave `checkpoint` ao fim do CTG-0001 e ceda a janela.
 **Janelas previstas:** 2 (CTG-0001/0002 na primeira; CTG-0003 e docs na segunda).
 
@@ -203,9 +204,21 @@ Checkpoint da janela 1 em 2026-09-14:
   nao autorizou commit, evidencia, push, PR ou inicio de CTG-0002.
 - Checkpoint registrado ao fim do CTG-0001: a janela 6 excedeu o limite estimado e cede a janela a
   R-0004; CTG-0002 nao deve iniciar.
+- Integracao retomada por autorizacao do Owner: R-0004 mesclou no PR #38; CTG-0001 foi rebaseado
+  sobre `34062b5`, preservando `ops/parameter` junto dos cinco modulos OPS. Gates pos-rebase
+  passaram. A revisao focal ciclo 1 retornou REVIEW por descricao pre-rebase nos resultados da
+  evidencia; a sequencia 2 corrigiu os resultados sem editar a sequencia 1. Ciclo focal 2 retornou
+  PASS com zero highs. Proximo passo: commit administrativo, push, PR, CI e merge; CTG-0002 segue
+  sem workers ate esse merge.
 
 ## Triagem
 
+- Integracao pos-rebase: a primeira execucao de `backend:test:ci` terminou em `sensor-error`
+  antes de observar `@detran/ops-parameter`, porque `pnpm install --lockfile-only` atualizou o
+  lockfile sem criar seus links locais. `pnpm install --frozen-lockfile` materializou o workspace;
+  a repeticao integral passou com parameter unit 57/57, parameter integration 1/1, app unit 54/54,
+  app integration 11/11 e app e2e 12/12. O erro de observacao nao foi classificado como PASS ou
+  FAIL e sera preservado na evidencia corretiva append-only.
 - TASK-0004 iteracao 0: `plant-bug` na referencia Architect. `BP-OPS-SNAPSHOTS-001` ordenou
   `VehicleSnapshot` antes de `ExternalQuery`, mas a primeira cria FK para
   `ops.snapshots_external_query`; `backend:db:reset` falha antes dos testes. Varredura dos cinco
