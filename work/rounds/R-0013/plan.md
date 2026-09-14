@@ -3,7 +3,7 @@
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`
 (Fable 5.1 no `delivery-review` do provisionamento).
-**Depende de:** `teat-backend` (R-0008) em `main`; `rait-web` (R-0012) mesclado (lock `packages/ui`).
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (reconciliação do corpus) e CTG-0002 (126 fichas, i18n, transições, diagramas): nenhum upstream. CTG-0003 (provisionamento offline: ADR, blueprint, rotas): `ops-agency` R-0005 (`orchestra/ops-agency`). CTG-0004 (apps mobile e web): `teat-backend` R-0008 (schemas e clientes) e `rait-web` R-0012 (lock `packages/ui`).
 **Janelas previstas:** 5 (o maior da carteira; um PR por grupo).
 
 ## Metas
@@ -86,6 +86,11 @@ CTG-0004 = 0009…0011 (apps). Um PR por CTG.
 - Provisionamento toca `backend/domains/ops` e `policy.ts`: na onda 6 a outra frente ativa é
   `portal-pwa`, sem lock comum.
 - Impressora real, KMS real e Keystore: fora desta frente (integração); portas com fixtures.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

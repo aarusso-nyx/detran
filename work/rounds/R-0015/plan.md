@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Depende de:** `boat-backend` (R-0010) e `teat-frontends` (R-0013) em `main` (shell de campo, `apps/teat/web`).
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (17 fichas, i18n, transições): nenhum upstream. CTG-0002 (biblioteca mobile, módulo `sinistros` web, formulários): `boat-backend` R-0010 e `teat-frontends` R-0013 (shell de campo e `apps/teat/web`) em `main`.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -64,6 +64,11 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
 - Vítimas: tela liberada para produção por H.44, mas retenção e finalidade vêm do backend (R-0010);
   nada de acesso sem `purpose`.
 - Nativos (câmera, GPS, assinatura, atestação): portas com fixtures; hardware real fora da rodada.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

@@ -2,8 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Depende de:** `rait-backend` (R-0007) em `main` (delegações de defesa/indicação/pagamento;
-`DetranError`; `check-commands.mjs`). Até lá as rotas delegadas devolvem `SERVICE_UNAVAILABLE` com motivo.
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (identidade federada + modelo + projeções + fixtures): nenhum upstream. CTG-0002 (rotas, delegações, contratos): `rait-backend` R-0007 (`orchestra/rait-backend`) só para as delegações reais de defesa/indicação/pagamento — até lá as rotas delegadas devolvem `SERVICE_UNAVAILABLE` com motivo (build pack §3) e o grupo pode mesclar com o teste de delegação real marcado `todo` citando R-0007.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -87,6 +86,11 @@ CTG-0001 = 0001…0004 (identidade + modelo); CTG-0002 = 0005…0007 (rotas + co
 - Federação gov.br real depende de credenciais institucionais: nesta frente só IdP simulado nos
   perfis `test`/`local`; a homologação é R-0014 (WP-P6).
 - `policy.ts` lock com `boat-backend` (R-0010): blocos `portal:*` × `est:*`; rebase da segunda.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

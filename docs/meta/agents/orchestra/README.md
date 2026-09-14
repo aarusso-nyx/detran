@@ -9,13 +9,13 @@ Lema: **planeje muito para trabalhar pouco.** O custo caro é retrabalho, não p
 
 ## 1. Unidades
 
-| Termo         | Definição                                                                                                                                                               |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Frente**    | um pacote de trabalho (WP) de um build pack, ou um grupo acoplado de WPs, com dependências satisfeitas em `main`. Lista em `waves.md`.                                  |
-| **Orquestra** | maestro + reviewer + workers dedicados a uma frente. Vive numa sessão nova, sem contexto anterior, iniciada com um único prompt (`prompts/00-maestro.md`).              |
-| **Rodada**    | rodada DEVAI (`R-nnnn`) por frente: `work/rounds/R-nnnn/{plan.md, tasks/, prompts/, compositions.json, reviews/, budget.json}`; evidência e `audit observe` por rodada. |
-| **Worktree**  | `../detran-worktrees/<frente>` sobre o branch `orchestra/<frente>`; a raiz do repositório fica reservada a humanos (Art. 27).                                           |
-| **Tarefa**    | unidade atribuída a um worker: JSON no esquema DEVAI `task.schema.json` (`tasks/TASK-nnnn.json`), com critérios de aceitação executáveis.                               |
+| Termo         | Definição                                                                                                                                                                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Frente**    | um pacote de trabalho (WP) de um build pack, ou um grupo acoplado de WPs, cujos grupos acoplados declaram, cada um, os upstreams que precisam estar em `main` para o merge (abertura só exige `main` atualizado). Lista em `waves.md`. |
+| **Orquestra** | maestro + reviewer + workers dedicados a uma frente. Vive numa sessão nova, sem contexto anterior, iniciada com um único prompt (`prompts/00-maestro.md`).                                                                             |
+| **Rodada**    | rodada DEVAI (`R-nnnn`) por frente: `work/rounds/R-nnnn/{plan.md, tasks/, prompts/, compositions.json, reviews/, budget.json}`; evidência e `audit observe` por rodada.                                                                |
+| **Worktree**  | `../detran-worktrees/<frente>` sobre o branch `orchestra/<frente>`; a raiz do repositório fica reservada a humanos (Art. 27).                                                                                                          |
+| **Tarefa**    | unidade atribuída a um worker: JSON no esquema DEVAI `task.schema.json` (`tasks/TASK-nnnn.json`), com critérios de aceitação executáveis.                                                                                              |
 
 ## 2. Papéis e famílias
 

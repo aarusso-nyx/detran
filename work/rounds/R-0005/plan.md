@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
-**Depende de:** onda 1 em `main` (`dash-roles` R-0003, `param-store` R-0004).
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — nenhum upstream para grupo algum (decisão do Owner, 2026-09-14: abre em paralelo à onda 1). Pontos de rebase com R-0004 `param-store`: `backend/app/src/app.module.ts` e `docs/framework/blueprints/BP-INF-NORMATIVE-001.json`; se R-0004 retomar na janela Sol, grave `checkpoint` ao fim do CTG-0001 e ceda a janela.
 **Janelas previstas:** 2 (CTG-0001/0002 na primeira; CTG-0003 e docs na segunda).
 
 ## Metas
@@ -101,6 +101,14 @@ Um PR por CTG (a frente é grande); CTG-0001 mescla primeiro.
   pendente (`backend/database/seed/30-fixtures-teat-timers.sql`, aplicado só quando a tabela existir)
   e o fato entra em §Bloqueios para o maestro de R-0006.
 - `policy.ts` **não** é tocado nesta frente (WP-T2 em R-0008); `roles.ts` idem.
+- Abertura em paralelo à onda 1: `AppModule` (R-0004 monta `ops/parameter`) e `BP-INF-NORMATIVE-001`
+  (R-0004 pode mexer nele pela view de compatibilidade) são os pontos de rebase; se R-0004 retomar na
+  janela Sol, esta frente grava `checkpoint` ao fim do CTG-0001 e cede a janela.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 
