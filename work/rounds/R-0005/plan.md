@@ -232,6 +232,9 @@ Checkpoint da janela 1 em 2026-09-14:
   Checkpoint pronto para CTG-0002: TASK-0005, TASK-0006 e TASK-0007 permanecem queued; nenhum
   worker foi iniciado. O proximo ato, sujeito a nova instrucao humana, e despachar primeiro a
   TASK-0005 Architect e respeitar as dependencias internas do grupo.
+- CTG-0002 iniciado por autorizacao do Owner em 2026-09-14. TASK-0005 foi marcada `in_progress`
+  para despacho Architect Terra/alto com a composicao fechada `PC-9da7ddfeadf987ff`; TASK-0006 e
+  TASK-0007 permanecem queued ate a conclusao e o checkpoint das respectivas dependencias.
 
 ## Triagem
 
