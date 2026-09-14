@@ -224,6 +224,14 @@ Checkpoint da janela 1 em 2026-09-14:
   ancestralidade; `backend:test:ci` e `pnpm check` passaram no candidato combinado. Proximo passo:
   anexar a evidencia dessa integracao, push normal, CI verde e merge do PR #40. CTG-0002 continua
   sem workers.
+- CTG-0001 concluido: o candidato `90bce3b5dfab5e194c333c14a3e6d0c666d32172` passou os cinco
+  jobs do CI no run `34904483773`; o ultimo review focal Opus 5 permaneceu PASS, zero highs; e o
+  PR #40 foi mesclado como `1c662f08ab3a7a61db754700dbe45fd91680de25`. A observacao
+  pos-merge no HEAD exato completou como `EV-bcc003fe0592d332`, `readiness_promoting=false`, e
+  avancou a cadeia para `8d9246e6b1e2223f5d50875f41d885718c1b597878fb7a1d141165b2b5d43c09`.
+  Checkpoint pronto para CTG-0002: TASK-0005, TASK-0006 e TASK-0007 permanecem queued; nenhum
+  worker foi iniciado. O proximo ato, sujeito a nova instrucao humana, e despachar primeiro a
+  TASK-0005 Architect e respeitar as dependencias internas do grupo.
 
 ## Triagem
 
