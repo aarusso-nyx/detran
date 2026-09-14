@@ -1,0 +1,15 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0004",
+  "coupled_task_group": "CTG-0002",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Item 1 confirmado: verifyLegalReadonly em tools/parameters/verify.mjs:43-107 é explícito e fail-closed — sai com código 1 quando não há nenhuma entrada legal (linhas 45-51), quando um artefato gerado não pode ser lido (linhas 63-69), quando a linha do seed não preserva legal_readonly=true (linhas 72-76), quando o catálogo TypeScript não preserva legal_readonly: true dentro do objeto da chave (linhas 77-84), quando uma chave legal aparece em parameter-flags.ts (linhas 85-88) e quando o contrato omite a linguagem de não editabilidade ou expõe legalReadonly (linhas 91-106); é executado dentro de --check-generated, que integra verify:parameter-catalogue (package.json:42) e pnpm check (package.json:15).",
+    "Item 2 confirmado: detranFeatureEnvironmentName em backend/app/src/detran-runtime.ts:760-762 usa replace(/[^A-Za-z0-9]+/g, '_'), convertendo cada sequência não alfanumérica inteira em um único '_'; coberto por backend/app/src/detran-feature-flags.spec.ts:18-24 ('..' e '---' colapsam para um separador).",
+    "Item 3 confirmado: cells() em tools/parameters/parser.mjs:36-56 remove a barra e emite '|' literal na célula corrente sem push de coluna (linhas 42-43); coberto por tools/parameters/tests/generator.test.mjs:86-106, que verifica consumer: 'worklist | queue' com oito células preservadas.",
+    "Item 4 confirmado: renderCatalogue (tools/parameters/generate-seed.mjs:34-40) serializa todas as propriedades da entrada, incluindo value_type (87 ocorrências no artefato gerado), alinhado ao contrato BP-OPS-PARAMETER-001.openapi.json (value_type presente e required nos schemas, linhas 101/158/193/239); os três artefatos gerados carregam o mesmo sha256 46e1a81e…, idêntico ao hash recalculado de docs/framework/arch/parameter-catalogue.md, provando reconstrução conjunta; consumidores alinhados em backend/domains/ops/parameter/src/repositories/parameter.repository.ts:21, backend/domains/ops/parameter/src/handwritten/parameter.service.ts:327 e backend/app/src/detran-runtime.ts:58.",
+    "Item 5 confirmado: renderFlags (tools/parameters/generate-seed.mjs:41-48) filtra value_type === 'F' && !entry.legal_readonly; parameter-flags.ts contém exatamente 18 flags e nenhuma das 4 entradas legal_readonly do catálogo gerado; dupla garantia pelo verificador (verify.mjs:85-88) e pelo teste generator.test.mjs:108-131.",
+    "Evidência do maestro reproduzida em leitura independente: node --test tools/parameters/tests → 17 pass / 0 fail / 0 skipped / 0 todo; node tools/parameters/verify.mjs --check-generated --check-usage → OK (87 entries, 18 flags, 0 errors). Os quatro lows da primeira tentativa estão emendados; nenhum finding high ou low remanescente; nenhuma contradição com ADR-0021, WP-A ou a Constituição DEVAI."
+  ]
+}

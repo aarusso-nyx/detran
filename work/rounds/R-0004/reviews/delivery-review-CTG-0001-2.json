@@ -1,0 +1,33 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0004",
+  "coupled_task_group": "CTG-0001",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "backend/domains/ops/parameter/src/handwritten/parameter-command.controller.ts",
+      "line": 16,
+      "claim": "O contrato (docs/framework/arch/ops-parameter-command-contract.md:33-34) exige que a resposta 200 do PUT inclua o header ETag correspondente à nova versão, mas o handler retorna apenas o corpo e nenhum código do pacote define o header; o ETag default do Express (hash fraco do corpo) não corresponde à versão, e um cliente que seguir o contrato usando esse header como próximo If-Match receberá sempre RAIT.VERSION_CONFLICT 412, pois o serviço compara If-Match com String(version) (parameter.service.ts:278). Nenhum dos 51 testes cobre o header ETag.",
+      "fix": "Definir o header ETag com a versão criada na resposta do PUT (por exemplo injetando @Res({ passthrough: true }) e chamando response.setHeader('ETag', String(result.version)) no ParameterCommandController, ou via interceptor dedicado), aceitar If-Match com ou sem aspas fracas ao comparar, e adicionar teste negativo/positivo cobrindo o ciclo GET/PUT → ETag → If-Match."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/domains/ops/parameter/src/handwritten/parameter.service.ts",
+      "line": 400,
+      "claim": "select() retorna effective[0] mesmo quando todas as linhas têm rank 0 (scope='agency' com traffic_agency_id de outra agência), então get(key, { agencyId: A }) pode devolver o valor calibrado para a agência B se não existir linha tenant/surface para a chave; hoje o seed do catálogo garante uma linha tenant para toda chave, o que torna o caso improvável, mas a resolução da ADR-0021 §2 (surface → agency → tenant → default) nunca inclui a agência alheia.",
+      "fix": "Filtrar as linhas com rank 0 antes de selecionar (por exemplo `const ranked = effective.filter((row) => rank(row) > 0)`) e lançar NotFoundException quando nada restar, com teste unitário cobrindo linha agency de outra agência como única candidata."
+    }
+  ],
+  "notes": [
+    "Ponto 1 confirmado: OpsParameterError estende StynxError de @stynx-nyx/core (parameter.service.ts:140-144) com assinatura oficial (message, {code, status, context}); o StynxErrorFilter é registrado via StynxDataModule → StynxCoreModule.forRoot (única instância pnpm de @stynx-nyx/core@1.3.1, identidade de classe compartilhada) e entrega response.status(status).json({code, message, context}); o teste unitário parameter-contract.spec.ts:122-151 exercita o filtro real com 412/código/contexto canônicos.",
+    "Ponto 2 confirmado: nenhum cache/Map de replay local resta no pacote (grep limpo); Action('update') não-leitura aplica Idempotent() e RateLimit (backend/domains/shared/src/decorators.ts:23-31); o app registra StynxPlatformPipelineModule.forRoot(detranPipelineOptions()) com store PgIdempotencyStore durável (detran-runtime.ts:551-666, durableStrict:true, backend em memória no-op) e única instância de @stynx-nyx/idempotency garante o mesmo Symbol de rota; o teste parameter-contract.spec.ts:272-303 prova ausência de replay local entre TENANT_A e TENANT_B.",
+    "Ponto 3 confirmado: surface é derivada do prefixo da chave (surfaceFor, parameter.service.ts:363-369, fail-closed para prefixo desconhecido) e payload com surface divergente falha com 400 antes de database.tx (linhas 233-234 vs 253); o teste parameter-contract.spec.ts:305-322 assevera database.tx não chamado.",
+    "Ponto 4 confirmado: a consulta de legal_readonly=true por tenant/key/surface (parameter.service.ts:257-267, SQL parametrizado $1/$2 + current_setting('app.tenant_id')) precede a seleção mutável por escopo/agência com FOR UPDATE (linhas 268-274); RLS forçada verificada pela integração (relrowsecurity/relforcerowsecurity true e invisibilidade cross-tenant, parameter.integration.spec.ts:26-96); o teste parameter-contract.spec.ts:324-348 prova o bloqueio com uma única query executada.",
+    "Ponto 5 confirmado: os testes negativos novos cobrem os quatro pontos (filtro StynxError 412, replay entre tenants, surface divergente pré-transação, legal_readonly cross-escopo), além de 428/412/422 e rejeição de tenant_id no payload; unit 51/51 compatível com os dois testes adicionados sobre os 49 anteriores.",
+    "Sem contradição de autoridade: wiring manuscrito declarado no blueprint (handwrittenControllers/Providers/Exports em BP-OPS-PARAMETER-001.json), arquivos gerados registrados em tools/blueprints/generated-files.json, OpenAPI gerado expõe somente list/get conforme o contrato, e policy ops:parameter restrita a agency-admin inclusive contra papéis globais (policy.ts:1320-1322), coerente com 'o comando só permite agency-admin'.",
+    "Deferimentos deliberados, não contados como achados: NullParameterCache substitui o cache de leitura por tenant prometido na ADR-0021 §2 (comentário no código e invalidação preservada pós-sucesso); surface 'shared' aceita no DDL mas inalcançável por SURFACE_BY_PREFIX até a view normativa de TASK-0004+."
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "round": "R-0004",
+  "front": "param-store",
+  "current_window": 5,
+  "window_input_budget": 800000,
+  "checkpoint_at_input": 640000,
+  "windows": [
+    {
+      "id": 1,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T00:00:00.000Z",
+      "reason": "Initial planning and prompt-review-1 with Opus"
+    },
+    {
+      "id": 2,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T05:00:00.000Z",
+      "reason": "Owner authorized replan, prompt-review-2 with Fable, and worker execution after PASS"
+    },
+    {
+      "id": 3,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T05:10:00.000Z",
+      "reason": "Owner authorized prompt-review-3 and selected Opus 5 after cycle-2 escalation"
+    },
+    {
+      "id": 4,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T05:20:00.000Z",
+      "reason": "Owner authorized the three cycle-3 amendments and prompt-review-4 with Opus 5"
+    },
+    {
+      "id": 5,
+      "status": "exceeded",
+      "authorized_at": "2026-09-14T11:50:00.000Z",
+      "reason": "Owner authorized the cycle-4 contract rename and three low hardening amendments plus prompt-review-5 with Opus 5"
+    }
+  ],
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-1",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 180000,
+      "estimated_output_tokens": 30000,
+      "status": "completed"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-1",
+      "model": "claude-opus",
+      "estimated_input_tokens": 45000,
+      "estimated_output_tokens": 8000,
+      "actual_input_tokens": 2153536,
+      "actual_output_tokens": 36223,
+      "status": "completed",
+      "verdict": "FAIL",
+      "bridge_record": "work/rounds/R-0004/reviews/prompt-review-1.bridge.json"
+    },
+    {
+      "kind": "maestro-replanning",
+      "id": "PLAN-2",
+      "window": 2,
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 70000,
+      "estimated_output_tokens": 14000,
+      "status": "completed"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-2",
+      "window": 2,
+      "model": "claude-fable",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_input_tokens": 2907274,
+      "actual_output_tokens": 50787,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "bridge_record": "work/rounds/R-0004/reviews/prompt-review-2.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-3",
+      "window": 3,
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_input_tokens": 1486689,
+      "actual_output_tokens": 22169,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "bridge_record": "work/rounds/R-0004/reviews/prompt-review-3.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-4",
+      "window": 4,
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_input_tokens": 5575260,
+      "actual_output_tokens": 42522,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "bridge_record": "work/rounds/R-0004/reviews/prompt-review-4.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-5",
+      "window": 5,
+      "model": "claude-opus",
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 10000,
+      "actual_input_tokens": 4279202,
+      "actual_output_tokens": 49408,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "bridge_record": "work/rounds/R-0004/reviews/prompt-review-5.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "prompt-review-6",
+      "model": "claude-fable",
+      "status": "completed",
+      "verdict": "PASS",
+      "token_budget_enforced": false,
+      "token_metrics": "unavailable-from-normalized-text-bridge",
+      "bridge_record": "work/rounds/R-0004/reviews/prompt-review-6.bridge.json"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0001",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 90000,
+      "estimated_output_tokens": 18000,
+      "status": "completed"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0002",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 45000,
+      "estimated_output_tokens": 10000,
+      "status": "completed",
+      "escalated_to": "gpt-5.6-terra"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0003",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 65000,
+      "estimated_output_tokens": 15000,
+      "status": "completed",
+      "architect_intervention": "post-gate blueprint module export and runtime provider registration"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0004",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 70000,
+      "estimated_output_tokens": 14000,
+      "status": "completed"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0005",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 40000,
+      "estimated_output_tokens": 9000,
+      "status": "completed"
+    },
+    {
+      "kind": "worker-task",
+      "id": "TASK-0006",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 65000,
+      "estimated_output_tokens": 15000,
+      "status": "completed",
+      "escalated_to": "gpt-5.6-terra"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-CTG-0001-attempt-1",
+      "model": "claude-fable",
+      "status": "invalid-output-reviewed",
+      "verdict": "REVIEW",
+      "token_budget_enforced": false,
+      "bridge_record": null
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-CTG-0001-attempt-2",
+      "model": "claude-fable",
+      "status": "completed",
+      "verdict": "REVIEW",
+      "token_budget_enforced": false,
+      "bridge_record": "work/rounds/R-0004/reviews/delivery-review-CTG-0001-2.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-CTG-0001-attempt-3",
+      "model": "claude-fable",
+      "status": "completed",
+      "verdict": "PASS",
+      "token_budget_enforced": false,
+      "bridge_record": "work/rounds/R-0004/reviews/delivery-review-CTG-0001-3.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-CTG-0002-attempt-1",
+      "model": "claude-fable",
+      "status": "invalid-output-reviewed",
+      "verdict": "PASS",
+      "token_budget_enforced": false,
+      "bridge_record": null
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-CTG-0002-attempt-2",
+      "model": "claude-fable",
+      "status": "completed",
+      "verdict": "PASS",
+      "token_budget_enforced": false,
+      "bridge_record": "work/rounds/R-0004/reviews/delivery-review-CTG-0002-2.bridge.json"
+    }
+  ]
+}
