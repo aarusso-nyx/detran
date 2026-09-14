@@ -48,6 +48,9 @@ Canonical decisions live as ADRs under `docs/meta/adr/` — this file is the ind
 - **ADR-0021** (Proposed) — one shared, versioned parameter store `ops.parameter` for every calibration that is
   not law; boolean switches in `@stynx-nyx/feature-flags`; catalogue in `docs/framework/arch/parameter-catalogue.md`;
   decisions of the implementation gate recorded in `docs/meta/knowledge-base/steering.md` §H.
+- **ADR-0022** (Proposed) — the implementation backlog is executed by dedicated agent orchestras (large
+  maestro, other-family reviewer, same-family workers) on per-front worktrees and DEVAI rounds;
+  method in `docs/meta/agents/orchestra/`, wave plan in `waves.md`.
 
 Owner-reserved questions (ask once, lettered; never decide unilaterally): staff vs
 citizen Cognito pool split, senatran-mock public mirror, RAIT statutory prazo
