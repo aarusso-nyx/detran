@@ -269,8 +269,9 @@ Checkpoint `2026-09-14` pós-evidência local:
 - Concluídos os commits locais `ece68c0` (CTG-0001), `a26e9d0` (CTG-0002) e `2ad067f`
   (histórico governado), além dos registros de evidência `generic` sequências 1 e 2. A cadeia está
   válida no head `5b8fcdac500fa651f7df5b7eb7bd134c13054378471e9cedeb6286564af33bce`.
-- Próximo limite de autoridade: publicação da branch, criação do PR, acompanhamento do CI, merge,
-  observação Auditor e fechamento da rodada. Nenhum push, PR ou merge desta rodada ocorreu.
+- Branch publicada por push normal e PR #37 aberto contra `main`; acompanhamento do CI e merge
+  foram autorizados pelo Owner. Observação Auditor e fechamento da rodada permanecem posteriores
+  ao merge.
 - Últimos vereditos: `reviews/delivery-review-CTG-0001-3.json` e
   `reviews/delivery-review-CTG-0002-2.json`, ambos `PASS` sem findings, com registros de bridge e
   hashes válidos.
