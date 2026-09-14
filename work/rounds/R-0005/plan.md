@@ -208,8 +208,12 @@ Checkpoint da janela 1 em 2026-09-14:
   sobre `34062b5`, preservando `ops/parameter` junto dos cinco modulos OPS. Gates pos-rebase
   passaram. A revisao focal ciclo 1 retornou REVIEW por descricao pre-rebase nos resultados da
   evidencia; a sequencia 2 corrigiu os resultados sem editar a sequencia 1. Ciclo focal 2 retornou
-  PASS com zero highs. Proximo passo: commit administrativo, push, PR, CI e merge; CTG-0002 segue
-  sem workers ate esse merge.
+  PASS com zero highs. Os commits foram publicados no PR #40. O primeiro run de CI revelou que o
+  job `backend-kernel` nao reproduzia a separacao owner/app ja exigida por este plano: o pool app
+  entrou como `postgres` e contornou RLS. A correcao limita-se a declarar no job as URLs owner,
+  app e reader, com app/reader sob `role_app_backend`; a reexecucao local integral passou. Proximo
+  passo: registrar/revisar a correcao, atualizar o PR, obter CI verde e mesclar. CTG-0002 segue sem
+  workers ate esse merge.
 
 ## Triagem
 
@@ -219,6 +223,12 @@ Checkpoint da janela 1 em 2026-09-14:
   a repeticao integral passou com parameter unit 57/57, parameter integration 1/1, app unit 54/54,
   app integration 11/11 e app e2e 12/12. O erro de observacao nao foi classificado como PASS ou
   FAIL e sera preservado na evidencia corretiva append-only.
+- PR #40, run 34900620022: `backend-kernel` executou o app com o fallback `DATABASE_URL` de
+  `postgres`; o e2e cross-tenant recebeu a linha do outro tenant e falhou 1/12. Classificacao:
+  `sensor-error` de configuracao do CI, pois o sensor de RLS rodou com principal que o contorna.
+  A configuracao foi alinhada ao gate local documentado: owner permanece `postgres`, enquanto
+  app/reader usam `options=-c role=role_app_backend`. Com as mesmas URLs, `backend:test:ci` passou
+  integralmente, inclusive app e2e 12/12. Nenhum teste ou politica RLS foi enfraquecido.
 - TASK-0004 iteracao 0: `plant-bug` na referencia Architect. `BP-OPS-SNAPSHOTS-001` ordenou
   `VehicleSnapshot` antes de `ExternalQuery`, mas a primeira cria FK para
   `ops.snapshots_external_query`; `backend:db:reset` falha antes dos testes. Varredura dos cinco

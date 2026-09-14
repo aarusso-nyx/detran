@@ -145,6 +145,9 @@ jobs:
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran
       DETRAN_TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran
+      STYNX_OWNER_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran
+      STYNX_APP_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran?options=-c%20role%3Drole_app_backend
+      STYNX_READER_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/detran?options=-c%20role%3Drole_app_backend
       DB_HOST: localhost
       DB_PORT: '5432'
       DB_USER: postgres
