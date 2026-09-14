@@ -1,0 +1,161 @@
+{
+  "action": "Implement WP-A CTG-0001: infraction aggregate and notification blueprints, deadline engine library, transition guards, event schemas, fixtures and tests; seed and CI fixture wiring",
+  "round": "R-0006",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "commits": [
+    "29c9fe2289e96bb5447fecc6fe7b4ac5b56b1cb7",
+    "b1c5882d3c866c261a69a0c52efeaeb7c11fd0ed"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/framework/blueprints/BP-INF-INFRACTION-001.json",
+      "sha256": "c9e1dec5067f8324003780a279b646761b2298bf7712019b3023acdf50746e4c"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-NOTIFICATION-001.json",
+      "sha256": "4c103efb85b586bbe1d79e0fc7367ae2e566e53d551fa0e41fd4635207283be6"
+    },
+    {
+      "path": "backend/database/ddl/38-inf-infraction.sql",
+      "sha256": "beedd5dc0e8a6250815fa19461e0d263e6ae47ad94425e2734a5ce09df62fae9"
+    },
+    {
+      "path": "backend/database/ddl/59-inf-notification.sql",
+      "sha256": "aa98cd95b17dc450b8a62417a4e5afba794194add8f3c202fe4cf222b829cacf"
+    },
+    {
+      "path": "backend/database/seed/30-fixtures-infraction.sql",
+      "sha256": "f1d3e8059803b06119d3d94b86a403ec8686ab634bed4af8ad90ac4fb21bbe57"
+    },
+    {
+      "path": "backend/database/seed/05-parameters.sql",
+      "sha256": "50595deb2fa6383a43db8838c7a0acee77daae6fc7ce532e8ec579b9e1971676"
+    },
+    {
+      "path": "backend/domains/inf/deadlines/src/engine.ts",
+      "sha256": "96b1a4d616ffe3a23807b3f6a6065d4f638a3e463cc84bd0db9e9608c62a809f"
+    },
+    {
+      "path": "backend/domains/inf/deadlines/src/types.ts",
+      "sha256": "ecbe6c97f49d8a1c3b05af4347707caa883835053c6023995280bd8ad1679fab"
+    },
+    {
+      "path": "backend/domains/inf/deadlines/tests/unit/deadline-engine.spec.ts",
+      "sha256": "650cad0cc7c43c9045d0592b0d532d771d320e15b622859c2ba08330f5a99fa5"
+    },
+    {
+      "path": "backend/domains/inf/infraction/src/handwritten/guards/infraction.transitions.ts",
+      "sha256": "235a922830e676bde6381e7113a57e1ff8c6bcf86ad717c312a7f7181c06663c"
+    },
+    {
+      "path": "backend/domains/inf/infraction/src/handwritten/guards/infraction.guard.ts",
+      "sha256": "54ae3a730290836f1b97d3896f6364faabfea38730e3cfce5b64400c04b59bea"
+    },
+    {
+      "path": "backend/domains/inf/infraction/src/handwritten/events.ts",
+      "sha256": "2305d6c7120b3b089c5f04d32dd3294199cd05ea0d0ded3da66d8e882afafa6f"
+    },
+    {
+      "path": "backend/domains/inf/infraction/tests/unit/infraction-transitions.matrix.spec.ts",
+      "sha256": "cd8ef0651807ced5cb8c1c19f681c085c1bd2bb61e6345e112f5a99e705b9de6"
+    },
+    {
+      "path": "backend/domains/inf/notification/src/handwritten/acknowledgement-mark.ts",
+      "sha256": "12b32e2997c78a64b245a591f393da96d8f58a1102405c467f530d4eff53d800"
+    },
+    {
+      "path": "docs/framework/schemas/events/inf.timer.rescheduled.schema.json",
+      "sha256": "66127eb18bbd20aca150079a7a8b7a663a2e250415bd90b49f078400b1a7f55c"
+    },
+    {
+      "path": "docs/framework/arch/rait-events-sse-contract.md",
+      "sha256": "5ff41272efc6a403dea38a16c78a4957b1b7dfab5bcb959549ae04abc94eee84"
+    },
+    {
+      "path": "tools/parameters/generate-seed.mjs",
+      "sha256": "2fff58ce410d4ff46ba56898f985663e5d6f3d6f224e5e0d1cc09e2fcd1d3a86"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "46d86c9d018885bac12a7baf412aca07c93b79fdfde8a5ed4fcc09c8e1a11d83"
+    },
+    {
+      "path": "work/rounds/R-0006/contracts/CTG-0001.md",
+      "sha256": "14124db7c395ed0f12050536acc220571c40311eff6dabf5a9ee70bcfaa2ad96"
+    },
+    {
+      "path": "work/rounds/R-0006/reviews/delivery-review-CTG-0001-4.json",
+      "sha256": "402fa69f0d30b0ca4c4e6eca1bb29796148f588d7d79f8ed303dfb27c5c059a1"
+    }
+  ],
+  "gates": [
+    {
+      "command": "pnpm --filter @detran/inf-deadlines test",
+      "result": "PASS (23 cases: rait-deadline-engine.md §7 1–18, contract §5.2 19–22, §5.2.9 23)"
+    },
+    {
+      "command": "pnpm --filter @detran/inf-infraction test:unit",
+      "result": "PASS (88 tests: 46-row transition matrix with exhaustive negatives, event schemas)"
+    },
+    {
+      "command": "pnpm --filter @detran/inf-notification test:unit",
+      "result": "PASS (7 tests)"
+    },
+    {
+      "command": "DB_NAME=detran_r6 bash backend/database/apply.sh --full && bash backend/database/seed.sh (twice)",
+      "result": "PASS (20 AITs, 15 infractions, 87 parameters; idempotent)"
+    },
+    {
+      "command": "pnpm backend:rls-smoke",
+      "result": "PASS (102 inf/ch tables, ops RLS)"
+    },
+    {
+      "command": "pnpm backend:test:ci",
+      "result": "PASS (unit, integration and e2e tiers; exit 0 on the rebased tree)"
+    },
+    {
+      "command": "pnpm check",
+      "result": "PASS (format, kb, blueprints, contracts, parameters, typecheck, ui, decorators 529, rls-ddl 141, role-catalog, lifecycle-vocabulary, senatran boundary/contracts, pec parity/superset)"
+    },
+    {
+      "command": "pnpm verify:rls-ddl",
+      "result": "PASS (141 tenant tables)"
+    },
+    {
+      "command": "pnpm verify:lifecycle-vocabulary",
+      "result": "PASS (15 states, 12 substates, 18 timers; DDL 14 untouched)"
+    },
+    {
+      "command": "pnpm verify:parameter-catalogue",
+      "result": "PASS (87 entries, 18 flags)"
+    },
+    {
+      "command": "pnpm docs:kb:check",
+      "result": "PASS (521 artifacts, 446 canonical tokens)"
+    },
+    {
+      "command": "cross-family delivery review (GPT-5.6 Terra)",
+      "result": "PASS (cycle 4; cycles 1–3 corrected: M13 append-only/unmounted, M14 event port and T-DIL extension, M15 extension reason)"
+    }
+  ],
+  "decisions": [
+    "OD-301",
+    "OD-303",
+    "OD-304",
+    "OD-305",
+    "OD-019",
+    "M13",
+    "M14",
+    "M15"
+  ],
+  "requirements": [
+    "WF-INF-003 §2",
+    "WF-INF-002 §9.2",
+    "RN-RAIT-004",
+    "RN-RAIT-101",
+    "RN-RAIT-104",
+    "ADR-0016",
+    "ADR-0021"
+  ]
+}

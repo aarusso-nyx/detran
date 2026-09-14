@@ -1,0 +1,34 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "work/rounds/R-0006/prompts/TASK-0009.md",
+      "line": 56,
+      "claim": "O prompt fixa `aggregate.kind: 'timer'`, mas o envelope canônico não admite esse token: a §1 enumera `clock`, não `timer`, e o schema atual enumera os mesmos tipos. TASK-0009 não pode alterar o envelope nem esse trecho do schema.",
+      "fix": "usar o token canônico `clock` no evento reduzido, ou abrir decisão/contrato explícito que amplie o envelope e todos os schemas afetados antes de exigir `timer`."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0006/prompts/TASK-0009.md",
+      "line": 69,
+      "claim": "O enum novo `reason: 'suspension' | 'extension'` é imposto sem fonte canônica. As fontes citadas definem suspensão e prorrogação, mas não os tokens de payload; M12 também não autoriza esses valores.",
+      "fix": "registrar uma decisão canônica para os tokens de `reason` antes da tarefa, ou marcar o campo/valores como `source_pending` e abrir OD."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0006/prompts/TASK-0009.md",
+      "line": 71,
+      "claim": "O critério manda a tabela §2.4 declarar `suspensionActId?`, enquanto os casos 19 e 20 exigem o campo sempre presente, inclusive `null` na prorrogação. Opcionalidade e nulabilidade não são equivalentes; o prompt afirma evitar divergência, mas cria uma.",
+      "fix": "fixar `suspensionActId` como obrigatório e anulável no contrato, tabela e JSON Schema, removendo o `?`; ou ajustar explicitamente os casos e o schema para semântica opcional consistente."
+    }
+  ],
+  "notes": [
+    "A tríade, as fronteiras de escrita e a proibição de git estão corretamente declaradas; os dois últimos prompts dependem adequadamente dos artefatos anteriores."
+  ]
+}

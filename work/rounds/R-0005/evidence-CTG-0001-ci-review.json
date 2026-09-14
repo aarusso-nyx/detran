@@ -7,7 +7,7 @@
     "base": "34062b552a205b31b095a2594b7815959efc24ef",
     "ci_correction_commit": "7a62d8ff1d1d64b3f92c84fb6ce7f01945a3c328"
   },
-  "prior_chain_head": "c7f24be7f6dcd89a9fb726d1bc1bc93af1233732521e9c9b2a6a5e1278bddf5a",
+  "prior_chain_head": "1b3e148ec43eea73b541c5d55926d60de3c3b37e8c04d3336d1d581b3afb4848",
   "normative_links": {
     "decisions": ["OD-T02", "OD-013"],
     "requirements": ["RN-TEAT-003", "RN-TEAT-142"],
@@ -16,11 +16,11 @@
   "artifacts": [
     {
       "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-ci-correction.json",
-      "sha256": "405ad0f93df6e1f404f75bd25f5be191e5a67162e81470d049d2aa287f2d5d84"
+      "sha256": "7baa503d36182cc1482684a827971d5d94969c477b0fc2aeff3813ad7719cd66"
     },
     {
       "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-ci-correction.bridge.json",
-      "sha256": "152315d263201d5189d0e595d6b814a2e6721e8183f7dfc7bfede6eaf4e27a4b"
+      "sha256": "8b1fd636fe0058df889080c05713a1ec08bc9642b77a52ba6bcda7e9ca7ba0b9"
     }
   ],
   "review": {
@@ -30,12 +30,12 @@
     "low_findings": 3
   },
   "low_routing": [
-    "Dedicated non-superuser LOGIN identities for app and reader are routed to R-0008 / WP-T2 environment hardening.",
-    "A positive same-tenant fixture for the OPS e2e isolation sensor is routed to R-0008 / WP-T2 test hardening.",
+    "Effective-principal assertion and dedicated non-superuser LOGIN identities are routed to R-0008 / WP-T2 environment hardening.",
+    "Fail-closed test-profile database URLs and a least-privilege reader principal are routed to R-0008 / WP-T2 test and environment hardening.",
     "Review artifact binding is closed by this append-only evidence sequence."
   ],
   "notes": [
-    "The review confirmed that current_user is role_app_backend and RLS is genuinely enforced by the corrected job configuration.",
+    "The repeated review against the formatted prompt confirmed that current_user is role_app_backend and RLS is genuinely enforced by the corrected job configuration.",
     "No CTG-0002 worker has been started."
   ]
 }

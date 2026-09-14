@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0006",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Write case 23: retention of the extend() reason (M15)",
+  "description": "Mini-iteration M15 after delivery-review-CTG-0001-3 (human decision 2026-09-14): retain the caller reason of extend() in Deadline.extensionReason without changing the event envelope.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-deadlines-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["contract CTG-0001 §5.2.9", "M15"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0011",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "sensor-error",
+      "finding": "TS2352 at deadline-engine.spec.ts:768: `extended as Record<string, unknown>` (no index signature on Deadline); fix the cast in the test (as unknown as Record<string, unknown>), matching the nullable variants used for beforeExtend/afterExtend.",
+      "status": "completed"
+    }
+  ],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "deadlines", "m15"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-3508e47fb6695093",
+  "acceptance_commands": [
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "backend/domains/inf/deadlines/tests"
+    ]
+  ],
+  "created_at": "2026-09-15T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-3508e47fb6695093",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -7,6 +7,10 @@ consequence of ADR-0014 (the infraction aggregate needs its own blueprint) and c
 ownership gap found on 2026-09-13: the "Notificar" sub-process of `WF-INF-002` §2 was reused
 by TEAT, RAIT and PORTAL without a module owning it. Extends ADR-0003 and ADR-0005.
 
+Implementação: PR #39 (R-0006, CTG-0001, 2026-09-14) — `BP-INF-INFRACTION-001`, `BP-INF-NOTIFICATION-001`,
+`@detran/inf-deadlines` (library, §2), transition guards and event schemas; command surfaces, sweep job and
+the `rait_communication` projection follow in R-0007 / WP-P.
+
 ## Context
 
 Three applications touch the same legal facts. TEAT integrates the AIT and triggers the

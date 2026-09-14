@@ -3,7 +3,7 @@ id: ARCH-RAIT-EVENTS
 title: Contrato de eventos de domínio e do fluxo SSE do RAIT
 status: draft
 apps: [rait, portal, dashboard]
-updated: 2026-09-13
+updated: 2026-09-14
 ---
 
 # Eventos de domínio e fluxo SSE
@@ -81,7 +81,7 @@ pós-transição, o que permite ao frontend descartar eventos velhos.
 | `inf.infraction.penalty-final` | `PENALIDADE_DEFINITIVA`    | `infractionId, aitId, finalOn, points, amountTier`                                                      | senatran-adapter (RENACH)                     |
 | `inf.infraction.refund-due`    | `RESTITUICAO_DEVIDA`       | `infractionId, paymentId, amount, reason`                                                               | financeiro                                    |
 | `inf.timer.expired`            | `TIMER_VENCIDO`            | `ownerKind, ownerId, timerCode, dueOn, effect: transicao                                                | alerta                                        | marco | regra` | auditoria |
-| `inf.timer.rescheduled`        | `TIMER_REPROGRAMADO`       | `ownerId, timerCode, oldDueOn, newDueOn, suspensionActId`                                               | auditoria, SSE                                |
+| `inf.timer.rescheduled`        | `TIMER_REPROGRAMADO`       | `ownerId, timerCode, oldDueOn, newDueOn, suspensionActId (obrigatório, nulo na prorrogação), reason`    | auditoria, SSE                                |
 
 Eventos **consumidos** pela infração (produzidos fora): `AIT_INTEGRADO`, `AIT_CANCELADO_POSFINAL`
 (TEAT), `NOTIFICACAO_EXPEDIDA`, `NOTIFICACAO_CIENCIA` (notificação), `CONDUTOR_INDICADO`

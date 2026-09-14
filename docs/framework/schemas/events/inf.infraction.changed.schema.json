@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/inf.infraction.changed.schema.json",
+  "title": "inf.infraction.changed",
+  "description": "Transicao de estado do agregado da infracao — publicado a cada transicao ([WF-INF-003] secao 6; rait-events-sse-contract secao 2.4). Consumidores: portal, dashboard, senatran-adapter (RENAINF).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "ULID do envelope; ordena por tempo dentro do tenant (rait-events-sse-contract secao 1)."
+    },
+    "type": {
+      "const": "inf.infraction.changed"
+    },
+    "domainEvent": {
+      "const": "INFRACAO_ESTADO_ALTERADO",
+      "description": "Token canonico de inf.infraction_event_ref (14-inf-lifecycle-vocabulary.sql)."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Usado para roteamento; nunca exposto no SSE."
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "requestId do comando que gerou o evento."
+    },
+    "causationId": {
+      "type": "string",
+      "description": "id do evento que causou este; ausente no evento raiz."
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "infraction"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ETag pos-transicao (inf.infraction.version)."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "description": "Codigos de estado, sub-estado e motivo restritos aos conjuntos de inf.infraction_state_ref, inf.infraction_substate_ref e inf.infraction_closure_motive_ref.",
+      "additionalProperties": false,
+      "required": [
+        "infractionId",
+        "aitId",
+        "fromState",
+        "toState",
+        "triggerKind",
+        "triggerCode",
+        "ruleRef"
+      ],
+      "properties": {
+        "infractionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "aitId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "fromState": {
+          "type": ["string", "null"],
+          "enum": [
+            "AIT_LAVRADO",
+            "NOTIFICADO_AUTUACAO",
+            "DEFESA_EM_JULGAMENTO",
+            "PENALIDADE_A_APLICAR",
+            "NOTIFICADO_PENALIDADE",
+            "RECURSO_1A_INSTANCIA",
+            "AGUARDANDO_RECURSO_2A",
+            "RECURSO_2A_INSTANCIA",
+            "INSTANCIA_ENCERRADA",
+            "ARQUIVADO",
+            "CANCELADO_POS_INTEGRACAO",
+            "AIT_CANCELADO",
+            "EXTINTO_DECADENCIA",
+            "EXTINTO_PRESCRICAO",
+            "CANCELADO_DEFINITIVO",
+            null
+          ],
+          "description": "null na criacao do agregado (inf.infraction_transition_ref id 1, from_state IS NULL)."
+        },
+        "toState": {
+          "type": "string",
+          "enum": [
+            "AIT_LAVRADO",
+            "NOTIFICADO_AUTUACAO",
+            "DEFESA_EM_JULGAMENTO",
+            "PENALIDADE_A_APLICAR",
+            "NOTIFICADO_PENALIDADE",
+            "RECURSO_1A_INSTANCIA",
+            "AGUARDANDO_RECURSO_2A",
+            "RECURSO_2A_INSTANCIA",
+            "INSTANCIA_ENCERRADA",
+            "ARQUIVADO",
+            "CANCELADO_POS_INTEGRACAO",
+            "AIT_CANCELADO",
+            "EXTINTO_DECADENCIA",
+            "EXTINTO_PRESCRICAO",
+            "CANCELADO_DEFINITIVO"
+          ]
+        },
+        "substate": {
+          "type": "string",
+          "enum": [
+            "PRAZO_DEFESA_ABERTO",
+            "INDICACAO_EM_PROCESSAMENTO",
+            "EM_ADMISSIBILIDADE_1A",
+            "EM_REMESSA_JARI",
+            "EM_JULGAMENTO_JARI",
+            "PROVIDO_1A",
+            "NEGADO_1A",
+            "EM_ADMISSIBILIDADE_2A",
+            "EM_JULGAMENTO_CETRAN",
+            "PENDENTE_PAGAMENTO",
+            "QUITADA",
+            "EM_COBRANCA"
+          ]
+        },
+        "closureMotive": {
+          "type": "string",
+          "enum": [
+            "nao_interposicao_1a",
+            "nao_interposicao_2a",
+            "julgamento_2a",
+            "reconhecimento",
+            "desistencia",
+            "nao_conhecimento_intempestivo",
+            "na_nao_expedida",
+            "insubsistente"
+          ]
+        },
+        "triggerKind": {
+          "type": "string",
+          "enum": ["evento", "timer", "ato", "sistema"]
+        },
+        "triggerCode": {
+          "type": "string",
+          "description": "inf.infraction_transition_ref.trigger_code da linha aplicada."
+        },
+        "ruleRef": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "inf.infraction_transition_ref.rule_ref (numero da linha de [WF-INF-003] secao 2)."
+        }
+      }
+    }
+  }
+}

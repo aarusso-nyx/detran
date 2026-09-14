@@ -1,0 +1,42 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0006/prompts/TASK-0005.md",
+      "line": 49,
+      "claim": "TASK-0005 atribui ao Architect a escrita de arquivos TypeScript da fachada em shared; TASK-0006 somente depois escreve o teste. Isso viola Art. 10: Architect não pode editar código e a tríade exige Inspector antes do Engineer.",
+      "fix": "TASK-0005 deve deixar apenas a especificação no contrato; mover a implementação da fachada para TASK-0007, ampliar sua fronteira para shared/documents e manter TASK-0006 como autor prévio dos testes."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0006/plan.md",
+      "line": 64,
+      "claim": "M10 exclui explicitamente projeções por consumidor desta rodada e as desloca para WP-P após WP-B, mas TASK-0005 manda criar BP-INF-RAIT-INTEGRATION-001 como projeção de integration.outbox.",
+      "fix": "Antes do disparo, obter decisão canônica que altere M10/ADR-0020 e atualizar o plano; sem isso, remover a projeção de TASK-0005 e registrá-la como fora de escopo para WP-P."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0006/prompts/TASK-0008.md",
+      "line": 25,
+      "claim": "TASK-0008 exige ler o relatório de TASK-0007 para transcrever o estado real, mas o plano também permite que TASK-0008 rode em paralelo com TASK-0007. Nessa execução a leitura fechada não está disponível nem é suficiente.",
+      "fix": "Remover o paralelismo de TASK-0008 ou dividir a documentação: deixar a transcrição dependente de TASK-0007 e de evidência/PR já existente."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0006/prompts/TASK-0008.md",
+      "line": 53,
+      "claim": "O prompt obriga registrar \"executado em R-0006 (PRs …)\" e marcar backlog como executado com referência a PRs, embora os números não estejam nas fontes fechadas e a própria documentação integra o CTG-0002 antes da abertura/merge do PR.",
+      "fix": "Exigir somente estado verificável no momento da tarefa; usar source_pending para PR ainda inexistente e atualizar a referência em etapa posterior, após criação ou merge do PR."
+    }
+  ],
+  "notes": [
+    "TASK-0005 está configurada como Opus/médio apesar de concentrar três blueprints, DDL, contratos e decisões de modelagem; a escada prescreve esforço alto para blueprint/guardas."
+  ]
+}

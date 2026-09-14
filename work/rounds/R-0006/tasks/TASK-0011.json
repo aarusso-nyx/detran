@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0006",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implement the deadline event port, event emission and extend()",
+  "description": "Make cases 19–22 and the amended case 12 pass in @detran/inf-deadlines; additive API only.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-deadlines", "MOD-inf-infraction-handwritten"],
+  "target_substrates": ["F2"],
+  "target_invariants": [
+    "contract CTG-0001 §5.2",
+    "RAIT.INQUIRY_EXTENSION_LIMIT",
+    "RAIT.DEADLINE_LEGAL_READONLY"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "iteration_trail": [],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "deadlines", "delivery-review-2"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-decb2aaa1d1b9f37",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-deadlines", "test"],
+    ["pnpm", "--filter", "@detran/inf-deadlines", "typecheck"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-14T22:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-decb2aaa1d1b9f37",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

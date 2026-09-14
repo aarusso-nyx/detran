@@ -1,0 +1,16 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/deadlines/src/engine.ts",
+      "line": 364,
+      "claim": "`extend(id, _reason)` descarta integralmente o motivo do chamador; ele não é persistido nem enviado a uma porta auditável. Isso contradiz o contrato, que exige que `reason` seja registrado para auditoria.",
+      "fix": "Definir um destino auditável canônico para o motivo da prorrogação, implementá-lo sem substituir o token obrigatório `data.reason: 'prorrogacao'`, e acrescentar teste que prove a retenção do motivo informado."
+    }
+  ],
+  "notes": []
+}

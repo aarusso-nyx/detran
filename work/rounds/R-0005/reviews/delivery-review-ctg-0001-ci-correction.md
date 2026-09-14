@@ -52,18 +52,18 @@ configuração inválida para node-postgres/PostgreSQL, ocultação do FAIL, enf
 evidência inconsistente. Preserve lows sem rebaixar severidade.
 
 {
-  "mode": "delivery-review-ci-correction",
-  "round": "R-0005",
-  "verdict": "PASS | REVIEW | FAIL",
-  "findings": [
-    {
-      "severity": "high | low",
-      "item": 1,
-      "file": "path",
-      "line": 1,
-      "claim": "plain text",
-      "fix": "plain text"
-    }
-  ],
-  "notes": ["plain text"]
+"mode": "delivery-review-ci-correction",
+"round": "R-0005",
+"verdict": "PASS | REVIEW | FAIL",
+"findings": [
+{
+"severity": "high | low",
+"item": 1,
+"file": "path",
+"line": 1,
+"claim": "plain text",
+"fix": "plain text"
+}
+],
+"notes": ["plain text"]
 }

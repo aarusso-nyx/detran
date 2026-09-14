@@ -1,0 +1,710 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Notification — BP-INF-NOTIFICATION-001",
+    "version": "1.1.1",
+    "description": "Modulo de notificacao (ADR-0016 Decision 1 e 3; [WF-INF-002] secao 2 P2 Notificar): unico escritor de avisos (NA, NP, decisao, diligencia, edital), da ciencia efetiva ou ficta e das tentativas de entrega. Publica NOTIFICACAO_EXPEDIDA e NOTIFICACAO_CIENCIA; nunca decide nada sobre a infracao. Marco por canal em inf.notification_channel_ref ([RN-RAIT-104]).",
+    "x-blueprint": "BP-INF-NOTIFICATION-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/notification/notices": {
+      "get": {
+        "tags": ["notice"],
+        "operationId": "listNotice",
+        "summary": "List Notice (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Notice"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["notice"],
+        "operationId": "createNotice",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNoticeDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/notification/notices/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["notice"],
+        "operationId": "getNotice",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["notice"],
+        "operationId": "updateNotice",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNoticeDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["notice"],
+        "operationId": "removeNotice",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/notification/acknowledgements": {
+      "get": {
+        "tags": ["notice-acknowledgement"],
+        "operationId": "listNoticeAcknowledgement",
+        "summary": "List NoticeAcknowledgement (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NoticeAcknowledgement"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["notice-acknowledgement"],
+        "operationId": "createNoticeAcknowledgement",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNoticeAcknowledgementDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeAcknowledgement"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/notification/acknowledgements/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["notice-acknowledgement"],
+        "operationId": "getNoticeAcknowledgement",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeAcknowledgement"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/notification/delivery-attempts": {
+      "get": {
+        "tags": ["notice-delivery-attempt"],
+        "operationId": "listNoticeDeliveryAttempt",
+        "summary": "List NoticeDeliveryAttempt (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NoticeDeliveryAttempt"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["notice-delivery-attempt"],
+        "operationId": "createNoticeDeliveryAttempt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNoticeDeliveryAttemptDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeDeliveryAttempt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/notification/delivery-attempts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["notice-delivery-attempt"],
+        "operationId": "getNoticeDeliveryAttempt",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeDeliveryAttempt"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Notice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["NA", "NP", "DECISAO", "DILIGENCIA", "EDITAL"]
+          },
+          "addressee_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "principal_condutor",
+              "condutor_identificado",
+              "possuidor_equiparado",
+              "embarcador",
+              "transportador"
+            ]
+          },
+          "addressee_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dispatched_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dispatched_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "printed_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "solicitada",
+              "expedida",
+              "publicada",
+              "devolvida",
+              "falha",
+              "eficaz"
+            ]
+          },
+          "supersedes_notice_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "infraction_id",
+          "kind",
+          "addressee_kind",
+          "channel",
+          "issued_at",
+          "status",
+          "created_at"
+        ],
+        "description": "Aviso expedido pelo orgao — NA, NP, decisao, diligencia ou edital (ADR-0016 Decision 1; [WF-INF-002] secao 2 P2 Notificar). Dois marcos sempre separados: expedicao (dispatched_at/dispatched_on, prazo do orgao) e ciencia (inf.notice_acknowledgement, prazo do administrado). case_id referencia inf.rait_case sem FK — outro modulo. addressee_ref e referencia opaca, sem PII."
+      },
+      "CreateNoticeDto": {
+        "type": "object",
+        "properties": {
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["NA", "NP", "DECISAO", "DILIGENCIA", "EDITAL"]
+          },
+          "addressee_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "proprietario",
+              "principal_condutor",
+              "condutor_identificado",
+              "possuidor_equiparado",
+              "embarcador",
+              "transportador"
+            ]
+          },
+          "addressee_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dispatched_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dispatched_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "printed_deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "solicitada",
+              "expedida",
+              "publicada",
+              "devolvida",
+              "falha",
+              "eficaz"
+            ]
+          },
+          "supersedes_notice_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "infraction_id",
+          "kind",
+          "addressee_kind",
+          "channel",
+          "issued_at",
+          "status"
+        ]
+      },
+      "NoticeAcknowledgement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "notice_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "fictitious": {
+            "type": "boolean"
+          },
+          "evidence_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "ar_postal",
+              "recibo_sne",
+              "publicacao_edital",
+              "assinatura",
+              "registro_balcao"
+            ]
+          },
+          "evidence_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "registered_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "notice_id",
+          "effective_on",
+          "fictitious",
+          "evidence_kind",
+          "registered_at",
+          "created_at"
+        ],
+        "description": "Ciencia efetiva ou ficta de um aviso (ADR-0016 Decision 1; [RN-RAIT-104]; inf.notification_channel_ref). Uma por aviso: effective_on e o marco a partir do qual correm os prazos do administrado (T-DEF, T-NP-VENC). fictitious=true no SNE quando vale a disponibilizacao + 30 dias (T-SNE-CIENCIA)."
+      },
+      "CreateNoticeAcknowledgementDto": {
+        "type": "object",
+        "properties": {
+          "notice_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "effective_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "fictitious": {
+            "type": "boolean"
+          },
+          "evidence_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "ar_postal",
+              "recibo_sne",
+              "publicacao_edital",
+              "assinatura",
+              "registro_balcao"
+            ]
+          },
+          "evidence_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "registered_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "notice_id",
+          "effective_on",
+          "fictitious",
+          "evidence_kind",
+          "registered_at"
+        ]
+      },
+      "NoticeDeliveryAttempt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "notice_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "attempted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["entregue", "devolvida", "falha"]
+          },
+          "provider_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "error_code": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "outbox_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "notice_id",
+          "channel",
+          "attempted_at",
+          "outcome",
+          "created_at"
+        ],
+        "description": "Tentativa de entrega de um aviso por canal (ADR-0016 Decision 1 e 3; [WF-INF-002] secao 2: retorno da remessa entregue | devolvida | falha). Refazimento do ato gera novo aviso com supersedes_notice_id, nunca reescreve a tentativa. outbox_id liga a entrega ao envelope da integration.outbox."
+      },
+      "CreateNoticeDeliveryAttemptDto": {
+        "type": "object",
+        "properties": {
+          "notice_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["sne", "postal", "pessoal", "edital", "portal", "balcao"]
+          },
+          "attempted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["entregue", "devolvida", "falha"]
+          },
+          "provider_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "error_code": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "outbox_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["notice_id", "channel", "attempted_at", "outcome"]
+      }
+    }
+  }
+}

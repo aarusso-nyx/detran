@@ -1,4 +1,7 @@
 -- Generated from parameter-catalogue.md sha256:46e1a81e8e98465aad5b1a1fb5c1fbdcf6eaa3814614dc817fe8965b65c7890a
+-- Applied by backend/database/seed.sh after apply.sh: the tenant context below satisfies auth.enforce_tenant_id().
+select set_config('app.role', 'owner', false);
+select set_config('app.tenant_id', '00000000-0000-7000-8000-00000000a001', false);
 INSERT INTO ops.parameter
   (tenant_id, traffic_agency_id, scope, surface, key, value_json, value_type, status, source_pending, legal_readonly, decision_ref, legal_basis, reason, version, effective_from, changed_by, created_at)
 VALUES

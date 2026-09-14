@@ -214,10 +214,11 @@ Checkpoint da janela 1 em 2026-09-14:
   app e reader, com app/reader sob `role_app_backend`; a reexecucao local integral passou. Proximo
   passo: registrar/revisar a correcao, atualizar o PR, obter CI verde e mesclar. CTG-0002 segue sem
   workers ate esse merge.
-- Revisao focal Opus 5 da correcao CI: PASS, zero highs. O vinculo dos artefatos do review sera
-  anexado na proxima sequencia de evidencia. Os lows de identidades LOGIN distintas para pools
-  app/reader e de fixture positiva no sensor e2e foram roteados para o hardening de ambiente/testes
-  de R-0008 / WP-T2; nao alteram o gate atual, que efetivamente executa como `role_app_backend`.
+- Revisao focal Opus 5 da correcao CI, repetida com prompt formatado: PASS, zero highs. O vinculo
+  dos artefatos do review sera anexado na proxima sequencia de evidencia. Os lows de assertar o
+  principal efetivo/dedicar LOGINs, tornar URLs de test profile fail-closed e separar um reader
+  least-privilege foram roteados para o hardening de ambiente/testes de R-0008 / WP-T2; nao
+  alteram o gate atual, que efetivamente executa como `role_app_backend`.
 
 ## Triagem
 
@@ -233,10 +234,15 @@ Checkpoint da janela 1 em 2026-09-14:
   A configuracao foi alinhada ao gate local documentado: owner permanece `postgres`, enquanto
   app/reader usam `options=-c role=role_app_backend`. Com as mesmas URLs, `backend:test:ci` passou
   integralmente, inclusive app e2e 12/12. Nenhum teste ou politica RLS foi enfraquecido.
-- Lows da revisao focal da correcao CI: criar LOGINs dedicados `detran_app`/`detran_reader` em vez
-  de sessao postgres com role inicial, e fortalecer o e2e com uma fixture visivel do tenant local.
-  Ambos ficam em R-0008 / WP-T2, onde o contrato de ambiente e a matriz OPS ja estao roteados. O
-  low de rastreabilidade desta revisao e fechado imediatamente por evidencia append-only.
+- Lows da revisao focal repetida da correcao CI: assertar `current_user`, exigir URLs app/reader no
+  perfil de teste, usar LOGINs nao-superuser e separar reader least-privilege. Ficam em R-0008 /
+  WP-T2, onde o contrato de ambiente e a matriz OPS ja estao roteados. O vinculo desta revisao e
+  fechado imediatamente por evidencia append-only.
+- Integracao de `origin/main`/PR #39: a primeira execucao local pos-merge aplicou o banco mas
+  omitiu o novo `seed.sh`, pre-condicao dos testes de infractions; os tres failures observaram
+  somente fixtures ausentes. Classificacao: `sensor-error` de procedimento. Depois do seed
+  canonico, `backend:test:ci` passou integralmente, inclusive os novos pacotes R-0006 e app e2e
+  12/12. Nenhum codigo ou teste foi alterado para esse resultado.
 - TASK-0004 iteracao 0: `plant-bug` na referencia Architect. `BP-OPS-SNAPSHOTS-001` ordenou
   `VehicleSnapshot` antes de `ExternalQuery`, mas a primeira cria FK para
   `ops.snapshots_external_query`; `backend:db:reset` falha antes dos testes. Varredura dos cinco
