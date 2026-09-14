@@ -7,7 +7,7 @@ Estado em 2026-09-14: WP-0 e WP-T0 mesclados em `main` (PRs #28 e #29).
 
 - Duas frentes ativas por vez, famílias de maestro alternadas; a segunda a mesclar rebaseia sobre `main`.
 - Nunca duas frentes ativas com lock no mesmo módulo (`policy.ts`, `roles.ts`, um mesmo DDL, um mesmo blueprint).
-- Uma rodada DEVAI por frente; numeração sequencial a partir de R-0003.
+- Uma rodada DEVAI por frente; R-0003…R-0016 já instanciadas em `work/rounds/` (plano e prompt do maestro por frente).
 - Uma frente só abre quando todas as frentes de que depende estão em `main`.
 
 ## Plano de ondas
@@ -43,7 +43,19 @@ ficam ativas ao mesmo tempo (ondas 5 e 6).
 
 ## Histórico (preencher a cada rodada)
 
-| Rodada | Frente        | Abertura | Merge | Tarefas | Ciclos de REVIEW | Escaladas | Tokens estimados | Ajustes ao método |
-| ------ | ------------- | -------- | ----- | ------- | ---------------- | --------- | ---------------- | ----------------- |
-| R-0003 | `dash-roles`  | —        | —     | —       | —                | —         | —                | —                 |
-| R-0004 | `param-store` | —        | —     | —       | —                | —         | —                | —                 |
+| Rodada | Frente              | Abertura | Merge | Tarefas | Ciclos de REVIEW | Escaladas | Tokens estimados | Ajustes ao método |
+| ------ | ------------------- | -------- | ----- | ------- | ---------------- | --------- | ---------------- | ----------------- |
+| R-0003 | `dash-roles`        | —        | —     | —       | —                | —         | —                | —                 |
+| R-0004 | `param-store`       | —        | —     | —       | —                | —         | —                | —                 |
+| R-0005 | `ops-agency`        | —        | —     | —       | —                | —         | —                | —                 |
+| R-0006 | `rait-model`        | —        | —     | —       | —                | —         | —                | —                 |
+| R-0007 | `rait-backend`      | —        | —     | —       | —                | —         | —                | —                 |
+| R-0008 | `teat-backend`      | —        | —     | —       | —                | —         | —                | —                 |
+| R-0009 | `portal-backend`    | —        | —     | —       | —                | —         | —                | —                 |
+| R-0010 | `boat-backend`      | —        | —     | —       | —                | —         | —                | —                 |
+| R-0011 | `dashboard-backend` | —        | —     | —       | —                | —         | —                | —                 |
+| R-0012 | `rait-web`          | —        | —     | —       | —                | —         | —                | —                 |
+| R-0013 | `teat-frontends`    | —        | —     | —       | —                | —         | —                | —                 |
+| R-0014 | `portal-pwa`        | —        | —     | —       | —                | —         | —                | —                 |
+| R-0015 | `boat-mobile`       | —        | —     | —       | —                | —         | —                | —                 |
+| R-0016 | `dashboard-console` | —        | —     | —       | —                | —         | —                | —                 |
