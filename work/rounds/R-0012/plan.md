@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Depende de:** `rait-backend` (R-0007) em `main` (contratos de comando e `contracts:clients`).
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (fichas de tela): nenhum upstream. CTG-0002 (app, formulários): `rait-backend` R-0007 (`orchestra/rait-backend`, `contracts:clients`) — empilhe nele se ainda não mesclou; lock `packages/ui` com R-0013 `teat-frontends`: só um dos dois grupos de app ativo por vez.
 **Lock compartilhado:** `packages/ui` — nunca ativa ao mesmo tempo que `teat-frontends` (R-0013).
 **Janelas previstas:** 3.
 
@@ -77,6 +77,11 @@ CTG-0001 = 0002/0003 (fichas, PR próprio); CTG-0002 = 0004…0006 (app). TASK-0
   o `pnpm-lock.yaml` (commit separado "chore(deps)").
 - Angular 22 (`OnPush` default, router `always`, TS 6): notas em `wp0-stynx-1-3-1-migration.md` §7.
 - Fichas são corpus de produto: linguagem e tokens canônicos do KB; nenhuma tela fora da §4.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
-**Depende de:** `ops-agency` (R-0005) e `teat-backend` (R-0008) em `main` (fila de sincronização e evidência).
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (política `est:*`, `UC-BOAT-013`, modelo, refs, fixtures): nenhum upstream. CTG-0002 (comandos, aplicador da fila, RENAEST, projeções, contratos): `teat-backend` R-0008 (`orchestra/teat-backend`, fila de sincronização e evidência) e `ops-agency` R-0005.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -84,6 +84,11 @@ CTG-0001 = 0001…0004; CTG-0002 = 0005…0008. Um PR por CTG.
 - `UC-BOAT-013` é edição de corpus de produto (papel Owner delegado): texto só a partir de W-05 e
   [RN-BOAT-*]; sem regra nova.
 - Retenção `est.retention.*` vigente por H.45, bodycam pendente: eliminação opera com listagem, nunca automática.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

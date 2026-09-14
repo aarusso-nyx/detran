@@ -50,3 +50,12 @@ over six rounds.
   R-0004 (`param-store`) are the first instances.
 - Out of scope: `devai round run`, automatic dequeuing, cross-family workers, and the model
   registry (`model-runtime-registry.schema.json`) until the bridge is exercised in practice.
+
+## Emenda 2026-09-14 — concorrência por grupo acoplado
+
+A abertura de uma frente exige apenas `origin/main` atualizado; as dependências entre frentes valem
+para o merge de cada grupo acoplado, não para a abertura. Grupos que precisam de código ainda não
+mesclado desenvolvem sobre base empilhada (`orchestra/<upstream>`) e rebaseiam sobre `main` quando o
+upstream mescla. O limite de frentes simultâneas passa a ser o orçamento de janelas por família
+(`waves.md`), não o grafo. Motivo: os maestros de R-0005 e R-0013 pararam no portão de dependência
+com janelas ociosas, embora parte dos grupos não dependesse de nada.

@@ -5,10 +5,15 @@ Estado em 2026-09-14: WP-0 e WP-T0 mesclados em `main` (PRs #28 e #29).
 
 ## Regras
 
-- Duas frentes ativas por vez, famílias de maestro alternadas; a segunda a mesclar rebaseia sobre `main`.
+- Pelo menos duas frentes ativas, uma por família de maestro; mais frentes quando o orçamento de
+  janelas permitir — o limite de concorrência é o orçamento, não o grafo. A segunda a mesclar rebaseia sobre `main`.
 - Nunca duas frentes ativas com lock no mesmo módulo (`policy.ts`, `roles.ts`, um mesmo DDL, um mesmo blueprint).
 - Uma rodada DEVAI por frente; R-0003…R-0016 já instanciadas em `work/rounds/` (plano e prompt do maestro por frente).
-- Uma frente só abre quando todas as frentes de que depende estão em `main`.
+- Toda frente pode **abrir** com `origin/main` atualizado. O que depende de upstream é o **merge de
+  cada grupo acoplado** (lista em `plan.md` §Concorrência e no §0 do prompt de cada rodada). Grupos
+  que precisam de código ainda não mesclado desenvolvem sobre base empilhada no branch
+  `orchestra/<upstream>` e rebaseiam sobre `main` quando ele mescla; o PR contra `main` só abre
+  depois disso. A coluna "Depende de" da tabela abaixo indica o merge do último grupo, não a abertura.
 
 ## Plano de ondas
 

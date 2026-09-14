@@ -3,8 +3,7 @@
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`
 (escalar para Sol no `delivery-review` dos grupos de sincronização e política).
-**Depende de:** `ops-agency` (R-0005) em `main`; `DetranError` de `rait-backend` (R-0007 CTG-0001)
-se já mesclado — senão, esta frente o cria em `@detran/shared` e R-0007 rebaseia.
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — todos os grupos: `ops-agency` R-0005 (`orchestra/ops-agency`; módulos `ops` gerados e deltas v1.1.0 dos blueprints `inf`) — enquanto não mesclar, desenvolva sobre base empilhada nele. `DetranError` de R-0007 CTG-0001 se já em `main`; senão crie em `@detran/shared` e avise em §Bloqueios para R-0007 rebasear. CTG-0004 (contratos): também `check-commands.mjs` de R-0007 CTG-0001, ou crie aqui.
 **Janelas previstas:** 4.
 
 ## Metas
@@ -83,6 +82,11 @@ CTG-0001 = 0001…0003; CTG-0002 = 0004/0005; CTG-0003 = 0006/0007; CTG-0004 = 0
   valor inventado.
 - Bodycam: só chrome/metadados; retenção `teat.bodycam.retention_days` `source_pending` (DT-049).
 - Guarda monitorada e medidores acoplados: rotas registradas e desligadas por flag (`teat.monitored_custody`, `teat.speed_meters`).
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

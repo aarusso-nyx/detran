@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Depende de:** `param-store` (R-0004) em `main` (parâmetros vivem em `ops.parameter`, ADR-0021).
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (infração, `inf/notification`, `@detran/inf-deadlines`): nenhum upstream — lock em `14-inf-lifecycle-vocabulary.sql` com R-0005 `ops-agency`, rebase. CTG-0002 (worklist/sessão/caso, org, financeiro, integração): `param-store` R-0004 (`orchestra/param-store`) em `main`.
 **Janelas previstas:** 2.
 
 ## Metas
@@ -92,6 +92,11 @@ CTG-0001 = TASK-0001…0003 (infração); CTG-0002 = TASK-0004…0007 (RAIT). Um
 - Timers `owner='medida'` (TEAT) podem chegar como seed pendente de R-0005: aplicar aqui.
 - Nenhum valor de prazo inventado: só os de [WF-INF-002] §9.2 e do catálogo; o que faltar vira
   `source_pending`.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

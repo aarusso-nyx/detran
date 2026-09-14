@@ -2,8 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
-**Depende de:** `rait-backend` (R-0007) e `teat-backend` (R-0008) em `main` (eventos de origem);
-`dash-roles` (R-0003) já em `main` desde a onda 1.
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (modelo, refs, projeções, seed dos 42, gate `verify:domain-boundaries`): nenhum upstream — projeções escritas contra os contratos de eventos já publicados (`rait-events-sse-contract.md`, `teat-route-contract.md` §8, `boat-route-contract.md` §7, `portal-route-contract.md` §10) com fixtures. CTG-0002 (ciclo do alerta, deveres, frescor, exportação, SSE, contratos, e2e de escalonamento): `rait-backend` R-0007 e `teat-backend` R-0008 em `main`.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -83,6 +82,11 @@ CTG-0001 = 0001…0003; CTG-0002 = 0004…0006. Um PR por CTG.
 - `verify:domain-boundaries` é gate novo em `pnpm check`: rodar sobre o repositório inteiro antes
   de ligar, e corrigir as violações existentes no mesmo PR (nunca lista de exceções silenciosa).
 - Lock `packages/ui` não é tocado; `apps/dashboard/web` é R-0016.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 
