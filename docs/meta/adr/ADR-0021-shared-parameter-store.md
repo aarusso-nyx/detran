@@ -2,8 +2,10 @@
 
 ## Status
 
-Proposed on 2026-09-13 by the Architect, on the Owner's choice of the same date (closure plan of
-the implementation gate). Depends on ADR-0015 (STYNX 1.3.1 target) and complements ADR-0016…0020.
+Accepted on 2026-09-14 by the Architect for implementation in R-0004, with Owner-authorized
+publication through PR #37. Originally proposed on 2026-09-13 on the Owner's choice of the same
+date (closure plan of the implementation gate). Depends on ADR-0015 (STYNX 1.3.1 target) and
+complements ADR-0016…0020.
 
 ## Context
 

@@ -1,0 +1,75 @@
+{
+  "is_error": false,
+  "duration_api_ms": 572151,
+  "num_turns": 61,
+  "stop_reason": "end_turn",
+  "session_id": "cb816129-1e10-4e82-acb9-9ffbf5f21a87",
+  "total_cost_usd": 5.298698999999999,
+  "usage": {
+    "input_tokens": 96,
+    "cache_creation_input_tokens": 152098,
+    "cache_read_input_tokens": 5423066,
+    "output_tokens": 42522,
+    "output_tokens_details": { "thinking_tokens": 25786 },
+    "server_tool_use": { "web_search_requests": 0, "web_fetch_requests": 0 },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 152098,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 5668,
+        "cache_read_input_tokens": 166778,
+        "cache_creation_input_tokens": 1215,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1215
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 2556,
+      "outputTokens": 20,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.002656,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty"
+    },
+    "claude-opus-5": {
+      "inputTokens": 96,
+      "outputTokens": 42522,
+      "cacheReadInputTokens": 5423066,
+      "cacheCreationInputTokens": 152098,
+      "webSearchRequests": 0,
+      "costUSD": 5.296042999999999,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "canonicalModel": "claude-opus-5",
+      "provider": "firstParty"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "```json\n{\n  \"mode\": \"prompt-review\",\n  \"round\": \"R-0004\",\n  \"verdict\": \"REVIEW\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"item\": 4,\n      \"file\": \"work/rounds/R-0004/prompts/TASK-0001.md\",\n      \"line\": 41,\n      \"claim\": \"O artefato autorizado `docs/framework/contracts/BP-OPS-PARAMETER-001.commands.openapi.json` quebra o próprio gate de contratos. `tools/contracts/generate-openapi.mjs:236-242` varre `docs/framework/contracts` e marca como `orphan contract` (drift → exit 1) qualquer arquivo terminado em `.openapi.json` que não esteja em `expected`; `expected` recebe exatamente um nome por blueprint, `${bp.id}.openapi.json` (linha 213), isto é, só `BP-OPS-PARAMETER-001.openapi.json`. O sufixo `.commands.openapi.json` casa com o filtro da linha 238 e nunca com `expected`, e o laço de órfãos roda nos dois modos (está depois do `continue` do `checkMode`, linhas 228-235). Consequência encadeada: falha o critério de TASK-0001.md:88 (`pnpm blueprints:generate && pnpm contracts:openapi` → sem erro) e o de TASK-0001.md:91 (`pnpm contracts:check`), falha `pnpm contracts:check` em TASK-0003.md:80 e tasks/TASK-0003.json:34, e falha `pnpm check` em TASK-0006.md:80 (a cadeia de `check` inclui `contracts:check`). Nenhuma das seis tarefas pode tocar `tools/contracts/**` — não está em nenhum `Pode tocar` —, logo o gate fica insatisfazível dentro da rodada. Hoje `docs/framework/contracts/` só contém os 27 `BP-*.openapi.json` gerados e `README.md`, ou seja, não há precedente de contrato manual nesse diretório.\",\n      \"fix\": \"Tirar o contrato manual do espaço de nomes varrido: renomear para `docs/framework/contracts/BP-OPS-PARAMETER-001.commands.json` (o filtro da linha 238 exige o sufixo `.openapi.json`, então `.commands.json` não é órfão) ou movê-lo para fora de `docs/framework/contracts/`, p. ex. `docs/framework/arch/ops-parameter-command-contract.md`. Propagar o caminho novo em TASK-0001.md:41, TASK-0002.md:27 e TASK-0003.md:28.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"item\": 4,\n      \"file\": \"work/rounds/R-0004/plan.md\",\n      \"line\": 49,\n      \"claim\": \"A emenda 2 do Owner está correta no conteúdo (o alvo `../domains/ops/parameter/src/index.ts` resolve para `backend/domains/ops/parameter/src/index.ts` a partir de `backend/app/vitest.config.ts`, e o pacote gerado será `@detran/ops-parameter`, conforme `tools/blueprints/generate.mjs:263`), mas fica numa tarefa tarde demais em relação ao import que a torna necessária. TASK-0003 (CTG-0001) põe `ParameterModule` em `backend/app/src/app.module.ts`; o alias só chega em TASK-0006 (CTG-0002). Na janela entre as duas, qualquer tier de vitest do app que carregue `AppModule` falha na resolução — `backend/app/tests/e2e/inf-ait-routes.e2e.spec.ts:7`, `pec-idempotency.e2e.spec.ts:7` e `runtime-profiles.e2e.spec.ts:6` importam `../../src/app.module.js`, e sem alias o pacote resolve pelo `exports.default` `./dist/index.js` do manifesto gerado, que nunca é construído nesta rodada. O gate de grupo de `00-maestro.md:158` nomeia justamente `pnpm backend:test:ci`, que inclui `backend:test:e2e`. Não afeta `pnpm check` (não roda vitest de backend) nem `pnpm --filter @detran/app test:unit` de TASK-0005.md:70 (o tier unit coleta só `src/**/*.spec.ts`, e nenhum desses specs importa `app.module`).\",\n      \"fix\": \"Fixar em plan.md §Tarefas que o gate do checkpoint de CTG-0001 é a lista de §Critérios de aceitação (escopada ao pacote `@detran/ops-parameter` mais `pnpm check`), e que `pnpm backend:test:ci` / `backend:test:e2e` só são exigidos depois de TASK-0006 acrescentar o alias — ou, em alternativa equivalente e sem ampliar fronteira de produto, transferir a linha do alias para TASK-0003 sob `MOD-app-module`, junto com a dependência já autorizada.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"item\": 8,\n      \"file\": \"work/rounds/R-0004/prompts/TASK-0006.md\",\n      \"line\": 44,\n      \"claim\": \"Os testes escritos por TASK-0005 em `tools/parameters/tests/**` não ficam acessíveis a nenhum comando de CI. Eles só rodam por `node --test tools/parameters/tests/*.test.mjs` (TASK-0005.md:68, TASK-0006.md:76), que é comando de aceitação de worker e não existe em `package.json`. A fronteira de TASK-0006 autoriza apenas os scripts `parameters:generate`, `verify:parameter-catalogue`, a composição de `check` e a inclusão de `@detran/ops-parameter` em `backend:test:unit`/`backend:test:integration`; `.github/workflows/ci.yml:112,183` roda `pnpm check` e `pnpm backend:test:ci`, e nenhum dos dois alcança `tools/parameters/tests`. O gate `verify:parameter-catalogue` entra em `check`, mas os sensores fail-closed do parser (header errado, chave duplicada, `pend.` typo, flag não booleana, ref órfã, gerado stale) ficam sem execução automática após o merge.\",\n      \"fix\": \"Acrescentar ao `Pode tocar` de TASK-0006 o script `parameters:test` (`node --test tools/parameters/tests/*.test.mjs`) e a sua inclusão em `backend:test:unit` — ou em `check`, ao lado de `verify:parameter-catalogue` —, e citar o novo script nos critérios de aceitação de TASK-0005 e TASK-0006.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"item\": 4,\n      \"file\": \"work/rounds/R-0004/tasks/TASK-0003.json\",\n      \"line\": 29,\n      \"claim\": \"`acceptance_commands` de TASK-0003 não reflete o prompt: o prompt exige cinco blocos (TASK-0003.md:76-81), incluindo `pnpm --filter @detran/ops-parameter test:integration` (condicionado a `DETRAN_TEST_DATABASE_URL`) e `pnpm format:check`; o JSON lista apenas `test:unit`, `typecheck`, `verify:decorators`, `verify:rls-ddl` e `contracts:check`. `format:check` está presente nos JSON de TASK-0001, TASK-0002 e TASK-0005, o que confirma a omissão como lapso e não como escolha; é justamente o gate que TASK-0003 pode quebrar ao escrever `handwritten/**`, `app.module.ts`, `policy.ts` e a nova linha de `backend/app/package.json`.\",\n      \"fix\": \"Acrescentar `[\\\"pnpm\\\", \\\"format:check\\\"]` a `tasks/TASK-0003.json` e registrar o `test:integration` condicionado ao banco no mesmo lugar em que plan.md:60-63 já o descreve, para que o JSON e o prompt digam a mesma coisa.\"\n    }\n  ],\n  \"notes\": [\n    \"As três emendas autorizadas foram verificadas no repositório, não presumidas. (1) TASK-0003.md:40-41 e a leitura fechada em TASK-0003.md:33 cobrem `backend/app/package.json` só na dependência; a correção é suficiente para o `pnpm typecheck` de `pnpm check`, porque o manifesto gerado expõe `exports['.'].types = './src/index.ts'` (`tools/blueprints/generate.mjs:263-266`, confirmado em `backend/domains/inf/ait/package.json`) e `backend/app/tsconfig.json` usa `moduleResolution: NodeNext`, de modo que `tsc --noEmit` resolve pelo symlink criado pelo `pnpm install` do checkpoint (plan.md:51-53). O gerador nunca escreve `backend/app/package.json` (`packageFiles` só emite `backend/domains/<ns>/<mod>/...`), portanto a linha realmente precisava de dono. (2) TASK-0006.md:42-43: alvo e nome do pacote conferem, ressalva de sequenciamento no achado low acima. (3) TASK-0004.md:84-86: os dez prefixos batem exatamente com o catálogo — contagem por prefixo das 87 linhas de parâmetro: rait 21, dashboard 16, teat 11, est 11, portal 10, session 9, deadline 6, collection 1, privacy 1, sync 1, e os headings `parameter-catalogue.md:18,60,77,93,109` anunciam os mesmos conjuntos.\",\n    \"Executabilidade do catálogo conferida linha a linha contra o contrato que TASK-0004 vai escrever: 97 linhas de tabela menos 10 de cabeçalho/separador = 87 parâmetros, coerente com plan.md:77; todas as linhas têm exatamente 8 colunas e nenhuma célula vazia; `status` só assume `vigente` (72), `proposta` (11) e `a_confirmar` (4), idêntico a plan.md:77; `legal` só `sim|não`; `pend.` aparece como `não` (77) e `**sim**` (10), coberto pela regra de normalização de TASK-0004.md:57 que remove `**`; as 18 linhas tipo `F` têm default booleano `true|false` (o `false (fixo)` apontado em prompt-review-1 não existe mais); as 5 linhas com default `—` têm todas `pend.=sim`; e as 87 linhas têm ao menos um token elegível na coluna Decisão — atenção para `OD-P08` (l. 88), `OD-P12` (l. 90), `OD-B10` (l. 105) e `OD-D10` (l. 119), que são `OD-*` com letra e só passam se o contrato não restringir `OD-` a dígitos.\",\n    \"Resolução de `decision_ref`: as 30 referências eleitas pela regra de TASK-0004.md:68-72 (último `H.<n>`, senão o primeiro `OD-*`/`DT-*`) existem nas fontes da leitura fechada. Um cuidado a transferir ao Architect: `H.<n>` não ocorre literalmente em `steering.md` — a §H (`steering.md:162`) é uma lista numerada, e `H.55`, por exemplo, é o item 55 (`steering.md` item \\\"55. Cédula 07 (OD-T04)\\\"), usado por `parameter-catalogue.md:65`. A regra de resolução precisa apontar para a numeração da lista, não para uma busca textual por `H.55`.\",\n    \"Gates conferidos como satisfazíveis pelo desenho atual: DDL `15-ops-parameter.sql` está livre (`backend/database/ddl` tem 13 e 14, nada em 15) e cai antes de `20-rls-policies.sql`; o DDL gerado emite `select auth.create_rls_policy(...)` por si (ver `30-ops-example.sql`), o que satisfaz `tools/check-rls-ddl.ts` sem tocar `20-rls-policies.sql`; `entity.checks` e índices com `unique`/`name`/expressão em `columns` são suportados por `generate.mjs:106-121`, logo os checks e o índice único com `coalesce(...)` de TASK-0001.md:68-73 são geráveis; `api.operations: ['list','get']` é suportado (`generate.mjs:191-217`, precedente em BP-CH-BILLING-001); `testAliases` com alvo `../../shared/src/index.ts` reproduz exatamente o que os blueprints CH já usam e o que o vitest gerado de `inf/ait` contém; `seed/05-parameters.sql` ordena depois de `00-fixtures-core.sql` no laço de `seed.sh`; as regras `ops:parameter:read|update` não quebram `policy.spec.ts` (o invariante é `> 140` chaves e formato de três segmentos, `policy.spec.ts:87-94`) nem `check-role-catalog.ts` (só compara papéis, e TASK-0003.md:86 proíbe papel novo); `verify:pec-parity`/`verify:pec-superset` só leem os próprios ledgers; `node --test` com glob é válido em Node 24 (`engines: >=24 <25`, CI em `node-version: '24'`); e `docs:kb:check` não é afetado pela nova seção do catálogo, porque `parameter-catalogue.md` não está sob os `artifactRoots` de `tools/docs/kb/check.mjs:19-27` (só valem para ele as checagens de link local e de caminho absoluto).\",\n    \"Conferências de rotina: os seis sha256 batem com o material anexado e com `compositions.json` (pc_id = `PC-` + 16 hex do sha, conferido nos seis tasks JSON); papel constitucional declarado em todos os prompts e compatível com os caminhos tocados (Architect em blueprint/contrato/catálogo, Inspector só em testes, Engineer só em manuscrito/ferramenta/wiring); listas de leitura fechadas e sem convite a varrer o repositório; todos os prompts proíbem `git` e instalação de pacotes; tríades Architect → Inspector → Engineer encadeadas por `upstream_task_id` em dois `coupled_task_group`; locks sem interseção entre tarefas concorrentes; fronteira SENATRAN intocada; os códigos `RAIT.IF_MATCH_REQUIRED` (428), `RAIT.VERSION_CONFLICT` (412), `RAIT.IDEMPOTENCY_REPLAY` (409), `RAIT.PARAMETER_LEGAL_READONLY` (422), `RAIT.PARAMETER_EFFECTIVE_DATE_PAST` (422) e `RAIT.PARAMETER_SOURCE_PENDING` (422) existem em `rait-error-catalog.md:93-95,206-208` com exatamente os status citados nos prompts.\",\n    \"O único high desta iteração não decorre das emendas do Owner: é um efeito do gate de órfãos de `contracts:check` sobre um artefato que já estava previsto desde a primeira composição e que as três revisões anteriores não verificaram. A correção é de caminho de arquivo, não altera decisão canônica da ADR-0021 nem fronteira de produto — por isso REVIEW e não FAIL. Pelo critério desta revisão extraordinária, porém, o high volta ao Owner antes de qualquer disparo de worker; se ele autorizar a renomeação como emenda de maestro, basta reemitir os sha256/pc_id de TASK-0001, TASK-0002 e TASK-0003 em `compositions.json` e nos tasks JSON correspondentes.\",\n    \"Divergência do model-ladder registrada de novo sem virar achado: `model-ladder.md:33` pede reviewer de nível grande quando a frente muda DDL, política ou contrato — é o caso —, e esta quarta janela usa Opus 5 por escolha expressa do Owner (plan.md:4-6,153). O ladder é heurística revisável (Art. 23) e exige apenas registro do ajuste em `waves.md` §Histórico no fechamento da rodada.\"\n  ]\n}\n```",
+  "ttft_ms": 6543,
+  "ttft_stream_ms": 924,
+  "time_to_request_ms": 18,
+  "type": "result",
+  "duration_ms": 590985,
+  "uuid": "968b10ab-7391-4529-9608-ed0749de19fe"
+}

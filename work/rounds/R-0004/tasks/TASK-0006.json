@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0004",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implement the catalogue generator, verifier, seed, and flags",
+  "description": "Implement the approved catalogue tooling, add its scripts and seed artifact, and consume generated boolean defaults in the backend runtime without changing the normative generated CRUD.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-tools-parameters",
+    "MOD-package-json",
+    "MOD-seed-parameters",
+    "MOD-app-runtime"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0005",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-a", "param-store", "tooling", "flags"],
+  "branch": "orchestra/param-store",
+  "worktree_id": "WT-param-store",
+  "prompt_composition_id": "PC-379f22a59548f627",
+  "acceptance_commands": [
+    ["pnpm", "parameters:test"],
+    ["pnpm", "parameters:generate"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "--filter", "@detran/app", "test:unit"],
+    ["pnpm", "check"],
+    ["pnpm", "build"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-14T04:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
+    "prompt_composition_id": "PC-379f22a59548f627",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

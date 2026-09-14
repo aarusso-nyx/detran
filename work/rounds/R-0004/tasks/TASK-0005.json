@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0005",
+  "round_id": "R-0004",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codify the catalogue tooling contract in tests",
+  "description": "Write tests that prove deterministic seed and flag generation and fail-closed handling of malformed rows, orphan decisions, unknown code keys, and non-boolean flags.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-tools-parameters-tests", "MOD-app-flag-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-a", "param-store", "tests", "catalogue"],
+  "branch": "orchestra/param-store",
+  "worktree_id": "WT-param-store",
+  "prompt_composition_id": "PC-f75d3fc93b8d2765",
+  "acceptance_commands": [
+    ["node", "--test", "tools/parameters/tests/*.test.mjs"],
+    ["pnpm", "--filter", "@detran/app", "test:unit"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-14T04:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
+    "prompt_composition_id": "PC-f75d3fc93b8d2765",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

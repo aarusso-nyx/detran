@@ -1,0 +1,59 @@
+{
+  "action": "Implement the governed ops.parameter store, command contract, policy, and tenant-isolation coverage",
+  "round": "R-0004",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "commits": [
+    "ece68c022fd7cb391be40e1513a3f7079bb00f64",
+    "2ad067f2470b2787712fcefa50721d06d34077b7"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/framework/blueprints/BP-OPS-PARAMETER-001.json",
+      "sha256": "3259251ebb1dfaccd776e889a446ca45db209b824d7760cc132d20c015e3e39e"
+    },
+    {
+      "path": "backend/database/ddl/15-ops-parameter.sql",
+      "sha256": "b8b856ef1d1d4d23dec6a1ee3ca0e14bdaa6faf7572f81b1b7b6effb15e72e1d"
+    },
+    {
+      "path": "docs/framework/contracts/BP-OPS-PARAMETER-001.openapi.json",
+      "sha256": "b759c3345b9170f95188bcf46bf9aa16cf059efb39dab63572453e71c5e3b1b5"
+    },
+    {
+      "path": "backend/domains/ops/parameter/src/handwritten/parameter.service.ts",
+      "sha256": "c35c866585e000da0e387ee8c4027dacb9565603c49ee3e91ac4ebf8c30dcbcb"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.ts",
+      "sha256": "c67a9ef39c43ab24d806712b7ece915081aa9c603266da87b88965d599108403"
+    },
+    {
+      "path": "work/rounds/R-0004/reviews/delivery-review-CTG-0001-3.json",
+      "sha256": "1b3a9bf791c0322dba3c588b9053cf988fead30e9cce80f1bc230b816d1604c1"
+    }
+  ],
+  "gates": [
+    {
+      "command": "pnpm --filter @detran/ops-parameter test:unit",
+      "result": "PASS (57 tests)"
+    },
+    {
+      "command": "DETRAN_TEST_TIER=integration pnpm --filter @detran/ops-parameter exec vitest run tests",
+      "result": "PASS (1 integration test)"
+    },
+    { "command": "pnpm contracts:check", "result": "PASS" },
+    { "command": "pnpm build", "result": "PASS" },
+    {
+      "command": "DATABASE_URL and DETRAN_TEST_DATABASE_URL bound to detran_r4_param_store pnpm backend:test:ci",
+      "result": "PASS"
+    },
+    { "command": "pnpm check", "result": "PASS" },
+    {
+      "command": "cross-family delivery review with Claude Fable 5.1",
+      "result": "PASS (cycle 3, no findings)"
+    }
+  ],
+  "decisions": ["ADR-0021"],
+  "requirements": ["UC-RAIT-043"]
+}

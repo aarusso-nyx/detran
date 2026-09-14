@@ -1,0 +1,75 @@
+{
+  "is_error": false,
+  "duration_api_ms": 295246,
+  "num_turns": 30,
+  "stop_reason": "end_turn",
+  "session_id": "ce10ceae-3682-43bc-aca1-01454478b3e3",
+  "total_cost_usd": 2.1325030000000003,
+  "usage": {
+    "input_tokens": 38,
+    "cache_creation_input_tokens": 87595,
+    "cache_read_input_tokens": 1399056,
+    "output_tokens": 22169,
+    "output_tokens_details": { "thinking_tokens": 13322 },
+    "server_tool_use": { "web_search_requests": 0, "web_fetch_requests": 0 },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 87595,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4733,
+        "cache_read_input_tokens": 100625,
+        "cache_creation_input_tokens": 2865,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2865
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 2525,
+      "outputTokens": 17,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.00261,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty"
+    },
+    "claude-opus-5": {
+      "inputTokens": 38,
+      "outputTokens": 22169,
+      "cacheReadInputTokens": 1399056,
+      "cacheCreationInputTokens": 87595,
+      "webSearchRequests": 0,
+      "costUSD": 2.129893,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "canonicalModel": "claude-opus-5",
+      "provider": "firstParty"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "```json\n{\n  \"mode\": \"prompt-review\",\n  \"round\": \"R-0004\",\n  \"verdict\": \"REVIEW\",\n  \"findings\": [\n    {\n      \"severity\": \"high\",\n      \"item\": 4,\n      \"file\": \"work/rounds/R-0004/prompts/TASK-0003.md\",\n      \"line\": 38,\n      \"claim\": \"Nenhuma fronteira de escrita da rodada inclui `backend/app/package.json`, mas o wiring exigido por TASK-0003 (`ParameterModule` em `backend/app/src/app.module.ts`, que importa por nome de pacote como todos os módulos existentes — `app.module.ts:64` `import { AitModule } from '@detran/inf-ait'`) só resolve se `@detran/ops-parameter` for declarado em `backend/app/package.json` dependencies (pnpm isolado; hoje o arquivo lista `@detran/inf-ait`, `@detran/portal-complaints` etc. um a um, e `tools/blueprints/generate.mjs:253-295` escreve apenas `backend/domains/<ns>/<mod>/package.json`, nunca o manifesto do app — `backend/app/package.json` não está em `tools/blueprints/generated-files.json`). TASK-0001 proíbe explicitamente `backend/app/**` e `package.json` (TASK-0001.md:45-46); o `Pode tocar` de TASK-0003 é a lista fechada handwritten/app.module.ts/policy.ts; TASK-0006 só pode tocar o `package.json` raiz. Como `pnpm check` inclui `pnpm typecheck` = `pnpm -r --if-present run typecheck` e `@detran/app` roda `tsc --noEmit`, o gate de grupo do maestro (§7) e o critério `pnpm check` de TASK-0006 (TASK-0006.md:76) falham com TS2307 sem que nenhuma tarefa esteja autorizada a corrigir; TASK-0003 ainda reporta verde porque seus acceptance_commands são escopados ao pacote.\",\n      \"fix\": \"Acrescentar `backend/app/package.json` (somente a entrada `\\\"@detran/ops-parameter\\\": \\\"workspace:*\\\"` em dependencies) ao `Pode tocar` de TASK-0003, sob o lock `MOD-app-module`, e registrar em plan.md que o `pnpm install` do checkpoint pós-TASK-0003 atualiza o `pnpm-lock.yaml` — ou atribuir essa única linha a um passo do maestro no checkpoint de CTG-0001, antes de rodar `pnpm check`.\"\n    },\n    {\n      \"severity\": \"high\",\n      \"item\": 4,\n      \"file\": \"work/rounds/R-0004/prompts/TASK-0006.md\",\n      \"line\": 75,\n      \"claim\": \"O critério `pnpm --filter @detran/app test:unit` → verde é inalcançável depois que TASK-0006 alimentar `detranFeatureFlagSet()` pelo mapa gerado: `backend/app/vitest.config.ts` resolve cada pacote de domínio por `resolve.alias` explícito (`'@detran/inf-ait': fileURLToPath(new URL('../domains/inf/ait/src/index.ts', ...))`, e assim para os ~30 pacotes existentes) e não tem entrada para `@detran/ops-parameter`; o arquivo não é gerado (ausente de `tools/blueprints/generated-files.json`) e não aparece no `Pode tocar` de nenhuma das seis tarefas — TASK-0006 só pode tocar `tools/parameters/**`, o seed, o gerado, `backend/app/src/detran-runtime.ts` e scripts do `package.json` raiz. O mesmo vale para o critério de TASK-0005 (TASK-0005.md:70-71) e para `backend:test:unit`, cuja última etapa é `pnpm --filter @detran/app test:unit`.\",\n      \"fix\": \"Acrescentar `backend/app/vitest.config.ts` (somente o alias `'@detran/ops-parameter' → '../domains/ops/parameter/src/index.ts'`) ao `Pode tocar` de TASK-0006 sob o lock `MOD-app-runtime`, ou, se preferir concentrar a integração do app num único ponto, mover alias e dependência para o mesmo passo de maestro proposto no achado anterior e citá-lo nos dois prompts.\"\n    },\n    {\n      \"severity\": \"low\",\n      \"item\": 7,\n      \"file\": \"work/rounds/R-0004/prompts/TASK-0004.md\",\n      \"line\": 84,\n      \"claim\": \"\\\"prefixos canônicos\\\" não está definido no prompt e colide com o mapa surface→prefixo dado logo acima (linhas 60-63), que nomeia apenas `rait|teat|portal|est|dashboard`. O catálogo real usa dez prefixos de chave: rait 21, dashboard 16, est 11, teat 11, portal 10, session 9, deadline 6, collection 1, privacy 1, sync 1 (headings em parameter-catalogue.md:18,60,77,93,109 já anunciam `collection.*`, `deadline.*`, `session.*`, `sync.*`, `privacy.*`). Um contrato que leia \\\"canônico\\\" como os cinco nomes de surface deixa fora do scan de chave desconhecida metade do espaço de chaves.\",\n      \"fix\": \"Trocar por \\\"os prefixos enumerados na cláusula de seção — `rait`, `collection`, `deadline`, `session`, `teat`, `sync`, `portal`, `privacy`, `est`, `dashboard`\\\", ligando explicitamente a regra de candidatos à mesma lista de exceções enumeradas exigida na linha 63.\"\n    }\n  ],\n  \"notes\": [\n    \"Os quatro highs da iteração 2 foram verificados no repositório, não presumidos. (a) Scan: TASK-0004.md:82-86 separa uso exato do catálogo de candidatos desconhecidos com dois ou mais pontos e exclui explicitamente ambiguidades de um ponto citando `portal.complaint`; varredura em `backend/**` e `apps/**` (*.ts) não encontra nenhum literal minúsculo com dois ou mais pontos, e `teat.speed_meters` só ocorre em `backend/app/src/{app.module,detran-runtime}.ts` — o gate é satisfazível como escrito. (b) Lockfile: plan.md:51-52 usa `pnpm install` simples e assume a atualização do `pnpm-lock.yaml`, mantendo `--frozen-lockfile` no bootstrap inicial (00-maestro.md:53) e no CI. (c) Tiers: TASK-0002.md:73-77 e tasks/TASK-0002.json trazem os dois comandos com exigência de coleta não vazia; o template gerado confere — `generate.mjs:268-274` emite `test:unit`/`test:integration` e o `vitest.config.ts` gerado inclui `tests/integration/**/*.integration.spec.ts` só no tier integration. (d) Sensor do app: TASK-0005.md:36 abre `backend/app/src/detran-feature-flags.spec.ts` e a linha 62-63 exige provar defaults do mapa gerado, `teat.speed_meters=false` e precedência de `DETRAN_FEATURE_*` antes da implementação; `@detran/app` tem `test:unit` e o tier unit inclui `src/**/*.spec.ts`.\",\n    \"Os dois lows da iteração 2 também estão fechados: DT-133 agora cita §5 (open-issues.md:149), coerente com `rait-deadline-engine.md:80` \\\"## 5. Varredura (job)\\\"; e TASK-0006.md:41-43 autoriza incluir `@detran/ops-parameter` em `backend:test:unit` e `backend:test:integration` do `package.json` raiz.\",\n    \"Conferências de rotina: os seis sha256 batem com o material anexado e com `compositions.json` (pc_id = 16 hex do sha); o catálogo tem 87 linhas de parâmetro (97 linhas de tabela menos 10 de cabeçalho/separador em cinco seções), coerente com plan.md:76; papéis declarados em todos os prompts e compatíveis com os caminhos; workers proibidos de `git`; fronteira SENATRAN intocada.\",\n    \"Os dois highs desta iteração são da mesma família: a integração do pacote novo ao composition root `backend/app` (manifesto e alias de teste) não pertence a nenhuma fronteira de escrita. Não é violação de fronteira nem contradição de ADR/Owner/Constituição — por isso REVIEW e não FAIL —, mas é lacuna de executabilidade que só aparece no gate de grupo, quando nenhuma tarefa pode mais corrigi-la.\",\n    \"Terceiro ciclo com high remanescente: conforme o critério desta rodada e §5 do orchestra/README.md, o soft gate encerra aqui e deve ser escalado ao humano antes de qualquer disparo de worker. As duas correções propostas são de uma linha cada e não alteram decisão canônica; se o Owner autorizá-las como emenda de maestro, basta reemitir os sha256/pc_id de TASK-0003 e TASK-0006 em `compositions.json`.\",\n    \"Divergência do model-ladder registrada sem virar achado: `model-ladder.md` pede reviewer de nível grande (Fable 5.1) quando a frente muda DDL, política ou contrato — é o caso —, e esta janela usa Opus 5 por escolha expressa do Owner (plan.md:4,141). O ladder é heurística revisável (Art. 23, política F5) e exige apenas registro do ajuste em `waves.md` §Histórico, hoje ainda no formato de template e preenchido no fechamento da rodada.\"\n  ]\n}\n```",
+  "ttft_ms": 7336,
+  "ttft_stream_ms": 872,
+  "time_to_request_ms": 30,
+  "type": "result",
+  "duration_ms": 307228,
+  "uuid": "415194d3-279f-4dda-817f-e875fea61345"
+}

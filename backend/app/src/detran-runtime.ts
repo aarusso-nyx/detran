@@ -55,6 +55,7 @@ import {
   InMemoryFeatureFlagProvider,
   type FlagSet,
 } from '@stynx-nyx/feature-flags';
+import { PARAMETER_FLAGS } from './generated/parameter-flags.js';
 
 export type DetranRuntimeProfile =
   'local-sandbox' | 'test' | 'staging-like' | 'production';
@@ -732,21 +733,32 @@ export function detranPipelineOptions() {
  * environment with `DETRAN_FEATURE_<NAME>=on`.
  */
 export function detranFeatureFlagSet(): FlagSet {
-  const on = (name: string, fallback: boolean): boolean => {
-    const raw = process.env[`DETRAN_FEATURE_${name}`];
+  const on = (key: string, fallback: boolean): boolean => {
+    const canonical = detranFeatureEnvironmentName(key);
+    const legacy =
+      key === 'teat.speed_meters'
+        ? process.env.DETRAN_FEATURE_SPEED_METERS
+        : undefined;
+    const raw = process.env[canonical] ?? legacy;
     if (raw === undefined || raw === '') return fallback;
     return raw === 'on' || raw === 'true' || raw === '1';
   };
   return {
-    flags: {
-      'teat.speed_meters': {
-        default: on('SPEED_METERS', false),
-        description:
-          'Speed meter catalogue and measurements (inf/speed); off until the agency operates meters (steering H.54).',
-        owner: 'teat',
-      },
-    },
-  };
+    flags: Object.fromEntries(
+      Object.entries(PARAMETER_FLAGS).map(([key, fallback]) => [
+        key,
+        {
+          default: on(key, fallback),
+          description: `Parameter catalogue flag ${key}`,
+          owner: key.split('.')[0],
+        },
+      ]),
+    ),
+  } as FlagSet;
+}
+
+export function detranFeatureEnvironmentName(key: string): string {
+  return `DETRAN_FEATURE_${key.replace(/[^A-Za-z0-9]+/g, '_').toUpperCase()}`;
 }
 
 export function detranFeatureFlagProvider(): InMemoryFeatureFlagProvider {

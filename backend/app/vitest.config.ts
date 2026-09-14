@@ -111,6 +111,9 @@ export default defineConfig({
       '@detran/portal-complaints': fileURLToPath(
         new URL('../domains/portal/complaints/src/index.ts', import.meta.url),
       ),
+      '@detran/ops-parameter': fileURLToPath(
+        new URL('../domains/ops/parameter/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {

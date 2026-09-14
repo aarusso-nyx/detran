@@ -1,0 +1,69 @@
+{
+  "action": "Generate and verify the canonical parameter catalogue, seed, and application feature-flag defaults",
+  "round": "R-0004",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": [
+    "a26e9d0fbef3dde46b36fb8adfeabe2f84b6870a",
+    "2ad067f2470b2787712fcefa50721d06d34077b7"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/framework/arch/parameter-catalogue.md",
+      "sha256": "46e1a81e8e98465aad5b1a1fb5c1fbdcf6eaa3814614dc817fe8965b65c7890a"
+    },
+    {
+      "path": "backend/database/seed/05-parameters.sql",
+      "sha256": "96d81dbfcaf1d5707704d3c90aed255f7d70726c8837bddc8a35e2ddbb6b311a"
+    },
+    {
+      "path": "backend/domains/ops/parameter/src/generated/parameter-catalogue.ts",
+      "sha256": "3e33e322008e5154a6fc9ba74a9f30e9d3add3a2fe83d4a375915263a233a1d6"
+    },
+    {
+      "path": "backend/app/src/generated/parameter-flags.ts",
+      "sha256": "88a02243062463294a40dbe1f5212d04affd0dcaf20cf201b7893c8ccfae0864"
+    },
+    {
+      "path": "backend/app/src/detran-runtime.ts",
+      "sha256": "b4ea63c930ac82e6991ebc8bf2d14fe96798eddf6b98263678241faa7f038f5a"
+    },
+    {
+      "path": "tools/parameters/parser.mjs",
+      "sha256": "8214fda05eeeb353ea2103e244ff5363ca913b8c8e0301e1d7e23c1b0c9835e2"
+    },
+    {
+      "path": "tools/parameters/verify.mjs",
+      "sha256": "d1d5cb4352c4eeffb86faf47a7a364a2eb4a020a982b5bd96a727e62094a2a47"
+    },
+    {
+      "path": "work/rounds/R-0004/reviews/delivery-review-CTG-0002-2.json",
+      "sha256": "217268c86e3835116fac09e1f611134703d53b083787cf477131ecd7efbfd9ea"
+    }
+  ],
+  "gates": [
+    { "command": "pnpm parameters:generate", "result": "PASS" },
+    { "command": "pnpm parameters:test", "result": "PASS (17 tests)" },
+    {
+      "command": "pnpm verify:parameter-catalogue",
+      "result": "PASS (87 entries, 18 flags, 0 errors)"
+    },
+    { "command": "pnpm contracts:check", "result": "PASS" },
+    { "command": "pnpm build", "result": "PASS" },
+    {
+      "command": "DATABASE_URL and DETRAN_TEST_DATABASE_URL bound to detran_r4_param_store pnpm backend:test:ci",
+      "result": "PASS"
+    },
+    { "command": "pnpm check", "result": "PASS" },
+    {
+      "command": "prompt/task JSON symmetry and composition identity validator",
+      "result": "PASS (6 of 6 tasks)"
+    },
+    {
+      "command": "cross-family delivery review with Claude Fable 5.1",
+      "result": "PASS (cycle 2, no findings)"
+    }
+  ],
+  "decisions": ["ADR-0021", "OD-005", "DT-132", "DT-133"],
+  "requirements": ["UC-RAIT-043"]
+}
