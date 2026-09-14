@@ -116,16 +116,23 @@ script a criar em WP-C/WP-T3), "`contracts:check` estendido" (o script atual nã
 de comandos). O build pack do RAIT não tem seção OD própria: as questões vivem em
 `docs/meta/knowledge-base/open-decisions-rait.md`.
 
+Numeração de DDL nos build packs colide com arquivos existentes: BOAT cita `40-est-crash.sql`
+(`40-ch-clinical-network.sql` existe) e DASHBOARD cita `50-dashboard.sql` (`50-ch-telehealth.sql`
+existe); o RAIT diz que os DDL "34…37 já foram incluídos" no `apply.sh`, mas o script aplica
+`ddl/*.sql` por ordem lexicográfica. Os planos das rodadas usam `70-est-crash.sql`,
+`80-dashboard.sql`, `38/39/57/58-inf-*.sql`, `13/16/17/18/19-ops-*.sql` e `61…64-portal-*.sql`;
+a tarefa de documentação de cada rodada corrige o build pack correspondente.
+
 ## Arquivos deste método
 
-| Arquivo                                 | Uso                                                               |
-| --------------------------------------- | ----------------------------------------------------------------- |
-| `README.md`                             | este método                                                       |
-| `model-ladder.md`                       | escada de modelos, esforço e escolha por tipo de tarefa           |
-| `waves.md`                              | frentes, dependências, locks, família do maestro, rodadas         |
-| `maestro-prompt.template.md`            | prompt único da orquestra (agnóstico de família)                  |
-| `reviewer-prompt.template.md`           | prompt do reviewer (modos prompt-review e delivery-review)        |
-| `worker-prompt.template.md`             | esqueleto dos prompts de worker, por papel                        |
-| `task.template.json`                    | tarefa no esquema DEVAI (`task.schema.json` 2.0.0)                |
-| `../../../../tools/orchestra/bridge.sh` | ponte de CLI para o reviewer                                      |
-| `../../../../work/rounds/`              | instâncias por rodada (R-0003 `dash-roles`, R-0004 `param-store`) |
+| Arquivo                                 | Uso                                                                 |
+| --------------------------------------- | ------------------------------------------------------------------- |
+| `README.md`                             | este método                                                         |
+| `model-ladder.md`                       | escada de modelos, esforço e escolha por tipo de tarefa             |
+| `waves.md`                              | frentes, dependências, locks, família do maestro, rodadas           |
+| `maestro-prompt.template.md`            | prompt único da orquestra (agnóstico de família)                    |
+| `reviewer-prompt.template.md`           | prompt do reviewer (modos prompt-review e delivery-review)          |
+| `worker-prompt.template.md`             | esqueleto dos prompts de worker, por papel                          |
+| `task.template.json`                    | tarefa no esquema DEVAI (`task.schema.json` 2.0.0)                  |
+| `../../../../tools/orchestra/bridge.sh` | ponte de CLI para o reviewer                                        |
+| `../../../../work/rounds/`              | instâncias por rodada (R-0003…R-0016, uma por frente de `waves.md`) |
