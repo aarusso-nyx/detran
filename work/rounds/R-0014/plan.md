@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Depende de:** `portal-backend` (R-0009) em `main`.
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (27 fichas, mapa de tradução, i18n, textos jurídicos): nenhum upstream. CTG-0002 (PWA, formulários) e CTG-0003 (e2e das 11 jornadas no mock, lint de payload): `portal-backend` R-0009 (`orchestra/portal-backend`) — empilhe nele se ainda não mesclou.
 **Janelas previstas:** 4.
 
 ## Metas
@@ -72,6 +72,11 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006; CTG-0003 = 0007. Um PR por CTG.
 - Ferramenta de auditoria PWA/a11y em CI: só a que rode offline no runner; nunca serviço externo.
 - Cache cifrado só para CNH-e/CRLV-e: chave por sessão, nunca persistida em claro.
 - `senatran-mock` tem lockfile próprio: alterações no mock vão em commit separado.
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

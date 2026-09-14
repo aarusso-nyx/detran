@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
-**Depende de:** `dashboard-backend` (R-0011) em `main`.
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (18 fichas, i18n — nomes dos 42 indicadores transcritos de [APP-DASHBOARD] §Catálogo, iguais ao seed): nenhum upstream. CTG-0002 (console, formulários): `dashboard-backend` R-0011 (`orchestra/dashboard-backend`) — empilhe nele se ainda não mesclou.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -64,6 +64,11 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
   `packages/ui` sem ADR curta.
 - Nomes dos 42 indicadores vêm do seed (R-0011), nunca redigitados.
 - P-09: publicar com supressão secundária; se o teste de supressão de R-0011 não existir em `main`, bloquear a tela (não o app).
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

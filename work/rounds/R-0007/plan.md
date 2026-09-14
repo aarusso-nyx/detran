@@ -3,7 +3,7 @@
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`
 (escalar para Fable 5.1 no `delivery-review` dos grupos que mudam `policy.ts`).
-**Depende de:** `rait-model` (R-0006) e `ops-agency` (R-0005) em `main`.
+**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (`DetranError`, formato dos contratos de comando, `check-commands.mjs`, `contracts:clients`): nenhum upstream — mesclar cedo, R-0008 o consome. CTG-0002 (case/worklist/session) e CTG-0004 (org/finance/integrations/SSE/contratos): `rait-model` R-0006 (`orchestra/rait-model`). CTG-0003 (infração, consumidores, timers): R-0006 e `ops-agency` R-0005 (`orchestra/ops-agency`, evento `AIT_INTEGRADO`).
 **Janelas previstas:** 4 (um grupo acoplado por janela; cada grupo é um PR).
 
 ## Metas
@@ -90,6 +90,11 @@ CTG-0001 = 0001…0003; CTG-0002 = 0004/0005; CTG-0003 = 0006/0007; CTG-0004 = 0
 - `DetranError` nasce aqui e é consumido por R-0008: publicar em `@detran/shared` no CTG-0001 e
   mesclar cedo.
 - Nunca calcular prazo fora de `@detran/inf-deadlines` ([RN-RAIT-005]).
+
+## Concorrência
+
+(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
+em base empilhada e sobre qual branch)
 
 ## Bloqueios
 

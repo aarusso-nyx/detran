@@ -18,10 +18,32 @@
   `work/rounds/R-0007/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
-- Dependências que precisam estar em `main` antes de começar: **`rait-model` (R-0006) e `ops-agency` (R-0005)**. Verifique com
-  `git log --oneline -20 origin/main`; se faltar alguma, pare e reporte.
+- Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
+  (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
+  **merge de cada grupo acoplado**: **CTG-0001 (`DetranError`, formato dos contratos de comando, `check-commands.mjs`, `contracts:clients`): nenhum upstream — mesclar cedo, R-0008 o consome. CTG-0002 (case/worklist/session) e CTG-0004 (org/finance/integrations/SSE/contratos): `rait-model` R-0006 (`orchestra/rait-model`). CTG-0003 (infração, consumidores, timers): R-0006 e `ops-agency` R-0005 (`orchestra/ops-agency`, evento `AIT_INTEGRADO`)**. No bootstrap, registre em `plan.md`
+  §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
+  `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
+  desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
+  empilham, nunca bloqueiam a rodada inteira.
 
 ## 1. Bootstrap (Engineer)
+
+**Descoberta de estado — antes de criar qualquer coisa.** Outra sessão pode ter começado esta
+frente ou uma vizinha; nunca duplique worktree, branch ou rodada.
+
+```bash
+git -C "$(git rev-parse --show-toplevel)" fetch -q origin --prune
+git worktree list                                   # worktree /Volumes/Thiamat II/stech/detran-worktrees/rait-backend já existe?
+git branch -a --list '*orchestra/*'                # branches locais e remotos das frentes
+gh pr list --state all --limit 30 --search "orchestra/" # PRs abertos/mesclados por frente
+sed -n '/^## Retomada/,/^## Leitura/p' work/rounds/R-0007/plan.md   # checkpoint anterior?
+```
+
+Regras: (a) worktree e branch existentes → reutilize-os, nunca recrie; (b) `plan.md` §Retomada
+preenchido → você está **retomando**: continue do checkpoint, não replaneje; (c) branch
+`orchestra/rait-backend` remoto sem worktree local → `git worktree add /Volumes/Thiamat II/stech/detran-worktrees/rait-backend orchestra/rait-backend`; (d) PR aberto
+de outra frente com lock comum ao seu grupo → registre em `plan.md` §Concorrência e trate como
+upstream (base empilhada ou espera). Só então rode o bootstrap:
 
 ```bash
 export NODE_AUTH_TOKEN="$(gh auth token)"
@@ -36,6 +58,28 @@ pnpm exec devai round plan --scaffold --round R-0007 --repo-root . --as-role arc
 
 Se a worktree ou o branch não existirem, crie-os a partir de `origin/main`:
 `git worktree add -b orchestra/rait-backend /Volumes/Thiamat II/stech/detran-worktrees/rait-backend origin/main`.
+
+**Base empilhada** (só para grupos que precisam de código de um upstream ainda não mesclado):
+`git fetch origin && git rebase origin/orchestra/<upstream>` no seu branch (ou crie a worktree já a
+partir de `origin/orchestra/<upstream>`). Quando o upstream mesclar, `git rebase origin/main`. Nunca
+traga commits do upstream para o seu PR: o PR contra `main` só abre depois de o upstream estar em
+`main` e do rebase; um branch empilhado pode ser enviado (`git push -u origin orchestra/rait-backend`) sem PR para
+que outras frentes empilhem sobre ele.
+
+**Avanços do `main` durante a rodada.** Outras frentes mesclam enquanto você trabalha. No início de
+cada janela, em cada checkpoint (§7) e antes de cada PR (§9): `git fetch -q origin` e
+`git log --oneline HEAD..origin/main`; se houver commits novos, `git rebase origin/main` e rode de
+novo os gates do grupo. Ao resolver conflitos: arquivo **gerado** (`backend/domains/**/src/generated`,
+contratos `*.openapi.json` gerados, `ddl/*.sql` de blueprint) → nunca edite à mão, aceite qualquer
+lado, formate o blueprint com prettier e `pnpm blueprints:generate` + `pnpm contracts:openapi`;
+`record/proofs/chain.json` ou `record/proofs/work/generic/*.jsonl` → aceite a versão de `main` e
+rode `devai evidence record` de novo para os seus commits (a cadeia nunca é mesclada à mão);
+`policy.ts`/`roles.ts` → mantenha os dois blocos, rode `pnpm --filter @detran/shared test`;
+`pnpm-lock.yaml` → aceite `main` e `pnpm install --frozen-lockfile`, ou `pnpm install` num commit
+`chore(deps)` próprio. Antes de criar um DDL novo, confira o número livre com `ls backend/database/ddl`
+(a numeração do plano pode ter sido ocupada por outra frente); antes de criar uma ADR, confira o
+próximo número em `docs/meta/adr/README.md`. Se o rebase invalidar um veredito `PASS` do reviewer
+(diff mudou de forma substantiva), peça nova `delivery-review`.
 
 ## 2. Leitura obrigatória (Architect) — nesta ordem, uma vez
 
@@ -130,7 +174,9 @@ commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `es
 2. Evidência: escreva `evidence-<ctg>.json` (ação, commits, artefatos com sha256, gates) e rode
    `pnpm exec devai evidence record --kind generic --round R-0007 --repo-root . --as-role engineer --input <arquivo> --write --format human`;
    depois `evidence verify`. Commit "chore(devai): …".
-3. `git push -u origin orchestra/rait-backend`; `gh pr create --base main` com o corpo pelo
+3. Confirme que todo upstream do grupo está em `main` e rebaseie (`git rebase origin/main`;
+   `git push --force-with-lease` se o branch já estava publicado); então `git push -u origin orchestra/rait-backend`
+   e `gh pr create --base main` com o corpo pelo
    `.github/pull_request_template.md` (papel, WP e fontes, o que muda, verificação, OD tocadas,
    fora de escopo, linha final de atribuição).
 4. Acompanhe o CI (`gh pr checks <n>`); falha de infraestrutura (pull do Docker, registro) →
@@ -146,7 +192,8 @@ commit; `REVIEW` volta ao worker responsável (máximo 2 ciclos); `FAIL` → `es
 
 **Condições de parada** (grave `checkpoint` em `plan.md` §Retomada: tarefas concluídas, em curso,
 pendentes; último veredito; próximos passos): orçamento da janela esgotado; bloqueio por decisão
-`OD-*` não coberta pelo steering §H; dependência de outra frente ainda não em `main`; reviewer
+`OD-*` não coberta pelo steering §H; todos os grupos livres concluídos e os restantes presos a
+umpstream não mesclado; reviewer
 `FAIL` após escalada. Um novo maestro retoma pelo mesmo prompt e pelo `plan.md`.
 
 ## 10. Relatório final (última mensagem da sessão)
