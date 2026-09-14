@@ -1,0 +1,41 @@
+{
+  "action": "Bind the focused Opus 5 PASS review of the PR #40 RLS sensor correction",
+  "round": "R-0005",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "candidate": {
+    "base": "34062b552a205b31b095a2594b7815959efc24ef",
+    "ci_correction_commit": "7a62d8ff1d1d64b3f92c84fb6ce7f01945a3c328"
+  },
+  "prior_chain_head": "c7f24be7f6dcd89a9fb726d1bc1bc93af1233732521e9c9b2a6a5e1278bddf5a",
+  "normative_links": {
+    "decisions": ["OD-T02", "OD-013"],
+    "requirements": ["RN-TEAT-003", "RN-TEAT-142"],
+    "invariants": ["INV-EVIDENCE-001", "INV-OFFLINE-001"]
+  },
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-ci-correction.json",
+      "sha256": "405ad0f93df6e1f404f75bd25f5be191e5a67162e81470d049d2aa287f2d5d84"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-ci-correction.bridge.json",
+      "sha256": "152315d263201d5189d0e595d6b814a2e6721e8183f7dfc7bfede6eaf4e27a4b"
+    }
+  ],
+  "review": {
+    "model": "Opus 5",
+    "verdict": "PASS",
+    "high_findings": 0,
+    "low_findings": 3
+  },
+  "low_routing": [
+    "Dedicated non-superuser LOGIN identities for app and reader are routed to R-0008 / WP-T2 environment hardening.",
+    "A positive same-tenant fixture for the OPS e2e isolation sensor is routed to R-0008 / WP-T2 test hardening.",
+    "Review artifact binding is closed by this append-only evidence sequence."
+  ],
+  "notes": [
+    "The review confirmed that current_user is role_app_backend and RLS is genuinely enforced by the corrected job configuration.",
+    "No CTG-0002 worker has been started."
+  ]
+}

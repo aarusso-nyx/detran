@@ -214,6 +214,10 @@ Checkpoint da janela 1 em 2026-09-14:
   app e reader, com app/reader sob `role_app_backend`; a reexecucao local integral passou. Proximo
   passo: registrar/revisar a correcao, atualizar o PR, obter CI verde e mesclar. CTG-0002 segue sem
   workers ate esse merge.
+- Revisao focal Opus 5 da correcao CI: PASS, zero highs. O vinculo dos artefatos do review sera
+  anexado na proxima sequencia de evidencia. Os lows de identidades LOGIN distintas para pools
+  app/reader e de fixture positiva no sensor e2e foram roteados para o hardening de ambiente/testes
+  de R-0008 / WP-T2; nao alteram o gate atual, que efetivamente executa como `role_app_backend`.
 
 ## Triagem
 
@@ -229,6 +233,10 @@ Checkpoint da janela 1 em 2026-09-14:
   A configuracao foi alinhada ao gate local documentado: owner permanece `postgres`, enquanto
   app/reader usam `options=-c role=role_app_backend`. Com as mesmas URLs, `backend:test:ci` passou
   integralmente, inclusive app e2e 12/12. Nenhum teste ou politica RLS foi enfraquecido.
+- Lows da revisao focal da correcao CI: criar LOGINs dedicados `detran_app`/`detran_reader` em vez
+  de sessao postgres com role inicial, e fortalecer o e2e com uma fixture visivel do tenant local.
+  Ambos ficam em R-0008 / WP-T2, onde o contrato de ambiente e a matriz OPS ja estao roteados. O
+  low de rastreabilidade desta revisao e fechado imediatamente por evidencia append-only.
 - TASK-0004 iteracao 0: `plant-bug` na referencia Architect. `BP-OPS-SNAPSHOTS-001` ordenou
   `VehicleSnapshot` antes de `ExternalQuery`, mas a primeira cria FK para
   `ops.snapshots_external_query`; `backend:db:reset` falha antes dos testes. Varredura dos cinco
