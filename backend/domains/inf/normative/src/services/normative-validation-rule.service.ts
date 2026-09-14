@@ -1,4 +1,4 @@
-// Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:9312d2d0009dca8a9a345b86aa4cda330d2bed8e98072f5036909160f5017d1c
+// Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:9b6f79a3cdcad0f477ef759231f4effedede012dda39fe184dad78a5196f11ca
 import { Injectable } from '@nestjs/common';
 import { NormativeValidationRuleRepository } from '../repositories/normative-validation-rule.repository.js';
 import type { NormativeValidationRule } from '../entities/normative-validation-rule.entity.js';
