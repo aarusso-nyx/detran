@@ -433,8 +433,11 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [x] **Meta-orquestração definida (2026-09-14, ADR-0022)**: método em `docs/meta/agents/orchestra/`, escada de
       modelos, plano de ondas (14 frentes, R-0003…R-0016), templates de maestro/reviewer/worker, ponte
       `tools/orchestra/bridge.sh`; rodadas R-0003 (`dash-roles`) e R-0004 (`param-store`) prontas para abrir
-- [x] **Frente `dash-roles` (`R-0003`) concluída em 2026-09-14**: WP-D0 executado (papéis, política
-      `dashboard:*`, camadas N0…N3; ver backlog DASHBOARD acima e `dashboard-build-pack.md`)
+- [x] **Frente `dash-roles` (`R-0003`) concluída em 2026-09-14 pelo PR #32 e fechada como
+      `PC-0001`**: WP-D0 executado
+      (papéis, política `dashboard:*`, camadas N0…N3; merge
+      `cf8f475eaf1951fa2ebb3c42d24f725c6581ea0e`; ver backlog DASHBOARD acima e
+      `dashboard-build-pack.md`)
 - [ ] **Abrir a onda 1 restante**: colar `work/rounds/R-0004/prompts/00-maestro.md` numa sessão Codex (Sol)
       na sua worktree; confirmar os ids de modelo Codex (`gpt-5.6-terra`/`-luna`/`-sol`) antes da primeira
       ponte (added 2026-09-14)
