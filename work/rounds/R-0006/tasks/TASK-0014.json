@@ -26,6 +26,12 @@
       "classification": "policy-issue",
       "finding": "delivery-review-CTG-0002-2: criterion re-scoped to non-administrative roles with the two pre-existing grants as named exceptions (OD-309); Inspector cites OD-309 in the test.",
       "status": "completed"
+    },
+    {
+      "iteration": 3,
+      "classification": "reference-gap",
+      "finding": "delivery-review-CTG-0002-3: criterion text restricted to the generated CRUD keys with the OD-309 pair as the only exceptions; pre-existing command keys declared out of scope (matches the delivered test).",
+      "status": "completed"
     }
   ],
   "max_iterations": 2,
@@ -33,7 +39,7 @@
   "tags": ["wp-a", "collection", "policy", "delivery-review"],
   "branch": "orchestra/rait-model",
   "worktree_id": "WT-rait-model",
-  "prompt_composition_id": "PC-e0b7019c2198ff10",
+  "prompt_composition_id": "PC-f274d4e853711fe3",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/inf-collection", "test:unit"],
     ["pnpm", "--filter", "@detran/shared", "test"]
@@ -48,7 +54,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-e0b7019c2198ff10",
+    "prompt_composition_id": "PC-f274d4e853711fe3",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

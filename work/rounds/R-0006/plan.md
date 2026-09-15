@@ -307,6 +307,10 @@ Inspector segue a especificação §7).
   iteração 2 do Inspector cita a OD no teste; (3) **OD-309** registrada em `open-decisions-rait.md` (grants pré-existentes
   `inf:rait-suspension-act:create`/`inf:rait-export:create`). Ciclo 3 restrito às três correções.
 
+- 2026-09-15 (janela 3) delivery-review-CTG-0002 ciclo 3 (restrito): **REVIEW**, 1 achado de texto — critério de TASK-0014
+  restrito às chaves CRUD geradas (exceções OD-309 nesse conjunto; comandos pré-existentes fora de escopo), composição
+  recalculada. Reautoria documental e OD-309 verificadas pelo reviewer. Ciclo 4 restrito a este item.
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de
