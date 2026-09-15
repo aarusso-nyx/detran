@@ -276,6 +276,13 @@ Inspector segue a especificação §7).
   três módulos montados no `AppModule` (surface CRUD gerada; comandos em R-0007), `pnpm install` do maestro. Divergência de
   nome do mock (`bank.mock.ts`) aceita como está — o contrato §c é harmonizado na nota do PR.
 
+- 2026-09-14 (janela 3) gates do grupo após TASK-0007: `backend:test:ci` vermelho no tier e2e do app — (a) `plant-bug`:
+  `backend/app/vitest.config.ts` sem aliases para `@detran/inf-{rait-org,collection,rait-integration}` (o Vite resolve
+  `dist/index.js` inexistente; TASK-0007 não tinha o arquivo na fronteira) → aliases acrescentados pelo maestro (Engineer);
+  (b) `sensor-error` local: `ops-modules.e2e` lia cross-tenant porque o app conectava como superusuário; com os
+  `STYNX_*_DATABASE_URL` de `role_app_backend` do CI (R-0005) → 12/12 e 1/1 verdes. Regra para o método: todo pacote
+  novo montado no `AppModule` entra nos aliases do vitest do app (adicionar à fronteira do Engineer).
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de
