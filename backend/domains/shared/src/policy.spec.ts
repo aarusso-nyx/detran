@@ -855,9 +855,12 @@ describe('DASHBOARD roles, dashboard:* policy matrix and access layers (WP-D0, C
  * (`rait-signing-authority`, `rait-chair`) e `inf:rait-export:create`
  * (`AUDITOR`). Isso contradiz a premissa "a matriz não contém nenhuma chave
  * `inf:<recurso>:*` destes recursos" para a ação `create` desses dois
- * recursos; os testes abaixo provam o estado real (com a exceção nomeada)
- * em vez de falhar às ciências, e o achado vai para
- * `docs/meta/knowledge-base/open-decisions-rait.md` (relatório desta tarefa).
+ * recursos; os testes abaixo provam o estado real (exceções nomeadas —
+ * OD-309), em vez de falhar às ciências. Achado registrado como OD-309
+ * (`docs/meta/knowledge-base/open-decisions-rait.md`): confirmar em R-0007
+ * se os grants de `RAIT_COMMAND_RULES` para estes dois recursos são
+ * intencionais ou devem ser retirados/ajustados quando a matriz completa
+ * dos 23 recursos entrar.
  */
 describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
   const GENERATED_ACTIONS = ['read', 'create', 'update', 'delete'] as const;
@@ -868,10 +871,11 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
     'technical-admin',
   ] as const;
   /**
-   * Achado (ver comentário do describe): `RAIT_COMMAND_RULES` grava estas
-   * duas chaves de ação gerada, de rodada anterior. Único par (recurso,
-   * ação gerada) com uma exceção; todos os outros recursos e ações negam
-   * para todo papel além de `GLOBAL_ADMIN_ROLES`.
+   * Achado (ver comentário do describe) — exceções nomeadas, OD-309:
+   * `RAIT_COMMAND_RULES` grava estas duas chaves de ação gerada, de rodada
+   * anterior. Único par (recurso, ação gerada) com uma exceção; todos os
+   * outros recursos e ações negam para todo papel além de
+   * `GLOBAL_ADMIN_ROLES`.
    */
   const PRE_EXISTING_COMMAND_GRANTS: Readonly<
     Record<string, Readonly<Record<string, readonly string[]>>>
@@ -953,7 +957,7 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
   });
 
   for (const resource of NEW_RESOURCES) {
-    it(`dado o recurso novo inf:${resource} sem matriz quando isDetranActionAllowed é chamado para read/create/update/delete então nega para todo papel canônico de roles.ts, exceto GLOBAL_ADMIN_ROLES e a exceção nomeada da matriz de comando (M17)`, () => {
+    it(`dado o recurso novo inf:${resource} sem matriz quando isDetranActionAllowed é chamado para read/create/update/delete então nega para todo papel canônico de roles.ts, exceto GLOBAL_ADMIN_ROLES e a exceção nomeada da matriz de comando — OD-309 (M17)`, () => {
       expectDeniedForEveryRole(resource);
       expectResourceHasNoGeneratedMatrixEntry(resource);
     });

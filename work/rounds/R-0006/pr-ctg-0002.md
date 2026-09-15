@@ -11,7 +11,7 @@ WP-A de `docs/framework/arch/rait-build-pack.md` (restante: deltas v1.1.0 dos bl
 - `BP-INF-RAIT-WORKLIST-001`, `BP-INF-RAIT-SESSION-001`, `BP-INF-RAIT-CASE-001` → v1.1.0: `rait_unit`, `rait_schedule`/`rait_schedule_slot`, `rait_batch`/`rait_batch_item`, `rait_substitute_duty`, `rait_bench`, colunas de pool/membro/atribuição/impedimento; `modality`, `short_notice_ack`, pedido de vista, `published_at`; `legal_priority`, `unit_id`, `version`, `rait_pending_content`, `rait_redirect`, `rait_draft`. DDL 34–36 regenerados (+10 tabelas).
 - `BP-INF-RAIT-ORG-001` (DDL 39: feriados, atos de suspensão, folha/linhas de jeton com valores pendentes de fonte, incidentes, amostras de qualidade, planos de capacidade, exportações), `BP-INF-COLLECTION-001` (DDL 57: `collection_document`, `payment`, `refund_order`, `debt_handoff`, faixas FK `infraction_payment_tier_ref`), `BP-INF-RAIT-INTEGRATION-001` (DDL 58: só `rait_reconciliation` — projeções do outbox ficam em WP-P, M10). Módulos gerados e contratos OpenAPI (38). 178 tabelas de tenant.
 - Fachada de documentos em `@detran/shared` (`DocumentKind` × 12, `SignaturePolicy`, `DocumentsFacade`, `DOCUMENT_ERROR_CODES` — ADR-0018 §1–§4), só tipos e interface.
-- `BankPort` + mock determinístico em `collection/src/handwritten/ports/bank` (ADR-0017 §4), provider `BANK_PORT`; `RaitOrgModule`, `CollectionModule`, `RaitIntegrationModule` montados no `AppModule` (superfície CRUD gerada; comandos em R-0007).
+- `BankPort` + mock determinístico em `collection/src/handwritten/ports/bank` (ADR-0017 §4), provider `BANK_PORT`, 8 testes de comportamento (contrato §c); os módulos `rait-org`, `collection` e `rait-integration` **não** são montados no `AppModule` até R-0007 (M13/M17: sem matriz de política); negativas exaustivas de política para os 23 recursos novos (`policy.spec.ts`, 24 `it`).
 - Fixtures: `20-fixtures-rait.sql` ajustado, `40-fixtures-rait-org.sql`, `50-fixtures-collection.sql`, `60-fixtures-rait-integration.sql` (uma por estado, prefixos M16), espelho `rait-fixtures.json`; 114 testes de integração novos (RLS, checks das máquinas TURMA/LOTE/BANCA/disponibilidade e dos módulos, FKs, unicidades parciais); sensor `inf-rls` 58 → 81.
 - Docs: build pack §WP-A com a numeração real (38/39/57/58/59), `blueprints/README.md`, `rait-fixtures.md`, `rait-deadline-engine.md` §1, backlog; método da orquestra (ciclos de review restritos, fixtures no CI, escada recalibrada).
 - Contratos da tríade: `work/rounds/R-0006/contracts/CTG-0002-deltas.md`, `CTG-0002-modules.md`.
@@ -24,7 +24,7 @@ WP-A de `docs/framework/arch/rait-build-pack.md` (restante: deltas v1.1.0 dos bl
 - [x] `pnpm exec devai evidence record …` (referência abaixo)
 - [x] nenhum arquivo gerado editado à mão; blueprint e gerados no mesmo PR
 
-Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): delivery-review-CTG-0002: DELIVERY_VERDICT_2. Evidência DEVAI: EVIDENCE_2.
+Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): delivery-review-CTG-0002 ciclo 1 FAIL (5 achados → M17: reatribuição de TASK-0008 a Architect, bump do blueprint pelo Architect, testes do mock bancário, desmontagem dos módulos + negativas de política, critério 178) → ciclo 2 DELIVERY_VERDICT_2. Evidência DEVAI: EVIDENCE_2.
 
 ## Questões abertas tocadas
 
@@ -32,6 +32,6 @@ Vigentes (H.54/H.57): OD-003, 004, 005, 007, 008, 012, 013, 015, 016, 017, 018, 
 
 ## Fora do escopo / deixado explicitamente
 
-Comandos, rotas e política das máquinas novas (R-0007, WP-B); projeções por consumidor e migração de `rait_communication` (WP-P, M10); `signature_policy` e generalização de `normative_document_template` (R-0008); provedor bancário real e porta da Fazenda; `rait-error-catalog.md` (`context` de `RAIT.INQUIRY_EXTENSION_LIMIT`, `T-PAR-3A` em `SUSPENSION_LEGAL_TIMER`) — correção de catálogo para a rodada dona; observação de auditoria de CTG-0001 (EV-b1a79752263c5493) perdida ao aceitar a cadeia de `main` no merge — observação final no sha deste merge.
+Montagem de `rait-org`/`collection`/`rait-integration` no `AppModule` e matriz de política dos 23 recursos novos (R-0007, com os comandos); grants pré-existentes `inf:rait-suspension-act:create` e `inf:rait-export:create` em `RAIT_COMMAND_RULES` a confirmar em R-0007. Comandos, rotas e política das máquinas novas (R-0007, WP-B); projeções por consumidor e migração de `rait_communication` (WP-P, M10); `signature_policy` e generalização de `normative_document_template` (R-0008); provedor bancário real e porta da Fazenda; `rait-error-catalog.md` (`context` de `RAIT.INQUIRY_EXTENSION_LIMIT`, `T-PAR-3A` em `SUSPENSION_LEGAL_TIMER`) — correção de catálogo para a rodada dona; observação de auditoria de CTG-0001 (EV-b1a79752263c5493) perdida ao aceitar a cadeia de `main` no merge — observação final no sha deste merge.
 
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
