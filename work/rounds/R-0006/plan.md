@@ -283,6 +283,9 @@ Inspector segue a especificação §7).
   `STYNX_*_DATABASE_URL` de `role_app_backend` do CI (R-0005) → 12/12 e 1/1 verdes. Regra para o método: todo pacote
   novo montado no `AppModule` entra nos aliases do vitest do app (adicionar à fronteira do Engineer).
 
+- 2026-09-14 (janela 3) TASK-0008 concluída (Sonnet, ~194 k brutos): 5/5 PASS; build pack, README dos blueprints,
+  fixtures, motor de prazos e backlog transcritos. Grupo CTG-0002 completo: `pnpm check` + delivery-review.
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de

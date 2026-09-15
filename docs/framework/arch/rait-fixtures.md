@@ -3,7 +3,7 @@ id: ARCH-RAIT-FIXTURES
 title: Fixtures canônicas do RAIT — personas, tenant, casos por estado, sessões, relógios e calendário
 status: draft
 apps: [rait]
-updated: 2026-09-13
+updated: 2026-09-14
 ---
 
 # Fixtures canônicas
@@ -106,7 +106,7 @@ Feriados nacionais 2026, pontos facultativos, feriado estadual (05/09) e municip
 ## 7. Como usar
 
 ```bash
-DB_NAME=detran_dev pnpm backend:db:reset          # DDL completo (00…37 + RLS)
+DB_NAME=detran_dev pnpm backend:db:reset          # DDL completo (00…60 + RLS)
 bash backend/database/seed.sh                     # fixtures (idempotente)
 ```
 
@@ -115,8 +115,16 @@ Testes `integration`/`e2e` assumem a seed aplicada; testes `unit` e do frontend 
 crie um segundo tenant efêmero com `randomUUID()` (padrão de `audit-persistence.integration.spec.ts`);
 nunca altere o tenant das fixtures.
 
-## 8. O que ainda não está nas fixtures (depende de WP-A)
+## 8. O que passou a existir (WP-A, R-0006) e o que ainda falta
 
-Infração (agregado), notificações NA/NP e timers da infração, escala e plantão, lote de sorteio,
-turma, parâmetros versionados, atos de suspensão, jeton, documentos de arrecadação e outbox de
-integração. Quando o blueprint existir, a fixture correspondente entra no mesmo PR (uma por estado).
+Infração (agregado, `30-fixtures-infraction.sql`: `infraction`, `infraction_timer`,
+`infraction_event`, avisos `inf.notice*`), escala/plantão/lote de sorteio/turma
+(`20-fixtures-rait.sql`: `rait_schedule`/`rait_schedule_slot`, `rait_substitute_duty`,
+`rait_batch`/`rait_batch_item`, `rait_unit`), organização (`40-fixtures-rait-org.sql`:
+`rait_holiday`, `rait_suspension_act`, `rait_jeton_sheet`/`rait_jeton_line`, `rait_incident`,
+`rait_quality_sample`, `rait_capacity_plan`, `rait_export`), financeiro
+(`50-fixtures-collection.sql`: `collection_document`, `payment`, `refund_order`, `debt_handoff`)
+e integração (`60-fixtures-rait-integration.sql`: `rait_reconciliation`) já têm fixture por
+estado. Parâmetros versionados passaram a `ops.parameter` (ADR-0021, R-0004), fora do escopo de
+fixtures por estado do RAIT. Fica fora: projeção da `integration.outbox` por sistema — deferida a
+WP-P (ADR-0020, M10).
