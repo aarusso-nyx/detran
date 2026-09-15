@@ -341,10 +341,11 @@ Checkpoint final `2026-09-15`: rodada fechada.
 
 - Concluídas: TASK-0001…TASK-0014; CTG-0001 mesclado pelo PR #39 (`1fefb32`, 2026-09-14) e CTG-0002 pelo PR #43
   (`515a5e3da63e040ae9287719d9a735213a31e249`, 2026-09-15); observação Auditor `EV-3aa0c1d48633ef57` no HEAD exato;
-  `devai round close` → `PC-0004` (cadeia válida no head `2912181936518a54e85ed3e410dc86500d5ea868386432068b525c783c2cbdb0`).
+  `devai round close` → `PC-0004`. `main` integrou R-0005 (`PC-0003`) antes do fechamento: cadeia de `main` aceita (entrada de
+  `EV-3aa0c1d48633ef57` substituída), nova observação `EV-9f3aa9a41093dbea` no HEAD integrado `9292e4f`, cadeia válida no head `bb7d69ae86b2667c257733a0743a708a40742b6115d2e117fa4745d270698f00`.
 - Últimos vereditos: `reviews/delivery-review-CTG-0001-4.json` PASS; `reviews/delivery-review-CTG-0002-5.json` PASS.
 - Pendente: nada nesta rodada. Rotas, jobs, montagem dos módulos no `AppModule` e projeções seguem para R-0007 / WP-P;
-  OD-309 aguarda decisão do Owner. Não replanejar; a próxima frente lê `PC-0003` e este plano como histórico.
+  OD-309 aguarda decisão do Owner. Não replanejar; a próxima frente lê `PC-0004` e este plano como histórico.
 
 ## Leitura
 
