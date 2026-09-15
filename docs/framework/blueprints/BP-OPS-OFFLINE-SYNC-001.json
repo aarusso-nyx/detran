@@ -4,13 +4,28 @@
   "module": {
     "name": "OfflineSync",
     "namespace": "ops",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "ddlFile": "18-ops-offline-sync.sql",
     "dependencies": {
-      "@detran/ops-core": "workspace:*"
+      "@detran/ops-core": "workspace:*",
+      "@detran/ops-parameter": "workspace:*"
     },
     "owners": ["detran-ops"],
-    "description": "Offline numbering and durable synchronization from WF-TEAT-002 and INV-OFFLINE-001; no WP-T2 controller is mounted in this round."
+    "description": "Offline numbering and durable synchronization from WF-TEAT-002 and INV-OFFLINE-001; no WP-T2 controller is mounted in this round.",
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-core",
+        "target": "../core/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-parameter",
+        "target": "../parameter/src/index.ts"
+      }
+    ]
   },
   "api": {
     "basePath": "/v1/ops/offline-sync/",
@@ -33,7 +48,8 @@
       {
         "entity": "SyncBatch",
         "path": "sync-batches",
-        "resource": "sync-batch"
+        "resource": "sync-batch",
+        "operations": ["list", "get"]
       },
       {
         "entity": "SyncQueueItem",

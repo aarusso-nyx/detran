@@ -1,4 +1,4 @@
-// Generated from BP-OPS-OFFLINE-SYNC-001 v1.1.0 sha256:fb2ab9cef5ee5621be533d83fd88a694912460d6fbe4cd446bc2c8d7f7bcfc3d
+// Generated from BP-OPS-OFFLINE-SYNC-001 v1.2.0 sha256:caa6ee5fb47a5169864e22d9763e35d774009a12ac8d550129bacf8d39ac2cac
 import { Injectable } from '@nestjs/common';
 import { AitNumberingRangeRepository } from '../repositories/ait-numbering-range.repository.js';
 import type { AitNumberingRange } from '../entities/ait-numbering-range.entity.js';
