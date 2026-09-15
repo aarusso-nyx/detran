@@ -1,0 +1,43 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0005/reports/TASK-0008.md",
+      "line": 33,
+      "claim": "O criterio 2 do relatorio afirma sem ressalva que todos os ON CONFLICT convergem todas as colunas escritas. Isso vale para os cinco upserts de backend/database/seed/25-fixtures-teat.sql (linhas 18, 25, 32, 40, 44), mas nao para o outro arquivo entregue: em backend/database/seed/10-fixtures-inf-ait.sql o catalogo (linha 3) converge apenas status, os dezessete ait_ait (linhas 8, 10, 12 ... 46) convergem apenas current_status e os ait_status_history (linhas 9, 11, 13 ...) usam do nothing. Os dois enquadramentos alterados pela escalada (linhas 6 e 7) convergem description e approach_class, entao a migracao do delta converge de fato; o defeito e o alcance da afirmacao, nao a entrega.",
+      "fix": "Restringir a frase do relatorio aos upserts de 25-fixtures-teat.sql e aos enquadramentos de 10-fixtures-inf-ait.sql, ou registrar em Fora do escopo que a convergencia dos upserts legados de 10-fixtures-inf-ait.sql nao foi tocada pela alteracao minima de compatibilidade."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 17,
+      "claim": "O comentario das linhas 6 e 7 diz que a fixture falha fechada. Isso e verdade so para metade da derivacao: se inf.ait_state_ref nao existir ou estiver vazia o insert erra ou some, mas o join da linha 17 com a linha-base 00000000-0000-7000-8000-0000f0000001 e um inner join, e se essa linha faltar (10-fixtures-inf-ait.sql nao aplicado, ou o id renomeado no futuro) o insert grava zero linhas sem erro e o seed termina PASS com cobertura 0/17. A consulta independente de cobertura citada no relatorio linha 20 e externa ao seed, entao nenhum gate automatico detectaria a regressao.",
+      "fix": "Tornar a dependencia observavel dentro do proprio seed, por exemplo um do block que levante excecao quando a linha-base nao existir, ou ajustar o comentario para dizer que so o vocabulario de estados falha fechado."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 22,
+      "claim": "Os tres dispositivos, a faixa e as quatro reservas apontam para traffic_agency_id 00000000-0000-7000-8000-0000e2000001 e shift_id 00000000-0000-7000-8000-0000e3000001, e nenhum arquivo de backend/database/seed/ insere linha em ops.ops_agent_profile, ops.ops_shift ou na tabela de orgao: os unicos arquivos que citam esses ids sao 10-fixtures-inf-ait.sql e este. Hoje nada quebra porque ops.ops_operational_device e ops.numbering_reservation so tem FK para ops.ait_numbering_range (backend/database/ddl/13-ops-field-operations.sql linha 44 e 18-ops-offline-sync.sql linha 42), mas o teat-build-pack.md §WP-T1 declara que os blueprints ops existem justamente para acrescentar CHECKs e FKs que o DDL manual nao tinha. O padrao e herdado de 10-fixtures-inf-ait.sql e nao esta em Fora do escopo.",
+      "fix": "Registrar em Fora do escopo que orgao, perfil de agente e turno continuam sem fixture, ou semear as linhas minimas de ops.ops_agent_profile e ops.ops_shift junto com os dispositivos para que a reference data do WP-T1 seja auto-contida."
+    }
+  ],
+  "notes": [
+    "High 1 do ciclo 1 fechado: o quarto estado de reserva agora e cancelled (25-fixtures-teat.sql linha 39, idempotency_key teat-cancelled) e a linha 2 documenta reserved|consumed|expired|cancelled como espelho de RESERVADA|CONSUMIDA|EXPIRADA|CANCELADA. Conferi a autoridade diretamente: WF-TEAT-002.md linhas 44 a 47 fixa exatamente esses quatro destinos e nenhum outro, e o default do armazenamento e reserved (18-ops-offline-sync.sql linha 38). O token revoked desapareceu do arquivo.",
+    "High 2 do ciclo 1 fechado: a linha-base e selecionada por id deterministico em 25-fixtures-teat.sql linha 17, sem order by nem limit, e o do update da linha 18 converge as vinte colunas escritas, de modo que um banco ja semeado com a versao antiga converge para o conteudo novo.",
+    "High 3 do ciclo 1 fechado: as duas listas do CASE (linhas 14 e 15) tem 15 e 12 codigos, exatamente os de sort_order >= 30 e >= 60 de inf.ait_state_ref (14-inf-lifecycle-vocabulary.sql linhas 22 a 39). RASCUNHO_OFFLINE e CANCELADO_RASCUNHO ficam sem content_hash, e tudo antes de RECEBIDO fica sem receipt_protocol, coerente com as descricoes canonicas de FINALIZADO_LOCAL e RECEBIDO.",
+    "High do ciclo 2 fechado e verificado alem do pedido: 10-fixtures-inf-ait.sql linha 6 poe 7455-0 em caso_2 e linha 7 poe 5541-0 em caso_1, o que e a migracao fiel do booleano anterior e tambem e semanticamente consistente com RN-TEAT-108 em todos os AITs do repositorio. Varri as dezessete linhas de inf.ait_ait de 10-fixtures-inf-ait.sql: toda ocorrencia de 7455-0 tem constatation_type abordagem e had_approach true (compativel com Caso 2, mediante abordagem) e toda ocorrencia de 5541-0 tem sem_abordagem e had_approach false (compativel com Caso 1, possivel sem abordagem). Os dezessete AITs derivados em 25-fixtures-teat.sql herdam o framing de f0000001, logo herdam caso_2 com abordagem. Nao ha contradicao entre classe e abordagem em nenhuma linha semeada.",
+    "Item 5 satisfeito nos dois pontos que o ciclo 2 apontou: o comentario da linha 4 de 10-fixtures-inf-ait.sql nao chama mais caso_1 de conservador e descreve a migracao como e, e a linha 5 registra source_pending exigindo a ficha MBFT antes de tratar a classificacao como dado normativo importado, alinhado a CTG-0002.md linhas 75 e 76, que mandava registrar a pendencia sem decidir. Como approach_class e NOT NULL (30-inf-normative.sql linha 38), preservar a semantica anterior e a unica opcao que nao decide nada novo. Em usage_mode o seed grava literalmente source_pending (linhas 30 e 31), que e a forma prescrita pela propria rubrica item 5; nao ha vocabulario fechado para o campo em BP-OPS-OFFLINE-SYNC-001, no DDL ou em teat-route-contract.md.",
+    "Postura de dispositivo: nao ha definicao vinculante de WP-T1 violada. Nem BP-OPS-FIELD-001 nem 13-ops-field-operations.sql linha 36 declaram CHECK ou enum para ops_operational_device.status, e a unica enumeracao de posturas negativas esta em teat-error-catalog.md linha 47, artefato de WP-T2. O adiamento esta duplamente registrado, em TASK-0008.md linhas 44 a 46, no comentario da linha 27 de 25-fixtures-teat.sql e em plan.md, o que fecha o low do ciclo 2. Nao transformei isso em high.",
+    "Item 4: backend:test:ci aparece agora em TASK-0008.md linha 27 sobre o estado final, fechando o low do ciclo 2; os cinco acceptance_commands de tasks/TASK-0008.json correspondem um a um as linhas 18 a 26 do relatorio e aos criterios de plan.md linhas 84 a 90. Esta revisao e somente leitura e nao reexecutou nada.",
+    "Item 7: nenhum gate enfraquecido. Nenhum teste, DDL, blueprint ou arquivo gerado foi tocado; a alteracao de 10-fixtures-inf-ait.sql continua sendo compatibilidade obrigatoria com a coluna NOT NULL. Nenhum spec depende dos valores das fixtures: os unicos usos de approach_class em TypeScript sao dto, entidade, repositorio e testes que criam o proprio framing (ait-lifecycle.e2e.spec.ts linha 122 e inf-ait-routes.e2e.spec.ts linha 64).",
+    "Itens 1, 9 e 13: papel Engineer declarado e compativel com MOD-seed; nada nesta entrega fala com SENATRAN fora de packages/senatran-adapter; nao ha matriz de autorizacao no diff, e o JSON da tarefa (queued para completed, iteration_count 2) esta declarado como escrituracao do maestro em TASK-0008.md linhas 46 e 47, fechando o low do ciclo 1.",
+    "Unicidade e determinismo reverificados: os ids 0000f8 mais lpad(sort_order,6) sao UUIDs validos e disjuntos da faixa 0000f0 existente, ait_number TEAT-010 a TEAT-170 nao colide com ux_inf_ait_number e receipt_protocol TEAT-0008-nnn nao colide com o indice parcial ux_inf_ait_receipt_protocol. O insert le inf.ait_ait enquanto escreve na mesma tabela, o que e seguro porque o snapshot do select precede o insert; a segunda execucao cai no do update convergente."
+  ]
+}

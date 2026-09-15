@@ -1,4 +1,4 @@
--- Generated from BP-INF-MEASURES-001 v1.0.0 sha256:5579cc45b6f017e5fe67a0f399f4547a0efae00552c7609c33d7257e572be367
+-- Generated from BP-INF-MEASURES-001 v1.1.0 sha256:0d61bf54d2c0383839c31d1ecb76100ecb64d1f60e1285f5d621451b36d3995c
 
 -- Regenerable-only DDL for BP-INF-MEASURES-001; request-path writes use role_app_backend.
 
@@ -33,12 +33,13 @@ create table if not exists inf.administrative_measure (
   ended_at timestamptz,
   location_json jsonb,
   reason text not null,
-  current_status varchar(60) default 'started' not null,
+  current_status varchar(60) default 'RETIDO' not null,
   notes text,
   location_geom geometry(Point,4674),
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_administrative_measure primary key (id),
+  constraint ck_inf_administrative_measure_current_status check (current_status in ('RETIDO', 'LIBERADO_LOCAL', 'LIBERADO_COM_PRAZO', 'REGULARIZADO', 'CONVERTIDO_REMOCAO', 'REMOVIDO', 'EM_DEPOSITO', 'GUARDA_MONITORADA', 'VIOLACAO_MONITORAMENTO', 'NOTIFICADO', 'RESTITUIDO', 'LEILAO')),
   constraint fk_inf_measure_type foreign key (measure_type_id) references inf.measure_type (id),
   constraint fk_inf_measure_ait foreign key (ait_id) references inf.ait_ait (id),
   constraint fk_inf_measure_approach foreign key (approach_id) references ops.ops_approach (id)
@@ -65,6 +66,13 @@ create table if not exists inf.administrative_term (
   file_evidence_id uuid,
   issued_at timestamptz not null,
   signed_by_person_id uuid,
+  signer_name varchar(160),
+  withdrawal_deadline_at timestamptz,
+  ctb_deadline_at timestamptz,
+  field_details_json jsonb,
+  source_local_id varchar(120),
+  source_idempotency_key varchar(160),
+  source_payload_hash varchar(128),
   status varchar(60) default 'issued' not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
@@ -78,6 +86,7 @@ create index if not exists ix_administrative_term_tenant_id on inf.administrativ
 create index if not exists ix_administrative_term_measure_id on inf.administrative_term (measure_id);
 create index if not exists ix_administrative_term_file_evidence_id on inf.administrative_term (file_evidence_id);
 create index if not exists ix_administrative_term_signed_by_person_id on inf.administrative_term (signed_by_person_id);
+create index if not exists ix_administrative_term_source_local_id on inf.administrative_term (source_local_id);
 
 create table if not exists inf.measure_retention (
   id uuid default gen_random_uuid() not null,
@@ -85,12 +94,15 @@ create table if not exists inf.measure_retention (
   measure_id uuid not null,
   vehicle_snapshot_id uuid not null,
   retention_reason text not null,
+  regularization_deadline_at timestamptz,
+  regularization_deadline_days integer,
   regularized_at timestamptz,
   released_at timestamptz,
   release_user_ref uuid,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_measure_retention primary key (id),
+  constraint ck_inf_measure_retention_regularization_deadline_30 check (regularization_deadline_days is null or regularization_deadline_days between 1 and 30),
   constraint fk_inf_retention_measure foreign key (measure_id) references inf.administrative_measure (id),
   constraint fk_inf_retention_vehicle foreign key (vehicle_snapshot_id) references ops.snapshots_vehicle (id)
 );
@@ -108,10 +120,13 @@ create table if not exists inf.measure_removal (
   requested_at timestamptz,
   tow_arrived_at timestamptz,
   delivered_at timestamptz,
+  regularization_deadline_at timestamptz,
+  regularization_deadline_days integer,
   destination_description text,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_measure_removal primary key (id),
+  constraint ck_inf_measure_removal_regularization_deadline_15 check (regularization_deadline_days is null or regularization_deadline_days between 1 and 15),
   constraint fk_inf_removal_measure foreign key (measure_id) references inf.administrative_measure (id),
   constraint fk_inf_removal_vehicle foreign key (vehicle_snapshot_id) references ops.snapshots_vehicle (id)
 );

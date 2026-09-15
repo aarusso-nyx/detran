@@ -4,7 +4,7 @@
   "module": {
     "name": "Normative",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "30-inf-normative.sql",
     "testAliases": [
       {
@@ -150,9 +150,23 @@
             "nullable": true
           },
           {
-            "name": "allows_no_approach",
+            "name": "approach_class",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "required_fields",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "required_instrument",
             "type": "boolean",
             "default": "false"
+          },
+          {
+            "name": "points_label",
+            "type": "varchar(160)",
+            "nullable": true
           },
           {
             "name": "requires_observation",
@@ -177,9 +191,48 @@
             "unique": true
           }
         ],
+        "checks": [
+          {
+            "name": "ck_inf_normative_framing_approach_class",
+            "expression": "approach_class in ('caso_1', 'caso_2', 'caso_3')"
+          }
+        ],
         "foreignKeys": [
           {
             "name": "fk_inf_framing_catalog",
+            "columns": ["catalog_id"],
+            "references": {
+              "table": "inf.normative_catalog",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "NormativeMetrologicalTable",
+        "table": "normative_metrological_table",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "catalog_id", "type": "uuid" },
+          { "name": "table_name", "type": "varchar(160)" },
+          { "name": "version", "type": "varchar(80)" },
+          { "name": "table_json", "type": "jsonb" },
+          { "name": "valid_from", "type": "date" },
+          { "name": "valid_to", "type": "date", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_normative_metrological_table",
+            "columns": ["tenant_id", "catalog_id", "table_name", "version"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_metrological_table_catalog",
             "columns": ["catalog_id"],
             "references": {
               "table": "inf.normative_catalog",
@@ -341,8 +394,13 @@
             "type": "uuid"
           },
           {
-            "name": "document_type",
+            "name": "document_kind",
             "type": "varchar(80)"
+          },
+          {
+            "name": "domain_scope",
+            "type": "varchar(80)",
+            "default": "'inf'"
           },
           {
             "name": "name",
@@ -372,9 +430,33 @@
             "columns": [
               "tenant_id",
               "traffic_agency_id",
-              "document_type",
+              "document_kind",
               "version"
             ],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "SignaturePolicy",
+        "table": "signature_policy",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "document_kind", "type": "varchar(80)" },
+          { "name": "required_signers_json", "type": "jsonb" },
+          { "name": "pades_level", "type": "varchar(40)" },
+          { "name": "tsa_required", "type": "boolean", "default": "false" },
+          { "name": "pdfa_required", "type": "boolean", "default": "false" },
+          { "name": "govbr_level", "type": "varchar(40)", "nullable": true },
+          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_signature_policy_document_kind",
+            "columns": ["tenant_id", "traffic_agency_id", "document_kind"],
             "unique": true
           }
         ]
@@ -463,6 +545,11 @@
         "resource": "framing"
       },
       {
+        "entity": "NormativeMetrologicalTable",
+        "path": "metrological-tables",
+        "resource": "normative-metrological-table"
+      },
+      {
         "entity": "NormativeValidationRule",
         "path": "validation-rules",
         "resource": "validation-rule"
@@ -476,6 +563,11 @@
         "entity": "NormativeDocumentTemplate",
         "path": "document-templates",
         "resource": "document-template"
+      },
+      {
+        "entity": "SignaturePolicy",
+        "path": "signature-policies",
+        "resource": "signature-policy"
       },
       {
         "entity": "MobileNormativePackage",

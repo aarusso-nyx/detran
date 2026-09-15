@@ -1,4 +1,4 @@
-// Generated from BP-INF-MEASURES-001 v1.0.0 sha256:5579cc45b6f017e5fe67a0f399f4547a0efae00552c7609c33d7257e572be367
+// Generated from BP-INF-MEASURES-001 v1.1.0 sha256:0d61bf54d2c0383839c31d1ecb76100ecb64d1f60e1285f5d621451b36d3995c
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -20,6 +20,13 @@ const WRITABLE_FIELDS = new Set<string>([
   'file_evidence_id',
   'issued_at',
   'signed_by_person_id',
+  'signer_name',
+  'withdrawal_deadline_at',
+  'ctb_deadline_at',
+  'field_details_json',
+  'source_local_id',
+  'source_idempotency_key',
+  'source_payload_hash',
   'status',
 ]);
 

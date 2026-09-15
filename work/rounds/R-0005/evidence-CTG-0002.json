@@ -1,0 +1,80 @@
+{
+  "action": "Implement WP-T1 INF blueprint deltas and canonical AIT, administrative-measure, and alcohol refusal lifecycle behavior with generated DDL, contracts, and red-before-green tests",
+  "round": "R-0005",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": ["f81ae5743cb5738c38049c911a94ea7be1005521"],
+  "artifacts": [
+    {
+      "path": "docs/framework/blueprints/BP-INF-AIT-001.json",
+      "sha256": "de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-NORMATIVE-001.json",
+      "sha256": "79161caba1463941727a4a6ad952f010c399cca7df3febfa1cf881ac14c7ca52"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-MEASURES-001.json",
+      "sha256": "0d61bf54d2c0383839c31d1ecb76100ecb64d1f60e1285f5d621451b36d3995c"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-INF-ALCOHOL-001.json",
+      "sha256": "18decd0fa5855e93f40ce052c3ffb2ec4ad022530cd5da983fadf681a45bd246"
+    },
+    {
+      "path": "backend/database/ddl/14-inf-lifecycle-vocabulary.sql",
+      "sha256": "7568c0b433aa55183d1cec22a4eba6e70a88a3a42e7ab378332f71263257dd1d"
+    },
+    {
+      "path": "tools/check-lifecycle-vocabulary.ts",
+      "sha256": "ab41e165cda0ffbad1c69679172488f41e47b5b6b65718db1985cbfc954b164c"
+    },
+    {
+      "path": "work/rounds/R-0005/contracts/CTG-0002.md",
+      "sha256": "9e81bad77cecfd207169030b5320a0fe37d05338843db12bc6b005c9dab496dc"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0002-final.json",
+      "sha256": "17d88efa9306e3ea251d3f2b3d6c76516325d03bea9e218dd409a58e26c84a47"
+    }
+  ],
+  "gates": [
+    {
+      "command": "DB_NAME=detran_r5 DB_PASSWORD=postgres bash backend/database/apply.sh --full and seed.sh twice",
+      "result": "PASS; complete schema and idempotent fixtures"
+    },
+    {
+      "command": "DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r5 pnpm backend:rls-smoke",
+      "result": "PASS; tenant isolation, OPS RLS, SRID-4674 round-trip, and audit persistence"
+    },
+    {
+      "command": "pnpm backend:test:ci with isolated detran_r5 and role_app_backend application pools",
+      "result": "PASS; AIT unit 5/5, Measures unit 7/7, Alcohol unit 5/5, app integration 11/11, app e2e 12/12, AIT e2e 1/1"
+    },
+    {
+      "command": "pnpm check",
+      "result": "PASS; format, bridge, KB, blueprints, contracts, typecheck, UI, decorators, RLS, roles, lifecycle vocabulary, SENATRAN, and PEC"
+    },
+    {
+      "command": "cross-family final delivery review",
+      "result": "PASS; zero high findings after explicit red-before-green escalation"
+    },
+    {
+      "command": "git diff --cached --check",
+      "result": "PASS"
+    }
+  ],
+  "decisions": ["OD-T05", "OD-T13"],
+  "requirements": [
+    "RN-TEAT-005",
+    "RN-TEAT-108",
+    "RN-TEAT-124",
+    "RN-TEAT-125",
+    "RN-TEAT-126",
+    "RN-TEAT-128",
+    "RN-TEAT-131",
+    "RN-TEAT-133",
+    "RN-TEAT-134"
+  ],
+  "workflows": ["WF-TEAT-001", "WF-TEAT-004", "WF-TEAT-005"]
+}

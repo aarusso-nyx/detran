@@ -1,0 +1,54 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/database/seed/10-fixtures-inf-ait.sql",
+      "line": 5,
+      "claim": "O enquadramento 7455-0 (art. 218, II) tinha allows_no_approach = false no HEAD (coluna com default false not null em 30-inf-normative.sql linha 38 antes do delta) e a entrega o migra para approach_class = caso_1. RN-TEAT-108 define Caso 1 como possivel sem abordagem, com justificativa dispensada, ou seja a classe permissiva; a classe que fecha a porta e o Caso 2, mediante abordagem, que bloqueia a finalizacao sem registro de abordagem. O comentario da linha 4 e o relatorio linha 13 afirmam que caso_1 e a postura conservadora, inversao da definicao canonica. O valor nao tem fonte autorizada declarada (a propria entrega diz que a ficha MBFT nao e fonte autorizada) e nao virou linha source_pending no parameter-catalogue nem questao OD: o relatorio linha 46 registra OD Nenhuma, contra a regra nao negociavel do orchestra README secao 4 item 3.",
+      "fix": "Usar approach_class = caso_2 para o enquadramento 7455-0, que preserva exatamente a semantica booleana anterior e e compativel com todos os AITs que o referenciam (todos com had_approach true), manter caso_1 apenas para 5541-0, que mapeia fielmente allows_no_approach = true, corrigir o comentario para nao chamar caso_1 de conservador, e abrir source_pending ou OD registrando a lacuna da ficha MBFT."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 28,
+      "claim": "usage_mode recebe o literal offline sem vocabulario canonico: BP-OPS-OFFLINE-SYNC-001 linha 68 declara apenas varchar(40) sem enum, o DDL 18-ops-offline-sync.sql nao tem CHECK e teat-route-contract.md linha 121 so nomeia o campo. Constante sem fonte e sem source_pending nem OD.",
+      "fix": "Registrar o token como source_pending no parameter-catalogue ou como OD ate a autoridade publicar o conjunto fechado de usage_mode."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 20,
+      "claim": "teat-error-catalog.md linha 47 enumera tres posturas negativas de dispositivo (DEVICE_NOT_AUTHORIZED, DEVICE_BLOCKED, DEVICE_TAMPER_DETECTED) e a meta 5 do plano pede um dispositivo por postura; as fixtures cobrem authorized, blocked e tamper, deixando a postura nao autorizada sem representante.",
+      "fix": "Manter o adiamento, que esta registrado na secao Fora do escopo linhas 41 a 43, mas amarrar explicitamente a lacuna ao WP-T2 no plano para que nao se perca."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0005/reports/TASK-0008.md",
+      "line": 18,
+      "claim": "A evidencia da iteracao 2 lista apply, seed duplo, cobertura, RLS smoke e pnpm check, mas nao backend:test:ci, que plan.md linha 90 exige como criterio de aceitacao da rodada. O script check em package.json nao inclui nenhum tier de teste de backend, portanto nenhuma camada de teste foi reexecutada apos a mudanca final das fixtures. Risco real baixo, pois os specs e2e e de integracao criam os proprios dados e nao contam linhas semeadas.",
+      "fix": "Anexar o resultado de backend:test:ci sobre o estado final antes do commit, conforme o plano ja indica estar em repeticao."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 25,
+      "claim": "O relatorio linha 31 afirma que ON CONFLICT converge todas as colunas. Isso e verdade apenas para o upsert de ait_ait na linha 18; os quatro upserts seguintes convergem subconjuntos (linha 25 apenas status e tamper_flag, linha 29 apenas next_number e status, linha 37 apenas status, linha 41 apenas status e manifest_hash), o que deixa as demais colunas divergirem em banco ja semeado se a fixture mudar.",
+      "fix": "Estender o do update dos quatro upserts a todas as colunas escritas, como ja foi feito para o AIT, ou restringir a afirmacao do relatorio a linha-base do AIT."
+    }
+  ],
+  "notes": [
+    "Highs do ciclo 1 confirmados fechados por leitura direta: os tokens de armazenamento reserved, consumed, expired e cancelled correspondem um a um a RESERVADA, CONSUMIDA, EXPIRADA e CANCELADA do diagrama de WF-TEAT-002; a linha-base do AIT e selecionada por ID deterministico em 25-fixtures-teat.sql linha 17, sem ordenacao implicita; content_hash so aparece a partir de FINALIZADO_LOCAL (sort_order 30) e receipt_protocol so a partir de RECEBIDO (sort_order 60), coerente com WF-TEAT-001 linhas 53 e 107. As duas listas do CASE cobrem exatamente 15 e 12 codigos, sem sobra nem falta.",
+    "Cobertura 17/17 verificada estruturalmente: inf.ait_state_ref em 14-inf-lifecycle-vocabulary.sql tem exatamente 17 codigos e o insert deriva uma linha por codigo, de modo que a fixture falha fechada se o vocabulario nao estiver aplicado. Unicidade preservada: ait_number TEAT-010 a TEAT-170 e receipt_protocol TEAT-0008-nnn nao colidem com ux_inf_ait_number nem com ux_inf_ait_receipt_protocol, e a chave sintetica 0000f8 mais sort_order nao colide com a faixa 0000f0 das fixtures existentes.",
+    "Fronteira de escrita respeitada: o diff toca apenas MOD-seed e o JSON da tarefa, que e escrituracao do maestro. Nenhum arquivo gerado foi editado a mao, nenhum teste foi relaxado e nada fala com SENATRAN fora do adapter.",
+    "Divergencia de vocabulario herdada de CTG-0002, fora deste diff mas util registrar: RN-TEAT-108 na secao Verificacao nomeia os tokens POSSIVEL_SEM_ABORDAGEM, MEDIANTE_ABORDAGEM e VIDE_PROCEDIMENTOS, enquanto o CHECK em 30-inf-normative.sql linha 48 e a meta 3 do plano fixam caso_1, caso_2 e caso_3. A fixture usa corretamente os tokens de armazenamento; a reconciliacao pertence a TASK-0005 ou a documentacao de TASK-0009.",
+    "Item 13 nao se aplica a esta entrega: nao ha matriz de autorizacao no diff. As matrizes positivas e negativas de OPS continuam roteadas para R-0008 / WP-T2, como o plano ja registra."
+  ]
+}

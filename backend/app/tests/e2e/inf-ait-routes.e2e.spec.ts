@@ -61,8 +61,8 @@ beforeAll(async () => {
     [tenantId, `e2e-${randomUUID().slice(0, 8)}`],
   );
   const framing = await client.query<{ id: string }>(
-    `insert into inf.normative_framing (tenant_id, catalog_id, framing_code, description, status)
-     values ($1, $2, '74550', 'Infraction framing', 'active') returning id`,
+    `insert into inf.normative_framing (tenant_id, catalog_id, framing_code, description, approach_class, status)
+     values ($1, $2, '74550', 'Infraction framing', 'caso_2', 'active') returning id`,
     [tenantId, catalog.rows[0]!.id],
   );
   const vehicle = await client.query<{ id: string }>(
@@ -119,7 +119,7 @@ describe('inf/ait routes mounted in the unified app (WP-T0)', () => {
         constatation_type: 'approach',
         location_description: 'Av. Brasil',
         uf: 'AM',
-        current_status: 'draft',
+        current_status: 'RASCUNHO_OFFLINE',
       });
     expect(created.status, JSON.stringify(created.body)).toBe(201);
     const id = created.body.id as string;
@@ -153,7 +153,7 @@ describe('inf/ait routes mounted in the unified app (WP-T0)', () => {
       .set(headers())
       .send({});
     expect(finalized.status, JSON.stringify(finalized.body)).toBe(201);
-    expect(finalized.body.current_status).toBe('issued');
+    expect(finalized.body.current_status).toBe('FINALIZADO_LOCAL');
     expect(finalized.body.content_hash).toBeTruthy();
   });
 

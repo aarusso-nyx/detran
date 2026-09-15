@@ -1,4 +1,4 @@
--- Generated from BP-INF-AIT-001 v1.0.0 sha256:1b2717e37821dbaa07fe8909762b132a11e1f71514ca40a196fb04a8053d5e77
+-- Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
 
 -- Regenerable-only DDL for BP-INF-AIT-001; request-path writes use role_app_backend.
 
@@ -33,7 +33,9 @@ create table if not exists inf.ait_ait (
   direction varchar(60),
   mandatory_observation text,
   complementary_observation text,
-  current_status varchar(60) default 'draft' not null,
+  current_status varchar(60) default 'RASCUNHO_OFFLINE' not null,
+  version integer default 1 not null,
+  speed_measurement_id uuid,
   content_hash varchar(128),
   system_signature_ref text,
   receipt_protocol varchar(120),
@@ -42,8 +44,10 @@ create table if not exists inf.ait_ait (
   updated_at timestamptz,
   constraint pk_ait_ait primary key (id),
   constraint ck_inf_ait_issue_after_infraction check (issued_at >= infraction_at),
+  constraint ck_inf_ait_current_status check (current_status in ('RASCUNHO_OFFLINE', 'CANCELADO_RASCUNHO', 'FINALIZADO_LOCAL', 'ENFILEIRADO', 'TRANSMITIDO', 'RECEBIDO', 'SUSPEITO_CONCORRENCIA', 'VALIDANDO', 'ACEITO', 'REJEITADO', 'PENDENTE_CORRECAO', 'CORRIGIDO', 'INTEGRADO', 'PROCESSADO', 'ARQUIVADO', 'SOLICITADO_CANCEL_POSFINAL', 'CANCELADO_POSFINAL')),
   constraint fk_inf_ait_catalog foreign key (catalog_id) references inf.normative_catalog (id),
-  constraint fk_inf_ait_framing foreign key (framing_id) references inf.normative_framing (id)
+  constraint fk_inf_ait_framing foreign key (framing_id) references inf.normative_framing (id),
+  constraint fk_inf_ait_current_status foreign key (current_status) references inf.ait_state_ref (code)
 );
 create unique index if not exists ux_inf_ait_number on inf.ait_ait (tenant_id, traffic_agency_id, series, ait_number);
 create unique index if not exists ux_inf_ait_receipt_protocol on inf.ait_ait (tenant_id, receipt_protocol) where receipt_protocol is not null;
@@ -58,6 +62,48 @@ create index if not exists ix_ait_ait_operation_id on inf.ait_ait (operation_id)
 create index if not exists ix_ait_ait_device_id on inf.ait_ait (device_id);
 create index if not exists ix_ait_ait_framing_id on inf.ait_ait (framing_id);
 create index if not exists ix_ait_ait_catalog_id on inf.ait_ait (catalog_id);
+create index if not exists ix_ait_ait_speed_measurement_id on inf.ait_ait (speed_measurement_id);
+
+create table if not exists inf.ait_cancel_request (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  ait_id uuid not null,
+  kind varchar(60) not null,
+  target_local_act_id varchar(120),
+  origin_status varchar(60) not null,
+  addressed_to varchar(120) not null,
+  status varchar(60) default 'requested' not null,
+  decision text,
+  requested_at timestamptz default now() not null,
+  decided_at timestamptz,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ait_cancel_request primary key (id),
+  constraint ck_inf_ait_cancel_request_status check (status in ('requested', 'under_review', 'approved', 'denied')),
+  constraint fk_inf_ait_cancel_request_ait foreign key (ait_id) references inf.ait_ait (id)
+);
+create index if not exists ix_inf_ait_cancel_request on inf.ait_cancel_request (tenant_id, ait_id, status);
+create index if not exists ix_ait_cancel_request_tenant_id on inf.ait_cancel_request (tenant_id);
+create index if not exists ix_ait_cancel_request_ait_id on inf.ait_cancel_request (ait_id);
+create index if not exists ix_ait_cancel_request_target_local_act_id on inf.ait_cancel_request (target_local_act_id);
+
+create table if not exists inf.ait_cancel_request_event (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  cancel_request_id uuid not null,
+  event_type varchar(80) not null,
+  event_at timestamptz default now() not null,
+  actor_user_ref uuid,
+  decision text,
+  details_json jsonb,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_ait_cancel_request_event primary key (id),
+  constraint fk_inf_ait_cancel_request_event_request foreign key (cancel_request_id) references inf.ait_cancel_request (id)
+);
+create index if not exists ix_inf_ait_cancel_request_event on inf.ait_cancel_request_event (tenant_id, cancel_request_id, event_at);
+create index if not exists ix_ait_cancel_request_event_tenant_id on inf.ait_cancel_request_event (tenant_id);
+create index if not exists ix_ait_cancel_request_event_cancel_request_id on inf.ait_cancel_request_event (cancel_request_id);
 
 create table if not exists inf.ait_vehicle (
   id uuid default gen_random_uuid() not null,
@@ -186,6 +232,10 @@ create index if not exists ix_ait_print_event_ait_id on inf.ait_print_event (ait
 create index if not exists ix_ait_print_event_device_id on inf.ait_print_event (device_id);
 
 select auth.create_rls_policy('inf', 'ait_ait');
+
+select auth.create_rls_policy('inf', 'ait_cancel_request');
+
+select auth.create_rls_policy('inf', 'ait_cancel_request_event');
 
 select auth.create_rls_policy('inf', 'ait_vehicle');
 

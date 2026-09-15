@@ -4,7 +4,7 @@
   "module": {
     "name": "Ait",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "31-inf-ait.sql",
     "dependencies": {
       "@detran/inf-normative": "workspace:*",
@@ -186,7 +186,17 @@
           {
             "name": "current_status",
             "type": "varchar(60)",
-            "default": "'draft'"
+            "default": "'RASCUNHO_OFFLINE'"
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          },
+          {
+            "name": "speed_measurement_id",
+            "type": "uuid",
+            "nullable": true
           },
           {
             "name": "content_hash",
@@ -240,6 +250,10 @@
           {
             "name": "ck_inf_ait_issue_after_infraction",
             "expression": "issued_at >= infraction_at"
+          },
+          {
+            "name": "ck_inf_ait_current_status",
+            "expression": "current_status in ('RASCUNHO_OFFLINE', 'CANCELADO_RASCUNHO', 'FINALIZADO_LOCAL', 'ENFILEIRADO', 'TRANSMITIDO', 'RECEBIDO', 'SUSPEITO_CONCORRENCIA', 'VALIDANDO', 'ACEITO', 'REJEITADO', 'PENDENTE_CORRECAO', 'CORRIGIDO', 'INTEGRADO', 'PROCESSADO', 'ARQUIVADO', 'SOLICITADO_CANCEL_POSFINAL', 'CANCELADO_POSFINAL')"
           }
         ],
         "foreignKeys": [
@@ -256,6 +270,86 @@
             "columns": ["framing_id"],
             "references": {
               "table": "inf.normative_framing",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_ait_current_status",
+            "columns": ["current_status"],
+            "references": {
+              "table": "inf.ait_state_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "AitCancelRequest",
+        "table": "ait_cancel_request",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "ait_id", "type": "uuid" },
+          { "name": "kind", "type": "varchar(60)" },
+          {
+            "name": "target_local_act_id",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          { "name": "origin_status", "type": "varchar(60)" },
+          { "name": "addressed_to", "type": "varchar(120)" },
+          { "name": "status", "type": "varchar(60)", "default": "'requested'" },
+          { "name": "decision", "type": "text", "nullable": true },
+          { "name": "requested_at", "type": "timestamptz", "default": "now()" },
+          { "name": "decided_at", "type": "timestamptz", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_ait_cancel_request_status",
+            "expression": "status in ('requested', 'under_review', 'approved', 'denied')"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_ait_cancel_request",
+            "columns": ["tenant_id", "ait_id", "status"]
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_cancel_request_ait",
+            "columns": ["ait_id"],
+            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "AitCancelRequestEvent",
+        "table": "ait_cancel_request_event",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "cancel_request_id", "type": "uuid" },
+          { "name": "event_type", "type": "varchar(80)" },
+          { "name": "event_at", "type": "timestamptz", "default": "now()" },
+          { "name": "actor_user_ref", "type": "uuid", "nullable": true },
+          { "name": "decision", "type": "text", "nullable": true },
+          { "name": "details_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_ait_cancel_request_event",
+            "columns": ["tenant_id", "cancel_request_id", "event_at"]
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_ait_cancel_request_event_request",
+            "columns": ["cancel_request_id"],
+            "references": {
+              "table": "inf.ait_cancel_request",
               "columns": ["id"]
             }
           }
@@ -700,6 +794,16 @@
         "entity": "Ait",
         "path": "aits",
         "resource": "ait"
+      },
+      {
+        "entity": "AitCancelRequest",
+        "path": "cancel-requests",
+        "resource": "ait-cancel-request"
+      },
+      {
+        "entity": "AitCancelRequestEvent",
+        "path": "cancel-request-events",
+        "resource": "ait-cancel-request-event"
       },
       {
         "entity": "AitVehicle",

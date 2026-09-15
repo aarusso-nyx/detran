@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Alcohol — BP-INF-ALCOHOL-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Breathalyzer and alcohol-testing procedure flows ported from TEAT.",
     "x-blueprint": "BP-INF-ALCOHOL-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -837,6 +837,78 @@
             "type": "string",
             "nullable": true
           },
+          "ait_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "sign_catalog_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "sign_catalog_version": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "driver_name": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "driver_document": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "vehicle_plate": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "vehicle_make": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "refused_procedures": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "driver_statement_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "witnesses_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "source_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "source_payload_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
           "location_geom": {
             "nullable": true
           },
@@ -920,6 +992,78 @@
           },
           "notes": {
             "type": "string",
+            "nullable": true
+          },
+          "ait_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "sign_catalog_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "sign_catalog_version": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "driver_name": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "driver_document": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "vehicle_plate": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "vehicle_make": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "refused_procedures": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "driver_statement_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "witnesses_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "forever"
+          },
+          "source_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "source_payload_hash": {
+            "type": "string",
+            "maxLength": 128,
             "nullable": true
           },
           "location_geom": {
@@ -1070,6 +1214,14 @@
             "type": "number",
             "nullable": true
           },
+          "considered_mg_l": {
+            "type": "number",
+            "nullable": true
+          },
+          "max_error_mg_l": {
+            "type": "number",
+            "nullable": true
+          },
           "counterproof": {
             "type": "boolean",
             "default": "false"
@@ -1121,6 +1273,14 @@
             "type": "number",
             "nullable": true
           },
+          "considered_mg_l": {
+            "type": "number",
+            "nullable": true
+          },
+          "max_error_mg_l": {
+            "type": "number",
+            "nullable": true
+          },
           "counterproof": {
             "type": "boolean",
             "default": "false"
@@ -1158,6 +1318,11 @@
             "type": "string",
             "format": "date-time"
           },
+          "kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": ["refusal", "technical_impossibility"]
+          },
           "refusal_description": {
             "type": "string"
           },
@@ -1185,6 +1350,7 @@
           "tenant_id",
           "procedure_id",
           "refused_at",
+          "kind",
           "refusal_description",
           "created_at"
         ]
@@ -1200,6 +1366,11 @@
             "type": "string",
             "format": "date-time"
           },
+          "kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": ["refusal", "technical_impossibility"]
+          },
           "refusal_description": {
             "type": "string"
           },
@@ -1214,7 +1385,12 @@
             "nullable": true
           }
         },
-        "required": ["procedure_id", "refused_at", "refusal_description"]
+        "required": [
+          "procedure_id",
+          "refused_at",
+          "kind",
+          "refusal_description"
+        ]
       },
       "PsychomotorSign": {
         "type": "object",
@@ -1242,6 +1418,21 @@
           "observed": {
             "type": "boolean",
             "default": "true"
+          },
+          "sign_group": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "sign_status": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "method": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
           },
           "created_at": {
             "type": "string",
@@ -1278,6 +1469,21 @@
           "observed": {
             "type": "boolean",
             "default": "true"
+          },
+          "sign_group": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "sign_status": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "method": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
           }
         },
         "required": ["procedure_id", "sign_code", "description"]

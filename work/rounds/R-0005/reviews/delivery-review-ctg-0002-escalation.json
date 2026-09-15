@@ -1,0 +1,57 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/domains/inf/alcohol/src/alcohol-lifecycle.service.ts",
+      "line": 96,
+      "claim": "recordRefusal grava kind = dto.kind ?? 'refusal' e, na linha 105, escreve incondicionalmente outcome = 'refusal' no alcohol_procedure, mesmo quando o chamador informa kind = 'technical_impossibility'. O par foi criado nesta entrega: a coluna kind e o CHECK ck_inf_alcohol_refusal_kind entraram em 33-inf-alcohol.sql e o campo entrou no serviço manuscrito no mesmo CTG. Duas definições vinculantes são contrariadas: RN-TEAT-134 define a recusa ao procedimento como infração autônoma do art. 165-A e RN-TEAT-005 §Correção material adverte que fundir o eixo de submissão ao procedimento com o de impossibilidade produz erro de enquadramento com consequência de dez vezes a multa e 12 meses de suspensão; RN-TEAT-131 manda tratar a impossibilidade técnica apenas como obrigação de usar outro meio de prova do art. 277. O próprio CTG-0002 enumera entre os critérios negativos do Inspector: reprovar kind diferente de refusal|technical_impossibility ou tratar impossibilidade técnica como recusa 165-A. A coluna é NOT NULL sem default no banco, portanto a ausência do default de serviço seria fail-closed; a implementação escolheu fail-open na direção da classificação mais gravosa, ao contrário do critério fail-closed adotado para cancel de medida sob OD-T13. Nenhum teste cobre kind, e alcohol-lifecycle.service.spec.ts não exercita recordRefusal.",
+      "fix": "tornar kind obrigatório em recordRefusal (sem default) e derivar o outcome do procedimento de kind, gravando outcome distinto para technical_impossibility; acrescentar teste positivo e negativo por valor de kind, como já existe para o par considered_mg_l/max_error_mg_l"
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "backend/domains/inf/measures/src/measure-lifecycle.service.ts",
+      "line": 65,
+      "claim": "A migração de tokens reescreveu a lista de origens de issueTerm de started|in_execution|released|concluded para RETIDO|LIBERADO_LOCAL|LIBERADO_COM_PRAZO|REGULARIZADO, isto é, apenas a submáquina A de WF-TEAT-004. Como recordRemoval agora encerra a medida em REMOVIDO, o Termo de Recolhimento do Veículo — que WF-TEAT-004 submáquina B posiciona exatamente na entrada de REMOVIDO, com conteúdo mínimo da Res. 1.025/2026 art. 14, e que o escopo do workflow declara ser o fim do ato de campo — não pode mais ser emitido depois que a remoção é registrada. É o mesmo termo que carrega withdrawal_deadline_at e ctb_deadline_at, os dois prazos impressos de OD-T05 introduzidos neste CTG. O termo continua emissível antes, a partir de RETIDO, então não é rota permanentemente quebrada; nenhum relatório registra a restrição em Fora de escopo.",
+      "fix": "incluir CONVERTIDO_REMOCAO, REMOVIDO, EM_DEPOSITO e NOTIFICADO nas origens de issueTerm, ou registrar em Fora de escopo de TASK-0007 que a emissão de termo na submáquina B fica para WP-T2"
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0005/contracts/CTG-0002.md",
+      "line": 72,
+      "claim": "OD-T13 existe somente no contrato da rodada, no plan.md, no título de um teste e no arquivo de escalada. Não foi registrado no cadastro canônico de questões abertas: docs/framework/arch/teat-build-pack.md §4 continua terminando em OD-T12 e open-decisions-rait.md §F não foi tocado, embora a própria seção §4 determine registrar em open-decisions-rait.md §F ou em arquivo próprio. Enquanto isso o grant ['inf','administrative-measure','cancel',['traffic-authority']] permanece em backend/domains/shared/src/policy.ts:546 apontando para um comando que agora rejeita incondicionalmente. O achado high anterior foi fechado pela via aceita — abrir OD e citá-la no relatório —, mas a OD ainda não é rastreável fora da rodada.",
+      "fix": "acrescentar a linha OD-T13 ao cadastro canônico de questões abertas do TEAT com premissa fail-closed e decisor Owner, referenciando WF-TEAT-004, e decidir em WP-T2 se o grant de cancel é removido ou implementado"
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "tools/check-lifecycle-vocabulary.ts",
+      "line": 141,
+      "claim": "O gate de terminalidade adicionado nesta entrega compara ait_state_ref contra a constante workflowAitTerminalStates, escrita à mão no próprio verificador, e não contra WF-TEAT-001. O documento já expressa terminalidade de forma legível por máquina — ARQUIVADO, CANCELADO_RASCUNHO e CANCELADO_POSFINAL são os únicos com aresta para [*] — e o conjunto de estados ao lado é derivado do documento. Se o workflow ganhar ou perder um estado terminal, o gate continuará afirmando a verdade antiga e passará verde, exatamente a falha que o achado high de REJEITADO expôs no ciclo anterior.",
+      "fix": "derivar o conjunto terminal do mesmo bloco mermaid, casando as arestas para [*], e manter a comparação bidirecional contra ait_state_ref"
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "backend/domains/inf/measures/src/measure-lifecycle.service.spec.ts",
+      "line": 1,
+      "claim": "O high anterior sobre REGULARIZADO inalcançável foi corrigido na produção — release grava LIBERADO_COM_PRAZO quando há regularization_deadline_at e conclude aceita essa origem — mas nenhum dos seis testes do arquivo chama conclude. A alcançabilidade de REGULARIZADO só é provada de forma transitiva pelo teste de release; a restrição de origem única de conclude e o preenchimento de ended_at ficam sem cobertura, inclusive negativa (conclude a partir de RETIDO, LIBERADO_LOCAL ou REMOVIDO deve falhar).",
+      "fix": "acrescentar um teste positivo LIBERADO_COM_PRAZO para REGULARIZADO com ended_at e ao menos um negativo de origem inválida, no mesmo padrão dos testes de recordRemoval"
+    }
+  ],
+  "notes": [
+    "Os cinco highs do review anterior foram fechados e verificados de forma independente. (1) reject só produz REJEITADO: o parâmetro cancelled saiu do corpo em ait-commands.controller.ts:120 e o teste de ait-lifecycle.service.spec.ts passa o terceiro argumento legado true e prova update com current_status REJEITADO. (2) REJEITADO tem is_terminal false em 14-inf-lifecycle-vocabulary.sql linha 32 e o gate agora reprova divergência de terminalidade. (3) recordRemoval encadeia CONVERTIDO_REMOCAO e depois REMOVIDO na mesma transação, com dois testes cobrindo a origem RETIDO e a origem já convertida. (4) release escolhe LIBERADO_COM_PRAZO ou LIBERADO_LOCAL por presença de regularization_deadline_at, tornando REGULARIZADO alcançável por conclude. (5) cancel é fail-closed sem mutação, com teste que prova que transaction, update e history não são chamados.",
+    "Os três lows anteriores também foram incorporados: ait_cancel_request passou a default requested com ck_inf_ait_cancel_request_status fechado em requested|under_review|approved|denied; refused_procedures é boolean canônico no blueprint e no DDL; a suíte de medidas passou de uma asserção de self-loop para seis testes, cinco deles provando mudança real de estado.",
+    "Item 6 respeitado na escalada: TASK-0005 fixou contrato e vocabulário, TASK-0006 registrou vermelho observado (AIT 1 vermelho de 5, Measures 3 vermelhos de 7) antes da correção de TASK-0007, e nenhum skip, todo ou relaxamento foi introduzido. Item 7 quanto a arquivo gerado: as mudanças de DDL, DTO, entidade, repositório, serviço e controller correspondem a deltas de blueprint e o cabeçalho sha256 dos quatro DDLs acompanha a versão 1.1.0.",
+    "Item 9 atendido: a única costura nacional continua sendo publishViaRenainf sobre RenainfPort em ait-lifecycle.service.ts; nenhum cliente HTTP novo em controller ou serviço nos quatro módulos tocados.",
+    "Item 13: as quatro tabelas novas expõem CRUD gerado com os resources inf:ait-cancel-request, inf:ait-cancel-request-event, inf:normative-metrological-table e inf:signature-policy sem grant em policy.ts e sem matriz positiva ou negativa. O build pack roteia a reconciliação rota versus política para o gate policy-routes.spec.ts de WP-T2, portanto não bloqueia aqui; registro a observação de que signature_policy carrega requisitos PAdES, TSA e PDF-A e chega a WP-T2 com DELETE gerado sem matriz própria.",
+    "O gate de vocabulário parseia corretamente os 17 estados: a notação [estado_origem], as arestas para [*] e as setas de início não casam com a regex e não viram estado. O gate continua sem verificar transições — os quatro highs de transição do ciclo anterior passaram verdes por isso, e os testes unitários novos são hoje a única prova de encadeamento.",
+    "O veredito é REVIEW e não FAIL porque o high remanescente é corrigível dentro da fronteira de TASK-0007, em duas linhas do serviço manuscrito de alcoolemia mais teste, sem alterar plano, contrato ou blueprint. A rota AlcoholCommandsController ainda não é montada pelo AlcoholModule (montagem é WP-T2), o que reduz a exposição atual mas não a classificação: o default legal fica gravado no serviço que WP-T2 vai montar.",
+    "Fora de escopo por instrução: CTG-0003, backend/database/seed/10-fixtures-inf-ait.sql e os reviews anteriores como produto não foram julgados."
+  ]
+}

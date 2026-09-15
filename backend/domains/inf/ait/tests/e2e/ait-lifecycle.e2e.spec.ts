@@ -119,6 +119,7 @@ describe('AIT lifecycle', () => {
     const framing = await framings.create({
       catalog_id: catalog.id,
       framing_code: '74550',
+      approach_class: 'caso_1',
       description: 'Infraction framing',
       status: 'active',
     });
@@ -181,7 +182,7 @@ describe('AIT lifecycle', () => {
     await lifecycle.queueTransmission(draft.id, actorA);
     await lifecycle.receiveProtocol(draft.id, 'RENAINF-001', actorA);
     const accepted = await lifecycle.accept(draft.id, actorA);
-    expect(accepted.current_status).toBe('accepted');
+    expect(accepted.current_status).toBe('ACEITO');
     const history = await repositories.history.findAll();
     expect(
       history
@@ -189,11 +190,11 @@ describe('AIT lifecycle', () => {
         .map((item) => item.status),
     ).toEqual(
       expect.arrayContaining([
-        'draft',
-        'issued',
-        'pending_transmission',
-        'received',
-        'accepted',
+        'RASCUNHO_OFFLINE',
+        'FINALIZADO_LOCAL',
+        'ENFILEIRADO',
+        'RECEBIDO',
+        'ACEITO',
       ]),
     );
     await expect(lifecycle.createDraft(draftInput)).rejects.toMatchObject({

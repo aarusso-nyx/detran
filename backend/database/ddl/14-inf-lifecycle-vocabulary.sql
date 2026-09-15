@@ -9,6 +9,38 @@
 
 CREATE SCHEMA IF NOT EXISTS inf;
 
+-- WF-TEAT-001 — Estados canônicos da lavratura e processamento do AIT.
+CREATE TABLE IF NOT EXISTS inf.ait_state_ref (
+  code varchar(60) PRIMARY KEY,
+  sort_order smallint NOT NULL UNIQUE,
+  is_terminal boolean NOT NULL DEFAULT false,
+  description text NOT NULL,
+  legal_basis text NOT NULL
+);
+COMMENT ON TABLE inf.ait_state_ref IS 'WF-TEAT-001 — estados do ciclo de lavratura do AIT; [estado_origem] é notação de retorno, não estado.';
+
+INSERT INTO inf.ait_state_ref (code, sort_order, is_terminal, description, legal_basis) VALUES
+  ('RASCUNHO_OFFLINE', 10, false, 'rascunho criado no dispositivo com faixa reservada', 'WF-TEAT-001; REF-SENATRAN-997 Anexo II'),
+  ('CANCELADO_RASCUNHO', 20, true, 'cancelamento do preenchimento em curso aprovado pela autoridade', 'WF-TEAT-001; REF-SENATRAN-997 Anexo II, k'),
+  ('FINALIZADO_LOCAL', 30, false, 'conteúdo legal congelado localmente por ação explícita do agente', 'WF-TEAT-001; REF-SENATRAN-997 Anexo II, g'),
+  ('ENFILEIRADO', 40, false, 'AIT gravado em fila local cifrada', 'WF-TEAT-001'),
+  ('TRANSMITIDO', 50, false, 'lote enviado para sincronização', 'WF-TEAT-001'),
+  ('RECEBIDO', 60, false, 'backend emitiu protocolo de recebimento', 'WF-TEAT-001'),
+  ('SUSPEITO_CONCORRENCIA', 70, false, 'mesmo agente em dispositivos distintos no mesmo intervalo; processamento bloqueado', 'WF-TEAT-001; REF-SENATRAN-997 Anexo II, h'),
+  ('VALIDANDO', 80, false, 'conteúdo e referências normativas em validação', 'WF-TEAT-001'),
+  ('ACEITO', 90, false, 'autoridade de trânsito aceitou o AIT para integração', 'WF-TEAT-001'),
+  ('REJEITADO', 100, false, 'autoridade rejeitou o AIT; integração bloqueada, mas pode seguir para correção solicitada', 'WF-TEAT-001'),
+  ('PENDENTE_CORRECAO', 110, false, 'correção solicitada pela retaguarda ou autoridade', 'WF-TEAT-001'),
+  ('CORRIGIDO', 120, false, 'correção aprovada com justificativa', 'WF-TEAT-001'),
+  ('INTEGRADO', 130, false, 'integração autorizada e evento AIT_INTEGRADO emitido', 'WF-TEAT-001; ADR-0014'),
+  ('PROCESSADO', 140, false, 'processamento downstream concluído', 'WF-TEAT-001'),
+  ('ARQUIVADO', 150, true, 'processamento TEAT encerrado e arquivado', 'WF-TEAT-001'),
+  ('SOLICITADO_CANCEL_POSFINAL', 160, false, 'pedido formal de cancelamento pós-finalização endereçado à Diretoria de Fiscalização', 'WF-TEAT-001; UC-TEAT-011'),
+  ('CANCELADO_POSFINAL', 170, true, 'cancelamento pós-finalização deferido; conteúdo legal original imutável', 'WF-TEAT-001; UC-TEAT-011')
+ON CONFLICT (code) DO UPDATE SET
+  sort_order = EXCLUDED.sort_order, is_terminal = EXCLUDED.is_terminal, description = EXCLUDED.description,
+  legal_basis = EXCLUDED.legal_basis;
+
 -- §1 — Estados (um por fase jurídica)
 CREATE TABLE IF NOT EXISTS inf.infraction_state_ref (
   code varchar(40) PRIMARY KEY,
@@ -136,7 +168,7 @@ ON CONFLICT (code) DO UPDATE SET ciencia_rule = EXCLUDED.ciencia_rule, legal_bas
 -- WF-INF-002 §9 — Catálogo unificado de timers
 CREATE TABLE IF NOT EXISTS inf.infraction_timer_ref (
   code varchar(20) PRIMARY KEY,
-  owner varchar(20) NOT NULL CHECK (owner IN ('infracao', 'caso', 'sessao', 'indicador')),
+  owner varchar(20) NOT NULL CHECK (owner IN ('infracao', 'caso', 'sessao', 'indicador', 'medida')),
   duration_value integer,
   duration_unit varchar(20) NOT NULL CHECK (duration_unit IN ('dias_corridos', 'dias_uteis', 'meses', 'anos', 'data_impressa', 'meta')),
   start_mark text NOT NULL,
@@ -163,6 +195,12 @@ INSERT INTO inf.infraction_timer_ref (code, owner, duration_value, duration_unit
   ('T-R2', 'infracao', 30, 'dias_corridos', 'publicação da decisão da JARI (Owner C.24)', 'AGUARDANDO_RECURSO_2A', 'transicao', NULL, NULL, 'vigente', 'CTB art. 288; RN-RAIT-103, RN-RAIT-130'),
   ('T-PAR-3A', 'infracao', 3, 'anos', 'último ato registrado (reinicia a cada movimentação)', 'qualquer estado pendente de julgamento', 'transicao', 'EXTINTO_PRESCRICAO', NULL, 'a_confirmar', 'Lei 9.873/1999 art. 1º §1º; RN-RAIT-113'),
   ('T-PRESC-5A', 'infracao', 5, 'anos', 'prática do ato; interrompido só pelas hipóteses do art. 2º da Lei 9.873 (sem auto-reset na NP)', 'todo o ciclo até o encerramento', 'transicao', 'EXTINTO_PRESCRICAO', '30/45/54/60 meses', 'a_confirmar', 'Lei 9.873/1999 arts. 1º-2º; Res. 918/2022 art. 36; RN-RAIT-113'),
+  ('T-REG30', 'medida', 30, 'dias_corridos', 'recibo entregue na retenção com CLA recolhido', 'LIBERADO_COM_PRAZO (CTB art. 270 §2º)', 'regra', NULL, NULL, 'vigente', 'WF-TEAT-004; CTB art. 270 §§2º, 6º-7º; RN-TEAT-124'),
+  ('T-REG15', 'medida', 15, 'dias_corridos', 'recibo entregue na liberação do CTB art. 271 §9º-A', 'LIBERADO_COM_PRAZO (CTB art. 271 §9º-A)', 'regra', NULL, NULL, 'vigente', 'WF-TEAT-004; CTB art. 271 §§9º-A, 9º-C-9º-D; RN-TEAT-125'),
+  ('T-NOTIF10', 'medida', 10, 'dias_corridos', 'remoção efetivada sem proprietário ou condutor presente', 'EM_DEPOSITO', 'regra', NULL, NULL, 'vigente', 'WF-TEAT-004; CTB art. 271 §6º; Res. CONTRAN 1.025/2026 art. 15'),
+  ('T-DEPOSITO6M', 'medida', 6, 'meses', 'entrada no centro de custódia', 'EM_DEPOSITO', 'marco', NULL, NULL, 'vigente', 'WF-TEAT-004; CTB art. 271 §10; Res. CONTRAN 1.025/2026 art. 21 §2º; RN-TEAT-128'),
+  ('T-CNH5D', 'medida', 5, 'dias_corridos', 'recolhimento de CNH por alcoolemia', 'recolhimento de CNH em procedimento de alcoolemia', 'regra', NULL, NULL, 'vigente', 'WF-TEAT-004; WF-TEAT-005; Res. CONTRAN 432/2013 art. 10 §1º'),
+  ('T-SNE2027', 'medida', NULL, 'meta', 'marco fixo de 01/01/2027', 'notificação de remoção', 'marco', NULL, NULL, 'vigente', 'WF-TEAT-004; Res. CONTRAN 1.025/2026 art. 15 §3º'),
   ('T-VOTO', 'caso', 20, 'dias_corridos', 'distribuição ao relator (aceite do lote)', 'caso RAIT em EM_INSTRUCAO (2º circuito)', 'alerta', NULL, NULL, 'proposta', 'WF-RAIT-003 (pendente regimento)'),
   ('T-CONV', 'sessao', 5, 'dias_uteis', 'fechamento da pauta', 'sessão em PAUTA_FECHADA', 'guarda', NULL, NULL, 'proposta', 'WF-RAIT-003 (pendente regimento)'),
   ('T-ASS', 'caso', 5, 'dias_uteis', 'minuta enviada para assinatura', 'caso RAIT em PRONTO_P_DECISAO (1º circuito)', 'alerta', NULL, NULL, 'proposta', 'WF-RAIT-004 §2 (meta operacional)'),

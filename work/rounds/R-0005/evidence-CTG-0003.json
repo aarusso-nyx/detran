@@ -1,0 +1,54 @@
+{
+  "action": "Add deterministic and idempotent WP-T1 TEAT fixtures covering canonical AIT and numbering-reservation states with source-pending markers for unresolved product vocabularies",
+  "round": "R-0005",
+  "coupled_task_group": "CTG-0003",
+  "role": "engineer",
+  "commits": ["6fec99059412cec0c8c812fa4c1ef175df566199"],
+  "artifacts": [
+    {
+      "path": "backend/database/seed/25-fixtures-teat.sql",
+      "sha256": "5bf3a2c63d63a9fa8e6a4b0c9c0a73a1112dfcc2dff6e257a55c8dc22fbffbfe"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0003-escalation.json",
+      "sha256": "8ba23b11951a39d4178d870a270018ce68a00a94d7ef9157b0e184799442fec6"
+    }
+  ],
+  "gates": [
+    {
+      "command": "DB_NAME=detran_r5 DB_PASSWORD=postgres bash backend/database/apply.sh --full",
+      "result": "PASS"
+    },
+    {
+      "command": "DB_NAME=detran_r5 DB_PASSWORD=postgres bash backend/database/seed.sh twice",
+      "result": "PASS; idempotent"
+    },
+    {
+      "command": "independent fixture coverage query",
+      "result": "PASS; 17/17 AIT states and cancelled, consumed, expired, reserved numbering states"
+    },
+    {
+      "command": "DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r5 pnpm backend:rls-smoke",
+      "result": "PASS"
+    },
+    {
+      "command": "pnpm backend:test:ci with isolated detran_r5 and role_app_backend application pools",
+      "result": "PASS; unit, integration, and e2e tiers"
+    },
+    {
+      "command": "pnpm check",
+      "result": "PASS"
+    },
+    {
+      "command": "cross-family escalation delivery review",
+      "result": "PASS; zero high findings"
+    }
+  ],
+  "requirements": ["RN-TEAT-108"],
+  "workflows": ["WF-TEAT-001", "WF-TEAT-002"],
+  "open_scope": [
+    "MBFT classification for 7455-0 remains source_pending while the fixture preserves prior behavior",
+    "usage_mode vocabulary remains source_pending",
+    "a distinct unauthorized-device persisted posture remains routed to WP-T2"
+  ]
+}

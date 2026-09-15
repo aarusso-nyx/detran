@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Ait — BP-INF-AIT-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "AIT issuance and lifecycle with immutable content hash, normative references, and operational satellites.",
     "x-blueprint": "BP-INF-AIT-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -124,6 +124,258 @@
       "delete": {
         "tags": ["ait"],
         "operationId": "removeAit",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/cancel-requests": {
+      "get": {
+        "tags": ["ait-cancel-request"],
+        "operationId": "listAitCancelRequest",
+        "summary": "List AitCancelRequest (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitCancelRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-cancel-request"],
+        "operationId": "createAitCancelRequest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitCancelRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCancelRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/cancel-requests/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-cancel-request"],
+        "operationId": "getAitCancelRequest",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCancelRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-cancel-request"],
+        "operationId": "updateAitCancelRequest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitCancelRequestDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCancelRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-cancel-request"],
+        "operationId": "removeAitCancelRequest",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/cancel-request-events": {
+      "get": {
+        "tags": ["ait-cancel-request-event"],
+        "operationId": "listAitCancelRequestEvent",
+        "summary": "List AitCancelRequestEvent (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AitCancelRequestEvent"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["ait-cancel-request-event"],
+        "operationId": "createAitCancelRequestEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAitCancelRequestEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCancelRequestEvent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/ait/cancel-request-events/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["ait-cancel-request-event"],
+        "operationId": "getAitCancelRequestEvent",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCancelRequestEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["ait-cancel-request-event"],
+        "operationId": "updateAitCancelRequestEvent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAitCancelRequestEventDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AitCancelRequestEvent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["ait-cancel-request-event"],
+        "operationId": "removeAitCancelRequestEvent",
         "responses": {
           "200": {
             "description": "deleted"
@@ -1018,7 +1270,35 @@
           "current_status": {
             "type": "string",
             "maxLength": 60,
-            "default": "'draft'"
+            "enum": [
+              "RASCUNHO_OFFLINE",
+              "CANCELADO_RASCUNHO",
+              "FINALIZADO_LOCAL",
+              "ENFILEIRADO",
+              "TRANSMITIDO",
+              "RECEBIDO",
+              "SUSPEITO_CONCORRENCIA",
+              "VALIDANDO",
+              "ACEITO",
+              "REJEITADO",
+              "PENDENTE_CORRECAO",
+              "CORRIGIDO",
+              "INTEGRADO",
+              "PROCESSADO",
+              "ARQUIVADO",
+              "SOLICITADO_CANCEL_POSFINAL",
+              "CANCELADO_POSFINAL"
+            ],
+            "default": "'RASCUNHO_OFFLINE'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "speed_measurement_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "content_hash": {
             "type": "string",
@@ -1181,7 +1461,35 @@
           "current_status": {
             "type": "string",
             "maxLength": 60,
-            "default": "'draft'"
+            "enum": [
+              "RASCUNHO_OFFLINE",
+              "CANCELADO_RASCUNHO",
+              "FINALIZADO_LOCAL",
+              "ENFILEIRADO",
+              "TRANSMITIDO",
+              "RECEBIDO",
+              "SUSPEITO_CONCORRENCIA",
+              "VALIDANDO",
+              "ACEITO",
+              "REJEITADO",
+              "PENDENTE_CORRECAO",
+              "CORRIGIDO",
+              "INTEGRADO",
+              "PROCESSADO",
+              "ARQUIVADO",
+              "SOLICITADO_CANCEL_POSFINAL",
+              "CANCELADO_POSFINAL"
+            ],
+            "default": "'RASCUNHO_OFFLINE'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "speed_measurement_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "content_hash": {
             "type": "string",
@@ -1216,6 +1524,214 @@
           "location_description",
           "uf"
         ]
+      },
+      "AitCancelRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "target_local_act_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "origin_status": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "addressed_to": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["requested", "under_review", "approved", "denied"],
+            "default": "'requested'"
+          },
+          "decision": {
+            "type": "string",
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "ait_id",
+          "kind",
+          "origin_status",
+          "addressed_to",
+          "created_at"
+        ]
+      },
+      "CreateAitCancelRequestDto": {
+        "type": "object",
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "target_local_act_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "origin_status": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "addressed_to": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["requested", "under_review", "approved", "denied"],
+            "default": "'requested'"
+          },
+          "decision": {
+            "type": "string",
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["ait_id", "kind", "origin_status", "addressed_to"]
+      },
+      "AitCancelRequestEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cancel_request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "actor_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "decision": {
+            "type": "string",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "cancel_request_id",
+          "event_type",
+          "created_at"
+        ]
+      },
+      "CreateAitCancelRequestEventDto": {
+        "type": "object",
+        "properties": {
+          "cancel_request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "actor_user_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "decision": {
+            "type": "string",
+            "nullable": true
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["cancel_request_id", "event_type"]
       },
       "AitVehicle": {
         "type": "object",
