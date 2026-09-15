@@ -60,9 +60,15 @@
     },
     {
       "id": 9,
-      "status": "active",
+      "status": "completed",
       "authorized_at": "2026-09-14T23:22:38.000Z",
       "reason": "Owner explicitly authorized CTG-0002 start and TASK-0005 Architect dispatch"
+    },
+    {
+      "id": 10,
+      "status": "active",
+      "authorized_at": "2026-09-15T03:11:45.000Z",
+      "reason": "Continuation of the Owner-authorized sequence after CTG-0002 and CTG-0003 merge, covering TASK-0009 and formal R-0005 closure"
     }
   ],
   "entries": [
@@ -362,7 +368,10 @@
       "model": "gpt-5.6-luna",
       "estimated_input_tokens": 40000,
       "estimated_output_tokens": 8000,
-      "status": "window-2"
+      "status": "completed",
+      "window": 10,
+      "started_at": "2026-09-15T03:11:45.000Z",
+      "result": "PASS; six authorized documentation files updated, including corrected route-contract section 2 boundary; format and KB checks passed at 521 artifacts, 446 canonical tokens, and 201 publishable files"
     },
     {
       "kind": "reviewer-call",
@@ -476,6 +485,73 @@
       "verdict": "PASS",
       "attempts": 1,
       "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0002-final.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-task-0009",
+      "model": "claude-opus",
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 6000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "REVIEW",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-task-0009.bridge.json"
+    },
+    {
+      "kind": "worker-task-remediation",
+      "id": "TASK-0009-delivery-1",
+      "model": "gpt-5.6-luna",
+      "estimated_input_tokens": 16000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "window": 10,
+      "result": "PASS; both documentary highs and all five safe lows closed; independent format, KB 521/446, publish 201 and diff checks passed"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-task-0009-2",
+      "model": "claude-opus",
+      "estimated_input_tokens": 20000,
+      "estimated_output_tokens": 5000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "REVIEW",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-task-0009-2.bridge.json"
+    },
+    {
+      "kind": "worker-task-escalation",
+      "id": "TASK-0009-documentation-escalation",
+      "model": "gpt-5.6-terra",
+      "estimated_input_tokens": 18000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "window": 10,
+      "result": "PASS; residual CHECK claim removed, dates corrected, mounted handwritten 10/5/5 route surfaces preserved; all documentary gates passed independently"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-task-0009-escalation",
+      "model": "claude-opus",
+      "estimated_input_tokens": 18000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "PASS",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-task-0009-escalation.bridge.json"
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "TASK-0009-MAIN-INTEGRATION",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 12000,
+      "estimated_output_tokens": 3000,
+      "status": "completed",
+      "window": 10,
+      "completed_at": "2026-09-15T04:23:56.000Z",
+      "result": "PASS; PR #43/main integrated by merge ec09e08, additive README conflict composed, main evidence chain accepted, workspace-link sensor-error resolved by frozen install, full pnpm check passed"
     }
   ]
 }

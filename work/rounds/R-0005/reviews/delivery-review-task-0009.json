@@ -1,0 +1,70 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/framework/arch/teat-build-pack.md",
+      "line": 59,
+      "claim": "A linha de BP-OPS-FIELD-001 continua descrevendo shift como \"(check de estado)\" e agora fica sob o cabecalho \"Executado em 2026-09-15\" da linha 50, de modo que o build pack passa a declarar entregue um CHECK que nao existe: em docs/framework/blueprints/BP-OPS-FIELD-001.json a entidade Shift (tabela ops_shift) tem status varchar(40) default 'open' sem constraint, e plan.md Meta 2 e a §Bloqueios registram o reference-gap. Os outros tres documentos tocados (blueprints/README.md:37, backend/domains/ops/README.md:17, backlog.md:453) declaram shift.status como source_pending, logo o documento canonico de WP-T1 e o unico que contradiz a lacuna e e justamente o que o engenheiro de WP-T2 le primeiro.",
+      "fix": "Na linha 59 trocar \"shift (check de estado)\" por \"shift (status sem CHECK, source_pending; reference-gap de BP-MOBILE-OPERATIONS-001)\", ou acrescentar a ressalva ao paragrafo da linha 50, mantendo a mesma formula usada nos demais cinco documentos."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/framework/arch/teat-route-contract.md",
+      "line": 47,
+      "claim": "A §2 foi atualizada em cinco linhas ops, mas a linha de mobile-bootstrap continua apontando para \"handwritten ops-operations\", pacote aposentado: ADR-0006-ops-field-operations-port.md (adendo de 2026-09-14, R-0005/WP-T1) declara ops-operations e ops-evidence-custody superseded por @detran/ops-field e @detran/ops-evidence, git ls-files nao retorna nenhum arquivo rastreado em backend/domains/ops/operations e o review delivery-review-ctg-0001-3.json nomeou explicitamente esta linha, junto de mobile-operations, ao rotear o low para TASK-0009. O relatorio TASK-0009.md nao registra essa pendencia em §Fora do escopo, entao o low roteado ficou fechado apenas pela metade e o contrato de rotas agora contradiz uma ADR aceita.",
+      "fix": "Atualizar a coluna Blueprint/modulo da linha 47 para o dono real do bootstrap (controladores handwritten de @detran/ops-field, conforme ADR-0006) ou declarar \"sem pacote dono ate WP-T2\", preservando a situacao \"pendente\"."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "docs/framework/arch/teat-route-contract.md",
+      "line": 46,
+      "claim": "As cinco linhas ops reescritas usam a formula \"blueprint/DDL gerados; comandos permanecem WP-T2\", que subdeclara a entrega: os pacotes gerados incluem controladores CRUD (por exemplo backend/domains/ops/agency/src/controllers/agency-unit.controller.ts) e os modulos estao montados em backend/app/src/app.module.ts:72-77. As linhas inf da mesma tabela dizem \"CRUD gerado; comandos ...\", de modo que a tabela passa a usar dois vocabularios para o mesmo estado, e a superficie CRUD viva deixa de ser visivel para a cobertura politica/rotas de WP-T2.",
+      "fix": "Uniformizar as cinco linhas ops para \"CRUD gerado (blueprint e DDL); comandos permanecem WP-T2\", igual as linhas inf."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "docs/framework/arch/teat-route-contract.md",
+      "line": 48,
+      "claim": "A linha de offline-sync teve a situacao atualizada, mas a coluna de modulo continua apenas com @stynx-nyx/offline-sync e nao nomeia o pacote efetivamente entregue @detran/ops-offline-sync (backend/domains/ops/offline-sync, DDL 18-ops-offline-sync.sql, montado no AppModule), ao contrario das quatro linhas irmas que passaram a citar o pacote. Alem disso \"comandos permanecem WP-T2\" convive, no mesmo diff, com backend/domains/ops/README.md:10 e com ADR-0006, que diferem o protocolo handwritten para a Fase 5 sobre @stynx-nyx/offline-sync.",
+      "fix": "Citar @detran/ops-offline-sync + BP-OPS-OFFLINE-SYNC-001 na coluna de modulo e qualificar a situacao como \"CRUD gerado; protocolo e comandos handwritten diferidos (seam @stynx-nyx/offline-sync, Fase 5 por ADR-0006)\"."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "docs/framework/arch/teat-build-pack.md",
+      "line": 50,
+      "claim": "O carimbo \"Executado em 2026-09-15\" e aplicado aos tres CTGs, mas apenas CTG-0003 mesclou nessa data: 1c662f08ab3a7a61db754700dbe45fd91680de25 (PR #40) tem data de commit 2026-09-14T19:45:20-03:00 e bb4797ab38cc4cf47d500e29b203925b29861057 (PR #41) 2026-09-14T23:56:07-03:00; so 30118fa749801d43e7b0b3238ed19b241c8b9114 (PR #42) e 2026-09-15T00:10:58-03:00. O mesmo deslize aparece em docs/meta/knowledge-base/backlog.md:453 (\"PRs #40/#41/#42, 2026-09-15\"). O prompt pedia data real, e ADR-0006 ja registra o adendo WP-T1 como 2026-09-14.",
+      "fix": "Escrever \"CTG-0001 e CTG-0002 em 2026-09-14; CTG-0003 em 2026-09-15 (fechamento do WP-T1)\" no build pack e ajustar a mesma atribuicao no backlog e em decision-closure-plan.md:28."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "docs/meta/knowledge-base/decision-closure-plan.md",
+      "line": 28,
+      "claim": "O gate 3 foi fechado citando somente blueprint, pacote/DDL e o PR #40, sem citar ADR-0023-minimum-ops-agency-context.md, que existe, esta indexada em docs/meta/adr/README.md:33 e e o registro canonico da decisao \"minimo agora, agency-context completo depois\" exigido pela Meta 1 do plano. O criterio do proprio prompt do worker condicionava o fechamento a entrega do ADR, entao a evidencia decisiva ficou fora da linha.",
+      "fix": "Acrescentar a citacao de ADR-0023 (e do DDL 13-ops-agency.sql) a celula de encaminhamento do item 3."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "docs/framework/arch/teat-build-pack.md",
+      "line": 50,
+      "claim": "O paragrafo \"Executado em 2026-09-15\" precede, sem qualquer recorte, a tabela inteira do WP-T1, que inclui a linha de BP-OPS-PROVISIONING-001 e e seguido pelo bloco \"Tambem:\" (timers de WF-TEAT-004/005, inf.ait_state_ref, extensao de verify:lifecycle-vocabulary, fixtures) e pela linha de Gate. Provisioning nao foi entregue: nao existe docs/framework/blueprints/BP-OPS-PROVISIONING-001.json e o plano (Meta 2) o remete a R-0013/WP-T5. A ressalva \"(novo, WP-T5)\" dentro da linha evita a leitura errada, mas o carimbo global e mais forte que ela.",
+      "fix": "Delimitar o carimbo, por exemplo \"Executado ... (linhas WP-T1; BP-OPS-PROVISIONING-001 permanece em R-0013/WP-T5)\"."
+    }
+  ],
+  "notes": [
+    "Conferi os fatos imutaveis contra o repositorio: os tres hashes de merge existem e correspondem aos PRs #40/#41/#42; nenhum numero de PR, run ou identificador de evidencia foi inventado no diff.",
+    "Verificado como correto e nao promovido: os cinco blueprints ops existem em docs/framework/blueprints/, com contratos OpenAPI e DDLs 13-ops-agency.sql, 13-ops-field-operations.sql, 16, 17 e 18; 13-ops-agency.sql precede lexicograficamente 13-ops-field-operations.sql, como pedia a Meta 1.",
+    "Nenhum gate foi enfraquecido e a fronteira de escrita foi respeitada: o diff toca somente os seis documentos autorizados, sem codigo, teste, blueprint, contrato gerado, DDL, ADR, record/ ou .devai/; nada fala com SENATRAN fora do adapter.",
+    "O backlog (linha 453) e o corpo dos demais documentos nao declaram WP-T2+, provisioning nem vocabularios MBFT/usage mode concluidos; a lacuna de shift.status esta explicita em tres dos seis documentos e falta apenas no build pack (finding 1).",
+    "Os dois highs sao corrigiveis por edicao documental, sem mudar o plano nem reabrir CTG mesclado; nenhum deles contradiz decisao do Owner, o que mantem o veredito em REVIEW e nao em FAIL."
+  ]
+}

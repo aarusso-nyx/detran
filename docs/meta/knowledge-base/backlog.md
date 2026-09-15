@@ -450,3 +450,4 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       real de DDL (ver `orchestra/README.md` §9) e ajuste do baseline do KB nas frentes que criam fichas de tela
 - [ ] **Abrir a onda 2** (`ops-agency` R-0005 em Codex/Sol, `rait-model` R-0006 em Claude/Fable) assim que a onda 1
       estiver em `main`; a partir da onda 3, abrir a próxima frente de uma família quando a anterior daquela família mesclar (added 2026-09-14)
+- [x] **WP-T1 ops-agency (R-0005)**: agência, modelos ops, deltas inf e fixtures entregues nos CTG-0001/0002 (PRs #40/#41, 2026-09-14) e CTG-0003/fechamento (PR #42, 2026-09-15); `shift.status`, demais vocabulários source-pending e provisioning (R-0013/WP-T5) permanecem roteados a WP-T2+.
