@@ -1,4 +1,4 @@
--- Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:13122b32afc4e95a5acd5e4e83201d632a049d42739ec80f5f86820b6dbd77e7
+-- Generated from BP-INF-NORMATIVE-001 v1.1.0 sha256:79161caba1463941727a4a6ad952f010c399cca7df3febfa1cf881ac14c7ca52
 
 -- Regenerable-only DDL for BP-INF-NORMATIVE-001; request-path writes use role_app_backend.
 
@@ -35,18 +35,41 @@ create table if not exists inf.normative_framing (
   severity varchar(40),
   penalty text,
   administrative_measure_summary text,
-  allows_no_approach boolean default false not null,
+  approach_class varchar(20) not null,
+  required_fields jsonb,
+  required_instrument boolean default false not null,
+  points_label varchar(160),
   requires_observation boolean default false not null,
   requires_equipment boolean default false not null,
   status varchar(40) default 'active' not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_normative_framing primary key (id),
+  constraint ck_inf_normative_framing_approach_class check (approach_class in ('caso_1', 'caso_2', 'caso_3')),
   constraint fk_inf_framing_catalog foreign key (catalog_id) references inf.normative_catalog (id)
 );
 create unique index if not exists ux_inf_normative_framing_code on inf.normative_framing (tenant_id, catalog_id, framing_code);
 create index if not exists ix_normative_framing_tenant_id on inf.normative_framing (tenant_id);
 create index if not exists ix_normative_framing_catalog_id on inf.normative_framing (catalog_id);
+
+create table if not exists inf.normative_metrological_table (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  catalog_id uuid not null,
+  table_name varchar(160) not null,
+  version varchar(80) not null,
+  table_json jsonb not null,
+  valid_from date not null,
+  valid_to date,
+  status varchar(40) default 'active' not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_normative_metrological_table primary key (id),
+  constraint fk_inf_metrological_table_catalog foreign key (catalog_id) references inf.normative_catalog (id)
+);
+create unique index if not exists ux_inf_normative_metrological_table on inf.normative_metrological_table (tenant_id, catalog_id, table_name, version);
+create index if not exists ix_normative_metrological_table_tenant_id on inf.normative_metrological_table (tenant_id);
+create index if not exists ix_normative_metrological_table_catalog_id on inf.normative_metrological_table (catalog_id);
 
 create table if not exists inf.normative_validation_rule (
   id uuid default gen_random_uuid() not null,
@@ -93,7 +116,8 @@ create table if not exists inf.normative_document_template (
   id uuid default gen_random_uuid() not null,
   tenant_id uuid not null,
   traffic_agency_id uuid not null,
-  document_type varchar(80) not null,
+  document_kind varchar(80) not null,
+  domain_scope varchar(80) default 'inf' not null,
   name varchar(255) not null,
   version varchar(80) not null,
   template_body text not null,
@@ -103,9 +127,28 @@ create table if not exists inf.normative_document_template (
   updated_at timestamptz,
   constraint pk_normative_document_template primary key (id)
 );
-create unique index if not exists ux_inf_normative_document_template on inf.normative_document_template (tenant_id, traffic_agency_id, document_type, version);
+create unique index if not exists ux_inf_normative_document_template on inf.normative_document_template (tenant_id, traffic_agency_id, document_kind, version);
 create index if not exists ix_normative_document_template_tenant_id on inf.normative_document_template (tenant_id);
 create index if not exists ix_normative_document_template_traffic_agency_id on inf.normative_document_template (traffic_agency_id);
+
+create table if not exists inf.signature_policy (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  traffic_agency_id uuid not null,
+  document_kind varchar(80) not null,
+  required_signers_json jsonb not null,
+  pades_level varchar(40) not null,
+  tsa_required boolean default false not null,
+  pdfa_required boolean default false not null,
+  govbr_level varchar(40),
+  status varchar(40) default 'active' not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_signature_policy primary key (id)
+);
+create unique index if not exists ux_inf_signature_policy_document_kind on inf.signature_policy (tenant_id, traffic_agency_id, document_kind);
+create index if not exists ix_signature_policy_tenant_id on inf.signature_policy (tenant_id);
+create index if not exists ix_signature_policy_traffic_agency_id on inf.signature_policy (traffic_agency_id);
 
 create table if not exists inf.normative_mobile_package (
   id uuid default gen_random_uuid() not null,
@@ -132,11 +175,15 @@ select auth.create_rls_policy('inf', 'normative_catalog');
 
 select auth.create_rls_policy('inf', 'normative_framing');
 
+select auth.create_rls_policy('inf', 'normative_metrological_table');
+
 select auth.create_rls_policy('inf', 'normative_validation_rule');
 
 select auth.create_rls_policy('inf', 'normative_agency_parameter');
 
 select auth.create_rls_policy('inf', 'normative_document_template');
+
+select auth.create_rls_policy('inf', 'signature_policy');
 
 select auth.create_rls_policy('inf', 'normative_mobile_package');
 

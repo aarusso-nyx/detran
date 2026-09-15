@@ -1,4 +1,4 @@
-// Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:13122b32afc4e95a5acd5e4e83201d632a049d42739ec80f5f86820b6dbd77e7
+// Generated from BP-INF-NORMATIVE-001 v1.1.0 sha256:79161caba1463941727a4a6ad952f010c399cca7df3febfa1cf881ac14c7ca52
 export * from './controllers/normative-catalog.controller.js';
 export * from './dto/create-normative-catalog.dto.js';
 export * from './entities/normative-catalog.entity.js';
@@ -9,6 +9,11 @@ export * from './dto/create-normative-framing.dto.js';
 export * from './entities/normative-framing.entity.js';
 export * from './repositories/normative-framing.repository.js';
 export * from './services/normative-framing.service.js';
+export * from './controllers/normative-metrological-table.controller.js';
+export * from './dto/create-normative-metrological-table.dto.js';
+export * from './entities/normative-metrological-table.entity.js';
+export * from './repositories/normative-metrological-table.repository.js';
+export * from './services/normative-metrological-table.service.js';
 export * from './controllers/normative-validation-rule.controller.js';
 export * from './dto/create-normative-validation-rule.dto.js';
 export * from './entities/normative-validation-rule.entity.js';
@@ -24,6 +29,11 @@ export * from './dto/create-normative-document-template.dto.js';
 export * from './entities/normative-document-template.entity.js';
 export * from './repositories/normative-document-template.repository.js';
 export * from './services/normative-document-template.service.js';
+export * from './controllers/signature-policy.controller.js';
+export * from './dto/create-signature-policy.dto.js';
+export * from './entities/signature-policy.entity.js';
+export * from './repositories/signature-policy.repository.js';
+export * from './services/signature-policy.service.js';
 export * from './controllers/mobile-normative-package.controller.js';
 export * from './dto/create-mobile-normative-package.dto.js';
 export * from './entities/mobile-normative-package.entity.js';

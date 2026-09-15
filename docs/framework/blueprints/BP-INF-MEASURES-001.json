@@ -4,7 +4,7 @@
   "module": {
     "name": "Measures",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "32-inf-measures.sql",
     "dependencies": { "@detran/inf-ait": "workspace:*" },
     "handwrittenExports": [
@@ -58,13 +58,19 @@
           {
             "name": "current_status",
             "type": "varchar(60)",
-            "default": "'started'"
+            "default": "'RETIDO'"
           },
           { "name": "notes", "type": "text", "nullable": true },
           {
             "name": "location_geom",
             "type": "geometry(Point,4674)",
             "nullable": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_administrative_measure_current_status",
+            "expression": "current_status in ('RETIDO', 'LIBERADO_LOCAL', 'LIBERADO_COM_PRAZO', 'REGULARIZADO', 'CONVERTIDO_REMOCAO', 'REMOVIDO', 'EM_DEPOSITO', 'GUARDA_MONITORADA', 'VIOLACAO_MONITORAMENTO', 'NOTIFICADO', 'RESTITUIDO', 'LEILAO')"
           }
         ],
         "indexes": [
@@ -110,6 +116,33 @@
           { "name": "file_evidence_id", "type": "uuid", "nullable": true },
           { "name": "issued_at", "type": "timestamptz" },
           { "name": "signed_by_person_id", "type": "uuid", "nullable": true },
+          { "name": "signer_name", "type": "varchar(160)", "nullable": true },
+          {
+            "name": "withdrawal_deadline_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "ctb_deadline_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          { "name": "field_details_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "source_local_id",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "source_idempotency_key",
+            "type": "varchar(160)",
+            "nullable": true
+          },
+          {
+            "name": "source_payload_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          },
           { "name": "status", "type": "varchar(60)", "default": "'issued'" }
         ],
         "indexes": [
@@ -153,9 +186,25 @@
           { "name": "measure_id", "type": "uuid" },
           { "name": "vehicle_snapshot_id", "type": "uuid" },
           { "name": "retention_reason", "type": "text" },
+          {
+            "name": "regularization_deadline_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "regularization_deadline_days",
+            "type": "integer",
+            "nullable": true
+          },
           { "name": "regularized_at", "type": "timestamptz", "nullable": true },
           { "name": "released_at", "type": "timestamptz", "nullable": true },
           { "name": "release_user_ref", "type": "uuid", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_measure_retention_regularization_deadline_30",
+            "expression": "regularization_deadline_days is null or regularization_deadline_days between 1 and 30"
+          }
         ],
         "foreignKeys": [
           {
@@ -191,9 +240,25 @@
           { "name": "tow_arrived_at", "type": "timestamptz", "nullable": true },
           { "name": "delivered_at", "type": "timestamptz", "nullable": true },
           {
+            "name": "regularization_deadline_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "regularization_deadline_days",
+            "type": "integer",
+            "nullable": true
+          },
+          {
             "name": "destination_description",
             "type": "text",
             "nullable": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_measure_removal_regularization_deadline_15",
+            "expression": "regularization_deadline_days is null or regularization_deadline_days between 1 and 15"
           }
         ],
         "foreignKeys": [

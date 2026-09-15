@@ -1,4 +1,4 @@
-// Generated from BP-INF-ALCOHOL-001 v1.0.0 sha256:72c248e25fda146066eccac64123aca6ffeb1112b114ed4f1f03237d033e93ec
+// Generated from BP-INF-ALCOHOL-001 v1.1.0 sha256:18decd0fa5855e93f40ce052c3ffb2ec4ad022530cd5da983fadf681a45bd246
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -26,6 +26,19 @@ const WRITABLE_FIELDS = new Set<string>([
   'outcome',
   'status',
   'notes',
+  'ait_local_id',
+  'sign_catalog_id',
+  'sign_catalog_version',
+  'driver_name',
+  'driver_document',
+  'vehicle_plate',
+  'vehicle_make',
+  'refused_procedures',
+  'driver_statement_json',
+  'witnesses_json',
+  'source_local_id',
+  'source_idempotency_key',
+  'source_payload_hash',
   'location_geom',
 ]);
 

@@ -81,17 +81,23 @@ export class AlcoholLifecycleService {
     id: string,
     dto: {
       refused_at?: string;
+      kind: 'refusal' | 'technical_impossibility';
       refusal_description: string;
       witness_person_id?: string;
       evidence_id?: string;
     },
   ) {
+    if (!dto.kind)
+      return Promise.reject(
+        new BadRequestException('Alcohol refusal kind is required'),
+      );
     return this.repositories.procedures.transaction(async (tx) => {
       await this.requireStatus(id, ['draft', 'in_progress'], tx);
       const refusal = await this.repositories.refusals.create(
         {
           procedure_id: id,
           refused_at: dto.refused_at ?? new Date().toISOString(),
+          kind: dto.kind,
           refusal_description: dto.refusal_description,
           witness_person_id: dto.witness_person_id ?? null,
           evidence_id: dto.evidence_id ?? null,
@@ -100,7 +106,7 @@ export class AlcoholLifecycleService {
       );
       await this.repositories.procedures.update(
         id,
-        { status: 'refused', outcome: 'refusal' },
+        { status: 'refused', outcome: dto.kind },
         tx,
       );
       return refusal;

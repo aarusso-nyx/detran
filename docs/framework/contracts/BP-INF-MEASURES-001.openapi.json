@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Measures — BP-INF-MEASURES-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Administrative measures, terms, retention, removal, inventory, providers, yards, and status history.",
     "x-blueprint": "BP-INF-MEASURES-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -1276,7 +1276,21 @@
           "current_status": {
             "type": "string",
             "maxLength": 60,
-            "default": "'started'"
+            "enum": [
+              "RETIDO",
+              "LIBERADO_LOCAL",
+              "LIBERADO_COM_PRAZO",
+              "REGULARIZADO",
+              "CONVERTIDO_REMOCAO",
+              "REMOVIDO",
+              "EM_DEPOSITO",
+              "GUARDA_MONITORADA",
+              "VIOLACAO_MONITORAMENTO",
+              "NOTIFICADO",
+              "RESTITUIDO",
+              "LEILAO"
+            ],
+            "default": "'RETIDO'"
           },
           "notes": {
             "type": "string",
@@ -1365,7 +1379,21 @@
           "current_status": {
             "type": "string",
             "maxLength": 60,
-            "default": "'started'"
+            "enum": [
+              "RETIDO",
+              "LIBERADO_LOCAL",
+              "LIBERADO_COM_PRAZO",
+              "REGULARIZADO",
+              "CONVERTIDO_REMOCAO",
+              "REMOVIDO",
+              "EM_DEPOSITO",
+              "GUARDA_MONITORADA",
+              "VIOLACAO_MONITORAMENTO",
+              "NOTIFICADO",
+              "RESTITUIDO",
+              "LEILAO"
+            ],
+            "default": "'RETIDO'"
           },
           "notes": {
             "type": "string",
@@ -1427,6 +1455,41 @@
             "format": "uuid",
             "nullable": true
           },
+          "signer_name": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "withdrawal_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ctb_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "field_details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "source_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "source_payload_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
           "status": {
             "type": "string",
             "maxLength": 60,
@@ -1485,6 +1548,41 @@
             "format": "uuid",
             "nullable": true
           },
+          "signer_name": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "withdrawal_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ctb_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "field_details_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "source_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "source_payload_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
           "status": {
             "type": "string",
             "maxLength": 60,
@@ -1521,6 +1619,15 @@
           },
           "retention_reason": {
             "type": "string"
+          },
+          "regularization_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "regularization_deadline_days": {
+            "type": "integer",
+            "nullable": true
           },
           "regularized_at": {
             "type": "string",
@@ -1568,6 +1675,15 @@
           },
           "retention_reason": {
             "type": "string"
+          },
+          "regularization_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "regularization_deadline_days": {
+            "type": "integer",
+            "nullable": true
           },
           "regularized_at": {
             "type": "string",
@@ -1632,6 +1748,15 @@
             "format": "date-time",
             "nullable": true
           },
+          "regularization_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "regularization_deadline_days": {
+            "type": "integer",
+            "nullable": true
+          },
           "destination_description": {
             "type": "string",
             "nullable": true
@@ -1687,6 +1812,15 @@
           "delivered_at": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "regularization_deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "regularization_deadline_days": {
+            "type": "integer",
             "nullable": true
           },
           "destination_description": {

@@ -1,5 +1,5 @@
 {
-  "head": "128b8e5af9530a859f9e3ac59e5b07c619eee04e4a19a8fa1337870afdbaa6a8",
+  "head": "da8a77f2d4f60c97661887beb4fb6e229493605cf8adfb3b05be09e4714c0ea6",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -1384,6 +1384,98 @@
       "manifest_hash": "128b8e5af9530a859f9e3ac59e5b07c619eee04e4a19a8fa1337870afdbaa6a8",
       "sequence": 18,
       "previous_hash": "d3952623cad2d2f10ebb74eabee3c976807599e1e133805a7fa91f788c61d60d"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-bcc003fe0592d332",
+      "timestamp": "2026-09-14T22:45:49.115Z",
+      "actor": "devai-cli",
+      "actor_role": "harness",
+      "action": "audit.observe",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Volumes/Thiamat II/stech/detran-worktrees/ops-agency",
+        "git": {
+          "head_sha": "1c662f08ab3a7a61db754700dbe45fd91680de25",
+          "dirty_files": [
+            ".devai/state/audit-observations/1c662f08ab3a7a61db754700dbe45fd91680de25/"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": ".devai/state/audit-observations/1c662f08ab3a7a61db754700dbe45fd91680de25/inventory.json",
+          "sha256": "91a78091b4b590eaa56ec559754335ecddb04d8fac173343ff00c898f087b647",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/1c662f08ab3a7a61db754700dbe45fd91680de25/scorecard.json",
+          "sha256": "628a9b3222a1637d17b39c6a371db0e2f59738e12c0aba9e9a215c6fc9f6cb6f",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/1c662f08ab3a7a61db754700dbe45fd91680de25/backlog.json",
+          "sha256": "098978e5ff9bbd9b45f19b03cd5a199be2aab96e79c1dd2daf9f47d6bb20f9bc",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/1c662f08ab3a7a61db754700dbe45fd91680de25/assessment.json",
+          "sha256": "3b73513fa9b3dc5f2fc0bbb86228711737c3244ea4ceb72099b154df459d8f5d",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/1c662f08ab3a7a61db754700dbe45fd91680de25/status.json",
+          "sha256": "5a567ae5fd16757419fe0a5d4aa3baaccf387584c219a058e3ed3d02f5ac87c6",
+          "kind": "audit"
+        }
+      ],
+      "notes": [
+        "exact_sha=1c662f08ab3a7a61db754700dbe45fd91680de25",
+        "readiness_promoting=false"
+      ],
+      "previous_run_hash": "128b8e5af9530a859f9e3ac59e5b07c619eee04e4a19a8fa1337870afdbaa6a8",
+      "manifest_hash": "8d9246e6b1e2223f5d50875f41d885718c1b597878fb7a1d141165b2b5d43c09",
+      "sequence": 19,
+      "previous_hash": "128b8e5af9530a859f9e3ac59e5b07c619eee04e4a19a8fa1337870afdbaa6a8"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-fb5085e683fb16cc",
+      "timestamp": "2026-09-15T02:39:36.326Z",
+      "actor": "devai-cli",
+      "actor_role": "harness",
+      "action": "evidence.record.generic",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Volumes/Thiamat II/stech/detran-worktrees/ops-agency",
+        "git": {
+          "head_sha": "f81ae5743cb5738c38049c911a94ea7be1005521",
+          "dirty_files": [
+            "record/proofs/work/generic/R-0005.jsonl",
+            "work/rounds/R-0005/tasks/TASK-0008.json",
+            "backend/database/seed/25-fixtures-teat.sql",
+            "work/rounds/R-0005/evidence-CTG-0002.json",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003-2.bridge.json",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003-2.json",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003-2.md",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003-escalation.bridge.json",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003-escalation.json",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003-escalation.md",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003.bridge.json",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003.json",
+            "work/rounds/R-0005/reviews/delivery-review-ctg-0003.md"
+          ]
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "round_id=R-0005",
+        "proof_sequence=7"
+      ],
+      "previous_run_hash": "8d9246e6b1e2223f5d50875f41d885718c1b597878fb7a1d141165b2b5d43c09",
+      "manifest_hash": "da8a77f2d4f60c97661887beb4fb6e229493605cf8adfb3b05be09e4714c0ea6",
+      "sequence": 20,
+      "previous_hash": "8d9246e6b1e2223f5d50875f41d885718c1b597878fb7a1d141165b2b5d43c09"
     }
   ]
 }

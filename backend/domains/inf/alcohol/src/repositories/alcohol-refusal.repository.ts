@@ -1,4 +1,4 @@
-// Generated from BP-INF-ALCOHOL-001 v1.0.0 sha256:72c248e25fda146066eccac64123aca6ffeb1112b114ed4f1f03237d033e93ec
+// Generated from BP-INF-ALCOHOL-001 v1.1.0 sha256:18decd0fa5855e93f40ce052c3ffb2ec4ad022530cd5da983fadf681a45bd246
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -15,6 +15,7 @@ type SqlTransaction = Transaction & {
 const WRITABLE_FIELDS = new Set<string>([
   'procedure_id',
   'refused_at',
+  'kind',
   'refusal_description',
   'witness_person_id',
   'evidence_id',

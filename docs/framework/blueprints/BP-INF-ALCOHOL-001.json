@@ -4,7 +4,7 @@
   "module": {
     "name": "Alcohol",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "33-inf-alcohol.sql",
     "dependencies": {
       "@detran/inf-ait": "workspace:*",
@@ -39,6 +39,67 @@
           { "name": "outcome", "type": "varchar(80)" },
           { "name": "status", "type": "varchar(40)", "default": "'draft'" },
           { "name": "notes", "type": "text", "nullable": true },
+          { "name": "ait_local_id", "type": "varchar(120)", "nullable": true },
+          {
+            "name": "sign_catalog_id",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "sign_catalog_version",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "driver_name",
+            "type": "varchar(160)",
+            "nullable": true,
+            "pii": "high",
+            "retention": "forever"
+          },
+          {
+            "name": "driver_document",
+            "type": "varchar(60)",
+            "nullable": true,
+            "pii": "high",
+            "retention": "forever"
+          },
+          {
+            "name": "vehicle_plate",
+            "type": "varchar(20)",
+            "nullable": true,
+            "pii": "high",
+            "retention": "forever"
+          },
+          { "name": "vehicle_make", "type": "varchar(120)", "nullable": true },
+          { "name": "refused_procedures", "type": "boolean", "nullable": true },
+          {
+            "name": "driver_statement_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "witnesses_json",
+            "type": "jsonb",
+            "nullable": true,
+            "pii": "high",
+            "retention": "forever"
+          },
+          {
+            "name": "source_local_id",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "source_idempotency_key",
+            "type": "varchar(160)",
+            "nullable": true
+          },
+          {
+            "name": "source_payload_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          },
           {
             "name": "location_geom",
             "type": "geometry(Point,4674)",
@@ -121,6 +182,16 @@
           { "name": "test_number", "type": "varchar(80)", "nullable": true },
           { "name": "tested_at", "type": "timestamptz" },
           { "name": "result_mg_l", "type": "numeric(8,3)", "nullable": true },
+          {
+            "name": "considered_mg_l",
+            "type": "numeric(8,3)",
+            "nullable": true
+          },
+          {
+            "name": "max_error_mg_l",
+            "type": "numeric(8,3)",
+            "nullable": true
+          },
           { "name": "counterproof", "type": "boolean", "default": "false" },
           {
             "name": "result_image_evidence_id",
@@ -128,6 +199,12 @@
             "nullable": true
           },
           { "name": "status", "type": "varchar(40)", "default": "'recorded'" }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_alcohol_test_considered_error_pair",
+            "expression": "(considered_mg_l is null) = (max_error_mg_l is null) and (max_error_mg_l is null or max_error_mg_l >= 0)"
+          }
         ],
         "foreignKeys": [
           {
@@ -165,9 +242,16 @@
           { "name": "tenant_id", "type": "uuid" },
           { "name": "procedure_id", "type": "uuid" },
           { "name": "refused_at", "type": "timestamptz" },
+          { "name": "kind", "type": "varchar(40)" },
           { "name": "refusal_description", "type": "text" },
           { "name": "witness_person_id", "type": "uuid", "nullable": true },
           { "name": "evidence_id", "type": "uuid", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_alcohol_refusal_kind",
+            "expression": "kind in ('refusal', 'technical_impossibility')"
+          }
         ],
         "foreignKeys": [
           {
@@ -203,7 +287,10 @@
           { "name": "procedure_id", "type": "uuid" },
           { "name": "sign_code", "type": "varchar(80)" },
           { "name": "description", "type": "text" },
-          { "name": "observed", "type": "boolean", "default": "true" }
+          { "name": "observed", "type": "boolean", "default": "true" },
+          { "name": "sign_group", "type": "varchar(80)", "nullable": true },
+          { "name": "sign_status", "type": "varchar(20)", "nullable": true },
+          { "name": "method", "type": "varchar(120)", "nullable": true }
         ],
         "foreignKeys": [
           {

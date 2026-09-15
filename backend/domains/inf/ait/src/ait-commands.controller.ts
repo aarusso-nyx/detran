@@ -117,13 +117,8 @@ export class AitCommandsController {
   @Audit({ action: 'INF_AIT_REJECT', entity: 'inf.ait_ait' })
   reject(
     @Param('id') id: string,
-    @Body() body: { reason: string; cancelled?: boolean; user_ref?: string },
+    @Body() body: { reason: string; user_ref?: string },
   ) {
-    return this.lifecycle.reject(
-      id,
-      body.reason,
-      body.cancelled,
-      body.user_ref,
-    );
+    return this.lifecycle.reject(id, body.reason, body.user_ref);
   }
 }

@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.0.0 sha256:1b2717e37821dbaa07fe8909762b132a11e1f71514ca40a196fb04a8053d5e77
+// Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
 import { Injectable } from '@nestjs/common';
 import { AitPrintEventRepository } from '../repositories/ait-print-event.repository.js';
 import type { AitPrintEvent } from '../entities/ait-print-event.entity.js';

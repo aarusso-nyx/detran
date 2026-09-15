@@ -1,8 +1,14 @@
-// Generated from BP-INF-AIT-001 v1.0.0 sha256:1b2717e37821dbaa07fe8909762b132a11e1f71514ca40a196fb04a8053d5e77
+// Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
 import { Module } from '@nestjs/common';
 import { AitController } from './controllers/ait.controller.js';
 import { AitService } from './services/ait.service.js';
 import { AitRepository } from './repositories/ait.repository.js';
+import { AitCancelRequestController } from './controllers/ait-cancel-request.controller.js';
+import { AitCancelRequestService } from './services/ait-cancel-request.service.js';
+import { AitCancelRequestRepository } from './repositories/ait-cancel-request.repository.js';
+import { AitCancelRequestEventController } from './controllers/ait-cancel-request-event.controller.js';
+import { AitCancelRequestEventService } from './services/ait-cancel-request-event.service.js';
+import { AitCancelRequestEventRepository } from './repositories/ait-cancel-request-event.repository.js';
 import { AitVehicleController } from './controllers/ait-vehicle.controller.js';
 import { AitVehicleService } from './services/ait-vehicle.service.js';
 import { AitVehicleRepository } from './repositories/ait-vehicle.repository.js';
@@ -29,6 +35,8 @@ import { NormativeModule } from '@detran/inf-normative';
   imports: [NormativeModule],
   controllers: [
     AitController,
+    AitCancelRequestController,
+    AitCancelRequestEventController,
     AitVehicleController,
     AitPersonController,
     AitStatusHistoryController,
@@ -40,6 +48,10 @@ import { NormativeModule } from '@detran/inf-normative';
   providers: [
     AitService,
     AitRepository,
+    AitCancelRequestService,
+    AitCancelRequestRepository,
+    AitCancelRequestEventService,
+    AitCancelRequestEventRepository,
     AitVehicleService,
     AitVehicleRepository,
     AitPersonService,

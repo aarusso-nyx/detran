@@ -1,10 +1,12 @@
-// Generated from BP-INF-ALCOHOL-001 v1.0.0 sha256:72c248e25fda146066eccac64123aca6ffeb1112b114ed4f1f03237d033e93ec
+// Generated from BP-INF-ALCOHOL-001 v1.1.0 sha256:18decd0fa5855e93f40ce052c3ffb2ec4ad022530cd5da983fadf681a45bd246
 export interface CreateAlcoholTestDto {
   procedure_id: string;
   breathalyzer_id?: string | null;
   test_number?: string | null;
   tested_at: string;
   result_mg_l?: number | null;
+  considered_mg_l?: number | null;
+  max_error_mg_l?: number | null;
   counterproof?: boolean;
   result_image_evidence_id?: string | null;
   status?: string;
