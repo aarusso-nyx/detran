@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0008",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes do AIT: matriz WF-TEAT-001, cancel-requests × decision_body, concurrency-review, If-Match, política e rota ⇔ regra",
+  "description": "Codificar em testes (unit, integration, e2e) os critérios do contrato CTG-0001 para os comandos do AIT, o DetranError, a política TEAT e o policy-routes; os testes podem ficar vermelhos até TASK-0003.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-inf-ait-tests",
+    "MOD-app-e2e-tests",
+    "MOD-shared-policy-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-t2"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-e31ae3925f3efc73",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-e31ae3925f3efc73",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

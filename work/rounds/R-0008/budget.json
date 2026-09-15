@@ -1,0 +1,42 @@
+{
+  "round": "R-0008",
+  "window": 1,
+  "window_input_budget": 700000,
+  "checkpoint_threshold": 560000,
+  "estimated_input_total": 630000,
+  "estimated_output_total": 63500,
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0008-W1",
+      "input_tokens": 520000,
+      "output_tokens": 60000,
+      "status": "completed",
+      "note": "bootstrap, leitura obrigatória (repo + origem ../teat), M1–M20, 11 tarefas, 11 prompts; 3 ciclos de prompt-review (REVIEW, FAIL estrutural, PASS)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1",
+      "input_tokens": 60000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2",
+      "input_tokens": 25000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3",
+      "input_tokens": 25000,
+      "output_tokens": 500,
+      "status": "completed",
+      "verdict": "PASS"
+    }
+  ]
+}

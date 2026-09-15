@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0008",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes de sincronização, numeração, bootstrap, turno e handoff (ACK perdido, retry, lote parcial, sequência repetida/gap, conflito, integridade, concorrência) e as fixtures de campo",
+  "description": "Codificar os critérios do contrato CTG-0002 em testes unit/integration/e2e de ops-offline-sync, ops-field e inf/ait (applier), com a fixture 26-fixtures-teat-field.sql; vermelhos até TASK-0005.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ops-offline-sync-tests",
+    "MOD-ops-field-tests",
+    "MOD-seed-teat-field",
+    "MOD-shared-policy-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-t2"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-14b493ab3dc534fc",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["bash", "backend/database/seed.sh"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-14b493ab3dc534fc",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0008",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar evidência, acesso a bodycam, snapshots via adapter e pacote normativo até os testes de TASK-0006 passarem",
+  "description": "Implementação em src/handwritten de ops/evidence, ops/snapshots, inf/normative e wiring das portas (storage, adapter, signer) no app; regras de política do grupo.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ops-evidence",
+    "MOD-ops-snapshots",
+    "MOD-inf-normative",
+    "MOD-shared-policy",
+    "MOD-app-wiring"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["wp-t2"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-3cf242a6cf9f5693",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "--filter", "@detran/ops-evidence", "test:unit"],
+    ["pnpm", "--filter", "@detran/ops-evidence", "test:integration"],
+    ["pnpm", "--filter", "@detran/ops-snapshots", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-normative", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-normative", "test:integration"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "verify:senatran-boundary"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-3cf242a6cf9f5693",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
