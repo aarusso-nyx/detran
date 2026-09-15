@@ -1,9 +1,10 @@
 # R-0005 — frente `ops-agency` (WP-T1 do TEAT: modelo de dados de `ops/*` e deltas dos blueprints `inf`)
 
-**Status:** CTG-0001 mesclado no PR #40; CTG-0002 no PR #41; CTG-0003 no PR #42. Os cinco jobs do
-CI do PR #42 passaram e o merge foi concluido como `30118fa749801d43e7b0b3238ed19b241c8b9114`.
-TASK-0009 esta em execucao para transcrever somente os fatos comprovados antes do fechamento formal
-da rodada. Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
+**Status:** todas as TASK-0001...TASK-0009 concluídas. CTG-0001 mesclado no PR #40, CTG-0002 no
+PR #41, CTG-0003 no PR #42 e TASK-0009 no PR #44. O candidato final passou os cinco jobs do CI no
+run `34928749360` e foi mesclado como `f432a0cd1ef3bc1005da24208b9e3fb58ac098d6`; a observação
+Auditor exata é `EV-9dee77a57754060b`. O fechamento D-2 foi materializado como `PC-0003`.
+Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — nenhum upstream para grupo algum (decisão do Owner, 2026-09-14: abre em paralelo à onda 1). Pontos de rebase com R-0004 `param-store`: `backend/app/src/app.module.ts` e `docs/framework/blueprints/BP-INF-NORMATIVE-001.json`; se R-0004 retomar na janela Sol, grave `checkpoint` ao fim do CTG-0001 e ceda a janela.
 **Janelas previstas:** 2 (CTG-0001/0002 na primeira; CTG-0003 e docs na segunda).
 
@@ -455,7 +456,17 @@ Checkpoint da janela 1 em 2026-09-14:
   `numbering-ranges`, `receipts`) e locks explicitos para outputs gerados. Como TASK-0002 ja estava
   em `iteration_count=2`, a correcao foi escalada ao Architect Sol: blueprints corrigidos,
   artefatos regenerados, 64 paths limpos, zero tags nulas e locks atualizados. O teste e2e foi
-  alinhado a `/v1/ops/field/agents`. Uma terceira revisao nao foi iniciada.
+  alinhado a `/v1/ops/field/agents`. A terceira revisão autorizada retornou PASS com zero highs.
+- Encerramento funcional: os PRs #40, #41, #42 e #44 foram mesclados após os respectivos cinco
+  jobs obrigatórios passarem. O último candidato, `e9441c0a6c16a29baf1cdfda9ba92c29ebb7b4bb`,
+  passou no run `34928749360` e foi mesclado como
+  `f432a0cd1ef3bc1005da24208b9e3fb58ac098d6`. A observação Auditor
+  `EV-9dee77a57754060b` avançou a cadeia para
+  `19ff2e0b751db00e3aadd21be284685b5aab6314aa20398c7f2744d8db6c533b`.
+- Checkpoint final: TASK-0001...TASK-0009 estão `completed`; os últimos reviews de CTG-0001,
+  CTG-0002, CTG-0003 e TASK-0009 estão PASS com zero highs; a closure D-2 foi materializada como
+  `PC-0003`. Restam somente validar o candidato administrativo, mesclar o PR de fechamento e
+  apagar o branch remoto.
 
 ## Leitura
 
