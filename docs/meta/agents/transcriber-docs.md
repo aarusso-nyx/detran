@@ -1,6 +1,8 @@
 # Manual — Transcriber-docs
 
-Papel: **Owner (delegado)** para artefatos de produto e **Engineer** para contratos de comando.
+Papel: **Architect** para tudo o que vive em `docs/` (fichas, catálogos, arquitetura, knowledge base — a
+Constituição reserva `docs/` ao Architect; ajuste R-0006, delivery-review) e **Engineer** para contratos de
+comando em código. O Owner só fornece decisões de negócio; o worker declara **Architect (transcrição)**.
 Transcreve definições já fechadas em fichas, contratos e catálogos; não decide nada.
 
 ## Leitura obrigatória
@@ -40,4 +42,4 @@ pnpm format:check && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm co
 ## Entrega
 
 PR por lote pequeno (até ~10 fichas ou um módulo de contrato), com a lista fonte → arquivo, sem
-alteração de baselines silenciosa. "Papel: Owner (delegado)" ou "Engineer" conforme o arquivo.
+alteração de baselines silenciosa. "Papel: Architect (transcrição)" ou "Engineer" conforme o arquivo.

@@ -371,7 +371,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       de [WF-RAIT-004] §8 e o gatilho de nova turma ([RN-RAIT-139]) (added 2026-09-12)
 - [x] **Blueprint BP-INF-RAIT-WORKLIST-001** — deltas de modelo de dados propostos em
       [WF-RAIT-004] §10 (unidade/turma, escala, lote de sorteio, suplência, tipo de impedimento,
-      banca) — entregue em R-0006 (CTG-0002, TASK-0004; PR pendente) (added 2026-09-12)
+      banca) — entregue em R-0006 (CTG-0002, TASK-0004; PR #43, `PC-0004`, 2026-09-15) (added 2026-09-12)
 
 ## Rodada de definições para a orquestra de agentes — RAIT (2026-09-12)
 
@@ -448,6 +448,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [x] **Rodadas R-0005…R-0016 instanciadas (2026-09-14)**: `work/rounds/R-00nn/{plan.md,prompts/00-maestro.md}` para as
       doze frentes restantes de `waves.md` (ondas 2–7), com metas, tríades, critérios em comandos existentes, numeração
       real de DDL (ver `orchestra/README.md` §9) e ajuste do baseline do KB nas frentes que criam fichas de tela
-- [ ] **Abrir a onda 2** (`ops-agency` R-0005 em Codex/Sol, `rait-model` R-0006 em Claude/Fable) assim que a onda 1
-      estiver em `main`; a partir da onda 3, abrir a próxima frente de uma família quando a anterior daquela família mesclar (added 2026-09-14)
+- [x] **Onda 2 concluída**: `ops-agency` R-0005 fechada como `PC-0003` e `rait-model` R-0006 fechada como `PC-0004`
+      (PR #39 CTG-0001, 2026-09-14; PR #43 CTG-0002, 2026-09-15); rotas, jobs e projeções do RAIT seguem para R-0007 / WP-P;
+      a partir da onda 3, abrir a próxima frente de uma família quando a anterior daquela família mesclar (added 2026-09-14)
 - [x] **WP-T1 ops-agency (R-0005)**: agência, modelos ops, deltas inf e fixtures entregues nos CTG-0001/0002 (PRs #40/#41, 2026-09-14), CTG-0003 (PR #42), documentação final (PR #44) e fechamento `PC-0003` em 2026-09-15; `shift.status`, demais vocabulários source-pending e provisioning (R-0013/WP-T5) permanecem roteados a WP-T2+.
