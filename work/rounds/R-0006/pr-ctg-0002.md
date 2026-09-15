@@ -13,6 +13,7 @@ WP-A de `docs/framework/arch/rait-build-pack.md` (restante: deltas v1.1.0 dos bl
 - Fachada de documentos em `@detran/shared` (`DocumentKind` × 12, `SignaturePolicy`, `DocumentsFacade`, `DOCUMENT_ERROR_CODES` — ADR-0018 §1–§4), só tipos e interface.
 - `BankPort` + mock determinístico em `collection/src/handwritten/ports/bank` (ADR-0017 §4), provider `BANK_PORT`, 8 testes de comportamento (contrato §c); os módulos `rait-org`, `collection` e `rait-integration` **não** são montados no `AppModule` até R-0007 (M13/M17: sem matriz de política); negativas exaustivas de política para os 23 recursos novos (`policy.spec.ts`, 24 `it`).
 - Fixtures: `20-fixtures-rait.sql` ajustado, `40-fixtures-rait-org.sql`, `50-fixtures-collection.sql`, `60-fixtures-rait-integration.sql` (uma por estado, prefixos M16), espelho `rait-fixtures.json`; 114 testes de integração novos (RLS, checks das máquinas TURMA/LOTE/BANCA/disponibilidade e dos módulos, FKs, unicidades parciais); sensor `inf-rls` 58 → 81.
+- Integração de `main` durante a janela: PRs #37 (param-store), #40/#41/#42 (ops-agency: DDL 14 com 24 timers e 17 estados de AIT, TEAT v1.1.0, `signature_policy`, seed 25); sensor `inf-rls` 85 tabelas de tenant / 10 de referência; `verify:rls-ddl` 182.
 - Docs: build pack §WP-A com a numeração real (38/39/57/58/59), `blueprints/README.md`, `rait-fixtures.md`, `rait-deadline-engine.md` §1, backlog; método da orquestra (ciclos de review restritos, fixtures no CI, escada recalibrada).
 - Contratos da tríade: `work/rounds/R-0006/contracts/CTG-0002-deltas.md`, `CTG-0002-modules.md`.
 
@@ -24,7 +25,7 @@ WP-A de `docs/framework/arch/rait-build-pack.md` (restante: deltas v1.1.0 dos bl
 - [x] `pnpm exec devai evidence record …` (referência abaixo)
 - [x] nenhum arquivo gerado editado à mão; blueprint e gerados no mesmo PR
 
-Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): delivery-review-CTG-0002 ciclo 1 FAIL (5 achados → M17: reatribuição de TASK-0008 a Architect, bump do blueprint pelo Architect, testes do mock bancário, desmontagem dos módulos + negativas de política, critério 178) → ciclo 2 DELIVERY_VERDICT_2. Evidência DEVAI: EVIDENCE_2.
+Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): delivery-review-CTG-0002 ciclo 1 FAIL (5 achados → M17: reatribuição de TASK-0008 a Architect, bump do blueprint pelo Architect, testes do mock bancário, desmontagem dos módulos + negativas de política, critério 178) → ciclo 2 FAIL (autoria de docs, critério de TASK-0014, OD-309) → ciclo 3 REVIEW → ciclo 4 REVIEW → ciclo 5 **PASS**. Mutação documental de TASK-0008 revertida e re-autorada pelo Architect; OD-309 registrada. Evidência DEVAI: EVIDENCE_2.
 
 ## Questões abertas tocadas
 

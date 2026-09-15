@@ -1,5 +1,5 @@
 {
-  "action": "Implement WP-A CTG-0002: RAIT blueprint deltas v1.1.0, organisation, collection and integration blueprints, documents facade types, mock bank port, fixtures, database contract tests and documentation",
+  "action": "Implement WP-A CTG-0002: RAIT blueprint deltas v1.1.0, organisation, collection and integration blueprints, documents facade types, mock bank port, fixtures, database contract tests, policy negatives (M17), documentation re-authored by the Architect, and integration of main (ops-agency)",
   "round": "R-0006",
   "coupled_task_group": "CTG-0002",
   "role": "engineer",
@@ -10,7 +10,14 @@
     "ab1c43ec11b36c787c1898d7eef1c41663b3fd84",
     "6200da08361fea97b612d1126ce6f585ca2836cb",
     "bc446c92721693dc9c6dff710faa4d792e0c1d7c",
-    "0fcc1f702b08ae2ef90b676e3579206288acc85c"
+    "0fcc1f702b08ae2ef90b676e3579206288acc85c",
+    "7997a9ebb6b332a89e30701e850fbeb7ba670d8c",
+    "b7f4afc477035d1d65088be658af34b37f5de4ba",
+    "54976789b4eabd62b806b47af672ffad4d89181b",
+    "5b745e10254b734e9f419ae0f72a9a3dceca8c96",
+    "1751bcac3a464ab23802469144228d4dccc334f7",
+    "8be2eada2f577663a95db20bd5a7cb7251534cdc",
+    "f188cfb54f2b1d50fa6a8e95454765192b0bf2e8"
   ],
   "artifacts": [
     {
@@ -31,7 +38,7 @@
     },
     {
       "path": "docs/framework/blueprints/BP-INF-COLLECTION-001.json",
-      "sha256": "9553391da82dfaf5acf236128822deb730f18b660ab5416e12bdbb0014ca1c7f"
+      "sha256": "eb2537783873c7670d66ebe362abad2fe79a9d8e834a0fd30145389f995741d6"
     },
     {
       "path": "docs/framework/blueprints/BP-INF-RAIT-INTEGRATION-001.json",
@@ -47,7 +54,7 @@
     },
     {
       "path": "backend/database/ddl/57-inf-collection.sql",
-      "sha256": "236ccab32a928f0fa3cfb2261ef0b362c04310c30603468fa39027c63e1c1f85"
+      "sha256": "966da4a199e1b264d807b1645ed5e1ac5f8e6ded68cbce2f4a95bd6e2d6165d4"
     },
     {
       "path": "backend/database/ddl/58-inf-rait-integration.sql",
@@ -79,7 +86,7 @@
     },
     {
       "path": "backend/app/src/app.module.ts",
-      "sha256": "edba411b8ebfa8a4eab1be0b02b8ca44de74def328f70d60cc06fe0d518041bc"
+      "sha256": "f758773d0826fdc618a33fc7b6bf9ace4d2d1183fb93c29d426bc1619647a5fd"
     },
     {
       "path": "backend/app/vitest.config.ts",
@@ -96,6 +103,22 @@
     {
       "path": "work/rounds/R-0006/contracts/CTG-0002-modules.md",
       "sha256": "7e363085c2ec9e4efc6ca98a36034c5de9409095871e2c218641f8d9b26013ab"
+    },
+    {
+      "path": "backend/domains/inf/collection/tests/unit/bank-port.mock.spec.ts",
+      "sha256": "a8f6ef42bad1842ec7853efd727264c0da97ea52962bafb383ead43731581fe8"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.spec.ts",
+      "sha256": "a4518e109f9f41344e6d9422719e2017716aa52dbc37165f509c1bfc4da02290"
+    },
+    {
+      "path": "docs/meta/knowledge-base/open-decisions-rait.md",
+      "sha256": "f8698a2df5a1907eb89eb6e21c56de246d12c1d013bf7bce07895f85f019af03"
+    },
+    {
+      "path": "work/rounds/R-0006/reviews/delivery-review-CTG-0002-5.json",
+      "sha256": "53c4681222397e7df2767e61df6c862f417a01cd23b5ce0b959357ae74b8505f"
     }
   ],
   "gates": [
@@ -105,7 +128,7 @@
     },
     {
       "command": "pnpm verify:rls-ddl",
-      "result": "PASS (178 tenant tables)"
+      "result": "PASS (182 tenant tables after merging ops-agency #41/#42)"
     },
     {
       "command": "DB_NAME=detran_r6 bash backend/database/apply.sh --full && bash backend/database/seed.sh (twice)",
@@ -117,11 +140,11 @@
     },
     {
       "command": "pnpm backend:test:ci (STYNX_APP_DATABASE_URL role_app_backend)",
-      "result": "__CI__"
+      "result": "PASS (unit, integration and e2e tiers with role_app_backend; exit 0 on the merged tree f188cfb)"
     },
     {
       "command": "pnpm check",
-      "result": "__CHECK__"
+      "result": "PASS (format, kb 521/446, blueprints, contracts 38, parameters, typecheck, ui, decorators 839, rls-ddl 182, role-catalog, lifecycle-vocabulary 15/12/24, senatran boundary/contracts, pec parity/superset)"
     },
     {
       "command": "integration tests of the six RAIT modules",
@@ -137,7 +160,7 @@
     },
     {
       "command": "cross-family delivery review (GPT-5.6 Terra)",
-      "result": "__REVIEW__"
+      "result": "PASS (cycle 5; cycles 1–2 FAIL and 3–4 REVIEW corrected: M17 — Architect re-authoring of docs, blueprint bump by the Architect, bank-port tests, modules unmounted + policy negatives, OD-309, criterion text)"
     }
   ],
   "decisions": [
@@ -148,7 +171,9 @@
     "OD-017",
     "OD-207",
     "M10",
-    "M16"
+    "M16",
+    "OD-309",
+    "M17"
   ],
   "requirements": [
     "WF-RAIT-004 §9-§10",
