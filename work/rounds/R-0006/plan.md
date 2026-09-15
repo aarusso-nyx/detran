@@ -146,7 +146,8 @@ documentação e atualizado pelo maestro no fechamento.
 - CTG-0001: **liberado para merge** (nenhum upstream; DDL 14 intocado). **PR #39** aberto em 2026-09-14
   (`https://github.com/aarusso-nyx/detran/pull/39`), branch publicado a partir daqui (sem rebase; integrar com merge).
 - CTG-0002: desenvolvido sobre o mesmo branch depois do merge de CTG-0001. **`param-store` (R-0004) entrou em `main` em
-  2026-09-14 (PR #37, fechamento #38)**: o PR de CTG-0002 fica liberado quando o grupo concluir. Sem base empilhada por ora (upstream sem commits); se `param-store` publicar antes do PR de CTG-0002,
+  2026-09-14 (PR #37, fechamento #38)**. **PR #43** aberto em 2026-09-15 (`https://github.com/aarusso-nyx/detran/pull/43`)
+  após a integração de `main` (#40, #41, #42) e a delivery-review ciclo 5 PASS. Sem base empilhada por ora (upstream sem commits); se `param-store` publicar antes do PR de CTG-0002,
   integrar com `git merge --no-edit origin/main` (branch já publicado).
 - `pnpm exec devai round plan --scaffold --round R-0006` → `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31); nada a criar.
 
