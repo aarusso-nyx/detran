@@ -1,8 +1,8 @@
 # R-0005 — frente `ops-agency` (WP-T1 do TEAT: modelo de dados de `ops/*` e deltas dos blueprints `inf`)
 
-**Status:** CTG-0001 implementado, rebaseado sobre `origin/main@34062b5` e validado. A revisão
-focal pós-rebase retornou REVIEW apenas por evidência imprecisa; a correção append-only foi
-confirmada no ciclo 2 com PASS e zero highs. Ainda sem push ou PR. Reviewer: Opus 5 via
+**Status:** CTG-0001 mesclado no PR #40. CTG-0002 e CTG-0003 implementados; todos os gates locais
+finais estão verdes. As correções de escalada dos reviews anteriores aguardam somente a revisão
+Opus final antes de commit, evidência, PR e merge. Reviewer: Opus 5 via
 `tools/orchestra/bridge.sh claude`.
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — nenhum upstream para grupo algum (decisão do Owner, 2026-09-14: abre em paralelo à onda 1). Pontos de rebase com R-0004 `param-store`: `backend/app/src/app.module.ts` e `docs/framework/blueprints/BP-INF-NORMATIVE-001.json`; se R-0004 retomar na janela Sol, grave `checkpoint` ao fim do CTG-0001 e ceda a janela.
 **Janelas previstas:** 2 (CTG-0001/0002 na primeira; CTG-0003 e docs na segunda).
@@ -235,9 +235,122 @@ Checkpoint da janela 1 em 2026-09-14:
 - CTG-0002 iniciado por autorizacao do Owner em 2026-09-14. TASK-0005 foi marcada `in_progress`
   para despacho Architect Terra/alto com a composicao fechada `PC-9da7ddfeadf987ff`; TASK-0006 e
   TASK-0007 permanecem queued ate a conclusao e o checkpoint das respectivas dependencias.
+- TASK-0005 Architect concluida e confirmada pelo checkpoint Engineer independente. Os quatro
+  blueprints INF estao em 1.1.0; a superficie param-store de R-0004 foi preservada; contratos e
+  arvore gerada estao sincronizados. Gates: `format:check`, `blueprints:check`, `contracts:check`,
+  `verify:rls-ddl` (159 tabelas tenant) e `verify:lifecycle-vocabulary` (15 estados, 12 subestados,
+  24 timers) passaram. TASK-0006 esta pronta pela dependencia, mas permanece queued e sem worker
+  ate novo despacho do maestro.
+- TASK-0006 Inspector iniciada na sequencia autorizada do CTG-0002, composicao fechada
+  `PC-2edfc6daa6fd170c`, modelo Luna/medio. TASK-0007 permanece queued ate a conclusao e o
+  checkpoint independente dos testes.
+- TASK-0006 Inspector concluida na iteracao 1. O integration AIT passou 2/2 no banco reaplicado,
+  exigindo 62 tabelas tenant, 10 referencias e prova explicita das quatro tabelas CTG-0002. Os
+  specs normative/measures/alcohol passaram; o spec AIT preserva vermelho o `plant-bug` de tokens
+  legados para TASK-0007. Nenhuma assercao ou cobertura foi reduzida.
+- TASK-0007 Engineer iniciada com a composicao `PC-70787dc5c23875e4`, Luna/medio, para corrigir
+  somente o lifecycle manuscrito e o gate deterministico. Os arquivos manuscritos existentes
+  declarados por `handwrittenExports` no blueprint AIT ficam na raiz de `src/`; essa localizacao
+  concreta e a fronteira autorizada do prompt, sem permitir outros fontes manuscritos.
+- TASK-0007 implementou o lifecycle canonico e o gate de 17 estados; unit 3/3, typecheck e
+  integration 2/2 passaram apos a iteracao final do Inspector. O gate composto esta bloqueado
+  exclusivamente pelo seed existente incompatível com `approach_class`. Para evitar dependencia
+  circular entre o acceptance de TASK-0007 e o lock MOD-seed, TASK-0008 foi iniciada na sua
+  fronteira de fixtures antes de declarar TASK-0007 completed; ambos os gates serao repetidos
+  depois. Nenhuma responsabilidade de papel foi transferida.
+- TASK-0007 e TASK-0008 concluidas. O checkpoint composto repetido passou integralmente:
+  `backend:test:ci`, `pnpm check`, seed idempotente em duas execucoes, RLS smoke, cobertura
+  independente 17/17 dos estados AIT e os quatro estados de reserva. TASK-0008 exigiu iteracao 1
+  porque a entrega inicial omitira os AITs por estado; o mesmo Engineer corrigiu apenas o fixture
+  TEAT e nenhum gate foi enfraquecido. Proximo passo: delivery-review independente de CTG-0002 e
+  CTG-0003 antes de qualquer commit.
+- Primeiro delivery-review: CTG-0003 retornou REVIEW com tres highs de fixture (token de
+  cancelamento sem autoridade, selecao oculta da linha-base e hash/protocolo antes dos marcos
+  legais) e quatro lows; TASK-0008 iteracao 2 corrigiu todos os highs e os lows seguros. A ponte
+  CTG-0002 rejeitou JSON invalido antes de materializar veredito, mas preservou um high verificavel:
+  CHECK/default/lifecycle de medidas contraditorios. A remediation respeitou Architect ->
+  Inspector escalado -> Engineer: default `RETIDO`, teste vermelho 2/3 e lifecycle integralmente
+  canonico. Os hard gates completos estao em repeticao antes do segundo review.
+
+- O review materializado CTG-0002 retornou FAIL com cinco highs: cancelamento indevido pela rota
+  de rejeicao, terminalidade de `REJEITADO`, remocao sem `CONVERTIDO_REMOCAO`, regularizacao
+  inalcancavel e cancelamento de medida sem autoridade. A escalada Architect/Inspector/Engineer
+  corrigiu os quatro defeitos de implementacao e registrou `OD-T13` para o comportamento
+  fail-closed restante. Os lows seguros (CHECK do pedido, boolean e forca dos testes) tambem foram
+  incorporados.
+- O segundo review CTG-0003 retornou REVIEW por classificacao de abordagem invertida e quatro
+  lows. A escalada preservou `7455-0` como `caso_2`, marcou a classificacao MBFT e `usage_mode`
+  como `source_pending`, tornou todos os upserts convergentes e roteou o dispositivo
+  nao-autorizado distinto para WP-T2. O checkpoint final passou apply completo, seed duplo,
+  cobertura 17/17, RLS smoke, `backend:test:ci` e `pnpm check`.
+- O review de escalada CTG-0003 retornou PASS, zero highs; seus lows de precisão documental foram
+  incorporados ao relatório e os hardenings de seed ficaram explicitamente fora do produto.
+- A primeira materialização válida do review de escalada CTG-0002 retornou REVIEW por um novo high:
+  `technical_impossibility` ainda recebia `outcome=refusal`. O Inspector observou 2 vermelhos/3
+  verdes e o Engineer corrigiu o serviço para exigir `kind` e preservar o próprio ramo, sem default
+  punitivo. Os gates completos estão em repetição antes da confirmação final do reviewer.
+- Após a correção, `backend:test:ci` no banco isolado e `pnpm check` passaram integralmente. A
+  revisão focal final CTG-0002 retornou PASS, zero highs. Os lows foram roteados para WP-T2 e
+  hardening: estados legados de alcoolemia, validação runtime de `kind`, termo na submáquina B,
+  teste de `conclude`, derivação de terminais, cadastro canônico de `OD-T13` e matrizes dos quatro
+  recursos CRUD novos.
 
 ## Triagem
 
+- Repetição final de `backend:test:ci` sem variáveis do banco isolado: `sensor-error`; unitários
+  passaram, mas integração consultou o banco padrão sem as tabelas CTG-0001/integração. A execução
+  correta com `DATABASE_URL`, `DETRAN_TEST_DATABASE_URL` e pools owner/app/reader em `detran_r5`
+  passou integralmente. Nenhum código ou teste foi alterado por essa observação.
+- Review CTG-0002 de escalada, primeira tentativa de materialização: `sensor-error`; o payload
+  semanticamente completo veio em fence Markdown e a ponte o descartou. A repetição com primeiro
+  byte `{` materializou REVIEW e revelou o high de alcoolemia; não se inferiu PASS do payload
+  rejeitado.
+
+- Delivery-review CTG-0002, tentativa sem veredito: `sensor-error` de serializacao JSON da ponte;
+  o finding preservado foi confirmado como `plant-bug`. O CHECK de WF-TEAT-004 coexistia com
+  default e escritas legacy. TASK-0005 iteracao 1 fixou a autoridade em `RETIDO`, Inspector
+  escalado produziu vermelho reproduzivel e TASK-0007 iteracao 2 migrou o lifecycle sem relaxar
+  testes.
+- Delivery-review CTG-0003 ciclo 1: `plant-bug` nos fixtures. TASK-0008 iteracao 2 substituiu
+  `revoked`, removeu a selecao por ordem, tornou upsert convergente, respeitou os marcos de
+  hash/protocolo, usou IDs do padrao local e deixou abordagem sem fonte em postura conservadora.
+  Apply completo, seed duplo, cobertura 17/17 e RLS smoke passaram.
+- TASK-0008 iteracao 0: a entrega inicial continha dispositivos, reservas e pacote normativo, mas
+  omitia o requisito explicito de um AIT por cada estado canonico. Classificacao: `plant-bug` no
+  fixture. A iteracao 1 adicionou cobertura derivada diretamente de `inf.ait_state_ref`; consulta
+  independente confirmou 17/17 e os gates de banco permaneceram verdes.
+- Gate composto apos TASK-0008: `backend:test:ci` passou unit e integration, mas o app e2e tinha
+  uma insercao SQL direta de `normative_framing` sem `approach_class`. Classificacao: `test-bug`.
+  Como TASK-0006 consumiu duas iteracoes e o arquivo pertence ao app, a correcao foi escalada a um
+  Inspector Sol, restrito a essa fixture e sem reduzir cobertura.
+- O mesmo checkpoint `pnpm check` chegou ao typecheck e revelou que o handwritten export
+  `alcohol-lifecycle.service.ts` criava `AlcoholRefusal` sem o novo `kind`. Classificacao:
+  `plant-bug` de integracao do delta. TASK-0007 iteracao 1 foi autorizada apenas nesse arquivo
+  manuscrito para propagar `refusal|technical_impossibility`, sem editar contrato ou teste.
+- TASK-0007 ciclo inicial: o lifecycle canônico tornou vermelho um teste unitario legado que ainda
+  montava `draft`/esperava `issued`, e o typecheck revelou fixture e2e sem o novo
+  `approach_class`. Classificacao: `test-bug` esperado pela mudanca contratual. TASK-0006 retorna
+  ao Inspector na iteracao 2 final para atualizar somente as fixtures/expectativas, preservando
+  hash, assinatura, historico e toda cobertura existente.
+- TASK-0006 iteracao 0: o integration AIT executado pelo worker contra banco anterior observou
+  52 tabelas tenant; apos `apply.sh --full` no `detran_r5`, o checkpoint Engineer observou 62
+  contra a expectativa fixa de 58. Classificacao: `test-bug` por crescimento legitimo do esquema.
+  A iteracao 1 do Inspector deve preservar todas as assercoes e acrescentar prova explicita das
+  quatro tabelas tenant novas de CTG-0002.
+- TASK-0006 checkpoint: o DDL completo aplicou, mas o seed preexistente falhou porque a fixture de
+  `normative_framing` nao fornece o novo `approach_class` obrigatorio. Classificacao provisoria:
+  `plant-bug` de compatibilidade do delta/fixture; nao foi mascarado. A fronteira sera resolvida
+  antes do gate composto, sem enfraquecer schema ou teste.
+- TASK-0005 iteracao 0, pre-mutacao: o lock compartilhado de `BP-INF-NORMATIVE-001` exigiu
+  confirmacao do maestro. O arquivo era byte-identico ao baseline mesclado em `origin/main`
+  (`13122b32afc4e95a5acd5e4e83201d632a049d42739ec80f5f86820b6dbd77e7`); foi autorizado
+  somente o delta aditivo CTG-0002, preservando integralmente `normative_agency_parameter` e a
+  superficie R-0004.
+- TASK-0005 iteracao 0, `reference-gap` de composicao: o prompt exigia os campos `driver_*` e
+  `vehicle_*` exatamente como na origem, mas a leitura fechada nao incluia a fonte que os enumera.
+  O maestro autorizou consulta estritamente read-only apenas a
+  `teat:docs/framework/product/blueprints/BP-ALCOHOL-PROCEDURE-001.json`, fixando
+  `driver_name`, `driver_document`, `vehicle_plate` e `vehicle_make`, sem inventar outros campos.
 - Integracao pos-rebase: a primeira execucao de `backend:test:ci` terminou em `sensor-error`
   antes de observar `@detran/ops-parameter`, porque `pnpm install --lockfile-only` atualizou o
   lockfile sem criar seus links locais. `pnpm install --frozen-lockfile` materializou o workspace;

@@ -1,0 +1,81 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "backend/domains/inf/ait/src/ait-lifecycle.service.ts",
+      "line": 245,
+      "claim": "reject(id, reason, cancelled=true) grava CANCELADO_RASCUNHO a partir de RECEBIDO, VALIDANDO ou PENDENTE_CORRECAO. WF-TEAT-001 admite CANCELADO_RASCUNHO somente a partir de RASCUNHO_OFFLINE (997 Anexo II, k); cancelamento depois de FINALIZADO_LOCAL exige SOLICITADO_CANCEL_POSFINAL e depois CANCELADO_POSFINAL, por decisao da Diretoria de Fiscalizacao (UC-TEAT-011 AC-TEAT-011-2) e como ato apenso (RN-TEAT-004). A rota POST /v1/inf/ait/aits/:id/reject aceita cancelled no corpo (ait-commands.controller.ts:120) e o grant inf:ait:reject e de traffic-authority, logo a transicao nao canonica e alcancavel; o CHECK ck_inf_ait_current_status aceita os 17 tokens e nao barra. O proprio CTG-0002 reprova cancelamento que reescreva o AIT em vez de registrar pedido e evento apenso.",
+      "fix": "remover o parametro cancelled de reject e encaminhar o cancelamento pos-finalizacao pelas entidades ait_cancel_request e ait_cancel_request_event, com a transicao SOLICITADO_CANCEL_POSFINAL e depois CANCELADO_POSFINAL; se o comando nao for escopo do WP-T1, deixar reject apenas com REJEITADO e registrar o resto em Fora de escopo"
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/database/ddl/14-inf-lifecycle-vocabulary.sql",
+      "line": 32,
+      "claim": "A linha de REJEITADO em inf.ait_state_ref declara is_terminal true, contradizendo WF-TEAT-001, que define a transicao REJEITADO para PENDENTE_CORRECAO (solicitacao de correcao sobre rejeitado). A propria entrega implementa essa saida em ait-lifecycle.service.ts:186, que aceita REJEITADO como origem de requestCorrection. O gate verify:lifecycle-vocabulary compara apenas conjuntos de codigos e nao observa is_terminal, entao o valor falso passa sem deteccao numa tabela cuja unica funcao e ser autoridade.",
+      "fix": "definir is_terminal false para REJEITADO, mantendo true apenas para CANCELADO_RASCUNHO, ARQUIVADO e CANCELADO_POSFINAL, e regenerar"
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "backend/domains/inf/measures/src/measure-lifecycle.service.ts",
+      "line": 146,
+      "claim": "recordRemoval exige origem RETIDO e transiciona direto para REMOVIDO. Em WF-TEAT-004 a submaquina A so sai de RETIDO para LIBERADO_LOCAL, LIBERADO_COM_PRAZO ou CONVERTIDO_REMOCAO (CTB art. 270 paragrafos 4 e 7); REMOVIDO e estado inicial da submaquina B, nunca destino direto de RETIDO. O token CONVERTIDO_REMOCAO consta do CHECK ck_inf_administrative_measure_current_status e da uniao MeasureStatus, mas nenhum caminho de codigo o produz, de modo que a conversao legal fica sem registro.",
+      "fix": "transicionar RETIDO para CONVERTIDO_REMOCAO e so entao para REMOVIDO, ou aceitar recordRemoval apenas sobre medidas que ja estejam em CONVERTIDO_REMOCAO"
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/measures/src/measure-lifecycle.service.ts",
+      "line": 233,
+      "claim": "conclude passou a exigir origem LIBERADO_COM_PRAZO, mas nenhum metodo do servico grava LIBERADO_COM_PRAZO: start mantem RETIDO, recordRetention mantem RETIDO, release grava LIBERADO_LOCAL e recordRemoval grava REMOVIDO. Assim REGULARIZADO tornou-se inalcancavel e a rota concedida inf:administrative-measure:conclude, granteada a traffic-authority em backend/domains/shared/src/policy.ts:545, responde sempre 400. Antes da migracao conclude era alcancavel a partir de started, in_execution e released; a regressao nao esta declarada em Fora de escopo nem coberta por teste.",
+      "fix": "implementar a transicao RETIDO para LIBERADO_COM_PRAZO (CTB art. 270 paragrafo 2, com T-REG30) antes de exigi-la em conclude, ou registrar explicitamente a lacuna em Fora de escopo e no plano"
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/domains/inf/measures/src/measure-lifecycle.service.ts",
+      "line": 250,
+      "claim": "cancel foi convertido em rejeicao incondicional com BadRequestException. A supressao de uma capacidade ja concedida e uma decisao de produto, mas o relatorio TASK-0007 registra OD como Nenhuma e o grant inf:administrative-measure:cancel permanece em backend/domains/shared/src/policy.ts:546, deixando uma rota autorizada permanentemente quebrada. A regra 4.3 do metodo exige que valor ou comportamento sem fonte vire source_pending ou questao OD, nunca constante silenciosa.",
+      "fix": "abrir OD sobre o cancelamento de medida administrativa em WF-TEAT-004, remover o grant correspondente enquanto a decisao nao existir, ou ambos, e citar a OD no relatorio"
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "backend/database/ddl/31-inf-ait.sql",
+      "line": 75,
+      "claim": "ait_cancel_request.status usa o token nao canonico submitted como default e nao recebeu CHECK, enquanto todas as demais colunas de estado da rodada ganharam CHECK derivado de workflow. UC-TEAT-011 descreve submissao, deferimento e indeferimento como os tres desfechos.",
+      "fix": "enumerar os estados do pedido em CHECK a partir de UC-TEAT-011 ou marcar o vocabulario como source_pending no contrato"
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "backend/domains/inf/measures/src/measure-lifecycle.service.spec.ts",
+      "line": 5,
+      "claim": "O teste preexistente provava uma transicao real de started para in_execution; a versao nova afirma apenas que RETIDO e preservado. Como start ficou um self-loop RETIDO para RETIDO em measure-lifecycle.service.ts:40, a assercao perdeu poder de deteccao e nenhum teste cobre mais uma mudanca de estado disparada por start.",
+      "fix": "cobrir com a mesma forca a transicao canonica que start deve representar, ou remover o comando start se ele nao corresponde a nenhuma transicao de WF-TEAT-004"
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "docs/framework/blueprints/BP-INF-ALCOHOL-001.json",
+      "line": 75,
+      "claim": "refused_procedures foi declarado com tipo bool, enquanto todos os demais campos booleanos dos quatro blueprints usam boolean; o DDL gerado propaga a divergencia em 33-inf-alcohol.sql.",
+      "fix": "usar boolean e regenerar"
+    }
+  ],
+  "notes": [
+    "Item 6 atendido: a triade Architect TASK-0005, Inspector TASK-0006 e Engineer TASK-0007 foi respeitada, com vermelho observado antes da implementacao, inclusive na remediation escalada de medidas 2 de 3.",
+    "Item 4 atendido: blueprints:generate, contracts:openapi, blueprints:check, contracts:check, verify:rls-ddl, verify:lifecycle-vocabulary, backend:test:ci e check existem em package.json e tiveram resultado esperado declarado.",
+    "Item 7 quanto a skip: nenhum it.skip, describe.skip ou todo foi introduzido em backend/domains/inf; a alteracao do teste de integracao ampliou assercoes de 58 e 9 para 62 e 10 e acrescentou prova explicita de RLS, FORCE RLS, politica e trigger nas quatro tabelas novas.",
+    "Item 9 atendido: a unica costura nacional continua sendo publishViaRenainf sobre RenainfPort, sem cliente HTTP em controller ou servico.",
+    "O gate verify:lifecycle-vocabulary parseia corretamente os 17 estados de WF-TEAT-001: a notacao [estado_origem] e as setas de inicio nao casam com a regex, portanto nao viram estado. O gate porem so compara conjuntos de codigos e nao verifica transicoes nem is_terminal, o que explica os achados 1 e 2 terem passado verdes.",
+    "Item 13: nenhuma matriz de autorizacao foi tocada nesta entrega. As quatro entidades novas expoem CRUD gerado com Resource inf:ait-cancel-request, inf:ait-cancel-request-event, inf:normative-metrological-table e inf:signature-policy sem grant em policy.ts e sem testes positivos ou negativos. O comportamento e o mesmo do CRUD gerado preexistente (nega por ausencia de chave, salvo GLOBAL_ADMIN_ROLES) e o build pack coloca a reconciliacao rota versus politica no gate policy-routes.spec.ts do WP-T2, entao nao bloqueia aqui, mas signature_policy carrega requisitos PAdES, TSA e PDF-A e nao deveria chegar ao WP-T2 com DELETE aberto sem matriz propria.",
+    "O achado high preservado do ciclo anterior sobre o default de administrative_measure foi de fato corrigido: o default e RETIDO, o CHECK enumera os 12 tokens de WF-TEAT-004 e o lifecycle nao escreve mais started nem in_execution. Os cinco highs deste ciclo sao outros, e quatro deles estao nas transicoes, nao nos tokens.",
+    "O veredito e FAIL, e nao REVIEW, porque a entrega contradiz definicoes canonicas: o conjunto de transicoes de WF-TEAT-001, a competencia de UC-TEAT-011 e o encadeamento da submaquina A de WF-TEAT-004. As correcoes cabem nas fronteiras de TASK-0005 e TASK-0007 e nao exigem mudanca do plano nem do contrato CTG-0002, que ja reprova explicitamente o achado 1."
+  ]
+}

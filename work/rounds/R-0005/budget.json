@@ -1,7 +1,7 @@
 {
   "round": "R-0005",
   "front": "ops-agency",
-  "current_window": 9,
+  "current_window": 10,
   "window_input_budget": 800000,
   "checkpoint_at_input": 640000,
   "token_budget_exception": {
@@ -322,8 +322,9 @@
       "model": "gpt-5.6-terra",
       "estimated_input_tokens": 150000,
       "estimated_output_tokens": 30000,
-      "status": "in_progress",
-      "window": 9
+      "status": "completed",
+      "window": 9,
+      "result": "PASS after iteration 2 and Architect escalation; four INF blueprints advanced to v1.1.0, R-0004 normative param-store preserved, lifecycle vocabulary and generated artifacts synchronized; remediation aligned Measures default to canonical RETIDO and terminality/request vocabulary"
     },
     {
       "kind": "worker-task",
@@ -331,7 +332,9 @@
       "model": "gpt-5.6-luna",
       "estimated_input_tokens": 60000,
       "estimated_output_tokens": 12000,
-      "status": "window-2"
+      "status": "completed",
+      "window": 9,
+      "result": "PASS after iteration 2 and Inspector escalation; contract specs, AIT and Measures lifecycle negatives, alcohol refusal branch tests, and fresh-database integration coverage completed"
     },
     {
       "kind": "worker-task",
@@ -339,7 +342,9 @@
       "model": "gpt-5.6-luna",
       "estimated_input_tokens": 80000,
       "estimated_output_tokens": 16000,
-      "status": "window-2"
+      "status": "completed",
+      "window": 9,
+      "result": "PASS after Engineer iteration 2 and final escalations; canonical 17-state AIT lifecycle, canonical WF-TEAT-004 Measures lifecycle, fail-closed alcohol refusal kind, backend:test:ci and pnpm check all green"
     },
     {
       "kind": "worker-task",
@@ -347,7 +352,9 @@
       "model": "gpt-5.6-luna",
       "estimated_input_tokens": 50000,
       "estimated_output_tokens": 10000,
-      "status": "window-2"
+      "status": "completed",
+      "window": 9,
+      "result": "PASS after iteration 2; deterministic 17/17 AIT coverage without hidden ordering, lifecycle-correct hash/protocol, all numbering reservation states, device postures, published normative package, idempotent double seed and RLS smoke"
     },
     {
       "kind": "worker-task",
@@ -356,6 +363,119 @@
       "estimated_input_tokens": 40000,
       "estimated_output_tokens": 8000,
       "status": "window-2"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0002",
+      "model": "claude-opus",
+      "estimated_input_tokens": 70000,
+      "estimated_output_tokens": 12000,
+      "status": "sensor-error",
+      "window": 10,
+      "result": "Bridge rejected invalid JSON before materializing a verdict; one high finding was preserved and independently confirmed: Measures CHECK/default/handwritten lifecycle mismatch"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0003",
+      "model": "claude-opus",
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "REVIEW",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0003.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0002-2",
+      "model": "claude-opus",
+      "estimated_input_tokens": 70000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "FAIL",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0002-2.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0003-2",
+      "model": "claude-opus",
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "REVIEW",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0003-2.bridge.json"
+    },
+    {
+      "kind": "worker-task-escalation",
+      "id": "CTG-0002-lifecycle-escalation",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 100000,
+      "estimated_output_tokens": 20000,
+      "status": "completed",
+      "window": 10,
+      "result": "PASS; five prior highs closed, explicit red-before-green evidence preserved"
+    },
+    {
+      "kind": "worker-task-escalation",
+      "id": "CTG-0003-fixture-escalation",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 40000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "window": 10,
+      "result": "PASS; case mapping, source_pending vocabulary and upsert convergence corrected"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0003-escalation",
+      "model": "claude-opus",
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "PASS",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0003-escalation.bridge.json"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0002-escalation",
+      "model": "claude-opus",
+      "estimated_input_tokens": 70000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "REVIEW",
+      "attempts": 2,
+      "sensor_failures": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0002-escalation.bridge.json"
+    },
+    {
+      "kind": "worker-task-escalation",
+      "id": "CTG-0002-alcohol-branch-escalation",
+      "model": "gpt-5.6-sol",
+      "estimated_input_tokens": 20000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "window": 10,
+      "result": "PASS; red 2/5 observed, kind made mandatory and technical_impossibility preserved as non-refusal outcome"
+    },
+    {
+      "kind": "reviewer-call",
+      "id": "delivery-review-ctg-0002-final",
+      "model": "claude-opus",
+      "estimated_input_tokens": 20000,
+      "estimated_output_tokens": 5000,
+      "status": "completed",
+      "window": 10,
+      "verdict": "PASS",
+      "attempts": 1,
+      "bridge_record": "work/rounds/R-0005/reviews/delivery-review-ctg-0002-final.bridge.json"
     }
   ]
 }

@@ -1,4 +1,4 @@
-// Generated from BP-INF-ALCOHOL-001 v1.0.0 sha256:72c248e25fda146066eccac64123aca6ffeb1112b114ed4f1f03237d033e93ec
+// Generated from BP-INF-ALCOHOL-001 v1.1.0 sha256:18decd0fa5855e93f40ce052c3ffb2ec4ad022530cd5da983fadf681a45bd246
 export interface CreateAlcoholProcedureDto {
   traffic_agency_id: string;
   ait_id?: string | null;
@@ -13,5 +13,18 @@ export interface CreateAlcoholProcedureDto {
   outcome: string;
   status?: string;
   notes?: string | null;
+  ait_local_id?: string | null;
+  sign_catalog_id?: string | null;
+  sign_catalog_version?: string | null;
+  driver_name?: string | null;
+  driver_document?: string | null;
+  vehicle_plate?: string | null;
+  vehicle_make?: string | null;
+  refused_procedures?: boolean | null;
+  driver_statement_json?: Record<string, unknown> | null;
+  witnesses_json?: Record<string, unknown> | null;
+  source_local_id?: string | null;
+  source_idempotency_key?: string | null;
+  source_payload_hash?: string | null;
   location_geom?: unknown | null;
 }

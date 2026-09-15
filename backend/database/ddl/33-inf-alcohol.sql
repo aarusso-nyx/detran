@@ -1,4 +1,4 @@
--- Generated from BP-INF-ALCOHOL-001 v1.0.0 sha256:72c248e25fda146066eccac64123aca6ffeb1112b114ed4f1f03237d033e93ec
+-- Generated from BP-INF-ALCOHOL-001 v1.1.0 sha256:18decd0fa5855e93f40ce052c3ffb2ec4ad022530cd5da983fadf681a45bd246
 
 -- Regenerable-only DDL for BP-INF-ALCOHOL-001; request-path writes use role_app_backend.
 
@@ -20,6 +20,19 @@ create table if not exists inf.alcohol_procedure (
   outcome varchar(80) not null,
   status varchar(40) default 'draft' not null,
   notes text,
+  ait_local_id varchar(120),
+  sign_catalog_id varchar(120),
+  sign_catalog_version varchar(40),
+  driver_name varchar(160),
+  driver_document varchar(60),
+  vehicle_plate varchar(20),
+  vehicle_make varchar(120),
+  refused_procedures boolean,
+  driver_statement_json jsonb,
+  witnesses_json jsonb,
+  source_local_id varchar(120),
+  source_idempotency_key varchar(160),
+  source_payload_hash varchar(128),
   location_geom geometry(Point,4674),
   created_at timestamptz default now() not null,
   updated_at timestamptz,
@@ -39,6 +52,9 @@ create index if not exists ix_alcohol_procedure_approach_id on inf.alcohol_proce
 create index if not exists ix_alcohol_procedure_agent_id on inf.alcohol_procedure (agent_id);
 create index if not exists ix_alcohol_procedure_shift_id on inf.alcohol_procedure (shift_id);
 create index if not exists ix_alcohol_procedure_driver_person_id on inf.alcohol_procedure (driver_person_id);
+create index if not exists ix_alcohol_procedure_ait_local_id on inf.alcohol_procedure (ait_local_id);
+create index if not exists ix_alcohol_procedure_sign_catalog_id on inf.alcohol_procedure (sign_catalog_id);
+create index if not exists ix_alcohol_procedure_source_local_id on inf.alcohol_procedure (source_local_id);
 
 create table if not exists inf.alcohol_breathalyzer (
   id uuid default gen_random_uuid() not null,
@@ -66,12 +82,15 @@ create table if not exists inf.alcohol_test (
   test_number varchar(80),
   tested_at timestamptz not null,
   result_mg_l numeric(8,3),
+  considered_mg_l numeric(8,3),
+  max_error_mg_l numeric(8,3),
   counterproof boolean default false not null,
   result_image_evidence_id uuid,
   status varchar(40) default 'recorded' not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_alcohol_test primary key (id),
+  constraint ck_inf_alcohol_test_considered_error_pair check ((considered_mg_l is null) = (max_error_mg_l is null) and (max_error_mg_l is null or max_error_mg_l >= 0)),
   constraint fk_inf_alcohol_test_procedure foreign key (procedure_id) references inf.alcohol_procedure (id),
   constraint fk_inf_alcohol_test_device foreign key (breathalyzer_id) references inf.alcohol_breathalyzer (id),
   constraint fk_inf_alcohol_test_evidence foreign key (result_image_evidence_id) references ops.evidence_evidence (id)
@@ -86,12 +105,14 @@ create table if not exists inf.alcohol_refusal (
   tenant_id uuid not null,
   procedure_id uuid not null,
   refused_at timestamptz not null,
+  kind varchar(40) not null,
   refusal_description text not null,
   witness_person_id uuid,
   evidence_id uuid,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_alcohol_refusal primary key (id),
+  constraint ck_inf_alcohol_refusal_kind check (kind in ('refusal', 'technical_impossibility')),
   constraint fk_inf_alcohol_refusal_procedure foreign key (procedure_id) references inf.alcohol_procedure (id),
   constraint fk_inf_alcohol_refusal_person foreign key (witness_person_id) references ops.snapshots_person (id),
   constraint fk_inf_alcohol_refusal_evidence foreign key (evidence_id) references ops.evidence_evidence (id)
@@ -108,6 +129,9 @@ create table if not exists inf.alcohol_psychomotor_sign (
   sign_code varchar(80) not null,
   description text not null,
   observed boolean default true not null,
+  sign_group varchar(80),
+  sign_status varchar(20),
+  method varchar(120),
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_alcohol_psychomotor_sign primary key (id),

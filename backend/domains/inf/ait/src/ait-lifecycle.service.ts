@@ -24,17 +24,23 @@ import type { AitVehicleRepository } from './repositories/ait-vehicle.repository
 import type { AitRepository } from './repositories/ait.repository.js';
 
 export type AitStatus =
-  | 'draft'
-  | 'issued'
-  | 'pending_transmission'
-  | 'transmitted'
-  | 'received'
-  | 'validating'
-  | 'pending_correction'
-  | 'corrected'
-  | 'accepted'
-  | 'rejected'
-  | 'cancelled';
+  | 'RASCUNHO_OFFLINE'
+  | 'CANCELADO_RASCUNHO'
+  | 'FINALIZADO_LOCAL'
+  | 'ENFILEIRADO'
+  | 'TRANSMITIDO'
+  | 'RECEBIDO'
+  | 'SUSPEITO_CONCORRENCIA'
+  | 'VALIDANDO'
+  | 'ACEITO'
+  | 'REJEITADO'
+  | 'PENDENTE_CORRECAO'
+  | 'CORRIGIDO'
+  | 'INTEGRADO'
+  | 'PROCESSADO'
+  | 'ARQUIVADO'
+  | 'SOLICITADO_CANCEL_POSFINAL'
+  | 'CANCELADO_POSFINAL';
 
 export interface AitRepositories {
   ait: AitRepository;
@@ -57,7 +63,7 @@ export class AitLifecycleService {
     return this.repositories.ait.transaction(async (tx) => {
       await this.normative.assertActive(dto.catalog_id, dto.framing_id, tx);
       return this.repositories.ait.create(
-        { ...dto, current_status: 'draft', content_hash: null },
+        { ...dto, current_status: 'RASCUNHO_OFFLINE', content_hash: null },
         tx,
       );
     });
@@ -65,21 +71,21 @@ export class AitLifecycleService {
 
   addVehicle(aitId: string, dto: Omit<CreateAitVehicleDto, 'ait_id'>) {
     return this.repositories.ait.transaction(async (tx) => {
-      await this.requireStatus(aitId, ['draft'], tx);
+      await this.requireStatus(aitId, ['RASCUNHO_OFFLINE'], tx);
       return this.repositories.vehicles.create({ ...dto, ait_id: aitId }, tx);
     });
   }
 
   addPerson(aitId: string, dto: Omit<CreateAitPersonDto, 'ait_id'>) {
     return this.repositories.ait.transaction(async (tx) => {
-      await this.requireStatus(aitId, ['draft'], tx);
+      await this.requireStatus(aitId, ['RASCUNHO_OFFLINE'], tx);
       return this.repositories.people.create({ ...dto, ait_id: aitId }, tx);
     });
   }
 
   addCorrection(aitId: string, dto: Omit<CreateAitCorrectionDto, 'ait_id'>) {
     return this.repositories.ait.transaction(async (tx) => {
-      await this.requireStatus(aitId, ['pending_correction'], tx);
+      await this.requireStatus(aitId, ['PENDENTE_CORRECAO'], tx);
       return this.repositories.corrections.create(
         { ...dto, ait_id: aitId },
         tx,
@@ -89,7 +95,11 @@ export class AitLifecycleService {
 
   recordScience(aitId: string, dto: Omit<CreateAitSignatureDto, 'ait_id'>) {
     return this.repositories.ait.transaction(async (tx) => {
-      const ait = await this.requireStatus(aitId, ['draft', 'issued'], tx);
+      const ait = await this.requireStatus(
+        aitId,
+        ['RASCUNHO_OFFLINE', 'FINALIZADO_LOCAL'],
+        tx,
+      );
       const signature = await this.repositories.signatures.create(
         { ...dto, ait_id: aitId },
         tx,
@@ -106,7 +116,7 @@ export class AitLifecycleService {
 
   recordPrint(aitId: string, dto: Omit<CreateAitPrintEventDto, 'ait_id'>) {
     return this.repositories.ait.transaction(async (tx) => {
-      await this.requireStatus(aitId, ['issued', 'pending_transmission'], tx);
+      await this.requireStatus(aitId, ['FINALIZADO_LOCAL', 'ENFILEIRADO'], tx);
       return this.repositories.printEvents.create(
         { ...dto, ait_id: aitId },
         tx,
@@ -116,20 +126,27 @@ export class AitLifecycleService {
 
   finalize(id: string, actorId?: string): Promise<Ait> {
     return this.repositories.ait.transaction(async (tx) => {
-      const ait = await this.requireStatus(id, ['draft'], tx);
+      const ait = await this.requireStatus(id, ['RASCUNHO_OFFLINE'], tx);
       const contentHash = contentHashForAit(ait);
-      return this.transition(ait, 'issued', 'AIT finalized', tx, actorId, {
-        content_hash: contentHash,
-        system_signature_ref: `sha256:${contentHash}`,
-      });
+      return this.transition(
+        ait,
+        'FINALIZADO_LOCAL',
+        'AIT finalized',
+        tx,
+        actorId,
+        {
+          content_hash: contentHash,
+          system_signature_ref: `sha256:${contentHash}`,
+        },
+      );
     });
   }
 
   queueTransmission(id: string, actorId?: string): Promise<Ait> {
     return this.transitionFrom(
       id,
-      ['issued'],
-      'pending_transmission',
+      ['FINALIZADO_LOCAL'],
+      'ENFILEIRADO',
       'AIT queued for transmission',
       actorId,
     );
@@ -143,12 +160,12 @@ export class AitLifecycleService {
     return this.repositories.ait.transaction(async (tx) => {
       const ait = await this.requireStatus(
         id,
-        ['pending_transmission', 'transmitted'],
+        ['ENFILEIRADO', 'TRANSMITIDO'],
         tx,
       );
       return this.transition(
         ait,
-        'received',
+        'RECEBIDO',
         'RENAINF protocol received',
         tx,
         actorId,
@@ -166,8 +183,8 @@ export class AitLifecycleService {
   ): Promise<Ait> {
     return this.transitionFrom(
       id,
-      ['validating', 'rejected'],
-      'pending_correction',
+      ['VALIDANDO', 'REJEITADO'],
+      'PENDENTE_CORRECAO',
       reason,
       actorId,
     );
@@ -181,7 +198,7 @@ export class AitLifecycleService {
     return this.repositories.ait.transaction(async (tx) => {
       const ait = await this.requireStatus(
         id,
-        ['pending_correction', 'corrected'],
+        ['PENDENTE_CORRECAO', 'CORRIGIDO'],
         tx,
       );
       const correction = await this.repositories.corrections.findOne(
@@ -197,7 +214,7 @@ export class AitLifecycleService {
       );
       return this.transition(
         ait,
-        'corrected',
+        'CORRIGIDO',
         correction.justification,
         tx,
         actorId,
@@ -209,8 +226,8 @@ export class AitLifecycleService {
     // TODO(Phase 3 W3.3 RAIT): accepted AITs become the source for defesa/recurso case intake.
     return this.transitionFrom(
       id,
-      ['received', 'validating', 'corrected'],
-      'accepted',
+      ['RECEBIDO', 'VALIDANDO', 'CORRIGIDO'],
+      'ACEITO',
       'AIT accepted',
       actorId,
     );
@@ -219,13 +236,17 @@ export class AitLifecycleService {
   reject(
     id: string,
     reason: string,
-    cancelled = false,
-    actorId?: string,
+    actorIdOrLegacyFlag?: string | boolean,
+    legacyActorId?: string,
   ): Promise<Ait> {
+    const actorId =
+      typeof actorIdOrLegacyFlag === 'string'
+        ? actorIdOrLegacyFlag
+        : legacyActorId;
     return this.transitionFrom(
       id,
-      ['received', 'validating', 'pending_correction'],
-      cancelled ? 'cancelled' : 'rejected',
+      ['RECEBIDO', 'VALIDANDO', 'PENDENTE_CORRECAO'],
+      'REJEITADO',
       reason,
       actorId,
     );

@@ -1,4 +1,4 @@
-// Generated from BP-INF-NORMATIVE-001 v1.0.0 sha256:13122b32afc4e95a5acd5e4e83201d632a049d42739ec80f5f86820b6dbd77e7
+// Generated from BP-INF-NORMATIVE-001 v1.1.0 sha256:79161caba1463941727a4a6ad952f010c399cca7df3febfa1cf881ac14c7ca52
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -21,7 +21,10 @@ const WRITABLE_FIELDS = new Set<string>([
   'severity',
   'penalty',
   'administrative_measure_summary',
-  'allows_no_approach',
+  'approach_class',
+  'required_fields',
+  'required_instrument',
+  'points_label',
   'requires_observation',
   'requires_equipment',
   'status',

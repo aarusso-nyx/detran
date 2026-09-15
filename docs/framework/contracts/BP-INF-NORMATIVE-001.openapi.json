@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Normative — BP-INF-NORMATIVE-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Infraction catalog, framing rules, agency parameters, templates, and mobile package versioning ported from TEAT.",
     "x-blueprint": "BP-INF-NORMATIVE-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -250,6 +250,132 @@
       "delete": {
         "tags": ["framing"],
         "operationId": "removeNormativeFraming",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/metrological-tables": {
+      "get": {
+        "tags": ["normative-metrological-table"],
+        "operationId": "listNormativeMetrologicalTable",
+        "summary": "List NormativeMetrologicalTable (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NormativeMetrologicalTable"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["normative-metrological-table"],
+        "operationId": "createNormativeMetrologicalTable",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateNormativeMetrologicalTableDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeMetrologicalTable"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/metrological-tables/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["normative-metrological-table"],
+        "operationId": "getNormativeMetrologicalTable",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeMetrologicalTable"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["normative-metrological-table"],
+        "operationId": "updateNormativeMetrologicalTable",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateNormativeMetrologicalTableDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NormativeMetrologicalTable"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["normative-metrological-table"],
+        "operationId": "removeNormativeMetrologicalTable",
         "responses": {
           "200": {
             "description": "deleted"
@@ -638,6 +764,132 @@
         }
       }
     },
+    "/v1/inf/normative/signature-policies": {
+      "get": {
+        "tags": ["signature-policy"],
+        "operationId": "listSignaturePolicy",
+        "summary": "List SignaturePolicy (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SignaturePolicy"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["signature-policy"],
+        "operationId": "createSignaturePolicy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSignaturePolicyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignaturePolicy"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/normative/signature-policies/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["signature-policy"],
+        "operationId": "getSignaturePolicy",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignaturePolicy"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["signature-policy"],
+        "operationId": "updateSignaturePolicy",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateSignaturePolicyDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignaturePolicy"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["signature-policy"],
+        "operationId": "removeSignaturePolicy",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
     "/v1/inf/normative/mobile-packages": {
       "get": {
         "tags": ["mobile-normative-package"],
@@ -930,9 +1182,24 @@
             "type": "string",
             "nullable": true
           },
-          "allows_no_approach": {
+          "approach_class": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["caso_1", "caso_2", "caso_3"]
+          },
+          "required_fields": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "required_instrument": {
             "type": "boolean",
             "default": "false"
+          },
+          "points_label": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
           },
           "requires_observation": {
             "type": "boolean",
@@ -962,6 +1229,7 @@
           "catalog_id",
           "framing_code",
           "description",
+          "approach_class",
           "created_at"
         ]
       },
@@ -1002,9 +1270,24 @@
             "type": "string",
             "nullable": true
           },
-          "allows_no_approach": {
+          "approach_class": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["caso_1", "caso_2", "caso_3"]
+          },
+          "required_fields": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "required_instrument": {
             "type": "boolean",
             "default": "false"
+          },
+          "points_label": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
           },
           "requires_observation": {
             "type": "boolean",
@@ -1020,7 +1303,116 @@
             "default": "'active'"
           }
         },
-        "required": ["catalog_id", "framing_code", "description"]
+        "required": [
+          "catalog_id",
+          "framing_code",
+          "description",
+          "approach_class"
+        ]
+      },
+      "NormativeMetrologicalTable": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "table_name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "table_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "catalog_id",
+          "table_name",
+          "version",
+          "table_json",
+          "valid_from",
+          "created_at"
+        ]
+      },
+      "CreateNormativeMetrologicalTableDto": {
+        "type": "object",
+        "properties": {
+          "catalog_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "table_name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "table_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": [
+          "catalog_id",
+          "table_name",
+          "version",
+          "table_json",
+          "valid_from"
+        ]
       },
       "NormativeValidationRule": {
         "type": "object",
@@ -1262,9 +1654,14 @@
             "type": "string",
             "format": "uuid"
           },
-          "document_type": {
+          "document_kind": {
             "type": "string",
             "maxLength": 80
+          },
+          "domain_scope": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'inf'"
           },
           "name": {
             "type": "string",
@@ -1299,7 +1696,7 @@
         "required": [
           "tenant_id",
           "traffic_agency_id",
-          "document_type",
+          "document_kind",
           "name",
           "version",
           "template_body",
@@ -1314,9 +1711,14 @@
             "type": "string",
             "format": "uuid"
           },
-          "document_type": {
+          "document_kind": {
             "type": "string",
             "maxLength": 80
+          },
+          "domain_scope": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'inf'"
           },
           "name": {
             "type": "string",
@@ -1341,11 +1743,121 @@
         },
         "required": [
           "traffic_agency_id",
-          "document_type",
+          "document_kind",
           "name",
           "version",
           "template_body",
           "valid_from"
+        ]
+      },
+      "SignaturePolicy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_kind": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "required_signers_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "pades_level": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "tsa_required": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "pdfa_required": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "govbr_level": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "document_kind",
+          "required_signers_json",
+          "pades_level",
+          "created_at"
+        ]
+      },
+      "CreateSignaturePolicyDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_kind": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "required_signers_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "pades_level": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "tsa_required": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "pdfa_required": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "govbr_level": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'active'"
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "document_kind",
+          "required_signers_json",
+          "pades_level"
         ]
       },
       "MobileNormativePackage": {

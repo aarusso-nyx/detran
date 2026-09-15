@@ -39,6 +39,20 @@ const wf2 = fs.readFileSync(
   ),
   'utf8',
 );
+const teatWf = fs.readFileSync(
+  path.join(
+    root,
+    'docs',
+    'framework',
+    'product',
+    'domains',
+    'inf',
+    'teat',
+    'workflows',
+    'WF-TEAT-001.md',
+  ),
+  'utf8',
+);
 
 function seededCodes(table: string): Set<string> {
   const start = ddl.indexOf(`INSERT INTO ${table}`);
@@ -47,6 +61,18 @@ function seededCodes(table: string): Set<string> {
   const block = ddl.slice(start, end);
   return new Set(
     [...block.matchAll(/^\s*\('([^']+)'/gm)].map((match) => match[1] ?? ''),
+  );
+}
+
+function seededTerminality(table: string): Map<string, boolean> {
+  const start = ddl.indexOf(`INSERT INTO ${table}`);
+  if (start < 0) return new Map();
+  const end = ddl.indexOf('ON CONFLICT', start);
+  const block = ddl.slice(start, end);
+  return new Map(
+    [...block.matchAll(/^\s*\('([^']+)',\s*\d+,\s*(true|false),/gm)].map(
+      (match) => [match[1] ?? '', match[2] === 'true'],
+    ),
   );
 }
 
@@ -102,6 +128,22 @@ const ddlStates = seededCodes('inf.infraction_state_ref');
 const ddlSubstates = seededCodes('inf.infraction_substate_ref');
 const ddlTimers = seededCodes('inf.infraction_timer_ref');
 
+const aitStatesSection = section(teatWf, '## Estados', '## Transições');
+const workflowAitStates = new Set<string>();
+for (const match of aitStatesSection.matchAll(
+  /^\s*([A-Z][A-Z0-9_]+)\s+-->\s+([A-Z][A-Z0-9_]+)/gm,
+)) {
+  if (match[1] && match[1] !== 'AIT') workflowAitStates.add(match[1]);
+  if (match[2] && match[2] !== 'AIT') workflowAitStates.add(match[2]);
+}
+const ddlAitStates = seededCodes('inf.ait_state_ref');
+const ddlAitTerminality = seededTerminality('inf.ait_state_ref');
+const workflowAitTerminalStates = new Set([
+  'CANCELADO_RASCUNHO',
+  'ARQUIVADO',
+  'CANCELADO_POSFINAL',
+]);
+
 const problems: string[] = [];
 const compare = (
   label: string,
@@ -124,6 +166,15 @@ compare(
   new Set([...ddlSubstates].filter((code) => code !== 'PRAZO_DEFESA_ABERTO')),
 );
 compare('timer', docTimers, ddlTimers, false);
+compare('AIT state', workflowAitStates, ddlAitStates);
+for (const code of workflowAitStates) {
+  const expected = workflowAitTerminalStates.has(code);
+  const actual = ddlAitTerminality.get(code);
+  if (actual !== expected)
+    problems.push(
+      `- AIT state ${code}: is_terminal is ${String(actual)}; expected ${String(expected)}`,
+    );
+}
 
 if (problems.length > 0) {
   console.error(
@@ -133,6 +184,6 @@ if (problems.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `check-lifecycle-vocabulary: OK (${ddlStates.size} states, ${ddlSubstates.size} substates, ${ddlTimers.size} timers)`,
+    `check-lifecycle-vocabulary: OK (${ddlStates.size} states, ${ddlSubstates.size} substates, ${ddlTimers.size} timers, ${ddlAitStates.size} AIT states)`,
   );
 }

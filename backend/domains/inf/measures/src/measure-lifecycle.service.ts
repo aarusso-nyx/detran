@@ -11,13 +11,18 @@ import type { MeasureStatusHistoryRepository } from './repositories/measure-stat
 import type { VehicleInventoryRepository } from './repositories/vehicle-inventory.repository.js';
 
 type MeasureStatus =
-  | 'started'
-  | 'in_execution'
-  | 'pending_external_resource'
-  | 'released'
-  | 'concluded'
-  | 'cancelled'
-  | 'rejected';
+  | 'RETIDO'
+  | 'LIBERADO_LOCAL'
+  | 'LIBERADO_COM_PRAZO'
+  | 'REGULARIZADO'
+  | 'CONVERTIDO_REMOCAO'
+  | 'REMOVIDO'
+  | 'EM_DEPOSITO'
+  | 'GUARDA_MONITORADA'
+  | 'VIOLACAO_MONITORAMENTO'
+  | 'NOTIFICADO'
+  | 'RESTITUIDO'
+  | 'LEILAO';
 
 export interface MeasureRepositories {
   measures: AdministrativeMeasureRepository;
@@ -35,8 +40,8 @@ export class MeasureLifecycleService {
   start(id: string, actorId?: string) {
     return this.transitionFrom(
       id,
-      ['started'],
-      'in_execution',
+      ['RETIDO'],
+      'RETIDO',
       'Administrative measure started',
       actorId,
     );
@@ -57,7 +62,7 @@ export class MeasureLifecycleService {
     return this.repositories.measures.transaction(async (tx) => {
       const measure = await this.requireStatus(
         id,
-        ['started', 'in_execution', 'released', 'concluded'],
+        ['RETIDO', 'LIBERADO_LOCAL', 'LIBERADO_COM_PRAZO', 'REGULARIZADO'],
         tx,
       );
       const term = await this.repositories.terms.create(
@@ -93,11 +98,7 @@ export class MeasureLifecycleService {
     },
   ) {
     return this.repositories.measures.transaction(async (tx) => {
-      const measure = await this.requireStatus(
-        id,
-        ['started', 'in_execution'],
-        tx,
-      );
+      const measure = await this.requireStatus(id, ['RETIDO'], tx);
       const retention = await this.repositories.retentions.create(
         {
           measure_id: id,
@@ -108,7 +109,7 @@ export class MeasureLifecycleService {
       );
       await this.transition(
         measure,
-        'in_execution',
+        'RETIDO',
         'Retention recorded',
         tx,
         dto.user_ref,
@@ -128,11 +129,20 @@ export class MeasureLifecycleService {
     },
   ) {
     return this.repositories.measures.transaction(async (tx) => {
-      const measure = await this.requireStatus(
+      let measure = await this.requireStatus(
         id,
-        ['started', 'in_execution'],
+        ['RETIDO', 'LIBERADO_COM_PRAZO', 'CONVERTIDO_REMOCAO'],
         tx,
       );
+      if (measure.current_status !== 'CONVERTIDO_REMOCAO') {
+        measure = await this.transition(
+          measure,
+          'CONVERTIDO_REMOCAO',
+          'Retention converted to removal',
+          tx,
+          dto.user_ref,
+        );
+      }
       const removal = await this.repositories.removals.create(
         {
           measure_id: id,
@@ -146,7 +156,7 @@ export class MeasureLifecycleService {
       );
       await this.transition(
         measure,
-        'in_execution',
+        'REMOVIDO',
         'Removal recorded',
         tx,
         dto.user_ref,
@@ -168,7 +178,13 @@ export class MeasureLifecycleService {
     return this.repositories.measures.transaction(async (tx) => {
       const measure = await this.requireStatus(
         id,
-        ['started', 'in_execution'],
+        [
+          'REMOVIDO',
+          'EM_DEPOSITO',
+          'GUARDA_MONITORADA',
+          'VIOLACAO_MONITORAMENTO',
+          'NOTIFICADO',
+        ],
         tx,
       );
       const inventory = await this.repositories.inventories.create(
@@ -214,27 +230,20 @@ export class MeasureLifecycleService {
         },
         tx,
       );
-      await this.transition(
-        measure,
-        'released',
-        'Retention released',
-        tx,
-        actorId,
-      );
+      const target: MeasureStatus = retention.regularization_deadline_at
+        ? 'LIBERADO_COM_PRAZO'
+        : 'LIBERADO_LOCAL';
+      await this.transition(measure, target, 'Retention released', tx, actorId);
       return released;
     });
   }
 
   conclude(id: string, actorId?: string) {
     return this.repositories.measures.transaction(async (tx) => {
-      const measure = await this.requireStatus(
-        id,
-        ['started', 'in_execution', 'released'],
-        tx,
-      );
+      const measure = await this.requireStatus(id, ['LIBERADO_COM_PRAZO'], tx);
       return this.transition(
         measure,
-        'concluded',
+        'REGULARIZADO',
         'Administrative measure concluded',
         tx,
         actorId,
@@ -244,12 +253,12 @@ export class MeasureLifecycleService {
   }
 
   cancel(id: string, reason: string, actorId?: string) {
-    return this.transitionFrom(
-      id,
-      ['started', 'in_execution', 'pending_external_resource'],
-      'cancelled',
-      reason,
-      actorId,
+    void reason;
+    void actorId;
+    return Promise.reject(
+      new BadRequestException(
+        `Administrative measure ${id} has no cancellation state in WF-TEAT-004`,
+      ),
     );
   }
 
