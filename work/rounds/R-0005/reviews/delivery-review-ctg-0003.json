@@ -1,0 +1,72 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 34,
+      "claim": "O quarto estado de reserva entregue e 'revoked', token que nao existe em nenhum documento canonico. WF-TEAT-002 linhas 45-48 fecha o ciclo em RESERVADA, CONSUMIDA, EXPIRADA e CANCELADA, e teat-route-contract.md linha 123 confirma CANCELADA como resultado de numbering-reservations/{id}/cancel. O blueprint BP-OPS-OFFLINE-SYNC-001 nao declara enum nem CHECK para numbering_reservation.status, entao o CHECK do banco nao detecta a divergencia e o criterio 'uma reserva por estado' fica satisfeito apenas em aparencia. O prompt de TASK-0008 exigia 'nao invente estado' e nenhum OD ou source_pending foi registrado no relatorio.",
+      "fix": "Trocar 'revoked' pelo token canonico de cancelamento e alinhar o idempotency_key correspondente; se a forma inglesa do vocabulario for deliberada, registrar a correspondencia RESERVADA/CONSUMIDA/EXPIRADA/CANCELADA em documento canonico ou abrir OD antes de usar o token."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 15,
+      "claim": "Os 17 AITs por estado herdam tenant_id, traffic_agency_id, agent_id, shift_id, device_id, framing_id, catalog_id e datas de 'cross join lateral (select * from inf.ait_ait order by id limit 1)'. Isso e exatamente a ordem oculta que o prompt proibia: a linha-base nao esta fixada por id. Como seed.sh conecta com DB_USER=postgres (superusuario), o set_config de app.tenant_id na linha 3 nao restringe o lateral, pois o superusuario ignora RLS mesmo com FORCE ROW LEVEL SECURITY (auth.create_rls_policy em backend/database/ddl/11-auth-functions.sql linhas 53-58). Basta uma fixture de AIT de outro tenant ou com id menor que 00000000-0000-7000-8000-0000f0000001 para que os 17 registros passem a apontar para outro tenant/orgao; e como o ON CONFLICT (id) da linha 16 so atualiza current_status, bancos ja semeados nunca convergem para o novo conteudo.",
+      "fix": "Referenciar explicitamente a linha-base pelo id determinista ('00000000-0000-7000-8000-0000f0000001') ou repetir os literais do tenant a001 como no resto do arquivo, e estender o ON CONFLICT para reatualizar as colunas derivadas."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 13,
+      "claim": "Todos os 17 AITs recebem content_hash e receipt_protocol, inclusive os de RASCUNHO_OFFLINE e CANCELADO_RASCUNHO. WF-TEAT-001, transcrito em backend/database/ddl/14-inf-lifecycle-vocabulary.sql, define FINALIZADO_LOCAL (linha 25) como o ponto em que o conteudo legal e congelado e RECEBIDO (linha 28) como 'backend emitiu protocolo de recebimento'. A fixture atribui protocolo de recebimento e hash de conteudo a estados anteriores a ambos; as colunas sao nullable, entao nenhum gate reprova, mas os dados de referencia de WP-T2 passam a afirmar um fato que a definicao canonica exclui.",
+      "fix": "Emitir content_hash apenas a partir de FINALIZADO_LOCAL e receipt_protocol apenas a partir de RECEBIDO, deixando NULL nos estados anteriores (condicional por s.sort_order)."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0005/reports/TASK-0008.md",
+      "line": 18,
+      "claim": "O relatorio declara cobertura completa de postura e de estado de reserva, mas teat-route-contract.md linha 123 descreve tambem reserva bloqueada e fechada, e teat-error-catalog.md linha 47 separa TEAT.DEVICE_NOT_AUTHORIZED de TEAT.DEVICE_BLOCKED; nenhuma fixture cobre essas duas situacoes. Nada disso foi registrado em Fora do escopo.",
+      "fix": "Ou acrescentar as fixturas faltantes, ou registrar explicitamente em Fora do escopo que bloqueada/fechada e a postura nao-autorizada distinta de bloqueada ficam para WP-T2."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/database/seed/10-fixtures-inf-ait.sql",
+      "line": 4,
+      "claim": "O approach_class de 7455-0 (art. 218, II, velocidade) foi fixado em caso_2 por derivacao do antigo booleano allows_no_approach ausente (default false), e nao de ficha do MBFT. RN-TEAT-108 corrige justamente essa confusao: a classe e dado normativo importado ficha a ficha e nao e o booleano. O relatorio declara 'OD: Nenhuma', sem source_pending.",
+      "fix": "Registrar OD ou source_pending apontando a ficha MBFT do enquadramento, ou usar caso_1 (que nao proibe abordagem e preserva had_approach=true da fixture) enquanto a origem nao for consultada."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/database/seed/25-fixtures-teat.sql",
+      "line": 8,
+      "claim": "Os ids dos 17 AITs usam md5('task-0008-ait-' || code)::uuid, fora do padrao determinista '00000000-0000-7000-8000-...' usado por todas as demais fixtures do repositorio (incluindo as deste mesmo arquivo, linhas 20-38). O prompt pedia 'ids deterministas do padrao existente'. Verifiquei que os 17 digests sao distintos e todos maiores que 0x00000000..., entao nao ha colisao nem inversao de ordem hoje; o achado e de padrao e legibilidade, nao de falha corrente.",
+      "fix": "Derivar os ids do prefixo existente com o sort_order do estado, por exemplo um bloco 0000f8000NNN, mantendo determinismo e grepabilidade."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0005/reports/TASK-0008.md",
+      "line": 8,
+      "claim": "O diff do grupo altera work/rounds/R-0005/tasks/TASK-0008.json (status queued para completed, iteration_count 0 para 1), arquivo que nao consta em Arquivos nem em Fora do escopo do relatorio, cuja secao afirma que nada alem das seeds foi alterado pelo Engineer.",
+      "fix": "Declarar no relatorio que a mutacao do task JSON e escrituracao do maestro, fora da fronteira do worker."
+    }
+  ],
+  "notes": [
+    "Item 1: papel Engineer declarado e compativel; a entrega toca apenas backend/database/seed/, dentro do lock MOD-seed.",
+    "Item 4: os cinco comandos do relatorio correspondem exatamente a acceptance_commands de work/rounds/R-0005/tasks/TASK-0008.json e ao §Criterios do plano; nao os reexecutei, esta revisao e somente leitura.",
+    "Item 6: triade respeitada; TASK-0008 e o degrau Engineer de TASK-0007, e a iteracao 1 corrigiu apenas a fixture, sem tocar teste, DDL ou blueprint.",
+    "Item 7: nenhum teste relaxado, nenhum skip e nenhum arquivo gerado editado a mao; a mudanca em 10-fixtures-inf-ait.sql era obrigatoria, pois allows_no_approach deixou de existir e approach_class e NOT NULL (backend/database/ddl/30-inf-normative.sql linhas 38 e 48).",
+    "Item 9: nada nesta entrega fala com SENATRAN; a fronteira de packages/senatran-adapter esta intacta.",
+    "Item 13: sem matriz de autorizacao nesta entrega; nao se aplica.",
+    "A cobertura 17/17 e estrutural, nao apenas empirica: o insert deriva de inf.ait_state_ref e o FK fk_inf_ait_current_status garante o vinculo; a afirmacao do relatorio procede."
+  ]
+}
