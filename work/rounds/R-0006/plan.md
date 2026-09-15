@@ -245,7 +245,7 @@ com as rotas) e reemitir a delivery-review com essa premissa registrada como M14
 janela 2 (emenda do contrato §5 com porta `EventSink` e verbo `extend`, testes do Inspector para o envelope e para a
 segunda prorrogação negada, implementação do Engineer) antes do PR. Recomendação do maestro: (ii) — custo de uma
 tríade pequena (~150 k) e fecha as duas lacunas que os três workers apontaram; até lá o grupo fica commitado como
-checkpoint em branch não publicado. OD proposta por TASK-0014 (não bloqueante): `RAIT_COMMAND_RULES` já concede `inf:rait-suspension-act:create` e
+checkpoint em branch não publicado. **OD-309** (registrada em `open-decisions-rait.md`, não bloqueante): `RAIT_COMMAND_RULES` já concede `inf:rait-suspension-act:create` e
 `inf:rait-export:create` a papéis específicos antes de R-0007 fixar a matriz dos 23 recursos de CTG-0002 — confirmar
 intencionalidade em R-0007. Demais lacunas (não bloqueantes) — lacunas achadas por TASK-0001 (contrato `CTG-0001.md` §9), carregadas como premissa e a
 decidir fora desta rodada: (1) `TIMER_REPROGRAMADO` não existe em `inf.infraction_event_ref` → nesta rodada o
@@ -300,6 +300,12 @@ Inspector segue a especificação §7).
   exaustivas para 23 recursos (73/73 em `@detran/shared`). OD proposta: grants pré-existentes `inf:rait-suspension-act:create`
   e `inf:rait-export:create` em `RAIT_COMMAND_RULES` antes da matriz de R-0007 (registrada em §Bloqueios como não
   bloqueante). Delivery-review ciclo 2 (restrito às correções M17) solicitada.
+
+- 2026-09-15 (janela 3) delivery-review-CTG-0002 ciclo 2 (restrito): **FAIL**, 3 achados → (1) mutação documental de
+  TASK-0008 revertida e **refeita pelo Architect (maestro)** em commit próprio (mesmo conteúdo, autoria constitucional
+  correta); (2) critério de TASK-0014 corrigido (papéis não administrativos; exceções nomeadas), composição recalculada,
+  iteração 2 do Inspector cita a OD no teste; (3) **OD-309** registrada em `open-decisions-rait.md` (grants pré-existentes
+  `inf:rait-suspension-act:create`/`inf:rait-export:create`). Ciclo 3 restrito às três correções.
 
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
