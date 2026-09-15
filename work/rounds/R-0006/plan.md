@@ -272,6 +272,10 @@ Inspector segue a especificação §7).
 - 2026-09-14 (janela 3) TASK-0006 concluída (Sonnet, ~488 k brutos): 14/14 PASS; 114 testes de integração; seeds 40/50/60;
   sensor inf-rls 81; `documents.spec.ts` vermelho por especificação.
 
+- 2026-09-14 (janela 3) TASK-0007 concluída (Sonnet, ~297 k brutos): 9/9 PASS; fachada de documentos, port bancário mock,
+  três módulos montados no `AppModule` (surface CRUD gerada; comandos em R-0007), `pnpm install` do maestro. Divergência de
+  nome do mock (`bank.mock.ts`) aceita como está — o contrato §c é harmonizado na nota do PR.
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de

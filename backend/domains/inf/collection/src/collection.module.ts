@@ -1,4 +1,4 @@
-// Generated from BP-INF-COLLECTION-001 v1.0.0 sha256:72e0af13a687dd9bcaa3931941707644a2214b4ece8daa63d55712fee4ad0243
+// Generated from BP-INF-COLLECTION-001 v1.0.0 sha256:9553391da82dfaf5acf236128822deb730f18b660ab5416e12bdbb0014ca1c7f
 import { Module } from '@nestjs/common';
 import { CollectionDocumentController } from './controllers/collection-document.controller.js';
 import { CollectionDocumentService } from './services/collection-document.service.js';
@@ -12,6 +12,7 @@ import { RefundOrderRepository } from './repositories/refund-order.repository.js
 import { DebtHandoffController } from './controllers/debt-handoff.controller.js';
 import { DebtHandoffService } from './services/debt-handoff.service.js';
 import { DebtHandoffRepository } from './repositories/debt-handoff.repository.js';
+import { BANK_PORT } from './handwritten/index.js';
 
 @Module({
   controllers: [
@@ -29,6 +30,7 @@ import { DebtHandoffRepository } from './repositories/debt-handoff.repository.js
     RefundOrderRepository,
     DebtHandoffService,
     DebtHandoffRepository,
+    BANK_PORT,
   ],
 })
 export class CollectionModule {}
