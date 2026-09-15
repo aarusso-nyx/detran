@@ -305,7 +305,8 @@
       "id": "delivery-review-CTG-0002-5",
       "input_tokens": 25000,
       "output_tokens": 2000,
-      "status": "in_progress"
+      "status": "completed",
+      "verdict": "PASS"
     }
   ],
   "note": "Convention (as R-0003): worker input_tokens = unique reading, not raw subagent_tokens (which include cached context re-reads). At 570k after TASK-0002 = 81% of the window: checkpoint recorded in plan.md §Retomada; CTG-0001 is finished (TASK-0003 + delivery review + PR) and the window closes there. Raw subagent totals: TASK-0001 318k, TASK-0002 363k. Window closed after delivery-review-2 FAIL (escalated): ~705k unique input (101% of the 700k window); raw subagent totals 986k. Window 2: mini-triad prompts reviewed 3 times (REVIEW, REVIEW, FAIL) — stopped per maestro prompt §5; ~190k input, no worker dispatched. Window 2 total ~790k unique input (mini-triad, M15 iteration, 7 reviews, rebase and seed fix).",
