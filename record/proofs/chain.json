@@ -1,5 +1,5 @@
 {
-  "head": "2912181936518a54e85ed3e410dc86500d5ea868386432068b525c783c2cbdb0",
+  "head": "19ff2e0b751db00e3aadd21be284685b5aab6314aa20398c7f2744d8db6c533b",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -1598,56 +1598,84 @@
     },
     {
       "schemaVersion": "1.0.0",
-      "id": "EV-3aa0c1d48633ef57",
-      "timestamp": "2026-09-15T04:00:48.359Z",
+      "id": "EV-2d05d4fb107c3406",
+      "timestamp": "2026-09-15T04:24:48.666Z",
+      "actor": "devai-cli",
+      "actor_role": "harness",
+      "action": "evidence.record.generic",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Volumes/Thiamat II/stech/detran-worktrees/ops-agency",
+        "git": {
+          "head_sha": "3ebeb15b7971bd7a0a61ae504e569a49b8fc54f4",
+          "dirty_files": [
+            "record/proofs/work/generic/R-0005.jsonl",
+            "work/rounds/R-0005/evidence-TASK-0009-main-integration.json"
+          ]
+        }
+      },
+      "artifacts": [],
+      "notes": [
+        "round_id=R-0005",
+        "proof_sequence=10"
+      ],
+      "previous_run_hash": "e4b98151f503aa12934f94b197cc034875cca9106fd0796566d990f3e418eee0",
+      "manifest_hash": "862bedb056ac9f29d04f08e0987ea158936bceede8811fde7fd7314612b406cd",
+      "sequence": 24,
+      "previous_hash": "e4b98151f503aa12934f94b197cc034875cca9106fd0796566d990f3e418eee0"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-9dee77a57754060b",
+      "timestamp": "2026-09-15T04:42:15.333Z",
       "actor": "devai-cli",
       "actor_role": "harness",
       "action": "audit.observe",
       "status": "completed",
       "context": {
-        "repo_root": "/Volumes/Thiamat II/stech/detran-worktrees/rait-model",
+        "repo_root": "/Volumes/Thiamat II/stech/detran-worktrees/ops-agency",
         "git": {
-          "head_sha": "515a5e3da63e040ae9287719d9a735213a31e249",
+          "head_sha": "f432a0cd1ef3bc1005da24208b9e3fb58ac098d6",
           "dirty_files": [
-            ".devai/state/audit-observations/515a5e3da63e040ae9287719d9a735213a31e249/"
+            ".devai/state/audit-observations/f432a0cd1ef3bc1005da24208b9e3fb58ac098d6/"
           ]
         }
       },
       "artifacts": [
         {
-          "path": ".devai/state/audit-observations/515a5e3da63e040ae9287719d9a735213a31e249/inventory.json",
-          "sha256": "4d4ad5cd44da0dfb7cb9fea15c3c8a1fec00a845fc78a46808c9b62aaf1010be",
+          "path": ".devai/state/audit-observations/f432a0cd1ef3bc1005da24208b9e3fb58ac098d6/inventory.json",
+          "sha256": "9dffd7acb9748f53a887c0dde0b5372a9e9d80897df655ab7e5784a177bf1ec4",
           "kind": "audit"
         },
         {
-          "path": ".devai/state/audit-observations/515a5e3da63e040ae9287719d9a735213a31e249/scorecard.json",
-          "sha256": "513864dba31bb46573c3236bc43ace6de3dbf955e91d6f1731904e27a4508965",
+          "path": ".devai/state/audit-observations/f432a0cd1ef3bc1005da24208b9e3fb58ac098d6/scorecard.json",
+          "sha256": "c7d59693dd4d3497a77095e524f4a949c496ecace92c9a872c6606ccc3932fe2",
           "kind": "audit"
         },
         {
-          "path": ".devai/state/audit-observations/515a5e3da63e040ae9287719d9a735213a31e249/backlog.json",
-          "sha256": "f089940347558642948f5c61d57121f23ba6ffe016d0cf62cf1740d80759fd91",
+          "path": ".devai/state/audit-observations/f432a0cd1ef3bc1005da24208b9e3fb58ac098d6/backlog.json",
+          "sha256": "9efdb33dac45a300aa71cea0fe00f581113b7cc1ab27a49323b4b0a03c7ae750",
           "kind": "audit"
         },
         {
-          "path": ".devai/state/audit-observations/515a5e3da63e040ae9287719d9a735213a31e249/assessment.json",
-          "sha256": "0380938ec9699b9685ee8147f4b599b949f9a63843ab44416a5bfe3d1bcd022d",
+          "path": ".devai/state/audit-observations/f432a0cd1ef3bc1005da24208b9e3fb58ac098d6/assessment.json",
+          "sha256": "f3e91df5bbf2f3510f31a557d4487952cdbf796990279a09b10176a7942d9d94",
           "kind": "audit"
         },
         {
-          "path": ".devai/state/audit-observations/515a5e3da63e040ae9287719d9a735213a31e249/status.json",
-          "sha256": "ee7607aab8393934d775b0b499b50ea2986f65d0c4c3f04e90451f3efcd9987f",
+          "path": ".devai/state/audit-observations/f432a0cd1ef3bc1005da24208b9e3fb58ac098d6/status.json",
+          "sha256": "076bf8ca94b3048a8f79c5a43207cc6f59f542a54793b96f06a828217403542b",
           "kind": "audit"
         }
       ],
       "notes": [
-        "exact_sha=515a5e3da63e040ae9287719d9a735213a31e249",
+        "exact_sha=f432a0cd1ef3bc1005da24208b9e3fb58ac098d6",
         "readiness_promoting=false"
       ],
-      "previous_run_hash": "e4b98151f503aa12934f94b197cc034875cca9106fd0796566d990f3e418eee0",
-      "manifest_hash": "2912181936518a54e85ed3e410dc86500d5ea868386432068b525c783c2cbdb0",
-      "sequence": 24,
-      "previous_hash": "e4b98151f503aa12934f94b197cc034875cca9106fd0796566d990f3e418eee0"
+      "previous_run_hash": "862bedb056ac9f29d04f08e0987ea158936bceede8811fde7fd7314612b406cd",
+      "manifest_hash": "19ff2e0b751db00e3aadd21be284685b5aab6314aa20398c7f2744d8db6c533b",
+      "sequence": 25,
+      "previous_hash": "862bedb056ac9f29d04f08e0987ea158936bceede8811fde7fd7314612b406cd"
     }
   ]
 }

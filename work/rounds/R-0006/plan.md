@@ -1,6 +1,6 @@
 # R-0006 — frente `rait-model` (WP-A restante do RAIT: agregado da infração, organização, financeiro, integração)
 
-**Status:** fechada em 2026-09-15 como `PC-0003`, após CTG-0001 (PR #39) e CTG-0002 (PR #43) mesclados em `main`;
+**Status:** fechada em 2026-09-15 como `PC-0004`, após CTG-0001 (PR #39) e CTG-0002 (PR #43) mesclados em `main`;
 aberta em 2026-09-14 pelo maestro Fable 5.1 (Architect no planejamento, Engineer no git); prompt em `prompts/00-maestro.md`. Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (infração, `inf/notification`, `@detran/inf-deadlines`): nenhum upstream — lock em `14-inf-lifecycle-vocabulary.sql` com R-0005 `ops-agency`, rebase. CTG-0002 (worklist/sessão/caso, org, financeiro, integração): `param-store` R-0004 (`orchestra/param-store`) em `main`.
 **Janelas previstas:** 2.
@@ -341,7 +341,7 @@ Checkpoint final `2026-09-15`: rodada fechada.
 
 - Concluídas: TASK-0001…TASK-0014; CTG-0001 mesclado pelo PR #39 (`1fefb32`, 2026-09-14) e CTG-0002 pelo PR #43
   (`515a5e3da63e040ae9287719d9a735213a31e249`, 2026-09-15); observação Auditor `EV-3aa0c1d48633ef57` no HEAD exato;
-  `devai round close` → `PC-0003` (cadeia válida no head `2912181936518a54e85ed3e410dc86500d5ea868386432068b525c783c2cbdb0`).
+  `devai round close` → `PC-0004` (cadeia válida no head `2912181936518a54e85ed3e410dc86500d5ea868386432068b525c783c2cbdb0`).
 - Últimos vereditos: `reviews/delivery-review-CTG-0001-4.json` PASS; `reviews/delivery-review-CTG-0002-5.json` PASS.
 - Pendente: nada nesta rodada. Rotas, jobs, montagem dos módulos no `AppModule` e projeções seguem para R-0007 / WP-P;
   OD-309 aguarda decisão do Owner. Não replanejar; a próxima frente lê `PC-0003` e este plano como histórico.

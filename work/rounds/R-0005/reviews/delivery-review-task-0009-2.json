@@ -1,0 +1,40 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0005",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/framework/arch/teat-build-pack.md",
+      "line": 59,
+      "claim": "O high 1 do ciclo 1 foi fechado apenas na clausula de shift: a mesma linha de BP-OPS-FIELD-001 continua terminando em \"com CHECKs e FKs que o DDL manual nao tem\" e agora esta sob o carimbo \"Executado\" da linha 50, logo o build pack declara entregues CHECKs que nao existem. Verificacao: grep -ic check em backend/database/ddl/13-ops-field-operations.sql retorna 0 (nenhuma constraint check no arquivo inteiro, so 5 FKs em ops.ops_shift e demais), e docs/framework/blueprints/BP-OPS-FIELD-001.json nao tem nenhuma chave \"checks\". O gerador suporta o recurso: 17-ops-evidence.sql tem 4 checks, 18-ops-offline-sync.sql 3 e 32-inf-measures.sql tem os checks de estado/prazo. A Meta 2 do plano prometia \"FKs e os CHECKs respaldados pela origem que o DDL manual nao tem\"; so a parte FK foi entregue, e o documento canonico que o engenheiro de WP-T2 le primeiro afirma o contrario.",
+      "fix": "Reescrever o fim da linha 59 como \"com FKs que o DDL manual nao tem; sem CHECKs de estado enquanto a origem nao publicar os vocabularios (mesmo reference-gap de shift)\", mantendo a formula ja usada nos outros cinco documentos; se preferir preservar a mencao a CHECKs, restringi-la as linhas EVIDENCE e OFFLINE-SYNC, que de fato os tem."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "docs/framework/blueprints/README.md",
+      "line": 33,
+      "claim": "O low de datas foi fechado no build pack (linha 50), no backlog (linha 453) e em decision-closure-plan.md (linha 28), mas nao nestes dois documentos do mesmo diff: o cabecalho \"WP-T1 ops (executado em 2026-09-15)\" e backend/domains/ops/README.md:7 (\"Populated in WP-T1 (2026-09-15)\") continuam atribuindo a 2026-09-15 exatamente os artefatos que sao de 2026-09-14. Os cinco blueprints, os cinco pacotes e os DDLs entraram no commit ffe1979 (\"feat(ops): generate WP-T1 agency and operations domains\", 2026-09-14T18:20:04-03:00), ancestral do merge do PR #40 (1c662f08ab3a7a61db754700dbe45fd91680de25, 2026-09-14T19:45:20-03:00). O resultado e que a mesma entrega passa a declarar duas datas diferentes para o mesmo fato.",
+      "fix": "Trocar por \"WP-T1 ops (blueprints e pacotes em 2026-09-14, PR #40; fechamento do WP em 2026-09-15)\" e, em backend/domains/ops/README.md:7, \"Populated in WP-T1 (2026-09-14, PR #40)\"."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "docs/framework/arch/teat-route-contract.md",
+      "line": 46,
+      "claim": "Ao uniformizar as linhas ops (low 1 do ciclo 1), a coluna Situacao perdeu o registro das rotas handwritten que continuam vivas: mobile-operations (linha 46), evidence-custody (linha 49) e external-snapshots (linha 50) agora dizem apenas \"CRUD gerado (blueprint e DDL); comandos permanecem WP-T2\", enquanto as versoes anteriores diziam \"handwritten parcial (10 rotas)\" e \"handwritten parcial (5 rotas)\". Os controladores existem e seguem montados: backend/domains/ops/field/src/handwritten/field-operations.controller.ts (@Controller('ops') com 13 handlers: agents, devices, teams, shifts, homologations, app-versions), backend/domains/ops/snapshots/src/handwritten/frozen-snapshot.controller.ts e backend/domains/ops/evidence/src/handwritten/evidence-custody.controller.ts, todos declarados como handwrittenControllers nos blueprints (BP-OPS-FIELD-001.json linhas 10-28). Lido como esta, WP-T2 pode reimplementar rotas ja publicadas e a cobertura de politica perde a superficie existente.",
+      "fix": "Acrescentar a cada uma das tres linhas a mencao preservada, por exemplo \"CRUD gerado (blueprint e DDL); handwritten parcial ja montado (10/5/5 rotas); comandos permanecem WP-T2\"."
+    }
+  ],
+  "notes": [
+    "High 1 do ciclo 1 confirmado fechado no ponto nomeado: a linha 59 do build pack agora diz \"shift (status sem CHECK, source_pending; reference-gap de BP-MOBILE-OPERATIONS-001)\", o que corresponde ao repositorio (BP-OPS-FIELD-001.json: Shift.status varchar(40) default 'open', sem check; DDL identico). O residuo que sobrou na mesma linha esta no finding 1.",
+    "High 2 do ciclo 1 confirmado fechado e verificavel: a linha 47 deixou de citar ops-operations (sem arquivos rastreados; git ls-files vazio em backend/domains/ops/operations e evidence-custody, restam so node_modules) e passou a apontar \"handwritten controllers de @detran/ops-field (ADR-0006)\". O pacote realmente declara handwrittenControllers/Providers/Exports para handwritten/field-operations, e o build pack §WP-T2 (linha 75) coloca /v1/ops/mobile-bootstrap em src/handwritten; a situacao segue \"pendente\", coerente com a ausencia do controlador de bootstrap.",
+    "Os cinco lows do ciclo 1: (1) vocabulario CRUD uniformizado nas cinco linhas ops; (2) offline-sync agora cita @detran/ops-offline-sync + BP-OPS-OFFLINE-SYNC-001 e a Fase 5 com seam @stynx-nyx/offline-sync, o que confere com o adendo de 2026-09-14 da ADR-0006; (3) datas reais aplicadas no build pack, backlog e closure plan, com residuo no finding 2; (4) decision-closure-plan.md:28 agora cita ADR-0023 e 13-ops-agency.sql; (5) o carimbo foi delimitado e BP-OPS-PROVISIONING-001 esta explicitamente em R-0013/WP-T5, coerente com a ausencia do blueprint em docs/framework/blueprints/.",
+    "Fatos conferidos contra o repositorio: os tres merges existem com 1c662f0 em 2026-09-14T19:45:20-03:00, bb4797a em 2026-09-14T23:56:07-03:00 e 30118fa em 2026-09-15T00:10:58-03:00, o que valida a nova reparticao de datas; os cinco blueprints ops, seus contratos OpenAPI e os DDLs 13-ops-agency.sql, 13-ops-field-operations.sql, 16, 17 e 18 existem; os seis modulos ops estao importados em backend/app/src/app.module.ts:72-77. O bloco \"Tambem:\" coberto pelo carimbo tambem confere: inf.ait_state_ref esta em 14-inf-lifecycle-vocabulary.sql:13 e os seis timers T-REG30/T-REG15/T-NOTIF10/T-DEPOSITO6M/T-CNH5D/T-SNE2027 estao la com owner='medida' (linhas 198-203), alem das fixtures 25-fixtures-teat.sql.",
+    "Nenhum gate foi enfraquecido e a fronteira de escrita foi respeitada: o diff toca somente os seis documentos autorizados, sem codigo, teste, blueprint, contrato gerado, DDL, ADR, record/ ou .devai/; nenhum valor de PR, run, hash ou evidencia foi inventado; nada fala com SENATRAN fora do adapter.",
+    "Nao promovido a finding, so consistencia editorial: na coluna Blueprint/modulo da §2, so a linha 48 usa o nome com escopo (@detran/ops-offline-sync), enquanto as linhas 46, 49, 50 e 54 usam ops-field, ops-evidence, ops-snapshots e ops-agency sem prefixo. Como os nomes aposentados eram justamente os nus, vale padronizar em @detran/* na proxima passagem.",
+    "O unico high e corrigivel por edicao documental dentro da fronteira ja autorizada, sem mudar o plano, reabrir CTG mesclado ou contrariar decisao do Owner; por isso o veredito e REVIEW e nao FAIL."
+  ]
+}

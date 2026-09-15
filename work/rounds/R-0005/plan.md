@@ -1,9 +1,10 @@
 # R-0005 — frente `ops-agency` (WP-T1 do TEAT: modelo de dados de `ops/*` e deltas dos blueprints `inf`)
 
-**Status:** CTG-0001 mesclado no PR #40. CTG-0002 e CTG-0003 implementados; todos os gates locais
-finais estão verdes. As correções de escalada dos reviews anteriores aguardam somente a revisão
-Opus final antes de commit, evidência, PR e merge. Reviewer: Opus 5 via
-`tools/orchestra/bridge.sh claude`.
+**Status:** todas as TASK-0001...TASK-0009 concluídas. CTG-0001 mesclado no PR #40, CTG-0002 no
+PR #41, CTG-0003 no PR #42 e TASK-0009 no PR #44. O candidato final passou os cinco jobs do CI no
+run `34928749360` e foi mesclado como `f432a0cd1ef3bc1005da24208b9e3fb58ac098d6`; a observação
+Auditor exata é `EV-9dee77a57754060b`. O fechamento D-2 foi materializado como `PC-0003`.
+Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — nenhum upstream para grupo algum (decisão do Owner, 2026-09-14: abre em paralelo à onda 1). Pontos de rebase com R-0004 `param-store`: `backend/app/src/app.module.ts` e `docs/framework/blueprints/BP-INF-NORMATIVE-001.json`; se R-0004 retomar na janela Sol, grave `checkpoint` ao fim do CTG-0001 e ceda a janela.
 **Janelas previstas:** 2 (CTG-0001/0002 na primeira; CTG-0003 e docs na segunda).
 
@@ -294,6 +295,43 @@ Checkpoint da janela 1 em 2026-09-14:
   hardening: estados legados de alcoolemia, validação runtime de `kind`, termo na submáquina B,
   teste de `conclude`, derivação de terminais, cadastro canônico de `OD-T13` e matrizes dos quatro
   recursos CRUD novos.
+- CTG-0002 foi mesclado no PR #41 como `bb4797ab38cc4cf47d500e29b203925b29861057` depois de
+  todos os cinco jobs do run `34922071820` passarem. CTG-0003 foi mesclado no PR #42 como
+  `30118fa749801d43e7b0b3238ed19b241c8b9114` depois de todos os cinco jobs do run `34923196682`
+  passarem. A observacao Auditor pos-merge de #42 completou como `EV-a6f9b7b940fd0b04`; TASK-0009
+  foi liberada somente depois desses fatos imutaveis.
+- TASK-0009 pre-dispatch: `prompt-bug` na fronteira documental. O plano vinculante e o low da
+  terceira review já roteavam a atualização de `teat-route-contract.md` §2, mas o arquivo faltava
+  em "Pode tocar". A composição foi corrigida para incluir somente esse documento e nenhum
+  requisito novo; a autorização humana anterior para incorporar os lows permanece a autoridade.
+- TASK-0009 concluida pelo Owner delegado: os seis documentos autorizados transcrevem os PRs
+  #40/#41/#42, pacotes e blueprints WP-T1, fecham o gate institucional 3 e preservam WP-T2+ e
+  lacunas de vocabulario como pendentes. `format:check`, `docs:kb:check` (521/446),
+  `docs:kb:publish-check` (201, raw/internal excluido) e `git diff --check` passaram. Pendente:
+  delivery-review Opus antes de commit/evidencia/PR.
+- Delivery-review TASK-0009 ciclo 1 retornou REVIEW com dois highs documentais: a linha de
+  `BP-OPS-FIELD-001` ainda prometia CHECK inexistente para `shift.status`, e `mobile-bootstrap`
+  ainda citava o pacote aposentado `ops-operations`. Os lows pedem explicitar CRUD, pacote
+  `@detran/ops-offline-sync`, datas locais reais, ADR-0023/DDL e o recorte de provisioning. Todos
+  cabem na fronteira documental já autorizada; TASK-0009 volta ao mesmo transcritor na iteracao 1.
+- Delivery-review TASK-0009 ciclo 2 confirmou os achados anteriores, mas encontrou um high
+  residual na frase generica que ainda atribuía CHECKs ao FIELD inteiro, além de lows de datas em
+  dois documentos e preservação explícita das rotas handwritten já montadas. Como este foi o
+  segundo REVIEW, a iteração 2 escala de Luna para Terra, mesma família e mesma fronteira.
+- A revisão focal de escalada da TASK-0009 retornou PASS, zero highs. O low herdado sobre a
+  contagem/prefixo das rotas FIELD (10 documentadas versus 12 handlers atuais em `/v1/ops/*`) foi
+  roteado para R-0008/WP-T2, onde a superfície de comandos será consolidada; a duplicidade
+  preexistente do número ADR-0006 fica em hardening editorial próprio. Nenhum low altera o gate
+  de WP-T1 ou o diff aprovado.
+- Antes do merge do PR #44, `origin/main` avançou pelo PR #43/R-0006. A branch publicada integrou
+  `515a5e3` por merge normal `ec09e08e4e9a0f72a2f72fd7b2c3068cd2ed7a6c`. O conflito no
+  README de blueprints foi composição aditiva; a cadeia DEVAI aceitou `main` e será regravada para
+  TASK-0009 sobre a nova ancestralidade. A primeira repetição de `pnpm check` pós-merge passou
+  blueprints, contratos e parâmetros, mas falhou em typecheck porque os três workspaces novos de
+  R-0006 ainda não tinham links locais (`vitest/globals` ausente). Classificação: `sensor-error`
+  de ambiente. `pnpm install --frozen-lockfile` materializou os 47 workspaces sem alterar o
+  lockfile; a repetição integral passou, incluindo typecheck, 839 handlers, 182 tabelas tenant,
+  17 estados AIT, fronteira SENATRAN e paridade PEC.
 
 ## Triagem
 
@@ -418,7 +456,17 @@ Checkpoint da janela 1 em 2026-09-14:
   `numbering-ranges`, `receipts`) e locks explicitos para outputs gerados. Como TASK-0002 ja estava
   em `iteration_count=2`, a correcao foi escalada ao Architect Sol: blueprints corrigidos,
   artefatos regenerados, 64 paths limpos, zero tags nulas e locks atualizados. O teste e2e foi
-  alinhado a `/v1/ops/field/agents`. Uma terceira revisao nao foi iniciada.
+  alinhado a `/v1/ops/field/agents`. A terceira revisão autorizada retornou PASS com zero highs.
+- Encerramento funcional: os PRs #40, #41, #42 e #44 foram mesclados após os respectivos cinco
+  jobs obrigatórios passarem. O último candidato, `e9441c0a6c16a29baf1cdfda9ba92c29ebb7b4bb`,
+  passou no run `34928749360` e foi mesclado como
+  `f432a0cd1ef3bc1005da24208b9e3fb58ac098d6`. A observação Auditor
+  `EV-9dee77a57754060b` avançou a cadeia para
+  `19ff2e0b751db00e3aadd21be284685b5aab6314aa20398c7f2744d8db6c533b`.
+- Checkpoint final: TASK-0001...TASK-0009 estão `completed`; os últimos reviews de CTG-0001,
+  CTG-0002, CTG-0003 e TASK-0009 estão PASS com zero highs; a closure D-2 foi materializada como
+  `PC-0003`. Restam somente validar o candidato administrativo, mesclar o PR de fechamento e
+  apagar o branch remoto.
 
 ## Leitura
 
