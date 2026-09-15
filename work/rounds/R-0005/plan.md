@@ -322,6 +322,15 @@ Checkpoint da janela 1 em 2026-09-14:
   roteado para R-0008/WP-T2, onde a superfície de comandos será consolidada; a duplicidade
   preexistente do número ADR-0006 fica em hardening editorial próprio. Nenhum low altera o gate
   de WP-T1 ou o diff aprovado.
+- Antes do merge do PR #44, `origin/main` avançou pelo PR #43/R-0006. A branch publicada integrou
+  `515a5e3` por merge normal `ec09e08e4e9a0f72a2f72fd7b2c3068cd2ed7a6c`. O conflito no
+  README de blueprints foi composição aditiva; a cadeia DEVAI aceitou `main` e será regravada para
+  TASK-0009 sobre a nova ancestralidade. A primeira repetição de `pnpm check` pós-merge passou
+  blueprints, contratos e parâmetros, mas falhou em typecheck porque os três workspaces novos de
+  R-0006 ainda não tinham links locais (`vitest/globals` ausente). Classificação: `sensor-error`
+  de ambiente. `pnpm install --frozen-lockfile` materializou os 47 workspaces sem alterar o
+  lockfile; a repetição integral passou, incluindo typecheck, 839 handlers, 182 tabelas tenant,
+  17 estados AIT, fronteira SENATRAN e paridade PEC.
 
 ## Triagem
 
