@@ -8,7 +8,10 @@
     "ddlFile": "31-inf-ait.sql",
     "dependencies": {
       "@detran/inf-normative": "workspace:*",
-      "@detran/senatran-adapter": "workspace:*"
+      "@detran/senatran-adapter": "workspace:*",
+      "@detran/shared": "workspace:*",
+      "zod": "^4.6.5",
+      "@detran/ops-core": "workspace:*"
     },
     "devDependencies": {
       "@types/pg": "^8.15.4",
@@ -22,6 +25,10 @@
       {
         "package": "@detran/inf-normative",
         "target": "../normative/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-core",
+        "target": "../../ops/core/src/index.ts"
       }
     ],
     "moduleImports": [
@@ -34,18 +41,30 @@
       {
         "target": "ait-commands.controller",
         "symbol": "AitCommandsController"
+      },
+      {
+        "target": "handwritten/ait-cancel-requests.controller",
+        "symbol": "AitCancelRequestsController"
       }
     ],
     "handwrittenProviders": [
       {
         "target": "ait-lifecycle.provider",
         "symbol": "AIT_LIFECYCLE_PROVIDER"
+      },
+      {
+        "target": "handwritten/ait-cancel-requests.provider",
+        "symbol": "AIT_CANCEL_REQUESTS_PROVIDER"
       }
     ],
     "handwrittenExports": [
       "ait-lifecycle.service",
       "ait-lifecycle.provider",
-      "ait-commands.controller"
+      "ait-commands.controller",
+      "handwritten/index",
+      "handwritten/events",
+      "handwritten/ait-cancel-requests.controller",
+      "handwritten/ait-cancel-requests.provider"
     ],
     "owners": ["detran-inf"],
     "description": "AIT issuance and lifecycle with immutable content hash, normative references, and operational satellites."
@@ -896,7 +915,8 @@
       {
         "entity": "AitCancelRequest",
         "path": "cancel-requests",
-        "resource": "ait-cancel-request"
+        "resource": "ait-cancel-request",
+        "operations": ["list", "get"]
       },
       {
         "entity": "AitCancelRequestEvent",

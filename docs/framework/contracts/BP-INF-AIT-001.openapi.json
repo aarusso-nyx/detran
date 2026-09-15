@@ -154,32 +154,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": ["ait-cancel-request"],
-        "operationId": "createAitCancelRequest",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAitCancelRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AitCancelRequest"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/v1/inf/ait/cancel-requests/{id}": {
@@ -207,52 +181,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["ait-cancel-request"],
-        "operationId": "updateAitCancelRequest",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateAitCancelRequestDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AitCancelRequest"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["ait-cancel-request"],
-        "operationId": "removeAitCancelRequest",
-        "responses": {
-          "200": {
-            "description": "deleted"
           },
           "404": {
             "description": "not found"

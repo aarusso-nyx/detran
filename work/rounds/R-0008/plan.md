@@ -312,6 +312,33 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
 - Bodycam: só chrome/metadados; retenção `teat.bodycam.retention_days` `source_pending` (DT-049).
 - Guarda monitorada e medidores acoplados: rotas registradas e desligadas por flag (`teat.monitored_custody`, `teat.speed_meters`).
 
+## Triagem
+
+- 2026-09-15 TASK-0002 e2e 503 "Distributed rate limit backend unavailable" → `sensor-error`: o app lia `DATABASE_URL`/`STYNX_*_DATABASE_URL`
+  ausentes e conectava ao `detran` local sem DDL. Correção: `work/rounds/R-0008/env-detran-r8.sh` (cinco variáveis do job `backend-kernel`)
+  e nota nos prompts TASK-0003…0010/0012 (só ambiente; prompt-review não repetido). Confirmado: `ops-modules` e `pec-idempotency` e2e
+  verdes com o ambiente.
+- 2026-09-15 TASK-0001 bloqueio 2 (delta `BP-INF-AIT-001`) e CTG-0002 §11.4 → `reference-gap`: deltas aplicados pelo maestro (Architect)
+  em b523f1f com adendas §12 nos contratos CTG-0001/0002.
+
+- 2026-09-15 TASK-0003 iteração 1 — quatro bloqueios: (1) colisão `POST /v1/inf/ait/cancel-requests` (CRUD gerado × manuscrito) →
+  `reference-gap`: delta `BP-INF-AIT-001` `api.resources[AitCancelRequest].operations=['list','get']` aplicado pelo maestro (Architect;
+  o gerador já suportava `operations`), regenerado; OD-T23 do Engineer fechada por esse delta. (2) ordem 403/404 em `decide` sem pedido →
+  `sensor-error`: C-0001-40 exige um pedido `addressed_to='diretoria-fiscalizacao'` existente; o teste usou uuid aleatório — Inspector
+  corrige (iteração 2 de TASK-0002); ordem canônica: 404 `TEAT.AIT_CANCEL_TARGET_NOT_FOUND` antes do addressee (sem pedido não há
+  `addressed_to`). (3) testes pré-existentes contraditórios com M2/M4 (`inf-ait-routes.e2e.spec.ts` WP-T0 sem `If-Match`; `ait-lifecycle.e2e.spec.ts`
+  espera `ACEITO`) e specs do Inspector quebrando `tsc` (TS2493/TS2352) e `verify:parameter-catalogue` (literais `teat.errors.*` em
+  `detran-error.spec.ts`; o verificador só ignora diretórios `tests`, não `*.spec.ts`, contra o próprio contrato do catálogo) →
+  `sensor-error`: Inspector corrige os testes e alinha o verificador ao contrato ("ignorando testes"). (4) `zod` não linkado em
+  `@detran/inf-ait` → `reference-gap`: `module.dependencies.zod` no blueprint + `pnpm install` pelo maestro (commit `chore(deps)`).
+- 2026-09-15 delivery-review-CTG-0001 ciclo 1 `FAIL` (7 achados `high`, todos `plant-bug`/`reference-gap` de implementação incompleta
+  frente ao contrato): adenda §13 em CTG-0001 fecha cada um (porta `SyncConflictPort` em `ops-core`; `If-Match` do AIT quando `ait_id`
+  existe; guarda `decision_body` divergente; guarda de estado em `decide`/`review`; id do evento pelo outbox; `@Idempotent()` do kernel;
+  `originStatus` validado). Iteração 3 do Inspector (testes) e do Engineer (código); ciclo 2 da delivery-review restrito aos achados.
+- 2026-09-15 delivery-review-CTG-0001 ciclo 2 `REVIEW` (1 achado: `If-Match`/`ETag` de `review`/`decide` ausentes quando `ait_id` é nulo) →
+  `plant-bug`: Inspector iteração 5 (testes 428/412/200+ETag sem AIT) + Engineer iteração 4; ciclo 3 restrito. Gates completos
+  (`pnpm check`, `backend:test:ci` com `env-detran-r8.sh`) verdes no ciclo 2.
+
 ## Concorrência
 
 - `origin/main` em df1e1769941e527a07b6db7550aee84068f3a872 (PR #46). Upstreams **já em `main`**: `ops-agency` R-0005 (PRs #40, #41,
@@ -341,6 +368,10 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   `reviews/prompt-review-1.md` enviado à ponte (Terra). Concluídas: nenhuma. Em curso: prompt-review-1. Pendentes: TASK-0001…0011.
   prompt-review: ciclo 1 `REVIEW`, ciclo 2 `FAIL` (estrutura, corrigido com CTG-0005), ciclo 3 `PASS`.
   TASK-0001 disparada (opus/high).
+- 2026-09-15 (janela 1, checkpoint 2): CTG-0001 concluído — TASK-0001 (contratos), TASK-0002 (5 iterações), TASK-0003 (4 iterações);
+  delivery-review ciclos 1 `FAIL` / 2 `REVIEW` / 3 `PASS`; `pnpm check` e `backend:test:ci` verdes. Próximo: commit, evidência, PR do
+  CTG-0001; depois TASK-0004 (opus/high). Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
+  maestro prossegue por instrução explícita do Owner ("até a completa finalização e merge").
 
 ## Leitura
 

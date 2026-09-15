@@ -466,6 +466,119 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
   ['inf', 'ait', 'approve-correction', ['traffic-authority']],
   ['inf', 'ait', 'accept', ['traffic-authority']],
   ['inf', 'ait', 'reject', ['traffic-authority']],
+  // CTG-0001 §5 (M4/M18, TASK-0003): AIT completo — archive, review da
+  // apuração de concorrência e o comando de cancelamento. `create` reflete a
+  // origem `teat-policy.ts` (`ait-cancel-request:create`), mais restrito que
+  // `INF_FIELD_LEGAL_ROLES` (sem `processing-operator`); os pares `read`,
+  // `update`, `delete` e o recurso `ait-cancel-request-event` são a
+  // superfície CRUD gerada, sem regra hoje (§11.7 do contrato) — literais
+  // (não `INF_READ_ROLES`/`INF_FIELD_LEGAL_ROLES`: essas consts só são
+  // declaradas depois deste bloco no arquivo, TDZ impede a referência aqui).
+  ['inf', 'ait', 'archive', ['traffic-authority']],
+  ['inf', 'ait', 'review-concurrency', ['traffic-authority', 'AUDITOR']],
+  [
+    'inf',
+    'ait-cancel-request',
+    'create',
+    ['field-agent', 'field-supervisor', 'traffic-authority'],
+  ],
+  ['inf', 'ait-cancel-request', 'review', ['traffic-authority']],
+  ['inf', 'ait-cancel-request', 'decide', ['traffic-authority']],
+  [
+    'inf',
+    'ait-cancel-request',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'agency-admin',
+      'technical-admin',
+      'AUDITOR',
+      'bi-analyst',
+      'integration-operator',
+    ],
+  ],
+  [
+    'inf',
+    'ait-cancel-request',
+    'update',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  ['inf', 'ait-cancel-request', 'delete', ['technical-admin']],
+  [
+    'inf',
+    'ait-cancel-request-event',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'agency-admin',
+      'technical-admin',
+      'AUDITOR',
+      'bi-analyst',
+      'integration-operator',
+    ],
+  ],
+  [
+    'inf',
+    'ait-cancel-request-event',
+    'create',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  [
+    'inf',
+    'ait-cancel-request-event',
+    'update',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'technical-admin',
+    ],
+  ],
+  ['inf', 'ait-cancel-request-event', 'delete', ['technical-admin']],
+  // Superfície CRUD gerada sem regra hoje (§11.7): catálogo normativo,
+  // restrita a INF_ADMIN_ROLES (agency-admin, technical-admin).
+  [
+    'inf',
+    'normative-metrological-table',
+    'read',
+    ['agency-admin', 'technical-admin'],
+  ],
+  [
+    'inf',
+    'normative-metrological-table',
+    'create',
+    ['agency-admin', 'technical-admin'],
+  ],
+  [
+    'inf',
+    'normative-metrological-table',
+    'update',
+    ['agency-admin', 'technical-admin'],
+  ],
+  ['inf', 'normative-metrological-table', 'delete', ['technical-admin']],
+  ['inf', 'signature-policy', 'read', ['agency-admin', 'technical-admin']],
+  ['inf', 'signature-policy', 'create', ['agency-admin', 'technical-admin']],
+  ['inf', 'signature-policy', 'update', ['agency-admin', 'technical-admin']],
+  ['inf', 'signature-policy', 'delete', ['technical-admin']],
   [
     'ops',
     'evidence',
@@ -485,13 +598,8 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
     'generate',
     ['processing-operator', 'AUDITOR', 'technical-admin'],
   ],
-  ['ops', 'offline-numbering-reservation', 'reserve', ['field-agent']],
-  [
-    'ops',
-    'offline-numbering-reservation',
-    'cancel',
-    ['field-agent', 'field-supervisor'],
-  ],
+  // M18: `ops:offline-numbering-reservation:{reserve,cancel}` removidas —
+  // alias duplicado da origem; a rota única é `numbering-reservation`.
   ['ops', 'numbering-reservation', 'reserve', ['field-agent']],
   [
     'ops',
@@ -1323,6 +1431,26 @@ export function isDetranActionAllowed(
   if (roles.some((role) => GLOBAL_ADMIN_ROLES.has(role))) return true;
   const allowed = DETRAN_POLICY_MATRIX[key];
   return Boolean(allowed?.some((role) => roles.includes(role)));
+}
+
+/**
+ * CTG-0001 §5 (M3, H.39/OD-T01) — competence to decide an
+ * `ait_cancel_request`. The second layer applied after
+ * `isDetranActionAllowed('inf:ait-cancel-request', 'decide')`: a role check
+ * alone is not enough for `addressed_to='diretoria-fiscalizacao'`, which also
+ * requires the `decision_body` attribute (`Principal.claims.decision_body`,
+ * canonical value `diretoria-fiscalizacao`) — never `DETRAN_POLICY_MATRIX`,
+ * so `technical-admin`'s `'*'` in `isDetranActionAllowed` never substitutes
+ * for the attribute.
+ */
+export function canDecideAitCancelRequest(
+  principal: Pick<Principal, 'roles' | 'permissions' | 'claims'>,
+  addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+): boolean {
+  const roles = canonicalRoles(principal.roles);
+  if (!roles.includes('traffic-authority')) return false;
+  if (addressedTo === 'traffic-authority') return true;
+  return principal.claims?.['decision_body'] === 'diretoria-fiscalizacao';
 }
 
 /**

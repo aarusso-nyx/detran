@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 630000,
-  "estimated_output_total": 63500,
+  "estimated_input_total": 1575000,
+  "estimated_output_total": 298800,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -35,6 +35,94 @@
       "id": "prompt-review-3",
       "input_tokens": 25000,
       "output_tokens": 500,
+      "status": "completed",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "input_tokens": 130000,
+      "output_tokens": 40000,
+      "status": "completed",
+      "note": "subagent_tokens 507k brutos (108 tool uses, 39 min); ~130k únicos; 4 contratos (5.5k linhas)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "input_tokens": 110000,
+      "output_tokens": 35000,
+      "status": "completed",
+      "note": "subagent_tokens 437k brutos (107 tool uses, 27 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-iter2",
+      "input_tokens": 60000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "subagent 526k brutos (contexto retomado, 50 tool uses, 8.5 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "input_tokens": 200000,
+      "output_tokens": 75000,
+      "status": "completed",
+      "note": "iter1 650k brutos (288 tool uses, 78 min); iter2 678k brutos (24 tool uses, 13 min); iter3 pendente"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001",
+      "input_tokens": 80000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-2",
+      "input_tokens": 90000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-iter3-4",
+      "input_tokens": 80000,
+      "output_tokens": 20000,
+      "status": "completed",
+      "note": "iter3 651k brutos (50 tool uses, 12 min); iter4 663k brutos (9 tool uses, 3 min) — contexto retomado"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003-iter3",
+      "input_tokens": 90000,
+      "output_tokens": 30000,
+      "status": "completed",
+      "note": "871k brutos (167 tool uses, 23 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-iter5",
+      "input_tokens": 30000,
+      "output_tokens": 8000,
+      "status": "completed",
+      "note": "688k brutos (23 tool uses, 4.5 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003-iter4",
+      "input_tokens": 40000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "892k brutos (190 tool uses, 64 min — inclui espera de gates)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-3",
+      "input_tokens": 35000,
+      "output_tokens": 800,
       "status": "completed",
       "verdict": "PASS"
     }

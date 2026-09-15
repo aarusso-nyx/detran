@@ -319,7 +319,15 @@ export class DetranLocalTokenVerifier implements TokenVerifier {
       roles,
       permissions: permissionsForRoles(roles),
       tenants: [LOCAL_TENANT_ID],
-      claims: { local: true },
+      claims: {
+        local: true,
+        // M3/H.39/OD-T01, CTG-0001 §5: the real IdP's attribute mapping for
+        // `decision_body` is deployment configuration (source_pending,
+        // OD-T18); the local profile only lets tests opt into it.
+        ...(process.env.DETRAN_LOCAL_DECISION_BODY
+          ? { decision_body: process.env.DETRAN_LOCAL_DECISION_BODY }
+          : {}),
+      },
     };
     return { principal, token };
   }

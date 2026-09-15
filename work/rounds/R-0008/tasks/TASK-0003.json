@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0003",
   "round_id": "R-0008",
-  "status": "queued",
+  "status": "completed",
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
   "title": "Implementar DetranError, If-Match, concurrency-review, cancel-requests, archive e a política do AIT até os testes de TASK-0002 passarem",
@@ -20,13 +20,13 @@
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0002",
   "db_isolation": "database",
-  "iteration_count": 0,
+  "iteration_count": 4,
   "max_iterations": 2,
   "priority": 3,
   "tags": ["wp-t2"],
   "branch": "orchestra/teat-backend",
   "worktree_id": "WT-teat-backend",
-  "prompt_composition_id": "PC-dd9c5a6ae48f5ae5",
+  "prompt_composition_id": "PC-cabf4dcbb30715f2",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/shared", "test"],
     ["pnpm", "--filter", "@detran/inf-ait", "test:unit"],
@@ -46,7 +46,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-dd9c5a6ae48f5ae5",
+    "prompt_composition_id": "PC-cabf4dcbb30715f2",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

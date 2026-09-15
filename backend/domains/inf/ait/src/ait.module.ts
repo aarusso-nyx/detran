@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.2.0 sha256:7501ee3ae148ed392c384119fcce2158f0accb353d0ce4c4406b3863321a28ea
+// Generated from BP-INF-AIT-001 v1.2.0 sha256:929e2e65586fc826e76dc66fceae7a52e7920abed66169e1291a67e2bd055f6d
 import { Module } from '@nestjs/common';
 import { AitController } from './controllers/ait.controller.js';
 import { AitService } from './services/ait.service.js';
@@ -28,7 +28,9 @@ import { AitPrintEventController } from './controllers/ait-print-event.controlle
 import { AitPrintEventService } from './services/ait-print-event.service.js';
 import { AitPrintEventRepository } from './repositories/ait-print-event.repository.js';
 import { AitCommandsController } from './ait-commands.controller.js';
+import { AitCancelRequestsController } from './handwritten/ait-cancel-requests.controller.js';
 import { AIT_LIFECYCLE_PROVIDER } from './ait-lifecycle.provider.js';
+import { AIT_CANCEL_REQUESTS_PROVIDER } from './handwritten/ait-cancel-requests.provider.js';
 import { NormativeModule } from '@detran/inf-normative';
 
 @Module({
@@ -44,6 +46,7 @@ import { NormativeModule } from '@detran/inf-normative';
     AitSignatureController,
     AitPrintEventController,
     AitCommandsController,
+    AitCancelRequestsController,
   ],
   providers: [
     AitService,
@@ -65,6 +68,7 @@ import { NormativeModule } from '@detran/inf-normative';
     AitPrintEventService,
     AitPrintEventRepository,
     AIT_LIFECYCLE_PROVIDER,
+    AIT_CANCEL_REQUESTS_PROVIDER,
   ],
 })
 export class AitModule {}
