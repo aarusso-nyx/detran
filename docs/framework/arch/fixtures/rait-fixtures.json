@@ -556,5 +556,574 @@
       "flag": "ALERTA_N1",
       "ceilingOn": "2028-06-10"
     }
+  ],
+  "raitUnits": [
+    {
+      "id": "00000000-0000-7000-8000-000026000001",
+      "name": "JARI-AM",
+      "judgingBody": "jari",
+      "state": "TURMA_ATIVA",
+      "coordinatorMemberId": "00000000-0000-7000-8000-000021000011"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000026000002",
+      "name": "JARI-AM 2a Turma",
+      "judgingBody": "jari",
+      "state": "TURMA_EM_CONSTITUICAO"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000026000003",
+      "name": "JARI-AM 3a Turma",
+      "judgingBody": "jari",
+      "state": "TURMA_SUSPENSA"
+    }
+  ],
+  "raitSchedules": [
+    {
+      "id": "00000000-0000-7000-8000-000027000001",
+      "memberId": "00000000-0000-7000-8000-000021000001",
+      "kind": "escala_semanal",
+      "periodStart": "2026-09-14",
+      "periodEnd": "2026-09-18",
+      "availability": "DISPONIVEL"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000027000002",
+      "memberId": "00000000-0000-7000-8000-000021000004",
+      "kind": "plantao_risco",
+      "periodStart": "2026-09-14",
+      "periodEnd": "2026-09-18",
+      "availability": "EM_PLANTAO"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000027000003",
+      "memberId": "00000000-0000-7000-8000-000021000003",
+      "kind": "escala_semanal",
+      "periodStart": "2026-09-14",
+      "periodEnd": "2026-09-18",
+      "availability": "AUSENTE_PROGRAMADO",
+      "absenceReason": "ferias"
+    }
+  ],
+  "raitScheduleSlots": [
+    {
+      "id": "00000000-0000-7000-8000-000027010001",
+      "scheduleId": "00000000-0000-7000-8000-000027000001",
+      "slotOn": "2026-09-14",
+      "availability": "DISPONIVEL"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000027010002",
+      "scheduleId": "00000000-0000-7000-8000-000027000001",
+      "slotOn": "2026-09-15",
+      "availability": "DISPONIVEL"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000027010003",
+      "scheduleId": "00000000-0000-7000-8000-000027000002",
+      "slotOn": "2026-09-14",
+      "availability": "EM_PLANTAO"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000027010004",
+      "scheduleId": "00000000-0000-7000-8000-000027000003",
+      "slotOn": "2026-09-14",
+      "availability": "AUSENTE_PROGRAMADO",
+      "absenceReason": "ferias"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000027010005",
+      "scheduleId": "00000000-0000-7000-8000-000027000003",
+      "slotOn": "2026-09-15",
+      "availability": "AUSENTE_PROGRAMADO",
+      "absenceReason": "ferias"
+    }
+  ],
+  "raitBatches": [
+    {
+      "id": "00000000-0000-7000-8000-000028000001",
+      "poolId": "00000000-0000-7000-8000-000020000002",
+      "kind": "semanal",
+      "weekStart": "2026-09-14",
+      "state": "LOTE_ABERTO"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000028000002",
+      "poolId": "00000000-0000-7000-8000-000020000002",
+      "kind": "semanal",
+      "weekStart": "2026-09-07",
+      "state": "LOTE_SORTEADO",
+      "drawnAt": "2026-09-09"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000028000003",
+      "poolId": "00000000-0000-7000-8000-000020000002",
+      "kind": "semanal",
+      "weekStart": "2026-08-31",
+      "state": "LOTE_ACEITO",
+      "drawnAt": "2026-09-02",
+      "acceptedAt": "2026-09-03"
+    }
+  ],
+  "raitBatchItems": [
+    {
+      "id": "00000000-0000-7000-8000-000028010001",
+      "batchId": "00000000-0000-7000-8000-000028000001",
+      "caseId": "00000000-0000-7000-8000-000010000018",
+      "position": 1
+    },
+    {
+      "id": "00000000-0000-7000-8000-000028010002",
+      "batchId": "00000000-0000-7000-8000-000028000002",
+      "caseId": "00000000-0000-7000-8000-000010000019",
+      "position": 1,
+      "memberId": "00000000-0000-7000-8000-000021000009",
+      "claimDueOn": "2026-09-11"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000028010003",
+      "batchId": "00000000-0000-7000-8000-000028000002",
+      "caseId": "00000000-0000-7000-8000-000010000011",
+      "position": 2,
+      "memberId": "00000000-0000-7000-8000-000021000009",
+      "claimDueOn": "2026-09-11",
+      "declinedAt": "2026-09-10",
+      "declineKind": "impedimento"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000028010004",
+      "batchId": "00000000-0000-7000-8000-000028000003",
+      "caseId": "00000000-0000-7000-8000-000010000012",
+      "position": 1,
+      "memberId": "00000000-0000-7000-8000-000021000009",
+      "claimDueOn": "2026-09-04",
+      "acceptedAt": "2026-09-03"
+    }
+  ],
+  "raitSubstituteDuties": [
+    {
+      "id": "00000000-0000-7000-8000-000029000001",
+      "sessionId": "00000000-0000-7000-8000-000030000002",
+      "memberId": "00000000-0000-7000-8000-000021000010",
+      "designatedAt": "2026-09-08",
+      "convenedAt": "2026-09-10"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000029000002",
+      "sessionId": "00000000-0000-7000-8000-000030000001",
+      "memberId": "00000000-0000-7000-8000-000021000010",
+      "designatedAt": "2026-09-14"
+    }
+  ],
+  "raitBenches": [
+    {
+      "id": "00000000-0000-7000-8000-000035000001",
+      "sessionId": "00000000-0000-7000-8000-000030000001",
+      "state": "BANCA_PREVISTA",
+      "confirmedCount": 0
+    },
+    {
+      "id": "00000000-0000-7000-8000-000035000002",
+      "sessionId": "00000000-0000-7000-8000-000030000003",
+      "state": "BANCA_CONFIRMADA",
+      "confirmedCount": 3,
+      "confirmedAt": "2026-09-03"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000035000003",
+      "sessionId": "00000000-0000-7000-8000-000030000002",
+      "state": "BANCA_INSUFICIENTE",
+      "confirmedCount": 2,
+      "insufficientAt": "2026-09-10"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000035000004",
+      "sessionId": "00000000-0000-7000-8000-000030000004",
+      "state": "BANCA_CONFIRMADA",
+      "confirmedCount": 3,
+      "parityObserved": true,
+      "confirmedAt": "2026-09-14"
+    }
+  ],
+  "raitPendingContents": [
+    {
+      "id": "00000000-0000-7000-8000-000036000001",
+      "caseId": "00000000-0000-7000-8000-000010000001",
+      "dueOn": "2026-09-24"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000036000002",
+      "caseId": "00000000-0000-7000-8000-000010000002",
+      "dueOn": "2026-09-18",
+      "closedAt": "2026-09-12",
+      "outcome": "atendida"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000036000003",
+      "caseId": "00000000-0000-7000-8000-000010000003",
+      "dueOn": "2026-09-10",
+      "closedAt": "2026-09-11",
+      "outcome": "nao_atendida"
+    }
+  ],
+  "raitRedirects": [
+    {
+      "id": "00000000-0000-7000-8000-000037000001",
+      "direction": "saida",
+      "reason": "outro_orgao_autuador",
+      "protocolNumber": "RAIT-2026-R00001"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000037000002",
+      "direction": "entrada",
+      "reason": "orgao_incompetente",
+      "caseId": "00000000-0000-7000-8000-000010000002",
+      "protocolNumber": "RAIT-2026-R00002",
+      "originProtocolledOn": "2026-09-02",
+      "deadlineRestored": true
+    }
+  ],
+  "raitDrafts": [
+    {
+      "id": "00000000-0000-7000-8000-000038000001",
+      "caseId": "00000000-0000-7000-8000-000010000007",
+      "version": 1,
+      "status": "rascunho"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000038000002",
+      "caseId": "00000000-0000-7000-8000-000010000009",
+      "version": 1,
+      "status": "submetida"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000038000003",
+      "caseId": "00000000-0000-7000-8000-000010000020",
+      "version": 1,
+      "status": "devolvida",
+      "returnCount": 1
+    },
+    {
+      "id": "00000000-0000-7000-8000-000038000004",
+      "caseId": "00000000-0000-7000-8000-000010000010",
+      "version": 1,
+      "status": "assinada"
+    }
+  ],
+  "raitHolidays": [
+    {
+      "id": "00000000-0000-7000-8000-000039000001",
+      "name": "Independência",
+      "holidayOn": "2026-09-07",
+      "scope": "nacional"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000039000002",
+      "name": "Elevação do Amazonas à categoria de Província (lei estadual instituidora a capturar — source_pending)",
+      "holidayOn": "2026-09-05",
+      "scope": "estadual"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000039000003",
+      "name": "Elevação de Manaus a Cidade (Lei Orgânica art. 437, II)",
+      "holidayOn": "2026-10-24",
+      "scope": "municipal"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000039000004",
+      "name": "ponto facultativo estadual (Decreto AM 18/12/2025)",
+      "holidayOn": "2026-01-02",
+      "scope": "nacional",
+      "optional": true
+    }
+  ],
+  "raitSuspensionActs": [
+    {
+      "id": "00000000-0000-7000-8000-000040000001",
+      "state": "vigente",
+      "startsOn": "2026-09-10",
+      "endsOn": "2026-09-20"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000040000002",
+      "state": "revogado",
+      "startsOn": "2026-08-03",
+      "endsOn": "2026-08-07",
+      "revokedAt": "2026-08-05"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000040000003",
+      "state": "encerrado",
+      "startsOn": "2026-07-06",
+      "endsOn": "2026-07-10"
+    }
+  ],
+  "raitJetonSheets": [
+    {
+      "id": "00000000-0000-7000-8000-000041000001",
+      "judgingBody": "jari",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30",
+      "state": "gerada",
+      "sourcePending": true
+    },
+    {
+      "id": "00000000-0000-7000-8000-000041000002",
+      "judgingBody": "jari",
+      "periodStart": "2026-08-01",
+      "periodEnd": "2026-08-31",
+      "state": "conferida",
+      "sourcePending": true
+    },
+    {
+      "id": "00000000-0000-7000-8000-000041000003",
+      "judgingBody": "jari",
+      "periodStart": "2026-07-01",
+      "periodEnd": "2026-07-31",
+      "state": "homologada",
+      "sourcePending": true
+    },
+    {
+      "id": "00000000-0000-7000-8000-000041000004",
+      "judgingBody": "jari",
+      "periodStart": "2026-06-01",
+      "periodEnd": "2026-06-30",
+      "state": "enviada",
+      "sourcePending": true
+    }
+  ],
+  "raitJetonLines": [
+    {
+      "id": "00000000-0000-7000-8000-000041010001",
+      "sheetId": "00000000-0000-7000-8000-000041000001",
+      "memberId": "00000000-0000-7000-8000-000021000008",
+      "sessionId": "00000000-0000-7000-8000-000030000003",
+      "attendanceValid": true
+    },
+    {
+      "id": "00000000-0000-7000-8000-000041010002",
+      "sheetId": "00000000-0000-7000-8000-000041000001",
+      "memberId": "00000000-0000-7000-8000-000021000009",
+      "sessionId": "00000000-0000-7000-8000-000030000003",
+      "attendanceValid": true
+    },
+    {
+      "id": "00000000-0000-7000-8000-000041010003",
+      "sheetId": "00000000-0000-7000-8000-000041000001",
+      "memberId": "00000000-0000-7000-8000-000021000011",
+      "sessionId": "00000000-0000-7000-8000-000030000003",
+      "attendanceValid": true
+    },
+    {
+      "id": "00000000-0000-7000-8000-000041010004",
+      "sheetId": "00000000-0000-7000-8000-000041000001",
+      "memberId": "00000000-0000-7000-8000-000021000010",
+      "sessionId": "00000000-0000-7000-8000-000030000003",
+      "attendanceValid": false,
+      "absenceKind": "justificada"
+    }
+  ],
+  "raitIncidents": [
+    {
+      "id": "00000000-0000-7000-8000-000042000001",
+      "incidentRef": "INC-2026-0007",
+      "clockId": "00000000-0000-7000-8000-000024000005",
+      "caseId": "00000000-0000-7000-8000-000010000019"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000042000002",
+      "incidentRef": "INC-2026-0008",
+      "clockId": "00000000-0000-7000-8000-000024000004",
+      "caseId": "00000000-0000-7000-8000-000010000018",
+      "closedAt": "2026-09-12"
+    }
+  ],
+  "raitQualitySamples": [
+    {
+      "id": "00000000-0000-7000-8000-000043000001",
+      "caseId": "00000000-0000-7000-8000-000010000010",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000043000002",
+      "caseId": "00000000-0000-7000-8000-000010000012",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30",
+      "findingKind": "fundamento"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000043000003",
+      "caseId": "00000000-0000-7000-8000-000010000013",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30",
+      "findingKind": "prova",
+      "systemic": true
+    }
+  ],
+  "raitCapacityPlans": [
+    {
+      "id": "00000000-0000-7000-8000-000044000001",
+      "poolId": "00000000-0000-7000-8000-000020000001",
+      "periodStart": "2026-09-01",
+      "periodEnd": "2026-09-30",
+      "monthsOverCapacity": 0
+    },
+    {
+      "id": "00000000-0000-7000-8000-000044000002",
+      "poolId": "00000000-0000-7000-8000-000020000002",
+      "periodStart": "2026-08-01",
+      "periodEnd": "2026-08-31",
+      "monthsOverCapacity": 3,
+      "closedAt": "2026-09-01",
+      "reinforcementRequested": true,
+      "unitProposed": true
+    }
+  ],
+  "raitExports": [
+    {
+      "id": "00000000-0000-7000-8000-000045000001",
+      "status": "solicitada"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000045000002",
+      "status": "aguardando_dpo",
+      "rowCount": 250
+    },
+    {
+      "id": "00000000-0000-7000-8000-000045000003",
+      "status": "gerada",
+      "rowCount": 12,
+      "generatedAt": "2026-09-11"
+    }
+  ],
+  "collectionDocuments": [
+    {
+      "id": "00000000-0000-7000-8000-000046000001",
+      "infractionId": "00000000-0000-7000-8000-0000d0000005",
+      "tier": "desconto_80",
+      "status": "emitido",
+      "validUntil": "2026-09-30"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000046000002",
+      "infractionId": "00000000-0000-7000-8000-0000d0000015",
+      "tier": "desconto_80",
+      "status": "pago",
+      "validUntil": "2026-08-31"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000046000003",
+      "infractionId": "00000000-0000-7000-8000-0000d0000009",
+      "tier": "desconto_80",
+      "status": "vencido",
+      "validUntil": "2026-08-15"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000046000004",
+      "infractionId": "00000000-0000-7000-8000-0000d0000012",
+      "tier": "desconto_80",
+      "status": "invalidado",
+      "validUntil": "2026-09-30"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000046000005",
+      "infractionId": "00000000-0000-7000-8000-0000d0000009",
+      "tier": "integral_juros",
+      "status": "emitido",
+      "validUntil": "2026-10-15",
+      "supersedesDocumentId": "00000000-0000-7000-8000-000046000003"
+    }
+  ],
+  "payments": [
+    {
+      "id": "00000000-0000-7000-8000-000047000001",
+      "documentId": "00000000-0000-7000-8000-000046000002",
+      "bankReference": "BR-2026-0000001",
+      "paidOn": "2026-08-20"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000047000002",
+      "bankReference": "BR-2026-0000002",
+      "paidOn": "2026-09-10"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000047000003",
+      "documentId": "00000000-0000-7000-8000-000046000001",
+      "bankReference": "BR-2026-0000003",
+      "paidOn": "2026-09-08",
+      "reversedAt": "2026-09-11"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000047000004",
+      "documentId": "00000000-0000-7000-8000-000046000002",
+      "bankReference": "BR-2026-0000004",
+      "paidOn": "2026-08-22"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000047000005",
+      "documentId": "00000000-0000-7000-8000-000046000002",
+      "bankReference": "BR-2026-0000005",
+      "paidOn": "2026-08-25"
+    }
+  ],
+  "refundOrders": [
+    {
+      "id": "00000000-0000-7000-8000-000048000001",
+      "infractionId": "00000000-0000-7000-8000-0000d0000015",
+      "paymentId": "00000000-0000-7000-8000-000047000001",
+      "reason": "decisao_favoravel",
+      "status": "paga"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000048000002",
+      "infractionId": "00000000-0000-7000-8000-0000d0000015",
+      "paymentId": "00000000-0000-7000-8000-000047000004",
+      "reason": "pagamento_duplicado",
+      "status": "ordenada"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000048000003",
+      "infractionId": "00000000-0000-7000-8000-0000d0000015",
+      "paymentId": "00000000-0000-7000-8000-000047000005",
+      "reason": "pagamento_a_maior",
+      "status": "aberta"
+    }
+  ],
+  "debtHandoffs": [
+    {
+      "id": "00000000-0000-7000-8000-000049000001",
+      "infractionId": "00000000-0000-7000-8000-0000d0000009",
+      "status": "enviado"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000049000002",
+      "infractionId": "00000000-0000-7000-8000-0000d0000009",
+      "status": "cancelado",
+      "cancelReason": "pagamento"
+    }
+  ],
+  "raitReconciliations": [
+    {
+      "id": "00000000-0000-7000-8000-000050000001",
+      "system": "renainf",
+      "windowFrom": "2026-09-01",
+      "windowTo": "2026-09-14",
+      "status": "solicitada"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000050000002",
+      "system": "renach",
+      "windowFrom": "2026-08-01",
+      "windowTo": "2026-08-31",
+      "status": "conciliada"
+    },
+    {
+      "id": "00000000-0000-7000-8000-000050000003",
+      "system": "sne",
+      "windowFrom": "2026-07-01",
+      "windowTo": "2026-07-31",
+      "status": "escalada"
+    }
   ]
 }

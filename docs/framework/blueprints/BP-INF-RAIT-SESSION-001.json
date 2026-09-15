@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitSession",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "36-inf-rait-session.sql",
     "dependencies": {
       "@detran/inf-rait-case": "workspace:*",
@@ -29,7 +29,7 @@
       }
     ],
     "owners": ["detran-inf"],
-    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA."
+    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA. v1.1.0 acrescenta a modalidade da sessao, o reconhecimento de convocacao curta, o pedido de vista por item e a publicacao da ata (OD-102, OD-103, OD-106 vigentes por steering H.57)."
   },
   "database": {
     "entities": [
@@ -37,7 +37,7 @@
         "name": "RaitSession",
         "table": "rait_session",
         "primaryKey": ["id"],
-        "description": "Sessao de julgamento. Sem quorum a sessao nao abre e vai a SESSAO_ADIADA (AC-RAIT-006-1); relogios nao param (AC-RAIT-006-2).",
+        "description": "Sessao de julgamento. Sem quorum a sessao nao abre e vai a SESSAO_ADIADA (AC-RAIT-006-1); relogios nao param (AC-RAIT-006-2). v1.1.0: modality registra presencial, virtual ou hibrida (WF-RAIT-003 secao Fundamento e WF-RAIT-004 secao 6 regra (d); habilitacao pelo parametro session.modality.virtual_enabled, OD-106) e short_notice_ack marca o reconhecimento da convocacao com menos de T-CONV (RAIT.AGENDA_SHORT_NOTICE, OD-102).",
         "fields": [
           {
             "name": "id",
@@ -110,6 +110,16 @@
             "name": "short_notice_ack_by",
             "type": "uuid",
             "nullable": true
+          },
+          {
+            "name": "modality",
+            "type": "varchar(20)",
+            "default": "'presencial'"
+          },
+          {
+            "name": "short_notice_ack",
+            "type": "boolean",
+            "default": "false"
           }
         ],
         "indexes": [
@@ -138,6 +148,14 @@
           {
             "name": "ck_inf_rait_session_adjourned_reason",
             "expression": "state <> 'SESSAO_ADIADA' or adjourned_reason is not null"
+          },
+          {
+            "name": "ck_inf_rait_session_modality",
+            "expression": "modality in ('presencial','virtual','hibrida')"
+          },
+          {
+            "name": "ck_inf_rait_session_short_notice_ack",
+            "expression": "short_notice_ack_by is null or short_notice_ack"
           }
         ]
       },
@@ -145,7 +163,7 @@
         "name": "RaitAgendaItem",
         "table": "rait_agenda_item",
         "primaryKey": ["id"],
-        "description": "Caso em pauta. priority=true para bandeiras ALERTA_N3/CRITICO — entrada obrigatoria (AC-RAIT-005-1). So entra com parecer registrado (AC-RAIT-005-2).",
+        "description": "Caso em pauta. priority=true para bandeiras ALERTA_N3/CRITICO — entrada obrigatoria (AC-RAIT-005-1). So entra com parecer registrado (AC-RAIT-005-2). v1.1.0: view_requested_by e view_due_on registram o pedido de vista do item e seu prazo de devolucao (WF-RAIT-004 secao 2.3 — Res. 901/2022 Anexo 11.1; OD-103, teto por membro no parametro session.view_request.max_per_member).",
         "fields": [
           {
             "name": "id",
@@ -221,6 +239,16 @@
             "name": "withdrawn_reason",
             "type": "varchar(40)",
             "nullable": true
+          },
+          {
+            "name": "view_requested_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "view_due_on",
+            "type": "date",
+            "nullable": true
           }
         ],
         "indexes": [
@@ -251,6 +279,10 @@
           {
             "name": "ck_inf_rait_agenda_item_withdrawn_reason",
             "expression": "withdrawn = false or withdrawn_reason is not null"
+          },
+          {
+            "name": "ck_inf_rait_agenda_item_view_complete",
+            "expression": "(view_requested_by is null and view_due_on is null) or (view_requested_by is not null and view_due_on is not null)"
           }
         ],
         "foreignKeys": [
@@ -502,7 +534,7 @@
         "name": "RaitMinutes",
         "table": "rait_minutes",
         "primaryKey": ["id"],
-        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8).",
+        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING).",
         "fields": [
           {
             "name": "id",
@@ -550,6 +582,11 @@
             "name": "document_hash",
             "type": "varchar(128)",
             "nullable": true
+          },
+          {
+            "name": "published_at",
+            "type": "timestamptz",
+            "nullable": true
           }
         ],
         "indexes": [
@@ -567,6 +604,10 @@
           {
             "name": "ck_inf_rait_minutes_signed_complete",
             "expression": "signed_at is null or (signed_by is not null and signature_kind is not null and signature_ref is not null)"
+          },
+          {
+            "name": "ck_inf_rait_minutes_published_needs_signature",
+            "expression": "published_at is null or signed_at is not null"
           }
         ],
         "foreignKeys": [

@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0006",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0006/prompts/TASK-0014.md",
+      "line": 64,
+      "claim": "O critério ainda exige que não exista nenhuma chave `inf:<recurso>:*`, exceto as duas de OD-309, mas a entrega documenta outras chaves de comando pré-existentes para esses recursos (`rait-unit:constitute`, `rait-schedule:publish`, `rait-batch:open` etc.) em `policy.spec.ts:844-850`; o teste entregue só verifica as quatro ações CRUD geradas (`policy.spec.ts:890-905`), portanto não prova o critério escrito.",
+      "fix": "Restringir o critério às chaves CRUD geradas (`read|create|update|delete`), declarando as duas exceções OD-309 nesse conjunto e mantendo comandos pré-existentes explicitamente fora de escopo."
+    }
+  ],
+  "notes": [
+    "A reautoria documental pelo Architect e o registro de OD-309 foram verificados; `pnpm docs:kb:check` passou."
+  ]
+}

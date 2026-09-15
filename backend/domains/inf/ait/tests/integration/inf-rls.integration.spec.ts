@@ -37,14 +37,18 @@ describe('inf database contract', () => {
         group by tables.table_schema, tables.table_name, classes.relrowsecurity, classes.relforcerowsecurity
         order by tables.table_name`,
     );
-    // Tenant tables: ait (11), normative (7), measures (9), alcohol (6), rait case/worklist/session (21),
-    // speed (3), infraction (3: infraction, infraction_timer, infraction_event — DDL 38) and
-    // notification (3: notice, notice_acknowledgement, notice_delivery_attempt — DDL 59) —
-    // 14-inf-lifecycle-vocabulary.sql adds tenant-less reference tables (`*_ref`), which must
-    // never carry tenant RLS and must be the only unprotected tables in the schema.
+    // Tenant tables (85, grep -h 'create table if not exists inf\.' backend/database/ddl/*.sql):
+    // ait (11), normative (7), measures (9), alcohol (6), rait-case (12: DDL 34, includes
+    // rait_pending_content/rait_redirect/rait_draft v1.1.0), rait-worklist (13: DDL 35, includes
+    // rait_unit/rait_schedule/rait_schedule_slot/rait_batch/rait_batch_item/rait_substitute_duty/
+    // rait_bench v1.1.0), rait-session (6: DDL 36), speed (3), infraction (3: DDL 38), rait-org
+    // (8: DDL 39), collection (4: DDL 57), rait-integration (1: DDL 58) and notification (3:
+    // DDL 59) — 14-inf-lifecycle-vocabulary.sql adds tenant-less reference tables (`*_ref`,
+    // 10 after R-0005), which must never carry tenant RLS and must be the only unprotected
+    // tables in the schema.
     const tenantTables = result.rows.filter((row) => row.has_tenant_id);
     const referenceTables = result.rows.filter((row) => !row.has_tenant_id);
-    expect(tenantTables).toHaveLength(62);
+    expect(tenantTables).toHaveLength(85);
     expect(referenceTables).toHaveLength(10);
     const ctg2Tables = new Set([
       'ait_cancel_request',

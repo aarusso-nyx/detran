@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitWorklist",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "35-inf-rait-worklist.sql",
     "dependencies": {
       "@detran/inf-rait-case": "workspace:*"
@@ -24,15 +24,71 @@
       }
     ],
     "owners": ["detran-inf"],
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento."
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao."
   },
   "database": {
     "entities": [
       {
+        "name": "RaitUnit",
+        "table": "rait_unit",
+        "primaryKey": ["id"],
+        "description": "Unidade de julgamento (turma / JARI) — WF-RAIT-004 secao 7 e secao 10. Estados TURMA_* da secao 9; hoje uma unica JARI-AM (steering B.9) e coordenador exigido apenas quando houver mais de uma (Res. 357 itens 2.2-2.3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "judging_body",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "state",
+            "type": "varchar(30)",
+            "default": "'TURMA_ATIVA'"
+          },
+          {
+            "name": "coordinator_member_id",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_unit_name",
+            "columns": ["tenant_id", "judging_body", "name"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_unit_state",
+            "columns": ["tenant_id", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_unit_body",
+            "expression": "judging_body in ('jari','cetran')"
+          },
+          {
+            "name": "ck_inf_rait_unit_state",
+            "expression": "state in ('TURMA_ATIVA','TURMA_EM_CONSTITUICAO','TURMA_SUSPENSA')"
+          }
+        ]
+      },
+      {
         "name": "RaitPool",
         "table": "rait_pool",
         "primaryKey": ["id"],
-        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2).",
+        "description": "Pool de trabalho por instancia. Owner fixou os 3 pools base, sem segmentacao adicional (steering A.2). v1.1.0: unit_id liga o pool a uma turma/JARI (WF-RAIT-004 secao 10) e priority_policy registra a ordem unica de consumo das filas (secao 2, RN-RAIT-141).",
         "fields": [
           {
             "name": "id",
@@ -63,13 +119,30 @@
             "name": "active",
             "type": "boolean",
             "default": "true"
+          },
+          {
+            "name": "unit_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "priority_policy",
+            "type": "varchar(30)",
+            "default": "'ordem_unica'"
           }
         ],
         "indexes": [
           {
             "name": "ux_inf_rait_pool_instance",
             "columns": ["tenant_id", "instance"],
-            "unique": true
+            "unique": true,
+            "where": "unit_id is null"
+          },
+          {
+            "name": "ux_inf_rait_pool_instance_unit",
+            "columns": ["tenant_id", "instance", "unit_id"],
+            "unique": true,
+            "where": "unit_id is not null"
           }
         ],
         "checks": [
@@ -80,6 +153,20 @@
           {
             "name": "ck_inf_rait_pool_strategy",
             "expression": "strategy in ('pull','round_robin','load_balanced')"
+          },
+          {
+            "name": "ck_inf_rait_pool_priority_policy",
+            "expression": "priority_policy in ('ordem_unica')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_pool_unit",
+            "columns": ["unit_id"],
+            "references": {
+              "table": "inf.rait_unit",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -87,7 +174,7 @@
         "name": "RaitPoolMember",
         "table": "rait_pool_member",
         "primaryKey": ["id"],
-        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116).",
+        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48).",
         "fields": [
           {
             "name": "id",
@@ -134,6 +221,16 @@
             "name": "unjustified_absence_count",
             "type": "integer",
             "default": "0"
+          },
+          {
+            "name": "is_substitute",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "jurisdiction",
+            "type": "varchar(80)",
+            "nullable": true
           }
         ],
         "indexes": [
@@ -169,10 +266,426 @@
         ]
       },
       {
+        "name": "RaitSchedule",
+        "table": "rait_schedule",
+        "primaryKey": ["id"],
+        "description": "Escala e plantao do membro — WF-RAIT-004 secao 3 e secao 10. Disponibilidade DISPONIVEL/EM_PLANTAO/AUSENTE_PROGRAMADO (secao 9); wip_limit nulo usa o parametro rait.wip.limit (ops.parameter, ADR-0021) e ausencia programada rebaixa o limite a zero.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "pool_id",
+            "type": "uuid"
+          },
+          {
+            "name": "member_id",
+            "type": "uuid"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "period_start",
+            "type": "date"
+          },
+          {
+            "name": "period_end",
+            "type": "date"
+          },
+          {
+            "name": "availability",
+            "type": "varchar(30)",
+            "default": "'DISPONIVEL'"
+          },
+          {
+            "name": "wip_limit",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "absence_reason",
+            "type": "varchar(30)",
+            "nullable": true
+          },
+          {
+            "name": "published_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "published_by",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_schedule_member_period",
+            "columns": ["tenant_id", "member_id", "kind", "period_start"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_schedule_pool_period",
+            "columns": ["tenant_id", "pool_id", "period_start"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_schedule_kind",
+            "expression": "kind in ('escala_semanal','plantao_risco','escala_assinatura','escala_balcao')"
+          },
+          {
+            "name": "ck_inf_rait_schedule_availability",
+            "expression": "availability in ('DISPONIVEL','EM_PLANTAO','AUSENTE_PROGRAMADO')"
+          },
+          {
+            "name": "ck_inf_rait_schedule_period_order",
+            "expression": "period_end >= period_start"
+          },
+          {
+            "name": "ck_inf_rait_schedule_absence_reason",
+            "expression": "absence_reason is null or absence_reason in ('ferias','licenca','curso','sessao_externa')"
+          },
+          {
+            "name": "ck_inf_rait_schedule_absence_reason_required",
+            "expression": "availability <> 'AUSENTE_PROGRAMADO' or absence_reason is not null"
+          },
+          {
+            "name": "ck_inf_rait_schedule_wip_limit_non_negative",
+            "expression": "wip_limit is null or wip_limit >= 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_schedule_pool",
+            "columns": ["pool_id"],
+            "references": {
+              "table": "inf.rait_pool",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_schedule_member",
+            "columns": ["member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitScheduleSlot",
+        "table": "rait_schedule_slot",
+        "primaryKey": ["id"],
+        "description": "Dia coberto pela escala — WF-RAIT-004 secao 3. Disponibilidade efetiva por dia (base de RAIT.SCHEDULE_NO_DUTY_MEMBER, que informa a data); o turno nao tem vocabulario fixado por fonte e fica como OD, por isso o grao e o dia.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "schedule_id",
+            "type": "uuid"
+          },
+          {
+            "name": "slot_on",
+            "type": "date"
+          },
+          {
+            "name": "availability",
+            "type": "varchar(30)",
+            "default": "'DISPONIVEL'"
+          },
+          {
+            "name": "absence_reason",
+            "type": "varchar(30)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_schedule_slot_day",
+            "columns": ["tenant_id", "schedule_id", "slot_on"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_schedule_slot_availability",
+            "expression": "availability in ('DISPONIVEL','EM_PLANTAO','AUSENTE_PROGRAMADO')"
+          },
+          {
+            "name": "ck_inf_rait_schedule_slot_absence_reason",
+            "expression": "absence_reason is null or absence_reason in ('ferias','licenca','curso','sessao_externa')"
+          },
+          {
+            "name": "ck_inf_rait_schedule_slot_absence_reason_required",
+            "expression": "availability <> 'AUSENTE_PROGRAMADO' or absence_reason is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_schedule_slot_schedule",
+            "columns": ["schedule_id"],
+            "references": {
+              "table": "inf.rait_schedule",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitBatch",
+        "table": "rait_batch",
+        "primaryKey": ["id"],
+        "description": "Lote de sorteio de relator — WF-RAIT-004 secao 5 e secao 10. Estados LOTE_* da secao 9; semente e ordem auditaveis, ata do sorteio assinada pelo presidente (PAdES+TSA, steering A.8); lote semanal ou extraordinario (passos 1 e 7).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "pool_id",
+            "type": "uuid"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)",
+            "default": "'semanal'"
+          },
+          {
+            "name": "week_start",
+            "type": "date"
+          },
+          {
+            "name": "state",
+            "type": "varchar(20)",
+            "default": "'LOTE_ABERTO'"
+          },
+          {
+            "name": "seed",
+            "type": "varchar(64)",
+            "nullable": true
+          },
+          {
+            "name": "opened_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "opened_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "drawn_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "accepted_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "minutes_document_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "homologated_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "homologated_by",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_batch_pool_week",
+            "columns": ["tenant_id", "pool_id", "week_start"],
+            "unique": true,
+            "where": "kind = 'semanal'"
+          },
+          {
+            "name": "ix_inf_rait_batch_state",
+            "columns": ["tenant_id", "pool_id", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_batch_kind",
+            "expression": "kind in ('semanal','extraordinario')"
+          },
+          {
+            "name": "ck_inf_rait_batch_state",
+            "expression": "state in ('LOTE_ABERTO','LOTE_SORTEADO','LOTE_ACEITO')"
+          },
+          {
+            "name": "ck_inf_rait_batch_seed_required",
+            "expression": "state = 'LOTE_ABERTO' or seed is not null"
+          },
+          {
+            "name": "ck_inf_rait_batch_draw_consistency",
+            "expression": "(state = 'LOTE_ABERTO' and drawn_at is null) or (state in ('LOTE_SORTEADO','LOTE_ACEITO') and drawn_at is not null)"
+          },
+          {
+            "name": "ck_inf_rait_batch_accept_consistency",
+            "expression": "(state = 'LOTE_ACEITO' and accepted_at is not null) or (state <> 'LOTE_ACEITO' and accepted_at is null)"
+          },
+          {
+            "name": "ck_inf_rait_batch_homologation_complete",
+            "expression": "homologated_at is null or homologated_by is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_batch_pool",
+            "columns": ["pool_id"],
+            "references": {
+              "table": "inf.rait_pool",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitBatchItem",
+        "table": "rait_batch_item",
+        "primaryKey": ["id"],
+        "description": "Item do lote de sorteio — WF-RAIT-004 secao 5 passos 4-5. Posicao na ordem sorteada, relator designado, claim_due_on do T-CLAIM (rait.timer.T-CLAIM, 2 dias uteis) e recusa por impedimento ou suspeicao, que redistribui ao proximo da ordem no mesmo lote.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "batch_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "position",
+            "type": "integer"
+          },
+          {
+            "name": "member_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "claim_due_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "accepted_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "declined_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "decline_kind",
+            "type": "varchar(20)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_batch_item_case",
+            "columns": ["tenant_id", "batch_id", "case_id"],
+            "unique": true
+          },
+          {
+            "name": "ux_inf_rait_batch_item_position",
+            "columns": ["tenant_id", "batch_id", "position"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_batch_item_decline_kind",
+            "expression": "decline_kind is null or decline_kind in ('impedimento','suspeicao')"
+          },
+          {
+            "name": "ck_inf_rait_batch_item_decline_complete",
+            "expression": "(declined_at is null and decline_kind is null) or (declined_at is not null and decline_kind is not null)"
+          },
+          {
+            "name": "ck_inf_rait_batch_item_outcome_exclusive",
+            "expression": "accepted_at is null or declined_at is null"
+          },
+          {
+            "name": "ck_inf_rait_batch_item_claim_needs_member",
+            "expression": "claim_due_on is null or member_id is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_batch_item_batch",
+            "columns": ["batch_id"],
+            "references": {
+              "table": "inf.rait_batch",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_batch_item_case",
+            "columns": ["case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_batch_item_member",
+            "columns": ["member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
         "name": "RaitAssignment",
         "table": "rait_assignment",
         "primaryKey": ["id"],
-        "description": "Atribuicao de caso a membro. Reatribuir preserva estado e dossie (AC-RAIT-011-1); motivo e obrigatorio e tipado (AC-RAIT-011-2).",
+        "description": "Atribuicao de caso a membro. Reatribuir preserva estado e dossie (AC-RAIT-011-1); motivo e obrigatorio e tipado (AC-RAIT-011-2). v1.1.0: claim_due_at e o vencimento do T-CLAIM e batch_id liga a atribuicao ao lote de sorteio (WF-RAIT-004 secao 5 e secao 10).",
         "fields": [
           {
             "name": "id",
@@ -219,6 +732,16 @@
             "name": "active",
             "type": "boolean",
             "default": "true"
+          },
+          {
+            "name": "claim_due_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "batch_id",
+            "type": "uuid",
+            "nullable": true
           }
         ],
         "indexes": [
@@ -268,6 +791,14 @@
               "table": "inf.rait_pool_member",
               "columns": ["id"]
             }
+          },
+          {
+            "name": "fk_inf_rait_assignment_batch",
+            "columns": ["batch_id"],
+            "references": {
+              "table": "inf.rait_batch",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -275,7 +806,7 @@
         "name": "RaitImpediment",
         "table": "rait_impediment",
         "primaryKey": ["id"],
-        "description": "Impedimento declarado por caso (RN-RAIT-116; CONTRAN-357 5.1.c). Impede redistribuicao ao mesmo membro (AC-RAIT-011-3).",
+        "description": "Impedimento declarado por caso (RN-RAIT-116; CONTRAN-357 5.1.c). Impede redistribuicao ao mesmo membro (AC-RAIT-011-3). v1.1.0: kind distingue impedimento de suspeicao e legal_basis registra o artigo (Lei 9.784 arts. 18-20), com decided_by de quem decidiu a declaracao (WF-RAIT-004 secao 10).",
         "fields": [
           {
             "name": "id",
@@ -302,6 +833,21 @@
             "name": "declared_at",
             "type": "timestamptz",
             "default": "now()"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)",
+            "default": "'impedimento'"
+          },
+          {
+            "name": "legal_basis",
+            "type": "varchar(160)",
+            "nullable": true
+          },
+          {
+            "name": "decided_by",
+            "type": "uuid",
+            "nullable": true
           }
         ],
         "indexes": [
@@ -327,6 +873,140 @@
               "table": "inf.rait_pool_member",
               "columns": ["id"]
             }
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_impediment_kind",
+            "expression": "kind in ('impedimento','suspeicao')"
+          }
+        ]
+      },
+      {
+        "name": "RaitSubstituteDuty",
+        "table": "rait_substitute_duty",
+        "primaryKey": ["id"],
+        "description": "Plantao de suplencia por sessao — WF-RAIT-004 secao 3 (linha \"Plantao de suplencia\") e secao 6 regra (a): o suplente de plantao e convocado antes de qualquer outro quando a banca fica BANCA_INSUFICIENTE (RN-RAIT-142). session_id sem FK: inf.rait_session nasce no DDL 36, posterior ao 35.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "session_id",
+            "type": "uuid"
+          },
+          {
+            "name": "member_id",
+            "type": "uuid"
+          },
+          {
+            "name": "designated_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "designated_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "convened_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_substitute_duty",
+            "columns": ["tenant_id", "session_id", "member_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_substitute_duty_member",
+            "columns": ["member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitBench",
+        "table": "rait_bench",
+        "primaryKey": ["id"],
+        "description": "Banca da sessao — WF-RAIT-004 secao 6. Estados BANCA_* da secao 9, contagem de confirmacoes contra o quorum e paridade observada do CETRAN (parametro session.quorum.cetran_parity, ops.parameter). session_id sem FK: inf.rait_session nasce no DDL 36, posterior ao 35.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "session_id",
+            "type": "uuid"
+          },
+          {
+            "name": "state",
+            "type": "varchar(30)",
+            "default": "'BANCA_PREVISTA'"
+          },
+          {
+            "name": "confirmed_count",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "parity_observed",
+            "type": "boolean",
+            "nullable": true
+          },
+          {
+            "name": "confirmed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "insufficient_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_bench_session",
+            "columns": ["tenant_id", "session_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_bench_state",
+            "expression": "state in ('BANCA_PREVISTA','BANCA_CONFIRMADA','BANCA_INSUFICIENTE')"
+          },
+          {
+            "name": "ck_inf_rait_bench_confirmed_complete",
+            "expression": "state <> 'BANCA_CONFIRMADA' or confirmed_at is not null"
+          },
+          {
+            "name": "ck_inf_rait_bench_insufficient_complete",
+            "expression": "state <> 'BANCA_INSUFICIENTE' or insufficient_at is not null"
+          },
+          {
+            "name": "ck_inf_rait_bench_confirmed_count_non_negative",
+            "expression": "confirmed_count >= 0"
           }
         ]
       },
@@ -499,6 +1179,11 @@
     "basePath": "/v1/inf/rait/",
     "resources": [
       {
+        "entity": "RaitUnit",
+        "path": "units",
+        "resource": "rait-unit"
+      },
+      {
         "entity": "RaitPool",
         "path": "pools",
         "resource": "rait-pool"
@@ -509,6 +1194,26 @@
         "resource": "rait-pool-member"
       },
       {
+        "entity": "RaitSchedule",
+        "path": "schedules",
+        "resource": "rait-schedule"
+      },
+      {
+        "entity": "RaitScheduleSlot",
+        "path": "schedule-slots",
+        "resource": "rait-schedule-slot"
+      },
+      {
+        "entity": "RaitBatch",
+        "path": "batches",
+        "resource": "rait-batch"
+      },
+      {
+        "entity": "RaitBatchItem",
+        "path": "batch-items",
+        "resource": "rait-batch-item"
+      },
+      {
         "entity": "RaitAssignment",
         "path": "assignments",
         "resource": "rait-assignment"
@@ -517,6 +1222,16 @@
         "entity": "RaitImpediment",
         "path": "impediments",
         "resource": "rait-impediment"
+      },
+      {
+        "entity": "RaitSubstituteDuty",
+        "path": "substitute-duties",
+        "resource": "rait-substitute-duty"
+      },
+      {
+        "entity": "RaitBench",
+        "path": "benches",
+        "resource": "rait-bench"
       },
       {
         "entity": "RaitClock",

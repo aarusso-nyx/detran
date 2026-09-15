@@ -96,6 +96,18 @@ export default defineConfig({
       '@detran/inf-rait-session': fileURLToPath(
         new URL('../domains/inf/rait-session/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-rait-org': fileURLToPath(
+        new URL('../domains/inf/rait-org/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-collection': fileURLToPath(
+        new URL('../domains/inf/collection/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-rait-integration': fileURLToPath(
+        new URL(
+          '../domains/inf/rait-integration/src/index.ts',
+          import.meta.url,
+        ),
+      ),
       '@detran/inf-speed': fileURLToPath(
         new URL('../domains/inf/speed/src/index.ts', import.meta.url),
       ),

@@ -42,14 +42,15 @@ fase de planejamento.
 
 ## Orçamento de referência (calibrar em `budget.json`)
 
-| Item                                                | Ordem de grandeza por ocorrência              |
-| --------------------------------------------------- | --------------------------------------------- |
-| planejamento do maestro (leitura + plano + prompts) | 150–300 k tokens de entrada, 30–60 k de saída |
-| tarefa de worker pequeno                            | 30–80 k                                       |
-| tarefa de worker médio                              | 80–200 k                                      |
-| chamada do reviewer                                 | 20–60 k                                       |
-| checkpoint (gates, sem LLM)                         | 0                                             |
+| Item                                                | Ordem de grandeza por ocorrência                                                         |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| planejamento do maestro (leitura + plano + prompts) | 150–300 k tokens de entrada, 30–60 k de saída                                            |
+| tarefa de worker pequeno (Sonnet)                   | 30–80 k únicos; **120–200 k brutos** com releituras em cache (R-0006: 124–195 k)         |
+| tarefa de worker médio (Opus)                       | 80–200 k únicos; **160–360 k brutos** (R-0006: 160–363 k, 44–110 chamadas de ferramenta) |
+| chamada do reviewer                                 | 20–60 k                                                                                  |
+| checkpoint (gates, sem LLM)                         | 0                                                                                        |
 
 Regra prática por janela de 5 h de uma família: **um** planejamento de maestro ou **seis a oito**
-tarefas de worker pequeno com suas revisões. Duas frentes simultâneas só se forem de famílias
+tarefas de worker pequeno com suas revisões. Contabilize em `budget.json` os tokens **únicos** (convenção
+de R-0003/R-0006: ≈ ¼ dos brutos do subagente) e registre os brutos na nota da entrada. Duas frentes simultâneas só se forem de famílias
 diferentes.

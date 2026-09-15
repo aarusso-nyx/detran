@@ -40,6 +40,12 @@
 - **FAIL**: o plano ou a entrega contradiz uma definição canônica, uma decisão do Owner, uma ADR ou
   a Constituição; ou a fronteira de escrita foi violada.
 
+Ciclos: o **primeiro** ciclo de cada item é **exaustivo** — liste todos os achados de uma vez. Nos ciclos
+seguintes do mesmo item, avalie **somente** as correções dos achados anteriores; um achado novo sobre
+texto que não mudou só é admitido se for `FAIL` por definição (contradição canônica, decisão do Owner,
+ADR, Constituição ou fronteira de escrita) e deve dizer explicitamente por que não foi levantado antes
+(ajuste R-0006).
+
 ## Saída (JSON, e nada mais)
 
 ```json

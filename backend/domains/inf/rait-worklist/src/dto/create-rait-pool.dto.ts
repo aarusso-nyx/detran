@@ -1,8 +1,10 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.0.0 sha256:2297f42351909b6ac68f4a18e7c8b535508fa219dfdaa0f9b087f1ca3b745234
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
 export interface CreateRaitPoolDto {
   name: string;
   instance: string;
   circuit: number;
   strategy: string;
   active?: boolean;
+  unit_id?: string | null;
+  priority_policy?: string;
 }

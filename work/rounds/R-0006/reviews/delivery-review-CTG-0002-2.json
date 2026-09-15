@@ -1,0 +1,32 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0006/reports/TASK-0008.md",
+      "line": 1,
+      "claim": "A entrega admite que o worker que escreveu docs/** declarou \"Owner (delegado)\". A reatribuição posterior e a atestação do maestro não mudam a autoria da mutação: docs/** é fronteira exclusiva do Architect pela Constituição Art. 6.",
+      "fix": "Um Architect deve refazer e registrar a mutação documental em sessão autorizada; a entrega produzida sob papel Owner não pode ser ratificada retroativamente."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0006/prompts/TASK-0014.md",
+      "line": 62,
+      "claim": "O enunciado ainda exige false para cada papel canônico e ausência de toda chave inf:<recurso>:*, mas os testes entregues admitem GLOBAL_ADMIN_ROLES e dois grants create pré-existentes. Assim, a entrega não satisfaz o critério declarado.",
+      "fix": "Corrigir o prompt/critério para delimitar os papéis não administrativos e nomear as duas exceções, com a fonte ou OD correspondente."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0006/reports/TASK-0014.md",
+      "line": 8,
+      "claim": "Os grants pré-existentes são apresentados como OD proposta, mas sem ID OD-nnn e sem registro em open-decisions-rait.md; o comentário do teste afirma que o achado vai para esse arquivo, porém ele não foi tocado.",
+      "fix": "Registrar uma OD identificada no catálogo canônico, citá-la no relatório e no teste, ou apontar a decisão/ADR canônica que autoriza explicitamente os grants."
+    }
+  ],
+  "notes": []
+}
