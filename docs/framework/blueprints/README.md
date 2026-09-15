@@ -29,12 +29,3 @@ on any missing, changed, or extra generated file. It runs as part of root
 Example: `BP-INF-AIT-001` imports `NormativeModule` from `@detran/inf-normative` and registers
 `AitCommandsController` and `AIT_LIFECYCLE_PROVIDER`; `BP-INF-NORMATIVE-001` exports
 `NormativeLifecycleService`.
-
-`module.ddlFile` (optional) overrides the default generated DDL filename
-(`30-<namespace>-<kebab(name)>.sql`) whenever the real migration number falls outside that
-default range — e.g. `38-inf-infraction.sql`, `39-inf-rait-org.sql`, `57-inf-collection.sql`,
-`58-inf-rait-integration.sql`, `59-inf-notification.sql` (R-0006).
-
-Not every package under `backend/domains/inf/` is generated: some are entirely handwritten and
-have no blueprint at all — e.g. `@detran/inf-deadlines` in `backend/domains/inf/deadlines`
-(ADR-0016 §2), consumed by generated modules through their own dependencies/`handwrittenExports`.

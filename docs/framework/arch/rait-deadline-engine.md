@@ -3,7 +3,7 @@ id: ARCH-RAIT-DEADLINES
 title: Motor de prazos do RAIT e da infração — contagem, calendário, timers, suspensão e vencimento idempotente
 status: draft
 apps: [rait, portal, dashboard]
-updated: 2026-09-14
+updated: 2026-09-13
 ---
 
 # Motor de prazos (`DeadlineEngine`)
@@ -15,10 +15,8 @@ módulos consomem datas prontas (`RN-RAIT-005`, `RN-RAIT-105`).
 
 ## 1. Posição e fronteiras
 
-- Pacote: `@detran/inf-deadlines`, manuscrito em `backend/domains/inf/deadlines` (glob
-  `backend/domains/*/*` do workspace; ADR-0016 §2, M3), consumido como dependência de pacote por
-  `infraction`, `notification` e `rait-case`; não tem blueprint, logo nada de
-  `handwrittenExports`.
+- Pacote: `backend/domains/inf/rait-case/src/handwritten/deadlines/` (compartilhado com o futuro
+  módulo `infraction` via `@detran/inf-rait-case`), exportado por `handwrittenExports`.
 - Entradas: catálogo (`infraction_timer_ref`), calendário (`rait_holiday`, WP-A), parâmetros
   versionados (`ops.parameter`, ADR-0021), eventos de domínio.
 - Saídas: linhas em `rait_deadline` (caso) e `infraction_timer` (infração, WP-A); `rait_clock` +

@@ -353,8 +353,8 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 
 - [x] **Decidir a substituição de [WF-INF-001] por [WF-INF-003]** — **DECIDIDO pelo Owner em
       2026-09-12 (ADR-0014):** WF-INF-003 substitui WF-INF-001; ponteiro mantido, referências
-      atualizadas, WF-INF-003 promovido a `reviewed`. Runtime: agregado da infração com blueprint
-      `BP-INF-INFRACTION-001` desde R-0006 (CTG-0001, PR #39; ver ADR-0014 §Consequências)
+      atualizadas, WF-INF-003 promovido a `reviewed`. Runtime: agregado da infração ainda sem
+      blueprint (ver ADR-0014 §Consequências)
 - [ ] **Reconciliar a escada do relógio B** — [RN-RAIT-112] (4 degraus, crítico em 21 meses) ×
       [WF-RAIT-002] §4.1 (5 degraus, crítico em 23 meses, aprovado em steering A.1) (added 2026-09-12)
 - [ ] **Desfecho de `T-NA-IND` vencido** (NA ao condutor indicado não expedida em 30 dias do protocolo
@@ -369,9 +369,9 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       divisão de circunscrições ([RN-RAIT-143], [WF-RAIT-004] §3) — `institutional-ask` (added 2026-09-12)
 - [ ] **Taxa de recurso à JARI/CETRAN e throughput de sessão** (DT-064) — fecha o dimensionamento
       de [WF-RAIT-004] §8 e o gatilho de nova turma ([RN-RAIT-139]) (added 2026-09-12)
-- [x] **Blueprint BP-INF-RAIT-WORKLIST-001** — deltas de modelo de dados propostos em
+- [ ] **Blueprint BP-INF-RAIT-WORKLIST-001** — deltas de modelo de dados propostos em
       [WF-RAIT-004] §10 (unidade/turma, escala, lote de sorteio, suplência, tipo de impedimento,
-      banca) — entregue em R-0006 (CTG-0002, TASK-0004; PR pendente) (added 2026-09-12)
+      banca) — decisão do Architect (added 2026-09-12)
 
 ## Rodada de definições para a orquestra de agentes — RAIT (2026-09-12)
 
