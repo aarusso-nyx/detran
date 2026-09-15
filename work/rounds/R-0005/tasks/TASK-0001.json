@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0005",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Define the minimal ops agency model",
+  "description": "Model the Owner-approved minimum institutional context and record its boundary decision.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-bp-ops-agency",
+    "MOD-generated-ops-agency",
+    "MOD-ddl-13-ops-agency",
+    "MOD-openapi-ops-agency",
+    "MOD-blueprints-generated-manifest",
+    "MOD-adr"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": ["OD-T02", "OD-013", "H.40"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t1", "ops-agency"],
+  "branch": "orchestra/ops-agency",
+  "worktree_id": "WT-ops-agency",
+  "prompt_composition_id": "PC-ebd4e0d70ead83d5",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "verify:rls-ddl"]
+  ],
+  "created_at": "2026-09-14T05:15:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-ebd4e0d70ead83d5",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

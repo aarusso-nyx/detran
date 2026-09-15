@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0005",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Migrate ops controllers into generated modules",
+  "description": "Wire the approved generated ops modules while preserving all existing handwritten controllers and tests.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ops-modules",
+    "MOD-app-module",
+    "MOD-app-vitest",
+    "MOD-ddl-20-rls"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": ["ADR-0001", "ADR-0002", "ADR-0007"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t1", "ops-modules"],
+  "branch": "orchestra/ops-agency",
+  "worktree_id": "WT-ops-agency",
+  "prompt_composition_id": "PC-6555a0f0b3e2d00f",
+  "acceptance_commands": [
+    ["pnpm", "install"],
+    ["pnpm", "typecheck"],
+    ["pnpm", "verify:decorators"],
+    [
+      "env",
+      "DB_NAME=detran_r5",
+      "DB_PASSWORD=postgres",
+      "pnpm",
+      "backend:db:reset"
+    ],
+    [
+      "env",
+      "DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r5",
+      "pnpm",
+      "backend:test:ci"
+    ],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-14T05:15:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
+    "prompt_composition_id": "PC-6555a0f0b3e2d00f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

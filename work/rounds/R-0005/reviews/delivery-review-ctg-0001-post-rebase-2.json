@@ -1,0 +1,71 @@
+{
+  "mode": "delivery-review-post-rebase",
+  "round": "R-0005",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "record/proofs/work/generic/R-0005.jsonl",
+      "line": 2,
+      "claim": "O registro corretivo de sequencia 2, a atualizacao de record/proofs/chain.json para head 3fcaad0b59574810fd2e3a98954c72146ca99814dedb62de39ea7fbcfc94fcdb, o arquivo work/rounds/R-0005/evidence-CTG-0001-post-rebase.json, docs/meta/adr/README.md, work/rounds/R-0005/plan.md e work/rounds/R-0005/budget.json seguem nao commitados na worktree; git status --short mostra cinco modificados e sete nao rastreados. O conteudo esta correto e verificado, mas a correcao so passa a existir em main se for commitada antes do merge, exatamente o risco que o high original apontava.",
+      "fix": "Commitar o registro corretivo, a cadeia, o arquivo de evidencia, o indice de ADRs, o plano e o orcamento no mesmo commit da entrega antes de abrir ou atualizar o PR de merge."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0005/budget.json",
+      "line": 267,
+      "claim": "A entrada de orcamento do primeiro ciclo pos-rebase foi fechada corretamente para status completed com verdict REVIEW e bridge_record, e a entrada deste segundo ciclo esta em in_progress como esperado durante o gate. Permanece aberta a entrada maestro-integration CTG-0001-integration em status in_progress desde a janela 8, sem estimativa realizada nem nota de fechamento; ela e a unica entrada de integracao que atravessa o merge e continuara aberta no registro apos a entrega.",
+      "fix": "Fechar a entrada CTG-0001-integration com status e uso efetivo apos o merge de CTG-0001, no mesmo movimento que encerra a janela 8."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "record/proofs/work/generic/R-0005.jsonl",
+      "line": 2,
+      "claim": "O payload de sequencia 2 omite os blocos decisions, requirements e invariants que a sequencia 1 declara (OD-T02, OD-013, RN-TEAT-003, RN-TEAT-142, INV-EVIDENCE-001, INV-OFFLINE-001). Como o proprio registro declara supersedes_gate_results_only e a sequencia 1 permanece imutavel e legivel, a rastreabilidade normativa continua resolvivel pela leitura conjunta das duas sequencias, mas nenhum registro isolado do CTG resolve simultaneamente arvore, entradas, resultados e vinculos normativos.",
+      "fix": "Em registros corretivos futuros, repetir os vinculos normativos do registro corrigido ou declarar explicitamente no campo de notas que eles permanecem os da sequencia referenciada."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "docs/framework/arch/teat-route-contract.md",
+      "line": 1,
+      "claim": "Low herdado da terceira delivery-review, nao regredido e ainda aberto: a secao 2 de teat-route-contract.md continua desatualizada em relacao as rotas efetivamente geradas e roteada para TASK-0009, fora dos locks deste CTG.",
+      "fix": "Executar TASK-0009 e atualizar a secao 2 para o contrato de rotas vigente apos WP-T1."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "tools/blueprints/generate-openapi.mjs",
+      "line": 1,
+      "claim": "Low herdado da terceira delivery-review, nao regredido e ainda aberto: o gerador nao normaliza a juncao de segmentos de rota, e BP-OPS-EXAMPLE-001 mantem as duas chaves de path com barra dupla preexistentes; nenhum dos 33 contratos publicados por esta entrega reproduz o defeito.",
+      "fix": "Endurecer generate-openapi.mjs com joinRoute e regenerar o contrato do blueprint example na frente de orchestra-hardening."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/domains/ops/operations",
+      "line": 1,
+      "claim": "Recorrencia cosmetica nao resolvida: backend/domains/ops/operations e backend/domains/ops/evidence-custody continuam existindo em disco com arvores de node_modules nao rastreadas, embora todos os arquivos rastreados ja tenham sido movidos para ops/field e ops/evidence e o pnpm-lock.yaml nao contenha mais nenhuma referencia aos nomes antigos.",
+      "fix": "Remover os dois diretorios residuais da worktree apos o merge; nenhuma mudanca de arquivo rastreado e necessaria."
+    }
+  ],
+  "notes": [
+    "High fechado. O registro corretivo existe, e append-only e nao tocou a sequencia 1. git diff de record/proofs/work/generic/R-0005.jsonl mostra exclusivamente a insercao da linha 2: a linha 1 permanece byte a byte identica, com line_hash 013eadb1fb2d40e573ce8c85fd408aeaec21819b78ccc181dca1c7b6fb542254, e work/rounds/R-0005/evidence-CTG-0001.json nao aparece em git status, continuando como commitado em 0b8e9c4.",
+    "Encadeamento verificado localmente. A linha 2 declara previous_line_hash igual ao line_hash da linha 1 e sequence 2. Em record/proofs/chain.json os treze registros formam cadeia integra: para cada indice i, previous_hash e previous_run_hash sao iguais ao manifest_hash do registro anterior, o registro 1 ancora em GENESIS, a numeracao de sequence e contigua de 1 a 13 e head e igual ao manifest_hash do ultimo registro. O head e exatamente 3fcaad0b59574810fd2e3a98954c72146ca99814dedb62de39ea7fbcfc94fcdb, o novo registro EV-16d02454d2096b22 encadeia sobre bb49687c043b37d2d71d9bfcdf26d89d568d527557144761f0903d6a8a8ac61f e o diff da cadeia e puramente aditivo, alterando apenas o campo head e anexando o registro 13.",
+    "Hashes conferidos em disco: work/rounds/R-0005/evidence-CTG-0001-post-rebase.json tem sha256 1c7bf54e901df79eaf93643bafc4d923f7bb4e9a02d65426ed9615f7d83dddec, exatamente o esperado. O conteudo canonico desse arquivo e identico ao payload da linha 2 do jsonl, e o de work/rounds/R-0005/evidence-CTG-0001.json e identico ao payload da linha 1, ambos verificados por jq -S mais diff.",
+    "Arvore exata declarada e real. A sequencia 2 declara base 34062b552a205b31b095a2594b7815959efc24ef, head 0b8e9c4aa53c37ef67f01955bfb85969e5a36619 e commits 541f9181d6c061a7ebdab0ddb435a6a3a0ee6319, ffe1979702ebfc08455257c145c59fb5e254baa8 e 0b8e9c4aa53c37ef67f01955bfb85969e5a36619. Verificado de forma independente: git rev-parse HEAD e 0b8e9c4, git rev-parse origin/main e 34062b5, git merge-base origin/main HEAD e 34062b5, e os tres commits sao os rebased reais na ordem do log. O registro 13 da cadeia tambem fixa head_sha 0b8e9c4. Nenhum commit ou push foi criado nesta sessao.",
+    "Resultados exatos conferidos um a um contra o fix exigido pelo high. O array gates da sequencia 2 contem: backend:db:reset em detran_r5 PASS; backend:rls-smoke PASS com isolamento de tenant, 96 tabelas inf/ch, OPS RLS, round-trip SRID-4674 e persistencia de auditoria; primeira tentativa de backend:test:ci como SENSOR_ERROR, com causa raiz declarada na ausencia de links locais do workspace apos pnpm install --lockfile-only e com a frase explicita de que nenhum PASS ou FAIL foi inferido; pnpm install --frozen-lockfile PASS com 41 projetos vinculados; reexecucao integral de backend:test:ci PASS com ops-parameter unit 57/57, ops-parameter integration 1/1, app unit 54/54, app integration 11/11, inf-ait integration 2/2, app e2e 12/12 e inf-ait e2e 1/1; pnpm check PASS com parameters:test 17/17, verify:parameter-catalogue com 87 entradas e 18 flags, 33 blueprints e contratos sincronizados, typecheck, UI, decorators 680, RLS 149 tabelas, roles, vocabulary, SENATRAN e PEC; a delivery-review pos-rebase com veredito REVIEW; e git diff --check origin/main...HEAD PASS.",
+    "O low do sensor-error tambem esta fechado em dupla camada. Alem da entrada de gate na sequencia 2, work/rounds/R-0005/plan.md secao Triagem ganhou um paragrafo que descreve a falha de observacao, a causa, a correcao por pnpm install --frozen-lockfile, os numeros da repeticao integral e a afirmacao de que o erro nao foi classificado como PASS nem FAIL.",
+    "Delimitacao correta do escopo do registro corretivo. O campo supersedes_gate_results_only aponta para work/rounds/R-0005/evidence-CTG-0001.json e a primeira nota declara que a sequencia 1 permanece imutavel e que esta sequencia corrige apenas a descricao dos resultados de gate para o candidato rebased exato. Nenhum artefato de codigo ou gerado foi tocado para produzir a correcao.",
+    "Artefatos referenciados pela sequencia 2 conferidos em disco: delivery-review-ctg-0001-post-rebase.json com sha256 9a48367ae44a07ca9ee64a9da300b5d4538bfd9430e0d610b01117a8b668c4cd e o bridge com cd37370f90c475803bc9a9ab02de9e00a730d3fe8619f4c3cbe41cef01505003, ambos identicos aos valores declarados. O bridge por sua vez aponta para o prompt delivery-review-ctg-0001-post-rebase.md, cujo sha256 em disco e 215d3ffb093531fa26f102a79860f669fbe7e4a5ebaed0bcd1541b8159a96f78, igual ao prompt_sha256 registrado.",
+    "Low de ADR-0021 reconciliado. docs/meta/adr/README.md linha 31 agora marca ADR-0021 como (Accepted), alinhando o indice ao Status do proprio ADR, que declara Accepted on 2026-09-14 by the Architect for implementation in R-0004. O diff desse arquivo nesta correcao e de uma unica linha e nao altera as entradas de ADR-0022 e ADR-0023 inseridas pelo candidato.",
+    "Low do reference-gap registrado no plano. work/rounds/R-0005/plan.md secao Bloqueios, linhas 164, 169 e 173, roteia o low, explicita o reference-gap de Shift.status e declara que BP-MOBILE-OPERATIONS-001.json nao publica CHECK nem vocabulario fechado, com o CHECK bloqueado ate a autoridade de produto definir o conjunto canonico.",
+    "Low do orcamento parcialmente fechado. A entrada reviewer-call delivery-review-ctg-0001-post-rebase passou de in_progress para completed com verdict REVIEW, attempts 1 e bridge_record, e a entrada deste segundo ciclo foi aberta como in_progress. Os dois temporarios de ponte de zero byte apontados no ciclo anterior, .json.raw.kTXYQC e .json.formatted.MrqYz9, foram removidos; os dois presentes agora, .json.raw.7bg4BE e .json.formatted.mn3J63, pertencem a esta revisao em andamento e devem ser limpos ao encerra-la.",
+    "Arquivos nao rastreados desta revisao estavam presentes durante o gate conforme previsto no escopo e nao foram contados como high.",
+    "Esta revisao foi estritamente somente leitura: apenas git status, git diff, git log, git rev-parse, git merge-base, jq, sed, rg, find, ls e shasum. Nenhum gate mutante foi executado e nenhum arquivo foi escrito.",
+    "Racional do veredito. O unico high do ciclo anterior esta fechado por anexacao, na forma exigida pelo Artigo 41: arvore exata, entradas exatas, resultados exatos e falha de observacao registrada como tal. A sequencia 1 nao foi editada, a cadeia verifica localmente e chega ao head esperado, e os dois lows acionaveis daquele ciclo, ADR-0021 e orcamento, tambem foram reconciliados. PASS com seis lows preservados, nenhum deles bloqueante para o merge."
+  ]
+}

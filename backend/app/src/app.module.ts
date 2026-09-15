@@ -69,7 +69,12 @@ import { RaitCaseModule } from '@detran/inf-rait-case';
 import { RaitSessionModule } from '@detran/inf-rait-session';
 import { RaitWorklistModule } from '@detran/inf-rait-worklist';
 import { SpeedModule } from '@detran/inf-speed';
+import { AgencyModule } from '@detran/ops-agency';
+import { EvidenceModule } from '@detran/ops-evidence';
+import { FieldModule } from '@detran/ops-field';
+import { OfflineSyncModule } from '@detran/ops-offline-sync';
 import { ParameterModule } from '@detran/ops-parameter';
+import { SnapshotsModule } from '@detran/ops-snapshots';
 
 import {
   DetranPersistedAuditSink,
@@ -351,6 +356,11 @@ export class AppModule {
         RaitCaseModule,
         RaitWorklistModule,
         RaitSessionModule,
+        AgencyModule,
+        FieldModule,
+        SnapshotsModule,
+        EvidenceModule,
+        OfflineSyncModule,
         // Speed meters stay behind the `teat.speed_meters` flag (steering H.54:
         // the agency does not operate meters today).
         ...(detranFeatureFlagSet().flags['teat.speed_meters']?.default === true

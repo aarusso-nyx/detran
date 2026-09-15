@@ -769,42 +769,45 @@ rait_pool_member (jurisdiction)          deixar nula em todas                   
 
 ### e.3 Prefixos de id das fixtures novas
 
-Prefixos fixados pelo prompt desta tarefa, todos hexadecimais sob `00000000-0000-7000-8000-`:
+Prefixos **normativos** (decisão M16 do maestro, 2026-09-14): uma entidade, um prefixo, todos em
+faixa livre — nenhum reutiliza `0000130`, `0000140`, `0000150`, `0000220`, `0000230` ou `0000240`,
+que já pertencem a `rait_admissibility`, `rait_deadline`, `rait_inquiry`, `rait_assignment`,
+`rait_impediment` e `rait_clock` em `20-fixtures-rait.sql`. Todos hexadecimais sob
+`00000000-0000-7000-8000-`:
 
 ```text
 prefixo de id                          entidade                       alocação de NNNNN
 -------------------------------------  -----------------------------  ---------------------------------
-00000000-0000-7000-8000-0000220NNNNN   inf.rait_unit                  00001…00003 (um por estado)
-00000000-0000-7000-8000-0000230NNNNN   inf.rait_schedule              00001…00003 (um por estado)
-00000000-0000-7000-8000-0000230NNNNN   inf.rait_schedule_slot         10001…      (sub-faixa 1xxxx)
-00000000-0000-7000-8000-0000240NNNNN   inf.rait_batch                 00001…00003 (um por estado)
-00000000-0000-7000-8000-0000240NNNNN   inf.rait_batch_item            10001…      (sub-faixa 1xxxx)
-00000000-0000-7000-8000-0000260NNNNN   inf.rait_substitute_duty       00001…
-00000000-0000-7000-8000-0000270NNNNN   inf.rait_bench                 00001…00004 (3 estados + CETRAN)
-00000000-0000-7000-8000-0000130NNNNN   inf.rait_pending_content       00001…00003 (um por desfecho)
-00000000-0000-7000-8000-0000140NNNNN   inf.rait_redirect              00001…00002 (um por sentido)
-00000000-0000-7000-8000-0000150NNNNN   inf.rait_draft                 00001…00004 (um por status)
+00000000-0000-7000-8000-0000260NNNNN   inf.rait_unit                  00001…00003 (um por estado)
+00000000-0000-7000-8000-0000270NNNNN   inf.rait_schedule              00001…00003 (um por estado)
+00000000-0000-7000-8000-0000270NNNNN   inf.rait_schedule_slot         10001…      (sub-faixa 1xxxx)
+00000000-0000-7000-8000-0000280NNNNN   inf.rait_batch                 00001…00003 (um por estado)
+00000000-0000-7000-8000-0000280NNNNN   inf.rait_batch_item            10001…      (sub-faixa 1xxxx)
+00000000-0000-7000-8000-0000290NNNNN   inf.rait_substitute_duty       00001…00002
+00000000-0000-7000-8000-0000350NNNNN   inf.rait_bench                 00001…00004 (3 estados + CETRAN)
+00000000-0000-7000-8000-0000360NNNNN   inf.rait_pending_content       00001…00003 (um por desfecho)
+00000000-0000-7000-8000-0000370NNNNN   inf.rait_redirect              00001…00002 (um por sentido)
+00000000-0000-7000-8000-0000380NNNNN   inf.rait_draft                 00001…00004 (um por status)
 ```
+
+Os dez prefixos foram conferidos contra **os cinco** arquivos de seed
+(`backend/database/seed/{00-fixtures-core,05-parameters,10-fixtures-inf-ait,20-fixtures-rait,30-fixtures-infraction}.sql`):
+os prefixos em uso hoje são `0000000`, `0000100`…`0000180`, `0000200`…`0000250`, `0000300`…`0000340`
+e as famílias `0000c00`, `0000d00`…`0000d50`, `0000e00`…`0000e40`, `0000f00`, `0000f10`; nenhum dos
+dez colide, então nenhuma substituição pela "próxima livre" foi necessária. Faixas ainda livres para
+TASK-0005: `0000190`, `0000390`, `0000400`+.
 
 Ids de pessoa/usuário **não** seguem esse prefixo: são `00000000-0000-4000-8000-0000b000NNNN`
 (UUID versão 4, `rait-fixtures.md` §1) e aparecem nas tabelas da §e.4 como `…0000b000NNNN`; ids de
 membro de pool são `00000000-0000-7000-8000-0000210NNNNN` e aparecem como `…000021000NNN`.
 
-**Colisão a confirmar com o maestro.** Seis destes oito prefixos já pertencem a outras entidades em
-`20-fixtures-rait.sql`: `0000130` = `rait_admissibility`, `0000140` = `rait_deadline`,
-`0000150` = `rait_inquiry`, `0000220` = `rait_assignment`, `0000230` = `rait_impediment`,
-`0000240` = `rait_clock`. Só `0000260` e `0000270` estavam livres. Não há erro de banco — a chave
-primária é por tabela, e `inf.rait_unit …000022000001` conviverá com
-`inf.rait_assignment …000022000001` —, mas quebra a leitura "um prefixo, uma entidade" que
-`rait-fixtures.md` e o CTG-0001 §7 usam: num log ou numa falha de teste o id deixa de dizer que
-tabela é. Os prefixos acima **valem como estão** (são os do prompt); se o maestro preferir prefixos
-livres, as faixas disponíveis hoje são `0000190`, `0000260`…`0000290`, `0000350`…`0000390`.
+**Histórico da decisão M16.** A primeira redação desta seção usava os prefixos do prompt de
+TASK-0004, seis dos quais repetiam entidades já existentes; o maestro decidiu (2026-09-14) adotar
+faixas livres, uma por entidade. A tabela acima **já está** no prefixo normativo e os exemplos da
+§e.4 foram reescritos com ele — a tabela abaixo fica só como trilha de auditoria de quem tiver visto
+a redação anterior:
 
-**Mapa normativo dos prefixos (decisão M16 do maestro, 2026-09-14) — vale sobre a tabela e os exemplos acima.**
-O Inspector (TASK-0006) escreve as fixtures com estes prefixos; onde os exemplos das seções e.4…e.12 usam
-os prefixos antigos, aplique a substituição abaixo mantendo o sufixo `NNNNN`:
-
-| Entidade                   | Prefixo antigo (exemplos) | Prefixo normativo |
+| Entidade                   | Prefixo antigo (revogado) | Prefixo normativo |
 | -------------------------- | ------------------------- | ----------------- |
 | `inf.rait_unit`            | `0000220`                 | `0000260`         |
 | `inf.rait_schedule`        | `0000230` (0xxxx)         | `0000270` (0xxxx) |
@@ -826,18 +829,18 @@ Referências a entidades **já existentes** (`…000021…` membros, `…0000230
 inf.rait_unit  (máquina b.1)
 id                     state                   name                judging_body  coordinator_member_id
 ---------------------  ----------------------  ------------------  ------------  ---------------------
-…000022000001          TURMA_ATIVA             JARI-AM             jari          …000021000011 (Karina)
-…000022000002          TURMA_EM_CONSTITUICAO   JARI-AM 2a Turma    jari          null
-…000022000003          TURMA_SUSPENSA          JARI-AM 3a Turma    jari          null
+…000026000001          TURMA_ATIVA             JARI-AM             jari          …000021000011 (Karina)
+…000026000002          TURMA_EM_CONSTITUICAO   JARI-AM 2a Turma    jari          null
+…000026000003          TURMA_SUSPENSA          JARI-AM 3a Turma    jari          null
 ```
 
 ```text
 inf.rait_schedule  (máquina b.4) — período 2026-09-14 a 2026-09-18 (semana corrente)
 id             member_id              pool_id        kind              availability         wip_limit  absence_reason
 -------------  ---------------------  -------------  ----------------  -------------------  ---------  --------------
-…000023000001  …000021000001 (Ana)    …000020000001  escala_semanal    DISPONIVEL           null       null
-…000023000002  …000021000004 (Diego)  …000020000001  plantao_risco     EM_PLANTAO           null       null
-…000023000003  …000021000003 (Carla)  …000020000001  escala_semanal    AUSENTE_PROGRAMADO   0          ferias
+…000027000001  …000021000001 (Ana)    …000020000001  escala_semanal    DISPONIVEL           null       null
+…000027000002  …000021000004 (Diego)  …000020000001  plantao_risco     EM_PLANTAO           null       null
+…000027000003  …000021000003 (Carla)  …000020000001  escala_semanal    AUSENTE_PROGRAMADO   0          ferias
 ```
 
 `published_at` = `2026-09-11T12:00:00-04:00` e `published_by` = Diego (`…0000b0000004`) nas três
@@ -848,20 +851,20 @@ id             member_id              pool_id        kind              availabil
 inf.rait_schedule_slot  (máquina b.4, grão dia)
 id             schedule_id     slot_on      availability         absence_reason
 -------------  --------------  -----------  -------------------  --------------
-…000023010001  …000023000001   2026-09-14   DISPONIVEL           null
-…000023010002  …000023000001   2026-09-15   DISPONIVEL           null
-…000023010003  …000023000002   2026-09-14   EM_PLANTAO           null
-…000023010004  …000023000003   2026-09-14   AUSENTE_PROGRAMADO   ferias
-…000023010005  …000023000003   2026-09-15   AUSENTE_PROGRAMADO   ferias
+…000027010001  …000027000001   2026-09-14   DISPONIVEL           null
+…000027010002  …000027000001   2026-09-15   DISPONIVEL           null
+…000027010003  …000027000002   2026-09-14   EM_PLANTAO           null
+…000027010004  …000027000003   2026-09-14   AUSENTE_PROGRAMADO   ferias
+…000027010005  …000027000003   2026-09-15   AUSENTE_PROGRAMADO   ferias
 ```
 
 ```text
 inf.rait_batch  (máquina b.2) — pool JARI …000020000002
 id             kind            week_start   state           seed                  drawn_at     accepted_at
 -------------  --------------  -----------  --------------  --------------------  -----------  -----------
-…000024000001  semanal         2026-09-14   LOTE_ABERTO     null                  null         null
-…000024000002  semanal         2026-09-07   LOTE_SORTEADO   16 bytes em hex       2026-09-09   null
-…000024000003  semanal         2026-08-31   LOTE_ACEITO     16 bytes em hex       2026-09-02   2026-09-03
+…000028000001  semanal         2026-09-14   LOTE_ABERTO     null                  null         null
+…000028000002  semanal         2026-09-07   LOTE_SORTEADO   16 bytes em hex       2026-09-09   null
+…000028000003  semanal         2026-08-31   LOTE_ACEITO     16 bytes em hex       2026-09-02   2026-09-03
 ```
 
 `minutes_document_id`, `homologated_at` e `homologated_by` nulos no lote 0001; nos lotes 0002 e 0003
@@ -872,24 +875,24 @@ id             kind            week_start   state           seed                
 inf.rait_batch_item  (T-CLAIM = 2 dias úteis de drawn_at, calendar-2026.json)
 id             batch_id        case_id                position  member_id              claim_due_on  aceite / recusa
 -------------  --------------  ---------------------  --------  ---------------------  ------------  ----------------------------
-…000024010001  …000024000001   …000010000018 (18)     1         null                   null          lote ainda aberto
-…000024010002  …000024000002   …000010000019 (19)     1         …000021000009 (Iara)   2026-09-11    sem aceite (T-CLAIM vencido)
-…000024010003  …000024000002   …000010000011 (11)     2         …000021000009 (Iara)   2026-09-11    declined_at 2026-09-10,
+…000028010001  …000028000001   …000010000018 (18)     1         null                   null          lote ainda aberto
+…000028010002  …000028000002   …000010000019 (19)     1         …000021000009 (Iara)   2026-09-11    sem aceite (T-CLAIM vencido)
+…000028010003  …000028000002   …000010000011 (11)     2         …000021000009 (Iara)   2026-09-11    declined_at 2026-09-10,
                                                                                                      decline_kind 'impedimento'
-…000024010004  …000024000003   …000010000012 (12)     1         …000021000009 (Iara)   2026-09-04    accepted_at 2026-09-03
+…000028010004  …000028000003   …000010000012 (12)     1         …000021000009 (Iara)   2026-09-04    accepted_at 2026-09-03
 ```
 
-O item `…000024010003` é coerente com a fixture de impedimento que já existe (Iara impedida no caso
+O item `…000028010003` é coerente com a fixture de impedimento que já existe (Iara impedida no caso
 11, `…000023000001`) e com o relator efetivo do caso 11 ser Heitor: o lote sorteou Iara, ela
-declarou impedimento e a redistribuição levou ao próximo da ordem. O item `…000024010002` cobre o
+declarou impedimento e a redistribuição levou ao próximo da ordem. O item `…000028010002` cobre o
 auto-laço L2 (T-CLAIM vencido sem aceite) sem que o lote saia de `LOTE_SORTEADO`.
 
 ```text
 inf.rait_substitute_duty
 id             session_id             member_id                    designated_at  convened_at
 -------------  ---------------------  ---------------------------  -------------  -----------
-…000026000001  …000030000002 (s. 02)  …000021000010 (João, sup.)   2026-09-08     2026-09-10
-…000026000002  …000030000001 (s. 01)  …000021000010 (João, sup.)   2026-09-14     null
+…000029000001  …000030000002 (s. 02)  …000021000010 (João, sup.)   2026-09-08     2026-09-10
+…000029000002  …000030000001 (s. 01)  …000021000010 (João, sup.)   2026-09-14     null
 ```
 
 A primeira linha é o suplente designado por antecipação e **convocado** quando a banca da sessão 02
@@ -900,10 +903,10 @@ ordinária de 2026-09-24, ainda sem convocação.
 inf.rait_bench  (máquina b.3)
 id             session_id             state                 confirmed_count  parity_observed  confirmed_at / insufficient_at
 -------------  ---------------------  --------------------  ---------------  ---------------  ------------------------------
-…000027000001  …000030000001 (s. 01)  BANCA_PREVISTA        0                null             —
-…000027000002  …000030000003 (s. 03)  BANCA_CONFIRMADA      3                null             confirmed_at 2026-09-03
-…000027000003  …000030000002 (s. 02)  BANCA_INSUFICIENTE    2                null             insufficient_at 2026-09-10
-…000027000004  …000030000004 (s. 04)  BANCA_CONFIRMADA      3                true             confirmed_at 2026-09-14
+…000035000001  …000030000001 (s. 01)  BANCA_PREVISTA        0                null             —
+…000035000002  …000030000003 (s. 03)  BANCA_CONFIRMADA      3                null             confirmed_at 2026-09-03
+…000035000003  …000030000002 (s. 02)  BANCA_INSUFICIENTE    2                null             insufficient_at 2026-09-10
+…000035000004  …000030000004 (s. 04)  BANCA_CONFIRMADA      3                true             confirmed_at 2026-09-14
 ```
 
 `confirmed_count` da banca 0002 é o `quorum_observed` da sessão 03 e o da 0004 o da sessão 04
@@ -921,9 +924,9 @@ não uma violação de B0.
 inf.rait_pending_content  (UC-RAIT-028)
 id             case_id                due_on       outcome        closed_at     missing_items
 -------------  ---------------------  -----------  -------------  ------------  -------------------------
-…000013000001  …000010000001 (01)     2026-09-24   null           null          ["copia_cnh"]
-…000013000002  …000010000002 (02)     2026-09-18   atendida       2026-09-12    ["comprovante_endereco"]
-…000013000003  …000010000003 (03)     2026-09-10   nao_atendida   2026-09-11    ["copia_cnh"]
+…000036000001  …000010000001 (01)     2026-09-24   null           null          ["copia_cnh"]
+…000036000002  …000010000002 (02)     2026-09-18   atendida       2026-09-12    ["comprovante_endereco"]
+…000036000003  …000010000003 (03)     2026-09-10   nao_atendida   2026-09-11    ["copia_cnh"]
 ```
 
 A pendência aberta é a do caso 01 (protocolado hoje, canal postal); só uma por caso pode estar
@@ -935,8 +938,8 @@ estado em que está; o não conhecimento foi por intempestividade, nunca por doc
 inf.rait_redirect  (UC-RAIT-027)
 id             direction  reason                  case_id              deadline_restored  origin_protocolled_on
 -------------  ---------  ----------------------  -------------------  -----------------  ---------------------
-…000014000001  saida      outro_orgao_autuador    null                 false              null
-…000014000002  entrada    orgao_incompetente      …000010000002 (02)   true               2026-09-02
+…000037000001  saida      outro_orgao_autuador    null                 false              null
+…000037000002  entrada    orgao_incompetente      …000010000002 (02)   true               2026-09-02
 ```
 
 Na saída, `protocol_number` = `RAIT-2026-R00001`, `ait_number` de outro órgão,
@@ -949,16 +952,16 @@ caso 02 (AC-RAIT-027-1) e `deadline_restored = true` registra a devolução de p
 inf.rait_draft  (status da a.13)
 id             case_id              version  status       author_id              return_count
 -------------  -------------------  -------  -----------  ---------------------  ------------
-…000015000001  …000010000007 (07)   1        rascunho     …0000b0000001 (Ana)    0
-…000015000002  …000010000009 (09)   1        submetida    …0000b0000003 (Carla)  0
-…000015000003  …000010000020 (20)   1        devolvida    …0000b0000001 (Ana)    1
-…000015000004  …000010000010 (10)   1        assinada     …0000b0000003 (Carla)  0
+…000038000001  …000010000007 (07)   1        rascunho     …0000b0000001 (Ana)    0
+…000038000002  …000010000009 (09)   1        submetida    …0000b0000003 (Carla)  0
+…000038000003  …000010000020 (20)   1        devolvida    …0000b0000001 (Ana)    1
+…000038000004  …000010000010 (10)   1        assinada     …0000b0000003 (Carla)  0
 ```
 
 `content_hash` = sha-256 fictício de 64 hex, como nas fixtures de `rait_document`; `document_id`
-nulo (a fachada de documentos só nasce em TASK-0005/0007). A minuta `…000015000003` tem
+nulo (a fachada de documentos só nasce em TASK-0005/0007). A minuta `…000038000003` tem
 `returned_at` e `return_guidance` preenchidos e `return_count = 1` — o teto do §4 passo 5. A
-minuta `…000015000004` é a do caso 10, cuja decisão assinada já existe (`rait_decision
+minuta `…000038000004` é a do caso 10, cuja decisão assinada já existe (`rait_decision
 …000016000001`).
 
 ### e.5 O que o Inspector precisa cobrir além das fixtures
@@ -1038,8 +1041,9 @@ fontes.
    da sessão saia de `rait_attendance`.
 5. **Inversão de UC no prompt.** `rait_pending_content` é [UC-RAIT-028] e `rait_redirect` é
    [UC-RAIT-027]; o prompt troca os dois. As `description` seguem os arquivos-fonte (a.11).
-6. **Prefixos de fixture colidem com entidades existentes** em seis dos oito casos — §e.3. Sem
-   efeito no banco, com efeito na legibilidade; faixas livres listadas lá.
+6. **Prefixos de fixture — RESOLVIDO (M16, 2026-09-14).** Seis dos oito prefixos do prompt
+   repetiam entidades existentes; o maestro adotou faixas livres, uma por entidade. §e.3 já traz os
+   prefixos normativos e a trilha do que foi revogado.
 7. **`rait_distribution_batch` × `rait_batch`.** [WF-RAIT-004] §10 propõe o nome
    `rait_distribution_batch` e `rait_session.bench_state` + `rait_attendance.on_call_substitute`;
    esta tarefa fixou `rait_batch`/`rait_batch_item` e as entidades próprias `rait_bench` e

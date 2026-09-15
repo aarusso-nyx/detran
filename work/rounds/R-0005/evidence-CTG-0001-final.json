@@ -1,0 +1,45 @@
+{
+  "action": "Seal the final R-0005 CTG-0001 candidate after the administrative validation commit",
+  "round": "R-0005",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "candidate": {
+    "base": "34062b552a205b31b095a2594b7815959efc24ef",
+    "head": "426d65d07b3823da91d032fb46178a44ec75f174",
+    "administrative_validation_commit": "426d65d07b3823da91d032fb46178a44ec75f174"
+  },
+  "prior_chain_head": "218142f77628d99da3ec68361827467a8fe4017ce035b18fcc46e0452d36c297",
+  "normative_links": {
+    "decisions": ["OD-T02", "OD-013"],
+    "requirements": ["RN-TEAT-003", "RN-TEAT-142"],
+    "invariants": ["INV-EVIDENCE-001", "INV-OFFLINE-001"]
+  },
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-post-rebase-2.json",
+      "sha256": "aa4d8cc5f0e6262d35c8d977b2e3fd3fd145e9a09bf776b4cf012bc3b4867cde"
+    },
+    {
+      "path": "work/rounds/R-0005/reviews/delivery-review-ctg-0001-post-rebase-2.bridge.json",
+      "sha256": "1b9d61c741bdaca9b31938e320435233575e28fa6b298e41ce344ba61a34e94d"
+    }
+  ],
+  "gates": [
+    {
+      "command": "pnpm check",
+      "result": "PASS on the rebased CTG-0001 candidate"
+    },
+    {
+      "command": "cross-family focused post-rebase delivery review 2",
+      "result": "PASS with zero high findings"
+    },
+    {
+      "command": "pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human",
+      "result": "PASS before this append after integration with origin/main; prior head 218142f77628d99da3ec68361827467a8fe4017ce035b18fcc46e0452d36c297"
+    }
+  ],
+  "notes": [
+    "This final append binds the administrative validation commit and the focused PASS review to the candidate.",
+    "No CTG-0002 worker has been started."
+  ]
+}

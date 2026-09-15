@@ -1,0 +1,216 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-OPS-SNAPSHOTS-001",
+  "module": {
+    "name": "Snapshots",
+    "namespace": "ops",
+    "version": "1.0.0",
+    "ddlFile": "16-ops-snapshots.sql",
+    "dependencies": { "@detran/ops-core": "workspace:*" },
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/frozen-snapshot.controller",
+        "symbol": "FrozenSnapshotController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/frozen-snapshot.provider",
+        "symbol": "FROZEN_SNAPSHOT_PROVIDER"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/frozen-snapshot.controller",
+      "handwritten/frozen-snapshot.provider",
+      "handwritten/frozen-snapshot.service"
+    ],
+    "owners": ["detran-ops"],
+    "description": "Frozen external lookup snapshots preserved for legal acts, migrated from TEAT BP-EXTERNAL-SNAPSHOTS-001."
+  },
+  "api": {
+    "basePath": "/v1/ops/snapshots/",
+    "resources": [
+      { "entity": "Person", "path": "people", "resource": "person" },
+      {
+        "entity": "PersonDocument",
+        "path": "person-documents",
+        "resource": "person-document"
+      },
+      { "entity": "Vehicle", "path": "vehicles", "resource": "vehicle" },
+      {
+        "entity": "ExternalQuery",
+        "path": "external-queries",
+        "resource": "external-query"
+      },
+      {
+        "entity": "VehicleSnapshot",
+        "path": "vehicle-snapshots",
+        "resource": "vehicle-snapshot"
+      }
+    ]
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Person",
+        "table": "snapshots_person",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "person_type", "type": "varchar(40)" },
+          { "name": "name", "type": "varchar(255)", "nullable": true },
+          { "name": "cpf", "type": "varchar(11)", "nullable": true },
+          { "name": "cnpj", "type": "varchar(14)", "nullable": true },
+          { "name": "birth_date", "type": "date", "nullable": true },
+          { "name": "mother_name", "type": "varchar(255)", "nullable": true },
+          { "name": "source", "type": "varchar(60)" }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "cpf"] },
+          { "columns": ["tenant_id", "cnpj"] }
+        ]
+      },
+      {
+        "name": "PersonDocument",
+        "table": "snapshots_person_document",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "person_id", "type": "uuid" },
+          { "name": "document_type", "type": "varchar(40)" },
+          { "name": "document_number", "type": "varchar(80)" },
+          { "name": "issuing_uf", "type": "varchar(2)", "nullable": true },
+          { "name": "valid_until", "type": "date", "nullable": true },
+          {
+            "name": "license_category",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          { "name": "status", "type": "varchar(60)", "nullable": true },
+          { "name": "source", "type": "varchar(60)" }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "document_type", "document_number"] }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_person_document_person",
+            "columns": ["person_id"],
+            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "Vehicle",
+        "table": "snapshots_vehicle",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "plate", "type": "varchar(10)" },
+          { "name": "renavam", "type": "varchar(20)", "nullable": true },
+          { "name": "chassis", "type": "varchar(40)", "nullable": true },
+          { "name": "uf", "type": "varchar(2)", "nullable": true },
+          {
+            "name": "municipality_code",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          { "name": "make_model", "type": "varchar(255)", "nullable": true },
+          { "name": "species", "type": "varchar(80)", "nullable": true },
+          { "name": "category", "type": "varchar(80)", "nullable": true },
+          { "name": "color", "type": "varchar(60)", "nullable": true },
+          { "name": "source", "type": "varchar(60)" }
+        ],
+        "indexes": [{ "columns": ["tenant_id", "plate"] }]
+      },
+      {
+        "name": "ExternalQuery",
+        "table": "snapshots_external_query",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "user_ref", "type": "uuid" },
+          { "name": "agent_id", "type": "uuid", "nullable": true },
+          { "name": "device_id", "type": "uuid", "nullable": true },
+          { "name": "external_system_id", "type": "uuid" },
+          { "name": "query_type", "type": "varchar(80)" },
+          { "name": "parameters_hash", "type": "varchar(128)" },
+          { "name": "purpose", "type": "varchar(80)" },
+          { "name": "queried_at", "type": "timestamptz", "default": "now()" },
+          { "name": "status", "type": "varchar(40)" },
+          { "name": "protocol", "type": "varchar(120)", "nullable": true },
+          { "name": "result_summary", "type": "text", "nullable": true },
+          { "name": "result_snapshot_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "purpose", "queried_at"] },
+          { "columns": ["tenant_id", "parameters_hash"] }
+        ]
+      },
+      {
+        "name": "VehicleSnapshot",
+        "table": "snapshots_vehicle_snapshot",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "vehicle_id", "type": "uuid", "nullable": true },
+          { "name": "plate_snapshot", "type": "varchar(10)" },
+          {
+            "name": "renavam_snapshot",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "make_model_snapshot",
+            "type": "varchar(255)",
+            "nullable": true
+          },
+          {
+            "name": "species_snapshot",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "category_snapshot",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          { "name": "color_snapshot", "type": "varchar(60)", "nullable": true },
+          { "name": "data_source", "type": "varchar(80)" },
+          { "name": "external_query_id", "type": "uuid", "nullable": true },
+          {
+            "name": "divergence_recorded",
+            "type": "boolean",
+            "default": "false"
+          },
+          { "name": "payload_json", "type": "jsonb", "nullable": true }
+        ],
+        "indexes": [{ "columns": ["tenant_id", "plate_snapshot"] }],
+        "foreignKeys": [
+          {
+            "name": "fk_ops_vehicle_snapshot_vehicle",
+            "columns": ["vehicle_id"],
+            "references": {
+              "table": "ops.snapshots_vehicle",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_ops_vehicle_snapshot_external_query",
+            "columns": ["external_query_id"],
+            "references": {
+              "table": "ops.snapshots_external_query",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

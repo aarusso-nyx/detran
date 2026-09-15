@@ -111,6 +111,24 @@ export default defineConfig({
       '@detran/portal-complaints': fileURLToPath(
         new URL('../domains/portal/complaints/src/index.ts', import.meta.url),
       ),
+      '@detran/ops-agency': fileURLToPath(
+        new URL('../domains/ops/agency/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-core': fileURLToPath(
+        new URL('../domains/ops/core/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-field': fileURLToPath(
+        new URL('../domains/ops/field/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-snapshots': fileURLToPath(
+        new URL('../domains/ops/snapshots/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-evidence': fileURLToPath(
+        new URL('../domains/ops/evidence/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-offline-sync': fileURLToPath(
+        new URL('../domains/ops/offline-sync/src/index.ts', import.meta.url),
+      ),
       '@detran/ops-parameter': fileURLToPath(
         new URL('../domains/ops/parameter/src/index.ts', import.meta.url),
       ),
