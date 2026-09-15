@@ -1,0 +1,16 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0006",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0006/prompts/TASK-0014.md",
+      "line": 63,
+      "claim": "O critério ainda exige `isDetranActionAllowed(...)` igual a `false` para cada papel não administrativo e todas as ações CRUD, mas as exceções OD-309 concedem `create` a `rait-signing-authority`/`rait-chair` em `rait-suspension-act` e a `AUDITOR` em `rait-export`; o teste espera esses grants como `true` em `backend/domains/shared/src/policy.spec.ts:910-923`.",
+      "fix": "Excluir explicitamente os pares papel-chave de OD-309 da negativa de `isDetranActionAllowed`, exigindo-os como grants nomeados, além da exceção já declarada para a presença das chaves na matriz."
+    }
+  ],
+  "notes": []
+}

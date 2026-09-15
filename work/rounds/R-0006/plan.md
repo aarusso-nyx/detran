@@ -311,6 +311,10 @@ Inspector segue a especificação §7).
   restrito às chaves CRUD geradas (exceções OD-309 nesse conjunto; comandos pré-existentes fora de escopo), composição
   recalculada. Reautoria documental e OD-309 verificadas pelo reviewer. Ciclo 4 restrito a este item.
 
+- 2026-09-15 (janela 3) delivery-review-CTG-0002 ciclo 4 (restrito): **REVIEW**, 1 frase — os pares papel × chave de OD-309
+  são grants nomeados provados `true`; critério de TASK-0014 emendado, composição recalculada. Ciclo 5 restrito a este item;
+  se voltar REVIEW sobre texto, o maestro escala ao humano em vez de iterar.
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de
