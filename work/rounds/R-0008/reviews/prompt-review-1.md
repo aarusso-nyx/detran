@@ -421,12 +421,11 @@ avaliação), `roles.ts`, `policy.guard.ts`, `tenant-context.ts`, `inf/ait` (con
 `offline-sync`, `mobile-bootstrap`, `evidence`, `measures`, `alcohol`, `normative`, `ait-cancel-request`, trechos de
 `offline-sync-commands.service.ts`, `mobile-bootstrap.service.ts`, `evidence-commands.service.ts`, `normative-catalog-commands.service.ts`,
 `docs/framework/schemas/teat-offline-sync-batch.schema.json`, `docs/framework/contracts/openapi.json` (rotas).
-
 ```
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0001.md`
 
-```markdown
+````markdown
 # Prompt de worker — `TASK-0001` (`architect-blueprint`)
 
 > Você é um worker da orquestra `teat-backend`, rodada `R-0008`, na worktree
@@ -621,8 +620,9 @@ Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
 ```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0002.md`
 
@@ -761,9 +761,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0003.md`
 
@@ -911,9 +911,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0004.md`
 
@@ -1078,9 +1078,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0005.md`
 
@@ -1243,9 +1243,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0006.md`
 
@@ -1401,9 +1401,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0007.md`
 
@@ -1550,9 +1550,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0008.md`
 
@@ -1710,9 +1710,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0009.md`
 
@@ -1860,9 +1860,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0010.md`
 
@@ -2002,9 +2002,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0011.md`
 
@@ -2115,7 +2115,7 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
 ```
 
@@ -2123,3 +2123,4 @@ Bloqueios: <ou "nenhum">
 
 Ciclo 1 (exaustivo). Os prompts das tarefas Inspector/Engineer (TASK-0002…0010) recebem as definições detalhadas pelos contratos `work/rounds/R-0008/contracts/CTG-000n.md` que a TASK-0001 (Architect) escreve a partir das decisões M1–M20 do `plan.md`; esse encadeamento (contrato antes de teste e código) é o mesmo aceito em R-0006. Comandos de aceitação existentes em `package.json`: `format:check`, `check`, `contracts:check`, `verify:decorators`, `verify:senatran-boundary`, `blueprints:check`, `backend:test:ci|unit|integration|e2e`, `docs:kb:publish-check`, `test:unit|test:integration|test:e2e|typecheck|test` por pacote; `contracts:clients` e `tools/contracts/check-commands.mjs` são criados por TASK-0010 (critério da própria tarefa). Banco local da rodada: `detran_r8`.
 
+```

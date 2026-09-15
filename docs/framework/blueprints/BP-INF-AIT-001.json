@@ -4,7 +4,7 @@
   "module": {
     "name": "Ait",
     "namespace": "inf",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "ddlFile": "31-inf-ait.sql",
     "dependencies": {
       "@detran/inf-normative": "workspace:*",
@@ -288,21 +288,77 @@
         "table": "ait_cancel_request",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "ait_id", "type": "uuid" },
-          { "name": "kind", "type": "varchar(60)" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "ait_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "kind",
+            "type": "varchar(60)"
+          },
           {
             "name": "target_local_act_id",
             "type": "varchar(120)",
             "nullable": true
           },
-          { "name": "origin_status", "type": "varchar(60)" },
-          { "name": "addressed_to", "type": "varchar(120)" },
-          { "name": "status", "type": "varchar(60)", "default": "'requested'" },
-          { "name": "decision", "type": "text", "nullable": true },
-          { "name": "requested_at", "type": "timestamptz", "default": "now()" },
-          { "name": "decided_at", "type": "timestamptz", "nullable": true }
+          {
+            "name": "origin_status",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "addressed_to",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "idempotency_key",
+            "type": "varchar(160)",
+            "nullable": true
+          },
+          {
+            "name": "justification",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "requested_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          },
+          {
+            "name": "status",
+            "type": "varchar(60)",
+            "default": "'requested'"
+          },
+          {
+            "name": "decision",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "requested_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "decided_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
         ],
         "checks": [
           {
@@ -314,13 +370,26 @@
           {
             "name": "ix_inf_ait_cancel_request",
             "columns": ["tenant_id", "ait_id", "status"]
+          },
+          {
+            "name": "ux_inf_ait_cancel_request_idempotency",
+            "columns": ["tenant_id", "idempotency_key"],
+            "unique": true,
+            "where": "idempotency_key is not null"
+          },
+          {
+            "name": "ix_inf_ait_cancel_request_target",
+            "columns": ["tenant_id", "target_local_act_id"]
           }
         ],
         "foreignKeys": [
           {
             "name": "fk_inf_ait_cancel_request_ait",
             "columns": ["ait_id"],
-            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+            "references": {
+              "table": "inf.ait_ait",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -329,14 +398,43 @@
         "table": "ait_cancel_request_event",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "cancel_request_id", "type": "uuid" },
-          { "name": "event_type", "type": "varchar(80)" },
-          { "name": "event_at", "type": "timestamptz", "default": "now()" },
-          { "name": "actor_user_ref", "type": "uuid", "nullable": true },
-          { "name": "decision", "type": "text", "nullable": true },
-          { "name": "details_json", "type": "jsonb", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "cancel_request_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_type",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "event_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "actor_user_ref",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "decision",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "details_json",
+            "type": "jsonb",
+            "nullable": true
+          }
         ],
         "indexes": [
           {

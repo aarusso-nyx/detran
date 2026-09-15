@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Ait — BP-INF-AIT-001",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "AIT issuance and lifecycle with immutable content hash, normative references, and operational satellites.",
     "x-blueprint": "BP-INF-AIT-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -1539,7 +1539,8 @@
           },
           "ait_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "kind": {
             "type": "string",
@@ -1557,6 +1558,24 @@
           "addressed_to": {
             "type": "string",
             "maxLength": 120
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
           },
           "status": {
             "type": "string",
@@ -1590,7 +1609,6 @@
         },
         "required": [
           "tenant_id",
-          "ait_id",
           "kind",
           "origin_status",
           "addressed_to",
@@ -1602,7 +1620,8 @@
         "properties": {
           "ait_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "kind": {
             "type": "string",
@@ -1620,6 +1639,24 @@
           "addressed_to": {
             "type": "string",
             "maxLength": 120
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
           },
           "status": {
             "type": "string",
@@ -1642,7 +1679,7 @@
             "nullable": true
           }
         },
-        "required": ["ait_id", "kind", "origin_status", "addressed_to"]
+        "required": ["kind", "origin_status", "addressed_to"]
       },
       "AitCancelRequestEvent": {
         "type": "object",

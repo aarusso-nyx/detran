@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "OfflineSync — BP-OPS-OFFLINE-SYNC-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Offline numbering and durable synchronization from WF-TEAT-002 and INV-OFFLINE-001; no WP-T2 controller is mounted in this round.",
     "x-blueprint": "BP-OPS-OFFLINE-SYNC-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -1166,19 +1166,23 @@
           },
           "local_entity_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "idempotency_key": {
             "type": "string",
-            "maxLength": 160
+            "maxLength": 160,
+            "nullable": true
           },
           "server_entity_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "finalized_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "reconciled_at": {
             "type": "string",
@@ -1210,10 +1214,6 @@
           "reservation_id",
           "range_id",
           "number",
-          "local_entity_id",
-          "idempotency_key",
-          "server_entity_id",
-          "finalized_at",
           "created_at"
         ]
       },
@@ -1233,19 +1233,23 @@
           },
           "local_entity_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "idempotency_key": {
             "type": "string",
-            "maxLength": 160
+            "maxLength": 160,
+            "nullable": true
           },
           "server_entity_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "finalized_at": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "reconciled_at": {
             "type": "string",
@@ -1263,15 +1267,7 @@
             "nullable": true
           }
         },
-        "required": [
-          "reservation_id",
-          "range_id",
-          "number",
-          "local_entity_id",
-          "idempotency_key",
-          "server_entity_id",
-          "finalized_at"
-        ]
+        "required": ["reservation_id", "range_id", "number"]
       },
       "SyncBatch": {
         "type": "object",

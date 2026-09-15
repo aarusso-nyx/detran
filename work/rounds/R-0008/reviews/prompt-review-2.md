@@ -95,13 +95,11 @@ Veredito anterior: `REVIEW` (`work/rounds/R-0008/reviews/prompt-review-1.json`).
 
 CTG-0001 = 0001…0003; CTG-0002 = 0004/0005; CTG-0003 = 0006/0007; CTG-0004 = 0008, 0009, 0012, 0010, 0011. Um PR por CTG. Os Inspectors
 de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-policy-tests` em `policy.spec.ts`; prompt-review-1).
-
-
 ```
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0001.md`
 
-```markdown
+````markdown
 # Prompt de worker — `TASK-0001` (`architect-blueprint`)
 
 > Você é um worker da orquestra `teat-backend`, rodada `R-0008`, na worktree
@@ -302,8 +300,9 @@ Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
 ```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0006.md`
 
@@ -462,9 +461,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0008.md`
 
@@ -625,9 +624,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0010.md`
 
@@ -772,9 +771,9 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
-```
+````
 
 ## Anexo — `work/rounds/R-0008/prompts/TASK-0012.md`
 
@@ -879,7 +878,8 @@ Critérios de aceitação: <cada um com PASS/FAIL>
 Fora do escopo / deixado: <o quê e por quê>
 OD tocadas ou propostas: <ids, ou "nenhuma">
 Bloqueios: <ou "nenhum">
-```
+````
 
 ```
 
+```
