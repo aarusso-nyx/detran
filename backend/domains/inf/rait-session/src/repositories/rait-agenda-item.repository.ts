@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-SESSION-001 v1.0.0 sha256:dc1bce75baacc50799dc941fd01f8c5ccd3ca217522ca280f4fbea215d197a05
+// Generated from BP-INF-RAIT-SESSION-001 v1.1.0 sha256:24f07dd684f9142de9db5e84913c3e2899499e68aebd1d6ac33dc0a03c5eca01
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -27,6 +27,8 @@ const WRITABLE_FIELDS = new Set<string>([
   'outcome',
   'withdrawn',
   'withdrawn_reason',
+  'view_requested_by',
+  'view_due_on',
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */

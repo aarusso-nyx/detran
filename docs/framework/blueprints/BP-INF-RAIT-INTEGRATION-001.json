@@ -1,0 +1,102 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-RAIT-INTEGRATION-001",
+  "module": {
+    "name": "RaitIntegration",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "58-inf-rait-integration.sql",
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      }
+    ],
+    "owners": ["detran-inf"],
+    "description": "Conciliacao do RAIT com os registros nacionais (UC-RAIT-029 fluxo 3 e UC-RAIT-031 fluxo 3 e 3a): fato proprio do RAIT, nao projecao (ADR-0020 Decision 1 e 2). Nenhuma chamada nacional sai daqui — so o packages/senatran-adapter fala com RENAINF, RENACH e SNE (ADR-0003; AC-RAIT-029-1) — e nenhuma escrita na integration.outbox: a projecao da outbox por sistema pertence ao consumidor (dashboard.integration_health, ADR-0020 Decision 2) e nasce em WP-P (decisao M10). Nenhuma FK entre schemas."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "RaitReconciliation",
+        "table": "rait_reconciliation",
+        "primaryKey": ["id"],
+        "description": "Conciliacao por sistema e janela — UC-RAIT-031 fluxo 3 (compara estado local e nacional, aplica a precedencia e registra a conciliacao; AC-RAIT-031-2) e fluxo 3a (divergencia que altera sujeito passivo ou pontuacao nunca e automatica: escala ao gestor), aberta pela divergencia de UC-RAIT-029 fluxo 3. divergences_count e o par de RAIT.RECONCILIATION_DIVERGENCE (catalogo secao 3.11); report_document_id e o relatorio da conciliacao pela fachada de documentos (ADR-0018 Decision 1) e nao tem FK porque nao existe tabela de documento. Estados minusculos derivados do UC (decisao M12).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "system", "type": "varchar(10)" },
+          { "name": "window_from", "type": "date" },
+          { "name": "window_to", "type": "date" },
+          { "name": "requested_by", "type": "uuid" },
+          { "name": "requested_at", "type": "timestamptz", "default": "now()" },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'solicitada'"
+          },
+          { "name": "divergences_count", "type": "integer", "default": "0" },
+          { "name": "report_document_id", "type": "uuid", "nullable": true },
+          { "name": "resolved_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_reconciliation_window",
+            "columns": ["tenant_id", "system", "window_from", "window_to"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_reconciliation_status",
+            "columns": ["tenant_id", "status", "requested_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_reconciliation_system",
+            "expression": "system in ('renainf','renach','sne')"
+          },
+          {
+            "name": "ck_inf_rait_reconciliation_status",
+            "expression": "status in ('solicitada','conciliada','escalada')"
+          },
+          {
+            "name": "ck_inf_rait_reconciliation_window_order",
+            "expression": "window_to >= window_from"
+          },
+          {
+            "name": "ck_inf_rait_reconciliation_divergences_non_negative",
+            "expression": "divergences_count >= 0"
+          },
+          {
+            "name": "ck_inf_rait_reconciliation_resolved_complete",
+            "expression": "status = 'solicitada' or resolved_at is not null"
+          },
+          {
+            "name": "ck_inf_rait_reconciliation_report_required",
+            "expression": "status <> 'conciliada' or divergences_count = 0 or report_document_id is not null"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/rait/",
+    "resources": [
+      {
+        "entity": "RaitReconciliation",
+        "path": "reconciliations",
+        "resource": "rait-reconciliation"
+      }
+    ]
+  },
+  "auth": {
+    "source": "RAIT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

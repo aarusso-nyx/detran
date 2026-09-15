@@ -1,0 +1,1140 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Collection — BP-INF-COLLECTION-001",
+    "version": "1.0.1",
+    "description": "Modulo de arrecadacao (ADR-0017 Decision 1): unico escritor do documento de arrecadacao (UC-RAIT-032), do pagamento conciliado do retorno bancario (UC-RAIT-035), da ordem de restituicao corrigida (UC-RAIT-033) e do encaminhamento do credito a Fazenda (UC-RAIT-034). Dinheiro nunca muda estado direto: o agregado da infracao decide (ADR-0017 Decision 2; [WF-INF-003] secao 2 linhas 12 a 16 e 29). O banco e adapter interno do modulo em ports/bank, mock-first (ADR-0017 Decision 4); cartao e parcelamento estao fora de escopo (DT-031).",
+    "x-blueprint": "BP-INF-COLLECTION-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/collection/collection-documents": {
+      "get": {
+        "tags": ["collection-document"],
+        "operationId": "listCollectionDocument",
+        "summary": "List CollectionDocument (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CollectionDocument"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["collection-document"],
+        "operationId": "createCollectionDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCollectionDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionDocument"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/collection/collection-documents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["collection-document"],
+        "operationId": "getCollectionDocument",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["collection-document"],
+        "operationId": "updateCollectionDocument",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCollectionDocumentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CollectionDocument"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["collection-document"],
+        "operationId": "removeCollectionDocument",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/collection/payments": {
+      "get": {
+        "tags": ["payment"],
+        "operationId": "listPayment",
+        "summary": "List Payment (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Payment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["payment"],
+        "operationId": "createPayment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/collection/payments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["payment"],
+        "operationId": "getPayment",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["payment"],
+        "operationId": "updatePayment",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreatePaymentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["payment"],
+        "operationId": "removePayment",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/collection/refund-orders": {
+      "get": {
+        "tags": ["refund-order"],
+        "operationId": "listRefundOrder",
+        "summary": "List RefundOrder (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RefundOrder"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["refund-order"],
+        "operationId": "createRefundOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRefundOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefundOrder"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/collection/refund-orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["refund-order"],
+        "operationId": "getRefundOrder",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefundOrder"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["refund-order"],
+        "operationId": "updateRefundOrder",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRefundOrderDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefundOrder"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["refund-order"],
+        "operationId": "removeRefundOrder",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/collection/debt-handoffs": {
+      "get": {
+        "tags": ["debt-handoff"],
+        "operationId": "listDebtHandoff",
+        "summary": "List DebtHandoff (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DebtHandoff"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["debt-handoff"],
+        "operationId": "createDebtHandoff",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDebtHandoffDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DebtHandoff"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/collection/debt-handoffs/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["debt-handoff"],
+        "operationId": "getDebtHandoff",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DebtHandoff"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["debt-handoff"],
+        "operationId": "updateDebtHandoff",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateDebtHandoffDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DebtHandoff"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["debt-handoff"],
+        "operationId": "removeDebtHandoff",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CollectionDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tier": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nenhum",
+              "desconto_80",
+              "desconto_60_reconhecimento",
+              "desconto_40_fora_sne",
+              "integral_juros",
+              "restituido"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "barcode": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "pix_reference": {
+            "type": "string",
+            "maxLength": 140,
+            "nullable": true
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date"
+          },
+          "issued_for_state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "AIT_LAVRADO",
+              "NOTIFICADO_AUTUACAO",
+              "DEFESA_EM_JULGAMENTO",
+              "PENALIDADE_A_APLICAR",
+              "NOTIFICADO_PENALIDADE",
+              "RECURSO_1A_INSTANCIA",
+              "AGUARDANDO_RECURSO_2A",
+              "RECURSO_2A_INSTANCIA",
+              "INSTANCIA_ENCERRADA",
+              "ARQUIVADO",
+              "CANCELADO_POS_INTEGRACAO",
+              "AIT_CANCELADO",
+              "EXTINTO_DECADENCIA",
+              "EXTINTO_PRESCRICAO",
+              "CANCELADO_DEFINITIVO"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["emitido", "pago", "vencido", "invalidado"],
+            "default": "'emitido'"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "issued_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "supersedes_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "invalidated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "infraction_id",
+          "tier",
+          "amount",
+          "valid_until",
+          "issued_for_state",
+          "created_at"
+        ],
+        "description": "Documento proprio de arrecadacao por faixa e fase — UC-RAIT-032 (fluxo 1 a 4, AC-RAIT-032-1 data-limite unica, AC-RAIT-032-3 duas casas truncadas) e ADR-0017 Decision 1. tier referencia inf.infraction_payment_tier_ref e issued_for_state a fase da infracao para a qual foi emitido (RAIT.COLLECTION_PHASE_INVALID e a guarda de comando). A faixa desconto_40_fora_sne existe no vocabulario e fica desligada pela flag collection.discount_40_outside_sne=false (steering H.53; RAIT.COLLECTION_DISCOUNT_SNE_ONLY). Estados minusculos derivados de ADR-0017 Decision 2 (emitir ou invalidar por fase) e do fluxo 3 e 4 do UC (decisao M12)."
+      },
+      "CreateCollectionDocumentDto": {
+        "type": "object",
+        "properties": {
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tier": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nenhum",
+              "desconto_80",
+              "desconto_60_reconhecimento",
+              "desconto_40_fora_sne",
+              "integral_juros",
+              "restituido"
+            ]
+          },
+          "amount": {
+            "type": "number"
+          },
+          "barcode": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "pix_reference": {
+            "type": "string",
+            "maxLength": 140,
+            "nullable": true
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date"
+          },
+          "issued_for_state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "AIT_LAVRADO",
+              "NOTIFICADO_AUTUACAO",
+              "DEFESA_EM_JULGAMENTO",
+              "PENALIDADE_A_APLICAR",
+              "NOTIFICADO_PENALIDADE",
+              "RECURSO_1A_INSTANCIA",
+              "AGUARDANDO_RECURSO_2A",
+              "RECURSO_2A_INSTANCIA",
+              "INSTANCIA_ENCERRADA",
+              "ARQUIVADO",
+              "CANCELADO_POS_INTEGRACAO",
+              "AIT_CANCELADO",
+              "EXTINTO_DECADENCIA",
+              "EXTINTO_PRESCRICAO",
+              "CANCELADO_DEFINITIVO"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["emitido", "pago", "vencido", "invalidado"],
+            "default": "'emitido'"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "issued_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "supersedes_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "invalidated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "infraction_id",
+          "tier",
+          "amount",
+          "valid_until",
+          "issued_for_state"
+        ]
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "bank_reference": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "paid_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "tier_applied": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nenhum",
+              "desconto_80",
+              "desconto_60_reconhecimento",
+              "desconto_40_fora_sne",
+              "integral_juros",
+              "restituido"
+            ],
+            "nullable": true
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "matched_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reversed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "bank_reference",
+          "paid_on",
+          "amount",
+          "created_at"
+        ],
+        "description": "Pagamento vindo do retorno bancario e sua conciliacao — UC-RAIT-035 (fluxo 1 casamento por documento, valor e data; AC-RAIT-035-3 rastreabilidade) e ADR-0017 Decision 1. Retorno sem documento correspondente fica sem document_id e sem matched_at (RAIT.PAYMENT_UNMATCHED, catalogo secao 3.11); reversed_at registra o estorno que publica PAGAMENTO_ESTORNADO (ADR-0017 Decision 2). O pagamento nao muda estado da infracao: o agregado decide ([WF-INF-003] secao 2 linhas 12 a 16 e 29)."
+      },
+      "CreatePaymentDto": {
+        "type": "object",
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "bank_reference": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "paid_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "tier_applied": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "nenhum",
+              "desconto_80",
+              "desconto_60_reconhecimento",
+              "desconto_40_fora_sne",
+              "integral_juros",
+              "restituido"
+            ],
+            "nullable": true
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "matched_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reversed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["bank_reference", "paid_on", "amount"]
+      },
+      "RefundOrder": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "payment_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "decisao_favoravel",
+              "extincao",
+              "pagamento_duplicado",
+              "pagamento_a_maior"
+            ]
+          },
+          "base_amount": {
+            "type": "number"
+          },
+          "index_key": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "updated_amount": {
+            "type": "number",
+            "nullable": true
+          },
+          "bank_data_status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["pendente", "informado"],
+            "default": "'pendente'"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["aberta", "ordenada", "paga"],
+            "default": "'aberta'"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "ordered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paid_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "infraction_id",
+          "payment_id",
+          "reason",
+          "base_amount",
+          "index_key",
+          "created_at"
+        ],
+        "description": "Ordem de restituicao corrigida — UC-RAIT-033 (fluxo 1 a 4, fluxo 3a dados bancarios ausentes, AC-RAIT-033-1 sem pedido do cidadao, AC-RAIT-033-2 indice visivel) e ADR-0017 Decision 1. index_key registra qual indice foi aplicado e nao tem default: o valor vigente e o parametro rait.refund.index (IPCA-E, ops.parameter; RAIT.REFUND_INDEX_PENDING quando nao parametrizado). Estados minusculos dos eventos reservados RESTITUICAO_ORDENADA e RESTITUICAO_PAGA (rait-events-sse-contract.md secao 2.5) mais a abertura por RESTITUICAO_DEVIDA (decisao M12)."
+      },
+      "CreateRefundOrderDto": {
+        "type": "object",
+        "properties": {
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "payment_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "decisao_favoravel",
+              "extincao",
+              "pagamento_duplicado",
+              "pagamento_a_maior"
+            ]
+          },
+          "base_amount": {
+            "type": "number"
+          },
+          "index_key": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "updated_amount": {
+            "type": "number",
+            "nullable": true
+          },
+          "bank_data_status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["pendente", "informado"],
+            "default": "'pendente'"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["aberta", "ordenada", "paga"],
+            "default": "'aberta'"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "ordered_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paid_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "infraction_id",
+          "payment_id",
+          "reason",
+          "base_amount",
+          "index_key"
+        ]
+      },
+      "DebtHandoff": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fazenda_reference": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "dossier_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["preparado", "enviado", "reconhecido", "cancelado"],
+            "default": "'preparado'"
+          },
+          "prepared_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["pagamento"],
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "infraction_id", "created_at"],
+        "description": "Encaminhamento do credito definitivo nao pago a Fazenda e a divida ativa — UC-RAIT-034 (fluxo 3 transferencia com o dossie fiscal, fluxo 2a pagamento durante a cobranca, AC-RAIT-034-2) e ADR-0017 Decision 1. Antes de INSTANCIA_ENCERRADA ou com efeito suspensivo o encaminhamento e recusado (RAIT.DEBT_HANDOFF_NOT_FINAL, guarda de comando porque depende do estado do agregado). A porta da Fazenda segue pendente de fonte (ADR-0017 tabela de ownership)."
+      },
+      "CreateDebtHandoffDto": {
+        "type": "object",
+        "properties": {
+          "infraction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fazenda_reference": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "dossier_document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["preparado", "enviado", "reconhecido", "cancelado"],
+            "default": "'preparado'"
+          },
+          "prepared_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_reason": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["pagamento"],
+            "nullable": true
+          }
+        },
+        "required": ["infraction_id"]
+      }
+    }
+  }
+}

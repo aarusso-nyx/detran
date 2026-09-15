@@ -35,3 +35,12 @@ Example: `BP-INF-AIT-001` imports `NormativeModule` from `@detran/inf-normative`
 Os blueprints `BP-OPS-AGENCY-001`, `BP-OPS-FIELD-001`, `BP-OPS-SNAPSHOTS-001`,
 `BP-OPS-EVIDENCE-001` e `BP-OPS-OFFLINE-SYNC-001` foram entregues com pacotes, DDLs e
 contratos gerados. `shift.status` permanece `source_pending` até o vocabulário canônico.
+
+`module.ddlFile` (optional) overrides the default generated DDL filename
+(`30-<namespace>-<kebab(name)>.sql`) whenever the real migration number falls outside that
+default range — e.g. `38-inf-infraction.sql`, `39-inf-rait-org.sql`, `57-inf-collection.sql`,
+`58-inf-rait-integration.sql`, `59-inf-notification.sql` (R-0006).
+
+Not every package under `backend/domains/inf/` is generated: some are entirely handwritten and
+have no blueprint at all — e.g. `@detran/inf-deadlines` in `backend/domains/inf/deadlines`
+(ADR-0016 §2), consumed by generated modules through their own dependencies/`handwrittenExports`.

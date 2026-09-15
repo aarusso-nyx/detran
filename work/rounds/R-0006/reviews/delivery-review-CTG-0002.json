@@ -1,0 +1,50 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0006",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0006/tasks/TASK-0008.json",
+      "line": 6,
+      "claim": "TASK-0008 declara disciplina Owner e altera documentação publicada em docs/ (linhas 8–12), mas a Constituição reserva docs/ ao Architect (.devai/pin/constitution.md:91).",
+      "fix": "Reatribuir a transcrição e sua evidência a uma tarefa Architect; Owner pode apenas fornecer a decisão de negócio necessária."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0006/reports/TASK-0007.md",
+      "line": 3,
+      "claim": "O Engineer alterou BP-INF-COLLECTION-001 em docs/framework/blueprints, embora docs/ seja fronteira do Architect e o próprio contrato reserva esse bump ao Architect (contracts/CTG-0002-modules.md:867-871).",
+      "fix": "Mover o bump handwrittenExports/handwrittenProviders para uma tarefa Architect e regenerar a árvore a partir dela."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0006/reports/TASK-0007.md",
+      "line": 4,
+      "claim": "O BankPort mock foi implementado sem teste prévio: TASK-0006 enumera seus testes e não inclui o port (reports/TASK-0006.md:3), enquanto TASK-0007 registra collection test:unit como \"no test files\". Isso não prova os requisitos obrigatórios de idempotência, ordenação, isolamento entre instâncias e Clock injetado do contrato (contracts/CTG-0002-modules.md:923-943).",
+      "fix": "Inspector deve escrever testes unitários vermelhos para todos os comportamentos do mock; Engineer deve apenas fazê-los passar."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "backend/domains/inf/collection/src/controllers/collection-document.controller.ts",
+      "line": 16,
+      "claim": "A entrega monta CRUD com recurso inf:collection-document, mas a matriz RAIT não contém collection-document nem os demais recursos novos (backend/domains/shared/src/policy.ts:965-1014). Logo não há grants positivos nem negativas exaustivas testadas para essas superfícies; o guard falha fechado para usuários canônicos (policy.ts:1298-1325).",
+      "fix": "Não montar os módulos até R-0007, ou criar matriz canônica aprovada e testes Inspector de grants positivos e negativas para todos os papéis omitidos."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0006/plan.md",
+      "line": 102,
+      "claim": "O critério de aceitação fixa 134 tabelas tenant, mas os relatórios da própria entrega registram verify:rls-ddl = 178 (reports/TASK-0006.md:4). Portanto o resultado esperado canônico do gate está incorreto.",
+      "fix": "Architect deve corrigir o critério para o total efetivamente produzido e preservá-lo no relatório/evidência do gate."
+    }
+  ],
+  "notes": [
+    "A execução independente de pnpm verify:rls-ddl não pôde iniciar no sandbox porque tsx tentou abrir um pipe IPC e recebeu EPERM; o achado de contagem decorre da inconsistência documental verificável."
+  ]
+}

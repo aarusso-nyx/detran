@@ -2,8 +2,8 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0008",
   "round_id": "R-0006",
-  "status": "queued",
-  "discipline": "owner",
+  "status": "completed",
+  "discipline": "architect",
   "discipline_specialization": "transcriber-docs",
   "title": "Transcribe the executed WP-A into the build pack, blueprint README, fixtures and deadline docs, and backlog",
   "description": "Record the real DDL numbering (38/39/57/58/59), the blueprint renames per ADR-0016/0017, the handwritten deadlines package location, what was left out (M10, signature_policy), the merged CTG-0001 PR number from plan.md and \"pending\" for CTG-0002; mark backlog items executed in R-0006. Runs strictly after TASK-0007.",
@@ -12,11 +12,18 @@
   "target_substrates": ["F2"],
   "target_invariants": ["CODESTYLE §Docs", "conventions.md"],
   "coupled_task_group": "CTG-0002",
-  "coupled_pipeline_position": "owner",
+  "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0007",
   "db_isolation": "database",
-  "iteration_count": 0,
-  "iteration_trail": [],
+  "iteration_count": 1,
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "classification": "policy-issue",
+      "finding": "delivery-review-CTG-0002: docs/ is the Architect boundary (Constitution); task re-attributed from owner to architect (specialization transcriber-docs), content attested by the maestro as Architect.",
+      "status": "completed"
+    }
+  ],
   "max_iterations": 2,
   "priority": 3,
   "tags": ["wp-a", "docs", "transcription"],

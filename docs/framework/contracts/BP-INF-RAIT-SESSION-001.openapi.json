@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RaitSession — BP-INF-RAIT-SESSION-001",
-    "version": "1.0.0",
-    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA.",
+    "version": "1.1.0",
+    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA. v1.1.0 acrescenta a modalidade da sessao, o reconhecimento de convocacao curta, o pedido de vista por item e a publicacao da ata (OD-102, OD-103, OD-106 vigentes por steering H.57).",
     "x-blueprint": "BP-INF-RAIT-SESSION-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
   },
@@ -854,6 +854,16 @@
             "format": "uuid",
             "nullable": true
           },
+          "modality": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["presencial", "virtual", "hibrida"],
+            "default": "'presencial'"
+          },
+          "short_notice_ack": {
+            "type": "boolean",
+            "default": "false"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -870,7 +880,7 @@
           "quorum_required",
           "created_at"
         ],
-        "description": "Sessao de julgamento. Sem quorum a sessao nao abre e vai a SESSAO_ADIADA (AC-RAIT-006-1); relogios nao param (AC-RAIT-006-2)."
+        "description": "Sessao de julgamento. Sem quorum a sessao nao abre e vai a SESSAO_ADIADA (AC-RAIT-006-1); relogios nao param (AC-RAIT-006-2). v1.1.0: modality registra presencial, virtual ou hibrida (WF-RAIT-003 secao Fundamento e WF-RAIT-004 secao 6 regra (d); habilitacao pelo parametro session.modality.virtual_enabled, OD-106) e short_notice_ack marca o reconhecimento da convocacao com menos de T-CONV (RAIT.AGENDA_SHORT_NOTICE, OD-102)."
       },
       "CreateRaitSessionDto": {
         "type": "object",
@@ -949,6 +959,16 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "modality": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["presencial", "virtual", "hibrida"],
+            "default": "'presencial'"
+          },
+          "short_notice_ack": {
+            "type": "boolean",
+            "default": "false"
           }
         },
         "required": ["judging_body", "quorum_required"]
@@ -1028,6 +1048,16 @@
             "maxLength": 40,
             "nullable": true
           },
+          "view_requested_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "view_due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1046,7 +1076,7 @@
           "rapporteur_member_id",
           "created_at"
         ],
-        "description": "Caso em pauta. priority=true para bandeiras ALERTA_N3/CRITICO — entrada obrigatoria (AC-RAIT-005-1). So entra com parecer registrado (AC-RAIT-005-2)."
+        "description": "Caso em pauta. priority=true para bandeiras ALERTA_N3/CRITICO — entrada obrigatoria (AC-RAIT-005-1). So entra com parecer registrado (AC-RAIT-005-2). v1.1.0: view_requested_by e view_due_on registram o pedido de vista do item e seu prazo de devolucao (WF-RAIT-004 secao 2.3 — Res. 901/2022 Anexo 11.1; OD-103, teto por membro no parametro session.view_request.max_per_member)."
       },
       "CreateRaitAgendaItemDto": {
         "type": "object",
@@ -1112,6 +1142,16 @@
           "withdrawn_reason": {
             "type": "string",
             "maxLength": 40,
+            "nullable": true
+          },
+          "view_requested_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "view_due_on": {
+            "type": "string",
+            "format": "date",
             "nullable": true
           }
         },
@@ -1456,6 +1496,11 @@
             "maxLength": 128,
             "nullable": true
           },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1467,7 +1512,7 @@
           }
         },
         "required": ["tenant_id", "session_id", "content", "created_at"],
-        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8)."
+        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING)."
       },
       "CreateRaitMinutesDto": {
         "type": "object",
@@ -1507,6 +1552,11 @@
           "document_hash": {
             "type": "string",
             "maxLength": 128,
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
