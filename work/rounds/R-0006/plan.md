@@ -258,6 +258,14 @@ Inspector segue a especificação §7).
   a delivery-review cobre o diff do grupo inteiro antes do PR. `origin/main` avançou (PR #40 `ops-agency`): integrar
   por `git merge --no-edit origin/main` antes de TASK-0005.
 
+- 2026-09-14 (janela 3) `origin/main` (PR #40 `ops-agency`) integrado por `git merge --no-edit` (950bd5f): conflito só em
+  `record/proofs/chain.json` → versão de `main` aceita (regra §1); `pnpm install`, regeneração, gates rápidos verdes
+  (165 tabelas de tenant). `devai audit observe --at 1fefb32` recusado (`AUDIT_OBSERVE_EXACT_HEAD_REQUIRED`: só o HEAD
+  exato é observável) — a observação EV-b1a79752263c5493 de CTG-0001, gravada na cadeia do branch, caiu com a
+  aceitação da cadeia de `main`; a pasta `.devai/state/audit-observations/1fefb32…` permanece como registro. No
+  fechamento, `audit observe` no sha do merge de CTG-0002 (HEAD exato) e nota em `closure.json` sobre CTG-0001.
+  O remapeamento M16 dos prefixos foi aplicado pelo Architect no contrato (§e.3/§e.4) e entrou no commit de merge.
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de
