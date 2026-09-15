@@ -1,0 +1,391 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-COLLECTION-001",
+  "module": {
+    "name": "Collection",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "57-inf-collection.sql",
+    "dependencies": {
+      "@detran/inf-infraction": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-infraction",
+        "target": "../infraction/src/index.ts"
+      }
+    ],
+    "owners": ["detran-inf"],
+    "description": "Modulo de arrecadacao (ADR-0017 Decision 1): unico escritor do documento de arrecadacao (UC-RAIT-032), do pagamento conciliado do retorno bancario (UC-RAIT-035), da ordem de restituicao corrigida (UC-RAIT-033) e do encaminhamento do credito a Fazenda (UC-RAIT-034). Dinheiro nunca muda estado direto: o agregado da infracao decide (ADR-0017 Decision 2; [WF-INF-003] secao 2 linhas 12 a 16 e 29). O banco e adapter interno do modulo em ports/bank, mock-first (ADR-0017 Decision 4); cartao e parcelamento estao fora de escopo (DT-031)."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "CollectionDocument",
+        "table": "collection_document",
+        "primaryKey": ["id"],
+        "description": "Documento proprio de arrecadacao por faixa e fase — UC-RAIT-032 (fluxo 1 a 4, AC-RAIT-032-1 data-limite unica, AC-RAIT-032-3 duas casas truncadas) e ADR-0017 Decision 1. tier referencia inf.infraction_payment_tier_ref e issued_for_state a fase da infracao para a qual foi emitido (RAIT.COLLECTION_PHASE_INVALID e a guarda de comando). A faixa desconto_40_fora_sne existe no vocabulario e fica desligada pela flag collection.discount_40_outside_sne=false (steering H.53; RAIT.COLLECTION_DISCOUNT_SNE_ONLY). Estados minusculos derivados de ADR-0017 Decision 2 (emitir ou invalidar por fase) e do fluxo 3 e 4 do UC (decisao M12).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "infraction_id", "type": "uuid" },
+          { "name": "tier", "type": "varchar(40)" },
+          { "name": "amount", "type": "numeric(12,2)" },
+          { "name": "barcode", "type": "varchar(60)", "nullable": true },
+          { "name": "pix_reference", "type": "varchar(140)", "nullable": true },
+          { "name": "valid_until", "type": "date" },
+          { "name": "issued_for_state", "type": "varchar(40)" },
+          { "name": "status", "type": "varchar(20)", "default": "'emitido'" },
+          { "name": "issued_at", "type": "timestamptz", "default": "now()" },
+          { "name": "issued_by", "type": "uuid", "nullable": true },
+          { "name": "document_id", "type": "uuid", "nullable": true },
+          {
+            "name": "supersedes_document_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          { "name": "invalidated_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_collection_document_active",
+            "columns": ["tenant_id", "infraction_id"],
+            "unique": true,
+            "where": "status = 'emitido'"
+          },
+          {
+            "name": "ux_inf_collection_document_barcode",
+            "columns": ["tenant_id", "barcode"],
+            "unique": true,
+            "where": "barcode is not null"
+          },
+          {
+            "name": "ix_inf_collection_document_due",
+            "columns": ["tenant_id", "valid_until"],
+            "where": "status = 'emitido'"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_collection_document_tier",
+            "expression": "tier in ('nenhum','desconto_80','desconto_60_reconhecimento','desconto_40_fora_sne','integral_juros','restituido')"
+          },
+          {
+            "name": "ck_inf_collection_document_issued_for_state",
+            "expression": "issued_for_state in ('AIT_LAVRADO','NOTIFICADO_AUTUACAO','DEFESA_EM_JULGAMENTO','PENALIDADE_A_APLICAR','NOTIFICADO_PENALIDADE','RECURSO_1A_INSTANCIA','AGUARDANDO_RECURSO_2A','RECURSO_2A_INSTANCIA','INSTANCIA_ENCERRADA','ARQUIVADO','CANCELADO_POS_INTEGRACAO','AIT_CANCELADO','EXTINTO_DECADENCIA','EXTINTO_PRESCRICAO','CANCELADO_DEFINITIVO')"
+          },
+          {
+            "name": "ck_inf_collection_document_status",
+            "expression": "status in ('emitido','pago','vencido','invalidado')"
+          },
+          {
+            "name": "ck_inf_collection_document_amount_positive",
+            "expression": "amount > 0"
+          },
+          {
+            "name": "ck_inf_collection_document_reference_required",
+            "expression": "barcode is not null or pix_reference is not null"
+          },
+          {
+            "name": "ck_inf_collection_document_invalidated_complete",
+            "expression": "status <> 'invalidado' or invalidated_at is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_collection_document_infraction",
+            "columns": ["infraction_id"],
+            "references": { "table": "inf.infraction", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_collection_document_tier",
+            "columns": ["tier"],
+            "references": {
+              "table": "inf.infraction_payment_tier_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_collection_document_state",
+            "columns": ["issued_for_state"],
+            "references": {
+              "table": "inf.infraction_state_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_inf_collection_document_supersedes",
+            "columns": ["supersedes_document_id"],
+            "references": {
+              "table": "inf.collection_document",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Payment",
+        "table": "payment",
+        "primaryKey": ["id"],
+        "description": "Pagamento vindo do retorno bancario e sua conciliacao — UC-RAIT-035 (fluxo 1 casamento por documento, valor e data; AC-RAIT-035-3 rastreabilidade) e ADR-0017 Decision 1. Retorno sem documento correspondente fica sem document_id e sem matched_at (RAIT.PAYMENT_UNMATCHED, catalogo secao 3.11); reversed_at registra o estorno que publica PAGAMENTO_ESTORNADO (ADR-0017 Decision 2). O pagamento nao muda estado da infracao: o agregado decide ([WF-INF-003] secao 2 linhas 12 a 16 e 29).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "document_id", "type": "uuid", "nullable": true },
+          { "name": "bank_reference", "type": "varchar(80)" },
+          { "name": "paid_on", "type": "date" },
+          { "name": "amount", "type": "numeric(12,2)" },
+          { "name": "tier_applied", "type": "varchar(40)", "nullable": true },
+          { "name": "received_at", "type": "timestamptz", "default": "now()" },
+          { "name": "matched_at", "type": "timestamptz", "nullable": true },
+          { "name": "reversed_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_payment_bank_reference",
+            "columns": ["tenant_id", "bank_reference"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_payment_unmatched",
+            "columns": ["tenant_id", "received_at"],
+            "where": "matched_at is null"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_payment_tier_applied",
+            "expression": "tier_applied is null or tier_applied in ('nenhum','desconto_80','desconto_60_reconhecimento','desconto_40_fora_sne','integral_juros','restituido')"
+          },
+          {
+            "name": "ck_inf_payment_amount_positive",
+            "expression": "amount > 0"
+          },
+          {
+            "name": "ck_inf_payment_match_needs_document",
+            "expression": "matched_at is null or document_id is not null"
+          },
+          {
+            "name": "ck_inf_payment_tier_needs_match",
+            "expression": "tier_applied is null or matched_at is not null"
+          },
+          {
+            "name": "ck_inf_payment_reversal_needs_match",
+            "expression": "reversed_at is null or matched_at is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_payment_document",
+            "columns": ["document_id"],
+            "references": {
+              "table": "inf.collection_document",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_payment_tier",
+            "columns": ["tier_applied"],
+            "references": {
+              "table": "inf.infraction_payment_tier_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RefundOrder",
+        "table": "refund_order",
+        "primaryKey": ["id"],
+        "description": "Ordem de restituicao corrigida — UC-RAIT-033 (fluxo 1 a 4, fluxo 3a dados bancarios ausentes, AC-RAIT-033-1 sem pedido do cidadao, AC-RAIT-033-2 indice visivel) e ADR-0017 Decision 1. index_key registra qual indice foi aplicado e nao tem default: o valor vigente e o parametro rait.refund.index (IPCA-E, ops.parameter; RAIT.REFUND_INDEX_PENDING quando nao parametrizado). Estados minusculos dos eventos reservados RESTITUICAO_ORDENADA e RESTITUICAO_PAGA (rait-events-sse-contract.md secao 2.5) mais a abertura por RESTITUICAO_DEVIDA (decisao M12).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "infraction_id", "type": "uuid" },
+          { "name": "payment_id", "type": "uuid" },
+          { "name": "reason", "type": "varchar(30)" },
+          { "name": "base_amount", "type": "numeric(12,2)" },
+          { "name": "index_key", "type": "varchar(40)" },
+          {
+            "name": "updated_amount",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "bank_data_status",
+            "type": "varchar(20)",
+            "default": "'pendente'"
+          },
+          { "name": "status", "type": "varchar(20)", "default": "'aberta'" },
+          { "name": "opened_at", "type": "timestamptz", "default": "now()" },
+          { "name": "ordered_at", "type": "timestamptz", "nullable": true },
+          { "name": "paid_at", "type": "timestamptz", "nullable": true },
+          { "name": "document_id", "type": "uuid", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_refund_order_payment",
+            "columns": ["tenant_id", "payment_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_refund_order_status",
+            "columns": ["tenant_id", "status", "opened_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_refund_order_reason",
+            "expression": "reason in ('decisao_favoravel','extincao','pagamento_duplicado','pagamento_a_maior')"
+          },
+          {
+            "name": "ck_inf_refund_order_bank_data_status",
+            "expression": "bank_data_status in ('pendente','informado')"
+          },
+          {
+            "name": "ck_inf_refund_order_status",
+            "expression": "status in ('aberta','ordenada','paga')"
+          },
+          {
+            "name": "ck_inf_refund_order_base_amount_positive",
+            "expression": "base_amount > 0"
+          },
+          {
+            "name": "ck_inf_refund_order_order_needs_bank_data",
+            "expression": "status = 'aberta' or bank_data_status = 'informado'"
+          },
+          {
+            "name": "ck_inf_refund_order_ordered_complete",
+            "expression": "status = 'aberta' or ordered_at is not null"
+          },
+          {
+            "name": "ck_inf_refund_order_paid_complete",
+            "expression": "status <> 'paga' or paid_at is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_refund_order_infraction",
+            "columns": ["infraction_id"],
+            "references": { "table": "inf.infraction", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_refund_order_payment",
+            "columns": ["payment_id"],
+            "references": { "table": "inf.payment", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "DebtHandoff",
+        "table": "debt_handoff",
+        "primaryKey": ["id"],
+        "description": "Encaminhamento do credito definitivo nao pago a Fazenda e a divida ativa — UC-RAIT-034 (fluxo 3 transferencia com o dossie fiscal, fluxo 2a pagamento durante a cobranca, AC-RAIT-034-2) e ADR-0017 Decision 1. Antes de INSTANCIA_ENCERRADA ou com efeito suspensivo o encaminhamento e recusado (RAIT.DEBT_HANDOFF_NOT_FINAL, guarda de comando porque depende do estado do agregado). A porta da Fazenda segue pendente de fonte (ADR-0017 tabela de ownership).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "infraction_id", "type": "uuid" },
+          {
+            "name": "fazenda_reference",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "dossier_document_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          { "name": "status", "type": "varchar(20)", "default": "'preparado'" },
+          { "name": "prepared_at", "type": "timestamptz", "default": "now()" },
+          { "name": "sent_at", "type": "timestamptz", "nullable": true },
+          {
+            "name": "acknowledged_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          { "name": "cancel_reason", "type": "varchar(30)", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_debt_handoff_active",
+            "columns": ["tenant_id", "infraction_id"],
+            "unique": true,
+            "where": "status <> 'cancelado'"
+          },
+          {
+            "name": "ix_inf_debt_handoff_status",
+            "columns": ["tenant_id", "status", "prepared_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_debt_handoff_status",
+            "expression": "status in ('preparado','enviado','reconhecido','cancelado')"
+          },
+          {
+            "name": "ck_inf_debt_handoff_cancel_reason",
+            "expression": "cancel_reason is null or cancel_reason in ('pagamento')"
+          },
+          {
+            "name": "ck_inf_debt_handoff_sent_complete",
+            "expression": "status in ('preparado','cancelado') or sent_at is not null"
+          },
+          {
+            "name": "ck_inf_debt_handoff_ack_complete",
+            "expression": "status <> 'reconhecido' or (acknowledged_at is not null and fazenda_reference is not null)"
+          },
+          {
+            "name": "ck_inf_debt_handoff_ack_after_sent",
+            "expression": "acknowledged_at is null or sent_at is not null"
+          },
+          {
+            "name": "ck_inf_debt_handoff_cancel_complete",
+            "expression": "status <> 'cancelado' or cancel_reason is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_debt_handoff_infraction",
+            "columns": ["infraction_id"],
+            "references": { "table": "inf.infraction", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/collection/",
+    "resources": [
+      {
+        "entity": "CollectionDocument",
+        "path": "collection-documents",
+        "resource": "collection-document"
+      },
+      { "entity": "Payment", "path": "payments", "resource": "payment" },
+      {
+        "entity": "RefundOrder",
+        "path": "refund-orders",
+        "resource": "refund-order"
+      },
+      {
+        "entity": "DebtHandoff",
+        "path": "debt-handoffs",
+        "resource": "debt-handoff"
+      }
+    ]
+  },
+  "auth": {
+    "source": "RAIT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

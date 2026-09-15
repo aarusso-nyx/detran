@@ -1,0 +1,577 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INF-RAIT-ORG-001",
+  "module": {
+    "name": "RaitOrg",
+    "namespace": "inf",
+    "version": "1.0.0",
+    "ddlFile": "39-inf-rait-org.sql",
+    "dependencies": {
+      "@detran/inf-rait-worklist": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-rait-worklist",
+        "target": "../rait-worklist/src/index.ts"
+      }
+    ],
+    "owners": ["detran-inf"],
+    "description": "Organizacao do orgao julgador: calendario de feriados ([WF-RAIT-002] secao 7; UC-RAIT-043 fluxo 1), atos de suspensao de prazo por forca maior (UC-RAIT-022), folha de jeton por periodo (UC-RAIT-036), incidente de prescricao operacional ([WF-RAIT-002] secao 4.1 e 4.2), amostra de qualidade (UC-RAIT-025), plano de capacidade ([WF-RAIT-004] secao 8; UC-RAIT-038) e exportacoes com controle LGPD (UC-RAIT-042). Parametros vivem em ops.parameter (ADR-0021 Decision 6): este blueprint nao define rait_parameter e nenhuma coluna guarda valor de parametro."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "RaitHoliday",
+        "table": "rait_holiday",
+        "primaryKey": ["id"],
+        "description": "Feriado ou ponto facultativo do calendario do orgao — [WF-RAIT-002] secao 7 (calendario nacional + estadual do AM, decisao do Owner A.6) e UC-RAIT-043 fluxo 1 e AC-RAIT-043-3. Porta de calendario do motor de prazos; unicidade por data e escopo levanta RAIT.CALENDAR_OVERLAP (catalogo de erros secao 3.9).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "name", "type": "varchar(120)" },
+          { "name": "holiday_on", "type": "date" },
+          { "name": "scope", "type": "varchar(20)" },
+          { "name": "optional", "type": "boolean", "default": "false" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_holiday_date_scope",
+            "columns": ["tenant_id", "holiday_on", "scope"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_holiday_date",
+            "columns": ["tenant_id", "holiday_on"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_holiday_scope",
+            "expression": "scope in ('nacional','estadual','municipal')"
+          }
+        ]
+      },
+      {
+        "name": "RaitSuspensionAct",
+        "table": "rait_suspension_act",
+        "primaryKey": ["id"],
+        "description": "Ato motivado de suspensao de prazo por forca maior — UC-RAIT-022 (fluxo 1 a 4, fluxos 1a e 2a) e [WF-RAIT-002] secao 7. Prova obrigatoria (evidence_document_id; RAIT.SUSPENSION_EVIDENCE_REQUIRED) e ato assinado (signed_by); prazos de extincao nao podem ser suspensos (RAIT.SUSPENSION_LEGAL_TIMER, guarda de comando porque depende do codigo do timer). Os timers e casos alcancados apontam para o ato por inf.infraction_timer.suspended_by_act_id e inf.rait_deadline.suspended_by_act_id (decisao M5).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "reason", "type": "text" },
+          { "name": "legal_basis", "type": "text", "nullable": true },
+          { "name": "starts_on", "type": "date" },
+          { "name": "ends_on", "type": "date" },
+          {
+            "name": "timer_codes",
+            "type": "jsonb",
+            "default": "'[]'::jsonb"
+          },
+          { "name": "evidence_document_id", "type": "uuid" },
+          { "name": "signed_by", "type": "uuid" },
+          { "name": "signed_at", "type": "timestamptz", "default": "now()" },
+          { "name": "state", "type": "varchar(20)", "default": "'vigente'" },
+          { "name": "reviewed_at", "type": "timestamptz", "nullable": true },
+          { "name": "reviewed_by", "type": "uuid", "nullable": true },
+          { "name": "revoked_at", "type": "timestamptz", "nullable": true },
+          { "name": "revoked_reason", "type": "text", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_rait_suspension_act_period",
+            "columns": ["tenant_id", "starts_on", "ends_on"]
+          },
+          {
+            "name": "ix_inf_rait_suspension_act_state",
+            "columns": ["tenant_id", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_suspension_act_state",
+            "expression": "state in ('vigente','revogado','encerrado')"
+          },
+          {
+            "name": "ck_inf_rait_suspension_act_period_order",
+            "expression": "ends_on >= starts_on"
+          },
+          {
+            "name": "ck_inf_rait_suspension_act_timer_codes_array",
+            "expression": "jsonb_typeof(timer_codes) = 'array'"
+          },
+          {
+            "name": "ck_inf_rait_suspension_act_review_complete",
+            "expression": "reviewed_at is null or reviewed_by is not null"
+          },
+          {
+            "name": "ck_inf_rait_suspension_act_revoked_complete",
+            "expression": "state <> 'revogado' or (revoked_at is not null and revoked_reason is not null)"
+          }
+        ]
+      },
+      {
+        "name": "RaitJetonSheet",
+        "table": "rait_jeton_sheet",
+        "primaryKey": ["id"],
+        "description": "Folha de remuneracao por sessao (jeton) por periodo e orgao colegiado — UC-RAIT-036 fluxo 1 a 4 e fluxo 3a. Estados minusculos derivados do proprio UC (decisao M12): gerada, conferida pela secretaria, homologada pelo presidente, enviada ao RH/financeiro; RAIT.JETON_ALREADY_APPROVED barra a reaprovacao e RAIT.JETON_MINUTES_UNSIGNED a sessao sem ata assinada. source_pending marca que rait.jeton.value e rait.jeton.monthly_cap seguem pendentes de fonte (steering H.54 e H.57; ADR-0021 Decision 2, RAIT.PARAMETER_SOURCE_PENDING).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "judging_body", "type": "varchar(10)" },
+          { "name": "period_start", "type": "date" },
+          { "name": "period_end", "type": "date" },
+          { "name": "state", "type": "varchar(20)", "default": "'gerada'" },
+          { "name": "generated_at", "type": "timestamptz", "default": "now()" },
+          { "name": "generated_by", "type": "uuid", "nullable": true },
+          { "name": "reviewed_at", "type": "timestamptz", "nullable": true },
+          { "name": "reviewed_by", "type": "uuid", "nullable": true },
+          { "name": "homologated_at", "type": "timestamptz", "nullable": true },
+          { "name": "homologated_by", "type": "uuid", "nullable": true },
+          { "name": "sent_at", "type": "timestamptz", "nullable": true },
+          { "name": "document_id", "type": "uuid", "nullable": true },
+          {
+            "name": "source_pending",
+            "type": "boolean",
+            "default": "true"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_jeton_sheet_period",
+            "columns": ["tenant_id", "judging_body", "period_start"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_jeton_sheet_state",
+            "columns": ["tenant_id", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_jeton_sheet_body",
+            "expression": "judging_body in ('jari','cetran')"
+          },
+          {
+            "name": "ck_inf_rait_jeton_sheet_state",
+            "expression": "state in ('gerada','conferida','homologada','enviada')"
+          },
+          {
+            "name": "ck_inf_rait_jeton_sheet_period_order",
+            "expression": "period_end >= period_start"
+          },
+          {
+            "name": "ck_inf_rait_jeton_sheet_review_complete",
+            "expression": "state = 'gerada' or (reviewed_at is not null and reviewed_by is not null)"
+          },
+          {
+            "name": "ck_inf_rait_jeton_sheet_homologation_complete",
+            "expression": "state not in ('homologada','enviada') or (homologated_at is not null and homologated_by is not null)"
+          },
+          {
+            "name": "ck_inf_rait_jeton_sheet_sent_complete",
+            "expression": "state <> 'enviada' or sent_at is not null"
+          }
+        ]
+      },
+      {
+        "name": "RaitJetonLine",
+        "table": "rait_jeton_line",
+        "primaryKey": ["id"],
+        "description": "Linha da folha de jeton: um membro em uma sessao com ata assinada — UC-RAIT-036 fluxo 1 (presenca valida, itens relatados, votos, faltas justificadas e injustificadas), fluxo 2 e 2a (teto mensal, sessao excedente nao remunerada) e AC-RAIT-036-1 a AC-RAIT-036-3. unit_value e amount existem e ficam nulos enquanto source_pending for verdadeiro, porque rait.jeton.value nao tem fonte (steering H.54 e H.57).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "sheet_id", "type": "uuid" },
+          { "name": "member_id", "type": "uuid" },
+          { "name": "session_id", "type": "uuid" },
+          { "name": "minutes_id", "type": "uuid", "nullable": true },
+          {
+            "name": "attendance_valid",
+            "type": "boolean",
+            "default": "false"
+          },
+          { "name": "items_reported", "type": "integer", "default": "0" },
+          { "name": "votes_cast", "type": "integer", "default": "0" },
+          { "name": "absence_kind", "type": "varchar(20)", "nullable": true },
+          { "name": "remunerated", "type": "boolean", "default": "false" },
+          { "name": "over_cap", "type": "boolean", "default": "false" },
+          { "name": "unit_value", "type": "numeric(12,2)", "nullable": true },
+          { "name": "amount", "type": "numeric(12,2)", "nullable": true },
+          { "name": "source_pending", "type": "boolean", "default": "true" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_jeton_line_member_session",
+            "columns": ["tenant_id", "sheet_id", "member_id", "session_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_jeton_line_member",
+            "columns": ["tenant_id", "member_id"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_jeton_line_absence_kind",
+            "expression": "absence_kind is null or absence_kind in ('justificada','injustificada')"
+          },
+          {
+            "name": "ck_inf_rait_jeton_line_absence_exclusive",
+            "expression": "absence_kind is null or not attendance_valid"
+          },
+          {
+            "name": "ck_inf_rait_jeton_line_counts_non_negative",
+            "expression": "items_reported >= 0 and votes_cast >= 0"
+          },
+          {
+            "name": "ck_inf_rait_jeton_line_remunerated_needs_attendance",
+            "expression": "not remunerated or attendance_valid"
+          },
+          {
+            "name": "ck_inf_rait_jeton_line_value_pending",
+            "expression": "(source_pending and unit_value is null and amount is null) or (not source_pending and unit_value is not null and amount is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_jeton_line_sheet",
+            "columns": ["sheet_id"],
+            "references": { "table": "inf.rait_jeton_sheet", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_rait_jeton_line_member",
+            "columns": ["member_id"],
+            "references": { "table": "inf.rait_pool_member", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_rait_jeton_line_session",
+            "columns": ["session_id"],
+            "references": { "table": "inf.rait_session", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_rait_jeton_line_minutes",
+            "columns": ["minutes_id"],
+            "references": { "table": "inf.rait_minutes", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "RaitIncident",
+        "table": "rait_incident",
+        "primaryKey": ["id"],
+        "description": "Incidente de prescricao operacional — [WF-RAIT-002] secao 4.1 e 4.2 (nivel PRESCRITO_OPERACIONAL: registro de incidente, apuracao de causa, comunicacao ao LEGAL/auditoria) e AC-RAIT-010-4. incident_ref no formato INC-AAAA-NNNN, o mesmo de inf.rait_clock_alert.incident_ref (fixture INC-2026-0007, rait-fixtures.md secao 3). outcome e texto livre porque nenhuma fonte fixa vocabulario de desfecho (mesmo tratamento de rait_pool_member.jurisdiction).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "incident_ref", "type": "varchar(80)" },
+          { "name": "clock_id", "type": "uuid", "nullable": true },
+          { "name": "case_id", "type": "uuid", "nullable": true },
+          { "name": "opened_at", "type": "timestamptz", "default": "now()" },
+          { "name": "opened_by", "type": "uuid", "nullable": true },
+          { "name": "responsible_id", "type": "uuid", "nullable": true },
+          { "name": "cause_analysis", "type": "text", "nullable": true },
+          { "name": "outcome", "type": "text", "nullable": true },
+          {
+            "name": "legal_notified_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          { "name": "closed_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_incident_ref",
+            "columns": ["tenant_id", "incident_ref"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_incident_open",
+            "columns": ["tenant_id", "opened_at"],
+            "where": "closed_at is null"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_incident_ref_format",
+            "expression": "incident_ref ~ '^INC-[0-9]{4}-[0-9]{4}$'"
+          },
+          {
+            "name": "ck_inf_rait_incident_target",
+            "expression": "clock_id is not null or case_id is not null"
+          },
+          {
+            "name": "ck_inf_rait_incident_closed_complete",
+            "expression": "closed_at is null or (responsible_id is not null and cause_analysis is not null and outcome is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_incident_clock",
+            "columns": ["clock_id"],
+            "references": { "table": "inf.rait_clock", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_rait_incident_case",
+            "columns": ["case_id"],
+            "references": { "table": "inf.rait_case", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_rait_incident_responsible",
+            "columns": ["responsible_id"],
+            "references": { "table": "inf.rait_pool_member", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "RaitQualitySample",
+        "table": "rait_quality_sample",
+        "primaryKey": ["id"],
+        "description": "Item da amostra de qualidade das decisoes do periodo — UC-RAIT-025 (fluxo 1 sorteio estratificado, fluxo 2 checklist com achados tipados, fluxo 3 achados sistematicos ao TEAT e a JARI, fluxo 2a sem reabrir decisao) e [WF-RAIT-004] secao 2.1 fila F-DP-Q. O percentual da amostra e o parametro rait.quality.sample_pct (ops.parameter, ADR-0021): nenhuma coluna o guarda. Os tokens de finding_kind sao os quatro itens do checklist do fluxo 2 (decisao de modelagem M12).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "period_start", "type": "date" },
+          { "name": "period_end", "type": "date" },
+          { "name": "case_id", "type": "uuid" },
+          { "name": "decision_id", "type": "uuid", "nullable": true },
+          {
+            "name": "reviewer_member_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          { "name": "sampled_at", "type": "timestamptz", "default": "now()" },
+          { "name": "reviewed_at", "type": "timestamptz", "nullable": true },
+          { "name": "finding_kind", "type": "varchar(20)", "nullable": true },
+          { "name": "finding_note", "type": "text", "nullable": true },
+          { "name": "systemic", "type": "boolean", "default": "false" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_quality_sample_case",
+            "columns": ["tenant_id", "period_start", "case_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_quality_sample_period",
+            "columns": ["tenant_id", "period_start", "period_end"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_quality_sample_period_order",
+            "expression": "period_end >= period_start"
+          },
+          {
+            "name": "ck_inf_rait_quality_sample_finding_kind",
+            "expression": "finding_kind is null or finding_kind in ('fundamento','prova','coerencia','linguagem')"
+          },
+          {
+            "name": "ck_inf_rait_quality_sample_finding_needs_review",
+            "expression": "finding_kind is null or reviewed_at is not null"
+          },
+          {
+            "name": "ck_inf_rait_quality_sample_systemic_needs_finding",
+            "expression": "not systemic or finding_kind is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_quality_sample_case",
+            "columns": ["case_id"],
+            "references": { "table": "inf.rait_case", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_rait_quality_sample_decision",
+            "columns": ["decision_id"],
+            "references": { "table": "inf.rait_decision", "columns": ["id"] }
+          },
+          {
+            "name": "fk_inf_rait_quality_sample_reviewer",
+            "columns": ["reviewer_member_id"],
+            "references": { "table": "inf.rait_pool_member", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "RaitCapacityPlan",
+        "table": "rait_capacity_plan",
+        "primaryKey": ["id"],
+        "description": "Plano de capacidade por pool e periodo — [WF-RAIT-004] secao 8 (chegada, capacidade escalada, fila e gatilho de nova turma) e UC-RAIT-038 (fluxo 1 a 4, AC-RAIT-038-1 e AC-RAIT-038-2). months_over_capacity registra os meses observados de fila acima da capacidade; o limiar e o parametro rait.unit.queue_over_capacity_months (ops.parameter) e a guarda de constituicao de turma e de comando (RAIT.UNIT_TRIGGER_NOT_MET, catalogo secao 3.10).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "pool_id", "type": "uuid" },
+          { "name": "period_start", "type": "date" },
+          { "name": "period_end", "type": "date" },
+          { "name": "arrival_estimate", "type": "integer", "nullable": true },
+          { "name": "capacity_estimate", "type": "integer", "nullable": true },
+          { "name": "queue_observed", "type": "integer", "nullable": true },
+          {
+            "name": "months_over_capacity",
+            "type": "integer",
+            "default": "0"
+          },
+          { "name": "measures", "type": "text", "nullable": true },
+          {
+            "name": "reinforcement_requested",
+            "type": "boolean",
+            "default": "false"
+          },
+          { "name": "unit_proposed", "type": "boolean", "default": "false" },
+          {
+            "name": "registered_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          { "name": "registered_by", "type": "uuid", "nullable": true },
+          { "name": "closed_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_capacity_plan_pool_period",
+            "columns": ["tenant_id", "pool_id", "period_start"],
+            "unique": true
+          },
+          {
+            "name": "ix_inf_rait_capacity_plan_period",
+            "columns": ["tenant_id", "period_start", "period_end"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_capacity_plan_period_order",
+            "expression": "period_end >= period_start"
+          },
+          {
+            "name": "ck_inf_rait_capacity_plan_counts_non_negative",
+            "expression": "(arrival_estimate is null or arrival_estimate >= 0) and (capacity_estimate is null or capacity_estimate >= 0) and (queue_observed is null or queue_observed >= 0) and months_over_capacity >= 0"
+          },
+          {
+            "name": "ck_inf_rait_capacity_plan_closed_needs_measure",
+            "expression": "closed_at is null or measures is not null or reinforcement_requested"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_capacity_plan_pool",
+            "columns": ["pool_id"],
+            "references": { "table": "inf.rait_pool", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "RaitExport",
+        "table": "rait_export",
+        "primaryKey": ["id"],
+        "description": "Exportacao de decisoes e estatisticas com controle LGPD — UC-RAIT-042 fluxo 3, fluxo 3a e AC-RAIT-042-2 (finalidade, escopo, solicitante e hash registrados; aprovacao do DPO na exportacao nominal em massa). purpose nao admite nulo (RAIT.EXPORT_PURPOSE_REQUIRED) e o limiar de linhas que exige o DPO e o parametro rait.export.dpo_threshold_rows (ops.parameter; RAIT.EXPORT_DPO_APPROVAL_REQUIRED, catalogo secao 3.11). Estados minusculos derivados do proprio UC (decisao M12).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "purpose", "type": "text" },
+          { "name": "scope", "type": "jsonb", "default": "'{}'::jsonb" },
+          { "name": "requested_by", "type": "uuid" },
+          { "name": "requested_at", "type": "timestamptz", "default": "now()" },
+          { "name": "row_count", "type": "integer", "nullable": true },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'solicitada'"
+          },
+          { "name": "dpo_approved_by", "type": "uuid", "nullable": true },
+          {
+            "name": "dpo_approved_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          { "name": "generated_at", "type": "timestamptz", "nullable": true },
+          { "name": "document_id", "type": "uuid", "nullable": true },
+          { "name": "content_hash", "type": "varchar(64)", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ix_inf_rait_export_status",
+            "columns": ["tenant_id", "status", "requested_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_export_status",
+            "expression": "status in ('solicitada','aguardando_dpo','gerada')"
+          },
+          {
+            "name": "ck_inf_rait_export_row_count_non_negative",
+            "expression": "row_count is null or row_count >= 0"
+          },
+          {
+            "name": "ck_inf_rait_export_dpo_complete",
+            "expression": "dpo_approved_at is null or dpo_approved_by is not null"
+          },
+          {
+            "name": "ck_inf_rait_export_content_hash_format",
+            "expression": "content_hash is null or content_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_export_generated_complete",
+            "expression": "status <> 'gerada' or (generated_at is not null and content_hash is not null and document_id is not null)"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/inf/rait/",
+    "resources": [
+      {
+        "entity": "RaitHoliday",
+        "path": "holidays",
+        "resource": "rait-holiday"
+      },
+      {
+        "entity": "RaitSuspensionAct",
+        "path": "suspension-acts",
+        "resource": "rait-suspension-act"
+      },
+      {
+        "entity": "RaitJetonSheet",
+        "path": "jeton-sheets",
+        "resource": "rait-jeton-sheet"
+      },
+      {
+        "entity": "RaitJetonLine",
+        "path": "jeton-lines",
+        "resource": "rait-jeton-line"
+      },
+      {
+        "entity": "RaitIncident",
+        "path": "incidents",
+        "resource": "rait-incident"
+      },
+      {
+        "entity": "RaitQualitySample",
+        "path": "quality-samples",
+        "resource": "rait-quality-sample"
+      },
+      {
+        "entity": "RaitCapacityPlan",
+        "path": "capacity-plans",
+        "resource": "rait-capacity-plan"
+      },
+      { "entity": "RaitExport", "path": "exports", "resource": "rait-export" }
+    ]
+  },
+  "auth": {
+    "source": "RAIT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

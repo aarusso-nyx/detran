@@ -266,6 +266,9 @@ Inspector segue a especificação §7).
   fechamento, `audit observe` no sha do merge de CTG-0002 (HEAD exato) e nota em `closure.json` sobre CTG-0001.
   O remapeamento M16 dos prefixos foi aplicado pelo Architect no contrato (§e.3/§e.4) e entrou no commit de merge.
 
+- 2026-09-14 (janela 3) TASK-0005 concluída (Opus, ~360 k brutos): 6/7 PASS + typecheck após `pnpm install` do maestro;
+  178 tabelas de tenant; 14 OD propostas em `CTG-0002-modules.md` §e.3; prefixos M16 `0000390`…`0000500`.
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de

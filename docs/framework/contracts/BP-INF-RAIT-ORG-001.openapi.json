@@ -1,0 +1,2096 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RaitOrg — BP-INF-RAIT-ORG-001",
+    "version": "1.0.0",
+    "description": "Organizacao do orgao julgador: calendario de feriados ([WF-RAIT-002] secao 7; UC-RAIT-043 fluxo 1), atos de suspensao de prazo por forca maior (UC-RAIT-022), folha de jeton por periodo (UC-RAIT-036), incidente de prescricao operacional ([WF-RAIT-002] secao 4.1 e 4.2), amostra de qualidade (UC-RAIT-025), plano de capacidade ([WF-RAIT-004] secao 8; UC-RAIT-038) e exportacoes com controle LGPD (UC-RAIT-042). Parametros vivem em ops.parameter (ADR-0021 Decision 6): este blueprint nao define rait_parameter e nenhuma coluna guarda valor de parametro.",
+    "x-blueprint": "BP-INF-RAIT-ORG-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/inf/rait/holidays": {
+      "get": {
+        "tags": ["rait-holiday"],
+        "operationId": "listRaitHoliday",
+        "summary": "List RaitHoliday (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitHoliday"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-holiday"],
+        "operationId": "createRaitHoliday",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitHolidayDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitHoliday"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/holidays/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-holiday"],
+        "operationId": "getRaitHoliday",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitHoliday"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-holiday"],
+        "operationId": "updateRaitHoliday",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitHolidayDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitHoliday"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-holiday"],
+        "operationId": "removeRaitHoliday",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/suspension-acts": {
+      "get": {
+        "tags": ["rait-suspension-act"],
+        "operationId": "listRaitSuspensionAct",
+        "summary": "List RaitSuspensionAct (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitSuspensionAct"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-suspension-act"],
+        "operationId": "createRaitSuspensionAct",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitSuspensionActDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSuspensionAct"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/suspension-acts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-suspension-act"],
+        "operationId": "getRaitSuspensionAct",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSuspensionAct"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-suspension-act"],
+        "operationId": "updateRaitSuspensionAct",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitSuspensionActDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitSuspensionAct"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-suspension-act"],
+        "operationId": "removeRaitSuspensionAct",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/jeton-sheets": {
+      "get": {
+        "tags": ["rait-jeton-sheet"],
+        "operationId": "listRaitJetonSheet",
+        "summary": "List RaitJetonSheet (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitJetonSheet"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-jeton-sheet"],
+        "operationId": "createRaitJetonSheet",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitJetonSheetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitJetonSheet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/jeton-sheets/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-jeton-sheet"],
+        "operationId": "getRaitJetonSheet",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitJetonSheet"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-jeton-sheet"],
+        "operationId": "updateRaitJetonSheet",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitJetonSheetDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitJetonSheet"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-jeton-sheet"],
+        "operationId": "removeRaitJetonSheet",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/jeton-lines": {
+      "get": {
+        "tags": ["rait-jeton-line"],
+        "operationId": "listRaitJetonLine",
+        "summary": "List RaitJetonLine (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitJetonLine"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-jeton-line"],
+        "operationId": "createRaitJetonLine",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitJetonLineDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitJetonLine"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/jeton-lines/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-jeton-line"],
+        "operationId": "getRaitJetonLine",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitJetonLine"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-jeton-line"],
+        "operationId": "updateRaitJetonLine",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitJetonLineDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitJetonLine"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-jeton-line"],
+        "operationId": "removeRaitJetonLine",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/incidents": {
+      "get": {
+        "tags": ["rait-incident"],
+        "operationId": "listRaitIncident",
+        "summary": "List RaitIncident (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitIncident"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-incident"],
+        "operationId": "createRaitIncident",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitIncidentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitIncident"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/incidents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-incident"],
+        "operationId": "getRaitIncident",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitIncident"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-incident"],
+        "operationId": "updateRaitIncident",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitIncidentDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitIncident"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-incident"],
+        "operationId": "removeRaitIncident",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/quality-samples": {
+      "get": {
+        "tags": ["rait-quality-sample"],
+        "operationId": "listRaitQualitySample",
+        "summary": "List RaitQualitySample (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitQualitySample"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-quality-sample"],
+        "operationId": "createRaitQualitySample",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitQualitySampleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitQualitySample"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/quality-samples/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-quality-sample"],
+        "operationId": "getRaitQualitySample",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitQualitySample"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-quality-sample"],
+        "operationId": "updateRaitQualitySample",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitQualitySampleDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitQualitySample"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-quality-sample"],
+        "operationId": "removeRaitQualitySample",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/capacity-plans": {
+      "get": {
+        "tags": ["rait-capacity-plan"],
+        "operationId": "listRaitCapacityPlan",
+        "summary": "List RaitCapacityPlan (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitCapacityPlan"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-capacity-plan"],
+        "operationId": "createRaitCapacityPlan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitCapacityPlanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCapacityPlan"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/capacity-plans/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-capacity-plan"],
+        "operationId": "getRaitCapacityPlan",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCapacityPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-capacity-plan"],
+        "operationId": "updateRaitCapacityPlan",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitCapacityPlanDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitCapacityPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-capacity-plan"],
+        "operationId": "removeRaitCapacityPlan",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/exports": {
+      "get": {
+        "tags": ["rait-export"],
+        "operationId": "listRaitExport",
+        "summary": "List RaitExport (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RaitExport"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["rait-export"],
+        "operationId": "createRaitExport",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRaitExportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitExport"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/rait/exports/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["rait-export"],
+        "operationId": "getRaitExport",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitExport"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["rait-export"],
+        "operationId": "updateRaitExport",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateRaitExportDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RaitExport"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["rait-export"],
+        "operationId": "removeRaitExport",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RaitHoliday": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "holiday_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["nacional", "estadual", "municipal"]
+          },
+          "optional": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "name", "holiday_on", "scope", "created_at"],
+        "description": "Feriado ou ponto facultativo do calendario do orgao — [WF-RAIT-002] secao 7 (calendario nacional + estadual do AM, decisao do Owner A.6) e UC-RAIT-043 fluxo 1 e AC-RAIT-043-3. Porta de calendario do motor de prazos; unicidade por data e escopo levanta RAIT.CALENDAR_OVERLAP (catalogo de erros secao 3.9)."
+      },
+      "CreateRaitHolidayDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "holiday_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["nacional", "estadual", "municipal"]
+          },
+          "optional": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": ["name", "holiday_on", "scope"]
+      },
+      "RaitSuspensionAct": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "legal_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "starts_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ends_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "timer_codes": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "evidence_document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["vigente", "revogado", "encerrado"],
+            "default": "'vigente'"
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reviewed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "revoked_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "reason",
+          "starts_on",
+          "ends_on",
+          "evidence_document_id",
+          "signed_by",
+          "created_at"
+        ],
+        "description": "Ato motivado de suspensao de prazo por forca maior — UC-RAIT-022 (fluxo 1 a 4, fluxos 1a e 2a) e [WF-RAIT-002] secao 7. Prova obrigatoria (evidence_document_id; RAIT.SUSPENSION_EVIDENCE_REQUIRED) e ato assinado (signed_by); prazos de extincao nao podem ser suspensos (RAIT.SUSPENSION_LEGAL_TIMER, guarda de comando porque depende do codigo do timer). Os timers e casos alcancados apontam para o ato por inf.infraction_timer.suspended_by_act_id e inf.rait_deadline.suspended_by_act_id (decisao M5)."
+      },
+      "CreateRaitSuspensionActDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "legal_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "starts_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "ends_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "timer_codes": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "evidence_document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["vigente", "revogado", "encerrado"],
+            "default": "'vigente'"
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reviewed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "revoked_reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "reason",
+          "starts_on",
+          "ends_on",
+          "evidence_document_id",
+          "signed_by"
+        ]
+      },
+      "RaitJetonSheet": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "judging_body": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["jari", "cetran"]
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["gerada", "conferida", "homologada", "enviada"],
+            "default": "'gerada'"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "generated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reviewed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "homologated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "homologated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "source_pending": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "judging_body",
+          "period_start",
+          "period_end",
+          "created_at"
+        ],
+        "description": "Folha de remuneracao por sessao (jeton) por periodo e orgao colegiado — UC-RAIT-036 fluxo 1 a 4 e fluxo 3a. Estados minusculos derivados do proprio UC (decisao M12): gerada, conferida pela secretaria, homologada pelo presidente, enviada ao RH/financeiro; RAIT.JETON_ALREADY_APPROVED barra a reaprovacao e RAIT.JETON_MINUTES_UNSIGNED a sessao sem ata assinada. source_pending marca que rait.jeton.value e rait.jeton.monthly_cap seguem pendentes de fonte (steering H.54 e H.57; ADR-0021 Decision 2, RAIT.PARAMETER_SOURCE_PENDING)."
+      },
+      "CreateRaitJetonSheetDto": {
+        "type": "object",
+        "properties": {
+          "judging_body": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["jari", "cetran"]
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["gerada", "conferida", "homologada", "enviada"],
+            "default": "'gerada'"
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "generated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reviewed_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "homologated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "homologated_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "source_pending": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["judging_body", "period_start", "period_end"]
+      },
+      "RaitJetonLine": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minutes_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "attendance_valid": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "items_reported": {
+            "type": "integer",
+            "default": "0"
+          },
+          "votes_cast": {
+            "type": "integer",
+            "default": "0"
+          },
+          "absence_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["justificada", "injustificada"],
+            "nullable": true
+          },
+          "remunerated": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "over_cap": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "unit_value": {
+            "type": "number",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "nullable": true
+          },
+          "source_pending": {
+            "type": "boolean",
+            "default": "true"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "sheet_id",
+          "member_id",
+          "session_id",
+          "created_at"
+        ],
+        "description": "Linha da folha de jeton: um membro em uma sessao com ata assinada — UC-RAIT-036 fluxo 1 (presenca valida, itens relatados, votos, faltas justificadas e injustificadas), fluxo 2 e 2a (teto mensal, sessao excedente nao remunerada) e AC-RAIT-036-1 a AC-RAIT-036-3. unit_value e amount existem e ficam nulos enquanto source_pending for verdadeiro, porque rait.jeton.value nao tem fonte (steering H.54 e H.57)."
+      },
+      "CreateRaitJetonLineDto": {
+        "type": "object",
+        "properties": {
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minutes_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "attendance_valid": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "items_reported": {
+            "type": "integer",
+            "default": "0"
+          },
+          "votes_cast": {
+            "type": "integer",
+            "default": "0"
+          },
+          "absence_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["justificada", "injustificada"],
+            "nullable": true
+          },
+          "remunerated": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "over_cap": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "unit_value": {
+            "type": "number",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "nullable": true
+          },
+          "source_pending": {
+            "type": "boolean",
+            "default": "true"
+          }
+        },
+        "required": ["sheet_id", "member_id", "session_id"]
+      },
+      "RaitIncident": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "opened_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "responsible_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "cause_analysis": {
+            "type": "string",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "nullable": true
+          },
+          "legal_notified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "incident_ref", "created_at"],
+        "description": "Incidente de prescricao operacional — [WF-RAIT-002] secao 4.1 e 4.2 (nivel PRESCRITO_OPERACIONAL: registro de incidente, apuracao de causa, comunicacao ao LEGAL/auditoria) e AC-RAIT-010-4. incident_ref no formato INC-AAAA-NNNN, o mesmo de inf.rait_clock_alert.incident_ref (fixture INC-2026-0007, rait-fixtures.md secao 3). outcome e texto livre porque nenhuma fonte fixa vocabulario de desfecho (mesmo tratamento de rait_pool_member.jurisdiction)."
+      },
+      "CreateRaitIncidentDto": {
+        "type": "object",
+        "properties": {
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "opened_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "responsible_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "cause_analysis": {
+            "type": "string",
+            "nullable": true
+          },
+          "outcome": {
+            "type": "string",
+            "nullable": true
+          },
+          "legal_notified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["incident_ref"]
+      },
+      "RaitQualitySample": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reviewer_member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sampled_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "finding_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["fundamento", "prova", "coerencia", "linguagem"],
+            "nullable": true
+          },
+          "finding_note": {
+            "type": "string",
+            "nullable": true
+          },
+          "systemic": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "period_start",
+          "period_end",
+          "case_id",
+          "created_at"
+        ],
+        "description": "Item da amostra de qualidade das decisoes do periodo — UC-RAIT-025 (fluxo 1 sorteio estratificado, fluxo 2 checklist com achados tipados, fluxo 3 achados sistematicos ao TEAT e a JARI, fluxo 2a sem reabrir decisao) e [WF-RAIT-004] secao 2.1 fila F-DP-Q. O percentual da amostra e o parametro rait.quality.sample_pct (ops.parameter, ADR-0021): nenhuma coluna o guarda. Os tokens de finding_kind sao os quatro itens do checklist do fluxo 2 (decisao de modelagem M12)."
+      },
+      "CreateRaitQualitySampleDto": {
+        "type": "object",
+        "properties": {
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decision_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "reviewer_member_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "sampled_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "reviewed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "finding_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["fundamento", "prova", "coerencia", "linguagem"],
+            "nullable": true
+          },
+          "finding_note": {
+            "type": "string",
+            "nullable": true
+          },
+          "systemic": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": ["period_start", "period_end", "case_id"]
+      },
+      "RaitCapacityPlan": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "arrival_estimate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "capacity_estimate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "queue_observed": {
+            "type": "integer",
+            "nullable": true
+          },
+          "months_over_capacity": {
+            "type": "integer",
+            "default": "0"
+          },
+          "measures": {
+            "type": "string",
+            "nullable": true
+          },
+          "reinforcement_requested": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "unit_proposed": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "registered_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "registered_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "pool_id",
+          "period_start",
+          "period_end",
+          "created_at"
+        ],
+        "description": "Plano de capacidade por pool e periodo — [WF-RAIT-004] secao 8 (chegada, capacidade escalada, fila e gatilho de nova turma) e UC-RAIT-038 (fluxo 1 a 4, AC-RAIT-038-1 e AC-RAIT-038-2). months_over_capacity registra os meses observados de fila acima da capacidade; o limiar e o parametro rait.unit.queue_over_capacity_months (ops.parameter) e a guarda de constituicao de turma e de comando (RAIT.UNIT_TRIGGER_NOT_MET, catalogo secao 3.10)."
+      },
+      "CreateRaitCapacityPlanDto": {
+        "type": "object",
+        "properties": {
+          "pool_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date"
+          },
+          "arrival_estimate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "capacity_estimate": {
+            "type": "integer",
+            "nullable": true
+          },
+          "queue_observed": {
+            "type": "integer",
+            "nullable": true
+          },
+          "months_over_capacity": {
+            "type": "integer",
+            "default": "0"
+          },
+          "measures": {
+            "type": "string",
+            "nullable": true
+          },
+          "reinforcement_requested": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "unit_proposed": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "registered_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "registered_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["pool_id", "period_start", "period_end"]
+      },
+      "RaitExport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "row_count": {
+            "type": "integer",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["solicitada", "aguardando_dpo", "gerada"],
+            "default": "'solicitada'"
+          },
+          "dpo_approved_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "dpo_approved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "purpose", "requested_by", "created_at"],
+        "description": "Exportacao de decisoes e estatisticas com controle LGPD — UC-RAIT-042 fluxo 3, fluxo 3a e AC-RAIT-042-2 (finalidade, escopo, solicitante e hash registrados; aprovacao do DPO na exportacao nominal em massa). purpose nao admite nulo (RAIT.EXPORT_PURPOSE_REQUIRED) e o limiar de linhas que exige o DPO e o parametro rait.export.dpo_threshold_rows (ops.parameter; RAIT.EXPORT_DPO_APPROVAL_REQUIRED, catalogo secao 3.11). Estados minusculos derivados do proprio UC (decisao M12)."
+      },
+      "CreateRaitExportDto": {
+        "type": "object",
+        "properties": {
+          "purpose": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "row_count": {
+            "type": "integer",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["solicitada", "aguardando_dpo", "gerada"],
+            "default": "'solicitada'"
+          },
+          "dpo_approved_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "dpo_approved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          }
+        },
+        "required": ["purpose", "requested_by"]
+      }
+    }
+  }
+}
