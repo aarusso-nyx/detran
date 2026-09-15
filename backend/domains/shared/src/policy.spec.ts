@@ -818,3 +818,144 @@ describe('DASHBOARD roles, dashboard:* policy matrix and access layers (WP-D0, C
     ).toBe(false);
   });
 });
+
+/**
+ * CTG-0002 — recursos sem matriz até R-0007 (M17(c), delivery-review-CTG-0002
+ * ciclo 1, achado 4; work/rounds/R-0006/plan.md). `rait-org`, `collection` e
+ * `rait-integration` ficam desmontados do `AppModule` nesta rodada, mas os
+ * recursos NOVOS dos módulos já montados (`rait-case`, `rait-worklist`,
+ * `rait-session`) continuam expostos pela superfície CRUD gerada — por isso
+ * a política precisa provar ausência (README da orquestra §4 regra 8) para
+ * os 23 recursos abaixo, em toda ação gerada (`read`, `create`, `update`,
+ * `delete`) e todo papel canônico de `roles.ts`, até R-0007 criar a matriz
+ * real.
+ *
+ * Dois papéis são exceção estrutural, não gap desta rodada:
+ * `GLOBAL_ADMIN_ROLES` (`ADMIN`, `GESTOR_DETRAN`, `SUPORTE`,
+ * `technical-admin`) — `isDetranActionAllowed` os libera para toda chave
+ * antes de consultar `DETRAN_POLICY_MATRIX` (mesmo comportamento que
+ * `permissionsForRoles(['technical-admin'])` devolve `['*']`, provado acima
+ * em "preserves PEC, TEAT, and citizen decisions"); isto é válido para
+ * qualquer recurso do sistema, não uma lacuna dos recursos novos.
+ *
+ * Escopo da negativa: só a superfície CRUD **gerada** (`read`/`create`/
+ * `update`/`delete`, `api.resources[].operations`), que é o que M17(c) e
+ * "guarda falha fechado" cobrem. Vários destes recursos já têm ação de
+ * **comando** gravada em `RAIT_COMMAND_RULES` de rodada anterior
+ * (worklist/org, TASK-0004/0005) — `rait-unit:constitute/activate`,
+ * `rait-schedule:publish`, `rait-batch:open/draw/approve/accept/impede`,
+ * `rait-incident:open`, `rait-quality-sample:review`,
+ * `rait-capacity-plan:publish` — nenhuma delas é `read`/`create`/`update`/
+ * `delete`, então ficam fora desta negativa (comando ≠ superfície gerada;
+ * fora do escopo desta tarefa).
+ *
+ * Achado (não corrigido aqui — Inspector não edita `policy.ts`, manual
+ * `inspector-tests.md` §Não pode tocar): duas dessas chaves de comando
+ * COINCIDEM com uma ação gerada — `inf:rait-suspension-act:create`
+ * (`rait-signing-authority`, `rait-chair`) e `inf:rait-export:create`
+ * (`AUDITOR`). Isso contradiz a premissa "a matriz não contém nenhuma chave
+ * `inf:<recurso>:*` destes recursos" para a ação `create` desses dois
+ * recursos; os testes abaixo provam o estado real (com a exceção nomeada)
+ * em vez de falhar às ciências, e o achado vai para
+ * `docs/meta/knowledge-base/open-decisions-rait.md` (relatório desta tarefa).
+ */
+describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
+  const GENERATED_ACTIONS = ['read', 'create', 'update', 'delete'] as const;
+  const GLOBAL_ADMIN_ROLES = [
+    'ADMIN',
+    'GESTOR_DETRAN',
+    'SUPORTE',
+    'technical-admin',
+  ] as const;
+  /**
+   * Achado (ver comentário do describe): `RAIT_COMMAND_RULES` grava estas
+   * duas chaves de ação gerada, de rodada anterior. Único par (recurso,
+   * ação gerada) com uma exceção; todos os outros recursos e ações negam
+   * para todo papel além de `GLOBAL_ADMIN_ROLES`.
+   */
+  const PRE_EXISTING_COMMAND_GRANTS: Readonly<
+    Record<string, Readonly<Record<string, readonly string[]>>>
+  > = {
+    'rait-suspension-act': {
+      create: ['rait-signing-authority', 'rait-chair'],
+    },
+    'rait-export': { create: ['AUDITOR'] },
+  };
+
+  /**
+   * Só confere as 4 chaves de ação **gerada** (`read`/`create`/`update`/
+   * `delete`) do recurso — nunca todas as chaves `inf:<recurso>:*`, porque
+   * várias destas 23 já têm ações de comando pré-existentes fora deste
+   * conjunto (ver comentário do describe); essas ficam fora do escopo desta
+   * negativa, não são o gap que M17(c) endereça.
+   */
+  function expectResourceHasNoGeneratedMatrixEntry(resource: string): void {
+    const grantedActions = Object.keys(
+      PRE_EXISTING_COMMAND_GRANTS[resource] ?? {},
+    );
+    const presentGeneratedKeys = GENERATED_ACTIONS.filter(
+      (action) => `inf:${resource}:${action}` in DETRAN_POLICY_MATRIX,
+    ).map((action) => `inf:${resource}:${action}`);
+    expect(presentGeneratedKeys.sort()).toEqual(
+      grantedActions.map((action) => `inf:${resource}:${action}`).sort(),
+    );
+  }
+
+  function expectDeniedForEveryRole(resource: string): void {
+    for (const action of GENERATED_ACTIONS) {
+      const exceptionRoles =
+        PRE_EXISTING_COMMAND_GRANTS[resource]?.[action] ?? [];
+      for (const role of DETRAN_ROLES) {
+        const expected =
+          (GLOBAL_ADMIN_ROLES as readonly string[]).includes(role) ||
+          exceptionRoles.includes(role);
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            `inf:${resource}`,
+            action,
+          ),
+          `inf:${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+        ).toBe(expected);
+      }
+    }
+  }
+
+  const NEW_RESOURCES = [
+    'rait-unit',
+    'rait-schedule',
+    'rait-schedule-slot',
+    'rait-batch',
+    'rait-batch-item',
+    'rait-substitute-duty',
+    'rait-bench',
+    'rait-pending-content',
+    'rait-redirect',
+    'rait-draft',
+    'rait-holiday',
+    'rait-suspension-act',
+    'rait-jeton-sheet',
+    'rait-jeton-line',
+    'rait-incident',
+    'rait-quality-sample',
+    'rait-capacity-plan',
+    'rait-export',
+    'collection-document',
+    'payment',
+    'refund-order',
+    'debt-handoff',
+    'rait-reconciliation',
+  ];
+
+  it(`cataloga exatamente os 23 recursos novos de CTG-0002 sem matriz (M17)`, () => {
+    expect(NEW_RESOURCES).toHaveLength(23);
+    expect(new Set(NEW_RESOURCES).size).toBe(23);
+  });
+
+  for (const resource of NEW_RESOURCES) {
+    it(`dado o recurso novo inf:${resource} sem matriz quando isDetranActionAllowed é chamado para read/create/update/delete então nega para todo papel canônico de roles.ts, exceto GLOBAL_ADMIN_ROLES e a exceção nomeada da matriz de comando (M17)`, () => {
+      expectDeniedForEveryRole(resource);
+      expectResourceHasNoGeneratedMatrixEntry(resource);
+    });
+  }
+});
