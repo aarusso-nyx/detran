@@ -4,7 +4,7 @@
   "module": {
     "name": "Collection",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "ddlFile": "57-inf-collection.sql",
     "dependencies": {
       "@detran/inf-infraction": "workspace:*"
@@ -41,25 +41,75 @@
         "primaryKey": ["id"],
         "description": "Documento proprio de arrecadacao por faixa e fase — UC-RAIT-032 (fluxo 1 a 4, AC-RAIT-032-1 data-limite unica, AC-RAIT-032-3 duas casas truncadas) e ADR-0017 Decision 1. tier referencia inf.infraction_payment_tier_ref e issued_for_state a fase da infracao para a qual foi emitido (RAIT.COLLECTION_PHASE_INVALID e a guarda de comando). A faixa desconto_40_fora_sne existe no vocabulario e fica desligada pela flag collection.discount_40_outside_sne=false (steering H.53; RAIT.COLLECTION_DISCOUNT_SNE_ONLY). Estados minusculos derivados de ADR-0017 Decision 2 (emitir ou invalidar por fase) e do fluxo 3 e 4 do UC (decisao M12).",
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "infraction_id", "type": "uuid" },
-          { "name": "tier", "type": "varchar(40)" },
-          { "name": "amount", "type": "numeric(12,2)" },
-          { "name": "barcode", "type": "varchar(60)", "nullable": true },
-          { "name": "pix_reference", "type": "varchar(140)", "nullable": true },
-          { "name": "valid_until", "type": "date" },
-          { "name": "issued_for_state", "type": "varchar(40)" },
-          { "name": "status", "type": "varchar(20)", "default": "'emitido'" },
-          { "name": "issued_at", "type": "timestamptz", "default": "now()" },
-          { "name": "issued_by", "type": "uuid", "nullable": true },
-          { "name": "document_id", "type": "uuid", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "infraction_id",
+            "type": "uuid"
+          },
+          {
+            "name": "tier",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)"
+          },
+          {
+            "name": "barcode",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "pix_reference",
+            "type": "varchar(140)",
+            "nullable": true
+          },
+          {
+            "name": "valid_until",
+            "type": "date"
+          },
+          {
+            "name": "issued_for_state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'emitido'"
+          },
+          {
+            "name": "issued_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "issued_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "nullable": true
+          },
           {
             "name": "supersedes_document_id",
             "type": "uuid",
             "nullable": true
           },
-          { "name": "invalidated_at", "type": "timestamptz", "nullable": true }
+          {
+            "name": "invalidated_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
         ],
         "indexes": [
           {
@@ -110,7 +160,10 @@
           {
             "name": "fk_inf_collection_document_infraction",
             "columns": ["infraction_id"],
-            "references": { "table": "inf.infraction", "columns": ["id"] }
+            "references": {
+              "table": "inf.infraction",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_inf_collection_document_tier",
@@ -144,16 +197,52 @@
         "primaryKey": ["id"],
         "description": "Pagamento vindo do retorno bancario e sua conciliacao — UC-RAIT-035 (fluxo 1 casamento por documento, valor e data; AC-RAIT-035-3 rastreabilidade) e ADR-0017 Decision 1. Retorno sem documento correspondente fica sem document_id e sem matched_at (RAIT.PAYMENT_UNMATCHED, catalogo secao 3.11); reversed_at registra o estorno que publica PAGAMENTO_ESTORNADO (ADR-0017 Decision 2). O pagamento nao muda estado da infracao: o agregado decide ([WF-INF-003] secao 2 linhas 12 a 16 e 29).",
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "document_id", "type": "uuid", "nullable": true },
-          { "name": "bank_reference", "type": "varchar(80)" },
-          { "name": "paid_on", "type": "date" },
-          { "name": "amount", "type": "numeric(12,2)" },
-          { "name": "tier_applied", "type": "varchar(40)", "nullable": true },
-          { "name": "received_at", "type": "timestamptz", "default": "now()" },
-          { "name": "matched_at", "type": "timestamptz", "nullable": true },
-          { "name": "reversed_at", "type": "timestamptz", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "bank_reference",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "paid_on",
+            "type": "date"
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)"
+          },
+          {
+            "name": "tier_applied",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "received_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "matched_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "reversed_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
         ],
         "indexes": [
           {
@@ -214,13 +303,35 @@
         "primaryKey": ["id"],
         "description": "Ordem de restituicao corrigida — UC-RAIT-033 (fluxo 1 a 4, fluxo 3a dados bancarios ausentes, AC-RAIT-033-1 sem pedido do cidadao, AC-RAIT-033-2 indice visivel) e ADR-0017 Decision 1. index_key registra qual indice foi aplicado e nao tem default: o valor vigente e o parametro rait.refund.index (IPCA-E, ops.parameter; RAIT.REFUND_INDEX_PENDING quando nao parametrizado). Estados minusculos dos eventos reservados RESTITUICAO_ORDENADA e RESTITUICAO_PAGA (rait-events-sse-contract.md secao 2.5) mais a abertura por RESTITUICAO_DEVIDA (decisao M12).",
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "infraction_id", "type": "uuid" },
-          { "name": "payment_id", "type": "uuid" },
-          { "name": "reason", "type": "varchar(30)" },
-          { "name": "base_amount", "type": "numeric(12,2)" },
-          { "name": "index_key", "type": "varchar(40)" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "infraction_id",
+            "type": "uuid"
+          },
+          {
+            "name": "payment_id",
+            "type": "uuid"
+          },
+          {
+            "name": "reason",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "base_amount",
+            "type": "numeric(12,2)"
+          },
+          {
+            "name": "index_key",
+            "type": "varchar(40)"
+          },
           {
             "name": "updated_amount",
             "type": "numeric(12,2)",
@@ -231,11 +342,31 @@
             "type": "varchar(20)",
             "default": "'pendente'"
           },
-          { "name": "status", "type": "varchar(20)", "default": "'aberta'" },
-          { "name": "opened_at", "type": "timestamptz", "default": "now()" },
-          { "name": "ordered_at", "type": "timestamptz", "nullable": true },
-          { "name": "paid_at", "type": "timestamptz", "nullable": true },
-          { "name": "document_id", "type": "uuid", "nullable": true }
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'aberta'"
+          },
+          {
+            "name": "opened_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "ordered_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "paid_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "nullable": true
+          }
         ],
         "indexes": [
           {
@@ -282,12 +413,18 @@
           {
             "name": "fk_inf_refund_order_infraction",
             "columns": ["infraction_id"],
-            "references": { "table": "inf.infraction", "columns": ["id"] }
+            "references": {
+              "table": "inf.infraction",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_inf_refund_order_payment",
             "columns": ["payment_id"],
-            "references": { "table": "inf.payment", "columns": ["id"] }
+            "references": {
+              "table": "inf.payment",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -297,9 +434,19 @@
         "primaryKey": ["id"],
         "description": "Encaminhamento do credito definitivo nao pago a Fazenda e a divida ativa — UC-RAIT-034 (fluxo 3 transferencia com o dossie fiscal, fluxo 2a pagamento durante a cobranca, AC-RAIT-034-2) e ADR-0017 Decision 1. Antes de INSTANCIA_ENCERRADA ou com efeito suspensivo o encaminhamento e recusado (RAIT.DEBT_HANDOFF_NOT_FINAL, guarda de comando porque depende do estado do agregado). A porta da Fazenda segue pendente de fonte (ADR-0017 tabela de ownership).",
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "infraction_id", "type": "uuid" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "infraction_id",
+            "type": "uuid"
+          },
           {
             "name": "fazenda_reference",
             "type": "varchar(80)",
@@ -310,15 +457,31 @@
             "type": "uuid",
             "nullable": true
           },
-          { "name": "status", "type": "varchar(20)", "default": "'preparado'" },
-          { "name": "prepared_at", "type": "timestamptz", "default": "now()" },
-          { "name": "sent_at", "type": "timestamptz", "nullable": true },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'preparado'"
+          },
+          {
+            "name": "prepared_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "sent_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
           {
             "name": "acknowledged_at",
             "type": "timestamptz",
             "nullable": true
           },
-          { "name": "cancel_reason", "type": "varchar(30)", "nullable": true }
+          {
+            "name": "cancel_reason",
+            "type": "varchar(30)",
+            "nullable": true
+          }
         ],
         "indexes": [
           {
@@ -362,7 +525,10 @@
           {
             "name": "fk_inf_debt_handoff_infraction",
             "columns": ["infraction_id"],
-            "references": { "table": "inf.infraction", "columns": ["id"] }
+            "references": {
+              "table": "inf.infraction",
+              "columns": ["id"]
+            }
           }
         ]
       }
@@ -376,7 +542,11 @@
         "path": "collection-documents",
         "resource": "collection-document"
       },
-      { "entity": "Payment", "path": "payments", "resource": "payment" },
+      {
+        "entity": "Payment",
+        "path": "payments",
+        "resource": "payment"
+      },
       {
         "entity": "RefundOrder",
         "path": "refund-orders",

@@ -63,12 +63,9 @@ import { ToxicologyModule } from '@detran/ch-toxicology';
 import { ComplaintsModule } from '@detran/portal-complaints';
 import { AitModule } from '@detran/inf-ait';
 import { AlcoholModule } from '@detran/inf-alcohol';
-import { CollectionModule } from '@detran/inf-collection';
 import { MeasuresModule } from '@detran/inf-measures';
 import { NormativeModule } from '@detran/inf-normative';
 import { RaitCaseModule } from '@detran/inf-rait-case';
-import { RaitIntegrationModule } from '@detran/inf-rait-integration';
-import { RaitOrgModule } from '@detran/inf-rait-org';
 import { RaitSessionModule } from '@detran/inf-rait-session';
 import { RaitWorklistModule } from '@detran/inf-rait-worklist';
 import { SpeedModule } from '@detran/inf-speed';
@@ -359,9 +356,6 @@ export class AppModule {
         RaitCaseModule,
         RaitWorklistModule,
         RaitSessionModule,
-        RaitOrgModule,
-        CollectionModule,
-        RaitIntegrationModule,
         AgencyModule,
         FieldModule,
         SnapshotsModule,

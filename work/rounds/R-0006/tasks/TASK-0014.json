@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0014",
+  "round_id": "R-0006",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Bank-port mock unit tests and exhaustive policy negatives for the CTG-0002 resources (M17)",
+  "description": "Delivery-review-CTG-0002 findings 3 and 4: encode contract §c behaviours of the mock BankPort as unit tests and prove that no canonical role is granted any action on the 23 new resources until R-0007 creates the matrix.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-inf-collection-tests", "MOD-shared-policy-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [
+    "contract CTG-0002-modules §c",
+    "orchestra README §4 rule 8",
+    "M17"
+  ],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "iteration_trail": [],
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-a", "collection", "policy", "delivery-review"],
+  "branch": "orchestra/rait-model",
+  "worktree_id": "WT-rait-model",
+  "prompt_composition_id": "PC-ff4d8ec249f83e53",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-collection", "test:unit"],
+    ["pnpm", "--filter", "@detran/shared", "test"]
+  ],
+  "created_at": "2026-09-15T02:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-ff4d8ec249f83e53",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
