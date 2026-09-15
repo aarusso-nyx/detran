@@ -25,7 +25,7 @@ WP-A de `docs/framework/arch/rait-build-pack.md` (restante: deltas v1.1.0 dos bl
 - [x] `pnpm exec devai evidence record …` (referência abaixo)
 - [x] nenhum arquivo gerado editado à mão; blueprint e gerados no mesmo PR
 
-Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): delivery-review-CTG-0002 ciclo 1 FAIL (5 achados → M17: reatribuição de TASK-0008 a Architect, bump do blueprint pelo Architect, testes do mock bancário, desmontagem dos módulos + negativas de política, critério 178) → ciclo 2 FAIL (autoria de docs, critério de TASK-0014, OD-309) → ciclo 3 REVIEW → ciclo 4 REVIEW → ciclo 5 **PASS**. Mutação documental de TASK-0008 revertida e re-autorada pelo Architect; OD-309 registrada. Evidência DEVAI: EVIDENCE_2.
+Revisão cruzada (GPT-5.6 Terra via `tools/orchestra/bridge.sh`): delivery-review-CTG-0002 ciclo 1 FAIL (5 achados → M17: reatribuição de TASK-0008 a Architect, bump do blueprint pelo Architect, testes do mock bancário, desmontagem dos módulos + negativas de política, critério 178) → ciclo 2 FAIL (autoria de docs, critério de TASK-0014, OD-309) → ciclo 3 REVIEW → ciclo 4 REVIEW → ciclo 5 **PASS**. Mutação documental de TASK-0008 revertida e re-autorada pelo Architect; OD-309 registrada. Evidência DEVAI: `record/proofs/work/generic/R-0006.jsonl` sequência 2, cadeia `record/proofs/chain.json` (`evidence chain: valid; head e4b98151f503aa12934f94b197cc034875cca9106fd0796566d990f3e418eee0`).
 
 ## Questões abertas tocadas
 
