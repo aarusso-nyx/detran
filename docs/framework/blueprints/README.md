@@ -29,3 +29,9 @@ on any missing, changed, or extra generated file. It runs as part of root
 Example: `BP-INF-AIT-001` imports `NormativeModule` from `@detran/inf-normative` and registers
 `AitCommandsController` and `AIT_LIFECYCLE_PROVIDER`; `BP-INF-NORMATIVE-001` exports
 `NormativeLifecycleService`.
+
+## WP-T1 ops (blueprints e pacotes em 2026-09-14, PR #40; fechamento do WP em 2026-09-15)
+
+Os blueprints `BP-OPS-AGENCY-001`, `BP-OPS-FIELD-001`, `BP-OPS-SNAPSHOTS-001`,
+`BP-OPS-EVIDENCE-001` e `BP-OPS-OFFLINE-SYNC-001` foram entregues com pacotes, DDLs e
+contratos gerados. `shift.status` permanece `source_pending` até o vocabulário canônico.

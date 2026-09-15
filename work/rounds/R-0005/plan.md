@@ -1,9 +1,9 @@
 # R-0005 — frente `ops-agency` (WP-T1 do TEAT: modelo de dados de `ops/*` e deltas dos blueprints `inf`)
 
-**Status:** CTG-0001 mesclado no PR #40. CTG-0002 e CTG-0003 implementados; todos os gates locais
-finais estão verdes. As correções de escalada dos reviews anteriores aguardam somente a revisão
-Opus final antes de commit, evidência, PR e merge. Reviewer: Opus 5 via
-`tools/orchestra/bridge.sh claude`.
+**Status:** CTG-0001 mesclado no PR #40; CTG-0002 no PR #41; CTG-0003 no PR #42. Os cinco jobs do
+CI do PR #42 passaram e o merge foi concluido como `30118fa749801d43e7b0b3238ed19b241c8b9114`.
+TASK-0009 esta em execucao para transcrever somente os fatos comprovados antes do fechamento formal
+da rodada. Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — nenhum upstream para grupo algum (decisão do Owner, 2026-09-14: abre em paralelo à onda 1). Pontos de rebase com R-0004 `param-store`: `backend/app/src/app.module.ts` e `docs/framework/blueprints/BP-INF-NORMATIVE-001.json`; se R-0004 retomar na janela Sol, grave `checkpoint` ao fim do CTG-0001 e ceda a janela.
 **Janelas previstas:** 2 (CTG-0001/0002 na primeira; CTG-0003 e docs na segunda).
 
@@ -294,6 +294,34 @@ Checkpoint da janela 1 em 2026-09-14:
   hardening: estados legados de alcoolemia, validação runtime de `kind`, termo na submáquina B,
   teste de `conclude`, derivação de terminais, cadastro canônico de `OD-T13` e matrizes dos quatro
   recursos CRUD novos.
+- CTG-0002 foi mesclado no PR #41 como `bb4797ab38cc4cf47d500e29b203925b29861057` depois de
+  todos os cinco jobs do run `34922071820` passarem. CTG-0003 foi mesclado no PR #42 como
+  `30118fa749801d43e7b0b3238ed19b241c8b9114` depois de todos os cinco jobs do run `34923196682`
+  passarem. A observacao Auditor pos-merge de #42 completou como `EV-a6f9b7b940fd0b04`; TASK-0009
+  foi liberada somente depois desses fatos imutaveis.
+- TASK-0009 pre-dispatch: `prompt-bug` na fronteira documental. O plano vinculante e o low da
+  terceira review já roteavam a atualização de `teat-route-contract.md` §2, mas o arquivo faltava
+  em "Pode tocar". A composição foi corrigida para incluir somente esse documento e nenhum
+  requisito novo; a autorização humana anterior para incorporar os lows permanece a autoridade.
+- TASK-0009 concluida pelo Owner delegado: os seis documentos autorizados transcrevem os PRs
+  #40/#41/#42, pacotes e blueprints WP-T1, fecham o gate institucional 3 e preservam WP-T2+ e
+  lacunas de vocabulario como pendentes. `format:check`, `docs:kb:check` (521/446),
+  `docs:kb:publish-check` (201, raw/internal excluido) e `git diff --check` passaram. Pendente:
+  delivery-review Opus antes de commit/evidencia/PR.
+- Delivery-review TASK-0009 ciclo 1 retornou REVIEW com dois highs documentais: a linha de
+  `BP-OPS-FIELD-001` ainda prometia CHECK inexistente para `shift.status`, e `mobile-bootstrap`
+  ainda citava o pacote aposentado `ops-operations`. Os lows pedem explicitar CRUD, pacote
+  `@detran/ops-offline-sync`, datas locais reais, ADR-0023/DDL e o recorte de provisioning. Todos
+  cabem na fronteira documental já autorizada; TASK-0009 volta ao mesmo transcritor na iteracao 1.
+- Delivery-review TASK-0009 ciclo 2 confirmou os achados anteriores, mas encontrou um high
+  residual na frase generica que ainda atribuía CHECKs ao FIELD inteiro, além de lows de datas em
+  dois documentos e preservação explícita das rotas handwritten já montadas. Como este foi o
+  segundo REVIEW, a iteração 2 escala de Luna para Terra, mesma família e mesma fronteira.
+- A revisão focal de escalada da TASK-0009 retornou PASS, zero highs. O low herdado sobre a
+  contagem/prefixo das rotas FIELD (10 documentadas versus 12 handlers atuais em `/v1/ops/*`) foi
+  roteado para R-0008/WP-T2, onde a superfície de comandos será consolidada; a duplicidade
+  preexistente do número ADR-0006 fica em hardening editorial próprio. Nenhum low altera o gate
+  de WP-T1 ou o diff aprovado.
 
 ## Triagem
 
