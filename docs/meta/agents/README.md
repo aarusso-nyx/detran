@@ -6,13 +6,13 @@ pode tocar**, **como verificar** e **como entregar**. Os manuais não criam gove
 `AGENTS.md` (Constituição DEVAI, Art. 6 papéis) ao trabalho do RAIT. As definições curtas em
 `.claude/agents/*.md` apenas apontam para cá e fixam o modelo sugerido.
 
-| Perfil              | Papel Art. 6            | Modelo sugerido | Pacotes de trabalho             | Manual                                             |
-| ------------------- | ----------------------- | --------------- | ------------------------------- | -------------------------------------------------- |
-| Architect-blueprint | Architect               | Opus / Terra    | WP-A, revisão de guardas WP-B   | [architect-blueprint.md](./architect-blueprint.md) |
-| Engineer-backend    | Engineer                | Opus            | WP-B, WP-0 (parte backend)      | [engineer-backend.md](./engineer-backend.md)       |
-| Engineer-frontend   | Engineer                | Opus / Sonnet   | WP-F, WP-E (schemas), WP-0 (UI) | [engineer-frontend.md](./engineer-frontend.md)     |
-| Inspector-tests     | Inspector               | Sonnet / Opus   | testes de todos os WPs          | [inspector-tests.md](./inspector-tests.md)         |
-| Transcriber-docs    | Owner (delegado) / Eng. | Sonnet          | WP-C, WP-D, i18n, fichas        | [transcriber-docs.md](./transcriber-docs.md)       |
+| Perfil              | Papel Art. 6                | Modelo sugerido | Pacotes de trabalho             | Manual                                             |
+| ------------------- | --------------------------- | --------------- | ------------------------------- | -------------------------------------------------- |
+| Architect-blueprint | Architect                   | Opus / Terra    | WP-A, revisão de guardas WP-B   | [architect-blueprint.md](./architect-blueprint.md) |
+| Engineer-backend    | Engineer                    | Opus            | WP-B, WP-0 (parte backend)      | [engineer-backend.md](./engineer-backend.md)       |
+| Engineer-frontend   | Engineer                    | Opus / Sonnet   | WP-F, WP-E (schemas), WP-0 (UI) | [engineer-frontend.md](./engineer-frontend.md)     |
+| Inspector-tests     | Inspector                   | Sonnet / Opus   | testes de todos os WPs          | [inspector-tests.md](./inspector-tests.md)         |
+| Transcriber-docs    | Architect (transcr.) / Eng. | Sonnet          | WP-C, WP-D, i18n, fichas        | [transcriber-docs.md](./transcriber-docs.md)       |
 
 ## Orquestras de execução
 

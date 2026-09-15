@@ -68,7 +68,13 @@ O detalhe está em `maestro-prompt.template.md`.
    `bash backend/database/seed.sh` em banco limpo **e** o job `backend-kernel` executa `seed.sh` após o
    reset (passo criado em R-0006); um seed novo que não carrega sob `seed.sh` é `plant-bug` da rodada que
    o criou (R-0004: `05-parameters.sql` sem contexto de tenant abortava o seed e o CI não percebia).
-10. **Histórico publicado não se reescreve**: rebase é permitido somente antes do primeiro push.
+10. **Pacote novo montado no `AppModule`** entra também em `backend/app/vitest.config.ts` (alias para
+    `src/index.ts`) e em `backend/app/package.json`; a fronteira do Engineer de wiring inclui esses dois
+    arquivos (R-0006: o tier e2e do app falhou por resolução de `dist/` inexistente).
+11. **`devai audit observe` exige o HEAD exato**: observar o merge logo após `git fetch`, antes de qualquer
+    commit novo; ao aceitar a cadeia de `main` num merge, as observações do branch caem e são refeitas
+    no fechamento sobre o merge final (R-0006).
+12. **Histórico publicado não se reescreve**: rebase é permitido somente antes do primeiro push.
     Depois de publicar o branch, integre avanços do upstream ou de `main` com merge normal, rode de
     novo os gates e faça push sem força. `--force`, `--force-with-lease` e equivalentes são proibidos.
 
