@@ -1,0 +1,16 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/inf/ait/src/handwritten/ait-cancel-requests.controller.ts",
+      "line": 109,
+      "claim": "A correção do achado §13.2 está incompleta: quando `ait_id` é nulo, `review` não exige `If-Match` nem devolve `ETag`; `decide` repete a omissão na linha 131. A adenda exige `ait_cancel_request.version` nesses dois casos.",
+      "fix": "Aplicar `assertIfMatch(ifMatch, summary.version, 'TEAT')` incondicionalmente e devolver `ETag` da versão do pedido quando `summary.aitId` for nulo; faça `reviewCancelRequest` expor a versão incrementada e cubra ausência, divergência e sucesso dos dois comandos sem AIT."
+    }
+  ],
+  "notes": []
+}

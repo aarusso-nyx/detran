@@ -1,5 +1,6 @@
 import type { Provider } from '@nestjs/common';
 import { NormativeLifecycleService } from '@detran/inf-normative';
+import { TEAT_EVENT_OUTBOX, type TeatEventOutbox } from '@detran/shared';
 
 import { AitLifecycleService } from './ait-lifecycle.service.js';
 import { AitRepository } from './repositories/ait.repository.js';
@@ -14,7 +15,10 @@ import { AitPrintEventRepository } from './repositories/ait-print-event.reposito
  * Nest provider for the handwritten AIT lifecycle: the service takes its
  * repositories as one object (kept for the e2e fixtures), so the module builds
  * it from the generated repositories and the normative reference port exported
- * by `NormativeModule` (WP-T0).
+ * by `NormativeModule` (WP-T0). `TEAT_EVENT_OUTBOX` (M16, provided by
+ * `AIT_CANCEL_REQUESTS_PROVIDER` in the same module) is injected explicitly;
+ * the service also has a dependency-free `SqlTeatEventOutbox` fallback for
+ * callers that construct it directly (tests, CTG-0001 §8/§9).
  */
 export const AIT_LIFECYCLE_PROVIDER: Provider = {
   provide: AitLifecycleService,
@@ -27,10 +31,12 @@ export const AIT_LIFECYCLE_PROVIDER: Provider = {
     signatures: AitSignatureRepository,
     printEvents: AitPrintEventRepository,
     normative: NormativeLifecycleService,
+    outbox: TeatEventOutbox,
   ) =>
     new AitLifecycleService(
       { ait, vehicles, people, history, corrections, signatures, printEvents },
       normative,
+      { outbox },
     ),
   inject: [
     AitRepository,
@@ -41,5 +47,6 @@ export const AIT_LIFECYCLE_PROVIDER: Provider = {
     AitSignatureRepository,
     AitPrintEventRepository,
     NormativeLifecycleService,
+    TEAT_EVENT_OUTBOX,
   ],
 };

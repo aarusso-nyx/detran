@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Ait — BP-INF-AIT-001",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "AIT issuance and lifecycle with immutable content hash, normative references, and operational satellites.",
     "x-blueprint": "BP-INF-AIT-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -154,32 +154,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": ["ait-cancel-request"],
-        "operationId": "createAitCancelRequest",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateAitCancelRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AitCancelRequest"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/v1/inf/ait/cancel-requests/{id}": {
@@ -207,52 +181,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["ait-cancel-request"],
-        "operationId": "updateAitCancelRequest",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateAitCancelRequestDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AitCancelRequest"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["ait-cancel-request"],
-        "operationId": "removeAitCancelRequest",
-        "responses": {
-          "200": {
-            "description": "deleted"
           },
           "404": {
             "description": "not found"
@@ -1539,7 +1467,8 @@
           },
           "ait_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "kind": {
             "type": "string",
@@ -1557,6 +1486,24 @@
           "addressed_to": {
             "type": "string",
             "maxLength": 120
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
           },
           "status": {
             "type": "string",
@@ -1590,7 +1537,6 @@
         },
         "required": [
           "tenant_id",
-          "ait_id",
           "kind",
           "origin_status",
           "addressed_to",
@@ -1602,7 +1548,8 @@
         "properties": {
           "ait_id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "kind": {
             "type": "string",
@@ -1620,6 +1567,24 @@
           "addressed_to": {
             "type": "string",
             "maxLength": 120
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "requested_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
           },
           "status": {
             "type": "string",
@@ -1642,7 +1607,7 @@
             "nullable": true
           }
         },
-        "required": ["ait_id", "kind", "origin_status", "addressed_to"]
+        "required": ["kind", "origin_status", "addressed_to"]
       },
       "AitCancelRequestEvent": {
         "type": "object",

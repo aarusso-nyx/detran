@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
+// Generated from BP-INF-AIT-001 v1.2.0 sha256:929e2e65586fc826e76dc66fceae7a52e7920abed66169e1291a67e2bd055f6d
 import {
   Body,
   Controller,
@@ -21,35 +21,5 @@ export class AitCancelRequestController {
   }
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({
-    action: 'INF_AIT_CANCEL_REQUEST_CREATE',
-    entity: 'inf.ait_cancel_request',
-  })
-  create(@Body() dto: CreateAitCancelRequestDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({
-    action: 'INF_AIT_CANCEL_REQUEST_UPDATE',
-    entity: 'inf.ait_cancel_request',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateAitCancelRequestDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({
-    action: 'INF_AIT_CANCEL_REQUEST_DELETE',
-    entity: 'inf.ait_cancel_request',
-  })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }

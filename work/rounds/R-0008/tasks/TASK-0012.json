@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0008",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes do gate check-commands.mjs, do script de clientes e das verificações rota ⇔ contrato, operationId único e códigos do catálogo (WP-T3)",
+  "description": "Codificar em testes node:test os critérios do contrato CTG-0004 §WP-T3 para o gate de contratos de comando e o gerador de clientes, antes da implementação em TASK-0010; vermelhos até lá.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-tools-contracts-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0013",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 12,
+  "tags": ["wp-t3"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-31b0ca35b418e5d6",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "--test", "tools/contracts/tests/"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-31b0ca35b418e5d6",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

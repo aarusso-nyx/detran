@@ -1,4 +1,4 @@
--- Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
+-- Generated from BP-INF-AIT-001 v1.2.0 sha256:929e2e65586fc826e76dc66fceae7a52e7920abed66169e1291a67e2bd055f6d
 
 -- Regenerable-only DDL for BP-INF-AIT-001; request-path writes use role_app_backend.
 
@@ -67,11 +67,15 @@ create index if not exists ix_ait_ait_speed_measurement_id on inf.ait_ait (speed
 create table if not exists inf.ait_cancel_request (
   id uuid default gen_random_uuid() not null,
   tenant_id uuid not null,
-  ait_id uuid not null,
+  ait_id uuid,
   kind varchar(60) not null,
   target_local_act_id varchar(120),
   origin_status varchar(60) not null,
   addressed_to varchar(120) not null,
+  idempotency_key varchar(160),
+  justification text,
+  requested_by uuid,
+  version integer default 1 not null,
   status varchar(60) default 'requested' not null,
   decision text,
   requested_at timestamptz default now() not null,
@@ -83,6 +87,8 @@ create table if not exists inf.ait_cancel_request (
   constraint fk_inf_ait_cancel_request_ait foreign key (ait_id) references inf.ait_ait (id)
 );
 create index if not exists ix_inf_ait_cancel_request on inf.ait_cancel_request (tenant_id, ait_id, status);
+create unique index if not exists ux_inf_ait_cancel_request_idempotency on inf.ait_cancel_request (tenant_id, idempotency_key) where idempotency_key is not null;
+create index if not exists ix_inf_ait_cancel_request_target on inf.ait_cancel_request (tenant_id, target_local_act_id);
 create index if not exists ix_ait_cancel_request_tenant_id on inf.ait_cancel_request (tenant_id);
 create index if not exists ix_ait_cancel_request_ait_id on inf.ait_cancel_request (ait_id);
 create index if not exists ix_ait_cancel_request_target_local_act_id on inf.ait_cancel_request (target_local_act_id);

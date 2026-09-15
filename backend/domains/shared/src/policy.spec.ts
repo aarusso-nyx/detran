@@ -963,3 +963,210 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
     });
   }
 });
+
+/**
+ * CTG-0001 (R-0008, TASK-0002) — AIT completo: `inf:ait:archive`,
+ * `inf:ait:review-concurrency`, `inf:ait-cancel-request:{create,review,decide}`
+ * (§5 do contrato) e `canDecideAitCancelRequest` (M3, §5). `canDecideAitCancelRequest`
+ * ainda não é exportado por `policy.ts` (TASK-0003, Engineer) — é acessado via
+ * `import * as policyModule` para que a ausência do nome falhe só dentro do
+ * teste que o usa (assertion "expected undefined"), nunca no carregamento do
+ * arquivo inteiro, preservando os testes já verdes acima.
+ */
+describe('CTG-0001 §5 — AIT completo: archive, review-concurrency, ait-cancel-request, canDecideAitCancelRequest (TASK-0002)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (plan.md §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        // technical-admin está em GLOBAL_ADMIN_ROLES: '*' o libera para toda
+        // chave, sem entrar na lista estática de papéis concedidos.
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  }
+
+  it('C-0001-05 — dado inf:ait:archive quando consultado então só traffic-authority; negado para os outros seis papéis TEAT; technical-admin passa por "*"', () => {
+    expectGrantedOnlyTo('inf:ait', 'archive', ['traffic-authority']);
+  });
+
+  it('C-0001-06 — dado inf:ait:review-concurrency quando consultado então permitido para traffic-authority e AUDITOR, negado para os demais', () => {
+    expectGrantedOnlyTo('inf:ait', 'review-concurrency', [
+      'traffic-authority',
+      'AUDITOR',
+    ]);
+  });
+
+  it('C-0001-07 — dado inf:ait-cancel-request:{create,review,decide} então os três pares existem com os papéis do contrato §5', () => {
+    expectGrantedOnlyTo('inf:ait-cancel-request', 'create', [
+      'field-agent',
+      'field-supervisor',
+      'traffic-authority',
+    ]);
+    expectGrantedOnlyTo('inf:ait-cancel-request', 'review', [
+      'traffic-authority',
+    ]);
+    expectGrantedOnlyTo('inf:ait-cancel-request', 'decide', [
+      'traffic-authority',
+    ]);
+  });
+
+  it('C-0001-07 — dado a superfície CRUD gerada então inf:ait-cancel-request:{read,create,update,delete} e inf:ait-cancel-request-event:{read,create,update,delete} existem na matriz (INF_RESOURCES, §5)', () => {
+    for (const resource of ['ait-cancel-request', 'ait-cancel-request-event']) {
+      for (const action of ['read', 'create', 'update', 'delete']) {
+        expect(
+          `inf:${resource}:${action}` in DETRAN_POLICY_MATRIX,
+          `inf:${resource}:${action} deveria existir na matriz (superfície CRUD gerada, §5)`,
+        ).toBe(true);
+      }
+    }
+  });
+
+  it('§5 — dado a superfície CRUD gerada então inf:normative-metrological-table e inf:signature-policy existem, restritos a INF_ADMIN_ROLES (agency-admin, technical-admin)', () => {
+    for (const resource of [
+      'normative-metrological-table',
+      'signature-policy',
+    ]) {
+      expect(allowed(['agency-admin'], `inf:${resource}`, 'read')).toBe(true);
+      expect(allowed(['agency-admin'], `inf:${resource}`, 'create')).toBe(true);
+      expect(allowed(['field-agent'], `inf:${resource}`, 'create')).toBe(false);
+    }
+  });
+
+  it('M18 — dado ops:offline-numbering-reservation:{reserve,cancel} (alias duplicado da origem) então as chaves foram removidas da matriz (route contract: rota única numbering-reservation)', () => {
+    expect(
+      'ops:offline-numbering-reservation:reserve' in DETRAN_POLICY_MATRIX,
+    ).toBe(false);
+    expect(
+      'ops:offline-numbering-reservation:cancel' in DETRAN_POLICY_MATRIX,
+    ).toBe(false);
+    // A rota única sobrevivente continua concedida (não é tocada por esta remoção).
+    expect(
+      allowed(['field-agent'], 'ops:numbering-reservation', 'reserve'),
+    ).toBe(true);
+  });
+
+  describe('canDecideAitCancelRequest (C-0001-08, M3/H.39/OD-T01)', () => {
+    it('dado traffic-authority sem claims.decision_body quando addressedTo="diretoria-fiscalizacao" então false', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['traffic-authority'],
+        permissions: [],
+        claims: {},
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'diretoria-fiscalizacao',
+        ),
+      ).toBe(false);
+    });
+
+    it('dado traffic-authority com claims.decision_body="diretoria-fiscalizacao" quando addressedTo="diretoria-fiscalizacao" então true', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['traffic-authority'],
+        permissions: [],
+        claims: { decision_body: 'diretoria-fiscalizacao' },
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'diretoria-fiscalizacao',
+        ),
+      ).toBe(true);
+    });
+
+    it('dado traffic-authority sem claim quando addressedTo="traffic-authority" então true (não exige o claim)', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['traffic-authority'],
+        permissions: [],
+        claims: {},
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'traffic-authority',
+        ),
+      ).toBe(true);
+    });
+
+    it('dado technical-admin sem o claim quando addressedTo="diretoria-fiscalizacao" então false (a competência é atributo, não papel; não passa por isDetranActionAllowed "*")', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['technical-admin'],
+        permissions: ['*'],
+        claims: {},
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'diretoria-fiscalizacao',
+        ),
+      ).toBe(false);
+    });
+  });
+});

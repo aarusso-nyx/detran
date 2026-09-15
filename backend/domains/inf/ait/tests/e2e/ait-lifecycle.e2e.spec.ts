@@ -181,8 +181,10 @@ describe('AIT lifecycle', () => {
     await lifecycle.recordPrint(draft.id, { event_type: 'printed' });
     await lifecycle.queueTransmission(draft.id, actorA);
     await lifecycle.receiveProtocol(draft.id, 'RENAINF-001', actorA);
+    // CTG-0001 §4.12 (M4/ADR-0016): accept grava ACEITO e, na mesma
+    // transação, INTEGRADO — o AIT sempre termina em INTEGRADO, nunca ACEITO.
     const accepted = await lifecycle.accept(draft.id, actorA);
-    expect(accepted.current_status).toBe('ACEITO');
+    expect(accepted.current_status).toBe('INTEGRADO');
     const history = await repositories.history.findAll();
     expect(
       history
@@ -195,6 +197,7 @@ describe('AIT lifecycle', () => {
         'ENFILEIRADO',
         'RECEBIDO',
         'ACEITO',
+        'INTEGRADO',
       ]),
     );
     await expect(lifecycle.createDraft(draftInput)).rejects.toMatchObject({

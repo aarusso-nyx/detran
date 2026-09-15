@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
+// Generated from BP-INF-AIT-001 v1.2.0 sha256:929e2e65586fc826e76dc66fceae7a52e7920abed66169e1291a67e2bd055f6d
 import { Injectable } from '@nestjs/common';
 import { AitCancelRequestEventRepository } from '../repositories/ait-cancel-request-event.repository.js';
 import type { AitCancelRequestEvent } from '../entities/ait-cancel-request-event.entity.js';

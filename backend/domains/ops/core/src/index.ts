@@ -3,6 +3,13 @@ import type { Database, Transaction } from '@stynx-nyx/data';
 
 import { withTenantContext } from '@detran/shared';
 
+export {
+  SqlSyncConflictPort,
+  type ResolveSyncConflictOptions,
+  type SyncConflictPort,
+  type SyncConflictRef,
+} from './sync-conflict.port.js';
+
 type SqlTransaction = Transaction & {
   query<T extends Record<string, unknown> = Record<string, unknown>>(
     sql: string,
