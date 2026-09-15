@@ -6,24 +6,24 @@ Governed rounds of this repository (DEVAI 1.4.5). One round per front of the imp
 backlog (`docs/meta/agents/orchestra/waves.md`, ADR-0022). Evidence lives in
 `record/proofs/chain.json` (machine-only); this folder holds the human-readable working papers.
 
-| Round  | Front / scope                                     | State                                         |
-| ------ | ------------------------------------------------- | --------------------------------------------- |
-| R-0001 | definition round, WP-0, WP-T0 (evidence seq. 1–4) | closed by merges #27, #28, #29                |
-| R-0002 | PEC port                                          | see `record/proofs/work/generic/R-0002.jsonl` |
-| R-0003 | `dash-roles` — WP-D0                              | merged by PR #32; closed as PC-0001           |
-| R-0004 | `param-store` — ADR-0021 / WP-A parameters        | merged by PR #37; closed as PC-0002           |
-| R-0005 | `ops-agency` — WP-T1 (TEAT), `ops/agency` mínimo  | planned; maestro GPT-5.6 Sol                  |
-| R-0006 | `rait-model` — WP-A restante (RAIT)               | planned; maestro Fable 5.1                    |
-| R-0007 | `rait-backend` — WP-B + WP-C (RAIT)               | planned; maestro GPT-5.6 Sol                  |
-| R-0008 | `teat-backend` — WP-T2 + WP-T3 (TEAT)             | planned; maestro Fable 5.1                    |
-| R-0009 | `portal-backend` — WP-P0…P3 (PORTAL)              | planned; maestro Fable 5.1                    |
-| R-0010 | `boat-backend` — WP-B0…B3 (BOAT)                  | planned; maestro GPT-5.6 Sol                  |
-| R-0011 | `dashboard-backend` — WP-D1…D3 (DASHBOARD)        | planned; maestro GPT-5.6 Sol                  |
-| R-0012 | `rait-web` — WP-D + WP-E + WP-F (RAIT)            | planned; maestro Fable 5.1                    |
-| R-0013 | `teat-frontends` — WP-T4…T6 (TEAT)                | planned; maestro GPT-5.6 Sol                  |
-| R-0014 | `portal-pwa` — WP-P4…P6 (PORTAL)                  | planned; maestro Fable 5.1                    |
-| R-0015 | `boat-mobile` — WP-B4 + WP-B5 (BOAT)              | planned; maestro Fable 5.1                    |
-| R-0016 | `dashboard-console` — WP-D4 + WP-D5 (DASHBOARD)   | planned; maestro GPT-5.6 Sol                  |
+| Round  | Front / scope                                     | State                                          |
+| ------ | ------------------------------------------------- | ---------------------------------------------- |
+| R-0001 | definition round, WP-0, WP-T0 (evidence seq. 1–4) | closed by merges #27, #28, #29                 |
+| R-0002 | PEC port                                          | see `record/proofs/work/generic/R-0002.jsonl`  |
+| R-0003 | `dash-roles` — WP-D0                              | merged by PR #32; closed as PC-0001            |
+| R-0004 | `param-store` — ADR-0021 / WP-A parameters        | merged by PR #37; closed as PC-0002            |
+| R-0005 | `ops-agency` — WP-T1 (TEAT), `ops/agency` mínimo  | planned; maestro GPT-5.6 Sol                   |
+| R-0006 | `rait-model` — WP-A restante (RAIT)               | merged by PR #39 and PR #43; closed as PC-0003 |
+| R-0007 | `rait-backend` — WP-B + WP-C (RAIT)               | planned; maestro GPT-5.6 Sol                   |
+| R-0008 | `teat-backend` — WP-T2 + WP-T3 (TEAT)             | planned; maestro Fable 5.1                     |
+| R-0009 | `portal-backend` — WP-P0…P3 (PORTAL)              | planned; maestro Fable 5.1                     |
+| R-0010 | `boat-backend` — WP-B0…B3 (BOAT)                  | planned; maestro GPT-5.6 Sol                   |
+| R-0011 | `dashboard-backend` — WP-D1…D3 (DASHBOARD)        | planned; maestro GPT-5.6 Sol                   |
+| R-0012 | `rait-web` — WP-D + WP-E + WP-F (RAIT)            | planned; maestro Fable 5.1                     |
+| R-0013 | `teat-frontends` — WP-T4…T6 (TEAT)                | planned; maestro GPT-5.6 Sol                   |
+| R-0014 | `portal-pwa` — WP-P4…P6 (PORTAL)                  | planned; maestro Fable 5.1                     |
+| R-0015 | `boat-mobile` — WP-B4 + WP-B5 (BOAT)              | planned; maestro Fable 5.1                     |
+| R-0016 | `dashboard-console` — WP-D4 + WP-D5 (DASHBOARD)   | planned; maestro GPT-5.6 Sol                   |
 
 ## Folder convention (`R-nnnn/`)
 

@@ -5,6 +5,9 @@
 Accepted on 2026-09-13 by Owner decision (steering G.37), on the Architect's proposal of the same date. Extends ADR-0005
 (kernel composition root) and Owner steering A.8 (PAdES + TSA for decisions and minutes).
 
+Implementação: PR #43 (R-0006, CTG-0002, 2026-09-15) — documents facade types in `backend/domains/shared/src/documents/`
+(`DocumentKind`, `SignaturePolicy`, `DocumentsFacade`); rendering, signing and storage adapters follow in R-0007 / WP-P.
+
 ## Context
 
 Every app in the infractions scope produces legally relevant documents: the AIT print and

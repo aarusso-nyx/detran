@@ -1,7 +1,7 @@
 # R-0006 — frente `rait-model` (WP-A restante do RAIT: agregado da infração, organização, financeiro, integração)
 
-**Status:** aberta em 2026-09-14 pelo maestro Fable 5.1 (Architect no planejamento, Engineer no
-git); prompt em `prompts/00-maestro.md`. Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
+**Status:** fechada em 2026-09-15 como `PC-0003`, após CTG-0001 (PR #39) e CTG-0002 (PR #43) mesclados em `main`;
+aberta em 2026-09-14 pelo maestro Fable 5.1 (Architect no planejamento, Engineer no git); prompt em `prompts/00-maestro.md`. Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (infração, `inf/notification`, `@detran/inf-deadlines`): nenhum upstream — lock em `14-inf-lifecycle-vocabulary.sql` com R-0005 `ops-agency`, rebase. CTG-0002 (worklist/sessão/caso, org, financeiro, integração): `param-store` R-0004 (`orchestra/param-store`) em `main`.
 **Janelas previstas:** 2.
 
@@ -319,6 +319,8 @@ Inspector segue a especificação §7).
 - 2026-09-15 (janela 3) delivery-review-CTG-0002 ciclo 5: **PASS**. Gates finais: `backend:test:ci` exit 0 (app-role), `pnpm check`
   em conclusão. Segue: evidência `evidence-CTG-0002.json`, PR, CI, merge, `audit observe`, fechamento da rodada.
 
+- 2026-09-15 PR #43 mesclado (515a5e3da63e040ae9287719d9a735213a31e249); `audit observe` no HEAD exato; `closure.json` preenchido; fechamento da rodada.
+
 **Janela 3 aberta em 2026-09-14 (decisão do humano): CTG-0002 a partir de TASK-0004; recomendações metodológicas
 adotadas nos docs do método (reviewer: primeiro ciclo exaustivo, seguintes restritos aos itens corrigidos;
 README §4 regra 9 fixtures no CI; escada recalibrada em tokens brutos).** Prompts TASK-0004…0008 mantêm o PASS de
@@ -335,13 +337,14 @@ concluir). ADR-0016 ganhou "Implementação: PR #39"; ADR-0017/0018 recebem a li
 **Checkpoint anterior (fim da janela 1, ~101 % do orçamento).** Branch `orchestra/rait-model` **não publicado**;
 commits: `f27f6e5` (planejamento + esqueleto), `chore(infraction): checkpoint CTG-0001` (entrega completa de
 TASK-0001…0003 com as correções do ciclo 1 da delivery-review; histórico pode ser reescrito antes do primeiro push).
-Concluídas: TASK-0001, TASK-0002, TASK-0003 (esta `escalated` pela delivery-review). Pendentes: decisão do humano em
-§Bloqueios; depois delivery-review ciclo 3 (ou mini-tríade + review), commit definitivo por CODESTYLE (`feat(infraction): …`,
-squash do checkpoint), evidência `evidence-CTG-0001.json` + `devai evidence record`, push, PR (corpo pronto em
-`work/rounds/R-0006/pr-ctg-0001.md`), CI, merge, `audit observe`. CTG-0002 (TASK-0004…0008) na janela 2; PR só com
-`param-store` em `main`. Estado dos gates no checkpoint: `apply`+`seed`×2 OK, `rls-smoke` OK, `backend:test:ci` exit 0,
-`pnpm check` exit 0 (árvore corrigida, 2026-09-14). Últimos vereditos: prompt-review-2 PASS; delivery-review-CTG-0001 FAIL; -2 FAIL.
-Ao retomar: ler §Bloqueios, `reviews/delivery-review-CTG-0001-2.json`, `reports/TASK-000{1,2,3}.md`; não replanejar.
+Checkpoint final `2026-09-15`: rodada fechada.
+
+- Concluídas: TASK-0001…TASK-0014; CTG-0001 mesclado pelo PR #39 (`1fefb32`, 2026-09-14) e CTG-0002 pelo PR #43
+  (`515a5e3da63e040ae9287719d9a735213a31e249`, 2026-09-15); observação Auditor `EV-3aa0c1d48633ef57` no HEAD exato;
+  `devai round close` → `PC-0003` (cadeia válida no head `2912181936518a54e85ed3e410dc86500d5ea868386432068b525c783c2cbdb0`).
+- Últimos vereditos: `reviews/delivery-review-CTG-0001-4.json` PASS; `reviews/delivery-review-CTG-0002-5.json` PASS.
+- Pendente: nada nesta rodada. Rotas, jobs, montagem dos módulos no `AppModule` e projeções seguem para R-0007 / WP-P;
+  OD-309 aguarda decisão do Owner. Não replanejar; a próxima frente lê `PC-0003` e este plano como histórico.
 
 ## Leitura
 

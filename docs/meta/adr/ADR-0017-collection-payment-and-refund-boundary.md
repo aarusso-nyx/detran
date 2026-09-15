@@ -5,6 +5,10 @@
 Accepted on 2026-09-13 by Owner decision (steering G.37), on the Architect's proposal of the same date. Depends on ADR-0016
 (payment facts change the infraction state only through the aggregate).
 
+Implementação: PR #43 (R-0006, CTG-0002, 2026-09-15) — `BP-INF-COLLECTION-001` (DDL 57), mock `BankPort`,
+fixtures and database contract tests; command surfaces, bank integration and the debt hand-off follow in
+R-0007 / WP-P.
+
 ## Context
 
 Money enters the infraction lifecycle at four points: the 80% discount until the NP due date,
