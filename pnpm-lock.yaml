@@ -1660,6 +1660,9 @@ importers:
 
   backend/domains/portal/projections:
     dependencies:
+      '@detran/inf-deadlines':
+        specifier: workspace:*
+        version: link:../../inf/deadlines
       '@detran/ops-parameter':
         specifier: workspace:*
         version: link:../../ops/parameter
