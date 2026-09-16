@@ -13,6 +13,12 @@ export default defineConfig({
       '@detran/shared': fileURLToPath(
         new URL('../../shared/src/index.ts', import.meta.url),
       ),
+      '@detran/portal-identity': fileURLToPath(
+        new URL('../identity/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-deadlines': fileURLToPath(
+        new URL('../../inf/deadlines/src/index.ts', import.meta.url),
+      ),
       '@detran/ops-parameter': fileURLToPath(
         new URL('../../ops/parameter/src/index.ts', import.meta.url),
       ),

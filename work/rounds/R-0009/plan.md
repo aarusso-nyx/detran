@@ -452,14 +452,14 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0002 | in_progress | idem, em paralelo                                                                                             |
 | TASK-0003 | completed   | iteração 2 verde (49/49 unit, 14/14 e2e ×2); relatório atualizado                                             |
 | TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
-| TASK-0005 | queued      | —                                                                                                             |
+| TASK-0005 | in_progress | disparada após PR #54 (CTG-0001) aberto; branch publicado — só merge daqui em diante                          |
 | TASK-0006 | queued      | —                                                                                                             |
 | TASK-0007 | queued      | —                                                                                                             |
 | TASK-0008 | queued      | —                                                                                                             |
 | TASK-0009 | queued      | —                                                                                                             |
 | TASK-0010 | queued      | —                                                                                                             |
 
-Último veredito do reviewer: `prompt-review-3` PASS (após FAIL/FAIL de estrutura, ver §Bloqueios). Próximos passos: relatórios de TASK-0001/0002 → checkpoint → TASK-0003.
+Checkpoint 1 (2026-09-16): CTG-0001 concluído — commits `93a754d…104e5c8`, `delivery-review-CTG-0001` REVIEW → `-2` PASS, evidência generic seq. 1, **PR #54** aberto contra `main` (CI em curso). Branch **publicado**: integrar `origin/main` só com `git merge --no-edit`. Último veredito: `delivery-review-CTG-0001-2` PASS. Próximos passos: TASK-0005 (contrato CTG-0002 + wiring M24 dos 4 blueprints) → TASK-0006 → TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010; merge do PR #54 quando CI verde; `audit observe` no sha do merge.
 
 ## Leitura
 

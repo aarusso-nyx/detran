@@ -4,9 +4,10 @@
   "module": {
     "name": "Projections",
     "namespace": "portal",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "ddlFile": "65-portal-projections.sql",
     "dependencies": {
+      "@detran/portal-identity": "workspace:*",
       "@detran/ops-parameter": "workspace:*",
       "zod": "^4.6.5"
     },
@@ -20,10 +21,54 @@
         "target": "../../shared/src/index.ts"
       },
       {
+        "package": "@detran/portal-identity",
+        "target": "../identity/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../../inf/deadlines/src/index.ts"
+      },
+      {
         "package": "@detran/ops-parameter",
         "target": "../../ops/parameter/src/index.ts"
       }
     ],
+    "handwrittenExports": ["handwritten/index"],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/aits.controller",
+        "symbol": "PortalAitsController"
+      },
+      {
+        "target": "handwritten/documents.controller",
+        "symbol": "PortalDocumentsController"
+      },
+      {
+        "target": "handwritten/crashes.controller",
+        "symbol": "PortalCrashesController"
+      },
+      {
+        "target": "handwritten/exams.controller",
+        "symbol": "PortalExamsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/projectors.service",
+        "symbol": "PortalProjectors"
+      },
+      {
+        "target": "handwritten/national-reads.service",
+        "symbol": "PortalNationalReadsService"
+      }
+    ],
+    "moduleImports": [
+      {
+        "package": "@detran/portal-identity",
+        "symbol": "IdentityModule"
+      }
+    ],
+    "moduleExports": ["PortalProjectors"],
     "owners": ["detran-portal"],
     "description": "Projecoes do Portal (ADR-0020 Decision 1, 2 e 5; ADR-0019 Decision 5; plan R-0009 M16-M17): as cinco leituras cidadas do catalogo de projecoes (infraction_view, process_timeline, points_view, crash_view, exam_view) como entidades pequenas alimentadas por eventos da outbox (topics inf e rait) por projetores manuscritos idempotentes em event.id (portal.projection_applied_event) e replayaveis; mais o cache das leituras nacionais feitas so por packages/senatran-adapter (portal.national_read_cache, TTL = parametro portal.read_cache_ttl_minutes via @detran/ops-parameter, nunca literal). Nenhuma projecao escreve de volta; rotulos cidadaos, nunca tokens de inf (RN-PORTAL-112). Sem FK para outros pacotes: toda linha e reconstruivel por replay. Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24)."
   },
