@@ -21,12 +21,12 @@ import { JuntaSigningAdapter } from './junta-signing.adapter.js';
 
 @Module({
   controllers: [
+    JuntaCommandsController,
     JuntaCaseController,
     JuntaBoardController,
     JuntaBoardMemberController,
     JuntaDecisionController,
     JuntaAppealController,
-    JuntaCommandsController,
   ],
   providers: [
     JuntaCaseService,

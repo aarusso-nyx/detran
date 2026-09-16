@@ -37,6 +37,8 @@ import { NormativeModule } from '@detran/inf-normative';
 @Module({
   imports: [NormativeModule],
   controllers: [
+    AitCommandsController,
+    AitCancelRequestsController,
     AitController,
     AitCancelRequestController,
     AitCancelRequestEventController,
@@ -46,8 +48,6 @@ import { NormativeModule } from '@detran/inf-normative';
     AitCorrectionController,
     AitSignatureController,
     AitPrintEventController,
-    AitCommandsController,
-    AitCancelRequestsController,
   ],
   providers: [
     AitService,

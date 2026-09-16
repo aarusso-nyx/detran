@@ -11,9 +11,9 @@ import { RestrictionLifecycleService } from './restriction-lifecycle.service.js'
 
 @Module({
   controllers: [
+    RestrictionCommandsController,
     RestrictionCodeController,
     EncounterRestrictionController,
-    RestrictionCommandsController,
   ],
   providers: [
     RestrictionCodeService,

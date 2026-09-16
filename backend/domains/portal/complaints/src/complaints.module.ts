@@ -7,7 +7,7 @@ import { ComplaintCommandsController } from './complaint-commands.controller.js'
 import { ComplaintLifecycleService } from './complaint-lifecycle.service.js';
 
 @Module({
-  controllers: [ComplaintController, ComplaintCommandsController],
+  controllers: [ComplaintCommandsController, ComplaintController],
   providers: [ComplaintService, ComplaintRepository, ComplaintLifecycleService],
 })
 export class ComplaintsModule {}

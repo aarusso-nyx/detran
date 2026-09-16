@@ -8,8 +8,8 @@ import { OperationalControlService } from './operational-control.service.js';
 
 @Module({
   controllers: [
-    OperationalRecordController,
     OperationalControlCommandsController,
+    OperationalRecordController,
   ],
   providers: [
     OperationalRecordService,

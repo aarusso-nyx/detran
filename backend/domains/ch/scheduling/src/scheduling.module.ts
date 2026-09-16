@@ -11,9 +11,9 @@ import { AppointmentDistributionService } from './appointment-distribution.servi
 
 @Module({
   controllers: [
+    SchedulingCommandsController,
     ProfessionalScheduleController,
     AppointmentAssignmentDrawController,
-    SchedulingCommandsController,
   ],
   providers: [
     ProfessionalScheduleService,

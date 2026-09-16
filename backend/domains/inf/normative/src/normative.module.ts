@@ -29,6 +29,7 @@ import { NormativeLifecycleService } from './normative-lifecycle.service.js';
 
 @Module({
   controllers: [
+    NormativeCommandsController,
     NormativeCatalogController,
     NormativeFramingController,
     NormativeMetrologicalTableController,
@@ -37,7 +38,6 @@ import { NormativeLifecycleService } from './normative-lifecycle.service.js';
     NormativeDocumentTemplateController,
     SignaturePolicyController,
     MobileNormativePackageController,
-    NormativeCommandsController,
   ],
   providers: [
     NormativeCatalogService,

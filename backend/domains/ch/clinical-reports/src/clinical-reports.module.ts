@@ -31,6 +31,9 @@ import { EncounterClosureService } from './encounter-closure.service.js';
 
 @Module({
   controllers: [
+    ReportCommandsController,
+    CandidateDossierController,
+    EncounterClosureController,
     ReportController,
     ReportAddendumController,
     ReportAddendumApprovalController,
@@ -38,9 +41,6 @@ import { EncounterClosureService } from './encounter-closure.service.js';
     FeedbackRequestController,
     EpisodeExportController,
     ClinicalDocumentController,
-    ReportCommandsController,
-    CandidateDossierController,
-    EncounterClosureController,
   ],
   providers: [
     ReportService,

@@ -7,7 +7,7 @@ import { TelehealthCommandsController } from './telehealth-commands.controller.j
 import { TelehealthLifecycleService } from './telehealth-lifecycle.service.js';
 
 @Module({
-  controllers: [TelehealthSessionController, TelehealthCommandsController],
+  controllers: [TelehealthCommandsController, TelehealthSessionController],
   providers: [
     TelehealthSessionService,
     TelehealthSessionRepository,

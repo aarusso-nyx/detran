@@ -26,6 +26,7 @@ import { EVIDENCE_CUSTODY_PROVIDER } from './handwritten/evidence-custody.provid
 
 @Module({
   controllers: [
+    EvidenceCustodyController,
     EvidenceController,
     EvidenceLinkController,
     CustodyEventController,
@@ -33,7 +34,6 @@ import { EVIDENCE_CUSTODY_PROVIDER } from './handwritten/evidence-custody.provid
     ProbativePackageItemController,
     EvidenceAccessRequestController,
     StorageIntentController,
-    EvidenceCustodyController,
   ],
   providers: [
     EvidenceService,

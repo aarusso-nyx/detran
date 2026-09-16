@@ -28,6 +28,7 @@ import { ParameterModule } from '@detran/ops-parameter';
 @Module({
   imports: [ParameterModule],
   controllers: [
+    OfflineSyncController,
     AitNumberingRangeController,
     NumberingReservationController,
     NumberingConsumptionController,
@@ -35,7 +36,6 @@ import { ParameterModule } from '@detran/ops-parameter';
     SyncQueueItemController,
     SyncReceiptController,
     SyncConflictController,
-    OfflineSyncController,
   ],
   providers: [
     AitNumberingRangeService,

@@ -20,12 +20,12 @@ import { FROZEN_SNAPSHOT_PROVIDER } from './handwritten/frozen-snapshot.provider
 
 @Module({
   controllers: [
+    FrozenSnapshotController,
     PersonController,
     PersonDocumentController,
     VehicleController,
     ExternalQueryController,
     VehicleSnapshotController,
-    FrozenSnapshotController,
   ],
   providers: [
     PersonService,
