@@ -114,6 +114,9 @@ export default defineConfig({
       '@detran/inf-speed': fileURLToPath(
         new URL('../domains/inf/speed/src/index.ts', import.meta.url),
       ),
+      '@detran/est-crash': fileURLToPath(
+        new URL('../domains/est/crash/src/index.ts', import.meta.url),
+      ),
       '@detran/senatran-adapter': fileURLToPath(
         new URL(
           '../../packages/senatran-adapter/src/index.ts',

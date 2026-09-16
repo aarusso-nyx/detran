@@ -1,0 +1,646 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-EST-CRASH-001",
+  "module": {
+    "name": "Crash",
+    "namespace": "est",
+    "version": "1.0.0",
+    "ddlFile": "70-est-crash.sql",
+    "handwrittenExports": [],
+    "handwrittenControllers": [],
+    "owners": ["detran-est"],
+    "description": "BOAT crash records and related entities from WF-BOAT-001 and WF-BOAT-003."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "CrashRecord",
+        "table": "crash_record",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "crash_type", "type": "varchar(120)" },
+          { "name": "severity", "type": "varchar(60)" },
+          { "name": "state", "type": "varchar(60)", "default": "'RASCUNHO'" },
+          {
+            "name": "national_status",
+            "type": "varchar(60)",
+            "nullable": true,
+            "writable": false
+          },
+          { "name": "occurred_at", "type": "timestamptz" },
+          { "name": "recorded_at", "type": "timestamptz" },
+          { "name": "location_description", "type": "text" },
+          { "name": "location_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "location_reference",
+            "type": "varchar(255)",
+            "nullable": true
+          },
+          { "name": "municipality_code", "type": "varchar(20)" },
+          { "name": "uf", "type": "varchar(2)" },
+          { "name": "road", "type": "varchar(160)", "nullable": true },
+          { "name": "km", "type": "varchar(40)", "nullable": true },
+          { "name": "direction", "type": "varchar(120)", "nullable": true },
+          { "name": "road_condition", "type": "varchar(120)" },
+          { "name": "weather_condition", "type": "varchar(120)" },
+          { "name": "lighting_condition", "type": "varchar(120)" },
+          { "name": "signage_condition", "type": "varchar(120)" },
+          { "name": "dynamics_description", "type": "text", "nullable": true },
+          { "name": "shift_id", "type": "uuid", "nullable": true },
+          { "name": "device_id", "type": "varchar(120)", "nullable": true },
+          { "name": "operation_id", "type": "uuid", "nullable": true },
+          { "name": "source_system", "type": "varchar(80)", "nullable": true },
+          {
+            "name": "source_local_id",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "source_idempotency_key",
+            "type": "varchar(160)",
+            "nullable": true
+          },
+          {
+            "name": "source_payload_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          },
+          { "name": "version", "type": "integer", "default": "1" }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_record_local_state",
+            "expression": "state in ('RASCUNHO', 'EM_ATENDIMENTO', 'REGISTRADO', 'PENDENTE_COMPLEMENTO', 'VALIDADO', 'FECHADO', 'INTEGRADO', 'ARQUIVADO', 'CANCELADO')"
+          },
+          {
+            "name": "ck_est_crash_record_national_status",
+            "expression": "national_status is null or national_status in ('RECEBIDO', 'EM_ANALISE', 'CONSOLIDADO', 'REJEITADO')"
+          },
+          {
+            "name": "ck_est_crash_record_occurred_before_recorded",
+            "expression": "occurred_at <= recorded_at"
+          },
+          {
+            "name": "ck_est_crash_record_closed_severity",
+            "expression": "state <> 'FECHADO' or est.crash_severity_matches_victims(id, severity)"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_est_crash_record_tenant_occurred",
+            "columns": ["tenant_id", "occurred_at"]
+          },
+          {
+            "name": "ix_est_crash_record_tenant_state",
+            "columns": ["tenant_id", "state"]
+          },
+          {
+            "name": "ux_est_crash_record_source_local",
+            "columns": ["tenant_id", "source_system", "source_local_id"],
+            "unique": true,
+            "where": "source_system is not null and source_local_id is not null"
+          },
+          {
+            "name": "ux_est_crash_record_natural_key",
+            "columns": [
+              "tenant_id",
+              "uf",
+              "municipality_code",
+              "occurred_at",
+              "traffic_agency_id"
+            ],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_record_state",
+            "columns": ["state"],
+            "references": {
+              "table": "est.crash_state_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_est_crash_record_national_status",
+            "columns": ["national_status"],
+            "references": {
+              "table": "est.crash_state_ref",
+              "columns": ["code"]
+            }
+          },
+          {
+            "name": "fk_est_crash_record_severity",
+            "columns": ["severity"],
+            "references": {
+              "table": "est.crash_severity_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "CrashVehicle",
+        "table": "crash_vehicle",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          { "name": "vehicle_snapshot_id", "type": "uuid", "nullable": true },
+          {
+            "name": "plate",
+            "type": "varchar(20)",
+            "nullable": true,
+            "pii": "high",
+            "retention": "est.retention.bat_years"
+          },
+          { "name": "role", "type": "varchar(60)" },
+          { "name": "sequence", "type": "integer" },
+          { "name": "apparent_damage", "type": "text", "nullable": true },
+          { "name": "notes", "type": "text", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "name": "ux_est_crash_vehicle_sequence",
+            "columns": ["tenant_id", "crash_record_id", "sequence"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_vehicle_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "CrashPerson",
+        "table": "crash_person",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          { "name": "person_id", "type": "uuid", "nullable": true },
+          {
+            "name": "name",
+            "type": "varchar(160)",
+            "nullable": true,
+            "pii": "high",
+            "retention": "est.retention.bat_years"
+          },
+          {
+            "name": "document_number",
+            "type": "varchar(60)",
+            "nullable": true,
+            "pii": "high",
+            "retention": "est.retention.bat_years"
+          },
+          {
+            "name": "document_source",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          { "name": "crash_vehicle_id", "type": "uuid", "nullable": true },
+          { "name": "role", "type": "varchar(40)" },
+          {
+            "name": "used_seatbelt_or_helmet",
+            "type": "boolean",
+            "nullable": true
+          },
+          { "name": "refused_data", "type": "boolean", "default": "false" },
+          { "name": "notes", "type": "text", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_person_role",
+            "expression": "role in ('condutor', 'passageiro', 'pedestre', 'ciclista')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_person_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          },
+          {
+            "name": "fk_est_crash_person_vehicle",
+            "columns": ["crash_vehicle_id"],
+            "references": { "table": "est.crash_vehicle", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "CrashVictim",
+        "table": "crash_victim",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          {
+            "name": "crash_person_id",
+            "type": "uuid",
+            "pii": "sensitive-health",
+            "retention": "est.retention.health_fields_years"
+          },
+          {
+            "name": "severity",
+            "type": "varchar(60)",
+            "pii": "sensitive-health",
+            "retention": "est.retention.health_fields_years"
+          },
+          {
+            "name": "death_at_scene",
+            "type": "boolean",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "est.retention.health_fields_years"
+          },
+          {
+            "name": "medical_care",
+            "type": "boolean",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "est.retention.health_fields_years"
+          },
+          {
+            "name": "hospital_destination",
+            "type": "varchar(255)",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "est.retention.health_fields_years"
+          },
+          {
+            "name": "death_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "est.retention.health_fields_years"
+          },
+          {
+            "name": "health_notes",
+            "type": "text",
+            "nullable": true,
+            "pii": "sensitive-health",
+            "retention": "est.retention.health_fields_years"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_victim_death_consistency",
+            "expression": "death_at is null or death_at_scene is true or medical_care is true"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_victim_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          },
+          {
+            "name": "fk_est_crash_victim_person",
+            "columns": ["crash_person_id"],
+            "references": { "table": "est.crash_person", "columns": ["id"] }
+          },
+          {
+            "name": "fk_est_crash_victim_severity",
+            "columns": ["severity"],
+            "references": {
+              "table": "est.crash_severity_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "CrashSceneDuty",
+        "table": "crash_scene_duty",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          { "name": "regime", "type": "varchar(20)" },
+          { "name": "duty_code", "type": "varchar(20)" },
+          { "name": "crash_person_id", "type": "uuid", "nullable": true },
+          { "name": "crash_vehicle_id", "type": "uuid", "nullable": true },
+          { "name": "complied", "type": "boolean" },
+          { "name": "note", "type": "text", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_scene_duty_regime",
+            "expression": "regime in ('art176', 'art177', 'art178')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_scene_duty_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          },
+          {
+            "name": "fk_est_crash_scene_duty_code",
+            "columns": ["duty_code"],
+            "references": { "table": "est.scene_duty_ref", "columns": ["code"] }
+          },
+          {
+            "name": "fk_est_crash_scene_duty_person",
+            "columns": ["crash_person_id"],
+            "references": { "table": "est.crash_person", "columns": ["id"] }
+          },
+          {
+            "name": "fk_est_crash_scene_duty_vehicle",
+            "columns": ["crash_vehicle_id"],
+            "references": { "table": "est.crash_vehicle", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "CrashDamage",
+        "table": "crash_damage",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          { "name": "asset_kind", "type": "varchar(60)" },
+          { "name": "description", "type": "text" },
+          {
+            "name": "responsible_identified",
+            "type": "boolean",
+            "nullable": true
+          },
+          { "name": "notify_road_owner", "type": "boolean", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_damage_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          },
+          {
+            "name": "fk_est_crash_damage_asset_kind",
+            "columns": ["asset_kind"],
+            "references": {
+              "table": "est.damage_asset_kind_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "CrashWitness",
+        "table": "crash_witness",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          {
+            "name": "name",
+            "type": "varchar(160)",
+            "pii": "high",
+            "retention": "est.retention.bat_years"
+          },
+          {
+            "name": "contact",
+            "type": "varchar(160)",
+            "nullable": true,
+            "pii": "high",
+            "retention": "est.retention.bat_years"
+          },
+          { "name": "refused", "type": "boolean", "default": "false" },
+          { "name": "statement_summary", "type": "text", "nullable": true }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_witness_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "CrashSketch",
+        "table": "crash_sketch",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          { "name": "sketch_type", "type": "varchar(20)" },
+          { "name": "evidence_id", "type": "uuid", "nullable": true },
+          { "name": "drawing_json", "type": "jsonb", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_sketch_type",
+            "expression": "sketch_type in ('desenho', 'anexo', 'mapa')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_sketch_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "CrashLink",
+        "table": "crash_link",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          { "name": "kind", "type": "varchar(20)" },
+          { "name": "target_id", "type": "uuid" },
+          { "name": "target_number", "type": "varchar(120)", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_link_kind",
+            "expression": "kind in ('ait', 'measure')"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_est_crash_link_target",
+            "columns": ["tenant_id", "crash_record_id", "kind", "target_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_link_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          }
+        ]
+      },
+      {
+        "name": "CrashRenaestSubmission",
+        "table": "crash_renaest_submission",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid" },
+          { "name": "protocol", "type": "varchar(120)", "nullable": true },
+          { "name": "national_status", "type": "varchar(60)" },
+          { "name": "layout_version", "type": "varchar(80)", "nullable": true },
+          { "name": "submitted_at", "type": "timestamptz", "nullable": true },
+          {
+            "name": "rectification_kind",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          { "name": "rectification_reason", "type": "text", "nullable": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_renaest_submission_national_status",
+            "expression": "national_status in ('RECEBIDO', 'EM_ANALISE', 'CONSOLIDADO', 'REJEITADO')"
+          },
+          {
+            "name": "ck_est_crash_renaest_submission_rectification_kind",
+            "expression": "rectification_kind is null or rectification_kind in ('complement', 'correction')"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_est_crash_renaest_protocol",
+            "columns": ["tenant_id", "protocol"],
+            "unique": true,
+            "where": "protocol is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_renaest_submission_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          },
+          {
+            "name": "fk_est_crash_renaest_submission_state",
+            "columns": ["national_status"],
+            "references": {
+              "table": "est.crash_state_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "CrashSubjectRequest",
+        "table": "crash_subject_request",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_record_id", "type": "uuid", "nullable": true },
+          { "name": "kind", "type": "varchar(20)" },
+          {
+            "name": "subject_cpf",
+            "type": "varchar(20)",
+            "pii": "high",
+            "retention": "est.retention.bat_years"
+          },
+          { "name": "purpose", "type": "text" },
+          { "name": "status", "type": "varchar(60)", "default": "'REGISTRADO'" }
+        ],
+        "checks": [
+          {
+            "name": "ck_est_crash_subject_request_kind",
+            "expression": "kind in ('acesso', 'correcao', 'eliminacao')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_est_crash_subject_request_record",
+            "columns": ["crash_record_id"],
+            "references": { "table": "est.crash_record", "columns": ["id"] }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/est/crash/",
+    "resources": [
+      {
+        "entity": "CrashRecord",
+        "path": "records",
+        "resource": "crash-record"
+      },
+      {
+        "entity": "CrashVehicle",
+        "path": "vehicles",
+        "resource": "crash-vehicle"
+      },
+      { "entity": "CrashPerson", "path": "people", "resource": "crash-person" },
+      {
+        "entity": "CrashVictim",
+        "path": "victims",
+        "resource": "crash-victim"
+      },
+      {
+        "entity": "CrashSceneDuty",
+        "path": "scene-duties",
+        "resource": "crash-scene-duty"
+      },
+      {
+        "entity": "CrashDamage",
+        "path": "damages",
+        "resource": "crash-damage"
+      },
+      {
+        "entity": "CrashWitness",
+        "path": "witnesses",
+        "resource": "crash-witness"
+      },
+      {
+        "entity": "CrashSketch",
+        "path": "sketches",
+        "resource": "crash-sketch"
+      },
+      {
+        "entity": "CrashLink",
+        "path": "links",
+        "resource": "crash-link",
+        "operations": []
+      },
+      {
+        "entity": "CrashRenaestSubmission",
+        "path": "renaest-submissions",
+        "resource": "crash-renaest-submission"
+      },
+      {
+        "entity": "CrashSubjectRequest",
+        "path": "subject-requests",
+        "resource": "crash-subject-request"
+      }
+    ]
+  },
+  "auth": { "source": "BOAT_ROUTE_CONTRACT" },
+  "audit": { "enabled": true },
+  "ops": {
+    "timers": [
+      {
+        "code": "T-BOAT-TRANSM",
+        "parameter": "est.renaest.transmit_period",
+        "default": "monthly",
+        "owner": "sinistro",
+        "decisionRef": "OD-B04/DT-017"
+      }
+    ]
+  }
+}

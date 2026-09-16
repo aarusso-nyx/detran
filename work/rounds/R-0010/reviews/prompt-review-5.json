@@ -1,0 +1,21 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0011.md",
+      "line": 13,
+      "claim": "a linha 11 aponta CTG-0002 como fonte do C-2-nn do gate, mas a lista fechada nao inclui work/rounds/R-0010/contracts/CTG-0002.md; TASK-0003 e TASK-0006 trazem seus CTG e o mesmo defeito foi high em TASK-0006 no prompt-review-2",
+      "fix": "acrescentar work/rounds/R-0010/contracts/CTG-0002.md a lista fechada de TASK-0011 e exigir que cada teste cite o C-2-nn correspondente"
+    }
+  ],
+  "notes": [
+    "TASK-0005 linha 40 passa a exigir o C-2-nn do gate por prefixo em CTG-0002: o achado baixo do ciclo anterior esta fechado",
+    "Os treze achados high do prompt-review-2 estao fechados: triade separada em TASK-0011 (Inspector) e TASK-0010 (Engineer, so check-commands.mjs); create, read e crash-victim com purpose em TASK-0004; criterio de lifecycle-vocabulary e troca de contracts:check em TASK-0002; criterios de TASK-0008 reduzidos a JSON valido com gate no checkpoint; TASK-0008 antes de TASK-0010 no plano; prefixos TEAT. e BOAT. fixados no recibo; listas fechadas completadas em TASK-0001, TASK-0004, TASK-0006 e TASK-0008; package.json da raiz na fronteira de TASK-0007; pnpm install do maestro declarado no contexto de TASK-0003",
+    "Baixo: TASK-0005 escreve regra sobre TEAT.* sem teat-error-catalog.md na lista fechada; aceitavel porque so o caminho e citado, nao o conteudo",
+    "Baixo: TASK-0010 tambem nao le CTG-0002, mas o texto do proprio prompt e os testes de TASK-0011 bastam para implementar"
+  ]
+}

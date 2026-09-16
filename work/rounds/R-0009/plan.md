@@ -435,6 +435,7 @@ decisão do maestro sob a instrução do Owner. Registrado aqui e no relatório 
 - TASK-0004 — `pnpm --filter @detran/portal-identity test:unit` (C-0001-20a) — sensor-error — spec define relógio fixo mas não o injeta em `assertActLevel` (contrato §4 exige injeção) — TASK-0003 iteração 2: passar `clock` (5º argumento); código intacto.
 - TASK-0004 — `pnpm --filter @detran/app test:e2e` (C-0001-42) — reference-gap — contrato §3 fixa que a política roda antes da guarda; `field-agent` é negado pela política (403 STYNX sem `code`), logo `IDENTITY_NOT_CITIZEN` é inalcançável para esse papel no e2e — adenda A3; TASK-0003 iteração 2 ajusta a expectativa (403 sem `code`); `IDENTITY_NOT_CITIZEN` provado por `technical-admin` com claims (C-0001-09b).
 - TASK-0004 — e2e C-0001-41 (reexecução em banco persistente) — sensor-error — spec não limpa `portal.subject` do CPF fixture no `beforeAll` — TASK-0003 iteração 2: `delete` no `beforeAll`.
+- maestro (merge de `origin/main` #55) — `pnpm backend:test:ci` (`est-crash` `boat-contract.integration` "seed.sh roda duas vezes") — sensor-error (ambiente) — o spec de R-0010 roda `seed.sh` com `DB_NAME ?? 'detran_r10'`, banco sem o DDL do Portal; com `DB_NAME=detran_r9` (agora em `env-detran-r9.sh`) passa 21/21 — nenhum código alterado; CI usa `DB_NAME=detran`.
 - TASK-0004 — D13 (`portal.subject.name not null` × contrato) — reference-gap — blueprint `IDENTITY` v1.0.2 `name nullable` (maestro, Architect) + regeneração no checkpoint.
 
 ## Retomada

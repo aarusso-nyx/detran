@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0010",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcreva WP-B0…B3 como executados apenas para entregas comprovadas; corrija DDL para 70-est-crash",
+  "description": "Transcreva WP-B0…B3 como executados apenas para entregas comprovadas; corrija DDL para 70-est-crash.sql, atualize gate #5 da closure plan e backlog. Marque lacunas DT-061/OD-B08 e qualquer item não entregue, sem declarar produção ou homologação real. Não escreva política, produto ou código.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 11,
+  "tags": ["wp-b3"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-d21c2286e6f91e4b",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-d21c2286e6f91e4b",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0010"
+}
