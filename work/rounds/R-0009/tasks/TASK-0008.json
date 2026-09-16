@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0009",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar as rotas §4 (autuações), §6 (caixa e SNE), §7 (documentos, veículos, sinistros, exames com cache nacional), §8 (atendimento) e §9 (SSE), os projetores e o replay até todos os testes C-0002 passarem",
+  "description": "Fazer passar o restante dos testes do Inspector (TASK-0006), incluindo policy-routes; leituras nacionais só pelo senatran-adapter; projeções idempotentes por event.id.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-inbox-hw",
+    "MOD-portal-citizen-service-hw",
+    "MOD-portal-projections-hw",
+    "MOD-app-portal-stream"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p2"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-c3a5ffcdc96a0adf",
+  "acceptance_commands": [
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "verify:senatran-boundary"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-c3a5ffcdc96a0adf",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,0 +1,414 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-PORTAL-IDENTITY-001",
+  "module": {
+    "name": "Identity",
+    "namespace": "portal",
+    "version": "1.0.2",
+    "ddlFile": "61-portal-identity.sql",
+    "dependencies": {
+      "zod": "^4.6.5",
+      "@detran/inf-deadlines": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../../inf/deadlines/src/index.ts"
+      }
+    ],
+    "handwrittenExports": ["handwritten/index"],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/public.controller",
+        "symbol": "PortalPublicController"
+      },
+      {
+        "target": "handwritten/me.controller",
+        "symbol": "PortalMeController"
+      },
+      {
+        "target": "handwritten/assurance.controller",
+        "symbol": "PortalAssuranceController"
+      },
+      {
+        "target": "handwritten/representations.controller",
+        "symbol": "PortalRepresentationsController"
+      },
+      {
+        "target": "handwritten/preferences.controller",
+        "symbol": "PortalPreferencesController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/identity.service",
+        "symbol": "PortalIdentityService"
+      },
+      {
+        "target": "handwritten/citizen.guard",
+        "symbol": "PortalCitizenGuard"
+      },
+      {
+        "target": "handwritten/clock",
+        "symbol": "PortalClock"
+      }
+    ],
+    "moduleExports": [
+      "PortalIdentityService",
+      "PortalCitizenGuard",
+      "PortalClock"
+    ],
+    "owners": ["detran-portal"],
+    "description": "Identidade federada do cidadao (ADR-0019 Decision 1; [WF-PORTAL-002] secao Estados; plan R-0009 M3-M6): guarda so o que o gov.br nao guarda — sujeito por hash de CPF, representacao (procuracao), matriz ato -> nivel de assinatura como dados (portal.act_level_policy) e vinculos (portal.entitlement). Nunca armazena token, credencial nem CPF em claro (RN-PORTAL-112). Nenhuma rota CRUD gerada (M1): as rotas de /v1/portal/* sao manuscritas em src/handwritten e usam os repositorios gerados. Publica NIVEL_ASSINATURA_ELEVADO e REPRESENTACAO_VALIDADA (ADR-0019 Ownership table)."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Subject",
+        "table": "subject",
+        "primaryKey": ["id"],
+        "description": "Sujeito cidadao (ADR-0019 Decision 1; plan R-0009 M6): criado sob demanda no primeiro GET me por upsert em cpf_hash (sha256 hex do CPF, unico por tenant). Guarda apenas nome e o nivel observado na ultima sessao (selo gov.br e nivel de assinatura mapeado pela ADR-0024: bronze -> simples, prata|ouro -> avancada, ICP/e-Notariado -> qualificada). O titular ve o CPF pela claim, nunca por esta tabela (RN-PORTAL-112). version para If-Match.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "cpf_hash",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "pii": "personal",
+            "nullable": true
+          },
+          {
+            "name": "govbr_level_observed",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "assurance_level_observed",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "observed_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": 1
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_subject_cpf_hash",
+            "columns": ["tenant_id", "cpf_hash"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_subject_cpf_hash",
+            "expression": "cpf_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_portal_subject_govbr_level_observed",
+            "expression": "govbr_level_observed is null or govbr_level_observed in ('bronze','prata','ouro','qualificada')"
+          },
+          {
+            "name": "ck_portal_subject_assurance_level_observed",
+            "expression": "assurance_level_observed in ('simples','avancada','qualificada')"
+          }
+        ]
+      },
+      {
+        "name": "Representation",
+        "table": "representation",
+        "primaryKey": ["id"],
+        "description": "Procuracao apresentada por um sujeito (procurador) sobre um representado ([WF-PORTAL-002] secao Estados: PROCURACAO_APRESENTADA -> PROCURACAO_VALIDADA | PROCURACAO_RECUSADA; ADR-0019 Decision 1; plan R-0009 M6). O representado e identificado por hash de CPF e nome; o instrumento e um documento (storage) referenciado por id. scope limita o alcance (ait | all); valid_until nulo = sem termo. So representacoes PROCURACAO_VALIDADA vigentes conferem vinculo (M10).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "representative_subject_id",
+            "type": "uuid"
+          },
+          {
+            "name": "represented_cpf_hash",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "represented_name",
+            "type": "text",
+            "pii": "personal"
+          },
+          {
+            "name": "instrument_document_id",
+            "type": "uuid"
+          },
+          {
+            "name": "scope",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "valid_until",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "refusal_reason",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_portal_representation_representative",
+            "columns": ["tenant_id", "representative_subject_id", "state"]
+          },
+          {
+            "name": "ix_portal_representation_represented",
+            "columns": ["tenant_id", "represented_cpf_hash", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_representation_represented_cpf_hash",
+            "expression": "represented_cpf_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_portal_representation_scope",
+            "expression": "scope in ('ait','all')"
+          },
+          {
+            "name": "ck_portal_representation_state",
+            "expression": "state in ('PROCURACAO_APRESENTADA','PROCURACAO_VALIDADA','PROCURACAO_RECUSADA')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_representation_representative",
+            "columns": ["representative_subject_id"],
+            "references": {
+              "table": "portal.subject",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ActLevelPolicy",
+        "table": "act_level_policy",
+        "primaryKey": ["id"],
+        "description": "Matriz ato -> nivel minimo de assinatura como dados (ADR-0019 Decision 1; plan R-0009 M5; Decreto 10.543/2020 art. 4; PN DETRAN-AM 001/2025; steering H.49/H.50/H.51): act_key e o serviceKey do portal-route-contract.md secao 5.1 quando existe, senao o token de M5. Lida por assertActLevel (M4): ato sem linha habilitada e vigente -> 500 PORTAL.INTERNAL (nunca liberar por ausencia); minimum_assurance = qualificada -> 500 PORTAL.ASSURANCE_QUALIFIED_NEVER_REQUIRED (RN-PORTAL-101). Uma linha por (tenant, act_key, effective_from).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "act_key",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "minimum_assurance",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "legal_basis",
+            "type": "text"
+          },
+          {
+            "name": "decision_ref",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "enabled",
+            "type": "boolean"
+          },
+          {
+            "name": "effective_from",
+            "type": "date"
+          },
+          {
+            "name": "effective_to",
+            "type": "date",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_act_level_policy_act_key_effective_from",
+            "columns": ["tenant_id", "act_key", "effective_from"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_act_level_policy_minimum_assurance",
+            "expression": "minimum_assurance in ('none','simples','avancada','qualificada')"
+          },
+          {
+            "name": "ck_portal_act_level_policy_effective_range",
+            "expression": "effective_to is null or effective_to >= effective_from"
+          }
+        ]
+      },
+      {
+        "name": "Entitlement",
+        "table": "entitlement",
+        "primaryKey": ["id"],
+        "description": "Vinculo do sujeito com um alvo de outro dominio (ADR-0019 Decision 1; plan R-0009 M6 e M10; portal-route-contract.md secao 11: sucessor de portal.ait_entitlement com alvo generico). target_id e uuid sem FK (o alvo e de inf/est/ch). Toda leitura de aits/{id}, requests/{id}, vehicles/{id}/*, crashes/{id} e exams/{id} consulta esta tabela; ausencia -> 404 PORTAL.NOT_FOUND. Origem nesta rodada: fixtures e projetor de INFRACAO_ESTADO_ALTERADO (origin = infraction).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "subject_id",
+            "type": "uuid"
+          },
+          {
+            "name": "target_kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "target_id",
+            "type": "uuid"
+          },
+          {
+            "name": "relation",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "origin",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "valid_from",
+            "type": "date"
+          },
+          {
+            "name": "valid_until",
+            "type": "date",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_entitlement_subject_target_relation",
+            "columns": [
+              "tenant_id",
+              "subject_id",
+              "target_kind",
+              "target_id",
+              "relation"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ix_portal_entitlement_target",
+            "columns": ["tenant_id", "target_kind", "target_id"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_entitlement_target_kind",
+            "expression": "target_kind in ('ait','case','vehicle','license','crash','exam')"
+          },
+          {
+            "name": "ck_portal_entitlement_relation",
+            "expression": "relation in ('owner','driver','representative','interested_party')"
+          },
+          {
+            "name": "ck_portal_entitlement_origin",
+            "expression": "origin in ('renavam','renach','infraction','representation','manual')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_entitlement_subject",
+            "columns": ["subject_id"],
+            "references": {
+              "table": "portal.subject",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/portal/identity/",
+    "resources": [
+      {
+        "entity": "Subject",
+        "path": "subjects",
+        "resource": "subject",
+        "operations": []
+      },
+      {
+        "entity": "Representation",
+        "path": "representations",
+        "resource": "representation",
+        "operations": []
+      },
+      {
+        "entity": "ActLevelPolicy",
+        "path": "act-level-policies",
+        "resource": "act-level-policy",
+        "operations": []
+      },
+      {
+        "entity": "Entitlement",
+        "path": "entitlements",
+        "resource": "entitlement",
+        "operations": []
+      }
+    ]
+  },
+  "auth": {
+    "source": "PORTAL_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

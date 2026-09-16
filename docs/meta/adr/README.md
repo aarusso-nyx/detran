@@ -31,5 +31,6 @@ binding; supersede only by a new ADR.
 | [ADR-0021](ADR-0021-shared-parameter-store.md)                         | One shared, versioned parameter store (`ops.parameter`) for calibrations (Accepted)  |
 | [ADR-0022](ADR-0022-orchestra-execution-model.md)                      | Execution of the implementation backlog by dedicated agent orchestras (Proposed)     |
 | [ADR-0023](ADR-0023-minimum-ops-agency-context.md)                     | Minimum `ops/agency` institutional context (unit, jurisdiction, competence)          |
+| [ADR-0024](ADR-0024-govbr-federation-via-cognito.md)                   | gov.br federated through Cognito: signature levels as a claim, CPF as subject        |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).

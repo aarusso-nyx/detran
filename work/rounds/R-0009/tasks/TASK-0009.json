@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0009",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Escrever os contratos de comando BP-PORTAL-*.commands.openapi.json (corpos por serviceKey, 4xx do catálogo, Idempotency-Key, exemplos com fixtures) e portal-request-draft.schema.json; clientes gerados compilam",
+  "description": "Transcrever as rotas implementadas em contratos de comando verificáveis por contracts:check e no schema de rascunho; nada de decisão nem de código (o cliente gerado em packages/ é produzido pelo maestro com pnpm contracts:clients).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contracts-commands-portal", "MOD-schemas-portal"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p3"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-1ce96a3168fad3ba",
+  "acceptance_commands": [
+    ["pnpm", "contracts:check"],
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-1ce96a3168fad3ba",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

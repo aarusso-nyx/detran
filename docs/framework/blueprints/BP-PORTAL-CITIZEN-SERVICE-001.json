@@ -1,0 +1,367 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-PORTAL-CITIZEN-SERVICE-001",
+  "module": {
+    "name": "CitizenService",
+    "namespace": "portal",
+    "version": "1.0.0",
+    "ddlFile": "64-portal-citizen-service.sql",
+    "dependencies": {
+      "@detran/inf-deadlines": "workspace:*",
+      "zod": "^4.6.5"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../../inf/deadlines/src/index.ts"
+      }
+    ],
+    "owners": ["detran-portal"],
+    "description": "Atendimento ao cidadao (ADR-0019 Decision 4; [WF-PORTAL-004] secao Estados, secao Prazos e secao Carta de Servicos; plan R-0009 M12-M14): manifestacao de ouvidoria da Lei 13.460/2017 (entidade distinta de portal.complaint do PEC, M2 — nunca duas tabelas para a mesma manifestacao; unificacao futura e OD-P14), prorrogacao justificada dos prazos do art. 16 e Carta de Servicos como dados (portal.service_catalog, 11 campos de RN-PORTAL-108). Prazos calculados com addCalendarDays de @detran/inf-deadlines; timers T-OUV-RESPOSTA, T-OUV-INFO, T-LGPD-ACESSO e T-AVAL-CONVITE (owner = portal) em inf.infraction_timer_ref, espelhados em portal-timers.ts (M14). brand_profile e public_hostname NAO sao entidades deste blueprint: DDL manuscrito 19-portal-platform.sql (M11). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica MANIFESTACAO_REGISTRADA e MANIFESTACAO_ENCERRADA (M21)."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Manifestation",
+        "table": "manifestation",
+        "primaryKey": ["id"],
+        "description": "Manifestacao de ouvidoria — maquina [WF-PORTAL-004] secao Estados (9 tokens no check de state; Lei 13.460/2017 arts. 10-16; plan R-0009 M13): kind reclamacao | denuncia | sugestao | elogio | solicitacao (H.52); anonymous = true exige subject_id nulo (H.51: anonimo para manifestar, simples para acompanhar). POST manifestations nunca recusa (RN-PORTAL-109) e cria MANIFESTACAO_REGISTRADA + COMPROVANTE_EMITIDO na mesma transacao. agency_due_on = received_at + 30 dias corridos (T-OUV-RESPOSTA); info_due_on = 20 dias, nulo ate INFORMACAO_SOLICITADA_AO_AGENTE (T-OUV-INFO). version para If-Match.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "confidential",
+            "type": "boolean"
+          },
+          {
+            "name": "anonymous",
+            "type": "boolean"
+          },
+          {
+            "name": "subject_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "text",
+            "type": "text",
+            "pii": "personal"
+          },
+          {
+            "name": "protocol",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "received_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "agency_due_on",
+            "type": "date"
+          },
+          {
+            "name": "info_due_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "decision_text",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "decided_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "acknowledged_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": 1
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_manifestation_protocol",
+            "columns": ["tenant_id", "protocol"],
+            "unique": true
+          },
+          {
+            "name": "ix_portal_manifestation_subject_state",
+            "columns": ["tenant_id", "subject_id", "state"]
+          },
+          {
+            "name": "ix_portal_manifestation_state_due",
+            "columns": ["tenant_id", "state", "agency_due_on"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_manifestation_state",
+            "expression": "state in ('MANIFESTACAO_REGISTRADA','COMPROVANTE_EMITIDO','EM_ANALISE','INFORMACAO_SOLICITADA_AO_AGENTE','DECISAO_FINAL_ELABORADA','CIENCIA_AO_USUARIO','ENCERRADA','AVALIACAO_OFERECIDA','AVALIADA')"
+          },
+          {
+            "name": "ck_portal_manifestation_kind",
+            "expression": "kind in ('reclamacao','denuncia','sugestao','elogio','solicitacao')"
+          },
+          {
+            "name": "ck_portal_manifestation_anonymous_subject",
+            "expression": "not anonymous or subject_id is null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_manifestation_subject",
+            "columns": ["subject_id"],
+            "references": {
+              "table": "portal.subject",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ManifestationExtension",
+        "table": "manifestation_extension",
+        "primaryKey": ["id"],
+        "description": "Prorrogacao justificada de um prazo da manifestacao ([WF-PORTAL-004] secao Prazos: T-OUV-RESPOSTA 30 + 30 e T-OUV-INFO 20 + 20, prorrogaveis uma vez por igual periodo, Lei 13.460/2017 art. 16; plan R-0009 M13): justification obrigatoria — o sistema registra a motivacao, nunca estende o relogio silenciosamente. Uma prorrogacao por timer (unico por tenant, manifestation_id, timer); timer com FK para inf.infraction_timer_ref.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "manifestation_id",
+            "type": "uuid"
+          },
+          {
+            "name": "timer",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "justification",
+            "type": "text"
+          },
+          {
+            "name": "extended_on",
+            "type": "date"
+          },
+          {
+            "name": "new_due_on",
+            "type": "date"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_manifestation_extension_timer",
+            "columns": ["tenant_id", "manifestation_id", "timer"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_manifestation_extension_timer",
+            "expression": "timer in ('T-OUV-RESPOSTA','T-OUV-INFO')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_manifestation_extension_manifestation",
+            "columns": ["manifestation_id"],
+            "references": {
+              "table": "portal.manifestation",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_portal_manifestation_extension_timer",
+            "columns": ["timer"],
+            "references": {
+              "table": "inf.infraction_timer_ref",
+              "columns": ["code"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ServiceCatalog",
+        "table": "service_catalog",
+        "primaryKey": ["id"],
+        "description": "Carta de Servicos como dados ([WF-PORTAL-001] secao Carta de Servicos e secao Catalogo de servicos; [WF-PORTAL-004] secao Carta de Servicos como artefato vivo; Lei 13.460/2017 art. 7; RN-PORTAL-108, 11 campos; portal-route-contract.md secao 2 GET services; plan R-0009 M12): service_key unico por tenant; availability available | partially_available | unavailable com unavailable_reason obrigatorio quando unavailable (check de motivo; PORTAL.SERVICE_UNAVAILABLE 422 nunca 404). requirements_json e a lista requirements[] da rota. minimum_assurance espelha a matriz de M5 para exibicao.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "service_key",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "route",
+            "type": "text"
+          },
+          {
+            "name": "category",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "title",
+            "type": "text"
+          },
+          {
+            "name": "summary",
+            "type": "text"
+          },
+          {
+            "name": "requirements_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "delivery_channel",
+            "type": "text"
+          },
+          {
+            "name": "legal_deadline",
+            "type": "text"
+          },
+          {
+            "name": "cost",
+            "type": "text"
+          },
+          {
+            "name": "accessibility_note",
+            "type": "text"
+          },
+          {
+            "name": "responsible_party",
+            "type": "text"
+          },
+          {
+            "name": "normative_reference",
+            "type": "text"
+          },
+          {
+            "name": "availability",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "unavailable_reason",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "alternative_channel_note",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "minimum_assurance",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "name": "effective_from",
+            "type": "date"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_service_catalog_service_key",
+            "columns": ["tenant_id", "service_key"],
+            "unique": true
+          },
+          {
+            "name": "ix_portal_service_catalog_availability",
+            "columns": ["tenant_id", "availability", "category"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_service_catalog_availability",
+            "expression": "availability in ('available','partially_available','unavailable')"
+          },
+          {
+            "name": "ck_portal_service_catalog_unavailable_reason",
+            "expression": "availability <> 'unavailable' or unavailable_reason is not null"
+          },
+          {
+            "name": "ck_portal_service_catalog_minimum_assurance",
+            "expression": "minimum_assurance in ('none','simples','avancada','qualificada')"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/portal/citizen-service/",
+    "resources": [
+      {
+        "entity": "Manifestation",
+        "path": "manifestations",
+        "resource": "manifestation",
+        "operations": []
+      },
+      {
+        "entity": "ManifestationExtension",
+        "path": "manifestation-extensions",
+        "resource": "manifestation-extension",
+        "operations": []
+      },
+      {
+        "entity": "ServiceCatalog",
+        "path": "services",
+        "resource": "service-charter",
+        "operations": []
+      }
+    ]
+  },
+  "auth": {
+    "source": "PORTAL_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

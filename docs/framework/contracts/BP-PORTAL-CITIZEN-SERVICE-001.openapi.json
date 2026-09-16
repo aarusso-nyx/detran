@@ -1,0 +1,498 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CitizenService — BP-PORTAL-CITIZEN-SERVICE-001",
+    "version": "1.0.0",
+    "description": "Atendimento ao cidadao (ADR-0019 Decision 4; [WF-PORTAL-004] secao Estados, secao Prazos e secao Carta de Servicos; plan R-0009 M12-M14): manifestacao de ouvidoria da Lei 13.460/2017 (entidade distinta de portal.complaint do PEC, M2 — nunca duas tabelas para a mesma manifestacao; unificacao futura e OD-P14), prorrogacao justificada dos prazos do art. 16 e Carta de Servicos como dados (portal.service_catalog, 11 campos de RN-PORTAL-108). Prazos calculados com addCalendarDays de @detran/inf-deadlines; timers T-OUV-RESPOSTA, T-OUV-INFO, T-LGPD-ACESSO e T-AVAL-CONVITE (owner = portal) em inf.infraction_timer_ref, espelhados em portal-timers.ts (M14). brand_profile e public_hostname NAO sao entidades deste blueprint: DDL manuscrito 19-portal-platform.sql (M11). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica MANIFESTACAO_REGISTRADA e MANIFESTACAO_ENCERRADA (M21).",
+    "x-blueprint": "BP-PORTAL-CITIZEN-SERVICE-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Manifestation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "MANIFESTACAO_REGISTRADA",
+              "COMPROVANTE_EMITIDO",
+              "EM_ANALISE",
+              "INFORMACAO_SOLICITADA_AO_AGENTE",
+              "DECISAO_FINAL_ELABORADA",
+              "CIENCIA_AO_USUARIO",
+              "ENCERRADA",
+              "AVALIACAO_OFERECIDA",
+              "AVALIADA"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "reclamacao",
+              "denuncia",
+              "sugestao",
+              "elogio",
+              "solicitacao"
+            ]
+          },
+          "confidential": {
+            "type": "boolean"
+          },
+          "anonymous": {
+            "type": "boolean"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "x-pii": "personal"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "agency_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "info_due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "decision_text": {
+            "type": "string",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "state",
+          "kind",
+          "confidential",
+          "anonymous",
+          "text",
+          "protocol",
+          "received_at",
+          "agency_due_on",
+          "created_at"
+        ],
+        "description": "Manifestacao de ouvidoria — maquina [WF-PORTAL-004] secao Estados (9 tokens no check de state; Lei 13.460/2017 arts. 10-16; plan R-0009 M13): kind reclamacao | denuncia | sugestao | elogio | solicitacao (H.52); anonymous = true exige subject_id nulo (H.51: anonimo para manifestar, simples para acompanhar). POST manifestations nunca recusa (RN-PORTAL-109) e cria MANIFESTACAO_REGISTRADA + COMPROVANTE_EMITIDO na mesma transacao. agency_due_on = received_at + 30 dias corridos (T-OUV-RESPOSTA); info_due_on = 20 dias, nulo ate INFORMACAO_SOLICITADA_AO_AGENTE (T-OUV-INFO). version para If-Match."
+      },
+      "CreateManifestationDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "MANIFESTACAO_REGISTRADA",
+              "COMPROVANTE_EMITIDO",
+              "EM_ANALISE",
+              "INFORMACAO_SOLICITADA_AO_AGENTE",
+              "DECISAO_FINAL_ELABORADA",
+              "CIENCIA_AO_USUARIO",
+              "ENCERRADA",
+              "AVALIACAO_OFERECIDA",
+              "AVALIADA"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "reclamacao",
+              "denuncia",
+              "sugestao",
+              "elogio",
+              "solicitacao"
+            ]
+          },
+          "confidential": {
+            "type": "boolean"
+          },
+          "anonymous": {
+            "type": "boolean"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "x-pii": "personal"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "agency_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "info_due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "decision_text": {
+            "type": "string",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": [
+          "state",
+          "kind",
+          "confidential",
+          "anonymous",
+          "text",
+          "protocol",
+          "received_at",
+          "agency_due_on"
+        ]
+      },
+      "ManifestationExtension": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "manifestation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["T-OUV-RESPOSTA", "T-OUV-INFO"]
+          },
+          "justification": {
+            "type": "string"
+          },
+          "extended_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "new_due_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "manifestation_id",
+          "timer",
+          "justification",
+          "extended_on",
+          "new_due_on",
+          "created_at"
+        ],
+        "description": "Prorrogacao justificada de um prazo da manifestacao ([WF-PORTAL-004] secao Prazos: T-OUV-RESPOSTA 30 + 30 e T-OUV-INFO 20 + 20, prorrogaveis uma vez por igual periodo, Lei 13.460/2017 art. 16; plan R-0009 M13): justification obrigatoria — o sistema registra a motivacao, nunca estende o relogio silenciosamente. Uma prorrogacao por timer (unico por tenant, manifestation_id, timer); timer com FK para inf.infraction_timer_ref."
+      },
+      "CreateManifestationExtensionDto": {
+        "type": "object",
+        "properties": {
+          "manifestation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timer": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["T-OUV-RESPOSTA", "T-OUV-INFO"]
+          },
+          "justification": {
+            "type": "string"
+          },
+          "extended_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "new_due_on": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "manifestation_id",
+          "timer",
+          "justification",
+          "extended_on",
+          "new_due_on"
+        ]
+      },
+      "ServiceCatalog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service_key": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "route": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "requirements_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "delivery_channel": {
+            "type": "string"
+          },
+          "legal_deadline": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "string"
+          },
+          "accessibility_note": {
+            "type": "string"
+          },
+          "responsible_party": {
+            "type": "string"
+          },
+          "normative_reference": {
+            "type": "string"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["available", "partially_available", "unavailable"]
+          },
+          "unavailable_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "alternative_channel_note": {
+            "type": "string",
+            "nullable": true
+          },
+          "minimum_assurance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "simples", "avancada", "qualificada"]
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "effective_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "service_key",
+          "route",
+          "category",
+          "title",
+          "summary",
+          "requirements_json",
+          "delivery_channel",
+          "legal_deadline",
+          "cost",
+          "accessibility_note",
+          "responsible_party",
+          "normative_reference",
+          "availability",
+          "minimum_assurance",
+          "effective_from",
+          "created_at"
+        ],
+        "description": "Carta de Servicos como dados ([WF-PORTAL-001] secao Carta de Servicos e secao Catalogo de servicos; [WF-PORTAL-004] secao Carta de Servicos como artefato vivo; Lei 13.460/2017 art. 7; RN-PORTAL-108, 11 campos; portal-route-contract.md secao 2 GET services; plan R-0009 M12): service_key unico por tenant; availability available | partially_available | unavailable com unavailable_reason obrigatorio quando unavailable (check de motivo; PORTAL.SERVICE_UNAVAILABLE 422 nunca 404). requirements_json e a lista requirements[] da rota. minimum_assurance espelha a matriz de M5 para exibicao."
+      },
+      "CreateServiceCatalogDto": {
+        "type": "object",
+        "properties": {
+          "service_key": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "route": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "requirements_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "delivery_channel": {
+            "type": "string"
+          },
+          "legal_deadline": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "string"
+          },
+          "accessibility_note": {
+            "type": "string"
+          },
+          "responsible_party": {
+            "type": "string"
+          },
+          "normative_reference": {
+            "type": "string"
+          },
+          "availability": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["available", "partially_available", "unavailable"]
+          },
+          "unavailable_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "alternative_channel_note": {
+            "type": "string",
+            "nullable": true
+          },
+          "minimum_assurance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "simples", "avancada", "qualificada"]
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "effective_from": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "service_key",
+          "route",
+          "category",
+          "title",
+          "summary",
+          "requirements_json",
+          "delivery_channel",
+          "legal_deadline",
+          "cost",
+          "accessibility_note",
+          "responsible_party",
+          "normative_reference",
+          "availability",
+          "minimum_assurance",
+          "effective_from"
+        ]
+      }
+    }
+  }
+}

@@ -129,6 +129,24 @@ export default defineConfig({
       '@detran/portal-complaints': fileURLToPath(
         new URL('../domains/portal/complaints/src/index.ts', import.meta.url),
       ),
+      '@detran/portal-identity': fileURLToPath(
+        new URL('../domains/portal/identity/src/index.ts', import.meta.url),
+      ),
+      '@detran/portal-requests': fileURLToPath(
+        new URL('../domains/portal/requests/src/index.ts', import.meta.url),
+      ),
+      '@detran/portal-inbox': fileURLToPath(
+        new URL('../domains/portal/inbox/src/index.ts', import.meta.url),
+      ),
+      '@detran/portal-citizen-service': fileURLToPath(
+        new URL(
+          '../domains/portal/citizen-service/src/index.ts',
+          import.meta.url,
+        ),
+      ),
+      '@detran/portal-projections': fileURLToPath(
+        new URL('../domains/portal/projections/src/index.ts', import.meta.url),
+      ),
       '@detran/ops-agency': fileURLToPath(
         new URL('../domains/ops/agency/src/index.ts', import.meta.url),
       ),
