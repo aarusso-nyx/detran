@@ -1515,6 +1515,12 @@ importers:
       '@detran/inf-deadlines':
         specifier: workspace:*
         version: link:../../inf/deadlines
+      '@detran/portal-identity':
+        specifier: workspace:*
+        version: link:../identity
+      '@detran/portal-requests':
+        specifier: workspace:*
+        version: link:../requests
       '@detran/shared':
         specifier: workspace:*
         version: link:../../shared
@@ -1611,6 +1617,15 @@ importers:
 
   backend/domains/portal/inbox:
     dependencies:
+      '@detran/inf-deadlines':
+        specifier: workspace:*
+        version: link:../../inf/deadlines
+      '@detran/portal-identity':
+        specifier: workspace:*
+        version: link:../identity
+      '@detran/portal-requests':
+        specifier: workspace:*
+        version: link:../requests
       '@detran/shared':
         specifier: workspace:*
         version: link:../../shared
@@ -1648,6 +1663,9 @@ importers:
       '@detran/ops-parameter':
         specifier: workspace:*
         version: link:../../ops/parameter
+      '@detran/portal-identity':
+        specifier: workspace:*
+        version: link:../identity
       '@detran/shared':
         specifier: workspace:*
         version: link:../../shared
@@ -1682,6 +1700,9 @@ importers:
 
   backend/domains/portal/requests:
     dependencies:
+      '@detran/portal-identity':
+        specifier: workspace:*
+        version: link:../identity
       '@detran/shared':
         specifier: workspace:*
         version: link:../../shared
