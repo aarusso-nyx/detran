@@ -1,6 +1,6 @@
 # R-0008 — frente `teat-backend` (WP-T2 + WP-T3 do TEAT: rotas, comandos, sincronização e contratos)
 
-**Status:** aberto em 2026-09-15 pelo maestro Fable 5.1 (janela 1; planejamento em `main` df1e176). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`
+**Status:** fechada em 2026-09-16 como `PC-0005` (CTG-0001…0005 mesclados em `main` pelos PRs #47–#51; fechamento no PR #52). Aberta em 2026-09-15 pelo maestro Fable 5.1 (janela 1; planejamento em `main` df1e176). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`
 (escalar para Sol no `delivery-review` dos grupos de sincronização e política).
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — todos os grupos: `ops-agency` R-0005 (`orchestra/ops-agency`; módulos `ops` gerados e deltas v1.1.0 dos blueprints `inf`) — enquanto não mesclar, desenvolva sobre base empilhada nele. `DetranError` de R-0007 CTG-0001 se já em `main`; senão crie em `@detran/shared` e avise em §Bloqueios para R-0007 rebasear. CTG-0004 (contratos): também `check-commands.mjs` de R-0007 CTG-0001, ou crie aqui.
 **Janelas previstas:** 4.
@@ -431,6 +431,16 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   pelo maestro após a edição de `parameter-catalogue.md`). `openapi-typescript` 7.13.0 na raiz. Em curso: TASK-0012 iteração 3.
   Próximo: gates completos, delivery-review ciclo 3 (só C-5-25′), commit `feat(teat)` CTG-0005 (+docs), evidência seq. 5, PR #51, CI,
   merge, observe, `closure.json`, `round close`, waves/backlog, branch remota apagada, relatório final.
+
+- 2026-09-16 (checkpoint 11): CTG-0005 commitado (ed27610 + evidência seq. 5 em 48bcdb1), PR #51 aberto; primeira execução do CI
+  reprovou por `pnpm-lock.yaml` desatualizado (pacote novo `packages/api-clients` sem `pnpm install`) → corrigido em 5c1771f. Gates
+  finais: `pnpm check` exit 0, `backend:test:ci` exit 0 (51 execuções, 1561 testes) + unit 34/1278 no tree final; delivery-review ciclo 3
+  PASS. `AUTHORIZATION.md` criado pelo maestro a partir da instrução do Owner. Próximo: CI verde → merge → observe → `closure.json` →
+  `round close` → PR de fechamento → branch remota apagada → relatório final.
+
+- 2026-09-16 (checkpoint 12, fechamento): **PR #51 mesclado** em 3f8a817 (CI 5/5 após correção do lockfile; `audit observe`
+  EV-6bf500197fd3900b). `closure.json` escrito; `devai round close` → **PC-0005**. waves.md §Histórico e backlog.md preenchidos.
+  Resta: PR de fechamento (este commit) mesclado, branch remota `orchestra/teat-backend` apagada, relatório final ao Owner.
 
 ## Leitura
 
