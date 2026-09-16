@@ -1,0 +1,463 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Identity — BP-PORTAL-IDENTITY-001",
+    "version": "1.0.1",
+    "description": "Identidade federada do cidadao (ADR-0019 Decision 1; [WF-PORTAL-002] secao Estados; plan R-0009 M3-M6): guarda so o que o gov.br nao guarda — sujeito por hash de CPF, representacao (procuracao), matriz ato -> nivel de assinatura como dados (portal.act_level_policy) e vinculos (portal.entitlement). Nunca armazena token, credencial nem CPF em claro (RN-PORTAL-112). Nenhuma rota CRUD gerada (M1): as rotas de /v1/portal/* sao manuscritas em src/handwritten e usam os repositorios gerados. Publica NIVEL_ASSINATURA_ELEVADO e REPRESENTACAO_VALIDADA (ADR-0019 Ownership table).",
+    "x-blueprint": "BP-PORTAL-IDENTITY-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Subject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cpf_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "name": {
+            "type": "string",
+            "x-pii": "personal"
+          },
+          "govbr_level_observed": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["bronze", "prata", "ouro", "qualificada"],
+            "nullable": true
+          },
+          "assurance_level_observed": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["simples", "avancada", "qualificada"]
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "cpf_hash",
+          "name",
+          "assurance_level_observed",
+          "observed_at",
+          "created_at"
+        ],
+        "description": "Sujeito cidadao (ADR-0019 Decision 1; plan R-0009 M6): criado sob demanda no primeiro GET me por upsert em cpf_hash (sha256 hex do CPF, unico por tenant). Guarda apenas nome e o nivel observado na ultima sessao (selo gov.br e nivel de assinatura mapeado pela ADR-0024: bronze -> simples, prata|ouro -> avancada, ICP/e-Notariado -> qualificada). O titular ve o CPF pela claim, nunca por esta tabela (RN-PORTAL-112). version para If-Match."
+      },
+      "CreateSubjectDto": {
+        "type": "object",
+        "properties": {
+          "cpf_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "name": {
+            "type": "string",
+            "x-pii": "personal"
+          },
+          "govbr_level_observed": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["bronze", "prata", "ouro", "qualificada"],
+            "nullable": true
+          },
+          "assurance_level_observed": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["simples", "avancada", "qualificada"]
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": [
+          "cpf_hash",
+          "name",
+          "assurance_level_observed",
+          "observed_at"
+        ]
+      },
+      "Representation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "representative_subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "represented_cpf_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "represented_name": {
+            "type": "string",
+            "x-pii": "personal"
+          },
+          "instrument_document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["ait", "all"]
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROCURACAO_APRESENTADA",
+              "PROCURACAO_VALIDADA",
+              "PROCURACAO_RECUSADA"
+            ]
+          },
+          "refusal_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "representative_subject_id",
+          "represented_cpf_hash",
+          "represented_name",
+          "instrument_document_id",
+          "scope",
+          "state",
+          "created_at"
+        ],
+        "description": "Procuracao apresentada por um sujeito (procurador) sobre um representado ([WF-PORTAL-002] secao Estados: PROCURACAO_APRESENTADA -> PROCURACAO_VALIDADA | PROCURACAO_RECUSADA; ADR-0019 Decision 1; plan R-0009 M6). O representado e identificado por hash de CPF e nome; o instrumento e um documento (storage) referenciado por id. scope limita o alcance (ait | all); valid_until nulo = sem termo. So representacoes PROCURACAO_VALIDADA vigentes conferem vinculo (M10)."
+      },
+      "CreateRepresentationDto": {
+        "type": "object",
+        "properties": {
+          "representative_subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "represented_cpf_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "represented_name": {
+            "type": "string",
+            "x-pii": "personal"
+          },
+          "instrument_document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["ait", "all"]
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "PROCURACAO_APRESENTADA",
+              "PROCURACAO_VALIDADA",
+              "PROCURACAO_RECUSADA"
+            ]
+          },
+          "refusal_reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "representative_subject_id",
+          "represented_cpf_hash",
+          "represented_name",
+          "instrument_document_id",
+          "scope",
+          "state"
+        ]
+      },
+      "ActLevelPolicy": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "act_key": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "minimum_assurance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "simples", "avancada", "qualificada"]
+          },
+          "legal_basis": {
+            "type": "string"
+          },
+          "decision_ref": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "effective_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "effective_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "act_key",
+          "minimum_assurance",
+          "legal_basis",
+          "enabled",
+          "effective_from",
+          "created_at"
+        ],
+        "description": "Matriz ato -> nivel minimo de assinatura como dados (ADR-0019 Decision 1; plan R-0009 M5; Decreto 10.543/2020 art. 4; PN DETRAN-AM 001/2025; steering H.49/H.50/H.51): act_key e o serviceKey do portal-route-contract.md secao 5.1 quando existe, senao o token de M5. Lida por assertActLevel (M4): ato sem linha habilitada e vigente -> 500 PORTAL.INTERNAL (nunca liberar por ausencia); minimum_assurance = qualificada -> 500 PORTAL.ASSURANCE_QUALIFIED_NEVER_REQUIRED (RN-PORTAL-101). Uma linha por (tenant, act_key, effective_from)."
+      },
+      "CreateActLevelPolicyDto": {
+        "type": "object",
+        "properties": {
+          "act_key": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "minimum_assurance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "simples", "avancada", "qualificada"]
+          },
+          "legal_basis": {
+            "type": "string"
+          },
+          "decision_ref": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "effective_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "effective_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "required": [
+          "act_key",
+          "minimum_assurance",
+          "legal_basis",
+          "enabled",
+          "effective_from"
+        ]
+      },
+      "Entitlement": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ait", "case", "vehicle", "license", "crash", "exam"]
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "relation": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["owner", "driver", "representative", "interested_party"]
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "renavam",
+              "renach",
+              "infraction",
+              "representation",
+              "manual"
+            ]
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "subject_id",
+          "target_kind",
+          "target_id",
+          "relation",
+          "origin",
+          "valid_from",
+          "created_at"
+        ],
+        "description": "Vinculo do sujeito com um alvo de outro dominio (ADR-0019 Decision 1; plan R-0009 M6 e M10; portal-route-contract.md secao 11: sucessor de portal.ait_entitlement com alvo generico). target_id e uuid sem FK (o alvo e de inf/est/ch). Toda leitura de aits/{id}, requests/{id}, vehicles/{id}/*, crashes/{id} e exams/{id} consulta esta tabela; ausencia -> 404 PORTAL.NOT_FOUND. Origem nesta rodada: fixtures e projetor de INFRACAO_ESTADO_ALTERADO (origin = infraction)."
+      },
+      "CreateEntitlementDto": {
+        "type": "object",
+        "properties": {
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ait", "case", "vehicle", "license", "crash", "exam"]
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "relation": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["owner", "driver", "representative", "interested_party"]
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "renavam",
+              "renach",
+              "infraction",
+              "representation",
+              "manual"
+            ]
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          }
+        },
+        "required": [
+          "subject_id",
+          "target_kind",
+          "target_id",
+          "relation",
+          "origin",
+          "valid_from"
+        ]
+      }
+    }
+  }
+}

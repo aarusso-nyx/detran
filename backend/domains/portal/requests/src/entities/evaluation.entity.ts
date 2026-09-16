@@ -1,0 +1,12 @@
+// Generated from BP-PORTAL-REQUESTS-001 v1.0.1 sha256:7d0a55a7a82e70ee07788622c4eec34061cd514ce99ee2f768622565ca290904
+export interface Evaluation {
+  id: string;
+  tenant_id: string;
+  subject_kind: string;
+  subject_id: string;
+  scores_json: Record<string, unknown>;
+  comment?: string | null;
+  submitted_at: string;
+  created_at: string;
+  updated_at?: string | null;
+}

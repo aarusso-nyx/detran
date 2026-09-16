@@ -1,0 +1,593 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-PORTAL-REQUESTS-001",
+  "module": {
+    "name": "Requests",
+    "namespace": "portal",
+    "version": "1.0.1",
+    "ddlFile": "62-portal-requests.sql",
+    "dependencies": {
+      "zod": "^4.6.5"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      }
+    ],
+    "owners": ["detran-portal"],
+    "description": "Ciclo comum de pedidos do cidadao (ADR-0019 Decision 2; [WF-PORTAL-001] secao Estados e secao Transicoes; plan R-0009 M7-M9): uma unica maquina de 13 estados fixos em codigo (OD-P13) para todo servico do catalogo, com protocolo imediato (T-PROTOCOLO, Lei 14.129/2021 art. 27 IV) antes de qualquer validacao de conteudo e delegacao ao comando do dominio dono (M8). O pedido nunca guarda a decisao. Inclui rascunho versionado, anexos, ciencia de consequencias, avaliacao e registro de idempotencia (M9). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica SOLICITACAO_CRIADA, SOLICITACAO_PROTOCOLADA, SOLICITACAO_DESISTIDA, SOLICITACAO_CONCLUIDA e AVALIACAO_REGISTRADA (M21)."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Request",
+        "table": "request",
+        "primaryKey": ["id"],
+        "description": "Pedido do cidadao — maquina [WF-PORTAL-001] secao Estados (13 tokens no check de state; INELEGIVEL e resposta 422 PORTAL.INELIGIBLE sem linha persistida, M7). service_key e FK logica para portal.service_catalog.service_key (outro pacote, sem FK fisica). Delegacao (M8): delegation_domain, delegation_command (ex.: inf:rait-case:protocol), delegation_external_id, delegation_status e delegation_error; falha apos protocolo mantem o protocolo e grava delegation_status = failed (PORTAL.DELEGATION_FAILED). minimum_assurance copia o nivel exigido pela matriz no momento do pedido (M5). version para If-Match (M9); withdrawn_at em DESISTIDO.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "service_key",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "subject_id",
+            "type": "uuid"
+          },
+          {
+            "name": "target_kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "target_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "channel",
+            "type": "varchar(20)",
+            "default": "'portal'"
+          },
+          {
+            "name": "delegation_domain",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "delegation_command",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "delegation_external_id",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "delegation_status",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "delegation_error",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "minimum_assurance",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": 1
+          },
+          {
+            "name": "withdrawn_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_portal_request_subject_state",
+            "columns": ["tenant_id", "subject_id", "state"]
+          },
+          {
+            "name": "ix_portal_request_service_key",
+            "columns": ["tenant_id", "service_key", "state"]
+          },
+          {
+            "name": "ix_portal_request_target",
+            "columns": ["tenant_id", "target_kind", "target_id"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_request_state",
+            "expression": "state in ('IDENTIFICADO','SERVICO_SELECIONADO','ELEGIBILIDADE_VERIFICADA','INELEGIVEL','PEDIDO_EM_COMPOSICAO','AGUARDANDO_NIVEL_ASSINATURA','AGUARDANDO_PAGAMENTO','PROTOCOLADO','EM_ANDAMENTO_NO_ORGAO','RESULTADO_DISPONIVEL','AVALIACAO_OFERECIDA','CONCLUIDO','DESISTIDO')"
+          },
+          {
+            "name": "ck_portal_request_target_kind",
+            "expression": "target_kind in ('ait','case','vehicle','exam','crash','none')"
+          },
+          {
+            "name": "ck_portal_request_target_id_required",
+            "expression": "(target_kind = 'none' and target_id is null) or (target_kind <> 'none' and target_id is not null)"
+          },
+          {
+            "name": "ck_portal_request_channel",
+            "expression": "channel in ('portal')"
+          },
+          {
+            "name": "ck_portal_request_delegation_status",
+            "expression": "delegation_status in ('pending','delegated','failed','not_applicable')"
+          },
+          {
+            "name": "ck_portal_request_minimum_assurance",
+            "expression": "minimum_assurance in ('none','simples','avancada','qualificada')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_request_subject",
+            "columns": ["subject_id"],
+            "references": {
+              "table": "portal.subject",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RequestDraft",
+        "table": "request_draft",
+        "primaryKey": ["id"],
+        "description": "Rascunho versionado do pedido em PEDIDO_EM_COMPOSICAO ([WF-PORTAL-001] secao Transicoes, PUT requests/{id}/draft com If-Match; plan R-0009 M7 e M9): cada gravacao e uma nova versao (payload_json validado por docs/framework/schemas/portal-request-draft.schema.json por ato, WP-P3). Uma linha por (tenant, request, version).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "request_id",
+            "type": "uuid"
+          },
+          {
+            "name": "version",
+            "type": "integer"
+          },
+          {
+            "name": "payload_json",
+            "type": "jsonb",
+            "pii": "personal"
+          },
+          {
+            "name": "saved_at",
+            "type": "timestamptz"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_request_draft_request_version",
+            "columns": ["tenant_id", "request_id", "version"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_request_draft_version_positive",
+            "expression": "version > 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_request_draft_request",
+            "columns": ["request_id"],
+            "references": {
+              "table": "portal.request",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RequestAttachment",
+        "table": "request_attachment",
+        "primaryKey": ["id"],
+        "description": "Anexo do pedido com intencao de upload ([WF-PORTAL-001] secao Transicoes, composicao do pedido; portal-build-pack.md secao 2 WP-P1: hash e intencao de upload): upload_state intended -> completed | rejected; storage_ref preenchido na conclusao; sha256 declarado pelo cliente e conferido no armazenamento.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "request_id",
+            "type": "uuid"
+          },
+          {
+            "name": "filename",
+            "type": "text"
+          },
+          {
+            "name": "mime_type",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "size_bytes",
+            "type": "bigint"
+          },
+          {
+            "name": "sha256",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "upload_state",
+            "type": "varchar(20)",
+            "default": "'intended'"
+          },
+          {
+            "name": "storage_ref",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_portal_request_attachment_request",
+            "columns": ["tenant_id", "request_id", "upload_state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_request_attachment_sha256",
+            "expression": "sha256 ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_portal_request_attachment_size_bytes",
+            "expression": "size_bytes >= 0"
+          },
+          {
+            "name": "ck_portal_request_attachment_upload_state",
+            "expression": "upload_state in ('intended','completed','rejected')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_request_attachment_request",
+            "columns": ["request_id"],
+            "references": {
+              "table": "portal.request",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Protocol",
+        "table": "protocol",
+        "primaryKey": ["id"],
+        "description": "Protocolo imediato do pedido ([WF-PORTAL-001] secao Prazos, T-PROTOCOLO: imediato, sem excecao, Lei 14.129/2021 art. 27 IV; plan R-0009 M8): gravado na mesma transacao que leva o pedido a PROTOCOLADO, antes de qualquer validacao de conteudo e antes da delegacao. number = <tenant-slug-upper>-<AAAA>-<sequencial 7 digitos>, unico por tenant; um protocolo por pedido (request_id unico). receipt_hash = sha256 do JSON canonico do recibo. A sequencia portal.protocol_seq NAO e entidade deste blueprint: vive no DDL manuscrito 19-portal-platform.sql porque o gerador nao emite sequences.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "request_id",
+            "type": "uuid"
+          },
+          {
+            "name": "number",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "issued_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "channel",
+            "type": "varchar(20)",
+            "default": "'portal'"
+          },
+          {
+            "name": "receipt_hash",
+            "type": "varchar(64)"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_protocol_number",
+            "columns": ["tenant_id", "number"],
+            "unique": true
+          },
+          {
+            "name": "ux_portal_protocol_request",
+            "columns": ["tenant_id", "request_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_protocol_channel",
+            "expression": "channel in ('portal')"
+          },
+          {
+            "name": "ck_portal_protocol_receipt_hash",
+            "expression": "receipt_hash ~ '^[0-9a-f]{64}$'"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_protocol_request",
+            "columns": ["request_id"],
+            "references": {
+              "table": "portal.request",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ConsequenceAck",
+        "table": "consequence_ack",
+        "primaryKey": ["id"],
+        "description": "Ciencia das consequencias de um ato ([WF-PORTAL-001] secao Transicoes: desistencia, renuncia ao desconto de 40 % (H.53), indicacao de condutor e adesao ao SNE exigem ciencia explicita do texto versionado; portal-build-pack.md secao 2 WP-P1): guarda o kind, a versao do texto aceito e quando foi aceito; nunca o texto em si.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "request_id",
+            "type": "uuid"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "text_version",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "accepted_at",
+            "type": "timestamptz"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_portal_consequence_ack_request",
+            "columns": ["tenant_id", "request_id", "kind"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_consequence_ack_kind",
+            "expression": "kind in ('desistencia','renuncia_40','indicacao','sne')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_consequence_ack_request",
+            "columns": ["request_id"],
+            "references": {
+              "table": "portal.request",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Evaluation",
+        "table": "evaluation",
+        "primaryKey": ["id"],
+        "description": "Avaliacao de satisfacao ([WF-PORTAL-001] secao Estados AVALIACAO_OFERECIDA -> CONCLUIDO e [WF-PORTAL-004] secao Estados AVALIACAO_OFERECIDA -> AVALIADA; Lei 13.460/2017 art. 23; ADR-0019 Decision 4; plan R-0009 M9 POST evaluations idempotente): subject_kind | subject_id apontam o objeto avaliado (pedido ou manifestacao, sem FK por ser polimorfico — nao confundir com portal.subject). scores_json guarda as 5 notas; uma avaliacao por objeto (unico por tenant, subject_kind, subject_id). Publica AVALIACAO_REGISTRADA (M21).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "subject_kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "subject_id",
+            "type": "uuid"
+          },
+          {
+            "name": "scores_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "comment",
+            "type": "text",
+            "nullable": true,
+            "pii": "personal"
+          },
+          {
+            "name": "submitted_at",
+            "type": "timestamptz"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_evaluation_subject",
+            "columns": ["tenant_id", "subject_kind", "subject_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_evaluation_subject_kind",
+            "expression": "subject_kind in ('request','manifestation')"
+          }
+        ]
+      },
+      {
+        "name": "IdempotencyRecord",
+        "table": "idempotency_record",
+        "primaryKey": ["id"],
+        "description": "Registro de Idempotency-Key deterministica <ato>:<alvo>:<fingerprint> (plan R-0009 M9; portal-route-contract.md secao 1): POST requests, submit, respostas de diligencia, manifestations, evaluations e sne/enrollment. Reuso com o mesmo body_sha256 devolve response_json com o mesmo status; corpo diferente -> 409 PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY. subject_id nulo para POST manifestations anonimo (H.51). Unico por (tenant, key).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "key",
+            "type": "text"
+          },
+          {
+            "name": "subject_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "route",
+            "type": "text"
+          },
+          {
+            "name": "body_sha256",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "response_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "status",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_idempotency_record_key",
+            "columns": ["tenant_id", "key"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_idempotency_record_body_sha256",
+            "expression": "body_sha256 ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_portal_idempotency_record_status",
+            "expression": "status between 100 and 599"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_portal_idempotency_record_subject",
+            "columns": ["subject_id"],
+            "references": {
+              "table": "portal.subject",
+              "columns": ["id"]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/portal/requests/",
+    "resources": [
+      {
+        "entity": "Request",
+        "path": "requests",
+        "resource": "request",
+        "operations": []
+      },
+      {
+        "entity": "RequestDraft",
+        "path": "drafts",
+        "resource": "request-draft",
+        "operations": []
+      },
+      {
+        "entity": "RequestAttachment",
+        "path": "attachments",
+        "resource": "request-attachment",
+        "operations": []
+      },
+      {
+        "entity": "Protocol",
+        "path": "protocols",
+        "resource": "protocol",
+        "operations": []
+      },
+      {
+        "entity": "ConsequenceAck",
+        "path": "consequence-acks",
+        "resource": "consequence-ack",
+        "operations": []
+      },
+      {
+        "entity": "Evaluation",
+        "path": "evaluations",
+        "resource": "evaluation",
+        "operations": []
+      },
+      {
+        "entity": "IdempotencyRecord",
+        "path": "idempotency-records",
+        "resource": "idempotency-record",
+        "operations": []
+      }
+    ]
+  },
+  "auth": {
+    "source": "PORTAL_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

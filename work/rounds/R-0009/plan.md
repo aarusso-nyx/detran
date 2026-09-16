@@ -313,6 +313,29 @@ qualificada}` e `claims.cpf` (11 dígitos, `sub` de negócio). Perfil `local-san
     gerador deriva de `module.name`; TASK-0002 confirma e registra. Controladores adicionais **não** são criados: rotas novas entram nos
     controladores acima.
 
+### Adendas do maestro (Architect) — reconciliação das divergências
+
+- **A1 (2026-09-16, após TASK-0001)** — as divergências `[DIVERGE-Mn]` de `contracts/CTG-0001.md` §13 são **aceitas** (o
+  canônico prevalece): (a) `adesao_sne`/`cancelamento_sne` = `avancada` (RN-PORTAL-101 linha 9) — M5 e M12 corrigidas por esta
+  adenda; `AGUARDANDO_NIVEL_ASSINATURA` é alcançável pela API já nesta rodada; (b) matriz M5 ganha `consulta_bat`,
+  `consulta_exame`, `avaliar` (`simples`); (c) `submit` também de `AGUARDANDO_NIVEL_ASSINATURA` (M7); (d) `request.target_kind`
+  ganha `crash` (M7) — TASK-0002 ajusta o check do blueprint `Request` se já gerado sem ele (o maestro aplica a correção do
+  blueprint e regenera no checkpoint, como Architect); (e) `inbox_item.kind` = `SNE|PROCESSO|OUVIDORIA|SISTEMA` (ADR-0019 §3)
+  - coluna `action_required boolean not null default false`; `source` ∈ `sne|portal` mantido — a resposta de `GET inbox`
+    (route contract §6) deriva `kind: acao_necessaria|informativo` de `action_required` (M15 corrigida); (f) ordem da guarda:
+    claims → papel (contrato §3); (g) `identity` ganha o provider `PortalClock` (`handwritten/clock`, classe `@Injectable()`
+    que expõe `Clock` de `@detran/inf-deadlines`; perfil de teste substitui por `FixedClock`) — M24 ampliada; o maestro declara
+    no blueprint no checkpoint. OD-P22…P26 propostas por TASK-0001 são registradas por TASK-0010.
+- **A2 (2026-09-16, após TASK-0002)** — (a) pergunta de TASK-0002 sobre `act_level_policy` sem escopo: resolvida pelo contrato
+  CTG-0001 §5 — `act_key` composto com sufixo `:<escopo>` (`lgpd_declaracao`, `lgpd_declaracao:declaracao_completa`,
+  `lgpd_declaracao:correcao`, `lgpd_declaracao:eliminacao`); sem coluna nova. (b) Vocabulários sem fonte apontados por
+  TASK-0002: `inbox_item.deadline_owned_by` ∈ `citizen|agency` (route contract §5 `nextAction.by`/`deadlines[].ownedBy`, nulo
+  admitido) e `sne_enrollment.channel` ∈ `push|email|sne` (route contract §3 `preferences.channel`, nulo admitido) — checks
+  acrescentados pelo maestro (Architect) nos blueprints `INBOX` v1.0.1. (c) `[DIVERGE-M16]` aceito: `projection_applied_event`
+  único por `(tenant_id, event_id, projection)` + `last_error`; `[DIVERGE-M8]` aceito (`protocol_seq` no DDL 19). (d) O maestro
+  aplicou A1(d), A1(e) e A1(g) nos blueprints (`REQUESTS` v1.0.1, `INBOX` v1.0.1, `IDENTITY` v1.0.1 com provider `PortalClock`
+  e dependência `@detran/inf-deadlines`), regenerou e rodou `pnpm install` (lockfile) no checkpoint.
+
 ## Tarefas
 
 | Tarefa    | Papel                   | Perfil              | Modelo/esforço | Lock                                                                                                         | Depende de                                  | Entrega                                                                                                                                                                                                                                                                                                 |
@@ -410,18 +433,18 @@ concluído: rebase sobre `0996391`; `pnpm install --frozen-lockfile` OK; `pnpm c
 
 Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 
-| Tarefa    | Estado      | Nota                                              |
-| --------- | ----------- | ------------------------------------------------- |
-| TASK-0001 | in_progress | disparada 2026-09-16 após PASS de prompt-review-3 |
-| TASK-0002 | in_progress | idem, em paralelo                                 |
-| TASK-0003 | queued      | —                                                 |
-| TASK-0004 | queued      | —                                                 |
-| TASK-0005 | queued      | —                                                 |
-| TASK-0006 | queued      | —                                                 |
-| TASK-0007 | queued      | —                                                 |
-| TASK-0008 | queued      | —                                                 |
-| TASK-0009 | queued      | —                                                 |
-| TASK-0010 | queued      | —                                                 |
+| Tarefa    | Estado      | Nota                                                            |
+| --------- | ----------- | --------------------------------------------------------------- |
+| TASK-0001 | completed   | relatório em `reports/TASK-0001.md`; divergências aceitas em A1 |
+| TASK-0002 | in_progress | idem, em paralelo                                               |
+| TASK-0003 | queued      | —                                                               |
+| TASK-0004 | queued      | —                                                               |
+| TASK-0005 | queued      | —                                                               |
+| TASK-0006 | queued      | —                                                               |
+| TASK-0007 | queued      | —                                                               |
+| TASK-0008 | queued      | —                                                               |
+| TASK-0009 | queued      | —                                                               |
+| TASK-0010 | queued      | —                                                               |
 
 Último veredito do reviewer: `prompt-review-3` PASS (após FAIL/FAIL de estrutura, ver §Bloqueios). Próximos passos: relatórios de TASK-0001/0002 → checkpoint → TASK-0003.
 
