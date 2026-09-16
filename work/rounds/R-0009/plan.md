@@ -360,6 +360,24 @@ qualificada}` e `claims.cpf` (11 dígitos, `sub` de negócio). Perfil `local-san
   alteração de ferramenta: feita pelo **maestro (Engineer)** no checkpoint de TASK-0009, não pelo transcritor. (f) `pnpm install`
   (deps workspace novas dos quatro pacotes) feito pelo maestro após TASK-0005. (g) Numeração de DDL: `19-portal-platform.sql`
   convive com `19-est-lifecycle-vocabulary.sql` (R-0010, PR #55) por ordem lexicográfica, como já ocorre com `13-ops-*`.
+- **A5 (2026-09-16, após TASK-0006)** — (a) `rebuild` (CTG-0002 §7.1 × §7.3): reaplicar a janela **sem** apagar linhas
+  nunca projetadas — `rebuild` apaga apenas as linhas da projeção cujo `last_event_id` pertence à janela reaplicada (ou
+  cujo `ait_id`/`request_id`/`subject_cpf_hash` é tocado por evento da janela); linhas com sentinela D10 (fixtures sem
+  evento) são preservadas; C-0002-57 vale como escrito (snapshot → rebuild → linhas iguais). (b) Segunda avaliação:
+  a guarda de estado responde primeiro (`PORTAL.REQUEST_STATE_INVALID` em `CONCLUIDO`; `PORTAL.EVALUATION_NOT_OFFERED` fora
+  de `AVALIACAO_OFERECIDA`); `PORTAL.EVALUATION_ALREADY_SUBMITTED` só quando o pedido ainda está em `AVALIACAO_OFERECIDA` e a
+  linha de `evaluation` já existe (índice único) — e2e aceita qualquer dos 409, unit prova o único. (c) `policy.spec.ts`:
+  o `it` de TASK-0003 sobre `portal:appeal:*` passa a AUSENTE (M19). (d) Seed `71-fixtures-portal-events.sql` aceito no
+  lugar de editar o 70. (e) `@detran/inf-deadlines` entra em `BP-PORTAL-PROJECTIONS-001` v1.0.2 (`dependencies` +
+  `testAliases`; maestro como Architect, regenerado no checkpoint) e em `backend/app/package.json` (TASK-0008, wiring).
+  (f) Assinaturas fixadas pelos fakes do Inspector (relatório TASK-0006 item 7) valem como contrato para TASK-0007/0008:
+  `create(tx, identity, body, headers)`, `updateDraft/submit/withdraw/evaluate(tx, identity, id, body, headers)`,
+  `respondDiligence(tx, identity, id, did, body, headers)`, `manifest(tx, identity|null, body, headers)`,
+  `acknowledge(tx, identity, id)`, `evaluate(tx, identity, body, headers)`, `read(tx, subject, id)`,
+  `enroll(tx, subject, identity, body)`, `cancel(tx, subject, identity, reason?)`, `applyEvent(event, tx)` → `ApplyOutcome`,
+  `reshape(topic, payload, row?)`, `listSince(cursor, scope, limit)`, `protocolNumber(tx, slug, today, requestId)`,
+  `new ReadServiceDelegationTarget(serviceKey, readResource, targetKinds)`; SQL dentro do subconjunto documentado em
+  `requests/tests/support/fake-sql.ts`; headers em minúsculas; `actor.id` = `RequestContext.snapshot().actorId`.
 
 ## Tarefas
 
@@ -471,8 +489,8 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0003 | completed   | iteração 2 verde (49/49 unit, 14/14 e2e ×2); relatório atualizado                                             |
 | TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
 | TASK-0005 | completed   | relatório em `reports/TASK-0005.md`; A4; branch temporário `tmp/r9-ctg2-wip` até o merge do PR #54            |
-| TASK-0006 | in_progress | disparada sobre `tmp/r9-ctg2-wip` (= orchestra + TASK-0005)                                                   |
-| TASK-0007 | queued      | —                                                                                                             |
+| TASK-0006 | completed   | relatório em `reports/TASK-0006.md`; 84 critérios → specs; A5                                                 |
+| TASK-0007 | in_progress | disparada após A5 e regen PROJECTIONS v1.0.2                                                                  |
 | TASK-0008 | queued      | —                                                                                                             |
 | TASK-0009 | queued      | —                                                                                                             |
 | TASK-0010 | queued      | —                                                                                                             |

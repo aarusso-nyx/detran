@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1025000,
-  "estimated_output_total": 235500,
+  "estimated_input_total": 1205000,
+  "estimated_output_total": 325500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela de 700k pode ser excedida por instrução do Owner (AUTHORIZATION.md), como em R-0008.",
   "entries": [
     {
@@ -119,6 +119,15 @@
       "output_tokens": 60000,
       "status": "completed",
       "note": "brutos ≈553k, 152 chamadas, 48 min (2× blueprints:generate)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "opus",
+      "input_tokens": 180000,
+      "output_tokens": 90000,
+      "status": "completed",
+      "note": "brutos ≈717k, 140 chamadas, 64 min"
     }
   ]
 }

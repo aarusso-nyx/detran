@@ -87,9 +87,18 @@ const EST_CTG_0001_MOUNTED_KEYS = new Set([
   // suas operações entram na allowlist quando CTG-0002 as montar.
 ]);
 
-/** Escopo CTG-0004 §8, com a transição EST limitada pela adenda A-2 acima. */
+/**
+ * Escopo CTG-0004 §8, com a transição EST limitada pela adenda A-2 acima, e o
+ * escopo `portal:*` de R-0009 CTG-0002 §10.2 (M19, TASK-0006): todo recurso
+ * `portal` exceto `complaint` (PEC, M2) entra nos dois sentidos — sentido 1
+ * inclui `POST manifestations` (rota `@Public()` COM `@Resource/@Action`,
+ * A4(b)); rotas públicas sem metadados (`GET brand`, `GET services[/{key}]`)
+ * não têm `@Action` e nunca entram na coleta. Nenhuma exceção nova; o escopo
+ * TEAT permanece intacto.
+ */
 function inScope(key: string): boolean {
   const [domain, resource] = key.split(':');
+  if (domain === 'portal') return resource !== 'complaint';
   if (domain === 'est') return EST_CTG_0001_MOUNTED_KEYS.has(key);
   if (domain === 'ops') return resource !== 'parameter';
   if (domain !== 'inf') return false;
@@ -130,6 +139,9 @@ const SENTIDO_2_ALLOWLIST = new Set(['ops:evidence-access-request:update']);
 
 /** Chaves cuja remoção já foi pedida em CTG-0002 §8 / CTG-0003 §7 (C-0004-49). */
 const REMOVED_KEYS = [
+  // R-0009 CTG-0002 §10.1 (M19, ADR-0019): substituídas por portal:request:*
+  'portal:appeal:create',
+  'portal:appeal:read-own',
   'ops:offline-numbering-reservation:reserve',
   'ops:offline-numbering-reservation:cancel',
   'ops:snapshot-person:read',
@@ -294,6 +306,82 @@ describe('CTG-0004 §8 — política ⇔ rotas do escopo TEAT (M18)', () => {
         ...missingRoutes.map((key) => `  ${key}`),
       ].join('\n'),
     ).toEqual({ missingRules: [], missingRoutes: [] });
+  });
+
+  it('C-0002-84 (R-0009 CTG-0002 §10.2) — toda rota @Resource/@Action de domínio portal (exceto complaint) tem regra, inclusive POST manifestations (@Public); toda regra portal:* tem rota; rotas @Public sem metadados não entram', async () => {
+    const { ModulesContainer } = await import('@nestjs/core');
+    const {
+      DETRAN_RESOURCE_METADATA_KEY,
+      DETRAN_ACTION_METADATA_KEY,
+      DETRAN_PUBLIC_METADATA_KEY,
+      DETRAN_POLICY_MATRIX,
+      policyKey,
+    } = (await import('@detran/shared')) as unknown as {
+      DETRAN_RESOURCE_METADATA_KEY: string;
+      DETRAN_ACTION_METADATA_KEY: string;
+      DETRAN_PUBLIC_METADATA_KEY: string;
+      DETRAN_POLICY_MATRIX: Record<string, readonly string[]>;
+      policyKey: (resource: string, action: string) => string;
+    };
+    const routes = collectMountedRoutes(
+      app.get(ModulesContainer).values(),
+      DETRAN_RESOURCE_METADATA_KEY,
+      DETRAN_ACTION_METADATA_KEY,
+      policyKey,
+    ).filter((route) => route.key.startsWith('portal:') && inScope(route.key));
+
+    const missingRules = routes.filter(
+      (route) => !(route.key in DETRAN_POLICY_MATRIX),
+    );
+    const mountedKeys = new Set(routes.map((route) => route.key));
+    const missingRoutes = Object.keys(DETRAN_POLICY_MATRIX).filter(
+      (key) =>
+        key.startsWith('portal:') && inScope(key) && !mountedKeys.has(key),
+    );
+    expect(
+      { missingRules, missingRoutes },
+      [
+        'Rotas portal:* sem chave em DETRAN_POLICY_MATRIX (sentido 1):',
+        ...missingRules.map(
+          (route) => `  ${route.key} (${route.controller}.${route.method})`,
+        ),
+        'Chaves portal:* em DETRAN_POLICY_MATRIX sem rota (sentido 2):',
+        ...missingRoutes.map((key) => `  ${key}`),
+      ].join('\n'),
+    ).toEqual({ missingRules: [], missingRoutes: [] });
+
+    // sentido 1 inclui a rota pública com metadados (POST manifestations → portal:manifestation:manifest)
+    const manifest = routes.find(
+      (route) => route.key === 'portal:manifestation:manifest',
+    );
+    expect(
+      manifest,
+      'POST manifestations montada com @Resource/@Action',
+    ).toBeDefined();
+    const controllers = [...app.get(ModulesContainer).values()].flatMap(
+      (module) => [...module.controllers.values()],
+    );
+    const manifestController = controllers.find(
+      (wrapper) =>
+        (wrapper.metatype as { name?: string } | undefined)?.name ===
+        manifest!.controller,
+    );
+    const handler = (
+      manifestController!.metatype as unknown as {
+        prototype: Record<string, unknown>;
+      }
+    ).prototype[manifest!.method];
+    expect(
+      Reflect.getMetadata(DETRAN_PUBLIC_METADATA_KEY, handler as object),
+    ).toBeTruthy();
+
+    // sentido 2: as 29 chaves de CTG-0002 §10.1 estão todas montadas (nenhuma exceção declarada)
+    expect(mountedKeys.size).toBe(29);
+    expect([...mountedKeys].sort()).toEqual(
+      Object.keys(DETRAN_POLICY_MATRIX)
+        .filter((key) => key.startsWith('portal:') && inScope(key))
+        .sort(),
+    );
   });
 
   it('C-0004-49 — as chaves de alias removidas (CTG-0002 §8, CTG-0003 §7) não existem mais na matriz', async () => {
