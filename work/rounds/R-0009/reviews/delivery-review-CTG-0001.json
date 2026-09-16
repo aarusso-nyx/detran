@@ -1,0 +1,24 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0009",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/portal/identity/tests/integration/portal-rls.integration.spec.ts",
+      "line": 165,
+      "claim": "C-0001-32 exige inserir portal.subject sem tenant_id e provar que o trigger o preenche; o teste fornece tenant_id canônico divergente e só prova rejeição 42501.",
+      "fix": "inserir sem tenant_id sob OTHER_TENANT e afirmar que a linha retornada/consultada recebeu OTHER_TENANT; manter a asserção negativa de tenant divergente como caso adicional."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/portal/identity/src/handwritten/act-level.spec.ts",
+      "line": 72,
+      "claim": "CTG-0001 §11 exige relógio fixo 2026-09-14 nos testes unitários, mas C-0001-13–19 e C-0001-21 chamam assertActLevel sem o clock e usam PortalClock real.",
+      "fix": "passar o clock fixo como quinto argumento em todas as chamadas de assertActLevel do spec, ou encapsular a chamada em helper que sempre o injete."
+    }
+  ],
+  "notes": []
+}

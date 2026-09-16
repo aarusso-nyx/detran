@@ -158,7 +158,34 @@ describe('portal.* — RLS cruzada entre tenants (CTG-0001 §7, M11)', () => {
     expect(rows).toBe(0);
   });
 
-  it('C-0001-32 — dado um tenant efêmero quando uma linha do tenant canônico é inserida em portal.subject então enforce_tenant_id (auth.install_tenant_triggers, schema portal — M11) rejeita com 42501', async () => {
+  it('C-0001-32 — dado insert em portal.subject sem tenant_id no payload sob o tenant efêmero então enforce_tenant_id (auth.install_tenant_triggers, schema portal — M11) preenche a linha com o tenant da sessão', async () => {
+    const cpfHash = '1'.repeat(64);
+    await asTenant(OTHER_TENANT, async () => {
+      const inserted = await client.query<{ id: string; tenant_id: string }>(
+        `insert into portal.subject (cpf_hash, name, assurance_level_observed, observed_at)
+         values ($1, 'RLS probe (fixture, sem tenant_id)', 'simples', now())
+         returning id, tenant_id`,
+        [cpfHash],
+      );
+      expect(
+        inserted.rows[0]?.tenant_id,
+        'a linha gravada (RETURNING) deveria ter recebido o tenant da sessão',
+      ).toBe(OTHER_TENANT);
+
+      const consulted = await client.query<{ tenant_id: string }>(
+        'select tenant_id from portal.subject where id = $1',
+        [inserted.rows[0]?.id],
+      );
+      expect(
+        consulted.rows[0]?.tenant_id,
+        'a linha consultada em seguida deveria ter o tenant da sessão',
+      ).toBe(OTHER_TENANT);
+    });
+    // Limpeza: `asTenant` executa `work()` dentro de uma transação sempre
+    // desfeita em `rollback` (finally) — a linha inserida acima não persiste.
+  });
+
+  it('C-0001-32 (caso adicional) — dado um tenant_id divergente do app.tenant_id da sessão quando inserido em portal.subject então enforce_tenant_id rejeita com 42501', async () => {
     await expect(
       asTenant(OTHER_TENANT, () =>
         client.query(

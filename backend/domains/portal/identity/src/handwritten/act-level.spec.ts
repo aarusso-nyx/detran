@@ -32,6 +32,21 @@ const clock = {
   today: () => FIXED_TODAY,
 };
 
+/**
+ * Injeta sempre o relógio fixo 2026-09-14 (CTG-0001 §11) — nunca `PortalClock`
+ * real. Toda chamada a `assertActLevel` do spec passa por aqui para que a
+ * data de vigência nunca dependa do instante em que os testes rodam.
+ */
+type AssertActLevelArgs = Parameters<typeof assertActLevel>;
+function assertActLevelFixed(
+  tx: AssertActLevelArgs[0],
+  identity: AssertActLevelArgs[1],
+  actKey: AssertActLevelArgs[2],
+  resumeRoute: AssertActLevelArgs[3],
+): ReturnType<typeof assertActLevel> {
+  return assertActLevel(tx, identity, actKey, resumeRoute, clock);
+}
+
 function fakeTx(rows: FakePolicyRow[]) {
   const query = async (_sql: string, values?: readonly unknown[]) => {
     const [actKey, today] = (values ?? []) as [string, string];
@@ -69,7 +84,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
   it('C-0001-13 — dado política vigente "avancada" e current "simples" quando assertActLevel então ASSURANCE_INSUFFICIENT com o context exato', async () => {
     const tx = fakeTx([policy({ minimumAssurance: 'avancada' })]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '11111111111', assuranceLevel: 'simples' },
         'ato-x',
@@ -95,7 +110,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
         minimumAssurance: 'avancada',
       }),
     ]);
-    const decision = await assertActLevel(
+    const decision = await assertActLevelFixed(
       tx,
       { cpf: '22222222222', assuranceLevel: 'avancada' },
       'ato-x',
@@ -112,7 +127,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
   it('C-0001-15 — dado política "simples" e current "qualificada" quando assertActLevel então resolve (elevar sempre passa)', async () => {
     const tx = fakeTx([policy({ minimumAssurance: 'simples' })]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '44444444444', assuranceLevel: 'qualificada' },
         'ato-x',
@@ -124,7 +139,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
   it('C-0001-16 — dado política "none" e current "simples" quando assertActLevel então resolve (H.51: não compara)', async () => {
     const tx = fakeTx([policy({ minimumAssurance: 'none' })]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '11111111111', assuranceLevel: 'simples' },
         'ato-x',
@@ -136,7 +151,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
   it('C-0001-17 — dado política "qualificada" quando assertActLevel então PORTAL.ASSURANCE_QUALIFIED_NEVER_REQUIRED 500 { actKey } (RN-PORTAL-101 (c))', async () => {
     const tx = fakeTx([policy({ minimumAssurance: 'qualificada' })]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '11111111111', assuranceLevel: 'qualificada' },
         'ato-x',
@@ -152,7 +167,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
   it('C-0001-18 — dado ato sem nenhuma linha quando assertActLevel então PORTAL.INTERNAL 500 { actKey } (ato sem linha nunca libera)', async () => {
     const tx = fakeTx([]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '11111111111', assuranceLevel: 'qualificada' },
         'ato-inexistente',
@@ -168,7 +183,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
   it('C-0001-19 — dado a única linha com enabled=false quando assertActLevel então PORTAL.INTERNAL (tratada como ausência)', async () => {
     const tx = fakeTx([policy({ enabled: false })]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '11111111111', assuranceLevel: 'qualificada' },
         'ato-x',
@@ -180,12 +195,11 @@ describe('assertActLevel (§4, M4/M5)', () => {
   it('C-0001-20a — dado effective_from=2026-09-15 e clock=2026-09-14 quando assertActLevel então PORTAL.INTERNAL (ainda não vigente)', async () => {
     const tx = fakeTx([policy({ effectiveFrom: '2026-09-15' })]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '11111111111', assuranceLevel: 'qualificada' },
         'ato-x',
         '/resume/ato-x',
-        clock,
       ),
     ).rejects.toMatchObject({ code: 'PORTAL.INTERNAL' });
   });
@@ -195,12 +209,11 @@ describe('assertActLevel (§4, M4/M5)', () => {
       policy({ effectiveFrom: '2026-01-01', effectiveTo: '2026-09-14' }),
     ]);
     await expect(
-      assertActLevel(
+      assertActLevelFixed(
         tx,
         { cpf: '11111111111', assuranceLevel: 'qualificada' },
         'ato-x',
         '/resume/ato-x',
-        clock,
       ),
     ).rejects.toMatchObject({ code: 'PORTAL.INTERNAL' });
   });
@@ -218,7 +231,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
         minimumAssurance: 'avancada',
       }),
     ]);
-    const decision = await assertActLevel(
+    const decision = await assertActLevelFixed(
       tx,
       { cpf: '22222222222', assuranceLevel: 'avancada' },
       'ato-x',
