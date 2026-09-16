@@ -34,12 +34,15 @@ import {
   StynxAuthModule as FullStynxAuthModule,
 } from '@stynx-nyx/auth';
 import { StynxSessionsModule } from '@stynx-nyx/sessions';
-import { Observable } from 'rxjs';
+import { defer, from, mergeMap, Observable } from 'rxjs';
 import { createSenatranAdapter } from '@detran/senatran-adapter';
 import { SefazHttpAdapter } from '@detran/sefaz-adapter';
 import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
-
-import { DETRAN_PUBLIC_METADATA_KEY, DetranPolicyGuard } from '@detran/shared';
+import {
+  DETRAN_PUBLIC_METADATA_KEY,
+  DetranError,
+  DetranPolicyGuard,
+} from '@detran/shared';
 import { BiometricsModule } from '@detran/ch-biometrics';
 import { BillingModule } from '@detran/ch-billing';
 import { ClinicalControlsModule } from '@detran/ch-clinical-controls';
@@ -69,6 +72,7 @@ import { RaitCaseModule } from '@detran/inf-rait-case';
 import { RaitSessionModule } from '@detran/inf-rait-session';
 import { RaitWorklistModule } from '@detran/inf-rait-worklist';
 import { SpeedModule } from '@detran/inf-speed';
+import { CrashModule } from '@detran/est-crash';
 import { AgencyModule } from '@detran/ops-agency';
 import { EvidenceModule } from '@detran/ops-evidence';
 import { FieldModule } from '@detran/ops-field';
@@ -201,6 +205,81 @@ export const detranAuditSink = new DetranPersistedAuditSink();
 export const detranPostgresReadiness = new DetranPostgresReadiness();
 export const detranSessionReadiness = new DetranSessionReadiness();
 export const detranClinicalTrustReadiness = new DetranClinicalTrustReadiness();
+
+/** BOAT victim health data requires a declared purpose and a dedicated audit. */
+@Injectable()
+export class BoatVictimPurposeInterceptor {
+  constructor(
+    private readonly requestContext: RequestContext,
+    private readonly requestContextMutator: RequestContextMutator,
+  ) {}
+
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    const request = context.switchToHttp().getRequest<{
+      method?: string;
+      originalUrl?: string;
+      params?: Record<string, string | undefined>;
+      query?: Record<string, string | undefined>;
+      user?: { id?: string; roles?: string[] };
+      principal?: { id?: string };
+      tenantId?: string;
+      headers?: Record<string, string | undefined>;
+    }>();
+    const path = (request.originalUrl ?? '').split('?', 1)[0];
+    if (
+      request.method !== 'GET' ||
+      !/^\/v1\/est\/crash\/victims(?:\/[^/]+)?$/.test(path)
+    )
+      return next.handle();
+    const purpose = request.query?.purpose?.trim();
+    if (!purpose)
+      throw new DetranError('BOAT.VICTIM_PURPOSE_REQUIRED', {
+        status: 400,
+        context: {},
+      });
+    const work = () =>
+      defer(() => {
+        const snapshot = this.requestContext.snapshot();
+        if (!snapshot.tenantId)
+          throw new DetranError('BOAT.TENANT_MISMATCH', {
+            status: 404,
+            context: {},
+          });
+        return from(
+          detranAuditSink.write({
+            occurredAt: new Date().toISOString(),
+            tenantId: snapshot.tenantId,
+            actorId: snapshot.actorId,
+            actorRole: request.user?.roles?.[0],
+            action: 'EST_CRASH_VICTIM_READ',
+            entity: 'est.crash_victim',
+            entityId: request.params?.id,
+            metadata: { purpose },
+          }),
+        ).pipe(mergeMap(() => next.handle()));
+      });
+    if (this.requestContext.hasActiveContext()) return work();
+    return new Observable((subscriber) => {
+      let subscription: { unsubscribe(): void } | undefined;
+      this.requestContextMutator.runWithRequestContext(
+        {
+          requestId: generateRequestId(),
+          startedAt: new Date(),
+          tenantId: request.tenantId ?? request.headers?.['x-tenant-id'],
+          actorId: request.principal?.id ?? request.user?.id,
+        },
+        () => {
+          subscription = work().subscribe({
+            next: (value) => subscriber.next(value),
+            error: (error) => subscriber.error(error),
+            complete: () => subscriber.complete(),
+          });
+        },
+      );
+      return () => subscription?.unsubscribe();
+    });
+  }
+}
 
 @Injectable()
 export class DetranLegacyAuthContextGuard implements CanActivate {
@@ -371,6 +450,7 @@ export class AppModule {
         AitModule,
         MeasuresModule,
         AlcoholModule,
+        CrashModule,
         RaitCaseModule,
         RaitWorklistModule,
         RaitSessionModule,
@@ -400,6 +480,11 @@ export class AppModule {
       providers: [
         DetranDatabaseBinder,
         ...authProviders,
+        BoatVictimPurposeInterceptor,
+        {
+          provide: APP_INTERCEPTOR,
+          useExisting: BoatVictimPurposeInterceptor,
+        },
         DetranPolicyGuard,
         TeatStreamService,
         // CTG-0004 §16.3 (adenda, iteração 3): porta do poller do SSE — a

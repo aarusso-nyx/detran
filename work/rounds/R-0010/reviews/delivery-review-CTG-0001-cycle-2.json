@@ -1,0 +1,133 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "backend/app/tests/e2e/policy-routes.e2e.spec.ts",
+      "line": 67,
+      "claim": "`inScope` passou a admitir todo `est:crash-*`, mas `DETRAN_POLICY_MATRIX` tem 17 chaves do escopo sem rota montada nesta entrega — `est:crash-record:{add-vehicle,add-person,add-victim,record-duty,add-damage,add-witness,attach-sketch,link,record,complement,validate,close,cancel,transmit,rectify,archive}` e `est:crash-subject-request:subject-request` (só `create`, `start`, `read`, `update` e `delete` estão montadas). O sentido 2 de C-0004-47/48, que estava verde em `main`, passa a falhar: é um gate existente quebrado pela rodada, não um RED planejado.",
+      "fix": "Restringir `inScope` de `est` às ações efetivamente montadas em CTG-0001 (allowlist explícita, no padrão de `SENTIDO_2_ALLOWLIST`, com comentário citando a adenda A-2), e ampliar para as 17 chaves de comando na tarefa que monta as rotas (TASK-0007, CTG-0002)."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/app/tests/e2e/policy-routes.e2e.spec.ts",
+      "line": 324,
+      "claim": "Quatro testes novos exercitam rotas que não existem em CTG-0001 — `POST records/:id/transmit` (324), `POST records/:id/renaest/correct` (335) e `POST records/:id/scene-duties` (347 e 356). `BoatCommandsController` só monta `:id/start` e os controladores gerados montam `v1/est/crash/scene-duties`, então o Nest responde 404 e as asserções de 409/422 falham. O arquivo roda em `pnpm --filter @detran/app test:e2e`, que integra `pnpm backend:test:e2e` → `pnpm backend:test:ci`, critério de aceitação explícito do plano; a adenda A-2 do CTG-0001 aloca esses REDs à tríade de CTG-0002 (TASK-0006/0007). Commitado assim, o PR de CTG-0001 vai ao CI vermelho.",
+      "fix": "Mover os quatro testes para o commit de CTG-0002 (TASK-0006), junto com a ampliação de `inScope`, ou implementar as rotas correspondentes antes de fechar CTG-0001. Não relaxar as asserções nem marcar `skip`."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/shared/src/policy.ts",
+      "line": 445,
+      "claim": "`EST_CRUD_RULES` grava `read`, `create` e `update` com lista vazia para os dez recursos `est:*`, e o spread de linha 1649 põe essas entradas antes de `EST_COMMAND_RULES`, de modo que só `crash-record:create`, `crash-victim:read`, `crash-renaest-submission:read` e os `delete` recebem papel. O resultado é que nenhum papel canônico (fora de `GLOBAL_ADMIN_ROLES`) lê `est:crash-record`, `crash-vehicle`, `crash-person`, `crash-sketch`, `crash-scene-duty`, `crash-damage`, `crash-witness` ou `crash-subject-request`. Isso contradiz a linha `est:crash-record:read` do CTG-0001 e a instrução literal do contrato (\"Os aliases abreviados `field`, `processing` e `authority` aparecem no contrato de rota de leitura. O Engineer deve vinculá-los aos códigos canônicos já existentes em `policy.ts`\"), além de `boat-route-contract.md` §2 e §3 (`GET records/{id}/renaest`, `GET records/{id}/report`). Fica o absurdo operacional de um `field-agent` poder ler dado de saúde da vítima e não poder ler o registro do sinistro. Nada disso está registrado em §Fora de escopo de `reports/TASK-0004.md`.",
+      "fix": "Vincular `field`, `processing` e `authority` aos códigos canônicos (`field-agent`/`field-supervisor`, `processing-operator`, `traffic-authority`) nas chaves `read` dos recursos que o contrato de rota cobre, com comentário citando §2/§3; onde não houver fonte para `create`/`update` (recursos alimentados só por comando), manter a lista vazia mas com comentário explícito e registrar a decisão no relatório, no padrão já usado pelos blocos `ops:*` e RAIT do mesmo arquivo."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/framework/product/domains/est/boat/use-cases/INDEX.md",
+      "line": 61,
+      "claim": "A meta 1 do plano e o WP-B0 exigem `use-cases/INDEX.md` \"com status reais\". Só a linha de UC-BOAT-012 foi corrigida (`stub` → `approved`). As outras onze divergem das fichas: UC-BOAT-001, 002, 004 e 007 estão `approved` no frontmatter e `draft` no índice; UC-BOAT-003, 005, 006, 008, 009, 010 e 011 estão `reviewed` no frontmatter e `draft` no índice. O gate `node tools/docs/kb/check.mjs` não compara status, então passou verde sem cobrir o critério.",
+      "fix": "Reescrever a coluna `status` das duas tabelas do índice a partir do frontmatter de cada ficha (`grep -m1 '^status:' UC-BOAT-0*.md`) e reexecutar `docs:kb:check` e `format:check`."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/est/crash/src/handwritten/boat-commands.controller.ts",
+      "line": 27,
+      "claim": "`boat-route-contract.md` adota as convenções de `rait-build-pack.md` §0, cuja regra 2 diz \"todo comando exige `If-Match: \\\"<updated_at ISO ou version>\\\"`\", e o §3 do contrato de rota exige o evento `SINISTRO_INICIADO` no `start`. O handler não lê `if-match`, não chama `assertIfMatch` (helper já existente e usado por `backend/domains/inf/ait/src/handwritten/ait-cancel-requests.controller.ts`), não devolve `ETag`, não incrementa `est.crash_record.version` (coluna criada justamente para isso, linha 36 do DDL) e não publica evento. O catálogo BOAT já reserva `BOAT.IF_MATCH_REQUIRED` 428 e `BOAT.VERSION_CONFLICT` 412, que ficam inalcançáveis. O teste e2e novo (linha 298) envia só `idempotency-key` e espera 200, fixando o comportamento enfraquecido.",
+      "fix": "Ou completar `start` com `@Headers('if-match')` + `assertIfMatch`, incremento de `version`, `ETag` na resposta e publicação de `SINISTRO_INICIADO`, ajustando o teste e2e para exigir `If-Match`; ou remover `start` de CTG-0001 e entregá-lo com os demais comandos em TASK-0007, coerente com a adenda A-2."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/database/ddl/70-est-crash.sql",
+      "line": 224,
+      "claim": "O WP-B1 define `crash_renaest_submission` como \"protocolo, `layout_version`, situação nacional espelhada, retificações (`kind`, motivo, situação), chave natural\". A tabela entrega só `rectification_reason`: não há `kind` (`complement`/`correction` do `RectifyCrashCommandDto`, §3 do contrato de rota) nem coluna/índice da chave natural `(uf, município, occurred_at, órgão)` do §1.4. Além disso, `national_status` é `not null` com FK para `est.crash_state_ref` e **sem** check de escopo, então a tabela-espelho aceita estados locais (`RASCUNHO`, `FECHADO`…) — o check de C-1-04 existe apenas em `crash_record` (linha 42), e a spec de integração só testa `crash_record`. TASK-0007 não conseguirá distinguir complemento de correção nem barrar duplicidade por chave natural com este modelo.",
+      "fix": "Acrescentar ao blueprint `BP-EST-CRASH-001` a coluna `rectification_kind` (check `complement|correction`), um check de escopo em `national_status` (`in ('RECEBIDO','EM_ANALISE','CONSOLIDADO','REJEITADO')`) e o índice único da chave natural em `crash_record`; regenerar DDL, módulo, OpenAPI e clientes (ADR-0007, nunca editar o gerado à mão) e estender C-1-04 na spec de integração à tabela de submissão."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts",
+      "line": 306,
+      "claim": "O teste intitulado \"dada a chave natural de fixture quando repetida no mesmo tenant\" copia `source_system` e `source_local_id` da fixture, de modo que o 23505 observado vem de `ux_est_crash_record_source_local` (idempotência de origem), não da chave natural `(uf, município, occurred_at, órgão)` do §1.4 do contrato de rota — que não tem índice único no DDL. O título também cita C-1-11, critério do timer `T-BOAT-TRANSM`, e não o de duplicidade.",
+      "fix": "Renomear o teste para o que ele de fato prova (unicidade de `source_system`/`source_local_id`) e, depois de criado o índice único da chave natural, acrescentar um caso que repita `(uf, municipality_code, occurred_at, traffic_agency_id)` com `source_local_id` distinto. Corrigir a citação de critério."
+    },
+    {
+      "severity": "low",
+      "item": 13,
+      "file": "backend/domains/shared/src/policy.spec.ts",
+      "line": 19,
+      "claim": "C-1-12 exige que \"cada regra desta tabela\" seja testada com todos os papéis permitidos e todos os demais papéis canônicos. A lista `rules` cobre os 18 comandos, os três `read`/`subject-request` nomeados e os dez `delete`, mas não inclui `est:<recurso>:read` dos oito recursos restantes nem os `create`/`update` de lista vazia. Justamente as chaves do achado 3 ficam sem prova de presença ou ausência.",
+      "fix": "Acrescentar à lista `rules` as 28 chaves `read`/`create`/`update` restantes com a lista de papéis que o contrato fixar (vazia onde a ausência for decisão declarada), mantendo a iteração exaustiva sobre `DETRAN_ROLES`."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "backend/domains/shared/src/policy.ts",
+      "line": 793,
+      "claim": "As sete regras `est:crash-record:*` antigas (`start`, `add-vehicle`, `add-person`, `add-victim`, `attach-sketch`, `validate`, `close`) permanecem em `TEAT_RULES` e são silenciosamente sobrescritas pelo spread de `EST_COMMAND_RULES` (linha 1649, `Object.fromEntries`). Os valores coincidem hoje, então nada quebra, mas o WP-B0 pedia reconciliação e o arquivo fica com duas fontes para a mesma chave — qualquer edição futura em um dos blocos muda o comportamento sem sinal.",
+      "fix": "Remover as sete linhas `['est', …]` de `TEAT_RULES`, deixando `EST_COMMAND_RULES` como fonte única, e reexecutar `pnpm --filter @detran/shared test` e o e2e de rotas."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "backend/app/src/app.module.ts",
+      "line": 211,
+      "claim": "`BoatVictimPurposeInterceptor` implementa uma invariante de domínio do BOAT (§1.3 do contrato de rota: leitura de vítima exige `purpose` e auditoria) no composition root do app, casando a rota por regex literal `/^\\/v1\\/est\\/crash\\/victims(?:\\/[^/]+)?$/`. O pacote `@detran/est-crash` sozinho não carrega a guarda: qualquer outra composição que monte `CrashModule` expõe dado de saúde sem finalidade nem auditoria, e uma mudança de prefixo global ou do path no blueprint faz a guarda falhar aberta sem teste que perceba.",
+      "fix": "Mover a guarda para dentro de `backend/domains/est/crash` (interceptor exportado pelo `CrashModule`, ancorado nos metadados `@Resource('est:crash-victim')`/`@Action('read')` em vez do path literal) e manter no `AppModule` apenas o registro. A classe também deveria declarar `implements NestInterceptor`."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/app/src/app.module.ts",
+      "line": 236,
+      "claim": "O `purpose` é aceito como qualquer texto não vazio (`request.query?.purpose?.trim()`), sem catálogo de finalidades. `UC-BOAT-013` e [RN-BOAT-126] falam em finalidade declarada; `est.crash_subject_request.purpose` é `text` livre. Como não há fonte canônica para o conjunto de finalidades, a auditoria registra string arbitrária e o gate de C-1-13 se satisfaz com `?purpose=x`.",
+      "fix": "Registrar a lacuna como `source_pending`/OD no catálogo de parâmetros (finalidades admitidas de leitura de vítima) e, enquanto não houver fonte, no mínimo exigir comprimento mínimo e gravar o fato de o valor ser livre no relatório da tarefa."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "package.json",
+      "line": 1,
+      "claim": "`@detran/est-crash` não entrou em `backend:test:unit`, `backend:test:integration` nem `backend:test:e2e` (o plano atribui isso ao Engineer de TASK-0007, CTG-0002). Como CTG-0001 vai a `main` antes, a suíte de 1 teste unitário e 17 de integração escrita por TASK-0003 fica fora do CI no intervalo entre os dois PRs — o critério \"`pnpm --filter @detran/est-crash test:*` verdes\" só existe como execução manual.",
+      "fix": "Antecipar a inclusão de `@detran/est-crash` nos três scripts `backend:test:*` para o commit de CTG-0001, ou registrar explicitamente no relatório/PR que a cobertura do pacote só entra no CI com CTG-0002."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/database/ddl/19-est-lifecycle-vocabulary.sql",
+      "line": 129,
+      "claim": "`est.crash_severity_matches_victims` é `STABLE` e consulta `est.crash_victim`, e é usada em `ck_est_crash_record_closed_severity` (70-est-crash.sql:44). Um CHECK só reavalia a própria linha: inserir, alterar ou remover vítimas depois de `FECHADO` não dispara a verificação, então a invariante de H.43 não é realmente imposta pelo banco. O padrão também é frágil em `pg_dump`/restore, em que a validação do CHECK roda durante a carga de `crash_record` com `crash_victim` ainda vazia.",
+      "fix": "Manter o check como rede de segurança, mas acrescentar gatilho em `est.crash_victim` (insert/update/delete) que revalide o registro pai quando ele estiver em `FECHADO`/`INTEGRADO`, e registrar a limitação no comentário da função. A guarda equivalente no comando `close` continua obrigatória em TASK-0007."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "docs/framework/contracts/renaest-mapping.md",
+      "line": 1,
+      "claim": "O arquivo é entrega de TASK-0005, que o plano aloca a CTG-0002 (\"CTG-0001 = 0001…0004\"), mas está no diff apresentado como revisão de entrega de CTG-0001, junto com `contracts/CTG-0002.md` e os prompts de TASK-0005…0011. Misturar os dois cortes no mesmo commit apaga a fronteira \"um PR por CTG\" do §4.6 do método.",
+      "fix": "Separar o commit de CTG-0001 estritamente nos artefatos de TASK-0001…0004 (mais os gerados dependentes) e levar `renaest-mapping.md` e o contrato CTG-0002 no PR do segundo grupo; materiais de planejamento podem ir num commit próprio de rodada."
+    }
+  ],
+  "notes": [
+    "Ciclo 1 válido: avaliação exaustiva dos treze itens da rubrica. Os ciclos seguintes deste item devem ficar restritos às correções destes achados (§5 do método, ajuste R-0006).",
+    "Item 1 (papel declarado) OK: os quatro relatórios abrem com o papel e ele é compatível com o que a tarefa toca; a tríade Architect → Inspector → Engineer foi respeitada, inclusive nas duas escaladas de TASK-0003 e TASK-0004 registradas em §Triagem.",
+    "Item 6 OK: os testes de TASK-0003 precederam a implementação de TASK-0004 e os REDs de política/comando ficaram vermelhos até o Engineer, sem edição de teste pelo Engineer.",
+    "Item 9 OK: nenhum arquivo de `backend/domains/est/crash` importa `@detran/senatran-adapter`; `renaest-mapping.md` reafirma a fronteira do ADR-0003.",
+    "Item 2 e 12 não se aplicam a `delivery-review`.",
+    "Correção confirmada do achado anterior da ponte: o interceptor agora casa `\\/v1\\/est\\/crash\\/victims` com e sem `:id` (app.module.ts:231) e o teste de coleção sem/com `purpose` existe (policy-routes.e2e.spec.ts:365), verificando inclusive `entity_id is null` na auditoria. C-1-13 não foi enfraquecido.",
+    "O vocabulário canônico do DDL 19 está correto e sem valor inventado: os nove estados locais, os quatro do espelho, `SEM_VITIMA`/`COM_VITIMA_FERIDA`/`COM_VITIMA_FATAL`, 176_I…V/177/178 e os cinco catálogos de condição com `source_pending=true` e `editable_by='agency-admin'` (H.42). A extensão de `tools/check-lifecycle-vocabulary.ts` ao `est` amplia a verificação sem afrouxar nada do `inf`.",
+    "`ADR-0007` respeitado na forma: `crash.module.ts` e `index.ts` trazem o cabeçalho gerado e o `BoatCommandsController` entra por `module.handwrittenControllers` do blueprint, não por edição manual; todos os 61 arquivos estão em `tools/blueprints/generated-files.json`.",
+    "As fixtures gravam a string literal `source_pending` em `crash_type` e nas quatro condições, que são colunas `not null` sem FK. É coerente com H.42 (não inventar valor), mas convém um comentário no seed dizendo que o literal é sentinela de fonte pendente, para não virar dado de catálogo por inércia.",
+    "`CrashVictimController.list()` chama `service.findAll()` sem filtro nem paginação: com `?purpose=` qualquer papel de leitura de vítima obtém todos os campos de saúde do tenant numa chamada. É superfície gerada, portanto correção pelo blueprint (`operations`/filtros do §2 do contrato de rota), não por edição manual — vale endereçar em CTG-0002.",
+    "`inScope` em policy-routes.e2e.spec.ts:68 tem disjunção redundante (`resource === 'crash-record' || resource.startsWith('crash-')`); o primeiro termo nunca decide nada.",
+    "O veredito julga o código, não a declaração de gates. Nenhum achado é contradição de ADR, da Constituição ou de decisão do Owner, e não houve violação de fronteira de escrita: por isso REVIEW e não FAIL. Os seis achados `high` são corrigíveis sem mudar o plano — três deles (achados 1, 2 e 14) apenas movendo material para o corte de CTG-0002."
+  ]
+}

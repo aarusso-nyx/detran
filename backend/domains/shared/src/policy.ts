@@ -428,6 +428,92 @@ const PEC_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ],
 ];
 
+const EST_RESOURCES = [
+  'crash-record',
+  'crash-vehicle',
+  'crash-person',
+  'crash-victim',
+  'crash-sketch',
+  'crash-scene-duty',
+  'crash-damage',
+  'crash-witness',
+  'crash-link',
+  'crash-renaest-submission',
+  'crash-subject-request',
+] as const;
+// BOAT route contract §§2–3: field, processing and authority are the existing
+// canonical DETRAN roles. Subject requests are read only by their handlers;
+// citizen ownership checks await the identity-source decision (CTG-0001 A-1).
+const EST_GENERAL_READ_ROLES: readonly DetranRole[] = [
+  'field-agent',
+  'field-supervisor',
+  'processing-operator',
+  'traffic-authority',
+];
+const EST_READ_ROLES: Record<
+  (typeof EST_RESOURCES)[number],
+  readonly DetranRole[]
+> = {
+  'crash-record': EST_GENERAL_READ_ROLES,
+  'crash-vehicle': EST_GENERAL_READ_ROLES,
+  'crash-person': EST_GENERAL_READ_ROLES,
+  'crash-victim': [...EST_GENERAL_READ_ROLES, 'AUDITOR'],
+  'crash-sketch': EST_GENERAL_READ_ROLES,
+  'crash-scene-duty': EST_GENERAL_READ_ROLES,
+  'crash-damage': EST_GENERAL_READ_ROLES,
+  'crash-witness': EST_GENERAL_READ_ROLES,
+  'crash-link': EST_GENERAL_READ_ROLES,
+  'crash-renaest-submission': [
+    'processing-operator',
+    'traffic-authority',
+    'integration-operator',
+    'AUDITOR',
+  ],
+  'crash-subject-request': ['processing-operator', 'AUDITOR'],
+};
+const EST_CRUD_RULES: Array<[string, string, readonly DetranRole[]]> = [
+  ...EST_RESOURCES.flatMap((resource) => [
+    [resource, 'read', EST_READ_ROLES[resource]] as [
+      string,
+      string,
+      readonly DetranRole[],
+    ],
+    // Generated POST/PATCH remain closed; writes use guarded commands in WP-B2.
+    [resource, 'create', []] as [string, string, readonly DetranRole[]],
+    [resource, 'update', []] as [string, string, readonly DetranRole[]],
+    [resource, 'delete', ['technical-admin'] as readonly DetranRole[]] as [
+      string,
+      string,
+      readonly DetranRole[],
+    ],
+  ]),
+];
+const EST_COMMAND_RULES: Array<[string, string, readonly DetranRole[]]> = [
+  ['crash-record', 'create', ['field-agent']],
+  ['crash-record', 'start', ['field-agent']],
+  ['crash-record', 'add-vehicle', ['field-agent']],
+  ['crash-record', 'add-person', ['field-agent']],
+  ['crash-record', 'add-victim', ['field-agent']],
+  ['crash-record', 'record-duty', ['field-agent']],
+  ['crash-record', 'add-damage', ['field-agent']],
+  ['crash-record', 'add-witness', ['field-agent']],
+  ['crash-record', 'attach-sketch', ['field-agent', 'processing-operator']],
+  ['crash-record', 'link', ['field-agent', 'processing-operator']],
+  ['crash-record', 'record', ['field-agent']],
+  ['crash-record', 'complement', ['processing-operator']],
+  ['crash-record', 'validate', ['processing-operator', 'traffic-authority']],
+  ['crash-record', 'close', ['field-supervisor', 'traffic-authority']],
+  ['crash-record', 'cancel', ['field-agent', 'traffic-authority']],
+  ['crash-record', 'transmit', ['processing-operator', 'traffic-authority']],
+  ['crash-record', 'rectify', ['processing-operator', 'traffic-authority']],
+  ['crash-record', 'archive', ['traffic-authority']],
+  [
+    'crash-subject-request',
+    'subject-request',
+    ['processing-operator', 'AUDITOR', 'CIDADAO'],
+  ],
+];
+
 const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
   [
     'portal',
@@ -719,23 +805,6 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
   ],
   ['ops', 'integration', 'read', ['integration-operator', 'technical-admin']],
   ['ops', 'integration', 'retry', ['integration-operator', 'technical-admin']],
-  ['est', 'crash-record', 'start', ['field-agent']],
-  ['est', 'crash-record', 'add-vehicle', ['field-agent']],
-  ['est', 'crash-record', 'add-person', ['field-agent']],
-  ['est', 'crash-record', 'add-victim', ['field-agent']],
-  [
-    'est',
-    'crash-record',
-    'attach-sketch',
-    ['field-agent', 'processing-operator'],
-  ],
-  [
-    'est',
-    'crash-record',
-    'validate',
-    ['processing-operator', 'traffic-authority'],
-  ],
-  ['est', 'crash-record', 'close', ['field-supervisor', 'traffic-authority']],
   [
     'integration',
     'integration-batch',
@@ -1575,6 +1644,9 @@ export const DETRAN_POLICY_MATRIX: Readonly<
       teat(domain, resource, action),
       roles,
     ]),
+    ...EST_CRUD_RULES.concat(EST_COMMAND_RULES).map(
+      ([resource, action, roles]) => [teat('est', resource, action), roles],
+    ),
     ...OPS_SURFACE_RULES.map(([resource, action, roles]) => [
       teat('ops', resource, action),
       roles,
