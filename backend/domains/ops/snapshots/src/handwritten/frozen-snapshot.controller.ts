@@ -3,7 +3,7 @@ import { Action, Audit, Resource } from '@detran/shared';
 
 import { FrozenSnapshotService } from './frozen-snapshot.service.js';
 
-@Controller('ops/snapshots')
+@Controller('v1/ops/snapshots')
 export class FrozenSnapshotController {
   constructor(private readonly service: FrozenSnapshotService) {}
   @Get('people') @Resource('ops:snapshot-person') @Action('read') people() {

@@ -2,7 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
 import { FieldOperationsService } from './field-operations.service.js';
 
-@Controller('ops')
+// CTG-0002 §1 — a superfície manuscrita de `ops` monta em `v1/ops/…`, como
+// todo controlador gerado e o route contract §4; uma rota `/ops/agents` nunca
+// casaria com a matriz `ops:*` da política (M18).
+@Controller('v1/ops/field')
 export class FieldOperationsController {
   constructor(private readonly service: FieldOperationsService) {}
 

@@ -4,28 +4,56 @@
   "module": {
     "name": "Field",
     "namespace": "ops",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "ddlFile": "13-ops-field-operations.sql",
     "dependencies": {
       "@detran/ops-core": "workspace:*",
-      "@detran/ops-parameter": "workspace:*"
+      "@detran/ops-parameter": "workspace:*",
+      "zod": "^4.6.5",
+      "@detran/inf-normative": "workspace:*"
     },
     "handwrittenControllers": [
       {
         "target": "handwritten/field-operations.controller",
         "symbol": "FieldOperationsController"
+      },
+      {
+        "target": "handwritten/mobile-bootstrap.controller",
+        "symbol": "MobileBootstrapController"
+      },
+      {
+        "target": "handwritten/field-commands.controller",
+        "symbol": "FieldCommandsController"
       }
     ],
     "handwrittenProviders": [
       {
         "target": "handwritten/field-operations.provider",
         "symbol": "FIELD_OPERATIONS_PROVIDER"
+      },
+      {
+        "target": "handwritten/mobile-bootstrap.provider",
+        "symbol": "MOBILE_BOOTSTRAP_PROVIDER"
       }
     ],
     "handwrittenExports": [
       "handwritten/field-operations.controller",
       "handwritten/field-operations.provider",
-      "handwritten/field-operations.service"
+      "handwritten/field-operations.service",
+      "handwritten/field-runtime",
+      "handwritten/events",
+      "handwritten/mobile-bootstrap.service",
+      "handwritten/mobile-bootstrap.controller",
+      "handwritten/mobile-bootstrap.provider",
+      "handwritten/field-commands",
+      "handwritten/field-commands.controller",
+      "handwritten/shift-readiness",
+      "handwritten/open-shift.command",
+      "handwritten/close-shift.command",
+      "handwritten/handoff-session.command",
+      "handwritten/device-posture.command",
+      "handwritten/renew-homologation.command",
+      "handwritten/cancel-homologation.command"
     ],
     "owners": ["detran-ops"],
     "description": "Field-operation context from TEAT BP-MOBILE-OPERATIONS-001 and RN-TEAT-003; handwritten operations routes remain mounted through the generated module.",
@@ -41,6 +69,16 @@
       {
         "package": "@detran/ops-parameter",
         "target": "../parameter/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-normative",
+        "target": "../../inf/normative/src/index.ts"
+      }
+    ],
+    "moduleImports": [
+      {
+        "package": "@detran/ops-parameter",
+        "symbol": "ParameterModule"
       }
     ]
   },

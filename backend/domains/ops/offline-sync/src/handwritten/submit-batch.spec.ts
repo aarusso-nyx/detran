@@ -156,7 +156,9 @@ function batch(
     device_id: DEVICE_ID,
     agent_id: AGENT_ID,
     device_batch_id: 'batch-010',
-    batch_sequence: 2,
+    // Primeiro lote de um device: §4.1 passo 4 fixa `last = 0`, logo a
+    // única sequência aceita é 1. Os casos de replay e gap sobrescrevem.
+    batch_sequence: 1,
     items: [item()],
     ...overrides,
   };
@@ -476,7 +478,7 @@ describe('CTG-0002 §4.2/§4.3/§4.4 — item: identidade, integridade, tipo e l
     const appliesAfterFirst = ait.apply.mock.calls.length;
     const second = await submitBatch(
       dependencies,
-      batch({ device_batch_id: 'batch-012', batch_sequence: 3 }),
+      batch({ device_batch_id: 'batch-012', batch_sequence: 2 }),
     );
     expect(receiptFor(second, LOCAL_ENTITY_1)).toEqual(
       receiptFor(first, LOCAL_ENTITY_1),
@@ -492,7 +494,7 @@ describe('CTG-0002 §4.2/§4.3/§4.4 — item: identidade, integridade, tipo e l
       dependencies,
       batch({
         device_batch_id: 'batch-013',
-        batch_sequence: 3,
+        batch_sequence: 2,
         items: [
           item({
             payload_json: divergent,
@@ -833,5 +835,141 @@ describe('CTG-0002 §4.7 — detecção de concorrência (M6, RN-TEAT-111, AC-TE
       ),
     ).toBe(true);
     expect(response.warnings).toEqual([]);
+  });
+});
+
+/**
+ * CTG-0002 §4.1 passo 4 e §5.13 (R-0008, TASK-0004 iteração 3) — achados 3 e 4
+ * da delivery-review do CTG-0002: o primeiro lote sequenciado de um device e a
+ * validação de forma do `SubmitSyncBatchDto`.
+ *
+ * Os dois blocos são transcrição do contrato, não interpretação: o passo 4 diz
+ * `last = max(batch_sequence) aceito do (tenant, device), ou 0`, logo o
+ * primeiro lote de um device só aceita `1`; e a §5.13 fixa `device_batch_id`
+ * obrigatório, `items` obrigatório com ≥ 1 elemento e `batch_sequence?: int ≥ 1`.
+ */
+describe('CTG-0002 §4.1 passo 4 — primeiro lote sequenciado de um device (achado 3)', () => {
+  it('dado nenhum lote anterior do device quando chega batch_sequence = 2 então 422 TEAT.SYNC_BATCH_SEQUENCE_GAP com expectedSequence 1 e received 2 (last = 0)', async () => {
+    const dependencies = deps();
+    await expect(
+      submitBatch(dependencies, batch({ batch_sequence: 2 })),
+    ).rejects.toMatchObject({
+      code: 'TEAT.SYNC_BATCH_SEQUENCE_GAP',
+      status: 422,
+      context: expect.objectContaining({ expectedSequence: 1, received: 2 }),
+    });
+    expect(dependencies.repositories.batches.rows).toEqual([]);
+    expect(dependencies.repositories.items.rows).toEqual([]);
+  });
+
+  it('dado nenhum lote anterior do device quando chega batch_sequence = 1 então o lote é aceito e a resposta ecoa batch_sequence 1', async () => {
+    const dependencies = deps();
+    const response = await submitBatch(
+      dependencies,
+      batch({ batch_sequence: 1 }),
+    );
+    expect(response.batch_sequence).toBe(1);
+    expect(receiptFor(response, LOCAL_ENTITY_1).status).toBe('applied');
+  });
+
+  it('dado nenhum lote anterior do device quando chega batch_sequence = 3 então 422 com expectedSequence 1, nunca 409 de replay (não há o que reprisar)', async () => {
+    const dependencies = deps();
+    await expect(
+      submitBatch(dependencies, batch({ batch_sequence: 3 })),
+    ).rejects.toMatchObject({
+      code: 'TEAT.SYNC_BATCH_SEQUENCE_GAP',
+      status: 422,
+      context: expect.objectContaining({ expectedSequence: 1, received: 3 }),
+    });
+  });
+});
+
+describe('CTG-0002 §5.13 — validação de forma do SubmitSyncBatchDto (achado 4)', () => {
+  /** Nada pode ser materializado quando o corpo é inválido. */
+  function expectNothingMaterialized(dependencies: Deps): void {
+    expect(dependencies.repositories.batches.rows).toEqual([]);
+    expect(dependencies.repositories.items.rows).toEqual([]);
+    expect(dependencies.repositories.receipts.rows).toEqual([]);
+    expect(dependencies.repositories.conflicts.rows).toEqual([]);
+  }
+
+  it('dado items ausente então 400 TEAT.VALIDATION_FAILED com context.fields[] apontando items, e nada materializado', async () => {
+    const dependencies = deps();
+    const input = batch();
+    delete input.items;
+    await expect(submitBatch(dependencies, input)).rejects.toMatchObject({
+      code: 'TEAT.VALIDATION_FAILED',
+      status: 400,
+      context: expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({ path: 'items' }),
+        ]),
+      }),
+    });
+    expectNothingMaterialized(dependencies);
+  });
+
+  it('dado items vazio então 400 TEAT.VALIDATION_FAILED com context.fields[] apontando items (o DTO exige ≥ 1), e nada materializado', async () => {
+    const dependencies = deps();
+    await expect(
+      submitBatch(dependencies, batch({ items: [] })),
+    ).rejects.toMatchObject({
+      code: 'TEAT.VALIDATION_FAILED',
+      status: 400,
+      context: expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({ path: 'items' }),
+        ]),
+      }),
+    });
+    expectNothingMaterialized(dependencies);
+  });
+
+  it('dado batch_sequence não inteiro então 400 TEAT.VALIDATION_FAILED com context.fields[] apontando batch_sequence, e nada materializado', async () => {
+    const dependencies = deps();
+    await expect(
+      submitBatch(dependencies, batch({ batch_sequence: 1.5 })),
+    ).rejects.toMatchObject({
+      code: 'TEAT.VALIDATION_FAILED',
+      status: 400,
+      context: expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({ path: 'batch_sequence' }),
+        ]),
+      }),
+    });
+    expectNothingMaterialized(dependencies);
+  });
+
+  it('dado batch_sequence menor que 1 então 400 TEAT.VALIDATION_FAILED (o DTO e o check ck_ops_sync_batch_sequence_positive exigem ≥ 1)', async () => {
+    const dependencies = deps();
+    await expect(
+      submitBatch(dependencies, batch({ batch_sequence: 0 })),
+    ).rejects.toMatchObject({
+      code: 'TEAT.VALIDATION_FAILED',
+      status: 400,
+      context: expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({ path: 'batch_sequence' }),
+        ]),
+      }),
+    });
+    expectNothingMaterialized(dependencies);
+  });
+
+  it('dado device_batch_id ausente então 400 TEAT.VALIDATION_FAILED com context.fields[] apontando device_batch_id, e nada materializado', async () => {
+    const dependencies = deps();
+    const input = batch();
+    delete input.device_batch_id;
+    await expect(submitBatch(dependencies, input)).rejects.toMatchObject({
+      code: 'TEAT.VALIDATION_FAILED',
+      status: 400,
+      context: expect.objectContaining({
+        fields: expect.arrayContaining([
+          expect.objectContaining({ path: 'device_batch_id' }),
+        ]),
+      }),
+    });
+    expectNothingMaterialized(dependencies);
   });
 });

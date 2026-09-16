@@ -4,11 +4,12 @@
   "module": {
     "name": "OfflineSync",
     "namespace": "ops",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "ddlFile": "18-ops-offline-sync.sql",
     "dependencies": {
       "@detran/ops-core": "workspace:*",
-      "@detran/ops-parameter": "workspace:*"
+      "@detran/ops-parameter": "workspace:*",
+      "zod": "^4.6.5"
     },
     "owners": ["detran-ops"],
     "description": "Offline numbering and durable synchronization from WF-TEAT-002 and INV-OFFLINE-001; no WP-T2 controller is mounted in this round.",
@@ -24,6 +25,40 @@
       {
         "package": "@detran/ops-parameter",
         "target": "../parameter/src/index.ts"
+      }
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/offline-sync.controller",
+        "symbol": "OfflineSyncController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/offline-sync.provider",
+        "symbol": "OFFLINE_SYNC_PROVIDER"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/batch-protocol",
+      "handwritten/canonical-hash",
+      "handwritten/concurrency-detector",
+      "handwritten/events",
+      "handwritten/numbering-sql",
+      "handwritten/submit-batch.command",
+      "handwritten/reserve-numbering.command",
+      "handwritten/settle-numbering.command",
+      "handwritten/reconcile-numbering.command",
+      "handwritten/resolve-conflict.command",
+      "handwritten/offline-sync.reads",
+      "handwritten/offline-sync.commands",
+      "handwritten/offline-sync.controller",
+      "handwritten/offline-sync.provider"
+    ],
+    "moduleImports": [
+      {
+        "package": "@detran/ops-parameter",
+        "symbol": "ParameterModule"
       }
     ]
   },
@@ -59,7 +94,8 @@
       {
         "entity": "SyncReceipt",
         "path": "receipts",
-        "resource": "sync-receipt"
+        "resource": "sync-receipt",
+        "operations": ["list"]
       },
       {
         "entity": "SyncConflict",
@@ -589,7 +625,7 @@
           {
             "name": "safe_message",
             "type": "varchar(240)",
-            "default": "'Divergência de negócio requer análise.'"
+            "default": "'Diverg\u00eancia de neg\u00f3cio requer an\u00e1lise.'"
           },
           {
             "name": "correlation_id",

@@ -1170,3 +1170,265 @@ describe('CTG-0001 §5 — AIT completo: archive, review-concurrency, ait-cancel
     });
   });
 });
+
+/**
+ * CTG-0002 §8 (R-0008, TASK-0004) — campo, numeração e sincronização: as
+ * chaves novas de `TEAT_RULES` e de `OPS_SURFACE_RULES` que TASK-0005 escreve,
+ * e a ausência definitiva do alias `ops:offline-numbering-reservation:*` (M18).
+ *
+ * Toda linha abaixo é transcrição literal da §8 do contrato; nenhum papel é
+ * inferido. Os pares que ainda não existem falham hoje por comportamento
+ * ausente (Engineer, TASK-0005), nunca por erro de escrita.
+ */
+describe('R-0008 CTG-0002 §8 — política de campo, numeração e sincronização (TASK-0004)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (CTG-0001 §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        // technical-admin está em GLOBAL_ADMIN_ROLES: '*' o libera para toda
+        // chave, sem entrar na lista estática de papéis concedidos.
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  }
+
+  describe('§8 — chaves novas de TEAT_RULES (rotas manuscritas)', () => {
+    it('ops:operational-device:close-shift — field-agent e field-supervisor (origem teat-policy.ts)', () => {
+      expectGrantedOnlyTo('ops:operational-device', 'close-shift', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+
+    it('ops:operational-device:handoff-session — field-agent e field-supervisor (OD-T15: chave nova, por analogia com close-shift)', () => {
+      expectGrantedOnlyTo('ops:operational-device', 'handoff-session', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+
+    it('ops:operational-device:{block,unblock,wipe} — só technical-admin (route contract §4.2)', () => {
+      for (const action of ['block', 'unblock', 'wipe']) {
+        expectGrantedOnlyTo('ops:operational-device', action, [
+          'technical-admin',
+        ]);
+      }
+    });
+
+    it('ops:homologation:{renew,cancel-by-audit} — agency-admin e technical-admin (origem)', () => {
+      for (const action of ['renew', 'cancel-by-audit']) {
+        expectGrantedOnlyTo('ops:homologation', action, [
+          'agency-admin',
+          'technical-admin',
+        ]);
+      }
+    });
+  });
+
+  describe('§8 — chaves de comando já existentes, preservadas', () => {
+    it('ops:numbering-reservation:reserve — só field-agent (OD-T23: prevalece a fonte mais restrita)', () => {
+      expectGrantedOnlyTo('ops:numbering-reservation', 'reserve', [
+        'field-agent',
+      ]);
+    });
+
+    it('ops:numbering-reservation:cancel — field-agent e field-supervisor', () => {
+      expectGrantedOnlyTo('ops:numbering-reservation', 'cancel', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+
+    it('ops:sync-batch:submit — só field-agent', () => {
+      expectGrantedOnlyTo('ops:sync-batch', 'submit', ['field-agent']);
+    });
+
+    it('ops:sync-conflict:resolve — field-supervisor e processing-operator', () => {
+      expectGrantedOnlyTo('ops:sync-conflict', 'resolve', [
+        'field-supervisor',
+        'processing-operator',
+      ]);
+    });
+  });
+
+  describe('§8 — chaves novas de OPS_SURFACE_RULES (superfícies CRUD do route contract §4.3)', () => {
+    const surfaces: Array<[string, string, readonly string[]]> = [
+      ['numbering-range', 'read', ['agency-admin', 'technical-admin']],
+      ['numbering-range', 'create', ['agency-admin', 'technical-admin']],
+      ['numbering-range', 'update', ['agency-admin', 'technical-admin']],
+      [
+        'numbering-reservation',
+        'read',
+        ['field-agent', 'field-supervisor', 'processing-operator'],
+      ],
+      [
+        'numbering-consumption',
+        'read',
+        ['field-agent', 'field-supervisor', 'processing-operator'],
+      ],
+      [
+        'sync-batch',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'sync-receipt',
+        'read',
+        ['field-agent', 'field-supervisor', 'processing-operator'],
+      ],
+      [
+        'sync-queue-item',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'sync-conflict',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'session-handoff',
+        'read',
+        ['field-supervisor', 'processing-operator', 'traffic-authority'],
+      ],
+      [
+        'device-event',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'operation',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['operation', 'create', ['field-supervisor', 'agency-admin']],
+      [
+        'team-agent',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['team-agent', 'create', ['field-supervisor', 'agency-admin']],
+      [
+        'patrol-vehicle',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['patrol-vehicle', 'create', ['agency-admin']],
+      [
+        'measurement-instrument',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['measurement-instrument', 'create', ['agency-admin']],
+      [
+        'approach',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['approach', 'create', ['field-agent']],
+    ];
+
+    for (const [resource, action, roles] of surfaces) {
+      it(`ops:${resource}:${action} — ${roles.join(', ')}`, () => {
+        expectGrantedOnlyTo(`ops:${resource}`, action, roles);
+      });
+    }
+
+    const agencySurfaces = [
+      'agency-unit',
+      'agency-jurisdiction',
+      'agency-competence',
+    ];
+
+    it('ops:{agency-unit,agency-jurisdiction,agency-competence}:read — os quatro papéis de campo mais agency-admin', () => {
+      for (const resource of agencySurfaces) {
+        expectGrantedOnlyTo(`ops:${resource}`, 'read', [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'agency-admin',
+        ]);
+      }
+    });
+
+    it('ops:{agency-unit,agency-jurisdiction,agency-competence}:create — só agency-admin', () => {
+      for (const resource of agencySurfaces) {
+        expectGrantedOnlyTo(`ops:${resource}`, 'create', ['agency-admin']);
+      }
+    });
+  });
+
+  describe('§8 — remoção do alias duplicado da origem (M18)', () => {
+    it('dado ops:offline-numbering-reservation:{reserve,cancel} então as duas chaves não existem na matriz (a rota única é numbering-reservation)', () => {
+      for (const action of ['reserve', 'cancel']) {
+        expect(
+          `ops:offline-numbering-reservation:${action}` in DETRAN_POLICY_MATRIX,
+          `ops:offline-numbering-reservation:${action} deveria ter sido removida em M18`,
+        ).toBe(false);
+      }
+    });
+
+    it('dado qualquer papel canônico então nenhum recebe ops:offline-numbering-reservation:reserve, nem por permissionsForRoles', () => {
+      for (const role of TEAT_CANONICAL_ROLES) {
+        expect(
+          permissionsForRoles([role]).includes(
+            'ops:offline-numbering-reservation:reserve',
+          ),
+        ).toBe(false);
+      }
+    });
+  });
+});

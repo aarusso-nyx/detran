@@ -1,0 +1,50 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0008/tasks/TASK-0005.json",
+      "line": 10,
+      "claim": "TASK-0005 alterou os controladores de ops/evidence e ops/snapshots, mas seus target_modules não incluem esses módulos; eles pertencem ao TASK-0007, ainda queued.",
+      "fix": "reverter essas alterações da entrega CTG-0002 e deixá-las para TASK-0007, ou obter alteração formal do plano e dos locks antes de aceitá-las."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts",
+      "line": 715,
+      "claim": "O contrato exige que efeito de domínio, sync_queue_item/status+server_entity_id, sync_receipt/status e eventos estejam na mesma transação do item; a implementação só executa o applier/eventos na transação e atualiza item e recibo depois, fora dela.",
+      "fix": "mover as atualizações de fila e recibo para o callback iniciado na linha 650, usando a mesma transação recebida pelo applier."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts",
+      "line": 674,
+      "claim": "O evento SYNC_ITEM_RECEBIDO é gravado antes de sync_batch existir e publica batchId:null, contrariando a ordem canônica que grava o lote antes dos eventos e exige batchId no payload.",
+      "fix": "persistir o sync_batch antes de publicar os envelopes do item e preencher batchId com o id persistido."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts",
+      "line": 273,
+      "claim": "Quando não há lote sequenciado anterior, assertSequence retorna sem validar a sequência; portanto o primeiro lote pode usar batch_sequence 2 ou maior, embora o contrato defina last=0 e exija 422 SYNC_BATCH_SEQUENCE_GAP.",
+      "fix": "calcular last como 0 na ausência de sequências e aplicar as guardas de replay/gap também ao primeiro lote."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts",
+      "line": 139,
+      "claim": "A fronteira HTTP recebe uma interface TypeScript sem validação executável e normaliza items ausente para []; assim aceita lote vazio e batch_sequence inválida, apesar do DTO canônico exigir batch_sequence inteiro >=1 e items obrigatório com ao menos um elemento.",
+      "fix": "validar o corpo no controlador/comando com DTO ou schema runtime que imponha os limites e devolva TEAT.VALIDATION_FAILED antes de materializar qualquer item."
+    }
+  ],
+  "notes": [
+    "Ciclo 1 exaustivo: os achados são contradições diretas do contrato CTG-0002, além da violação de fronteira de escrita."
+  ]
+}

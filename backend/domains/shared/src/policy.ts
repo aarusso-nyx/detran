@@ -608,6 +608,34 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
     ['field-agent', 'field-supervisor'],
   ],
   ['ops', 'sync-batch', 'submit', ['field-agent']],
+  // CTG-0002 §8 (M18, TASK-0005): chaves novas das rotas manuscritas de campo.
+  // `close-shift` vem da origem `teat-policy.ts`; `handoff-session` é rota nova
+  // de D-01 e herda os papéis de `close-shift`, por analogia do mesmo ato de
+  // campo (OD-T15); `block`/`unblock`/`wipe` são do route contract §4.2 e
+  // existem mesmo com `technical-admin` passando por '*', para que
+  // `policy-routes.e2e.spec.ts` case rota <-> regra nos dois sentidos.
+  [
+    'ops',
+    'operational-device',
+    'close-shift',
+    ['field-agent', 'field-supervisor'],
+  ],
+  [
+    'ops',
+    'operational-device',
+    'handoff-session',
+    ['field-agent', 'field-supervisor'],
+  ],
+  ['ops', 'operational-device', 'block', ['technical-admin']],
+  ['ops', 'operational-device', 'unblock', ['technical-admin']],
+  ['ops', 'operational-device', 'wipe', ['technical-admin']],
+  ['ops', 'homologation', 'renew', ['agency-admin', 'technical-admin']],
+  [
+    'ops',
+    'homologation',
+    'cancel-by-audit',
+    ['agency-admin', 'technical-admin'],
+  ],
   [
     'ops',
     'sync-conflict',
@@ -760,8 +788,63 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
  * the ported CRUD surfaces whose TEAT fallback classified as field-legal or
  * governance work; spelling them out keeps the unified matrix authoritative.
  */
+const OPS_FIELD_READ_ROLES: readonly DetranRole[] = [
+  'field-agent',
+  'field-supervisor',
+  'processing-operator',
+  'traffic-authority',
+];
+const OPS_SYNC_DESK_ROLES: readonly DetranRole[] = [
+  'field-supervisor',
+  'processing-operator',
+  'technical-admin',
+];
+const OPS_SYNC_FIELD_ROLES: readonly DetranRole[] = [
+  'field-agent',
+  'field-supervisor',
+  'processing-operator',
+];
+const OPS_NUMBERING_ADMIN_ROLES: readonly DetranRole[] = [
+  'agency-admin',
+  'technical-admin',
+];
+
 const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['parameter', 'read', ['agency-admin']],
+  // CTG-0002 §8 (M18, TASK-0005) — superfícies do route contract §4.3 que
+  // ainda não tinham regra. Sem regra, a guarda falha fechado e a rota some
+  // para todo papel que não seja administrador global.
+  ['numbering-range', 'read', OPS_NUMBERING_ADMIN_ROLES],
+  ['numbering-range', 'create', OPS_NUMBERING_ADMIN_ROLES],
+  ['numbering-range', 'update', OPS_NUMBERING_ADMIN_ROLES],
+  ['numbering-reservation', 'read', OPS_SYNC_FIELD_ROLES],
+  ['numbering-consumption', 'read', OPS_SYNC_FIELD_ROLES],
+  ['sync-batch', 'read', OPS_SYNC_DESK_ROLES],
+  ['sync-receipt', 'read', OPS_SYNC_FIELD_ROLES],
+  ['sync-queue-item', 'read', OPS_SYNC_DESK_ROLES],
+  ['sync-conflict', 'read', OPS_SYNC_DESK_ROLES],
+  [
+    'session-handoff',
+    'read',
+    ['field-supervisor', 'processing-operator', 'traffic-authority'],
+  ],
+  ['device-event', 'read', OPS_SYNC_DESK_ROLES],
+  ['operation', 'read', OPS_FIELD_READ_ROLES],
+  ['operation', 'create', ['field-supervisor', 'agency-admin']],
+  ['team-agent', 'read', OPS_FIELD_READ_ROLES],
+  ['team-agent', 'create', ['field-supervisor', 'agency-admin']],
+  ['patrol-vehicle', 'read', OPS_FIELD_READ_ROLES],
+  ['patrol-vehicle', 'create', ['agency-admin']],
+  ['measurement-instrument', 'read', OPS_FIELD_READ_ROLES],
+  ['measurement-instrument', 'create', ['agency-admin']],
+  ['approach', 'read', OPS_FIELD_READ_ROLES],
+  ['approach', 'create', ['field-agent']],
+  ['agency-unit', 'read', [...OPS_FIELD_READ_ROLES, 'agency-admin']],
+  ['agency-jurisdiction', 'read', [...OPS_FIELD_READ_ROLES, 'agency-admin']],
+  ['agency-competence', 'read', [...OPS_FIELD_READ_ROLES, 'agency-admin']],
+  ['agency-unit', 'create', ['agency-admin']],
+  ['agency-jurisdiction', 'create', ['agency-admin']],
+  ['agency-competence', 'create', ['agency-admin']],
   ['parameter', 'update', ['agency-admin']],
   [
     'agent-profile',

@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.2.0 sha256:929e2e65586fc826e76dc66fceae7a52e7920abed66169e1291a67e2bd055f6d
+// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
 import { Module } from '@nestjs/common';
 import { AitController } from './controllers/ait.controller.js';
 import { AitService } from './services/ait.service.js';
@@ -31,6 +31,7 @@ import { AitCommandsController } from './ait-commands.controller.js';
 import { AitCancelRequestsController } from './handwritten/ait-cancel-requests.controller.js';
 import { AIT_LIFECYCLE_PROVIDER } from './ait-lifecycle.provider.js';
 import { AIT_CANCEL_REQUESTS_PROVIDER } from './handwritten/ait-cancel-requests.provider.js';
+import { AIT_SYNC_APPLIER_PROVIDER } from './handwritten/sync-applier.provider.js';
 import { NormativeModule } from '@detran/inf-normative';
 
 @Module({
@@ -69,6 +70,7 @@ import { NormativeModule } from '@detran/inf-normative';
     AitPrintEventRepository,
     AIT_LIFECYCLE_PROVIDER,
     AIT_CANCEL_REQUESTS_PROVIDER,
+    AIT_SYNC_APPLIER_PROVIDER,
   ],
 })
 export class AitModule {}

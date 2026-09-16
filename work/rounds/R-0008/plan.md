@@ -342,6 +342,21 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   sem `testAliases`) → `reference-gap`, delta aplicado pelo maestro (CTG-0002 §13.2); (2) colisão `POST sync-batches` CRUD × comando
   → `reference-gap`, `operations: [list, get]` (§13.1), extensivo a `evidence-access-requests` e `external-queries` (CTG-0003);
   (3) prefixo `v1/` de `evidence`/`snapshots` só em TASK-0007 → C-0002-50 fica vermelho até lá (aceito).
+- 2026-09-15 TASK-0005 iteração 1 — (1) `GET receipts/{tenantId}` sombreado pelo `GET receipts/:id` gerado → `reference-gap`: delta
+  `SyncReceipt.operations=['list']` (BP-OPS-OFFLINE-SYNC-001 v1.3.0) pelo maestro; (2) testes do Inspector reusam `batch_sequence: 1`
+  (C-0002-27/28/29), C-0002-27 exige consumo sem reserva, `ait-sync-applier` apaga todos os `sync_receipt` (derruba C-0002-30) →
+  `sensor-error`: Inspector iteração 2; (3) `zod`/`@detran/inf-normative` (ops/field) e `@detran/ops-core` (app) não linkados →
+  `reference-gap`: deps nos blueprints/app + `pnpm install` pelo maestro; Engineer iteração 2 converte eventos a zod.
+- 2026-09-15 delivery-review-CTG-0002 ciclo 1 `FAIL` (5 achados): (1) fronteira — a mudança do prefixo `v1/` em `evidence`/`snapshots`
+  foi pedida pelo maestro a TASK-0005 (só a string do `@Controller`); **alteração formal do plano**: locks
+  `MOD-ops-evidence-controller-prefix` e `MOD-ops-snapshots-controller-prefix` acrescentados a TASK-0005 (`tasks/TASK-0005.json`);
+  TASK-0007 deixa de executar CTG-0002 §13.4 (já executado); (2)–(5) `plant-bug` no `submit-batch.command.ts`: item/recibo fora da
+  transação do item; `SYNC_ITEM_RECEBIDO` antes do `sync_batch` (`batchId` nulo); primeiro lote sem guarda de sequência (`last=0`);
+  sem validação runtime do DTO (lote vazio, `batch_sequence` inválida) → Inspector iteração 3 (testes) + Engineer iteração 3; ciclo 2
+  restrito. Gates completos (`pnpm check`, `backend:test:ci`) verdes no ciclo 1.
+- 2026-09-15 delivery-review-CTG-0002 ciclo 2 `FAIL` (inversão dos passos 5–10 de §4.1 introduzida pelo achado 3 do ciclo 1) →
+  resolução formal do Architect: adenda §14 (lote durável no passo 5; fechamento no 9). Ciclo 3 `REVIEW` (consequência (c) da §14:
+  replay de lote interrompido deve completar os itens faltantes) → Inspector iteração 4 (teste) + Engineer iteração 5; ciclo 4 restrito.
 
 ## Concorrência
 
@@ -377,7 +392,10 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   publicado (a partir daqui só `merge`, nunca rebase); **PR #47** aberto (CI em curso). TASK-0004 (opus/high) disparada.
 - 2026-09-15 (checkpoint 3): **PR #47 mesclado** em 397cb033ce2da549e2922d307c28b6b81e5d5070 (CI 5/5 verde; `audit observe`
   EV-5a4d81502cca07c6); branch fast-forward ao merge. TASK-0004 concluída (testes vermelhos + seed 26); adenda §13 em CTG-0002
-  (colisões de rota por `operations`, `testAliases`, símbolos dos comandos, prefixo `v1/`). Próximo: TASK-0005 (opus/médio). Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
+  (colisões de rota por `operations`, `testAliases`, símbolos dos comandos, prefixo `v1/`). Próximo: TASK-0005 (opus/médio).
+- 2026-09-15 (checkpoint 4): CTG-0002 concluído — TASK-0004 (4 iterações), TASK-0005 (5 iterações); delivery-review ciclos 1 `FAIL`,
+  2 `FAIL` (resolvido por adenda §14), 3 `REVIEW`, 4 `PASS`; adendas §13/§14 em CTG-0002. Próximo: commit, evidência seq. 2, PR do
+  CTG-0002; TASK-0006 (sonnet/médio) em seguida. Pendentes: TASK-0006…0013. Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
   maestro prossegue por instrução explícita do Owner ("até a completa finalização e merge").
 
 ## Leitura

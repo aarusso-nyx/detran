@@ -1,4 +1,4 @@
-// Generated from BP-OPS-OFFLINE-SYNC-001 v1.2.0 sha256:caa6ee5fb47a5169864e22d9763e35d774009a12ac8d550129bacf8d39ac2cac
+// Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
 import { Module } from '@nestjs/common';
 import { AitNumberingRangeController } from './controllers/ait-numbering-range.controller.js';
 import { AitNumberingRangeService } from './services/ait-numbering-range.service.js';
@@ -21,8 +21,12 @@ import { SyncReceiptRepository } from './repositories/sync-receipt.repository.js
 import { SyncConflictController } from './controllers/sync-conflict.controller.js';
 import { SyncConflictService } from './services/sync-conflict.service.js';
 import { SyncConflictRepository } from './repositories/sync-conflict.repository.js';
+import { OfflineSyncController } from './handwritten/offline-sync.controller.js';
+import { OFFLINE_SYNC_PROVIDER } from './handwritten/offline-sync.provider.js';
+import { ParameterModule } from '@detran/ops-parameter';
 
 @Module({
+  imports: [ParameterModule],
   controllers: [
     AitNumberingRangeController,
     NumberingReservationController,
@@ -31,6 +35,7 @@ import { SyncConflictRepository } from './repositories/sync-conflict.repository.
     SyncQueueItemController,
     SyncReceiptController,
     SyncConflictController,
+    OfflineSyncController,
   ],
   providers: [
     AitNumberingRangeService,
@@ -47,6 +52,7 @@ import { SyncConflictRepository } from './repositories/sync-conflict.repository.
     SyncReceiptRepository,
     SyncConflictService,
     SyncConflictRepository,
+    OFFLINE_SYNC_PROVIDER,
   ],
 })
 export class OfflineSyncModule {}
