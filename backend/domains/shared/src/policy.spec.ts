@@ -1976,3 +1976,72 @@ describe('CTG-0004 §2/§4/§5/§8 — medidas, alcoolemia, velocidade, SSE, int
     });
   });
 });
+
+/**
+ * work/rounds/R-0009/contracts/CTG-0001.md §3/§8, §11 C-0001-52 (M19; plan.md M19) —
+ * `portal:identity:read`: única linha que TASK-0004 acrescenta a `policy.ts` neste grupo (o
+ * bloco `PORTAL_RULES` completo é CTG-0002/TASK-0007). Fica vermelho até TASK-0004 acrescentar
+ * `['portal:identity:read', ['CIDADAO']]`. Negativos exaustivos por todos os papéis canônicos de
+ * `DETRAN_ROLES`, exceto a exceção declarada de `GLOBAL_ADMIN_ROLES` (a guarda de identidade —
+ * `PortalCitizenGuard`, M4 — nega essas quatro depois, fora do escopo de `policy.spec.ts`).
+ *
+ * Nota de divergência (registrada no relatório de TASK-0003): o texto de §11 C-0001-52 fala em
+ * "32 papéis... negativos", mas a lista enumerada em §3 (`negativo pela política`) tem 31 nomes;
+ * 31 é o valor internamente consistente com `DETRAN_ROLES.length === 36` (36 − 1 CIDADAO − 4
+ * `GLOBAL_ADMIN_ROLES`), verificado abaixo programaticamente contra `roles.ts`.
+ *
+ * `portal:appeal:create`/`portal:appeal:read-own` (linhas existentes, ver teste acima em
+ * "grants RAIT command and surface rules only to RAIT staff roles") não são removidas nem
+ * alteradas aqui — permanecem até CTG-0002/TASK-0007 (M19).
+ */
+describe('CTG-0001 §3/§8 (M19, TASK-0003) — portal:identity:read: CIDADAO positivo, negativos exaustivos', () => {
+  const PORTAL_GLOBAL_ADMIN_ROLES = [
+    'ADMIN',
+    'GESTOR_DETRAN',
+    'SUPORTE',
+    'technical-admin',
+  ] as const;
+
+  it('C-0001-52 — dado portal:identity:read quando isDetranActionAllowed então CIDADAO permitido; ADMIN/GESTOR_DETRAN/SUPORTE/technical-admin permitidos por GLOBAL_ADMIN_ROLES (exceção declarada — a guarda de identidade nega depois, M4); os demais 31 papéis canônicos negados', () => {
+    for (const role of DETRAN_ROLES) {
+      const expected =
+        role === 'CIDADAO' ||
+        (PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role);
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'portal:identity',
+          'read',
+        ),
+        `portal:identity:read para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  });
+
+  it('dado os papéis canônicos fora de CIDADAO e GLOBAL_ADMIN_ROLES quando contados então são exatamente 31 (36 papéis − 1 CIDADAO − 4 GLOBAL_ADMIN_ROLES)', () => {
+    const negatives = DETRAN_ROLES.filter(
+      (role) =>
+        role !== 'CIDADAO' &&
+        !(PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role),
+    );
+    expect(DETRAN_ROLES).toHaveLength(36);
+    expect(negatives).toHaveLength(31);
+  });
+
+  it('dado portal:appeal:create e portal:appeal:read-own (linhas existentes) quando isDetranActionAllowed(CIDADAO) então continuam permitidas — só removidas em CTG-0002/TASK-0007 (M19)', () => {
+    expect(
+      isDetranActionAllowed(
+        { roles: ['CIDADAO'], permissions: [] },
+        'portal:appeal',
+        'create',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['CIDADAO'], permissions: [] },
+        'portal:appeal',
+        'read-own',
+      ),
+    ).toBe(true);
+  });
+});

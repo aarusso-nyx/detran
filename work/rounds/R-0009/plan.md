@@ -433,18 +433,18 @@ concluído: rebase sobre `0996391`; `pnpm install --frozen-lockfile` OK; `pnpm c
 
 Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 
-| Tarefa    | Estado      | Nota                                                            |
-| --------- | ----------- | --------------------------------------------------------------- |
-| TASK-0001 | completed   | relatório em `reports/TASK-0001.md`; divergências aceitas em A1 |
-| TASK-0002 | in_progress | idem, em paralelo                                               |
-| TASK-0003 | queued      | —                                                               |
-| TASK-0004 | queued      | —                                                               |
-| TASK-0005 | queued      | —                                                               |
-| TASK-0006 | queued      | —                                                               |
-| TASK-0007 | queued      | —                                                               |
-| TASK-0008 | queued      | —                                                               |
-| TASK-0009 | queued      | —                                                               |
-| TASK-0010 | queued      | —                                                               |
+| Tarefa    | Estado      | Nota                                                                          |
+| --------- | ----------- | ----------------------------------------------------------------------------- |
+| TASK-0001 | completed   | relatório em `reports/TASK-0001.md`; divergências aceitas em A1               |
+| TASK-0002 | in_progress | idem, em paralelo                                                             |
+| TASK-0003 | completed   | relatório em `reports/TASK-0003.md`; 52 critérios → specs; seed 70 provado 3× |
+| TASK-0004 | in_progress | disparada após commit dos testes de TASK-0003                                 |
+| TASK-0005 | queued      | —                                                                             |
+| TASK-0006 | queued      | —                                                                             |
+| TASK-0007 | queued      | —                                                                             |
+| TASK-0008 | queued      | —                                                                             |
+| TASK-0009 | queued      | —                                                                             |
+| TASK-0010 | queued      | —                                                                             |
 
 Último veredito do reviewer: `prompt-review-3` PASS (após FAIL/FAIL de estrutura, ver §Bloqueios). Próximos passos: relatórios de TASK-0001/0002 → checkpoint → TASK-0003.
 
