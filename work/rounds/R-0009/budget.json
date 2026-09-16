@@ -1,0 +1,45 @@
+{
+  "round": "R-0009",
+  "window": 1,
+  "window_input_budget": 700000,
+  "checkpoint_threshold": 560000,
+  "estimated_input_total": 435000,
+  "estimated_output_total": 64500,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela de 700k pode ser excedida por instrução do Owner (AUTHORIZATION.md), como em R-0008.",
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0009-W1",
+      "input_tokens": 300000,
+      "output_tokens": 60000,
+      "status": "completed",
+      "note": "retomada: rebase, install, pnpm check (≈8 min), devai doctor, leitura obrigatória, M1–M23, 10 tarefas, 10 prompts, compositions"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1",
+      "input_tokens": 70000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "FAIL",
+      "note": "6 achados high de fronteira de escrita; corrigidos pelo maestro (M24, TASK-0009 → Architect transcrição, e2e por fronteira)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2",
+      "input_tokens": 45000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "verdict": "FAIL",
+      "note": "3 inconsistências residuais tabela × prompts (substituições não aplicadas) — corrigidas"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3",
+      "input_tokens": 20000,
+      "output_tokens": 500,
+      "status": "completed",
+      "verdict": "PASS"
+    }
+  ]
+}

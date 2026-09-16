@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0009",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0009/plan.md",
+      "line": 328,
+      "claim": "TASK-0009 ainda está declarado como Engineer/engineer-backend para alterar contratos e schema sob docs/, contrariando o prompt e tasks/TASK-0009.json, que o corrigem para Architect (transcrição). Isso mantém a violação constitucional de autoridade por caminho.",
+      "fix": "Atualizar a linha da tabela para Architect (transcrição), perfil transcriber-docs, e registrar contracts:clients como checkpoint do maestro."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0009/plan.md",
+      "line": 324,
+      "claim": "A tabela ainda torna TASK-0005 dependente somente de TASK-0001 e TASK-0002, embora M24 exija CTG-0001 verde e commitado antes dela e tasks/TASK-0005.json declare upstream_task_id TASK-0004. Os artefatos de orquestra conflitam sobre a ordem Architect → Inspector → Engineer.",
+      "fix": "Trocar a dependência da tabela para TASK-0004 e manter o lock MOD-bp-portal explicitamente alinhado a M24."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0009/prompts/TASK-0004.md",
+      "line": 29,
+      "claim": "O contexto ainda instrui TASK-0004 a remover portal:appeal:*, mas M19 reserva essa remoção para TASK-0007 e o próprio prompt a proíbe na fronteira de escrita. É contradição com a decisão vinculante M19; não foi levantada antes porque ficou mascarada pelo achado então mais amplo sobre policy.spec.ts.",
+      "fix": "Remover '(e perde portal:appeal:*)' da linha; declarar somente a adição de portal:identity:read e a permanência de portal:appeal:* até TASK-0007."
+    }
+  ],
+  "notes": []
+}

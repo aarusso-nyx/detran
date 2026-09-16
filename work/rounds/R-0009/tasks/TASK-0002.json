@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0009",
+  "status": "in_progress",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Escrever os cinco blueprints BP-PORTAL-*-001, regenerar os pacotes e DDL 61…65, e os DDL manuscritos 19 (plataforma), 14 (timers portal) e 11 (schema portal nos triggers)",
+  "description": "Materializar o modelo de dados M1, M5–M7, M11–M17 como blueprints gerados (sem rotas CRUD) e DDL manuscrito nas faixas permitidas; aplicar em banco limpo detran_r9. Nada de código manuscrito nem teste.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-bp-portal",
+    "MOD-ddl-61-65",
+    "MOD-ddl-14",
+    "MOD-ddl-1x",
+    "MOD-blueprints-generated"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-p1"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-daa6f943adeae287",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "verify:lifecycle-vocabulary"],
+    ["pnpm", "typecheck"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-daa6f943adeae287",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

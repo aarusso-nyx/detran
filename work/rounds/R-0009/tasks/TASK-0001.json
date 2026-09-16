@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0009",
+  "status": "in_progress",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Escrever a ADR-0024 (gov.br via Cognito) e o contrato CTG-0001 (claims, guarda fail-closed, matriz ato→nível, máquinas WF-PORTAL-001/002/004, fixtures, critérios C-0001-nn, layout)",
+  "description": "Fechar, a partir das decisões M1–M23 do plan.md e das fontes canônicas, o contrato de identidade federada e do modelo que o Inspector transcreve em testes e o Engineer em código; registrar a decisão de fronteira na ADR-0024. Nada de código, blueprint ou teste.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-adr", "MOD-r9-contracts-ctg1"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-p0", "wp-p1"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-844688bb9e55b075",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-844688bb9e55b075",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

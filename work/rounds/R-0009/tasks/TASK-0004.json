@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0009",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar as claims no runtime, PortalCitizenGuard, assertActLevel, GET me/brand/services, TenantResolver por Host e o wiring dos cinco pacotes até os testes C-0001 passarem",
+  "description": "Fazer os testes do Inspector (TASK-0003) passarem sem alterá-los, dentro de src/handwritten/ de portal/identity, backend/app/src e os dois arquivos de wiring; nada de rota além das listadas.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-identity-hw",
+    "MOD-app-runtime-auth",
+    "MOD-app-module",
+    "MOD-check-rls-ddl",
+    "MOD-shared-policy"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p0", "wp-p1"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-e22580af666facf8",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-identity", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-e22580af666facf8",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
