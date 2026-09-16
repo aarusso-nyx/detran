@@ -189,6 +189,9 @@ export const REQUEST_ALLOWED_STATES_BY_COMMAND: Readonly<
     'AGUARDANDO_PAGAMENTO',
   ],
   evaluate: ['AVALIACAO_OFERECIDA'],
+  // CTG-0002 §2.3 `POST requests/{id}/diligences/{did}/responses` (§14): não é
+  // transição — o estado não muda —, só a guarda do comando `respond`.
+  respond: ['EM_ANDAMENTO_NO_ORGAO'],
 };
 
 export interface RequestStateSnapshot {

@@ -471,6 +471,9 @@ decisão do maestro sob a instrução do Owner. Registrado aqui e no relatório 
 - TASK-0004 — `pnpm --filter @detran/app test:e2e` (C-0001-42) — reference-gap — contrato §3 fixa que a política roda antes da guarda; `field-agent` é negado pela política (403 STYNX sem `code`), logo `IDENTITY_NOT_CITIZEN` é inalcançável para esse papel no e2e — adenda A3; TASK-0003 iteração 2 ajusta a expectativa (403 sem `code`); `IDENTITY_NOT_CITIZEN` provado por `technical-admin` com claims (C-0001-09b).
 - TASK-0004 — e2e C-0001-41 (reexecução em banco persistente) — sensor-error — spec não limpa `portal.subject` do CPF fixture no `beforeAll` — TASK-0003 iteração 2: `delete` no `beforeAll`.
 - maestro (merge de `origin/main` #55) — `pnpm backend:test:ci` (`est-crash` `boat-contract.integration` "seed.sh roda duas vezes") — sensor-error (ambiente) — o spec de R-0010 roda `seed.sh` com `DB_NAME ?? 'detran_r10'`, banco sem o DDL do Portal; com `DB_NAME=detran_r9` (agora em `env-detran-r9.sh`) passa 21/21 — nenhum código alterado; CI usa `DB_NAME=detran`.
+- TASK-0007 — e2e `portal-requests` C-0002-70 — sensor-error — spec usa `targetKind:'none'` para `consulta_bat`/`consulta_exame`; contrato §3.2 fixa `crash`/`exam` — TASK-0006 iteração 2: corrigir o spec.
+- TASK-0007 — integration `portal-requests` C-0002-30 — sensor-error — spec espera protocolos `\d{7}`; fixtures do seed 70 usam sufixo hex (contrato §12) — TASK-0006 iteração 2: aceitar os números das fixtures (só os gerados por `protocolNumber` são `\d{7}`).
+- TASK-0007 — e2e entre arquivos (C-0001-41 × `portal-requests.e2e`) — sensor-error — `portal-requests.e2e` deixa linhas do sujeito ouro no tenant local; `delete from portal.subject` de C-0001-41 viola FK em banco persistente — TASK-0006 iteração 2: limpeza em `afterAll` de `portal-requests.e2e` (requests, protocols, idempotency_record, representation do sujeito).
 - TASK-0004 — D13 (`portal.subject.name not null` × contrato) — reference-gap — blueprint `IDENTITY` v1.0.2 `name nullable` (maestro, Architect) + regeneração no checkpoint.
 
 ## Retomada
@@ -490,8 +493,8 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
 | TASK-0005 | completed   | relatório em `reports/TASK-0005.md`; A4; branch temporário `tmp/r9-ctg2-wip` até o merge do PR #54            |
 | TASK-0006 | completed   | relatório em `reports/TASK-0006.md`; 84 critérios → specs; A5                                                 |
-| TASK-0007 | in_progress | disparada após A5 e regen PROJECTIONS v1.0.2                                                                  |
-| TASK-0008 | queued      | —                                                                                                             |
+| TASK-0007 | completed   | relatório em `reports/TASK-0007.md`; 3 contradições de spec → §Triagem (TASK-0006 it.2)                       |
+| TASK-0008 | in_progress | disparada em paralelo com TASK-0006 it.2 (arquivos disjuntos)                                                 |
 | TASK-0009 | queued      | —                                                                                                             |
 | TASK-0010 | queued      | —                                                                                                             |
 

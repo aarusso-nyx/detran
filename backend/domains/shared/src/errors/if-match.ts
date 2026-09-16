@@ -1,4 +1,5 @@
-// CTG-0001 §1 (M1) — `If-Match` helpers shared by TEAT and RAIT commands.
+// CTG-0001 §1 (M1) — `If-Match` helpers shared by TEAT, RAIT and PORTAL
+// commands (R-0009 CTG-0002 §0, adenda A4(a): prefix `PORTAL`).
 // Grammar accepted for the header mirrors `OpsParameterService.normalizeIfMatch`
 // (parameter.service.ts): a bare integer, a quoted integer, or a weak ETag
 // (`W/"n"`). Any other shape counts as "absent" (428), never as a mismatch.
@@ -22,7 +23,7 @@ function normalizeIfMatch(
 export function assertIfMatch(
   header: string | string[] | undefined,
   version: number,
-  prefix: 'TEAT' | 'RAIT',
+  prefix: 'TEAT' | 'RAIT' | 'PORTAL',
 ): void {
   const received = normalizeIfMatch(header);
   if (received === undefined) {

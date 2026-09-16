@@ -110,6 +110,7 @@ import {
   seedPortalPublicRequest,
   type PortalPublicRequestLike,
 } from './detran-runtime.js';
+import { PortalDelegationTargetsModule } from './portal-delegation.providers.js';
 import { TeatSyncModule } from './teat-sync.providers.js';
 import { TeatEvidencePortsModule } from './teat-evidence.providers.js';
 import { TeatSnapshotPortsModule } from './teat-snapshots.providers.js';
@@ -500,6 +501,9 @@ export class AppModule {
         // Portal do cidadão (R-0009 CTG-0001, plan M1/M24): `identity` traz
         // as rotas manuscritas deste grupo; os outros quatro são montados
         // como módulos puramente gerados (sem rotas) até CTG-0002.
+        // CTG-0002 §3.2/§14 (TASK-0007): o mapa `PORTAL_DELEGATION_TARGETS`
+        // (global) é composto antes dos módulos que o consomem.
+        PortalDelegationTargetsModule,
         IdentityModule,
         RequestsModule,
         InboxModule,

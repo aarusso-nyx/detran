@@ -7,15 +7,39 @@
 import { createHash } from 'node:crypto';
 import { Injectable, Optional } from '@nestjs/common';
 import type { Transaction } from '@stynx-nyx/data';
-import type { getPrincipalFromRequest } from '@detran/shared';
+import { addCalendarDays } from '@detran/inf-deadlines';
+import {
+  SqlTeatEventOutbox,
+  type getPrincipalFromRequest,
+} from '@detran/shared';
 
 import { PortalClock, type PortalClockLike } from './clock.js';
 import { PortalError } from './errors.js';
+import {
+  portalIdentityEvents,
+  type PortalIdentityEventContext,
+} from './events.js';
 
 type Principal = NonNullable<ReturnType<typeof getPrincipalFromRequest>>;
 
-/** Subconjunto da transação STYNX que este pacote usa (SQL parametrizado). */
-export type PortalSqlTransaction = Pick<Transaction, 'query'>;
+/**
+ * Subconjunto da transação STYNX que os pacotes do Portal usam: `query`
+ * parametrizado devolvendo `rows`. Estrutural para que a `Transaction` real e
+ * a tx falsa em memória dos specs (`requests/tests/support/fake-sql.ts`,
+ * CTG-0002 §13) sirvam igualmente.
+ */
+export interface PortalSqlTransaction {
+  query<T extends Record<string, unknown> = Record<string, unknown>>(
+    sql: string,
+    values?: readonly unknown[],
+  ): Promise<{ rows: T[] }>;
+}
+
+/** A `Transaction` real satisfaz o subconjunto (verificação em tempo de tipo). */
+const _transactionIsPortalSqlTransaction: (
+  tx: Transaction,
+) => PortalSqlTransaction = (tx) => tx;
+void _transactionIsPortalSqlTransaction;
 
 // ---------------------------------------------------------------------------
 // §2.1 — claims e principal (M3)
@@ -334,6 +358,149 @@ const ENTITLEMENT_SQL = `select id
       and (valid_until is null or valid_until >= $4::date)
     limit 1`;
 
+// ---------------------------------------------------------------------------
+// §3 representações — [WF-PORTAL-002] (CTG-0001 §6.2; CTG-0002 §2.1)
+// ---------------------------------------------------------------------------
+
+export const REPRESENTATION_STATES = [
+  'PROCURACAO_APRESENTADA',
+  'PROCURACAO_VALIDADA',
+  'PROCURACAO_RECUSADA',
+] as const;
+export type RepresentationState = (typeof REPRESENTATION_STATES)[number];
+
+export interface RepresentationTransition {
+  /** `null` = apresentação. */
+  from: RepresentationState | null;
+  to: RepresentationState;
+  command: 'present' | 'validate' | 'refuse' | 'resubmit';
+  guard: string;
+}
+
+/** Só `portal.representation.state` é persistido (CTG-0001 §6.2). */
+export const REPRESENTATION_TRANSITIONS: readonly RepresentationTransition[] = [
+  {
+    from: null,
+    to: 'PROCURACAO_APRESENTADA',
+    command: 'present',
+    guard: "POST representations; assertActLevel('procuracao')",
+  },
+  {
+    from: 'PROCURACAO_APRESENTADA',
+    to: 'PROCURACAO_VALIDADA',
+    command: 'validate',
+    guard:
+      'instrumento conferido (documento assinado no nível do ato presume-se autêntico — RN-PORTAL-104)',
+  },
+  {
+    from: 'PROCURACAO_APRESENTADA',
+    to: 'PROCURACAO_RECUSADA',
+    command: 'refuse',
+    guard:
+      'refusal_reason obrigatório (422 REPRESENTATION_REFUSED na resposta síncrona, WF-PORTAL-002)',
+  },
+  {
+    from: 'PROCURACAO_RECUSADA',
+    to: 'PROCURACAO_APRESENTADA',
+    command: 'resubmit',
+    guard: 'reenvio sem reinício (WF-PORTAL-002)',
+  },
+];
+
+export interface CreateRepresentationInput {
+  representedCpf: string;
+  representedName: string;
+  instrumentDocumentId: string;
+  scope: 'ait' | 'all';
+  validUntil?: string;
+}
+
+export interface PortalRepresentationResponse {
+  id: string;
+  representedName: string;
+  scope: 'ait' | 'all';
+  validUntil: string | null;
+  state: RepresentationState;
+  refusalReason: string | null;
+}
+
+export interface ValidateRepresentationInput {
+  outcome: 'validated' | 'refused';
+  reason?: string;
+  /** Alvos (`portal.entitlement.target_id`) quando `scope = 'ait'` (OD-P37). */
+  aitIds?: readonly string[];
+}
+
+interface RepresentationDetailRow extends Record<string, unknown> {
+  id: string;
+  representative_subject_id: string;
+  represented_cpf_hash: string;
+  represented_name: string;
+  scope: 'ait' | 'all';
+  valid_until: string | null;
+  state: RepresentationState;
+  refusal_reason: string | null;
+}
+
+const REPRESENTATION_COLUMNS = `id, representative_subject_id, represented_cpf_hash, represented_name,
+          scope, to_char(valid_until, 'YYYY-MM-DD') as valid_until, state, refusal_reason`;
+
+/** `tenant_id` pela trigger `auth.enforce_tenant_id` (DDL 61). */
+const INSERT_REPRESENTATION_SQL = `insert into portal.representation
+      (representative_subject_id, represented_cpf_hash, represented_name,
+       instrument_document_id, scope, valid_until, state, refusal_reason)
+    values ($1, $2, $3, $4, $5, $6, 'PROCURACAO_APRESENTADA', null)
+    returning ${REPRESENTATION_COLUMNS}`;
+
+const LIST_REPRESENTATIONS_SQL = `select ${REPRESENTATION_COLUMNS}
+     from portal.representation
+    where representative_subject_id = $1
+    order by created_at asc, id asc`;
+
+const OWNED_REPRESENTATION_SQL = `select ${REPRESENTATION_COLUMNS}
+     from portal.representation
+    where id = $1 and representative_subject_id = $2
+    for update`;
+
+const REPRESENTATION_FOR_UPDATE_SQL = `select ${REPRESENTATION_COLUMNS}
+     from portal.representation
+    where id = $1
+    for update`;
+
+const REVOKE_REPRESENTATION_SQL = `update portal.representation
+      set valid_until = $2::date, updated_at = $3
+    where id = $1
+    returning ${REPRESENTATION_COLUMNS}`;
+
+const VALIDATE_REPRESENTATION_SQL = `update portal.representation
+      set state = $2, refusal_reason = $3, updated_at = $4
+    where id = $1
+    returning ${REPRESENTATION_COLUMNS}`;
+
+const INSERT_REPRESENTATIVE_ENTITLEMENT_SQL = `insert into portal.entitlement
+      (subject_id, target_kind, target_id, relation, origin, valid_from, valid_until)
+    values ($1, 'ait', $2, 'representative', 'representation', $3::date, $4)
+    on conflict (tenant_id, subject_id, target_kind, target_id, relation) do update set
+      valid_until = excluded.valid_until,
+      updated_at = excluded.created_at`;
+
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function representationOf(
+  row: RepresentationDetailRow,
+): PortalRepresentationResponse {
+  return {
+    id: row.id,
+    representedName: row.represented_name,
+    scope: row.scope,
+    validUntil: row.valid_until,
+    state: row.state,
+    refusalReason:
+      row.state === 'PROCURACAO_RECUSADA' ? (row.refusal_reason ?? null) : null,
+  };
+}
+
 @Injectable()
 export class PortalIdentityService {
   private readonly clock: PortalClockLike;
@@ -453,6 +620,182 @@ export class PortalIdentityService {
       scope: row.scope,
       validUntil: row.valid_until,
     }));
+  }
+
+  // -------------------------------------------------------------------------
+  // §3 representações (CTG-0002 §2.1) — [WF-PORTAL-002]
+  // -------------------------------------------------------------------------
+
+  /** `POST representations`: apresentação da procuração (`assertActLevel` é do controlador). */
+  async createRepresentation(
+    tx: PortalSqlTransaction,
+    identity: PortalIdentityClaims,
+    subjectId: string,
+    input: CreateRepresentationInput,
+    clock: PortalClockLike = this.clock,
+  ): Promise<PortalRepresentationResponse> {
+    if (input.representedCpf === identity.cpf) {
+      throw new PortalError('PORTAL.VALIDATION_FAILED', {
+        status: 400,
+        context: { fields: ['representedCpf'] },
+      });
+    }
+    if (input.validUntil !== undefined && input.validUntil < clock.today()) {
+      throw new PortalError('PORTAL.VALIDATION_FAILED', {
+        status: 400,
+        context: { fields: ['validUntil'] },
+      });
+    }
+    const result = await tx.query<RepresentationDetailRow>(
+      INSERT_REPRESENTATION_SQL,
+      [
+        subjectId,
+        cpfHashOf(input.representedCpf),
+        input.representedName,
+        input.instrumentDocumentId,
+        input.scope,
+        input.validUntil ?? null,
+      ],
+    );
+    const row = result.rows[0];
+    if (!row) {
+      throw new PortalError('PORTAL.INTERNAL', { status: 500, context: {} });
+    }
+    return representationOf(row);
+  }
+
+  /** `GET representations`: todas as do sujeito, todos os estados. */
+  async listRepresentations(
+    tx: PortalSqlTransaction,
+    subjectId: string,
+  ): Promise<PortalRepresentationResponse[]> {
+    const result = await tx.query<RepresentationDetailRow>(
+      LIST_REPRESENTATIONS_SQL,
+      [subjectId],
+    );
+    return result.rows.map(representationOf);
+  }
+
+  /**
+   * `DELETE representations/{id}`: revogação sem apagar (RN-PORTAL-112) —
+   * `valid_until = today − 1`; vínculos `origin='representation'` ficam (OD-P37).
+   */
+  async revokeRepresentation(
+    tx: PortalSqlTransaction,
+    subjectId: string,
+    representationId: string,
+    clock: PortalClockLike = this.clock,
+  ): Promise<
+    Pick<PortalRepresentationResponse, 'id' | 'state' | 'validUntil'>
+  > {
+    if (!UUID_RE.test(representationId)) {
+      throw new PortalError('PORTAL.VALIDATION_FAILED', {
+        status: 400,
+        context: { fields: ['id'] },
+      });
+    }
+    const owned = await tx.query<RepresentationDetailRow>(
+      OWNED_REPRESENTATION_SQL,
+      [representationId, subjectId],
+    );
+    if (!owned.rows[0]) {
+      throw new PortalError('PORTAL.NOT_FOUND', {
+        status: 404,
+        context: { kind: 'representation' },
+      });
+    }
+    const yesterday = addCalendarDays(clock.today(), -1);
+    const updated = await tx.query<RepresentationDetailRow>(
+      REVOKE_REPRESENTATION_SQL,
+      [representationId, yesterday, clock.now()],
+    );
+    const row = updated.rows[0] ?? owned.rows[0];
+    return { id: row.id, state: row.state, validUntil: yesterday };
+  }
+
+  /**
+   * Validação/recusa da procuração (CTG-0001 §6.2; sem rota nesta rodada —
+   * OD-P37): em `validated` materializa `portal.entitlement` (relation
+   * `representative`, origin `representation`) por AIT informado e publica
+   * `REPRESENTACAO_VALIDADA` na mesma transação.
+   */
+  async validateRepresentation(
+    tx: PortalSqlTransaction,
+    representationId: string,
+    input: ValidateRepresentationInput,
+    context: Pick<PortalIdentityEventContext, 'actorId' | 'correlationId'>,
+    clock: PortalClockLike = this.clock,
+  ): Promise<PortalRepresentationResponse> {
+    const current = (
+      await tx.query<RepresentationDetailRow>(REPRESENTATION_FOR_UPDATE_SQL, [
+        representationId,
+      ])
+    ).rows[0];
+    if (!current) {
+      throw new PortalError('PORTAL.NOT_FOUND', {
+        status: 404,
+        context: { kind: 'representation' },
+      });
+    }
+    const command = input.outcome === 'validated' ? 'validate' : 'refuse';
+    const transition = REPRESENTATION_TRANSITIONS.find(
+      (row) => row.from === current.state && row.command === command,
+    );
+    if (!transition) {
+      // portal-error-catalog.md não tem código de estado para a procuração
+      // (só REPRESENTATION_REFUSED/EXPIRED, sem rota nesta rodada — OD-P37);
+      // sem rota, a guarda interna responde com o genérico do §7.
+      throw new PortalError('PORTAL.VALIDATION_FAILED', {
+        status: 400,
+        context: { fields: ['state'] },
+      });
+    }
+    if (command === 'refuse' && !input.reason) {
+      throw new PortalError('PORTAL.VALIDATION_FAILED', {
+        status: 400,
+        context: { fields: ['reason'] },
+      });
+    }
+    const now = clock.now();
+    const updated = (
+      await tx.query<RepresentationDetailRow>(VALIDATE_REPRESENTATION_SQL, [
+        representationId,
+        transition.to,
+        command === 'refuse' ? (input.reason ?? null) : null,
+        now,
+      ])
+    ).rows[0];
+    if (!updated) {
+      throw new PortalError('PORTAL.INTERNAL', { status: 500, context: {} });
+    }
+    if (command === 'validate') {
+      if (updated.scope === 'ait') {
+        for (const aitId of input.aitIds ?? []) {
+          await tx.query(INSERT_REPRESENTATIVE_ENTITLEMENT_SQL, [
+            updated.representative_subject_id,
+            aitId,
+            clock.today(),
+            updated.valid_until,
+          ]);
+        }
+      }
+      await new SqlTeatEventOutbox().append(
+        tx as never,
+        portalIdentityEvents.representacaoValidada(
+          updated.id,
+          {
+            representationId: updated.id,
+            representativeSubjectId: updated.representative_subject_id,
+            representedCpfHash: updated.represented_cpf_hash,
+            scope: updated.scope,
+            validUntil: updated.valid_until,
+            validatedAt: now.toISOString(),
+          },
+          { ...context, occurredAt: now.toISOString() },
+        ),
+      );
+    }
+    return representationOf(updated);
   }
 
   /** Corpo de `GET /v1/portal/identity/me` (§8), numa única transação. */
