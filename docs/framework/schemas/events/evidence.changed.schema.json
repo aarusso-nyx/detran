@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/evidence.changed.schema.json",
+  "title": "evidence.changed",
+  "description": "Evidência capturada ou vinculada a uma entidade (CTG-0003 §4.2/§4.4/§8).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "evidence.changed"
+    },
+    "domainEvent": {
+      "type": "string",
+      "enum": ["EVIDENCIA_CAPTURADA", "EVIDENCIA_VINCULADA"]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "evidence"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "EVIDENCIA_CAPTURADA",
+          "required": [
+            "evidenceId",
+            "entityType",
+            "entityId",
+            "evidenceType",
+            "hashValue",
+            "capturedAt",
+            "uploadedAt"
+          ],
+          "properties": {
+            "evidenceId": {
+              "type": "string"
+            },
+            "entityType": {
+              "type": "string"
+            },
+            "entityId": {
+              "type": "string"
+            },
+            "evidenceType": {
+              "type": "string"
+            },
+            "hashValue": {
+              "type": "string"
+            },
+            "capturedAt": {
+              "type": ["string", "null"]
+            },
+            "uploadedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "EVIDENCIA_VINCULADA",
+          "required": [
+            "evidenceId",
+            "linkId",
+            "entityType",
+            "entityId",
+            "role"
+          ],
+          "properties": {
+            "evidenceId": {
+              "type": "string"
+            },
+            "linkId": {
+              "type": "string"
+            },
+            "entityType": {
+              "type": "string"
+            },
+            "entityId": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            },
+            "mandatory": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

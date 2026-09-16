@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/teat-offline-sync-batch.schema.json",
+  "title": "TEAT Offline Sync Batch",
+  "description": "Lote do protocolo de sincronização offline (teat-route-contract.md §4.3; CTG-0002 §4 e §5.13). Reconciliado com submitSyncBatchSchema de backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts (CTG-0002 §14d, declared_keys) — não é o arquivo da origem (../teat), cujas chaves de item (local_id, content_hash, payload) o comando montado não lê (OD-T67).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "traffic_agency_id",
+    "device_id",
+    "agent_id",
+    "device_batch_id",
+    "items"
+  ],
+  "properties": {
+    "traffic_agency_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "device_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "agent_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "device_batch_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "batch_sequence": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entity_type", "local_entity_id", "payload_hash"],
+        "properties": {
+          "entity_type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "enum": [
+              "ait",
+              "administrative-measure",
+              "alcohol-signs-term",
+              "ait-cancel-request",
+              "ait-cancel-posfinal-request",
+              "crash-record"
+            ],
+            "description": "SUPPORTED_ENTITY_TYPES de backend/domains/ops/offline-sync/src/handwritten/batch-protocol.ts; os cinco primeiros são route contract §4.3, e crash-record (BOAT) é aceito na forma e rejeitado no destino (TEAT.SYNC_DESTINATION_NOT_WIRED)."
+          },
+          "local_entity_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "server_entity_id": {
+            "type": ["string", "null"],
+            "format": "uuid"
+          },
+          "idempotency_key": {
+            "type": ["string", "null"],
+            "minLength": 1,
+            "maxLength": 160,
+            "description": "A ausência é o caminho legado, que nunca é aplicado — TEAT.SYNC_LEGACY_ITEM_NOT_APPLIED."
+          },
+          "payload_hash": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "created_locally_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "payload_json": {
+            "type": ["object", "null"],
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "deprecated": true,
+      "description": "ignorado; tenant vem do contexto"
+    },
+    "normative_package_id": {
+      "type": "string",
+      "format": "uuid",
+      "deprecated": true,
+      "description": "campo do schema de origem; não é lido pelo comando"
+    }
+  }
+}

@@ -1,0 +1,4212 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Field — comandos manuscritos (BP-OPS-FIELD-001)",
+    "version": "1.0.0",
+    "description": "Postura de dispositivo, ciclo de homologação e a superfície manuscrita de campo (agents/devices/teams/shifts/homologations/app-versions), montados em FieldCommandsController e FieldOperationsController.",
+    "x-blueprint": "BP-OPS-FIELD-001",
+    "x-commands": true,
+    "x-source": "teat-route-contract.md §4.2"
+  },
+  "paths": {
+    "/v1/ops/field/devices/{id}/block": {
+      "post": {
+        "tags": ["operational-device"],
+        "operationId": "teatOperationalDeviceBlock",
+        "summary": "Bloqueia o dispositivo operacional.",
+        "x-policy": "ops:operational-device:block",
+        "x-audit": "OPS_DEVICE_BLOCK",
+        "x-command": "backend/domains/ops/field/src/handwritten/device-posture.command.ts",
+        "x-contract": "CTG-0002 §5.9",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevicePostureCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispositivo bloqueado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "event_id"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "blocked"
+                    },
+                    "event_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "00000000-0000-7000-8000-0000e4000002",
+                  "status": "blocked",
+                  "event_id": "00000000-0000-7000-8000-0000e4000002"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "reason ausente, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/devices/{id}/unblock": {
+      "post": {
+        "tags": ["operational-device"],
+        "operationId": "teatOperationalDeviceUnblock",
+        "summary": "Desbloqueia o dispositivo operacional.",
+        "x-policy": "ops:operational-device:unblock",
+        "x-audit": "OPS_DEVICE_UNBLOCK",
+        "x-command": "backend/domains/ops/field/src/handwritten/device-posture.command.ts",
+        "x-contract": "CTG-0002 §5.9",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevicePostureCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dispositivo desbloqueado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "event_id"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "authorized"
+                    },
+                    "event_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Dispositivo não está bloqueado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.DEVICE_BLOCKED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "reason ausente, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/devices/{id}/wipe": {
+      "post": {
+        "tags": ["operational-device"],
+        "operationId": "teatOperationalDeviceWipe",
+        "summary": "Registra o wipe remoto do dispositivo.",
+        "x-policy": "ops:operational-device:wipe",
+        "x-audit": "OPS_DEVICE_WIPE",
+        "x-command": "backend/domains/ops/field/src/handwritten/device-posture.command.ts",
+        "x-contract": "CTG-0002 §5.9",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DevicePostureCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Wipe registrado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "event_id"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "blocked"
+                    },
+                    "event_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "reason ausente, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/homologations/{id}/renew": {
+      "post": {
+        "tags": ["homologation"],
+        "operationId": "teatHomologationRenew",
+        "summary": "Renova a homologação quadrienal do dispositivo.",
+        "x-policy": "ops:homologation:renew",
+        "x-audit": "OPS_HOMOLOGATION_RENEW",
+        "x-command": "backend/domains/ops/field/src/handwritten/renew-homologation.command.ts",
+        "x-contract": "CTG-0002 §5.7",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenewHomologationCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Homologação renovada.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "status",
+                    "laudo_emitido_em",
+                    "laudo_valido_ate"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "laudo_emitido_em": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "laudo_valido_ate": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "00000000-0000-7000-8000-0000e2200001",
+                  "status": "active",
+                  "laudo_emitido_em": "2026-09-01",
+                  "laudo_valido_ate": "2030-09-01"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Homologação fora de active.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.HOMOLOGATION_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "A própria renovação chega com laudo já vencido, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.HOMOLOGATION_RENEWAL_DUE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/homologations/{id}/cancel-by-audit": {
+      "post": {
+        "tags": ["homologation"],
+        "operationId": "teatHomologationCancelByAudit",
+        "summary": "Cancela a homologação por auditoria.",
+        "x-policy": "ops:homologation:cancel-by-audit",
+        "x-audit": "OPS_HOMOLOGATION_CANCEL",
+        "x-command": "backend/domains/ops/field/src/handwritten/cancel-homologation.command.ts",
+        "x-contract": "CTG-0002 §5.8",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelHomologationCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Homologação cancelada.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "cancelled_reason"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "cancelled"
+                    },
+                    "cancelled_reason": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Homologação fora de active.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.HOMOLOGATION_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "reason ausente, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/agents": {
+      "get": {
+        "tags": ["agent-profile"],
+        "operationId": "teatAgentProfileList",
+        "summary": "Lista agents (superfície manuscrita de campo).",
+        "x-policy": "ops:agent-profile:read",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "responses": {
+          "200": {
+            "description": "Lista de agents.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "description": "O controlador manuscrito repassa o corpo sem tipo. A forma efetiva é a da entidade correspondente em BP-OPS-FIELD-001.openapi.json (components.schemas).",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["agent-profile"],
+        "operationId": "teatAgentProfileCreate",
+        "summary": "Cria agents (superfície manuscrita de campo, sem DTO tipada).",
+        "x-policy": "ops:agent-profile:create",
+        "x-audit": "OPS_AGENT_CREATE",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UntypedFieldRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "agents criado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/devices": {
+      "get": {
+        "tags": ["operational-device"],
+        "operationId": "teatOperationalDeviceList",
+        "summary": "Lista devices (superfície manuscrita de campo).",
+        "x-policy": "ops:operational-device:read",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "responses": {
+          "200": {
+            "description": "Lista de devices.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "description": "O controlador manuscrito repassa o corpo sem tipo. A forma efetiva é a da entidade correspondente em BP-OPS-FIELD-001.openapi.json (components.schemas).",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["operational-device"],
+        "operationId": "teatOperationalDeviceCreate",
+        "summary": "Cria devices (superfície manuscrita de campo, sem DTO tipada).",
+        "x-policy": "ops:operational-device:create",
+        "x-audit": "OPS_DEVICE_CREATE",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UntypedFieldRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "devices criado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/teams": {
+      "get": {
+        "tags": ["team"],
+        "operationId": "teatTeamList",
+        "summary": "Lista teams (superfície manuscrita de campo).",
+        "x-policy": "ops:team:read",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "responses": {
+          "200": {
+            "description": "Lista de teams.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "description": "O controlador manuscrito repassa o corpo sem tipo. A forma efetiva é a da entidade correspondente em BP-OPS-FIELD-001.openapi.json (components.schemas).",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["team"],
+        "operationId": "teatTeamCreate",
+        "summary": "Cria teams (superfície manuscrita de campo, sem DTO tipada).",
+        "x-policy": "ops:team:create",
+        "x-audit": "OPS_TEAM_CREATE",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UntypedFieldRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "teams criado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/shifts/{id}": {
+      "get": {
+        "tags": ["shift"],
+        "operationId": "teatShiftGet",
+        "summary": "Lê um turno de campo por id (superfície manuscrita).",
+        "x-policy": "ops:shift:read",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Turno de campo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "description": "O controlador manuscrito repassa o objeto sem tipo. A forma efetiva é a de BP-OPS-FIELD-001.openapi.json (components.schemas)."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/shifts": {
+      "post": {
+        "tags": ["shift"],
+        "operationId": "teatShiftCreate",
+        "summary": "Cria um turno de campo (superfície manuscrita, sem DTO tipada).",
+        "x-policy": "ops:shift:create",
+        "x-audit": "OPS_SHIFT_CREATE",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UntypedFieldRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Turno criado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/homologations": {
+      "get": {
+        "tags": ["homologation"],
+        "operationId": "teatHomologationList",
+        "summary": "Lista homologations (superfície manuscrita de campo).",
+        "x-policy": "ops:homologation:read",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "responses": {
+          "200": {
+            "description": "Lista de homologations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "description": "O controlador manuscrito repassa o corpo sem tipo. A forma efetiva é a da entidade correspondente em BP-OPS-FIELD-001.openapi.json (components.schemas).",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["homologation"],
+        "operationId": "teatHomologationCreate",
+        "summary": "Cria homologations (superfície manuscrita de campo, sem DTO tipada).",
+        "x-policy": "ops:homologation:create",
+        "x-audit": "OPS_HOMOLOGATION_CREATE",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UntypedFieldRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "homologations criado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/field/app-versions": {
+      "get": {
+        "tags": ["application-version"],
+        "operationId": "teatApplicationVersionList",
+        "summary": "Lista app-versions (superfície manuscrita de campo).",
+        "x-policy": "ops:application-version:read",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "responses": {
+          "200": {
+            "description": "Lista de app-versions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "description": "O controlador manuscrito repassa o corpo sem tipo. A forma efetiva é a da entidade correspondente em BP-OPS-FIELD-001.openapi.json (components.schemas).",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["application-version"],
+        "operationId": "teatApplicationVersionCreate",
+        "summary": "Cria app-versions (superfície manuscrita de campo, sem DTO tipada).",
+        "x-policy": "ops:application-version:create",
+        "x-audit": "OPS_APP_VERSION_CREATE",
+        "x-command": "backend/domains/ops/field/src/handwritten/field-operations.service.ts",
+        "x-contract": "CTG-0005 §2.2/§2.3",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UntypedFieldRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "app-versions criado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DevicePostureCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reason"],
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "RenewHomologationCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["laudo_emitido_em", "emissor_independente"],
+        "properties": {
+          "laudo_emitido_em": {
+            "type": "string",
+            "format": "date"
+          },
+          "emissor_independente": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "descricao_publicada_em": {
+            "type": "string",
+            "format": "date"
+          },
+          "descricao_publicacao_local": {
+            "type": "string"
+          },
+          "senatran_protocolado_em": {
+            "type": "string",
+            "format": "date",
+            "deprecated": true,
+            "description": "Sem coluna em ops_homologation; aceito e ignorado (source_pending, CTG-0002 §11.9)."
+          },
+          "senatran_notificado_em": {
+            "type": "string",
+            "format": "date"
+          },
+          "document_uri": {
+            "type": "string"
+          }
+        }
+      },
+      "CancelHomologationCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["reason"],
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "audit_reference": {
+            "type": "string",
+            "maxLength": 160
+          }
+        }
+      },
+      "UntypedFieldRecordDto": {
+        "type": "object",
+        "additionalProperties": true,
+        "description": "O controlador manuscrito repassa o corpo sem tipo (Record<string, unknown>). A forma efetiva é a da entidade correspondente em BP-OPS-FIELD-001.openapi.json (components.schemas).",
+        "x-source-pending": "OD-T68"
+      }
+    }
+  }
+}

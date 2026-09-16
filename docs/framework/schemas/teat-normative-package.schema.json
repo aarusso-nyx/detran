@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/teat-normative-package.schema.json",
+  "title": "TEAT Normative Mobile Package (conteúdo assinado)",
+  "description": "Conteúdo assinado devolvido por GET /v1/inf/normative/mobile-packages/{id}/content (CTG-0003 §3 e §6.5; ADR-0018).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["manifest", "manifest_hash", "signature"],
+  "properties": {
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog",
+        "framings",
+        "validation_rules",
+        "metrological_tables",
+        "document_templates",
+        "agency_parameters"
+      ],
+      "properties": {
+        "catalog": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "A linha de inf.normative_catalog do catalog_id, sem tenant_id, created_at nem updated_at. Colunas de BP-INF-NORMATIVE-001 — não copiadas à mão (ADR-0007)."
+        },
+        "framings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "inf.normative_framing status=active, ordenado por id asc."
+          }
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "inf.normative_validation_rule status=active, ordenado por id asc."
+          }
+        },
+        "metrological_tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "inf.normative_metrological_table status=active, ordenado por id asc."
+          }
+        },
+        "document_templates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "inf.normative_document_template status=active, ordenado por id asc."
+          }
+        },
+        "agency_parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "inf.normative_agency_parameter status=active, ordenado por id asc."
+          }
+        }
+      }
+    },
+    "manifest_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "JSON canônico (chaves ordenadas, sem espaços) do manifest."
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "signer", "kind"],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "signer": {
+          "type": "string",
+          "description": "'detran-backend-local' no perfil local."
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["local-unsigned"],
+          "description": "O selo do substrato de documentos é source_pending (CTG-0003 §3, OD-T16); quando existir, entra aqui um novo token e o schema sobe de versão."
+        }
+      }
+    }
+  }
+}

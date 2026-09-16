@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/probative-package.generated.schema.json",
+  "title": "probative-package.generated",
+  "description": "Pacote probatório gerado a partir das evidências vinculadas a uma entidade (CTG-0003 §4.6/§8).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "probative-package.generated"
+    },
+    "domainEvent": {
+      "const": "PACOTE_PROBATORIO_GERADO"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "probative-package"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "entityType",
+        "entityId",
+        "purpose",
+        "manifestHash",
+        "itemCount"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string"
+        },
+        "entityType": {
+          "type": "string"
+        },
+        "entityId": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "manifestHash": {
+          "type": "string"
+        },
+        "itemCount": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}

@@ -75,6 +75,18 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
 - [ ] teat: exclusão de intervalos de numeração SEM constraint de banco (só validação de app) — risco de sobreposição sob concorrência
 - [ ] teat/boat: crash_record_id em medidas administrativas sem FK rígida (nota explícita nos docs)
 - [ ] teat: comportamento do pacote normativo expirado offline (bloquear vs avisar) — decisão de produto
+- [ ] teat/rait: **R-0007 `rait-backend` rebaseia sobre `main` pós-CTG-0001** (`DetranError` em
+      `backend/domains/shared/src/errors/`, `policy-routes.e2e.spec.ts` seção RAIT a acrescentar) e, após
+      o merge de CTG-0004/CTG-0005, sobre `tools/contracts/check-commands.mjs`, `contracts:clients` e
+      `packages/api-clients` (M1/M18/M19 nasceram na frente `teat-backend`, R-0008 `plan.md` §Bloqueios)
+- [ ] teat: **timers de medida (`owner='medida'`) só são calculados, nunca persistidos** — `inf.infraction_timer`
+      tem FK à infração, não à medida; a persistência fica para R-0007 (M14, CTG-0004 §2)
+- [ ] teat: **conteúdo "assinado" do pacote normativo mobile é `sha256` local** (`signer='detran-backend-local'`,
+      `signature.kind='local-unsigned'`) enquanto o substrato de assinatura (ADR-0018) não estiver ligado — OD-T16
+- [ ] teat: **`snapshot.maxAgeSeconds`/`validUntil` do bootstrap saem `null`** até haver linha no catálogo de
+      parâmetros para a constante que a origem usa sem fonte normativa — OD-T14
+- [ ] teat: **`batches/{id}/retransmit` e `GET certificates`** (route contract §4.6) ficam fora por falta de
+      entidade de lote de integração em `ops` e de fonte para validade mTLS — OD-T43
 
 ## Rodada RAIT — time multidisciplinar (2026-08-24)
 
@@ -431,9 +443,19 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **WP-A — view de compatibilidade de `inf.normative_agency_parameter`** sobre
       `ops.parameter` permanece para a regeneração do módulo normativo; não integra R-0004
       (ADR-0021 Decisão 6) (added 2026-09-13)
-- [ ] **WP-T1/T2 — achados do WP-T0**: `ops/*` (operations, evidence-custody, snapshots) sem módulo Nest e com serviços
-      não injetáveis; `MeasureLifecycleService`/`AlcoholLifecycleService` e seus comandos ainda não montados; as sete
-      entidades da origem (item 6 de `teat-route-contract.md` §9); `ops:evidence:complete-upload|validate` voltam com rotas (added 2026-09-13)
+- [x] **WP-T1/T2 — achados do WP-T0** (fechado em R-0008, 2026-09-15/16): `ops/*` (field, offline-sync,
+      evidence, snapshots) ganharam módulo Nest com serviços injetáveis (CTG-0002/0003, PRs #48/#49);
+      `MeasureLifecycleService`/`AlcoholLifecycleService` e seus comandos montados (CTG-0004, PR #50); as
+      sete entidades da origem (item 6 de `teat-route-contract.md` §9) fechadas no WP-T1 (ver
+      `teat-route-contract.md` §9 "Estado após R-0008"); `ops:evidence:complete-upload|validate` de volta
+      com rotas (M11, CTG-0003 §4) (added 2026-09-13)
+- [x] **WP-T2/WP-T3 do TEAT concluídos (R-0008, 2026-09-15/16)**: rotas e comandos de AIT, campo,
+      sincronização, evidência, normativo, medidas, alcoolemia, SSE e integrações montados e testados
+      (CTG-0001…0004, PRs #47…#50); contratos de comando WP-T3 (CTG-0005: nove `*.commands.openapi.json`,
+      92 operações, três schemas e 16 schemas de evento, `check-commands.mjs`, `generate-clients.mjs`,
+      `packages/api-clients`) entregues (TASK-0010/0012/0013), commit/PR #51 do maestro; ver
+      `teat-build-pack.md` §2 WP-T2/WP-T3 "Executado" e `docs/meta/knowledge-base/open-decisions-rait.md`
+      §F (OD-T13…T73) para o que ficou `source_pending` ou registrado como pergunta aberta
 - [x] **Meta-orquestração definida (2026-09-14, ADR-0022)**: método em `docs/meta/agents/orchestra/`, escada de
       modelos, plano de ondas (14 frentes, R-0003…R-0016), templates de maestro/reviewer/worker, ponte
       `tools/orchestra/bridge.sh`; R-0003 (`dash-roles`) e R-0004 (`param-store`) concluídas

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/custody.event.schema.json",
+  "title": "custody.event",
+  "description": "Evento de custódia registrado explicitamente ou por validação da evidência (CTG-0003 §4.3/§4.5/§8).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "custody.event"
+    },
+    "domainEvent": {
+      "const": "CUSTODIA_EVENTO"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "evidence"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidenceId", "custodyEventId", "eventType", "eventAt"],
+      "properties": {
+        "evidenceId": {
+          "type": "string"
+        },
+        "custodyEventId": {
+          "type": "string"
+        },
+        "eventType": {
+          "type": "string",
+          "enum": [
+            "uploaded",
+            "validated",
+            "rejected",
+            "linked",
+            "packaged",
+            "access_approved",
+            "access_denied",
+            "access_delivered",
+            "purged_unverified",
+            "quarantined",
+            "restored"
+          ]
+        },
+        "eventAt": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

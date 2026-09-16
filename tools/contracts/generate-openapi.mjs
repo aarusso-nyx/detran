@@ -235,7 +235,11 @@ for (const name of files) {
 }
 for (const name of fs
   .readdirSync(outputDir)
-  .filter((n) => n.endsWith('.openapi.json')))
+  // `*.commands.openapi.json` is hand-written and has its own gate
+  // (tools/contracts/check-commands.mjs) — it is never generated here.
+  .filter(
+    (n) => n.endsWith('.openapi.json') && !n.endsWith('.commands.openapi.json'),
+  ))
   if (!expected.has(name)) {
     drift = true;
     process.stderr.write(`orphan contract: ${name}\n`);

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/sync.conflict.resolved.schema.json",
+  "title": "sync.conflict.resolved",
+  "description": "Conflito de sincronização resolvido — pelo supervisor (ops/offline-sync) ou pela apuração de concorrência do AIT (inf/ait, CTG-0001 §4.8) (CTG-0002 §5.13/§7; CTG-0001 §6).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "sync.conflict.resolved"
+    },
+    "domainEvent": {
+      "const": "SYNC_CONFLITO_RESOLVIDO"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "sync-conflict"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conflictId", "conflictType", "resolvedAt"],
+      "properties": {
+        "conflictId": {
+          "type": "string"
+        },
+        "conflictType": {
+          "type": "string",
+          "enum": ["integrity", "domain", "concurrency"]
+        },
+        "aitId": {
+          "type": "string",
+          "description": "Presente só no ramo publicado por inf/ait (concurrency-review); ausente no ramo de ops/offline-sync."
+        },
+        "decision": {
+          "type": "string",
+          "enum": ["release", "reject"],
+          "description": "Presente só no ramo publicado por inf/ait."
+        },
+        "resolutionAction": {
+          "type": "string",
+          "description": "Presente só no ramo publicado por ops/offline-sync."
+        },
+        "resolvedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

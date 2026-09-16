@@ -1,0 +1,2224 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Alcohol — comandos manuscritos (BP-INF-ALCOHOL-001)",
+    "version": "1.0.0",
+    "description": "Comandos do procedimento de alcoolemia, montados em AlcoholCommandsController.",
+    "x-blueprint": "BP-INF-ALCOHOL-001",
+    "x-commands": true,
+    "x-source": "teat-route-contract.md §6"
+  },
+  "paths": {
+    "/v1/inf/alcohol/procedures/{id}/start": {
+      "post": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "teatAlcoholProcedureStart",
+        "summary": "Inicia a triagem de alcoolemia (ABORDAGEM → TRIAGEM).",
+        "x-policy": "inf:alcohol-procedure:start",
+        "x-audit": "INF_ALCOHOL_START",
+        "x-command": "backend/domains/inf/alcohol/src/handwritten/start-procedure.command.ts",
+        "x-contract": "CTG-0004 §5.1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartAlcoholProcedureCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Triagem iniciada.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "TRIAGEM"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "00000000-0000-7000-8000-0000ee000001",
+                  "status": "TRIAGEM"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Procedimento fora de ABORDAGEM.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ALCOHOL_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/procedures/{id}/tests": {
+      "post": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "teatAlcoholProcedureRecordTest",
+        "summary": "Registra o teste do etilômetro e classifica o resultado.",
+        "x-policy": "inf:alcohol-procedure:record-test",
+        "x-audit": "INF_ALCOHOL_TEST",
+        "x-command": "backend/domains/inf/alcohol/src/handwritten/record-test.command.ts",
+        "x-contract": "CTG-0004 §5.2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordAlcoholTestCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Teste registrado e resultado classificado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "procedure_id",
+                    "result_mg_l",
+                    "max_error_mg_l",
+                    "considered_mg_l",
+                    "procedure_status"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "procedure_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "result_mg_l": {
+                      "type": "number"
+                    },
+                    "max_error_mg_l": {
+                      "type": "number"
+                    },
+                    "considered_mg_l": {
+                      "type": "number"
+                    },
+                    "procedure_status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "result_mg_l ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.ALCOHOL_RESULT_PAIR_REQUIRED",
+                        "TEAT.ENUM_INVALID",
+                        "TEAT.VALIDATION_FAILED"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Procedimento fora de TRIAGEM/ETILOMETRO_OFERECIDO.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ALCOHOL_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Etilômetro sem verificação vigente, ou pacote sem tabela metrológica ativa, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.ALCOHOL_BREATHALYZER_NOT_VERIFIED",
+                        "TEAT.ALCOHOL_METROLOGICAL_TABLE_MISSING"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/procedures/{id}/refusals": {
+      "post": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "teatAlcoholProcedureRecordRefusal",
+        "summary": "Registra recusa ou impossibilidade técnica do teste.",
+        "x-policy": "inf:alcohol-procedure:record-refusal",
+        "x-audit": "INF_ALCOHOL_REFUSAL",
+        "x-command": "backend/domains/inf/alcohol/src/handwritten/record-refusal.command.ts",
+        "x-contract": "CTG-0004 §5.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordAlcoholRefusalCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Recusa/impossibilidade registrada.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "procedure_id",
+                    "kind",
+                    "procedure_status"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "procedure_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "procedure_status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "kind ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.ALCOHOL_REFUSAL_KIND_REQUIRED",
+                        "TEAT.ENUM_INVALID",
+                        "TEAT.VALIDATION_FAILED"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Procedimento fora de TRIAGEM/ETILOMETRO_OFERECIDO.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ALCOHOL_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/procedures/{id}/psychomotor-signs": {
+      "post": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "teatAlcoholProcedureRecordPsychomotorSigns",
+        "summary": "Registra o conjunto de sinais psicomotores observados.",
+        "x-policy": "inf:alcohol-procedure:record-psychomotor-signs",
+        "x-audit": "INF_ALCOHOL_SIGNS",
+        "x-command": "backend/domains/inf/alcohol/src/handwritten/record-signs.command.ts",
+        "x-contract": "CTG-0004 §5.4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordPsychomotorSignsCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sinais registrados.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["procedure_id", "procedure_status", "signs"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "procedure_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "procedure_status": {
+                      "type": "string"
+                    },
+                    "signs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "sign_code": {
+                            "type": "string"
+                          },
+                          "observed": {
+                            "type": "boolean"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Procedimento fora dos pré-estados admitidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ALCOHOL_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Menos de dois sinais observados (RN-TEAT-132), ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ALCOHOL_SIGNS_SET_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/procedures/{id}/forwardings": {
+      "post": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "teatAlcoholProcedureForward",
+        "summary": "Registra o encaminhamento a outro meio de prova.",
+        "x-policy": "inf:alcohol-procedure:forward",
+        "x-audit": "INF_ALCOHOL_FORWARD",
+        "x-command": "backend/domains/inf/alcohol/src/handwritten/forward-procedure.command.ts",
+        "x-contract": "CTG-0004 §5.5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordAlcoholForwardingCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Encaminhamento registrado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "procedure_id",
+                    "forwarding_type",
+                    "destination",
+                    "procedure_status"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "procedure_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "forwarding_type": {
+                      "type": "string"
+                    },
+                    "destination": {
+                      "type": "string"
+                    },
+                    "procedure_status": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Procedimento fora dos pré-estados admitidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ALCOHOL_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "forwarding_type fora do vocabulário desta rodada, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/inf/alcohol/procedures/{id}/close": {
+      "post": {
+        "tags": ["alcohol-procedure"],
+        "operationId": "teatAlcoholProcedureClose",
+        "summary": "Fecha o procedimento no estado terminal correspondente.",
+        "x-policy": "inf:alcohol-procedure:close",
+        "x-audit": "INF_ALCOHOL_CLOSE",
+        "x-command": "backend/domains/inf/alcohol/src/handwritten/close-procedure.command.ts",
+        "x-contract": "CTG-0004 §5.6",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseAlcoholProcedureCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Procedimento fechado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "outcome"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "outcome": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Procedimento fora dos pré-estados admitidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ALCOHOL_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Resultado crime sem encaminhamento, ou outro-meio-de-prova sem outcome válido, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.ALCOHOL_FORWARDING_REQUIRED_FOR_CRIME",
+                        "TEAT.ALCOHOL_TERM_MINIMUM_CONTENT"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StartAlcoholProcedureCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "RecordAlcoholTestCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["breathalyzer_id", "result_mg_l"],
+        "properties": {
+          "breathalyzer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "test_number": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "tested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "result_mg_l": {
+            "type": "number"
+          },
+          "counterproof": {
+            "type": "boolean"
+          },
+          "result_image_evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "outcome": {
+            "type": "string"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "RecordAlcoholRefusalCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["refusal_description", "kind"],
+        "properties": {
+          "refused_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refusal_description": {
+            "type": "string"
+          },
+          "witness_person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["refusal", "technical_impossibility"]
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "RecordPsychomotorSignsCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signs"],
+        "properties": {
+          "signs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sign_code", "description"],
+              "properties": {
+                "sign_code": {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                "description": {
+                  "type": "string"
+                },
+                "observed": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "sign_group": {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                "sign_status": {
+                  "type": "string",
+                  "maxLength": 20
+                },
+                "method": {
+                  "type": "string",
+                  "maxLength": 120
+                }
+              }
+            }
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "RecordAlcoholForwardingCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["forwarding_type", "destination"],
+        "properties": {
+          "forwarding_type": {
+            "type": "string",
+            "maxLength": 80,
+            "enum": [
+              "exame_sangue",
+              "exame_clinico",
+              "exame_laboratorial",
+              "policia_judiciaria"
+            ],
+            "description": "Vocabulário de modelagem fixado em CTG-0004 §5.5 — não é token canônico."
+          },
+          "destination": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "forwarded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "notes": {
+            "type": "string"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "CloseAlcoholProcedureCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "RESULTADO_ABAIXO_LIMITE",
+              "RESULTADO_ADMINISTRATIVO",
+              "RESULTADO_CRIME"
+            ]
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "details_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

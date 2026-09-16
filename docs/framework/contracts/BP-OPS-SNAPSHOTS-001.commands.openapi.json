@@ -1,0 +1,633 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Snapshots — comandos manuscritos (BP-OPS-SNAPSHOTS-001)",
+    "version": "1.0.0",
+    "description": "Consultas externas congeladas (WSDENATRAN/RENACH), montadas em FrozenSnapshotController.",
+    "x-blueprint": "BP-OPS-SNAPSHOTS-001",
+    "x-commands": true,
+    "x-source": "teat-route-contract.md §4.5"
+  },
+  "paths": {
+    "/v1/ops/snapshots/external-queries": {
+      "post": {
+        "tags": ["external-query"],
+        "operationId": "teatExternalQueryCreate",
+        "summary": "Registra uma consulta externa (WSDENATRAN/RENACH) e congela o snapshot.",
+        "x-policy": "ops:external-query:create",
+        "x-audit": "OPS_EXTERNAL_QUERY_RECORD",
+        "x-command": "backend/domains/ops/snapshots/src/handwritten/external-query.command.ts",
+        "x-contract": "CTG-0003 §5.1",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateExternalQueryCommandDto"
+              },
+              "example": {
+                "query_type": "vehicle_by_plate",
+                "parameters": {
+                  "plate": "ABC1D23"
+                },
+                "purpose": "confirmação de placa em campo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consulta registrada e snapshot congelado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "snapshot_id",
+                    "source",
+                    "queried_at",
+                    "result",
+                    "divergence_recorded"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "snapshot_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "source": {
+                      "type": "string"
+                    },
+                    "queried_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "result": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "divergence_recorded": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "purpose ausente, ou parameters não casa com query_type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.ENUM_INVALID",
+                        "TEAT.QUERY_PURPOSE_REQUIRED",
+                        "TEAT.VALIDATION_FAILED"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Placa/CPF inexistente na base nacional.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.QUERY_NOT_FOUND", "TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Adapter nacional sem resposta.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.QUERY_UPSTREAM_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 503
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["external-query"],
+        "operationId": "teatExternalQueryList",
+        "summary": "Lista consultas externas para auditoria (sem parâmetros pessoais).",
+        "x-policy": "ops:external-query:read",
+        "x-command": "backend/domains/ops/snapshots/src/handwritten/external-query.command.ts",
+        "x-contract": "CTG-0003 §5.2",
+        "parameters": [
+          {
+            "name": "query_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["vehicle_by_plate", "driver_by_cpf", "driver_by_license"]
+            }
+          },
+          {
+            "name": "purpose",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "agent_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consultas do tenant, sem os parâmetros de entrada (dado pessoal de terceiro).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["items"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "query_type": {
+                            "type": "string"
+                          },
+                          "purpose": {
+                            "type": "string"
+                          },
+                          "queried_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "parameters_hash": {
+                            "type": "string"
+                          },
+                          "user_ref": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "agent_id": {
+                            "type": ["string", "null"],
+                            "format": "uuid"
+                          },
+                          "device_id": {
+                            "type": ["string", "null"],
+                            "format": "uuid"
+                          }
+                        }
+                      }
+                    },
+                    "nextCursor": {
+                      "type": ["string", "null"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateExternalQueryCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["query_type", "parameters", "purpose"],
+        "properties": {
+          "query_type": {
+            "type": "string",
+            "enum": ["vehicle_by_plate", "driver_by_cpf", "driver_by_license"]
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "vehicle_by_plate: { plate }; driver_by_cpf: { cpf }; driver_by_license: { license_number } — a forma varia por query_type (CTG-0003 §5.1)."
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  }
+}

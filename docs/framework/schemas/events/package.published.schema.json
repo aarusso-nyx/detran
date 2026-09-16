@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/package.published.schema.json",
+  "title": "package.published",
+  "description": "Pacote normativo mobile publicado (CTG-0003 §6.3/§8).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "package.published"
+    },
+    "domainEvent": {
+      "const": "PACOTE_MOBILE_PUBLICADO"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "normative-package"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "catalogId",
+        "packageVersion",
+        "manifestHash",
+        "publishedAt",
+        "validUntil"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string"
+        },
+        "catalogId": {
+          "type": "string"
+        },
+        "packageVersion": {
+          "type": "string"
+        },
+        "manifestHash": {
+          "type": "string"
+        },
+        "publishedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": ["string", "null"],
+          "format": "date"
+        }
+      }
+    }
+  }
+}

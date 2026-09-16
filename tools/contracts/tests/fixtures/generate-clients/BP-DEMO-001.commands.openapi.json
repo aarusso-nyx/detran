@@ -1,0 +1,42 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Demo — comandos manuscritos (BP-DEMO-001)",
+    "version": "1.0.0",
+    "description": "Fixture mínima do Inspector (TASK-0012) para tools/contracts/generate-clients.mjs — imita um contrato de comando.",
+    "x-blueprint": "BP-DEMO-001",
+    "x-commands": true,
+    "x-source": "fixture"
+  },
+  "paths": {
+    "/v1/demo/items/{id}/finalize": {
+      "post": {
+        "tags": ["demo-item"],
+        "operationId": "teatDemoItemFinalize",
+        "summary": "Finaliza o item de demonstração (fixture).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "id": { "type": "string" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": { "schemas": {} }
+}

@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "tools/contracts/tests/schemas.test.mjs",
+      "line": 11,
+      "claim": "A correção de C-5-25 não cumpre a adenda vinculante CTG-0005 §9.16: o próprio teste declara que os envelopes são aproximações montadas a partir do schema, e não fixtures literais copiadas dos `*.spec.ts` dos helpers `events.ts`. Logo, a tríade ainda não prova os envelopes produzidos.",
+      "fix": "Substituir os envelopes por fixtures literais extraídas dos testes/helpers produtores de cada módulo, citando a origem; se tais literais não existirem, o Architect deve registrar formalmente a lacuna como OD/source_pending e definir um critério verificável substituto antes de aceitar C-5-25."
+    }
+  ],
+  "notes": [
+    "Itens 4, 7 e 11 do ciclo 1 foram corrigidos: assinaturas formalizadas, gate determinístico de clientes em `contracts:check` e TASK-0011 concluída."
+  ]
+}
