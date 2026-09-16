@@ -395,7 +395,10 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   (colisões de rota por `operations`, `testAliases`, símbolos dos comandos, prefixo `v1/`). Próximo: TASK-0005 (opus/médio).
 - 2026-09-15 (checkpoint 4): CTG-0002 concluído — TASK-0004 (4 iterações), TASK-0005 (5 iterações); delivery-review ciclos 1 `FAIL`,
   2 `FAIL` (resolvido por adenda §14), 3 `REVIEW`, 4 `PASS`; adendas §13/§14 em CTG-0002. Próximo: commit, evidência seq. 2, PR do
-  CTG-0002; TASK-0006 (sonnet/médio) em seguida. Pendentes: TASK-0006…0013. Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
+  CTG-0002; TASK-0006 (sonnet/médio) em seguida. Pendentes: TASK-0006…0013.
+- 2026-09-16 (checkpoint 5): **PR #48 mesclado** em ade61ac (CI 5/5); `audit observe` no merge; TASK-0006 concluída (testes vermelhos +
+  seed 27). Gerador alterado pelo maestro (Architect): controladores manuscritos registram **antes** dos gerados (rotas literais vencem
+  `:id`); todos os módulos regenerados. Próximo: TASK-0007 (sonnet/médio). Pendentes: TASK-0007…0013. Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
   maestro prossegue por instrução explícita do Owner ("até a completa finalização e merge").
 
 ## Leitura
