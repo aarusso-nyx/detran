@@ -3,8 +3,8 @@
   "window": 3,
   "window_input_budget": 800000,
   "checkpoint_threshold": 640000,
-  "estimated_input_total": 300000,
-  "estimated_output_total": 36000,
+  "estimated_input_total": 320000,
+  "estimated_output_total": 39000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -244,8 +244,18 @@
       "window": 3,
       "input_tokens": 25000,
       "output_tokens": 2000,
-      "status": "in_progress",
-      "note": "Final restricted verification of one high and two documentary lows"
+      "status": "completed",
+      "note": "Final restricted verification of one high and two documentary lows",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "CTG-0001-exact-candidate",
+      "window": 3,
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "note": "289916b isolated checkout: frozen install, build, DB reset/seed and backend:test:ci all PASS; DEVAI evidence sequence 1 chain valid"
     }
   ]
 }
