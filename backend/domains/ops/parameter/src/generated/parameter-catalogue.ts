@@ -1,6 +1,6 @@
-// Generated from parameter-catalogue.md sha256:46e1a81e8e98465aad5b1a1fb5c1fbdcf6eaa3814614dc817fe8965b65c7890a
+// Generated from parameter-catalogue.md sha256:3fc4ad325b45bb66c6a9cdb281fa0210fec24b529e7271a8c376a8d0dbf7d74e
 export const PARAMETER_CATALOGUE_SOURCE_SHA256 =
-  '46e1a81e8e98465aad5b1a1fb5c1fbdcf6eaa3814614dc817fe8965b65c7890a';
+  '3fc4ad325b45bb66c6a9cdb281fa0210fec24b529e7271a8c376a8d0dbf7d74e';
 export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.wip.limit',
@@ -566,7 +566,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T03',
     decision_tokens: ['OD-T03', 'DT-016'],
-    consumer: 'detecção de sessão concorrente',
+    consumer:
+      'ops/offline-sync/src/handwritten/concurrency-detector.ts (CONCURRENCY_WINDOW_KEY)',
     surface: 'teat',
     provenance: {
       line: 64,
@@ -581,7 +582,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T04',
     decision_tokens: ['OD-T04', 'DT-110'],
-    consumer: 'HOMOLOGATION_RENEWAL_DUE',
+    consumer:
+      'ops/field/src/handwritten/mobile-bootstrap.service.ts (HOMOLOGATION_BEHAVIOR_KEY), bloqueador HOMOLOGATION_RENEWAL_DUE',
     surface: 'teat',
     provenance: {
       line: 65,
@@ -611,7 +613,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'H.54',
     decision_tokens: ['OD-T07', 'H.54'],
-    consumer: 'faixas',
+    consumer:
+      'ops/offline-sync/src/handwritten/reserve-numbering.command.ts (RESERVATION_TTL_KEY)',
     surface: 'teat',
     provenance: {
       line: 67,
@@ -656,7 +659,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T09',
     decision_tokens: ['OD-T09', 'DT-015'],
-    consumer: 'rotas desligadas',
+    consumer:
+      'inf/measures/src/handwritten/record-removal.command.ts (MONITORED_CUSTODY_FLAG, porta MEASURE_FEATURE_FLAGS)',
     surface: 'teat',
     provenance: {
       line: 70,
@@ -671,7 +675,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T09',
     decision_tokens: ['OD-T09', 'DT-063'],
-    consumer: 'UC-TEAT-013',
+    consumer:
+      'backend/app/src/app.module.ts (montagem condicional do SpeedModule), UC-TEAT-013',
     surface: 'teat',
     provenance: {
       line: 71,

@@ -3,7 +3,7 @@ id: ARCH-TEAT-BUILD-PACK
 title: Pacote de construção do TEAT — definições e pacotes de trabalho para a orquestra de agentes (backend unificado, mobile e web)
 status: draft
 apps: [teat]
-updated: 2026-09-13
+updated: 2026-09-16
 ---
 
 # Pacote de construção do TEAT
@@ -70,6 +70,22 @@ Gate: `blueprints:check`, `contracts:check`, `verify:rls-ddl`, `verify:lifecycle
 
 ### WP-T2 — Rotas e comandos (Engineer-backend)
 
+**Executado em 2026-09-15/16** (rodada R-0008, frente `teat-backend`, grupos CTG-0001…0004,
+todos mesclados em `main`): AIT completo com `If-Match`/`ETag` em `ait_ait.version`,
+`concurrency-review` e `cancel-requests` (`decision_body`, H.39) — TASK-0002/TASK-0003, PR #47;
+bootstrap, turno, `sessions/handoff`, numeração e sincronização offline transacional por item
+(ACK perdido, retry, lote parcial, sequência repetida/gap, conflito, integridade) — TASK-0004/
+TASK-0005, PR #48; evidência (intenção → upload → conclusão, acesso a bodycam por
+`evidence-access-request`), snapshots via `packages/senatran-adapter`, catálogo e pacote
+normativo mobile (conteúdo "assinado" localmente enquanto o substrato não estiver ligado,
+OD-T16) — TASK-0006/TASK-0007, PR #49; medidas, alcoolemia (valor considerado pela tabela
+metrológica), velocidade atrás de `teat.speed_meters`, SSE `/v1/ops/stream`, projeção de
+integrações e `policy-routes.e2e.spec.ts` — TASK-0008/TASK-0009, PR #50. `DetranError`
+(`backend/domains/shared/src/errors/detran-error.ts`, M1) nasceu nesta frente, compartilhado por
+`@detran/shared` com `messageKey` por prefixo de app; `RaitError` de `inf/infraction` não foi
+tocado (R-0007 decide se o realinha). Relatórios: `work/rounds/R-0008/reports/TASK-000{3,5,7,9}.md`;
+contratos do Architect: `work/rounds/R-0008/contracts/CTG-000{1,2,3,4}.md`.
+
 Ler: `teat-route-contract.md` (todas as seções), `teat-error-catalog.md`, DTOs da origem.
 Produzir, em `src/handwritten/` de cada módulo: comandos do AIT completos (incl. `concurrency-review`,
 `cancel-requests`), bootstrap e turno (`/v1/ops/mobile-bootstrap`, `sessions/handoff`), numeração
@@ -79,11 +95,28 @@ snapshots (consultas via adapter), normativo (gerar/publicar/validar/retirar pac
 assinado), medidas e alcoolemia (comandos com cálculo do valor considerado pela tabela
 metrológica), SSE `/v1/ops/stream`, projeção de integrações. `RaitError` vira `DetranError`
 compartilhado com prefixo por app.
-Gate: matriz de política 100% coberta por rotas e vice-versa (teste novo `policy-routes.spec.ts`),
-`verify:decorators`, `backend:test:ci`, testes de sincronização (ACK perdido, retry, lote
-parcial, sequência repetida/gap, conflito, integridade), `verify:senatran-boundary`.
+Gate (comandos reais, confirmados verdes em `work/rounds/R-0008/reports/TASK-0009.md` "Gates
+finais"): `pnpm verify:decorators`, `pnpm verify:senatran-boundary`, `pnpm backend:test:ci`,
+matriz de política 100% coberta por rotas e vice-versa
+(`backend/app/tests/e2e/policy-routes.e2e.spec.ts`), testes de sincronização (ACK perdido, retry,
+lote parcial, sequência repetida/gap, conflito, integridade), `pnpm check`.
 
 ### WP-T3 — Payloads e contratos (Transcriber-docs / Engineer)
+
+**Executado** (rodada R-0008, grupo CTG-0005; TASK-0013 desenhou o contrato, TASK-0012 escreveu
+os testes do gate e do gerador de clientes, TASK-0010 implementou): nove
+`docs/framework/contracts/BP-*.commands.openapi.json` (92 operações — AIT 18, normative 8,
+measures 8, alcohol 6, ops-field 17, ops-offline-sync 12, ops-evidence 13, ops-snapshots 2,
+ops-bootstrap 8), três schemas (`teat-offline-sync-batch`, `teat-normative-package`,
+`teat-bootstrap`) e 16 `docs/framework/schemas/events/*.schema.json`; `tools/contracts/check-commands.mjs`
+e `tools/contracts/generate-clients.mjs`; pacote novo `packages/api-clients` (47 arquivos gerados,
+commitados). Gates confirmados em `work/rounds/R-0008/reports/TASK-0010.md`: `pnpm contracts:check`
+→ "commands contracts: OK (92 operations)"; `pnpm contracts:clients` → "clients written: 47";
+`pnpm check` → exit 0 (`node tools/docs/kb/check.mjs` inalterado, 521/446). `backend/domains/inf/speed/**`
+fica fora da varredura do gate por flag desligada (`FLAG_GATED_CONTROLLERS`, OD-T66). Entregue no
+PR #51 (R-0008, CTG-0005) junto com esta transcrição (`work/rounds/R-0008/plan.md` §Retomada);
+`docs/framework/contracts/README.md` recebeu a seção "`*.commands.openapi.json`" na mesma
+tarefa (TASK-0010).
 
 `docs/framework/contracts/BP-INF-AIT-001.commands.openapi.json` e equivalentes para normative,
 measures, alcohol, ops-field, ops-offline-sync, ops-evidence, ops-snapshots, ops-bootstrap: um
@@ -91,7 +124,8 @@ measures, alcohol, ops-field, ops-offline-sync, ops-evidence, ops-snapshots, ops
 `code` enumerado do catálogo, headers `If-Match`/`Idempotency-Key`/`ETag`, exemplos com ids das
 fixtures; schema JSON do lote de sincronização atualizado (`device_batch_id`, `batch_sequence`) em
 `docs/framework/schemas/teat-offline-sync-batch.schema.json`; schema do pacote normativo mobile e
-do bootstrap. Gate: `contracts:check` estendido; `openapi-typescript` gera clientes sem erro.
+do bootstrap. Gate: `pnpm contracts:check` (gerador CRUD + `tools/contracts/check-commands.mjs`);
+`pnpm contracts:clients` sem erro; `pnpm --filter @detran/api-clients typecheck`.
 
 ### WP-T4 — Telas, formulários e i18n (Transcriber-docs → Engineer-frontend)
 

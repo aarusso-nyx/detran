@@ -1,0 +1,42 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "tools/contracts/check-commands.mjs",
+      "line": 110,
+      "claim": "A API pública diverge de CTG-0005 §3.1: `scanControllers` retorna `{ routes, problems }`, não o `Array` definido; `collectOperations` também exige o segundo parâmetro `blueprintsDir` (linha 270), embora o contrato defina somente `contractsDir`.",
+      "fix": "Adequar as funções exportadas às assinaturas do CTG; mantenha problemas de varredura/validação na camada de `checkCommands` ou atualize formalmente o contrato antes de consumir a API."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "tools/contracts/tests/check-commands.test.mjs",
+      "line": 99,
+      "claim": "Os 16 testes não cobrem os critérios obrigatórios C-5-03, C-5-05, C-5-07, C-5-08, C-5-12 a C-5-16 e C-5-22 a C-5-26 de CTG-0005 §7; em particular não há testes para forma mínima, `error_code`, normalização/exclusões AST, caso real de 92 operações, nem qualquer validação dos schemas.",
+      "fix": "Adicionar fixtures e testes independentes para cada critério omitido antes de considerar TASK-0012/CTG-0005 completo."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "package.json",
+      "line": 45,
+      "claim": "`contracts:check` só verifica o CRUD e `check-commands`; não verifica que `packages/api-clients/src/generated/**` corresponde aos contratos, contrariando CTG-0005 §9.8, que exige o gate C-5-2x em `contracts:check`.",
+      "fix": "Adicionar uma verificação determinística e sem escrita da geração de clientes ao gate, cobrindo o conteúdo commitado e órfãos."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0008/tasks/TASK-0011.json",
+      "line": 5,
+      "claim": "TASK-0011, integrante de CTG-0005, ainda está `in_progress`; portanto os registros documentais vinculantes, incluindo OD-T72 e OD-T73 exigidos por CTG-0005 §9.13, não foram entregues.",
+      "fix": "Concluir TASK-0011, registrar as ODs no catálogo canônico e só então reapresentar o grupo para delivery-review."
+    }
+  ],
+  "notes": [
+    "`pnpm contracts:check` foi executado nesta worktree e retornou `commands contracts: OK (92 operations)`, mas esse resultado não cobre os achados acima."
+  ]
+}

@@ -3,7 +3,7 @@ id: ARCH-TEAT-ROUTES
 title: Contrato de rotas do TEAT no backend unificado — mapeamento da origem, comandos, payloads, política e auditoria
 status: draft
 apps: [teat]
-updated: 2026-09-13
+updated: 2026-09-16
 ---
 
 # Contrato de rotas do TEAT
@@ -232,3 +232,36 @@ replay conforme `rait-events-sse-contract.md` §1 e §3; filtro por papel e unid
 5. `BP-INF-SPEED-001` sem módulo nem política.
 6. `MetrologicalTable`, `EvidenceAccessRequest`, `AitCancelRequest`, `DeviceEvent`, `TeamAgent`, `PatrolVehicle`, `MeasurementInstrument` existem na origem e faltam nos blueprints daqui.
 7. Contrato de origem não declara 409/422 nem query params; o unificado declara ambos.
+
+**Estado após R-0008 (WP-T2/WP-T3, 2026-09-16):** itens 1–5 seguem corrigidos desde WP-T0.
+
+Item 6 **fechado** no WP-T1 (`work/rounds/R-0008/plan.md` §Decisões, `teat-build-pack.md` §2
+WP-T1): `BP-INF-NORMATIVE-001` ganhou `normative_metrological_table` (M15,
+`CTG-0004.md` §3.1); `BP-OPS-EVIDENCE-001` ganhou `EvidenceAccessRequest`; `BP-INF-AIT-001`
+ganhou `AitCancelRequest`; `BP-OPS-FIELD-001` ganhou `DeviceEvent`, `TeamAgent`, `PatrolVehicle`,
+`MeasurementInstrument` — todas seedadas em `backend/database/seed/26-fixtures-teat-field.sql`.
+
+Item 7 **fechado** por decisão do maestro (`CTG-0005.md` §9 item 2): o unificado continua
+declarando 409/422 e query params que a origem não declarava; WP-T3 transcreve esse
+comportamento nos `*.commands.openapi.json` tal como o código montado o produz hoje, sem
+reconciliar com o contrato de origem — correção de status HTTP para o texto dos CTG-0003/0004 e
+do catálogo é rodada futura (OD-T70, OD-T71).
+
+Divergências de vocabulário fechadas por decisão do maestro nesta rodada (registradas, não
+resolvidas — ver `docs/meta/knowledge-base/open-decisions-rait.md` §F):
+
+- **Evidência** (M11): `validate` produz `validated|rejected`; o blueprint `BP-OPS-EVIDENCE-001`
+  não tem o estado `invalid` que o texto desta página supunha.
+- **Cancelamento do AIT** (M3, H.39): `addressed_to='board'` do prompt original da origem virou
+  `traffic-authority|diretoria-fiscalizacao`; `CreateAitCancelRequestDto.addressedTo` da origem
+  prevalece sobre a grafia `board`.
+- **Pacote normativo** (M13): `VALIDADO_PKG` não é um estado persistido de
+  `normative_mobile_package` — `validate` é idempotente e devolve `{ valid, reason }` sem gravar
+  status novo.
+- **`POST aits/{id}/archive`** (M4): adotado só o papel `traffic-authority` (fonte mais
+  restrita); esta página também citava `processing-operator` em §3.2 — **OD-T13** registrada
+  para o Owner ampliar, se for o caso.
+
+WP-T3 (CTG-0005) publicou os nove `*.commands.openapi.json` sobre as rotas manuscritas desta
+página; ver `docs/framework/contracts/README.md` §"`*.commands.openapi.json`" (rotas manuscritas
+vencem o CRUD gerado) e `docs/framework/schemas/README.md` (índice dos schemas).

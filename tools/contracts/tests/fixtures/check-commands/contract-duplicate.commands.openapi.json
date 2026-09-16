@@ -1,0 +1,42 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Demo (rota B) — comandos manuscritos (BP-DEMO-001)",
+    "version": "1.0.0",
+    "description": "Fixture com o mesmo operationId de contract.commands.openapi.json, de propósito (tools/contracts/tests, caso duplicate-operation-id).",
+    "x-blueprint": "BP-DEMO-001",
+    "x-commands": true,
+    "x-source": "fixture"
+  },
+  "paths": {
+    "/v1/demo/items/{id}/other": {
+      "post": {
+        "tags": ["demo-item"],
+        "operationId": "teatDemoItemFinalize",
+        "summary": "Outra rota de exemplo (fixture; operationId duplicado de propósito).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ok.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": { "id": { "type": "string" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": { "schemas": {} }
+}

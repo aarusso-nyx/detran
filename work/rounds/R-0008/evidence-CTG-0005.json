@@ -1,0 +1,104 @@
+{
+  "action": "Implement WP-T3 CTG-0005: nine handwritten command contracts (92 operations), check-commands gate wired into contracts:check, typed clients generated with openapi-typescript into @detran/api-clients, sync-batch/normative-package/bootstrap schemas and 16 event schemas, node:test suites for the gate and the generator",
+  "round": "R-0008",
+  "coupled_task_group": "CTG-0005",
+  "role": "engineer",
+  "commits": ["COMMIT_SHA"],
+  "artifacts": [
+    {
+      "path": "tools/contracts/check-commands.mjs",
+      "sha256": "a988b9c36235041f795eff33d68bc880a16c3ac80024571653864f052b7583df"
+    },
+    {
+      "path": "tools/contracts/generate-clients.mjs",
+      "sha256": "b0f174cefd0ac089ee915bb63cae607320e13b820bd64144c35b16dad9103d74"
+    },
+    {
+      "path": "tools/contracts/generate-openapi.mjs",
+      "sha256": "387626a4694e3cd5b5e8aebd5b12d1b6bde7add6934feee4e70e41d465568897"
+    },
+    {
+      "path": "tools/contracts/tests/check-commands.test.mjs",
+      "sha256": "4ee1efd6d9cb25e86bbf8634155a7d4d91fb17e675ae10e1d4ef03bfe8a0a98c"
+    },
+    {
+      "path": "tools/contracts/tests/generate-clients.test.mjs",
+      "sha256": "6ec39eee8ab4ed7d5e1073cbe7ad3c4166c694707c3892cd363982a7b23bc37e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "ba1cfd82f5c6d8308db8751c9f8b00dac18213725eee70e36087d86c2a44fb27"
+    },
+    {
+      "path": "packages/api-clients/package.json",
+      "sha256": "f366b7f594519ecad8b5bd0feeb79a4a8cb3b7888402bfa04e65f42a46ec2a05"
+    },
+    {
+      "path": "packages/api-clients/src/index.ts",
+      "sha256": "9ec968a2ff098d7eaa1d9745f65c7eb165bca03105d737ead0d79b919160df34"
+    },
+    {
+      "path": "docs/framework/contracts/README.md",
+      "sha256": "374c9dbdbc7f56e08d48f39f961bb22ae1ba4807af7f7425719bd9bfeb08c2d8"
+    },
+    {
+      "path": "docs/framework/schemas/teat-offline-sync-batch.schema.json",
+      "sha256": "4890ca39a016962c2b43bbf6e83bc01021f23070889553301066bd58fe786a37"
+    },
+    {
+      "path": "docs/framework/schemas/teat-normative-package.schema.json",
+      "sha256": "b1da44b9c0383118da1bc2678241c605575fee92810b82c56524f50008016b17"
+    },
+    {
+      "path": "docs/framework/schemas/teat-bootstrap.schema.json",
+      "sha256": "4fa9bdc34194c4195e48944277c43297d347c0dd9bfdcd7fad52ac1d9469aeae"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-AIT-001.commands.openapi.json",
+      "sha256": "8c9d2cc0b78ca60fe6fc5919b175d0870ad5f8478f706cb8dfd3801bb93eaaaf"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-ALCOHOL-001.commands.openapi.json",
+      "sha256": "726e52b94d61e7f7a42de79f0f2f16e8e8b378aa19b4b05c3c2b1c9b8cc32a14"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-MEASURES-001.commands.openapi.json",
+      "sha256": "1032b700ad3538db18f34ab26774edb4afddd547bc6527a9f870408c58926a2d"
+    },
+    {
+      "path": "docs/framework/contracts/BP-INF-NORMATIVE-001.commands.openapi.json",
+      "sha256": "d8607b5361718e7ff1c6f7c3b22dbddefe1081217b977e25fd6d10837ba56923"
+    },
+    {
+      "path": "docs/framework/contracts/BP-OPS-BOOTSTRAP-001.commands.openapi.json",
+      "sha256": "1589a8940c60215c9ed83af38b587ec5da0c2a33b9de6e6abb19b419d7a2c7c3"
+    },
+    {
+      "path": "docs/framework/contracts/BP-OPS-EVIDENCE-001.commands.openapi.json",
+      "sha256": "113f8cf7ddd8c3ef18643d10989828caa4c3fd5f3f111acc175c740826634e39"
+    },
+    {
+      "path": "docs/framework/contracts/BP-OPS-FIELD-001.commands.openapi.json",
+      "sha256": "8fc01df98c3eb988a98d5892fa497d86cfdc6ca2a3a61e9bcf2972b25e5a9ac6"
+    },
+    {
+      "path": "docs/framework/contracts/BP-OPS-OFFLINE-SYNC-001.commands.openapi.json",
+      "sha256": "e2df3982b37e124df47bfe24aa2b1d9712dd2b09e2f0a287f4918a03f02888ab"
+    },
+    {
+      "path": "docs/framework/contracts/BP-OPS-SNAPSHOTS-001.commands.openapi.json",
+      "sha256": "8d629b1facad002764f60f59cc98f3ff8de85a1d702a0627c6ec9183c5ead925"
+    },
+    {
+      "path": "work/rounds/R-0008/contracts/CTG-0005.md",
+      "sha256": "1a8e7053af2842f7e593fe28e1fb3693860eb09030fbd01bd57daf4cb275d63f"
+    }
+  ],
+  "gates": {
+    "pnpm check": "pass",
+    "pnpm backend:test:ci": "pass (51 vitest runs, 1561 tests, 0 failed; unit tier rerun on the final tree: 34 runs, 1278 tests, 0 failed)",
+    "delivery-review": "PASS on cycle 3 (GPT-5.6 Terra): cycle 1 REVIEW (4), cycle 2 REVIEW (1), cycle 3 PASS"
+  },
+  "tasks": ["TASK-0013", "TASK-0012", "TASK-0010", "TASK-0011"],
+  "notes": "Adenda \u00a79 (items 1\u201313) of CTG-0005 and the openapi-typescript root devDependency applied by the maestro as Architect; OD-T66\u2026OD-T73."
+}

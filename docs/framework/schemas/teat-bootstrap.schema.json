@@ -1,0 +1,400 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/teat-bootstrap.schema.json",
+  "title": "TEAT Mobile Bootstrap",
+  "description": "Resposta de GET /v1/ops/mobile-bootstrap (M9), campo a campo como CTG-0002 §6.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "protocolVersion",
+    "requestedProtocolVersion",
+    "snapshot",
+    "context",
+    "catalog",
+    "normativePackage",
+    "numberingReservations",
+    "readiness",
+    "capabilities"
+  ],
+  "properties": {
+    "protocolVersion": {
+      "type": "string",
+      "const": "teat-mobile-bootstrap.v1"
+    },
+    "requestedProtocolVersion": {
+      "type": "string"
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capturedAt", "authority"],
+      "properties": {
+        "capturedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "description": "source_pending (OD-T14)."
+        },
+        "maxAgeSeconds": {
+          "type": ["integer", "null"],
+          "description": "source_pending (OD-T14)."
+        },
+        "authority": {
+          "type": "string",
+          "const": "server-snapshot"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenantId", "trafficAgencyId", "agent", "device", "session"],
+      "properties": {
+        "tenantId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "trafficAgencyId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "agent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "status"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "operationalUnitId": {
+              "type": ["string", "null"]
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        },
+        "device": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "status",
+            "homologated",
+            "tamperDetected",
+            "appVersion"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "status": {
+              "type": "string"
+            },
+            "homologated": {
+              "type": "boolean"
+            },
+            "tamperDetected": {
+              "type": "boolean"
+            },
+            "appVersion": {
+              "type": "string"
+            }
+          }
+        },
+        "activeShift": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "operationalUnitId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "teamId": {
+              "type": ["string", "null"],
+              "format": "uuid"
+            },
+            "patrolVehicleId": {
+              "type": ["string", "null"],
+              "format": "uuid"
+            },
+            "operationId": {
+              "type": ["string", "null"],
+              "format": "uuid"
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        },
+        "session": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "startedAt", "exclusive"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "exclusive": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "catalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operationalUnits",
+        "teams",
+        "patrolVehicles",
+        "operations",
+        "measurementInstruments"
+      ],
+      "properties": {
+        "operationalUnits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "patrolVehicles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "measurementInstruments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "instrumentType": {
+                "type": "string"
+              },
+              "serialNumber": {
+                "type": "string"
+              },
+              "brand": {
+                "type": "string"
+              },
+              "model": {
+                "type": "string"
+              },
+              "inmetroModelApproval": {
+                "type": "string"
+              },
+              "verificationValidUntil": {
+                "type": "string",
+                "format": "date"
+              },
+              "verificationValid": {
+                "type": "boolean"
+              },
+              "status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "normativePackage": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "catalogId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "string"
+        },
+        "manifestHash": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "publishedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": ["string", "null"],
+          "format": "date"
+        },
+        "contentPath": {
+          "type": "string"
+        }
+      }
+    },
+    "numberingReservations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rangeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "startNumber": {
+            "type": "integer"
+          },
+          "endNumber": {
+            "type": "integer"
+          },
+          "validUntil": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preShiftReady", "offlineReady", "blockers", "warnings"],
+      "properties": {
+        "preShiftReady": {
+          "type": "boolean"
+        },
+        "offlineReady": {
+          "type": "boolean"
+        },
+        "blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "SESSION_NOT_EXCLUSIVE",
+              "DEVICE_NOT_AUTHORIZED",
+              "DEVICE_TAMPER_DETECTED",
+              "DEVICE_NOT_HOMOLOGATED",
+              "APP_VERSION_NOT_ALLOWED",
+              "NORMATIVE_PACKAGE_MISSING",
+              "NORMATIVE_PACKAGE_EXPIRED",
+              "NUMBERING_RESERVATION_REQUIRED",
+              "AGENT_NOT_ACTIVE",
+              "AGENT_NOT_IN_UNIT",
+              "SHIFT_ALREADY_OPEN_ELSEWHERE"
+            ]
+          },
+          "description": "Ordem fixa do route contract §4.1 (CTG-0002 §5.3)."
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["NORMATIVE_PACKAGE_EXPIRED", "HOMOLOGATION_RENEWAL_DUE"]
+          },
+          "description": "CTG-0002 §5.3 — nunca bloqueiam."
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canOpenShift", "canOperateOffline", "canReserveNumbering"],
+      "properties": {
+        "canOpenShift": {
+          "type": "boolean"
+        },
+        "canOperateOffline": {
+          "type": "boolean"
+        },
+        "canReserveNumbering": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

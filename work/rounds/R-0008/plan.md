@@ -419,6 +419,19 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   iteração 4 + TASK-0008 iteração 5 (paralelas), TASK-0013 (Architect, `contracts/CTG-0005.md`). Próximo: gates, delivery-review
   CTG-0004 ciclo 3 (restrito aos 3 itens), commit `feat(teat)`, evidência seq. 4, PR #50, merge, observe; depois TASK-0012/0010/0011.
 
+- 2026-09-16 (checkpoint 9): **PR #50 mesclado** em 69f2cda (CI 5/5; `audit observe` EV-6cb2ac671c8c61ca; evidência seq. 4;
+  delivery-review CTG-0004 ciclo 3 PASS). TASK-0008/0009 concluídas. TASK-0013 concluída (`contracts/CTG-0005.md` + adenda §9 do
+  maestro: nove arquivos, speed fora da varredura, contrato transcreve o comportamento montado, OD-T66…T71). `openapi-typescript`
+  7.13.0 na raiz (`pnpm install` pelo maestro, não commitado ainda). Em curso: TASK-0012 (Inspector). Próximo: TASK-0010, delivery-review
+  CTG-0005, commit/evidência seq. 5/PR/merge/observe, TASK-0011, `closure.json`, `round close`, waves/backlog, relatório final.
+
+- 2026-09-16 (checkpoint 10): CTG-0005 entregue — TASK-0013, TASK-0012 (iterações 1–3), TASK-0010 (iterações 1–3), TASK-0011
+  (docs, no mesmo PR). Delivery-review ciclo 1 `REVIEW` (4 achados → §9.14–§9.18), ciclo 2 `REVIEW` (C-5-25 → §9.19, C-5-25′ vitest
+  por módulo). Gates: `backend:test:ci` exit 0; `pnpm check` falhou só por artefatos gerados do catálogo de parâmetros (regenerados
+  pelo maestro após a edição de `parameter-catalogue.md`). `openapi-typescript` 7.13.0 na raiz. Em curso: TASK-0012 iteração 3.
+  Próximo: gates completos, delivery-review ciclo 3 (só C-5-25′), commit `feat(teat)` CTG-0005 (+docs), evidência seq. 5, PR #51, CI,
+  merge, observe, `closure.json`, `round close`, waves/backlog, branch remota apagada, relatório final.
+
 ## Leitura
 
 HEAD lido: df1e1769941e527a07b6db7550aee84068f3a872. Lidos integralmente: `AGENTS.md`, `CODESTYLE.md`, `docs/meta/agents/README.md`,
