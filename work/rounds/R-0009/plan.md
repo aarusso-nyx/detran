@@ -1,7 +1,8 @@
 # R-0009 — frente `portal-backend` (WP-P0…P3 do PORTAL: identidade federada, modelo, rotas, projeções e contratos)
 
-**Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
-(prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
+**Status:** planejado em 2026-09-14 pelo Architect; bootstrap iniciado em 2026-09-16 pelo maestro Fable 5.1,
+suspenso pelo Owner e **retomado em 2026-09-16 por instrução explícita do Owner** ("prossiga até o completo
+encerramento do round com o merge correspondente"; ver `AUTHORIZATION.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
 **Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (identidade federada + modelo + projeções + fixtures): nenhum upstream. CTG-0002 (rotas, delegações, contratos): `rait-backend` R-0007 só para as delegações reais de defesa/indicação/pagamento — até lá as rotas delegadas devolvem `SERVICE_UNAVAILABLE` com motivo (build pack §3) e o grupo mescla com o teste de delegação real marcado `todo` citando R-0007. Já em `main` desde R-0008 (reutilizar, nunca recriar): `DetranError` (`backend/domains/shared/src/errors/`), `tools/contracts/check-commands.mjs` em `pnpm contracts:check`, `pnpm contracts:clients` → `@detran/api-clients`, `backend/app/tests/e2e/policy-routes.e2e.spec.ts` (estender com `portal:*`).
 **Janelas previstas:** 3.
 
@@ -89,8 +90,18 @@ CTG-0001 = 0001…0004 (identidade + modelo); CTG-0002 = 0005…0007 (rotas + co
 
 ## Concorrência
 
-(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
-em base empilhada e sobre qual branch)
+Registrado pelo maestro (Fable 5.1) em 2026-09-16, bootstrap parcial (ver §Retomada):
+
+- `origin/main` = `ea63084` (PR #52, fechamento de R-0008 `teat-backend` como PC-0005). Já em `main`:
+  R-0003 (#32/#35), R-0004 (#37/#38), R-0005 (#40–#42/#44/#45), R-0006 (#39/#43/#46), R-0008 (#47–#52).
+  Nenhum PR aberto de outra frente (`gh pr list --state open` vazio).
+- **R-0007 `rait-backend` não iniciou**: só existe branch local `orchestra/rait-backend` em `df1e176`
+  (= `main` no fechamento de R-0006), sem remoto e sem PR.
+- **CTG-0001** (identidade + modelo + projeções + fixtures): sem upstream → livre para merge.
+- **CTG-0002** (rotas + delegações + contratos): upstream R-0007 ausente → desenvolver com as rotas
+  delegadas devolvendo `SERVICE_UNAVAILABLE` com motivo e o teste de delegação real marcado `todo`
+  citando R-0007; **o Owner determinou em 2026-09-16 suspender a frente até R-0007 estar
+  disponível** (ver §Retomada), portanto nenhuma base empilhada foi criada.
 
 ## Bloqueios
 
@@ -98,7 +109,31 @@ em base empilhada e sobre qual branch)
 
 ## Retomada
 
-(vazio)
+**Checkpoint 2026-09-16 (maestro Fable 5.1, Engineer) — frente SUSPENSA por decisão do Owner até
+R-0007 (`rait-backend`) estar disponível.** Nenhuma tarefa iniciada; nenhum worker disparado;
+nenhum token de reviewer consumido.
+
+Feito nesta janela (bootstrap §1, parcial):
+
+1. Descoberta de estado: sem worktree/branch/PR prévios de `portal-backend`; sem checkpoint anterior.
+2. `git worktree add -b orchestra/portal-backend /Volumes/Thiamat II/stech/detran-worktrees/portal-backend origin/main`
+   → HEAD `ea63084`. Branch **nunca publicado** (sem push): na retomada, se `origin/main` avançou,
+   usar `git rebase origin/main` (permitido enquanto não publicado).
+3. `pnpm install --frozen-lockfile` → OK. `pnpm check` → **verde** (linha de base, ≈7m30s).
+4. §Concorrência preenchida.
+
+Não feito (próximos passos, nesta ordem, ao retomar):
+
+1. `git fetch -q origin && git log --oneline HEAD..origin/main`; rebase se houver avanços; confirmar
+   que `origin/orchestra/rait-backend` (ou o merge de R-0007 em `main`) existe e anotar em §Concorrência
+   se CTG-0002 passa a ter delegações reais.
+2. `pnpm exec devai doctor --repo-root . --format human`.
+3. `pnpm exec devai round plan --scaffold --round R-0009 --repo-root . --as-role architect --write --format human`.
+4. Criar `work/rounds/R-0009/AUTHORIZATION.md` (lição R-0006: `round close` exige a autorização do Owner).
+5. Leitura obrigatória (§2 do prompt do maestro) → §Leitura; decomposição (§3) → `tasks/`; prompts (§4);
+   `budget.json` e `compositions.json`; `prompt-review-1` pela ponte codex.
+
+Último veredito do reviewer: nenhum. Orçamento consumido: só o maestro (≈ 60 k tokens de entrada).
 
 ## Leitura
 
