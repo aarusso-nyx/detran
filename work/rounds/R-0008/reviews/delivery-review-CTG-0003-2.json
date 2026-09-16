@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0008/reports/TASK-0007.md",
+      "line": 17,
+      "claim": "Os únicos gates completos registrados são explicitamente “após iteração 2”, enquanto a própria linha registra que a iteração 3 do Inspector e Engineer ainda ocorreria; portanto não há resultado verificável de `pnpm check` e `pnpm backend:test:ci` para o candidato que contém as quatro correções.",
+      "fix": "Concluir os dois gates sobre o candidato pós-iteração 3 e registrar no relatório os comandos, exit 0 e totais resultantes."
+    }
+  ],
+  "notes": [
+    "As correções funcionais de DTO/entidade/idempotência, ETag/304 com guarda prévia e resolução fail-closed de traffic_agency_id correspondem à adenda §14."
+  ]
+}

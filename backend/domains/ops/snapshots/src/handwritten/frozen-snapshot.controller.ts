@@ -1,48 +1,36 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+// CTG-0003 §5.1 e §5.2 (R-0008, TASK-0007) — `external-queries` sob
+// `v1/ops/snapshots`. `people`/`vehicles` continuam CRUD gerado de
+// `BP-OPS-SNAPSHOTS-001` (`ops:person`, `ops:vehicle`): as rotas manuscritas
+// que declaravam `ops:snapshot-person`/`ops:snapshot-vehicle` saíram com as
+// regras correspondentes de `policy.ts` (§7).
+import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
 
-import { FrozenSnapshotService } from './frozen-snapshot.service.js';
+import {
+  ExternalQueryCommand,
+  type CreateExternalQueryInput,
+  type ExternalQueryListFilters,
+} from './external-query.command.js';
 
 @Controller('v1/ops/snapshots')
+@Resource('ops:external-query')
 export class FrozenSnapshotController {
-  constructor(private readonly service: FrozenSnapshotService) {}
-  @Get('people') @Resource('ops:snapshot-person') @Action('read') people() {
-    return this.service.list('people');
+  constructor(private readonly externalQuery: ExternalQueryCommand) {}
+
+  @Get('external-queries') @Action('read') list(
+    @Query() filters: ExternalQueryListFilters,
+  ) {
+    return this.externalQuery.list(filters ?? {});
   }
-  @Post('people')
-  @Resource('ops:snapshot-person')
-  @Action('create')
-  @Audit({
-    action: 'OPS_SNAPSHOT_PERSON_CREATE',
-    entity: 'ops.snapshots_person',
-  })
-  createPerson(@Body() dto: Record<string, unknown>) {
-    return this.service.create('people', dto);
-  }
-  @Get('vehicles')
-  @Resource('ops:snapshot-vehicle')
-  @Action('read')
-  vehicles() {
-    return this.service.list('vehicles');
-  }
-  @Post('vehicles')
-  @Resource('ops:snapshot-vehicle')
-  @Action('create')
-  @Audit({
-    action: 'OPS_SNAPSHOT_VEHICLE_CREATE',
-    entity: 'ops.snapshots_vehicle',
-  })
-  createVehicle(@Body() dto: Record<string, unknown>) {
-    return this.service.create('vehicles', dto);
-  }
+
   @Post('external-queries')
-  @Resource('ops:external-query')
+  @HttpCode(200)
   @Action('create')
   @Audit({
     action: 'OPS_EXTERNAL_QUERY_RECORD',
     entity: 'ops.snapshots_external_query',
   })
-  createExternalQuery(@Body() dto: Record<string, unknown>) {
-    return this.service.create('external-queries', dto);
+  create(@Body() body: CreateExternalQueryInput) {
+    return this.externalQuery.execute(body);
   }
 }

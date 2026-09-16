@@ -7,24 +7,46 @@
     "version": "1.1.0",
     "ddlFile": "17-ops-evidence.sql",
     "dependencies": {
-      "@detran/ops-core": "workspace:*"
+      "@detran/ops-core": "workspace:*",
+      "@detran/shared": "workspace:*",
+      "zod": "^4.6.5"
     },
     "handwrittenControllers": [
       {
         "target": "handwritten/evidence-custody.controller",
         "symbol": "EvidenceCustodyController"
+      },
+      {
+        "target": "handwritten/evidence-access.controller",
+        "symbol": "EvidenceAccessController"
       }
     ],
     "handwrittenProviders": [
       {
-        "target": "handwritten/evidence-custody.provider",
-        "symbol": "EVIDENCE_CUSTODY_PROVIDER"
+        "target": "handwritten/evidence-commands.provider",
+        "symbol": "EVIDENCE_COMMANDS_PROVIDER"
       }
     ],
     "handwrittenExports": [
+      "handwritten/evidence-runtime",
+      "handwritten/manifest",
+      "handwritten/events",
+      "handwritten/bodycam-projection",
+      "handwritten/local-evidence-storage",
+      "handwritten/initiate-upload.command",
+      "handwritten/complete-upload.command",
+      "handwritten/validate-evidence.command",
+      "handwritten/link-evidence.command",
+      "handwritten/add-custody-event.command",
+      "handwritten/generate-probative-package.command",
+      "handwritten/purge-unverified.command",
+      "handwritten/create-access-request.command",
+      "handwritten/decide-access-request.command",
+      "handwritten/deliver-access-request.command",
+      "handwritten/evidence-commands.service",
+      "handwritten/evidence-commands.provider",
       "handwritten/evidence-custody.controller",
-      "handwritten/evidence-custody.provider",
-      "handwritten/evidence-custody.service"
+      "handwritten/evidence-access.controller"
     ],
     "owners": ["detran-ops"],
     "description": "Evidence metadata, custody and formal access from TEAT evidence workflow and INV-EVIDENCE-001; binary storage remains a STYNX seam.",

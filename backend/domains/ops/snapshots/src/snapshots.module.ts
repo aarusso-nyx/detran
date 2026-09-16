@@ -1,4 +1,4 @@
-// Generated from BP-OPS-SNAPSHOTS-001 v1.1.0 sha256:c995962d248172eeb08cd92993fc4cafac0eada70cdbf240c54a4c69ce94edc4
+// Generated from BP-OPS-SNAPSHOTS-001 v1.1.0 sha256:be057438a0ae6bba679549fa27603002919b4035701f4ea81d9ed853b9c00734
 import { Module } from '@nestjs/common';
 import { PersonController } from './controllers/person.controller.js';
 import { PersonService } from './services/person.service.js';
@@ -16,7 +16,7 @@ import { VehicleSnapshotController } from './controllers/vehicle-snapshot.contro
 import { VehicleSnapshotService } from './services/vehicle-snapshot.service.js';
 import { VehicleSnapshotRepository } from './repositories/vehicle-snapshot.repository.js';
 import { FrozenSnapshotController } from './handwritten/frozen-snapshot.controller.js';
-import { FROZEN_SNAPSHOT_PROVIDER } from './handwritten/frozen-snapshot.provider.js';
+import { EXTERNAL_QUERY_PROVIDER } from './handwritten/external-query.provider.js';
 
 @Module({
   controllers: [
@@ -38,7 +38,7 @@ import { FROZEN_SNAPSHOT_PROVIDER } from './handwritten/frozen-snapshot.provider
     ExternalQueryRepository,
     VehicleSnapshotService,
     VehicleSnapshotRepository,
-    FROZEN_SNAPSHOT_PROVIDER,
+    EXTERNAL_QUERY_PROVIDER,
   ],
 })
 export class SnapshotsModule {}

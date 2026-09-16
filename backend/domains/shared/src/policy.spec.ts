@@ -103,11 +103,6 @@ describe('DETRAN unified policy kit', () => {
     expect(
       allowed(['integration-operator'], 'ops:application-version', 'read'),
     ).toBe(true);
-    // complete-upload and validate return with their routes in WP-T2
-    expect(
-      allowed(['processing-operator'], 'ops:evidence', 'complete-upload'),
-    ).toBe(false);
-    expect(allowed(['AUDITOR'], 'ops:evidence', 'validate')).toBe(false);
     expect(allowed(['agency-admin'], 'inf:speed-meter', 'create')).toBe(true);
     expect(allowed(['field-agent'], 'inf:speed-meter', 'create')).toBe(false);
     expect(allowed(['field-agent'], 'inf:speed-measurement', 'create')).toBe(
@@ -1427,6 +1422,337 @@ describe('R-0008 CTG-0002 §8 — política de campo, numeração e sincronizaç
           permissionsForRoles([role]).includes(
             'ops:offline-numbering-reservation:reserve',
           ),
+        ).toBe(false);
+      }
+    });
+  });
+});
+
+/**
+ * CTG-0003 §7 (R-0008, TASK-0006) — evidência, custódia, bodycam, snapshots e
+ * catálogo/pacote normativo: as chaves novas de `TEAT_RULES` e de
+ * `OPS_SURFACE_RULES` que TASK-0007 escreve, e a remoção definitiva do par
+ * `snapshot-person`/`snapshot-vehicle` (os controladores gerados declaram
+ * `ops:person`/`ops:vehicle`, nunca `ops:snapshot-*`).
+ *
+ * Toda linha abaixo é transcrição literal da §7 do contrato; nenhum papel é
+ * inferido. Os pares que ainda não existem falham hoje por comportamento
+ * ausente (Engineer, TASK-0007), nunca por erro de escrita.
+ */
+describe('R-0008 CTG-0003 §7 — política de evidência, snapshots e normativo (TASK-0006)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (CTG-0001 §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        // technical-admin está em GLOBAL_ADMIN_ROLES: '*' o libera para toda
+        // chave, sem entrar na lista estática de papéis concedidos.
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  }
+
+  describe('§7 — chaves novas de TEAT_RULES (comandos de evidência e acesso a bodycam)', () => {
+    it('ops:evidence:complete-upload — field-agent e processing-operator (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence', 'complete-upload', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+
+    it('ops:evidence:validate — processing-operator, AUDITOR e technical-admin (origem "evidence:validate", auditor canonizado em AUDITOR)', () => {
+      expectGrantedOnlyTo('ops:evidence', 'validate', [
+        'processing-operator',
+        'AUDITOR',
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:evidence:purge-unverified — só technical-admin (chave nova)', () => {
+      expectGrantedOnlyTo('ops:evidence', 'purge-unverified', [
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:evidence-access-request:create — processing-operator e traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'create', [
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:update — processing-operator e traffic-authority (origem, sem rota nesta rodada — §4.11 nota final)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'update', [
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:approve — só traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'approve', [
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:deny — só traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'deny', [
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:deliver — processing-operator e traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'deliver', [
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+  });
+
+  describe('§7 — chaves de comando já existentes, preservadas (CTG-0001/CTG-0002)', () => {
+    it('ops:evidence:initiate-upload — field-agent e processing-operator', () => {
+      expectGrantedOnlyTo('ops:evidence', 'initiate-upload', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+
+    it('ops:evidence:link — field-agent e processing-operator', () => {
+      expectGrantedOnlyTo('ops:evidence', 'link', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+
+    it('ops:evidence:add-custody-event — field-agent, processing-operator, AUDITOR e technical-admin', () => {
+      expectGrantedOnlyTo('ops:evidence', 'add-custody-event', [
+        'field-agent',
+        'processing-operator',
+        'AUDITOR',
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:probative-package:generate — processing-operator, AUDITOR e technical-admin', () => {
+      expectGrantedOnlyTo('ops:probative-package', 'generate', [
+        'processing-operator',
+        'AUDITOR',
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:external-query:create — field-agent, field-supervisor, processing-operator e traffic-authority (§5.1, mesma chave da superfície CRUD reaproveitada pelo comando)', () => {
+      expectGrantedOnlyTo('ops:external-query', 'create', [
+        'field-agent',
+        'field-supervisor',
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+
+    it('inf:normative-catalog:{publish,retire} — agency-admin e technical-admin', () => {
+      for (const action of ['publish', 'retire']) {
+        expectGrantedOnlyTo('inf:normative-catalog', action, [
+          'agency-admin',
+          'technical-admin',
+        ]);
+      }
+    });
+
+    it('inf:mobile-normative-package:{publish,retire} — agency-admin e technical-admin', () => {
+      for (const action of ['publish', 'retire']) {
+        expectGrantedOnlyTo('inf:mobile-normative-package', action, [
+          'agency-admin',
+          'technical-admin',
+        ]);
+      }
+    });
+
+    it('inf:mobile-normative-package:validate — field-agent, field-supervisor, agency-admin e technical-admin (§6.4 — field-agent lê conteúdo, não publica)', () => {
+      expectGrantedOnlyTo('inf:mobile-normative-package', 'validate', [
+        'field-agent',
+        'field-supervisor',
+        'agency-admin',
+        'technical-admin',
+      ]);
+    });
+  });
+
+  describe('§7 — chaves novas de OPS_SURFACE_RULES (superfícies CRUD do route contract §4.4/§4.5)', () => {
+    const surfaces: Array<[string, string, readonly string[]]> = [
+      [
+        'external-query',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+        ],
+      ],
+      ['evidence', 'create', ['field-agent', 'processing-operator']],
+      ['evidence', 'update', ['processing-operator', 'technical-admin']],
+      [
+        'evidence-link',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'custody-event',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'probative-package',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'probative-package-item',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'storage-intent',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'evidence-access-request',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      ['evidence-link', 'create', ['field-agent', 'processing-operator']],
+      [
+        'custody-event',
+        'create',
+        ['field-agent', 'processing-operator', 'AUDITOR', 'technical-admin'],
+      ],
+      [
+        'probative-package',
+        'create',
+        ['processing-operator', 'AUDITOR', 'technical-admin'],
+      ],
+      [
+        'probative-package-item',
+        'create',
+        ['processing-operator', 'technical-admin'],
+      ],
+      ['storage-intent', 'create', ['field-agent', 'processing-operator']],
+      [
+        'evidence-access-request',
+        'create',
+        ['processing-operator', 'traffic-authority'],
+      ],
+    ];
+
+    for (const [resource, action, roles] of surfaces) {
+      it(`ops:${resource}:${action} — ${roles.join(', ')}`, () => {
+        expectGrantedOnlyTo(`ops:${resource}`, action, roles);
+      });
+    }
+
+    const snapshotSurfaces = [
+      ['person', 'read'],
+      ['person', 'create'],
+      ['vehicle', 'read'],
+      ['vehicle', 'create'],
+      ['person-document', 'read'],
+      ['person-document', 'create'],
+      ['vehicle-snapshot', 'read'],
+      ['vehicle-snapshot', 'create'],
+    ] as const;
+
+    it('ops:{person,vehicle,person-document,vehicle-snapshot}:{read,create} — field-agent, field-supervisor, processing-operator, traffic-authority e technical-admin (§4.5, controladores gerados de BP-OPS-SNAPSHOTS-001)', () => {
+      for (const [resource, action] of snapshotSurfaces) {
+        expectGrantedOnlyTo(`ops:${resource}`, action, [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ]);
+      }
+    });
+  });
+
+  describe('§7 — remoção do alias duplicado da origem (`ops:snapshot-person`/`ops:snapshot-vehicle`)', () => {
+    it('dado ops:snapshot-{person,vehicle}:{read,create} então as quatro chaves não existem na matriz (a rota gerada é ops:person/ops:vehicle, nunca ops:snapshot-*)', () => {
+      for (const resource of ['snapshot-person', 'snapshot-vehicle']) {
+        for (const action of ['read', 'create']) {
+          expect(
+            `ops:${resource}:${action}` in DETRAN_POLICY_MATRIX,
+            `ops:${resource}:${action} deveria ter sido removida em M18 (CTG-0003 §7)`,
+          ).toBe(false);
+        }
+      }
+    });
+
+    it('dado qualquer papel canônico então nenhum recebe ops:snapshot-person:read, nem por permissionsForRoles', () => {
+      for (const role of TEAT_CANONICAL_ROLES) {
+        expect(
+          permissionsForRoles([role]).includes('ops:snapshot-person:read'),
         ).toBe(false);
       }
     });

@@ -7,7 +7,9 @@
     "version": "1.1.0",
     "ddlFile": "16-ops-snapshots.sql",
     "dependencies": {
-      "@detran/ops-core": "workspace:*"
+      "@detran/ops-core": "workspace:*",
+      "@detran/shared": "workspace:*",
+      "zod": "^4.6.5"
     },
     "handwrittenControllers": [
       {
@@ -17,14 +19,16 @@
     ],
     "handwrittenProviders": [
       {
-        "target": "handwritten/frozen-snapshot.provider",
-        "symbol": "FROZEN_SNAPSHOT_PROVIDER"
+        "target": "handwritten/external-query.provider",
+        "symbol": "EXTERNAL_QUERY_PROVIDER"
       }
     ],
     "handwrittenExports": [
-      "handwritten/frozen-snapshot.controller",
-      "handwritten/frozen-snapshot.provider",
-      "handwritten/frozen-snapshot.service"
+      "handwritten/snapshots-runtime",
+      "handwritten/events",
+      "handwritten/external-query.command",
+      "handwritten/external-query.provider",
+      "handwritten/frozen-snapshot.controller"
     ],
     "owners": ["detran-ops"],
     "description": "Frozen external lookup snapshots preserved for legal acts, migrated from TEAT BP-EXTERNAL-SNAPSHOTS-001.",

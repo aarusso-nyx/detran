@@ -1,0 +1,40 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/ops/evidence/src/handwritten/complete-upload.command.ts",
+      "line": 49,
+      "claim": "O comando só valida accepted_hash e storage_intent_id; ignora idempotency_key, entity_type e entity_id, embora CTG-0003 §4.2 os defina como obrigatórios e entity_type como 'ait'.",
+      "fix": "Validar os três campos e seus formatos/valor canônico antes da transação; cobrir ausência e valores inválidos nos testes."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/inf/normative/src/normative-commands.controller.ts",
+      "line": 67,
+      "claim": "GET mobile-packages/{id}/content não implementa ETag nem If-None-Match/304, ambos obrigatórios em CTG-0003 §6.5.",
+      "fix": "Receber Request/Response ou usar o mecanismo Nest equivalente, devolver ETag do manifest_hash e 304 quando If-None-Match corresponder; testar ambos os casos."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/domains/ops/snapshots/src/handwritten/external-query.command.ts",
+      "line": 295,
+      "claim": "Na ausência de traffic_agency_id, o código grava tenantId como traffic_agency_id. Tenant e órgão são identificadores distintos e o contrato não autoriza essa conversão; o próprio comentário a classifica apenas como observação de relatório.",
+      "fix": "Obter o órgão por fonte canônica ou bloquear com source_pending/OD e erro fail-closed; não persistir o id do tenant como id de órgão."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0008/reports/TASK-0007.md",
+      "line": 5,
+      "claim": "O relatório registra shared 164/165 e backend:test:unit bloqueado, enquanto a nota de entrega só informa pnpm check e backend:test:ci em execução. Não há resultado final verificável para os gates obrigatórios.",
+      "fix": "Atualizar o relatório com as saídas finais dos gates completos ou registrar a falha e sua triagem antes de declarar os critérios PASS."
+    }
+  ],
+  "notes": []
+}

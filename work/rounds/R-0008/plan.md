@@ -357,6 +357,9 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
 - 2026-09-15 delivery-review-CTG-0002 ciclo 2 `FAIL` (inversão dos passos 5–10 de §4.1 introduzida pelo achado 3 do ciclo 1) →
   resolução formal do Architect: adenda §14 (lote durável no passo 5; fechamento no 9). Ciclo 3 `REVIEW` (consequência (c) da §14:
   replay de lote interrompido deve completar os itens faltantes) → Inspector iteração 4 (teste) + Engineer iteração 5; ciclo 4 restrito.
+- 2026-09-16 delivery-review-CTG-0003 ciclo 1 `REVIEW` (4 achados): `complete-upload` sem validar `idempotency_key`/`entity_*`; `content` sem
+  `ETag`/`If-None-Match`; `traffic_agency_id` caindo no id do tenant; relatório sem gates finais → adenda §14 em CTG-0003; Inspector e
+  Engineer iteração 3; gates completos verdes (`pnpm check`, `backend:test:ci`). Ciclo 2 restrito.
 
 ## Concorrência
 
@@ -398,7 +401,10 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   CTG-0002; TASK-0006 (sonnet/médio) em seguida. Pendentes: TASK-0006…0013.
 - 2026-09-16 (checkpoint 5): **PR #48 mesclado** em ade61ac (CI 5/5); `audit observe` no merge; TASK-0006 concluída (testes vermelhos +
   seed 27). Gerador alterado pelo maestro (Architect): controladores manuscritos registram **antes** dos gerados (rotas literais vencem
-  `:id`); todos os módulos regenerados. Próximo: TASK-0007 (sonnet/médio). Pendentes: TASK-0007…0013. Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
+  `:id`); todos os módulos regenerados. Próximo: TASK-0007 (sonnet/médio). Pendentes: TASK-0007…0013.
+- 2026-09-16 (checkpoint 6): CTG-0003 concluído — TASK-0006 (3 iterações), TASK-0007 (3 iterações; o worker delegou a um subagente
+  aninhado); delivery-review ciclos 1 `REVIEW` (4), 2 `REVIEW` (gates), 3 `PASS`; adendas §12–§14 em CTG-0003; gates finais verdes
+  (1231 testes). Próximo: commit, evidência seq. 3, PR do CTG-0003; TASK-0008 (sonnet/médio). Pendentes: TASK-0008…0013. Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
   maestro prossegue por instrução explícita do Owner ("até a completa finalização e merge").
 
 ## Leitura
