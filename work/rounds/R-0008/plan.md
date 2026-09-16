@@ -360,6 +360,9 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
 - 2026-09-16 delivery-review-CTG-0003 ciclo 1 `REVIEW` (4 achados): `complete-upload` sem validar `idempotency_key`/`entity_*`; `content` sem
   `ETag`/`If-None-Match`; `traffic_agency_id` caindo no id do tenant; relatório sem gates finais → adenda §14 em CTG-0003; Inspector e
   Engineer iteração 3; gates completos verdes (`pnpm check`, `backend:test:ci`). Ciclo 2 restrito.
+- 2026-09-16 delivery-review-CTG-0004 ciclo 1 `FAIL` (5 achados): `release` sem `REGULARIZADO`/histórico; C-0004-42 inexequível com papéis
+  canônicos (resolução formal: adenda §16.2, OD-T64); `MEDIDA_LIBERADA` como `domainEvent` do ramo `RETIDO → LIBERADO_LOCAL` ratificado em §16.6 (OD-T65); poller do SSE não injetável; tabela metrológica sem checar catálogo ativo;
+  versões de blueprint 1.1.0 → 1.2.0 (maestro) → adenda §16; Inspector e Engineer iteração 3; gates completos verdes (1530 testes).
 
 ## Concorrência
 
@@ -404,8 +407,17 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   `:id`); todos os módulos regenerados. Próximo: TASK-0007 (sonnet/médio). Pendentes: TASK-0007…0013.
 - 2026-09-16 (checkpoint 6): CTG-0003 concluído — TASK-0006 (3 iterações), TASK-0007 (3 iterações; o worker delegou a um subagente
   aninhado); delivery-review ciclos 1 `REVIEW` (4), 2 `REVIEW` (gates), 3 `PASS`; adendas §12–§14 em CTG-0003; gates finais verdes
-  (1231 testes). Próximo: commit, evidência seq. 3, PR do CTG-0003; TASK-0008 (sonnet/médio). Pendentes: TASK-0008…0013. Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
+  (1231 testes). Próximo: commit, evidência seq. 3, PR do CTG-0003; TASK-0008 (sonnet/médio). Pendentes: TASK-0008…0013.
+- 2026-09-16 (checkpoint 7): **PR #49 mesclado** em f04fd68 (CI 5/5; `audit observe` EV-7015a54fd4ea3537). TASK-0008 concluída; TASK-0009
+  iteração 1 entregue (3 contradições de teste + deps não linkadas → adenda §15 em CTG-0004; deps `inf-deadlines`/`inf-normative`
+  adicionadas pelo maestro). Em curso: TASK-0008 iteração 2 e TASK-0009 iteração 2 (paralelas). Pendentes: TASK-0013, 0012, 0010, 0011. Pendentes: TASK-0004…0013. Orçamento da janela já ultrapassado (ver `budget.json`): o
   maestro prossegue por instrução explícita do Owner ("até a completa finalização e merge").
+
+- 2026-09-16 (checkpoint 8): CTG-0004 com gates completos verdes (`pnpm check` 0, `backend:test:ci` 0, 98 e2e) após reseed;
+  delivery-review ciclo 1 `FAIL` (5 achados → adenda §16, OD-T64/T65) e ciclo 2 `FAIL` (3 achados menores → §16.7: comentário de
+  `events.ts`, heartbeat do SSE pela porta `TeatStreamPoller.schedule(fn, intervalMs?)`, `describe` v1.2.0). Em curso: TASK-0009
+  iteração 4 + TASK-0008 iteração 5 (paralelas), TASK-0013 (Architect, `contracts/CTG-0005.md`). Próximo: gates, delivery-review
+  CTG-0004 ciclo 3 (restrito aos 3 itens), commit `feat(teat)`, evidência seq. 4, PR #50, merge, observe; depois TASK-0012/0010/0011.
 
 ## Leitura
 

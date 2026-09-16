@@ -1,0 +1,32 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "backend/domains/inf/measures/src/handwritten/events.ts",
+      "line": 27,
+      "claim": "O comentário normativo ainda declara RETIDO → LIBERADO_COM_PRAZO quando há regularization_deadline_at, contradizendo a resolução formal §16.1, que fixa RETIDO → LIBERADO_LOCAL sempre. Não foi levantado no ciclo 1 porque a regra formal §16.1 foi criada depois daquele veredito; agora é contradição direta de decisão do Architect.",
+      "fix": "Atualizar o comentário para os dois ramos canônicos de §16.1 e remover a afirmação de destino condicionado ao prazo."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/app/src/teat-stream.controller.ts",
+      "line": 104,
+      "claim": "O controlador ainda chama setInterval diretamente para heartbeat, embora §16.3 determine que o controlador nunca chama setInterval diretamente e o código do poller afirme que somente sua implementação padrão o faz.",
+      "fix": "Passar também o agendamento de heartbeat por uma porta injetada, ou restringir formalmente §16.3 ao polling da outbox e alinhar código, teste e documentação."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "backend/domains/inf/measures/src/measures-blueprint-contract.spec.ts",
+      "line": 23,
+      "claim": "O describe conserva o rótulo v1.1.0 embora o contrato agora valide 1.2.0.",
+      "fix": "Renomear o describe para v1.2.0; aplicar a mesma correção em alcohol-blueprint-contract.spec.ts."
+    }
+  ],
+  "notes": []
+}

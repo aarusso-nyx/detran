@@ -4,12 +4,46 @@
   "module": {
     "name": "Measures",
     "namespace": "inf",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "ddlFile": "32-inf-measures.sql",
-    "dependencies": { "@detran/inf-ait": "workspace:*" },
+    "dependencies": {
+      "@detran/inf-ait": "workspace:*",
+      "@detran/inf-deadlines": "workspace:*"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-ait",
+        "target": "../ait/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../deadlines/src/index.ts"
+      }
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "measure-commands.controller",
+        "symbol": "MeasureCommandsController"
+      },
+      {
+        "target": "measure-commands.controller",
+        "symbol": "MeasureRetentionCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/measure-lifecycle.provider",
+        "symbol": "MEASURE_LIFECYCLE_PROVIDER"
+      }
+    ],
     "handwrittenExports": [
       "measure-lifecycle.service",
-      "measure-commands.controller"
+      "measure-commands.controller",
+      "handwritten/index"
     ],
     "owners": ["detran-inf"],
     "description": "Administrative measures, terms, retention, removal, inventory, providers, yards, and status history."
@@ -21,12 +55,33 @@
         "table": "measure_type",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "code", "type": "varchar(60)" },
-          { "name": "name", "type": "varchar(160)" },
-          { "name": "description", "type": "text", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "code",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "name",
+            "type": "varchar(160)"
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          }
         ],
         "indexes": [
           {
@@ -41,26 +96,78 @@
         "table": "administrative_measure",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "measure_type_id", "type": "uuid" },
-          { "name": "ait_id", "type": "uuid", "nullable": true },
-          { "name": "crash_record_id", "type": "uuid", "nullable": true },
-          { "name": "approach_id", "type": "uuid", "nullable": true },
-          { "name": "agent_id", "type": "uuid" },
-          { "name": "shift_id", "type": "uuid" },
-          { "name": "device_id", "type": "uuid" },
-          { "name": "started_at", "type": "timestamptz" },
-          { "name": "ended_at", "type": "timestamptz", "nullable": true },
-          { "name": "location_json", "type": "jsonb", "nullable": true },
-          { "name": "reason", "type": "text" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "measure_type_id",
+            "type": "uuid"
+          },
+          {
+            "name": "ait_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "crash_record_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "approach_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "agent_id",
+            "type": "uuid"
+          },
+          {
+            "name": "shift_id",
+            "type": "uuid"
+          },
+          {
+            "name": "device_id",
+            "type": "uuid"
+          },
+          {
+            "name": "started_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "ended_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "reason",
+            "type": "text"
+          },
           {
             "name": "current_status",
             "type": "varchar(60)",
             "default": "'RETIDO'"
           },
-          { "name": "notes", "type": "text", "nullable": true },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true
+          },
           {
             "name": "location_geom",
             "type": "geometry(Point,4674)",
@@ -88,17 +195,26 @@
           {
             "name": "fk_inf_measure_type",
             "columns": ["measure_type_id"],
-            "references": { "table": "inf.measure_type", "columns": ["id"] }
+            "references": {
+              "table": "inf.measure_type",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_inf_measure_ait",
             "columns": ["ait_id"],
-            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+            "references": {
+              "table": "inf.ait_ait",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_inf_measure_approach",
             "columns": ["approach_id"],
-            "references": { "table": "ops.ops_approach", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_approach",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -107,16 +223,50 @@
         "table": "administrative_term",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "measure_id", "type": "uuid" },
-          { "name": "term_type", "type": "varchar(80)" },
-          { "name": "term_number", "type": "varchar(80)" },
-          { "name": "content_hash", "type": "varchar(128)" },
-          { "name": "file_evidence_id", "type": "uuid", "nullable": true },
-          { "name": "issued_at", "type": "timestamptz" },
-          { "name": "signed_by_person_id", "type": "uuid", "nullable": true },
-          { "name": "signer_name", "type": "varchar(160)", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "measure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "term_type",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "term_number",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "content_hash",
+            "type": "varchar(128)"
+          },
+          {
+            "name": "file_evidence_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "issued_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "signed_by_person_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "signer_name",
+            "type": "varchar(160)",
+            "nullable": true
+          },
           {
             "name": "withdrawal_deadline_at",
             "type": "timestamptz",
@@ -127,7 +277,11 @@
             "type": "timestamptz",
             "nullable": true
           },
-          { "name": "field_details_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "field_details_json",
+            "type": "jsonb",
+            "nullable": true
+          },
           {
             "name": "source_local_id",
             "type": "varchar(120)",
@@ -143,7 +297,11 @@
             "type": "varchar(128)",
             "nullable": true
           },
-          { "name": "status", "type": "varchar(60)", "default": "'issued'" }
+          {
+            "name": "status",
+            "type": "varchar(60)",
+            "default": "'issued'"
+          }
         ],
         "indexes": [
           {
@@ -172,7 +330,10 @@
           {
             "name": "fk_inf_term_person",
             "columns": ["signed_by_person_id"],
-            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+            "references": {
+              "table": "ops.snapshots_person",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -181,11 +342,27 @@
         "table": "measure_retention",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "measure_id", "type": "uuid" },
-          { "name": "vehicle_snapshot_id", "type": "uuid" },
-          { "name": "retention_reason", "type": "text" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "measure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "vehicle_snapshot_id",
+            "type": "uuid"
+          },
+          {
+            "name": "retention_reason",
+            "type": "text"
+          },
           {
             "name": "regularization_deadline_at",
             "type": "timestamptz",
@@ -196,9 +373,21 @@
             "type": "integer",
             "nullable": true
           },
-          { "name": "regularized_at", "type": "timestamptz", "nullable": true },
-          { "name": "released_at", "type": "timestamptz", "nullable": true },
-          { "name": "release_user_ref", "type": "uuid", "nullable": true }
+          {
+            "name": "regularized_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "released_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "release_user_ref",
+            "type": "uuid",
+            "nullable": true
+          }
         ],
         "checks": [
           {
@@ -230,15 +419,48 @@
         "table": "measure_removal",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "measure_id", "type": "uuid" },
-          { "name": "vehicle_snapshot_id", "type": "uuid" },
-          { "name": "tow_provider_id", "type": "uuid", "nullable": true },
-          { "name": "yard_id", "type": "uuid", "nullable": true },
-          { "name": "requested_at", "type": "timestamptz", "nullable": true },
-          { "name": "tow_arrived_at", "type": "timestamptz", "nullable": true },
-          { "name": "delivered_at", "type": "timestamptz", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "measure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "vehicle_snapshot_id",
+            "type": "uuid"
+          },
+          {
+            "name": "tow_provider_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "yard_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "requested_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "tow_arrived_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "delivered_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
           {
             "name": "regularization_deadline_at",
             "type": "timestamptz",
@@ -285,13 +507,37 @@
         "table": "vehicle_inventory",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "measure_id", "type": "uuid" },
-          { "name": "vehicle_snapshot_id", "type": "uuid" },
-          { "name": "inventory_json", "type": "jsonb" },
-          { "name": "damage_description", "type": "text", "nullable": true },
-          { "name": "signed_by_person_id", "type": "uuid", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "measure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "vehicle_snapshot_id",
+            "type": "uuid"
+          },
+          {
+            "name": "inventory_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "damage_description",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "signed_by_person_id",
+            "type": "uuid",
+            "nullable": true
+          }
         ],
         "foreignKeys": [
           {
@@ -313,7 +559,10 @@
           {
             "name": "fk_inf_inventory_person",
             "columns": ["signed_by_person_id"],
-            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+            "references": {
+              "table": "ops.snapshots_person",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -322,17 +571,38 @@
         "table": "tow_provider",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "name", "type": "varchar(255)" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(255)"
+          },
           {
             "name": "document_number",
             "type": "varchar(20)",
             "nullable": true
           },
-          { "name": "contact_json", "type": "jsonb", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+          {
+            "name": "contact_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          }
         ]
       },
       {
@@ -340,13 +610,38 @@
         "table": "yard",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "name", "type": "varchar(255)" },
-          { "name": "address", "type": "text", "nullable": true },
-          { "name": "location_json", "type": "jsonb", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(255)"
+          },
+          {
+            "name": "address",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          },
           {
             "name": "location_geom",
             "type": "geometry(Point,4674)",
@@ -366,14 +661,43 @@
         "table": "measure_status_history",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "measure_id", "type": "uuid" },
-          { "name": "status", "type": "varchar(60)" },
-          { "name": "changed_at", "type": "timestamptz", "default": "now()" },
-          { "name": "user_ref", "type": "uuid", "nullable": true },
-          { "name": "reason", "type": "text", "nullable": true },
-          { "name": "details_json", "type": "jsonb", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "measure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "status",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "changed_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "user_ref",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "reason",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "details_json",
+            "type": "jsonb",
+            "nullable": true
+          }
         ],
         "foreignKeys": [
           {
@@ -391,7 +715,11 @@
   "api": {
     "basePath": "/v1/inf/measures/",
     "resources": [
-      { "entity": "MeasureType", "path": "types", "resource": "measure-type" },
+      {
+        "entity": "MeasureType",
+        "path": "types",
+        "resource": "measure-type"
+      },
       {
         "entity": "AdministrativeMeasure",
         "path": "administrative-measures",
@@ -422,7 +750,11 @@
         "path": "tow-providers",
         "resource": "tow-provider"
       },
-      { "entity": "Yard", "path": "yards", "resource": "yard" },
+      {
+        "entity": "Yard",
+        "path": "yards",
+        "resource": "yard"
+      },
       {
         "entity": "MeasureStatusHistory",
         "path": "status-history",
@@ -430,6 +762,10 @@
       }
     ]
   },
-  "auth": { "source": "TEAT_COMMAND_RULES" },
-  "audit": { "enabled": true }
+  "auth": {
+    "source": "TEAT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
 }

@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 3200000,
-  "estimated_output_total": 701000,
+  "estimated_input_total": 4020000,
+  "estimated_output_total": 919000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -309,6 +309,118 @@
       "output_tokens": 500,
       "status": "completed",
       "verdict": "PASS"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "input_tokens": 160000,
+      "output_tokens": 60000,
+      "status": "completed",
+      "note": "633k brutos (246 tool uses, 61 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "input_tokens": 220000,
+      "output_tokens": 80000,
+      "status": "in_progress",
+      "note": "iter1 883k brutos (533 tool uses, 90 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "ci-and-merge-CTG-0003",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "status": "completed",
+      "note": "PR #49 merged f04fd68; audit observe"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-iter2",
+      "input_tokens": 60000,
+      "output_tokens": 15000,
+      "status": "completed",
+      "note": "689k brutos (29 tool uses, 10 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009-iter2",
+      "input_tokens": 70000,
+      "output_tokens": 20000,
+      "status": "completed",
+      "note": "harness 109k reportados (96 tool uses, 22 min) — contagem parcial"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0004",
+      "input_tokens": 150000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-iter3",
+      "input_tokens": 80000,
+      "output_tokens": 20000,
+      "status": "completed",
+      "note": "813k brutos (88 tool uses, 22 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009-iter3",
+      "input_tokens": 80000,
+      "output_tokens": 20000,
+      "status": "completed",
+      "note": "307k reportados (134 tool uses, 25 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-iter4",
+      "input_tokens": 40000,
+      "output_tokens": 6000,
+      "status": "completed",
+      "note": "346044k reportados (671 chamadas)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0004-2",
+      "input_tokens": 45000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "FAIL, 3 achados (comentário events.ts, heartbeat setInterval, describe v1.1.0) → §16.7"
+    },
+    {
+      "kind": "maestro",
+      "id": "gates-ctg4c",
+      "input_tokens": 3000,
+      "output_tokens": 500,
+      "status": "completed",
+      "note": "check exit 0, backend:test:ci exit 0 (98 e2e)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009-iter4",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "note": "110k reportados (20 tool uses)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-iter5",
+      "input_tokens": 28000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "127k reportados (31 tool uses)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0004-3",
+      "input_tokens": 12000,
+      "output_tokens": 300,
+      "status": "completed",
+      "note": "PASS, 0 achados"
     }
   ]
 }

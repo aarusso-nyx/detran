@@ -1032,13 +1032,42 @@ describe('CTG-0001 §5 — AIT completo: archive, review-concurrency, ait-cancel
     ]);
   });
 
-  it('C-0001-07 — dado a superfície CRUD gerada então inf:ait-cancel-request:{read,create,update,delete} e inf:ait-cancel-request-event:{read,create,update,delete} existem na matriz (INF_RESOURCES, §5)', () => {
-    for (const resource of ['ait-cancel-request', 'ait-cancel-request-event']) {
-      for (const action of ['read', 'create', 'update', 'delete']) {
+  it('C-0001-07 — dado a superfície CRUD gerada então inf:ait-cancel-request:{read,create} e inf:ait-cancel-request-event:{read,create,update,delete} existem na matriz; inf:ait-cancel-request:{update,delete} não existem (OD-T60: AitCancelRequestController gerado só expõe list|get desde CTG-0001 §12)', () => {
+    for (const action of ['read', 'create']) {
+      expect(
+        `inf:ait-cancel-request:${action}` in DETRAN_POLICY_MATRIX,
+        `inf:ait-cancel-request:${action} deveria existir na matriz (superfície CRUD gerada, §5)`,
+      ).toBe(true);
+    }
+    for (const action of ['update', 'delete']) {
+      expect(
+        `inf:ait-cancel-request:${action}` in DETRAN_POLICY_MATRIX,
+        `inf:ait-cancel-request:${action} deveria ter sido removida (OD-T60: sem rota, CRUD gerado é list|get)`,
+      ).toBe(false);
+    }
+    for (const action of ['read', 'create', 'update', 'delete']) {
+      expect(
+        `inf:ait-cancel-request-event:${action}` in DETRAN_POLICY_MATRIX,
+        `inf:ait-cancel-request-event:${action} deveria existir na matriz (superfície CRUD gerada, §5)`,
+      ).toBe(true);
+    }
+  });
+
+  it('OD-T60 — dado qualquer papel canônico então nenhum recebe inf:ait-cancel-request:{update,delete} como chave explícita, nem por permissionsForRoles (negativo universal; technical-admin passa só por GLOBAL_ADMIN_ROLES/"*")', () => {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      for (const action of ['update', 'delete'] as const) {
+        if (role !== 'technical-admin') {
+          expect(
+            allowed([role], 'inf:ait-cancel-request', action),
+            `inf:ait-cancel-request:${action} não deveria ser concedido a ${role}`,
+          ).toBe(false);
+        }
         expect(
-          `inf:${resource}:${action}` in DETRAN_POLICY_MATRIX,
-          `inf:${resource}:${action} deveria existir na matriz (superfície CRUD gerada, §5)`,
-        ).toBe(true);
+          permissionsForRoles([role]).includes(
+            `inf:ait-cancel-request:${action}`,
+          ),
+          `permissionsForRoles(${role}) nunca deveria conter a chave explícita inf:ait-cancel-request:${action}`,
+        ).toBe(false);
       }
     }
   });
@@ -1755,6 +1784,195 @@ describe('R-0008 CTG-0003 §7 — política de evidência, snapshots e normativo
           permissionsForRoles([role]).includes('ops:snapshot-person:read'),
         ).toBe(false);
       }
+    });
+  });
+});
+
+/**
+ * CTG-0004 §2/§4/§5/§8 (R-0008, TASK-0008) — medidas administrativas,
+ * alcoolemia, velocidade, SSE e integrações (WP-T2). `inf:administrative-measure:*`
+ * e `inf:alcohol-procedure:*` já existem em `TEAT_RULES` (ported ahead of
+ * TASK-0009, verificado por leitura direta de `policy.ts` linhas 663–706): os
+ * testes abaixo passam hoje. `ops:stream:read` e `ops:integration:{read,retry}`
+ * são chaves NOVAS pedidas pelo contrato (§8) e ainda não existem — os dois
+ * últimos `describe` ficam vermelhos até TASK-0009, comportamento ausente,
+ * nunca ajuste de teste (regra 7 do prompt).
+ */
+describe('CTG-0004 §2/§4/§5/§8 — medidas, alcoolemia, velocidade, SSE, integrações (TASK-0008)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (plan.md §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+    // rait-test-strategy.md §2: "negado para pelo menos um papel RAIT fora da lista".
+    expect(
+      allowed(['rait-analyst'], resource, action),
+      `${resource}:${action} nunca deveria conceder a um papel RAIT`,
+    ).toBe(false);
+  }
+
+  describe('§4 — inf:administrative-measure:* (C-0004: matriz de política das medidas)', () => {
+    it('start — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'start', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('register-retention — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'register-retention', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('register-removal — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'register-removal', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('inventory-vehicle — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'inventory-vehicle', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('apply-term — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'apply-term', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('release — field-supervisor, traffic-authority (403 TEAT.MEASURE_RELEASE_NOT_ALLOWED nos demais, §4.6)', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'release', [
+        'field-supervisor',
+        'traffic-authority',
+      ]);
+    });
+    it('conclude — só traffic-authority', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'conclude', [
+        'traffic-authority',
+      ]);
+    });
+    it('cancel — só traffic-authority (a rota sempre responde 409, §4.7)', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'cancel', [
+        'traffic-authority',
+      ]);
+    });
+  });
+
+  describe('§5 — inf:alcohol-procedure:* (C-0004: matriz de política da alcoolemia)', () => {
+    it('start — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'start', ['field-agent']);
+    });
+    it('record-test — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'record-test', [
+        'field-agent',
+      ]);
+    });
+    it('record-refusal — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'record-refusal', [
+        'field-agent',
+      ]);
+    });
+    it('record-psychomotor-signs — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'record-psychomotor-signs', [
+        'field-agent',
+      ]);
+    });
+    it('forward — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'forward', ['field-agent']);
+    });
+    it('close — field-agent, field-supervisor', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'close', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+  });
+
+  describe('§6 — inf:speed-measurement:create (atrás de teat.speed_meters, INF_FIELD_LEGAL_ROLES)', () => {
+    it('create — field-agent, field-supervisor, processing-operator, traffic-authority, technical-admin (INF_FIELD_LEGAL_ROLES; agency-admin/AUDITOR/integration-operator negados)', () => {
+      // INF_FIELD_LEGAL_ROLES inclui technical-admin explicitamente (não só via
+      // GLOBAL_ADMIN_ROLES) — expectGrantedOnlyTo cobre os dois caminhos porque
+      // ambos concedem true.
+      for (const role of [
+        'field-agent',
+        'field-supervisor',
+        'processing-operator',
+        'traffic-authority',
+      ] as const) {
+        expect(allowed([role], 'inf:speed-measurement', 'create')).toBe(true);
+      }
+      for (const role of [
+        'agency-admin',
+        'AUDITOR',
+        'integration-operator',
+      ] as const) {
+        expect(allowed([role], 'inf:speed-measurement', 'create')).toBe(false);
+      }
+    });
+  });
+
+  /**
+   * §8 (M17/OD-T17) — `ops:stream:read`: chave NOVA, todos os oito papéis
+   * TEAT (o stream só entrega o que o papel já lê por outra chave — não é
+   * ampliação de acesso). Vermelho até TASK-0009 acrescentar a linha em
+   * `TEAT_RULES`.
+   */
+  describe('§8 (OD-T17) — ops:stream:read: todos os oito papéis TEAT, nenhum papel PEC/RAIT/DASHBOARD', () => {
+    it('dado cada um dos oito papéis TEAT quando ops:stream:read então permitido', () => {
+      for (const role of TEAT_CANONICAL_ROLES) {
+        expect(
+          allowed([role], 'ops:stream', 'read'),
+          `ops:stream:read deveria ser permitido para ${role} (OD-T17)`,
+        ).toBe(true);
+      }
+    });
+    it('dado um papel PEC (CANDIDATO) ou RAIT (rait-analyst) quando ops:stream:read então negado', () => {
+      expect(allowed(['CANDIDATO'], 'ops:stream', 'read')).toBe(false);
+      expect(allowed(['rait-analyst'], 'ops:stream', 'read')).toBe(false);
+    });
+  });
+
+  /**
+   * §8 (route contract §4.6) — `ops:integration:{read,retry}`: só
+   * integration-operator e technical-admin. Vermelho até TASK-0009.
+   */
+  describe('§8 — ops:integration:{read,retry}: só integration-operator e technical-admin', () => {
+    it('read — integration-operator, technical-admin; negado para os outros seis papéis TEAT', () => {
+      expectGrantedOnlyTo('ops:integration', 'read', ['integration-operator']);
+    });
+    it('retry — integration-operator, technical-admin; negado para os outros seis papéis TEAT', () => {
+      expectGrantedOnlyTo('ops:integration', 'retry', ['integration-operator']);
     });
   });
 });

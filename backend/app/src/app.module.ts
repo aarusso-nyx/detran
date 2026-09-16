@@ -99,6 +99,15 @@ import {
 import { TeatSyncModule } from './teat-sync.providers.js';
 import { TeatEvidencePortsModule } from './teat-evidence.providers.js';
 import { TeatSnapshotPortsModule } from './teat-snapshots.providers.js';
+import { TeatMeasuresPortsModule } from './teat-measures.providers.js';
+import { TeatStreamController } from './teat-stream.controller.js';
+import {
+  createDefaultTeatStreamPoller,
+  TEAT_STREAM_POLLER,
+  TeatStreamService,
+} from './teat-stream.service.js';
+import { TeatIntegrationsController } from './teat-integrations.controller.js';
+import { TeatIntegrationsService } from './teat-integrations.service.js';
 import {
   DetranSessionReadinessBinder,
   DetranSessionStrongFactorGuard,
@@ -356,6 +365,7 @@ export class AppModule {
         TeatSyncModule,
         TeatEvidencePortsModule,
         TeatSnapshotPortsModule,
+        TeatMeasuresPortsModule,
         NormativeModule,
         ParameterModule,
         AitModule,
@@ -376,6 +386,8 @@ export class AppModule {
           : []),
       ],
       controllers: [
+        TeatStreamController,
+        TeatIntegrationsController,
         PecProcessParametersController,
         PecRenachProcessController,
         PecRenachTransmissionController,
@@ -389,6 +401,15 @@ export class AppModule {
         DetranDatabaseBinder,
         ...authProviders,
         DetranPolicyGuard,
+        TeatStreamService,
+        // CTG-0004 §16.3 (adenda, iteração 3): porta do poller do SSE — a
+        // fábrica é a única chamadora de `setInterval` em produção
+        // (`teat-stream.service.ts`); testes injetam outra implementação.
+        {
+          provide: TEAT_STREAM_POLLER,
+          useFactory: () => createDefaultTeatStreamPoller(),
+        },
+        TeatIntegrationsService,
         PecProcessParametersService,
         PecRenachProcessService,
         PecRenachTransmissionService,

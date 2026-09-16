@@ -4,7 +4,7 @@
   "module": {
     "name": "Speed",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "37-inf-speed.sql",
     "dependencies": {
       "@detran/inf-ait": "workspace:*"
@@ -22,6 +22,16 @@
         "package": "@detran/inf-ait",
         "target": "../ait/src/index.ts"
       }
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/speed-commands.controller",
+        "symbol": "SpeedCommandsController"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/create-measurement.command",
+      "handwritten/speed-commands.controller"
     ],
     "owners": ["detran-inf"],
     "description": "Medicao de velocidade por equipamento ACOPLADO ao talao eletronico (UC-TEAT-013). Escopo: inciso II do art. 3o §1o da Res. 918/2022. Fiscalizacao eletronica por equipamento fixo (inciso III, com referendo) esta FORA — ver inf/teat/APP.md secao Fronteira."

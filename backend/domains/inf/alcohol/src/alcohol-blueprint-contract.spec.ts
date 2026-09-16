@@ -20,9 +20,9 @@ const blueprint = JSON.parse(
   };
 };
 
-describe('BP-INF-ALCOHOL-001 v1.1.0', () => {
+describe('BP-INF-ALCOHOL-001 v1.2.0', () => {
   it('dado uma alcoolemia quando inspecionada então preserva o par de medição e distingue recusa de impossibilidade técnica', () => {
-    expect(blueprint.module.version).toBe('1.1.0');
+    expect(blueprint.module.version).toBe('1.2.0');
     const test = blueprint.database.entities.find(
       (entity) => entity.table === 'alcohol_test',
     );
