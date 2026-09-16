@@ -3,7 +3,7 @@
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`
 (Fable 5.1 no `delivery-review` do provisionamento).
-**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (reconciliação do corpus) e CTG-0002 (126 fichas, i18n, transições, diagramas): nenhum upstream. CTG-0003 (provisionamento offline: ADR, blueprint, rotas): `ops-agency` R-0005 (`orchestra/ops-agency`). CTG-0004 (apps mobile e web): `teat-backend` R-0008 (schemas e clientes) e `rait-web` R-0012 (lock `packages/ui`).
+**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (reconciliação do corpus), CTG-0002 (126 fichas, i18n, transições, diagramas) e CTG-0003 (provisionamento offline: ADR, blueprint, rotas — R-0005 em `main`): nenhum upstream. CTG-0004 (apps mobile e web): `rait-web` R-0012 (lock `packages/ui`); schemas, `@detran/api-clients` e contratos do TEAT já em `main` (R-0008).
 **Janelas previstas:** 5 (o maior da carteira; um PR por grupo).
 
 ## Metas

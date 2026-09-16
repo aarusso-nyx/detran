@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (identidade federada + modelo + projeções + fixtures): nenhum upstream. CTG-0002 (rotas, delegações, contratos): `rait-backend` R-0007 (`orchestra/rait-backend`) só para as delegações reais de defesa/indicação/pagamento — até lá as rotas delegadas devolvem `SERVICE_UNAVAILABLE` com motivo (build pack §3) e o grupo pode mesclar com o teste de delegação real marcado `todo` citando R-0007.
+**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (identidade federada + modelo + projeções + fixtures): nenhum upstream. CTG-0002 (rotas, delegações, contratos): `rait-backend` R-0007 só para as delegações reais de defesa/indicação/pagamento — até lá as rotas delegadas devolvem `SERVICE_UNAVAILABLE` com motivo (build pack §3) e o grupo mescla com o teste de delegação real marcado `todo` citando R-0007. Já em `main` desde R-0008 (reutilizar, nunca recriar): `DetranError` (`backend/domains/shared/src/errors/`), `tools/contracts/check-commands.mjs` em `pnpm contracts:check`, `pnpm contracts:clients` → `@detran/api-clients`, `backend/app/tests/e2e/policy-routes.e2e.spec.ts` (estender com `portal:*`).
 **Janelas previstas:** 3.
 
 ## Metas
