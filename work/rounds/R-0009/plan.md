@@ -343,6 +343,23 @@ qualificada}` e `claims.cpf` (11 dígitos, `sub` de negócio). Perfil `local-san
     (OD-P27 ao STYNX). (c) `DETRAN_PORTAL_HOST_RESOLUTION=on` faz o Host não mapeado responder 421 mesmo no perfil local (única
     forma de provar §9 no e2e). (d) D13: `portal.subject.name` nulo admitido (blueprint `IDENTITY` v1.0.2). (e) `PortalClock`
     com `America/Manaus` como fuso padrão nesta rodada; fuso por tenant em CTG-0002 (`auth.tenants.timezone`).
+- **A4 (2026-09-16, após TASK-0005)** — divergências de `contracts/CTG-0002.md` §15 **aceitas** como escritas no contrato
+  (o canônico prevalece; o código segue o contrato): (a) `[DIVERGE-M9-kernel]`: o kernel STYNX (`@Action` ⇒ `@Idempotent()`)
+  já trata `Idempotency-Key` (400 sem código, replay, 422 em corpo divergente); para cumprir M9 (409 `PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY`
+  `{ key }` + `portal.idempotency_record`) as rotas M9 usam `@NoIdempotent()` + `PortalIdempotencyService`; `@detran/shared`
+  reexporta `NoIdempotent` em `decorators.ts`; `assertIfMatch(header, version, 'PORTAL')` (TASK-0007; locks
+  `MOD-shared-decorators`, `MOD-shared-if-match`, `MOD-app-delegation-providers`). (b) OD-P30: autenticação oportunista em
+  `POST manifestations` (`@Public()` + `@Resource/@Action`; extensão do guard de auth do app — H.51 "anônimo para manifestar,
+  simples para acompanhar"); TASK-0008 ganha lock `MOD-app-module` (guard público) e `MOD-app-national-read-providers`.
+  (c) `[DIVERGE-M12]` `emissao_crlv`, `[DIVERGE-M8/M12]` `actions.pay`, `[DIVERGE-M24]` `moduleExports`/`dependencies`,
+  `[DIVERGE-M15]`/`[DIVERGE-M16]` `topic = type`, `[DIVERGE-M10]` evento sem CPF, `[DIVERGE-M18]` `data` reformatado,
+  `[DIVERGE-route-contract]` (`representedName`, `scores` aninhado, `category` na caixa), `[DIVERGE-CTG-0001]` (representation
+  sem `version`; `EVALUATION_NOT_OFFERED` × `REQUEST_STATE_INVALID`; chaves de `effects_ack` do seed), `[DIVERGE-M19]` (guarda
+  própria de `manifest`) — aceitas. (d) `GET content/points-explainer` fica fora desta rodada (OD-P31); produtor de
+  `inbox_item`/push fora de M16 (OD-P40). (e) `tools/contracts/check-commands.mjs` (`CONTROLLER_ROOTS` + catálogo do Portal) é
+  alteração de ferramenta: feita pelo **maestro (Engineer)** no checkpoint de TASK-0009, não pelo transcritor. (f) `pnpm install`
+  (deps workspace novas dos quatro pacotes) feito pelo maestro após TASK-0005. (g) Numeração de DDL: `19-portal-platform.sql`
+  convive com `19-est-lifecycle-vocabulary.sql` (R-0010, PR #55) por ordem lexicográfica, como já ocorre com `13-ops-*`.
 
 ## Tarefas
 
@@ -453,14 +470,14 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0002 | in_progress | idem, em paralelo                                                                                             |
 | TASK-0003 | completed   | iteração 2 verde (49/49 unit, 14/14 e2e ×2); relatório atualizado                                             |
 | TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
-| TASK-0005 | queued      | —                                                                                                             |
-| TASK-0006 | queued      | —                                                                                                             |
+| TASK-0005 | completed   | relatório em `reports/TASK-0005.md`; A4; branch temporário `tmp/r9-ctg2-wip` até o merge do PR #54            |
+| TASK-0006 | in_progress | disparada sobre `tmp/r9-ctg2-wip` (= orchestra + TASK-0005)                                                   |
 | TASK-0007 | queued      | —                                                                                                             |
 | TASK-0008 | queued      | —                                                                                                             |
 | TASK-0009 | queued      | —                                                                                                             |
 | TASK-0010 | queued      | —                                                                                                             |
 
-Último veredito do reviewer: `prompt-review-3` PASS (após FAIL/FAIL de estrutura, ver §Bloqueios). Próximos passos: relatórios de TASK-0001/0002 → checkpoint → TASK-0003.
+Checkpoint 1 (2026-09-16): CTG-0001 concluído — commits `93a754d…104e5c8`, `delivery-review-CTG-0001` REVIEW → `-2` PASS, evidência generic seq. 1, **PR #54** aberto contra `main` (CI em curso). Branch **publicado**: integrar `origin/main` só com `git merge --no-edit`. Último veredito: `delivery-review-CTG-0001-2` PASS. Próximos passos: TASK-0005 (contrato CTG-0002 + wiring M24 dos 4 blueprints) → TASK-0006 → TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010; merge do PR #54 quando CI verde; `audit observe` no sha do merge.
 
 ## Leitura
 

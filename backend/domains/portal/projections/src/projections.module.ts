@@ -1,4 +1,4 @@
-// Generated from BP-PORTAL-PROJECTIONS-001 v1.0.0 sha256:0be808a8cab613c80b9fc898d70fcdf1323a979c488210bf692b3c489326b380
+// Generated from BP-PORTAL-PROJECTIONS-001 v1.0.1 sha256:b30e4ad53da99d2d4e5fb17ef4f0c9c8cdf5814458a99505c92f04945c482281
 import { Module } from '@nestjs/common';
 import { InfractionViewController } from './controllers/infraction-view.controller.js';
 import { InfractionViewService } from './services/infraction-view.service.js';
@@ -21,9 +21,21 @@ import { ProjectionAppliedEventRepository } from './repositories/projection-appl
 import { NationalReadCacheController } from './controllers/national-read-cache.controller.js';
 import { NationalReadCacheService } from './services/national-read-cache.service.js';
 import { NationalReadCacheRepository } from './repositories/national-read-cache.repository.js';
+import { PortalAitsController } from './handwritten/aits.controller.js';
+import { PortalDocumentsController } from './handwritten/documents.controller.js';
+import { PortalCrashesController } from './handwritten/crashes.controller.js';
+import { PortalExamsController } from './handwritten/exams.controller.js';
+import { PortalProjectors } from './handwritten/projectors.service.js';
+import { PortalNationalReadsService } from './handwritten/national-reads.service.js';
+import { IdentityModule } from '@detran/portal-identity';
 
 @Module({
+  imports: [IdentityModule],
   controllers: [
+    PortalAitsController,
+    PortalDocumentsController,
+    PortalCrashesController,
+    PortalExamsController,
     InfractionViewController,
     ProcessTimelineController,
     PointsViewController,
@@ -47,6 +59,9 @@ import { NationalReadCacheRepository } from './repositories/national-read-cache.
     ProjectionAppliedEventRepository,
     NationalReadCacheService,
     NationalReadCacheRepository,
+    PortalProjectors,
+    PortalNationalReadsService,
   ],
+  exports: [PortalProjectors],
 })
 export class ProjectionsModule {}

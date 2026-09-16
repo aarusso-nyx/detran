@@ -1,4 +1,4 @@
-// Generated from BP-PORTAL-PROJECTIONS-001 v1.0.0 sha256:0be808a8cab613c80b9fc898d70fcdf1323a979c488210bf692b3c489326b380
+// Generated from BP-PORTAL-PROJECTIONS-001 v1.0.1 sha256:b30e4ad53da99d2d4e5fb17ef4f0c9c8cdf5814458a99505c92f04945c482281
 export * from './controllers/infraction-view.controller.js';
 export * from './dto/create-infraction-view.dto.js';
 export * from './entities/infraction-view.entity.js';
@@ -35,3 +35,4 @@ export * from './entities/national-read-cache.entity.js';
 export * from './repositories/national-read-cache.repository.js';
 export * from './services/national-read-cache.service.js';
 export * from './projections.module.js';
+export * from './handwritten/index.js';

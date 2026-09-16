@@ -1,4 +1,4 @@
-// Generated from BP-PORTAL-INBOX-001 v1.0.1 sha256:1ddffdafcda20768cbaa66e39e4ee4f5346513517e6bb95c6216878d42314ccd
+// Generated from BP-PORTAL-INBOX-001 v1.0.2 sha256:c04ef2d9c11828696abb081206e353636a01f9f86c39e28acfc0ada5addf53da
 export * from './controllers/inbox-item.controller.js';
 export * from './dto/create-inbox-item.dto.js';
 export * from './entities/inbox-item.entity.js';
@@ -20,3 +20,4 @@ export * from './entities/push-subscription.entity.js';
 export * from './repositories/push-subscription.repository.js';
 export * from './services/push-subscription.service.js';
 export * from './inbox.module.js';
+export * from './handwritten/index.js';
