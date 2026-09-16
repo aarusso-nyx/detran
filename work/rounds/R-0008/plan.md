@@ -1,6 +1,6 @@
 # R-0008 — frente `teat-backend` (WP-T2 + WP-T3 do TEAT: rotas, comandos, sincronização e contratos)
 
-**Status:** aberto em 2026-09-15 pelo maestro Fable 5.1 (janela 1; planejamento em `main` df1e176). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`
+**Status:** fechada em 2026-09-16 como `PC-0005` (CTG-0001…0005 mesclados em `main` pelos PRs #47–#51; fechamento no PR #52). Aberta em 2026-09-15 pelo maestro Fable 5.1 (janela 1; planejamento em `main` df1e176). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`
 (escalar para Sol no `delivery-review` dos grupos de sincronização e política).
 **Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — todos os grupos: `ops-agency` R-0005 (`orchestra/ops-agency`; módulos `ops` gerados e deltas v1.1.0 dos blueprints `inf`) — enquanto não mesclar, desenvolva sobre base empilhada nele. `DetranError` de R-0007 CTG-0001 se já em `main`; senão crie em `@detran/shared` e avise em §Bloqueios para R-0007 rebasear. CTG-0004 (contratos): também `check-commands.mjs` de R-0007 CTG-0001, ou crie aqui.
 **Janelas previstas:** 4.
