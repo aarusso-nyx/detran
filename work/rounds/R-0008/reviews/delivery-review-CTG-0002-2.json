@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts",
+      "line": 214,
+      "claim": "A correção persiste ops.sync_batch antes da materialização, da aplicação e dos recibos (passos 5–8), mas CTG-0002 §4.1 fixa esses passos em ordem e só grava o lote no passo 9. Assim um erro posterior pode deixar lote durável com accepted_items=0 e receipts_json vazio, contrariando a definição canônica.",
+      "fix": "Não aceitar esta inversão silenciosa: o Architect deve resolver formalmente a incompatibilidade entre §4.1 passos 7–10 e a exigência de batchId no evento transacional, alterando o contrato antes da implementação ou redesenhando o fluxo para respeitar a ordem canônica."
+    }
+  ],
+  "notes": [
+    "As correções de fronteira de escrita, promoção transacional por porta, last=0 e validação runtime do DTO estão presentes. O achado é novo porque a inversão de passos foi introduzida pela correção deste ciclo."
+  ]
+}

@@ -1,4 +1,4 @@
-// Generated from BP-OPS-SNAPSHOTS-001 v1.0.0 sha256:bebc10f45ae4f8887acc821ee7211894780dd9bd4b5a67d1edfbd371f54a21c4
+// Generated from BP-OPS-SNAPSHOTS-001 v1.1.0 sha256:c995962d248172eeb08cd92993fc4cafac0eada70cdbf240c54a4c69ce94edc4
 import { Injectable } from '@nestjs/common';
 import { VehicleRepository } from '../repositories/vehicle.repository.js';
 import type { Vehicle } from '../entities/vehicle.entity.js';

@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Action, Audit, Resource } from '@detran/shared';
 import { EvidenceCustodyService } from './evidence-custody.service.js';
 
-@Controller('ops/evidence')
+@Controller('v1/ops/evidence')
 export class EvidenceCustodyController {
   constructor(private readonly service: EvidenceCustodyService) {}
 

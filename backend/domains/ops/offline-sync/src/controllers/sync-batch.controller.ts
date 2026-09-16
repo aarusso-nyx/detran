@@ -1,4 +1,4 @@
-// Generated from BP-OPS-OFFLINE-SYNC-001 v1.1.0 sha256:fb2ab9cef5ee5621be533d83fd88a694912460d6fbe4cd446bc2c8d7f7bcfc3d
+// Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
 import {
   Body,
   Controller,
@@ -21,23 +21,5 @@ export class SyncBatchController {
   }
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({ action: 'OPS_SYNC_BATCH_CREATE', entity: 'ops.sync_batch' })
-  create(@Body() dto: CreateSyncBatchDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({ action: 'OPS_SYNC_BATCH_UPDATE', entity: 'ops.sync_batch' })
-  update(@Param('id') id: string, @Body() dto: Partial<CreateSyncBatchDto>) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({ action: 'OPS_SYNC_BATCH_DELETE', entity: 'ops.sync_batch' })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }

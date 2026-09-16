@@ -8,7 +8,22 @@ const include: Record<string, string[]> = {
   real: ['tests/real/**/*.real.spec.ts'],
 };
 export default defineConfig({
-  resolve: { alias: {} },
+  resolve: {
+    alias: {
+      '@detran/shared': fileURLToPath(
+        new URL('../../shared/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-core': fileURLToPath(
+        new URL('../core/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-parameter': fileURLToPath(
+        new URL('../parameter/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-normative': fileURLToPath(
+        new URL('../../inf/normative/src/index.ts', import.meta.url),
+      ),
+    },
+  },
   test: {
     environment: 'node',
     globals: true,

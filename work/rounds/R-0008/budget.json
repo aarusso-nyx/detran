@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1575000,
-  "estimated_output_total": 298800,
+  "estimated_input_total": 2375000,
+  "estimated_output_total": 498800,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -121,6 +121,118 @@
     {
       "kind": "reviewer",
       "id": "delivery-review-CTG-0001-3",
+      "input_tokens": 35000,
+      "output_tokens": 800,
+      "status": "completed",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "input_tokens": 120000,
+      "output_tokens": 45000,
+      "status": "completed",
+      "note": "468k brutos (129 tool uses, 63 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "ci-and-merge-CTG-0001",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "status": "completed",
+      "note": "PR #47 merged 397cb03; audit observe EV-5a4d81502cca07c6"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "input_tokens": 150000,
+      "output_tokens": 55000,
+      "status": "in_progress",
+      "note": "iter1 543k brutos (145 tool uses, 75 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004-iter2",
+      "input_tokens": 50000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "492k brutos (23 tool uses, 8 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005-iter2",
+      "input_tokens": 60000,
+      "output_tokens": 20000,
+      "status": "completed",
+      "note": "561k brutos (19 tool uses, 27 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002",
+      "input_tokens": 110000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004-iter3",
+      "input_tokens": 55000,
+      "output_tokens": 15000,
+      "status": "completed",
+      "note": "539k brutos (24 tool uses, 9 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005-iter3",
+      "input_tokens": 50000,
+      "output_tokens": 15000,
+      "status": "completed",
+      "note": "601k brutos (17 tool uses, 7 min); iter4 em curso"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005-iter4",
+      "input_tokens": 30000,
+      "output_tokens": 8000,
+      "status": "completed",
+      "note": "615k brutos (11 tool uses, 19 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-2",
+      "input_tokens": 45000,
+      "output_tokens": 1200,
+      "status": "completed",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-3",
+      "input_tokens": 20000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004-iter4",
+      "input_tokens": 40000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "563k brutos (13 tool uses, 7 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005-iter5",
+      "input_tokens": 35000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "637k brutos (17 tool uses, 7 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-4",
       "input_tokens": 35000,
       "output_tokens": 800,
       "status": "completed",

@@ -4,28 +4,83 @@
   "module": {
     "name": "Field",
     "namespace": "ops",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "ddlFile": "13-ops-field-operations.sql",
-    "dependencies": { "@detran/ops-core": "workspace:*" },
+    "dependencies": {
+      "@detran/ops-core": "workspace:*",
+      "@detran/ops-parameter": "workspace:*",
+      "zod": "^4.6.5",
+      "@detran/inf-normative": "workspace:*"
+    },
     "handwrittenControllers": [
       {
         "target": "handwritten/field-operations.controller",
         "symbol": "FieldOperationsController"
+      },
+      {
+        "target": "handwritten/mobile-bootstrap.controller",
+        "symbol": "MobileBootstrapController"
+      },
+      {
+        "target": "handwritten/field-commands.controller",
+        "symbol": "FieldCommandsController"
       }
     ],
     "handwrittenProviders": [
       {
         "target": "handwritten/field-operations.provider",
         "symbol": "FIELD_OPERATIONS_PROVIDER"
+      },
+      {
+        "target": "handwritten/mobile-bootstrap.provider",
+        "symbol": "MOBILE_BOOTSTRAP_PROVIDER"
       }
     ],
     "handwrittenExports": [
       "handwritten/field-operations.controller",
       "handwritten/field-operations.provider",
-      "handwritten/field-operations.service"
+      "handwritten/field-operations.service",
+      "handwritten/field-runtime",
+      "handwritten/events",
+      "handwritten/mobile-bootstrap.service",
+      "handwritten/mobile-bootstrap.controller",
+      "handwritten/mobile-bootstrap.provider",
+      "handwritten/field-commands",
+      "handwritten/field-commands.controller",
+      "handwritten/shift-readiness",
+      "handwritten/open-shift.command",
+      "handwritten/close-shift.command",
+      "handwritten/handoff-session.command",
+      "handwritten/device-posture.command",
+      "handwritten/renew-homologation.command",
+      "handwritten/cancel-homologation.command"
     ],
     "owners": ["detran-ops"],
-    "description": "Field-operation context from TEAT BP-MOBILE-OPERATIONS-001 and RN-TEAT-003; handwritten operations routes remain mounted through the generated module."
+    "description": "Field-operation context from TEAT BP-MOBILE-OPERATIONS-001 and RN-TEAT-003; handwritten operations routes remain mounted through the generated module.",
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-core",
+        "target": "../core/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-parameter",
+        "target": "../parameter/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-normative",
+        "target": "../../inf/normative/src/index.ts"
+      }
+    ],
+    "moduleImports": [
+      {
+        "package": "@detran/ops-parameter",
+        "symbol": "ParameterModule"
+      }
+    ]
   },
   "api": {
     "basePath": "/v1/ops/field/",
@@ -55,8 +110,16 @@
         "path": "device-events",
         "resource": "device-event"
       },
-      { "entity": "Operation", "path": "operations", "resource": "operation" },
-      { "entity": "Team", "path": "teams", "resource": "team" },
+      {
+        "entity": "Operation",
+        "path": "operations",
+        "resource": "operation"
+      },
+      {
+        "entity": "Team",
+        "path": "teams",
+        "resource": "team"
+      },
       {
         "entity": "TeamAgent",
         "path": "team-agents",
@@ -72,8 +135,16 @@
         "path": "measurement-instruments",
         "resource": "measurement-instrument"
       },
-      { "entity": "Shift", "path": "shifts", "resource": "shift" },
-      { "entity": "Approach", "path": "approaches", "resource": "approach" },
+      {
+        "entity": "Shift",
+        "path": "shifts",
+        "resource": "shift"
+      },
+      {
+        "entity": "Approach",
+        "path": "approaches",
+        "resource": "approach"
+      },
       {
         "entity": "SessionHandoff",
         "path": "session-handoffs",
@@ -88,12 +159,32 @@
         "table": "ops_agent_profile",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "user_ref", "type": "uuid" },
-          { "name": "operational_unit_id", "type": "uuid", "nullable": true },
-          { "name": "registration_number", "type": "varchar(60)" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "user_ref",
+            "type": "uuid"
+          },
+          {
+            "name": "operational_unit_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "registration_number",
+            "type": "varchar(60)"
+          },
           {
             "name": "credential_number",
             "type": "varchar(80)",
@@ -109,7 +200,11 @@
             "type": "date",
             "nullable": true
           },
-          { "name": "trained_at", "type": "timestamptz", "nullable": true }
+          {
+            "name": "trained_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
         ],
         "indexes": [
           {
@@ -127,23 +222,67 @@
         "table": "ops_operational_device",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "hardware_identifier_hash", "type": "varchar(128)" },
-          { "name": "model", "type": "varchar(120)", "nullable": true },
-          { "name": "manufacturer", "type": "varchar(120)", "nullable": true },
-          { "name": "os_name", "type": "varchar(40)" },
-          { "name": "os_version", "type": "varchar(80)", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "hardware_identifier_hash",
+            "type": "varchar(128)"
+          },
+          {
+            "name": "model",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "manufacturer",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "os_name",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "os_version",
+            "type": "varchar(80)",
+            "nullable": true
+          },
           {
             "name": "status",
             "type": "varchar(40)",
             "default": "'authorized'"
           },
-          { "name": "app_version", "type": "varchar(80)", "nullable": true },
-          { "name": "last_seen_at", "type": "timestamptz", "nullable": true },
-          { "name": "last_location_json", "type": "jsonb", "nullable": true },
-          { "name": "tamper_flag", "type": "boolean", "default": "false" },
+          {
+            "name": "app_version",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "last_seen_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "last_location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "tamper_flag",
+            "type": "boolean",
+            "default": "false"
+          },
           {
             "name": "last_location_geom",
             "type": "geometry(Point,4674)",
@@ -167,17 +306,56 @@
         "table": "ops_homologation",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "homologation_number", "type": "varchar(100)" },
-          { "name": "scope", "type": "text" },
-          { "name": "issued_at", "type": "date" },
-          { "name": "valid_until", "type": "date", "nullable": true },
-          { "name": "document_uri", "type": "text", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" },
-          { "name": "laudo_emitido_em", "type": "date", "nullable": true },
-          { "name": "laudo_valido_ate", "type": "date", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "homologation_number",
+            "type": "varchar(100)"
+          },
+          {
+            "name": "scope",
+            "type": "text"
+          },
+          {
+            "name": "issued_at",
+            "type": "date"
+          },
+          {
+            "name": "valid_until",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "document_uri",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          },
+          {
+            "name": "laudo_emitido_em",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "laudo_valido_ate",
+            "type": "date",
+            "nullable": true
+          },
           {
             "name": "emissor_independente",
             "type": "varchar(255)",
@@ -203,7 +381,11 @@
             "type": "date",
             "nullable": true
           },
-          { "name": "cancelled_reason", "type": "text", "nullable": true }
+          {
+            "name": "cancelled_reason",
+            "type": "text",
+            "nullable": true
+          }
         ],
         "indexes": [
           {
@@ -221,29 +403,67 @@
         "table": "ops_application_version",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "app_type", "type": "varchar(40)" },
-          { "name": "version", "type": "varchar(80)" },
-          { "name": "build_number", "type": "varchar(80)", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'allowed'" },
-          { "name": "homologation_id", "type": "uuid", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "app_type",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "version",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "build_number",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'allowed'"
+          },
+          {
+            "name": "homologation_id",
+            "type": "uuid",
+            "nullable": true
+          },
           {
             "name": "altera_funcionalidade",
             "type": "boolean",
             "default": "false"
           },
-          { "name": "valid_from", "type": "date" },
-          { "name": "valid_to", "type": "date", "nullable": true }
+          {
+            "name": "valid_from",
+            "type": "date"
+          },
+          {
+            "name": "valid_to",
+            "type": "date",
+            "nullable": true
+          }
         ],
         "indexes": [
-          { "columns": ["tenant_id", "app_type", "version"], "unique": true }
+          {
+            "columns": ["tenant_id", "app_type", "version"],
+            "unique": true
+          }
         ],
         "foreignKeys": [
           {
             "name": "fk_ops_application_version_homologation",
             "columns": ["homologation_id"],
-            "references": { "table": "ops.ops_homologation", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_homologation",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -252,21 +472,54 @@
         "table": "ops_device_event",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "device_id", "type": "uuid" },
-          { "name": "agent_id", "type": "uuid", "nullable": true },
-          { "name": "event_type", "type": "varchar(80)" },
-          { "name": "event_at", "type": "timestamptz", "default": "now()" },
-          { "name": "location_json", "type": "jsonb", "nullable": true },
-          { "name": "details_json", "type": "jsonb", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "device_id",
+            "type": "uuid"
+          },
+          {
+            "name": "agent_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "event_type",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "event_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "details_json",
+            "type": "jsonb",
+            "nullable": true
+          },
           {
             "name": "location_geom",
             "type": "geometry(Point,4674)",
             "nullable": true
           }
         ],
-        "indexes": [{ "columns": ["tenant_id", "device_id", "event_at"] }],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "device_id", "event_at"]
+          }
+        ],
         "foreignKeys": [
           {
             "name": "fk_ops_device_event_device",
@@ -291,35 +544,96 @@
         "table": "ops_operation",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "name", "type": "varchar(255)" },
-          { "name": "operation_type", "type": "varchar(80)" },
-          { "name": "description", "type": "text", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(255)"
+          },
+          {
+            "name": "operation_type",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": true
+          },
           {
             "name": "planned_start_at",
             "type": "timestamptz",
             "nullable": true
           },
-          { "name": "planned_end_at", "type": "timestamptz", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'planned'" },
-          { "name": "objectives", "type": "text", "nullable": true }
+          {
+            "name": "planned_end_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'planned'"
+          },
+          {
+            "name": "objectives",
+            "type": "text",
+            "nullable": true
+          }
         ],
-        "indexes": [{ "columns": ["tenant_id", "traffic_agency_id", "status"] }]
+        "indexes": [
+          {
+            "columns": ["tenant_id", "traffic_agency_id", "status"]
+          }
+        ]
       },
       {
         "name": "Team",
         "table": "ops_team",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "operational_unit_id", "type": "uuid", "nullable": true },
-          { "name": "name", "type": "varchar(120)" },
-          { "name": "supervisor_agent_id", "type": "uuid", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "operational_unit_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "name",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "supervisor_agent_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          }
         ],
         "indexes": [
           {
@@ -343,22 +657,51 @@
         "table": "ops_team_agent",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "team_id", "type": "uuid" },
-          { "name": "agent_id", "type": "uuid" },
-          { "name": "role", "type": "varchar(60)" },
-          { "name": "valid_from", "type": "date" },
-          { "name": "valid_to", "type": "date", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "team_id",
+            "type": "uuid"
+          },
+          {
+            "name": "agent_id",
+            "type": "uuid"
+          },
+          {
+            "name": "role",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "valid_from",
+            "type": "date"
+          },
+          {
+            "name": "valid_to",
+            "type": "date",
+            "nullable": true
+          }
         ],
         "indexes": [
-          { "columns": ["tenant_id", "team_id", "agent_id"], "unique": true }
+          {
+            "columns": ["tenant_id", "team_id", "agent_id"],
+            "unique": true
+          }
         ],
         "foreignKeys": [
           {
             "name": "fk_ops_team_agent_team",
             "columns": ["team_id"],
-            "references": { "table": "ops.ops_team", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_team",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_ops_team_agent_agent",
@@ -375,13 +718,36 @@
         "table": "ops_patrol_vehicle",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "prefix", "type": "varchar(60)" },
-          { "name": "plate", "type": "varchar(10)" },
-          { "name": "vehicle_type", "type": "varchar(60)" },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "prefix",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "plate",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "vehicle_type",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          }
         ],
         "indexes": [
           {
@@ -395,14 +761,39 @@
         "table": "ops_measurement_instrument",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "instrument_type", "type": "varchar(40)" },
-          { "name": "serial_number", "type": "varchar(120)" },
-          { "name": "brand", "type": "varchar(120)" },
-          { "name": "model", "type": "varchar(120)" },
-          { "name": "inmetro_model_approval", "type": "varchar(120)" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "instrument_type",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "serial_number",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "brand",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "model",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "inmetro_model_approval",
+            "type": "varchar(120)"
+          },
           {
             "name": "verification_certificate_number",
             "type": "varchar(120)",
@@ -413,20 +804,30 @@
             "type": "date",
             "nullable": true
           },
-          { "name": "last_verification_at", "type": "date", "nullable": true },
+          {
+            "name": "last_verification_at",
+            "type": "date",
+            "nullable": true
+          },
           {
             "name": "verification_valid_until",
             "type": "date",
             "nullable": true
           },
-          { "name": "status", "type": "varchar(40)", "default": "'approved'" }
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'approved'"
+          }
         ],
         "indexes": [
           {
             "columns": ["tenant_id", "instrument_type", "serial_number"],
             "unique": true
           },
-          { "columns": ["tenant_id", "traffic_agency_id", "status"] }
+          {
+            "columns": ["tenant_id", "traffic_agency_id", "status"]
+          }
         ]
       },
       {
@@ -434,20 +835,71 @@
         "table": "ops_shift",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "agent_id", "type": "uuid" },
-          { "name": "device_id", "type": "uuid" },
-          { "name": "operational_unit_id", "type": "uuid", "nullable": true },
-          { "name": "team_id", "type": "uuid", "nullable": true },
-          { "name": "patrol_vehicle_id", "type": "uuid", "nullable": true },
-          { "name": "operation_id", "type": "uuid", "nullable": true },
-          { "name": "started_at", "type": "timestamptz" },
-          { "name": "ended_at", "type": "timestamptz", "nullable": true },
-          { "name": "start_location_json", "type": "jsonb", "nullable": true },
-          { "name": "end_location_json", "type": "jsonb", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'open'" },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "agent_id",
+            "type": "uuid"
+          },
+          {
+            "name": "device_id",
+            "type": "uuid"
+          },
+          {
+            "name": "operational_unit_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "team_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "patrol_vehicle_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "operation_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "started_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "ended_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "start_location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "end_location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'open'"
+          },
           {
             "name": "offline_periods_count",
             "type": "integer",
@@ -465,8 +917,12 @@
           }
         ],
         "indexes": [
-          { "columns": ["tenant_id", "agent_id", "started_at"] },
-          { "columns": ["tenant_id", "status"] }
+          {
+            "columns": ["tenant_id", "agent_id", "started_at"]
+          },
+          {
+            "columns": ["tenant_id", "status"]
+          }
         ],
         "foreignKeys": [
           {
@@ -488,7 +944,10 @@
           {
             "name": "fk_ops_shift_team",
             "columns": ["team_id"],
-            "references": { "table": "ops.ops_team", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_team",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_ops_shift_vehicle",
@@ -501,7 +960,10 @@
           {
             "name": "fk_ops_shift_operation",
             "columns": ["operation_id"],
-            "references": { "table": "ops.ops_operation", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_operation",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -510,34 +972,81 @@
         "table": "ops_approach",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "shift_id", "type": "uuid" },
-          { "name": "operation_id", "type": "uuid", "nullable": true },
-          { "name": "agent_id", "type": "uuid" },
-          { "name": "approached_at", "type": "timestamptz" },
-          { "name": "location_json", "type": "jsonb", "nullable": true },
-          { "name": "approach_type", "type": "varchar(60)" },
-          { "name": "result", "type": "varchar(80)" },
-          { "name": "notes", "type": "text", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "shift_id",
+            "type": "uuid"
+          },
+          {
+            "name": "operation_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "agent_id",
+            "type": "uuid"
+          },
+          {
+            "name": "approached_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "approach_type",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "result",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true
+          },
           {
             "name": "location_geom",
             "type": "geometry(Point,4674)",
             "nullable": true
           }
         ],
-        "indexes": [{ "columns": ["tenant_id", "shift_id", "approached_at"] }],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "shift_id", "approached_at"]
+          }
+        ],
         "foreignKeys": [
           {
             "name": "fk_ops_approach_shift",
             "columns": ["shift_id"],
-            "references": { "table": "ops.ops_shift", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_shift",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_ops_approach_operation",
             "columns": ["operation_id"],
-            "references": { "table": "ops.ops_operation", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_operation",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_ops_approach_agent",
@@ -554,19 +1063,45 @@
         "table": "ops_session_handoff",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "shift_id", "type": "uuid" },
-          { "name": "from_agent_id", "type": "uuid" },
-          { "name": "to_agent_id", "type": "uuid" },
-          { "name": "handed_off_at", "type": "timestamptz" },
-          { "name": "details_json", "type": "jsonb", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "shift_id",
+            "type": "uuid"
+          },
+          {
+            "name": "from_agent_id",
+            "type": "uuid"
+          },
+          {
+            "name": "to_agent_id",
+            "type": "uuid"
+          },
+          {
+            "name": "handed_off_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "details_json",
+            "type": "jsonb",
+            "nullable": true
+          }
         ],
         "foreignKeys": [
           {
             "name": "fk_ops_session_handoff_shift",
             "columns": ["shift_id"],
-            "references": { "table": "ops.ops_shift", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_shift",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_ops_session_handoff_from_agent",

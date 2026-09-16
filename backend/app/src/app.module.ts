@@ -96,6 +96,7 @@ import {
   detranFeatureFlagSet,
   isLocalRuntimeProfile,
 } from './detran-runtime.js';
+import { TeatSyncModule } from './teat-sync.providers.js';
 import {
   DetranSessionReadinessBinder,
   DetranSessionStrongFactorGuard,
@@ -348,6 +349,9 @@ export class AppModule {
         ComplaintsModule,
         // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
         // handwritten AIT lifecycle commands (WP-T0).
+        // Portas do protocolo de sincronização (CTG-0002 §4.8) antes dos
+        // módulos que as consomem.
+        TeatSyncModule,
         NormativeModule,
         ParameterModule,
         AitModule,
