@@ -8,8 +8,8 @@ import { ClinicalControlLifecycleService } from './clinical-control-lifecycle.se
 
 @Module({
   controllers: [
-    ClinicalControlEventController,
     ClinicalControlCommandsController,
+    ClinicalControlEventController,
   ],
   providers: [
     ClinicalControlEventService,

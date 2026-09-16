@@ -1,4 +1,4 @@
-// Generated from BP-INF-NORMATIVE-001 v1.1.0 sha256:79161caba1463941727a4a6ad952f010c399cca7df3febfa1cf881ac14c7ca52
+// Generated from BP-INF-NORMATIVE-001 v1.1.0 sha256:41cbbec5aa5c5c6aa56495204f1b421d456abe78852bb03fd76a03715cbde6b1
 export * from './controllers/normative-catalog.controller.js';
 export * from './dto/create-normative-catalog.dto.js';
 export * from './entities/normative-catalog.entity.js';
@@ -41,4 +41,16 @@ export * from './repositories/mobile-normative-package.repository.js';
 export * from './services/mobile-normative-package.service.js';
 export * from './normative.module.js';
 export * from './normative-lifecycle.service.js';
+export * from './handwritten/normative-runtime.js';
+export * from './handwritten/manifest.js';
+export * from './handwritten/package-signer.js';
+export * from './handwritten/events.js';
+export * from './handwritten/publish-catalog.command.js';
+export * from './handwritten/generate-package.command.js';
+export * from './handwritten/publish-package.command.js';
+export * from './handwritten/validate-package.command.js';
+export * from './handwritten/package-content.query.js';
+export * from './handwritten/package-sync-metadata.query.js';
+export * from './handwritten/normative-commands.service.js';
+export * from './handwritten/normative-commands.provider.js';
 export * from './normative-commands.controller.js';

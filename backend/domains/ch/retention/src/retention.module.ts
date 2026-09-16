@@ -14,10 +14,10 @@ import { RetentionLifecycleService } from './retention-lifecycle.service.js';
 
 @Module({
   controllers: [
+    RetentionCommandsController,
     RetentionCaseController,
     RetentionHoldController,
     RetentionDispositionController,
-    RetentionCommandsController,
   ],
   providers: [
     RetentionCaseService,

@@ -7,7 +7,7 @@ import { InconsistencyCommandsController } from './inconsistency-commands.contro
 import { InconsistencyLifecycleService } from './inconsistency-lifecycle.service.js';
 
 @Module({
-  controllers: [InconsistencyController, InconsistencyCommandsController],
+  controllers: [InconsistencyCommandsController, InconsistencyController],
   providers: [
     InconsistencyService,
     InconsistencyRepository,

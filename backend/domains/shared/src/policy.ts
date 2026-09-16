@@ -554,31 +554,10 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
     ],
   ],
   ['inf', 'ait-cancel-request-event', 'delete', ['technical-admin']],
-  // Superfície CRUD gerada sem regra hoje (§11.7): catálogo normativo,
-  // restrita a INF_ADMIN_ROLES (agency-admin, technical-admin).
-  [
-    'inf',
-    'normative-metrological-table',
-    'read',
-    ['agency-admin', 'technical-admin'],
-  ],
-  [
-    'inf',
-    'normative-metrological-table',
-    'create',
-    ['agency-admin', 'technical-admin'],
-  ],
-  [
-    'inf',
-    'normative-metrological-table',
-    'update',
-    ['agency-admin', 'technical-admin'],
-  ],
-  ['inf', 'normative-metrological-table', 'delete', ['technical-admin']],
-  ['inf', 'signature-policy', 'read', ['agency-admin', 'technical-admin']],
-  ['inf', 'signature-policy', 'create', ['agency-admin', 'technical-admin']],
-  ['inf', 'signature-policy', 'update', ['agency-admin', 'technical-admin']],
-  ['inf', 'signature-policy', 'delete', ['technical-admin']],
+  // CTG-0003 §7 (M18, TASK-0007): `normative-metrological-table` e
+  // `signature-policy` passaram para INF_RESOURCES/INF_ADMIN_RESOURCES — a
+  // superfície CRUD gerada delas segue a mesma regra das demais do domínio,
+  // em um lugar só.
   [
     'ops',
     'evidence',
@@ -597,6 +576,45 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
     'probative-package',
     'generate',
     ['processing-operator', 'AUDITOR', 'technical-admin'],
+  ],
+  // CTG-0003 §7 (M18, TASK-0007): comandos de evidência, custódia e acesso a
+  // conteúdo de bodycam (RN-TEAT-142). Papéis transcritos da origem
+  // `teat-policy.ts`; `auditor` canonizado em `AUDITOR` por ROLE_ALIASES.
+  [
+    'ops',
+    'evidence',
+    'complete-upload',
+    ['field-agent', 'processing-operator'],
+  ],
+  [
+    'ops',
+    'evidence',
+    'validate',
+    ['processing-operator', 'AUDITOR', 'technical-admin'],
+  ],
+  ['ops', 'evidence', 'purge-unverified', ['technical-admin']],
+  [
+    'ops',
+    'evidence-access-request',
+    'create',
+    ['processing-operator', 'traffic-authority'],
+  ],
+  // `update` não tem rota de comando nesta rodada (§4.11 nota final): é a
+  // superfície `PATCH` do CRUD gerado, registrada aqui para que
+  // `policy-routes.e2e.spec.ts` case nos dois sentidos.
+  [
+    'ops',
+    'evidence-access-request',
+    'update',
+    ['processing-operator', 'traffic-authority'],
+  ],
+  ['ops', 'evidence-access-request', 'approve', ['traffic-authority']],
+  ['ops', 'evidence-access-request', 'deny', ['traffic-authority']],
+  [
+    'ops',
+    'evidence-access-request',
+    'deliver',
+    ['processing-operator', 'traffic-authority'],
   ],
   // M18: `ops:offline-numbering-reservation:{reserve,cancel}` removidas —
   // alias duplicado da origem; a rota única é `numbering-reservation`.
@@ -809,6 +827,31 @@ const OPS_NUMBERING_ADMIN_ROLES: readonly DetranRole[] = [
   'technical-admin',
 ];
 
+/** CTG-0003 §7 — leitura da cadeia de custódia e do pacote probatório. */
+const OPS_CUSTODY_READ_ROLES: readonly DetranRole[] = [
+  'field-supervisor',
+  'processing-operator',
+  'traffic-authority',
+  'AUDITOR',
+  'technical-admin',
+];
+/** CTG-0003 §5.2 — auditoria das consultas externas. */
+const OPS_EXTERNAL_QUERY_READ_ROLES: readonly DetranRole[] = [
+  'field-agent',
+  'field-supervisor',
+  'processing-operator',
+  'traffic-authority',
+  'AUDITOR',
+];
+/** CTG-0003 §4.5/§7 — superfícies CRUD de BP-OPS-SNAPSHOTS-001. */
+const OPS_SNAPSHOT_SURFACE_ROLES: readonly DetranRole[] = [
+  'field-agent',
+  'field-supervisor',
+  'processing-operator',
+  'traffic-authority',
+  'technical-admin',
+];
+
 const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['parameter', 'read', ['agency-admin']],
   // CTG-0002 §8 (M18, TASK-0005) — superfícies do route contract §4.3 que
@@ -962,50 +1005,9 @@ const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
     ],
   ],
   ['application-version', 'create', ['agency-admin', 'technical-admin']],
-  [
-    'snapshot-person',
-    'read',
-    [
-      'field-agent',
-      'field-supervisor',
-      'processing-operator',
-      'traffic-authority',
-      'technical-admin',
-    ],
-  ],
-  [
-    'snapshot-person',
-    'create',
-    [
-      'field-agent',
-      'field-supervisor',
-      'processing-operator',
-      'traffic-authority',
-      'technical-admin',
-    ],
-  ],
-  [
-    'snapshot-vehicle',
-    'read',
-    [
-      'field-agent',
-      'field-supervisor',
-      'processing-operator',
-      'traffic-authority',
-      'technical-admin',
-    ],
-  ],
-  [
-    'snapshot-vehicle',
-    'create',
-    [
-      'field-agent',
-      'field-supervisor',
-      'processing-operator',
-      'traffic-authority',
-      'technical-admin',
-    ],
-  ],
+  // CTG-0003 §7 (M18, TASK-0007): `ops:snapshot-person`/`ops:snapshot-vehicle`
+  // removidas — alias duplicado da origem. Os controladores gerados de
+  // BP-OPS-SNAPSHOTS-001 declaram `ops:person` e `ops:vehicle`, abaixo.
   [
     'external-query',
     'create',
@@ -1029,6 +1031,43 @@ const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
       'technical-admin',
     ],
   ],
+  // CTG-0003 §7 (M18, TASK-0007) — superfícies CRUD do route contract §4.4 e
+  // §4.5 que ainda não tinham regra. Sem regra a guarda falha fechado, e a
+  // rota some para todo papel que não seja administrador global.
+  ['external-query', 'read', OPS_EXTERNAL_QUERY_READ_ROLES],
+  ['evidence', 'create', ['field-agent', 'processing-operator']],
+  ['evidence', 'update', ['processing-operator', 'technical-admin']],
+  ['evidence-link', 'read', OPS_CUSTODY_READ_ROLES],
+  ['custody-event', 'read', OPS_CUSTODY_READ_ROLES],
+  ['probative-package', 'read', OPS_CUSTODY_READ_ROLES],
+  ['probative-package-item', 'read', OPS_CUSTODY_READ_ROLES],
+  ['storage-intent', 'read', OPS_CUSTODY_READ_ROLES],
+  ['evidence-access-request', 'read', OPS_CUSTODY_READ_ROLES],
+  ['evidence-link', 'create', ['field-agent', 'processing-operator']],
+  [
+    'custody-event',
+    'create',
+    ['field-agent', 'processing-operator', 'AUDITOR', 'technical-admin'],
+  ],
+  [
+    'probative-package',
+    'create',
+    ['processing-operator', 'AUDITOR', 'technical-admin'],
+  ],
+  [
+    'probative-package-item',
+    'create',
+    ['processing-operator', 'technical-admin'],
+  ],
+  ['storage-intent', 'create', ['field-agent', 'processing-operator']],
+  ['person', 'read', OPS_SNAPSHOT_SURFACE_ROLES],
+  ['person', 'create', OPS_SNAPSHOT_SURFACE_ROLES],
+  ['vehicle', 'read', OPS_SNAPSHOT_SURFACE_ROLES],
+  ['vehicle', 'create', OPS_SNAPSHOT_SURFACE_ROLES],
+  ['person-document', 'read', OPS_SNAPSHOT_SURFACE_ROLES],
+  ['person-document', 'create', OPS_SNAPSHOT_SURFACE_ROLES],
+  ['vehicle-snapshot', 'read', OPS_SNAPSHOT_SURFACE_ROLES],
+  ['vehicle-snapshot', 'create', OPS_SNAPSHOT_SURFACE_ROLES],
 ];
 
 const INF_READ_ROLES: readonly DetranRole[] = [
@@ -1060,6 +1099,9 @@ const INF_ADMIN_RESOURCES = new Set([
   'agency-parameter',
   'document-template',
   'mobile-normative-package',
+  // CTG-0003 §7 (M18, TASK-0007).
+  'normative-metrological-table',
+  'signature-policy',
   'measure-type',
   'tow-provider',
   'yard',
@@ -1080,6 +1122,9 @@ const INF_RESOURCES = [
   'agency-parameter',
   'document-template',
   'mobile-normative-package',
+  // CTG-0003 §7 (M18, TASK-0007).
+  'normative-metrological-table',
+  'signature-policy',
   'measure-type',
   'administrative-measure',
   'administrative-term',

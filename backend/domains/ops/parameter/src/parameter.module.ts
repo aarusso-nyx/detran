@@ -10,7 +10,7 @@ import { NullParameterCache } from './handwritten/parameter.service.js';
 import { SqlParameterOutbox } from './handwritten/parameter.service.js';
 
 @Module({
-  controllers: [ParameterController, ParameterCommandController],
+  controllers: [ParameterCommandController, ParameterController],
   providers: [
     ParameterService,
     ParameterRepository,

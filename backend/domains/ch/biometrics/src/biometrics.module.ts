@@ -18,11 +18,11 @@ import { BiometricLifecycleService } from './biometric-lifecycle.service.js';
 
 @Module({
   controllers: [
+    BiometricCommandsController,
     BiometricReferenceController,
     BiometricFingerConditionController,
     BiometricCheckController,
     BiometricExceptionController,
-    BiometricCommandsController,
   ],
   providers: [
     BiometricReferenceService,

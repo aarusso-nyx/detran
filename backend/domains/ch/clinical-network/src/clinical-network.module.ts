@@ -15,10 +15,10 @@ import { ProfessionalLifecycleService } from './professional-lifecycle.service.j
 
 @Module({
   controllers: [
+    ProfessionalCommandsController,
     ClinicController,
     ProfessionalController,
     BiometricStationController,
-    ProfessionalCommandsController,
   ],
   providers: [
     ClinicService,

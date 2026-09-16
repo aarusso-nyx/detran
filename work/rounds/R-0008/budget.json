@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2375000,
-  "estimated_output_total": 498800,
+  "estimated_input_total": 3200000,
+  "estimated_output_total": 701000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -235,6 +235,78 @@
       "id": "delivery-review-CTG-0002-4",
       "input_tokens": 35000,
       "output_tokens": 800,
+      "status": "completed",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "input_tokens": 130000,
+      "output_tokens": 45000,
+      "status": "completed",
+      "note": "521k brutos (168 tool uses, 43 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007",
+      "input_tokens": 200000,
+      "output_tokens": 70000,
+      "status": "in_progress",
+      "note": "iter1: harness reportou 90k/3 tool uses (69 min) — contagem parcial; estimativa por duração"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iter2",
+      "input_tokens": 60000,
+      "output_tokens": 15000,
+      "status": "completed",
+      "note": "583k brutos (55 tool uses, 13 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-iter2",
+      "input_tokens": 80000,
+      "output_tokens": 25000,
+      "status": "completed",
+      "note": "682k brutos (148 tool uses, 20 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003",
+      "input_tokens": 140000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iter3",
+      "input_tokens": 70000,
+      "output_tokens": 18000,
+      "status": "completed",
+      "note": "703k brutos (82 tool uses, 16 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-iter3",
+      "input_tokens": 80000,
+      "output_tokens": 25000,
+      "status": "completed",
+      "note": "750k brutos (93 tool uses, 18 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003-2",
+      "input_tokens": 50000,
+      "output_tokens": 1200,
+      "status": "completed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003-3",
+      "input_tokens": 15000,
+      "output_tokens": 500,
       "status": "completed",
       "verdict": "PASS"
     }

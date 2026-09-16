@@ -11,9 +11,9 @@ import { EncounterLifecycleService } from './encounter-lifecycle.service.js';
 
 @Module({
   controllers: [
+    EncounterCommandsController,
     AppointmentController,
     EncounterController,
-    EncounterCommandsController,
   ],
   providers: [
     AppointmentService,

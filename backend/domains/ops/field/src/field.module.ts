@@ -49,6 +49,9 @@ import { ParameterModule } from '@detran/ops-parameter';
 @Module({
   imports: [ParameterModule],
   controllers: [
+    FieldOperationsController,
+    MobileBootstrapController,
+    FieldCommandsController,
     AgentProfileController,
     OperationalDeviceController,
     HomologationController,
@@ -62,9 +65,6 @@ import { ParameterModule } from '@detran/ops-parameter';
     ShiftController,
     ApproachController,
     SessionHandoffController,
-    FieldOperationsController,
-    MobileBootstrapController,
-    FieldCommandsController,
   ],
   providers: [
     AgentProfileService,

@@ -22,15 +22,34 @@
       {
         "target": "normative-lifecycle.service",
         "symbol": "NormativeLifecycleService"
+      },
+      {
+        "target": "handwritten/normative-commands.provider",
+        "symbol": "NORMATIVE_COMMANDS_PROVIDER"
       }
     ],
     "handwrittenExports": [
       "normative-lifecycle.service",
+      "handwritten/normative-runtime",
+      "handwritten/manifest",
+      "handwritten/package-signer",
+      "handwritten/events",
+      "handwritten/publish-catalog.command",
+      "handwritten/generate-package.command",
+      "handwritten/publish-package.command",
+      "handwritten/validate-package.command",
+      "handwritten/package-content.query",
+      "handwritten/package-sync-metadata.query",
+      "handwritten/normative-commands.service",
+      "handwritten/normative-commands.provider",
       "normative-commands.controller"
     ],
     "moduleExports": ["NormativeLifecycleService"],
     "owners": ["detran-inf"],
-    "description": "Infraction catalog, framing rules, agency parameters, templates, and mobile package versioning ported from TEAT."
+    "description": "Infraction catalog, framing rules, agency parameters, templates, and mobile package versioning ported from TEAT.",
+    "dependencies": {
+      "zod": "^4.6.5"
+    }
   },
   "database": {
     "entities": [
@@ -213,15 +232,45 @@
         "table": "normative_metrological_table",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "catalog_id", "type": "uuid" },
-          { "name": "table_name", "type": "varchar(160)" },
-          { "name": "version", "type": "varchar(80)" },
-          { "name": "table_json", "type": "jsonb" },
-          { "name": "valid_from", "type": "date" },
-          { "name": "valid_to", "type": "date", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "catalog_id",
+            "type": "uuid"
+          },
+          {
+            "name": "table_name",
+            "type": "varchar(160)"
+          },
+          {
+            "name": "version",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "table_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "valid_from",
+            "type": "date"
+          },
+          {
+            "name": "valid_to",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          }
         ],
         "indexes": [
           {
@@ -442,16 +491,51 @@
         "table": "signature_policy",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "document_kind", "type": "varchar(80)" },
-          { "name": "required_signers_json", "type": "jsonb" },
-          { "name": "pades_level", "type": "varchar(40)" },
-          { "name": "tsa_required", "type": "boolean", "default": "false" },
-          { "name": "pdfa_required", "type": "boolean", "default": "false" },
-          { "name": "govbr_level", "type": "varchar(40)", "nullable": true },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "document_kind",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "required_signers_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "pades_level",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "tsa_required",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "pdfa_required",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "govbr_level",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          }
         ],
         "indexes": [
           {

@@ -20,12 +20,12 @@ import { BillingLifecycleService } from './billing-lifecycle.service.js';
 
 @Module({
   controllers: [
+    BillingCommandsController,
     FederalExamPublicPriceController,
     BillingItemController,
     BillingInvoiceController,
     BillingDivergenceController,
     BillingInvoiceItemController,
-    BillingCommandsController,
   ],
   providers: [
     FederalExamPublicPriceService,

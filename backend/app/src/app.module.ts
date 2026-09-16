@@ -97,6 +97,8 @@ import {
   isLocalRuntimeProfile,
 } from './detran-runtime.js';
 import { TeatSyncModule } from './teat-sync.providers.js';
+import { TeatEvidencePortsModule } from './teat-evidence.providers.js';
+import { TeatSnapshotPortsModule } from './teat-snapshots.providers.js';
 import {
   DetranSessionReadinessBinder,
   DetranSessionStrongFactorGuard,
@@ -352,6 +354,8 @@ export class AppModule {
         // Portas do protocolo de sincronização (CTG-0002 §4.8) antes dos
         // módulos que as consomem.
         TeatSyncModule,
+        TeatEvidencePortsModule,
+        TeatSnapshotPortsModule,
         NormativeModule,
         ParameterModule,
         AitModule,
