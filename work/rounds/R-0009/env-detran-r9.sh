@@ -5,3 +5,5 @@ export DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/de
 export STYNX_OWNER_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r9
 export STYNX_APP_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/detran_r9?options=-c%20role%3Drole_app_backend'
 export STYNX_READER_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/detran_r9?options=-c%20role%3Drole_app_backend'
+export DB_NAME=detran_r9
+export DB_PASSWORD=postgres
