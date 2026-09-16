@@ -16,6 +16,142 @@ import {
 import { withTenantContext } from './tenant-context.js';
 
 describe('DETRAN unified policy kit', () => {
+  it('dado cada regra CTG-0001 quando consultada por todos os papéis então concede somente os papéis canônicos permitidos', () => {
+    const rules: Array<[string, string[]]> = [
+      ['est:crash-record:create', ['field-agent']],
+      ...[
+        'crash-record',
+        'crash-vehicle',
+        'crash-person',
+        'crash-sketch',
+        'crash-scene-duty',
+        'crash-damage',
+        'crash-witness',
+        'crash-link',
+      ].map(
+        (resource) =>
+          [
+            `est:${resource}:read`,
+            [
+              'field-agent',
+              'field-supervisor',
+              'processing-operator',
+              'traffic-authority',
+            ],
+          ] as [string, string[]],
+      ),
+      ['est:crash-subject-request:read', ['processing-operator', 'AUDITOR']],
+      ...[
+        'crash-record',
+        'crash-vehicle',
+        'crash-person',
+        'crash-victim',
+        'crash-sketch',
+        'crash-scene-duty',
+        'crash-damage',
+        'crash-witness',
+        'crash-link',
+        'crash-renaest-submission',
+        'crash-subject-request',
+      ].flatMap((resource) => [
+        [`est:${resource}:update`, []] as [string, string[]],
+        ...(resource === 'crash-record'
+          ? []
+          : [[`est:${resource}:create`, []] as [string, string[]]]),
+      ]),
+      ['est:crash-record:start', ['field-agent']],
+      ['est:crash-record:add-vehicle', ['field-agent']],
+      ['est:crash-record:add-person', ['field-agent']],
+      ['est:crash-record:add-victim', ['field-agent']],
+      ['est:crash-record:record-duty', ['field-agent']],
+      ['est:crash-record:add-damage', ['field-agent']],
+      ['est:crash-record:add-witness', ['field-agent']],
+      [
+        'est:crash-record:attach-sketch',
+        ['field-agent', 'processing-operator'],
+      ],
+      ['est:crash-record:link', ['field-agent', 'processing-operator']],
+      ['est:crash-record:record', ['field-agent']],
+      ['est:crash-record:complement', ['processing-operator']],
+      [
+        'est:crash-record:validate',
+        ['processing-operator', 'traffic-authority'],
+      ],
+      ['est:crash-record:close', ['field-supervisor', 'traffic-authority']],
+      ['est:crash-record:cancel', ['field-agent', 'traffic-authority']],
+      [
+        'est:crash-record:transmit',
+        ['processing-operator', 'traffic-authority'],
+      ],
+      [
+        'est:crash-record:rectify',
+        ['processing-operator', 'traffic-authority'],
+      ],
+      ['est:crash-record:archive', ['traffic-authority']],
+      [
+        'est:crash-victim:read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+        ],
+      ],
+      [
+        'est:crash-renaest-submission:read',
+        [
+          'processing-operator',
+          'traffic-authority',
+          'integration-operator',
+          'AUDITOR',
+        ],
+      ],
+      [
+        'est:crash-subject-request:subject-request',
+        ['processing-operator', 'AUDITOR', 'CIDADAO'],
+      ],
+      ...[
+        'crash-record',
+        'crash-vehicle',
+        'crash-person',
+        'crash-victim',
+        'crash-sketch',
+        'crash-scene-duty',
+        'crash-damage',
+        'crash-witness',
+        'crash-link',
+        'crash-renaest-submission',
+        'crash-subject-request',
+      ].map(
+        (resource) =>
+          [`est:${resource}:delete`, ['technical-admin']] as [string, string[]],
+      ),
+    ];
+    const globallyAllowed = new Set([
+      'ADMIN',
+      'GESTOR_DETRAN',
+      'SUPORTE',
+      'technical-admin',
+    ]);
+    const failures: string[] = [];
+    for (const [resource, permitted] of rules) {
+      const expected = new Set([...permitted, ...globallyAllowed]);
+      for (const role of DETRAN_ROLES) {
+        const actual = isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          resource.split(/:(?=[^:]+$)/)[0],
+          resource.split(':').at(-1)!,
+        );
+        if (actual !== expected.has(role))
+          failures.push(
+            `${resource} para ${role}: esperado ${expected.has(role)}`,
+          );
+      }
+    }
+    expect(failures).toEqual([]);
+  });
+
   it('deduplicates only TEAT auditor into the PEC AUDITOR role', () => {
     expect(DETRAN_ROLES).toHaveLength(36);
     expect(ROLE_ALIASES.auditor).toBe('AUDITOR');

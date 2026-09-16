@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0010",
+  "status": "in_progress",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implemente os comandos CTG-0002, applier crash-record transacional, transmissão/retificação via outbox e RenaestPort, espelho, job mensal, PDF/A pela fachada ADR-0018, projeções re",
+  "description": "Implemente os comandos CTG-0002, applier crash-record transacional, transmissão/retificação via outbox e RenaestPort, espelho, job mensal, PDF/A pela fachada ADR-0018, projeções reais e SSE. Faça os testes C-2-nn passarem sem editá-los. Preserve independência recíproca do lote e não implemente host nacional direto. Se a interface requerer adenda, reporte antes.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-est-handwritten", "MOD-integration-outbox"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["wp-b2"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-806adcb631d71648",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/est-crash", "test:unit"],
+    ["pnpm", "--filter", "@detran/est-crash", "test:integration"],
+    ["pnpm", "--filter", "@detran/est-crash", "test:e2e"],
+    ["pnpm", "--filter", "@detran/ops-offline-sync", "test:unit"],
+    ["pnpm", "senatran-adapter:test:ci"],
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-806adcb631d71648",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0006"
+}

@@ -15,15 +15,15 @@ específica por caso nessa fonte. A substância de regra de negócio real está 
 
 ## Grupo O — UC-1.226 a UC-1.254 (temas)
 
-| Faixa          | Tema                                                                       | UC completo correspondente                                                                                                                               |
-| -------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| UC-1.226–1.229 | Início, classificação, data/hora e local georreferenciado do sinistro      | [UC-BOAT-001](./UC-BOAT-001.md)                                                                                                                          |
-| UC-1.230–1.234 | Condições de via, clima, iluminação, sinalização e dinâmica preliminar     | [UC-BOAT-001](./UC-BOAT-001.md)                                                                                                                          |
-| UC-1.235–1.239 | Veículos, condutores, passageiros, pedestres e ciclistas envolvidos        | [UC-BOAT-002](./UC-BOAT-002.md)                                                                                                                          |
-| UC-1.240–1.244 | Vítimas, gravidade, óbito no local, atendimento médico, remoção hospitalar | [UC-BOAT-003](./UC-BOAT-003.md)                                                                                                                          |
-| UC-1.245–1.246 | Danos materiais e testemunhas do sinistro                                  | [UC-BOAT-012](./UC-BOAT-012.md) — **Decisão do Owner (2026-08-24, steering.md F.33): UC próprio e dedicado**, não extensão de UC existente (stub criado) |
-| UC-1.247–1.250 | Fotos, croqui simples, associação a AITs e medidas administrativas         | [UC-BOAT-004](./UC-BOAT-004.md)                                                                                                                          |
-| UC-1.251–1.254 | Relatório preliminar, transmissão, complementação e encerramento           | [UC-BOAT-005](./UC-BOAT-005.md)                                                                                                                          |
+| Faixa          | Tema                                                                       | UC completo correspondente                                                                                                                            |
+| -------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| UC-1.226–1.229 | Início, classificação, data/hora e local georreferenciado do sinistro      | [UC-BOAT-001](./UC-BOAT-001.md)                                                                                                                       |
+| UC-1.230–1.234 | Condições de via, clima, iluminação, sinalização e dinâmica preliminar     | [UC-BOAT-001](./UC-BOAT-001.md)                                                                                                                       |
+| UC-1.235–1.239 | Veículos, condutores, passageiros, pedestres e ciclistas envolvidos        | [UC-BOAT-002](./UC-BOAT-002.md)                                                                                                                       |
+| UC-1.240–1.244 | Vítimas, gravidade, óbito no local, atendimento médico, remoção hospitalar | [UC-BOAT-003](./UC-BOAT-003.md)                                                                                                                       |
+| UC-1.245–1.246 | Danos materiais e testemunhas do sinistro                                  | [UC-BOAT-012](./UC-BOAT-012.md) — **Decisão do Owner (2026-08-24, steering.md F.33): UC próprio e dedicado**, não extensão de UC existente (aprovado) |
+| UC-1.247–1.250 | Fotos, croqui simples, associação a AITs e medidas administrativas         | [UC-BOAT-004](./UC-BOAT-004.md)                                                                                                                       |
+| UC-1.251–1.254 | Relatório preliminar, transmissão, complementação e encerramento           | [UC-BOAT-005](./UC-BOAT-005.md)                                                                                                                       |
 
 Lista completa dos 29 títulos (fonte: `UC-1-mobile.md` tabela de grupo O):
 UC-1.226 Iniciar registro de sinistro · UC-1.227 Classificar tipo de sinistro · UC-1.228
@@ -56,26 +56,27 @@ ponta-a-ponta.
 
 ## UC completos (núcleo)
 
-| id                              | título                                                   | status |
-| ------------------------------- | -------------------------------------------------------- | ------ |
-| [UC-BOAT-001](./UC-BOAT-001.md) | Agente inicia e classifica o registro de sinistro        | draft  |
-| [UC-BOAT-002](./UC-BOAT-002.md) | Agente registra veículos e pessoas envolvidas            | draft  |
-| [UC-BOAT-003](./UC-BOAT-003.md) | Agente registra vítimas e classifica gravidade           | draft  |
-| [UC-BOAT-004](./UC-BOAT-004.md) | Agente captura croqui, evidências e associa AITs/medidas | draft  |
-| [UC-BOAT-005](./UC-BOAT-005.md) | Registro é transmitido, complementado e encerrado        | draft  |
+| id                              | título                                                   | status   |
+| ------------------------------- | -------------------------------------------------------- | -------- |
+| [UC-BOAT-001](./UC-BOAT-001.md) | Agente inicia e classifica o registro de sinistro        | approved |
+| [UC-BOAT-002](./UC-BOAT-002.md) | Agente registra veículos e pessoas envolvidas            | approved |
+| [UC-BOAT-003](./UC-BOAT-003.md) | Agente registra vítimas e classifica gravidade           | reviewed |
+| [UC-BOAT-004](./UC-BOAT-004.md) | Agente captura croqui, evidências e associa AITs/medidas | approved |
+| [UC-BOAT-005](./UC-BOAT-005.md) | Registro é transmitido, complementado e encerrado        | reviewed |
 
 ## UC completos — rodada BPO 2026-08-24 (confirm-extend sobre pesquisa RENAEST/808-2020)
 
-| id                              | título                                                                                      | status | ver também                                                                                                                                                                                                                           |
-| ------------------------------- | ------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [UC-BOAT-006](./UC-BOAT-006.md) | Agente registra sinistro com vítima em via com remoção                                      | draft  | [WF-TEAT-004] (remoção, reuso por referência)                                                                                                                                                                                        |
-| [UC-BOAT-007](./UC-BOAT-007.md) | Agente captura as três condutas de cena estruturadas (arts. 176-178), substituindo `evaded` | draft  | refinamento de produto mais consequente da rodada — ver `_intake/bpo-notes.md`                                                                                                                                                       |
-| [UC-BOAT-008](./UC-BOAT-008.md) | Parceiro de saúde credenciado submete dado de sinistro/vítima                               | draft  | [WF-BOAT-002]                                                                                                                                                                                                                        |
-| [UC-BOAT-009](./UC-BOAT-009.md) | Coordenador de RENAEST valida e retifica em nível municipal/estadual                        | draft  | [WF-BOAT-003]                                                                                                                                                                                                                        |
-| [UC-BOAT-010](./UC-BOAT-010.md) | Bodycam no atendimento a sinistro                                                           | draft  | reuso integral de [UC-TEAT-010], não remodelado                                                                                                                                                                                      |
-| [UC-BOAT-011](./UC-BOAT-011.md) | Sistema transmite à RENAEST e acompanha pendência de validação                              | draft  | estende [UC-BOAT-005] com visão de acompanhamento                                                                                                                                                                                    |
-| [UC-BOAT-012](./UC-BOAT-012.md) | Agente registra danos materiais e testemunhas do sinistro                                   | stub   | **Decisão do Owner (2026-08-24, steering.md F.33):** UC próprio e dedicado para UC-1.245/1.246, não extensão de [UC-BOAT-002]; UC-1.251 (relatório preliminar) permanece candidato a dobrar/desdobrar aqui, avaliar em rodada futura |
+| id                              | título                                                                                      | status   | ver também                                                                                                                                                                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [UC-BOAT-006](./UC-BOAT-006.md) | Agente registra sinistro com vítima em via com remoção                                      | reviewed | [WF-TEAT-004] (remoção, reuso por referência)                                                                                                                                                                                        |
+| [UC-BOAT-007](./UC-BOAT-007.md) | Agente captura as três condutas de cena estruturadas (arts. 176-178), substituindo `evaded` | approved | refinamento de produto mais consequente da rodada — ver `_intake/bpo-notes.md`                                                                                                                                                       |
+| [UC-BOAT-008](./UC-BOAT-008.md) | Parceiro de saúde credenciado submete dado de sinistro/vítima                               | reviewed | [WF-BOAT-002]                                                                                                                                                                                                                        |
+| [UC-BOAT-009](./UC-BOAT-009.md) | Coordenador de RENAEST valida e retifica em nível municipal/estadual                        | reviewed | [WF-BOAT-003]                                                                                                                                                                                                                        |
+| [UC-BOAT-010](./UC-BOAT-010.md) | Bodycam no atendimento a sinistro                                                           | reviewed | reuso integral de [UC-TEAT-010], não remodelado                                                                                                                                                                                      |
+| [UC-BOAT-011](./UC-BOAT-011.md) | Sistema transmite à RENAEST e acompanha pendência de validação                              | reviewed | estende [UC-BOAT-005] com visão de acompanhamento                                                                                                                                                                                    |
+| [UC-BOAT-012](./UC-BOAT-012.md) | Agente registra danos materiais e testemunhas do sinistro                                   | approved | **Decisão do Owner (2026-08-24, steering.md F.33):** UC próprio e dedicado para UC-1.245/1.246, não extensão de [UC-BOAT-002]; UC-1.251 (relatório preliminar) permanece candidato a dobrar/desdobrar aqui, avaliar em rodada futura |
+| [UC-BOAT-013](./UC-BOAT-013.md) | Órgão atende pedido de acesso, correção ou eliminação do titular                            | draft    | W-05 — dever de resposta ao titular; prazo e procedimento ficam `source_pending`/OD                                                                                                                                                  |
 
 Backlog de UCs não escritos (relatório preliminar como documento próprio — UC-1.251): ver
 `_intake/proposals.md`. Danos materiais e testemunhas (UC-1.245/1.246) agora têm UC dedicado —
-[UC-BOAT-012](./UC-BOAT-012.md), stub (decisão do Owner, steering.md F.33).
+[UC-BOAT-012](./UC-BOAT-012.md), aprovado conforme a ficha vigente.

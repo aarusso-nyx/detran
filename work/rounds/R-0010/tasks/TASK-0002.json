@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Defina BP-EST-CRASH-001 com as 11 entidades de WP-B1, checks, RLS, índices, chaves, PII e retenção",
+  "description": "Defina BP-EST-CRASH-001 com as 11 entidades de WP-B1, checks, RLS, índices, chaves, PII e retenção. Acrescente referências e T-BOAT-TRANSM com owner sinistro sem alterar vocabulários alheios. Escreva CTG-0001.md com tabela de regras est:* × papéis e critérios C-1-nn para Inspector/Engineer, incluindo guardas de WF-BOAT-001/003. Gere artefatos somente pelos scripts. Confirme numeração 70 livre antes. Não crie código manuscrito nem testes.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-bp-est-crash", "MOD-ddl-70", "MOD-ddl-19"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-b1"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-9b04fe7ec70d5454",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "verify:lifecycle-vocabulary"],
+    ["node", "tools/contracts/generate-openapi.mjs", "--check"],
+    ["node", "tools/contracts/check-commands.mjs"]
+  ],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-9b04fe7ec70d5454",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
