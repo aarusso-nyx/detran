@@ -477,7 +477,7 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0009 | queued      | —                                                                                                             |
 | TASK-0010 | queued      | —                                                                                                             |
 
-Checkpoint 1 (2026-09-16): CTG-0001 concluído — commits `93a754d…104e5c8`, `delivery-review-CTG-0001` REVIEW → `-2` PASS, evidência generic seq. 1, **PR #54** aberto contra `main` (CI em curso). Branch **publicado**: integrar `origin/main` só com `git merge --no-edit`. Último veredito: `delivery-review-CTG-0001-2` PASS. Próximos passos: TASK-0005 (contrato CTG-0002 + wiring M24 dos 4 blueprints) → TASK-0006 → TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010; merge do PR #54 quando CI verde; `audit observe` no sha do merge.
+Checkpoint 1 (2026-09-16): CTG-0001 concluído — commits `93a754d…104e5c8`, `delivery-review-CTG-0001` REVIEW → `-2` PASS, evidência generic seq. 1, **PR #54** aberto contra `main` (CI em curso). Branch **publicado**: integrar `origin/main` só com `git merge --no-edit`. Checkpoint 2 (2026-09-16): **PR #54 mesclado** em `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8` (CI 5/5; `audit observe` EV-999a0329d451aa89, commit `b912555`); branch temporário `tmp/r9-ctg2-wip` reintegrado (`ba72228`) e apagado. Último veredito: `delivery-review-CTG-0001-2` PASS. Próximos passos: TASK-0005 (contrato CTG-0002 + wiring M24 dos 4 blueprints) → TASK-0006 → TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010; merge do PR #54 quando CI verde; `audit observe` no sha do merge.
 
 ## Leitura
 
