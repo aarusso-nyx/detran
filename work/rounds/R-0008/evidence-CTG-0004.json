@@ -1,0 +1,93 @@
+{
+  "action": "Implement WP-T2 CTG-0004: administrative measures, alcohol procedures and speed measurements as handwritten commands with DetranError, If-Match, status history and outbox events; SSE stream over the outbox with injectable poller; integrations projection; policy \u00a78 and policy\u21d4routes matrix; seed 28; blueprints 1.2.0; tests",
+  "round": "R-0008",
+  "coupled_task_group": "CTG-0004",
+  "role": "engineer",
+  "commits": [
+    "COMMIT_SHA"
+  ],
+  "artifacts": [
+    {
+      "path": "backend/domains/inf/measures/src/handwritten/release-retention.command.ts",
+      "sha256": "d1c9aaf39c3e6551c2b980a1cf8adcdb4f09004c6928c10353de9b3f774aad81"
+    },
+    {
+      "path": "backend/domains/inf/measures/src/handwritten/record-removal.command.ts",
+      "sha256": "ff6d270f97aac042645b2288a6338855a13839746b71e3a8bab2f2826481a8cc"
+    },
+    {
+      "path": "backend/domains/inf/measures/src/handwritten/issue-term.command.ts",
+      "sha256": "c29867f13554eaca10dd218b6044596fba230771798e10281b926811c7f1afd7"
+    },
+    {
+      "path": "backend/domains/inf/measures/src/measure-commands.controller.ts",
+      "sha256": "7c1ea6dc7c5a2a1a9487fed30967732faf7441cb33acab71071461f0066b847f"
+    },
+    {
+      "path": "backend/domains/inf/alcohol/src/handwritten/record-test.command.ts",
+      "sha256": "7f5fefbf797aca726677f36d0fb74b997596110fcc3bf1e53a737b3db3a6e04f"
+    },
+    {
+      "path": "backend/domains/inf/alcohol/src/handwritten/close-procedure.command.ts",
+      "sha256": "2b98cf2e67f2af085e47f53686e72a821908c539ce0c084d22ea2381ec1e2d96"
+    },
+    {
+      "path": "backend/domains/inf/alcohol/src/alcohol-commands.controller.ts",
+      "sha256": "f4e50e2601d6ab8a2c421b81f5b4015b96c559e1c9e75eddb9af870a8679522d"
+    },
+    {
+      "path": "backend/domains/inf/speed/src/handwritten/create-measurement.command.ts",
+      "sha256": "c9b33f91154b85e24f261b63eef104876938a2963afc180dfc470cd9bd3023c2"
+    },
+    {
+      "path": "backend/app/src/teat-stream.controller.ts",
+      "sha256": "2652ca91604c8db25768af2fbf30a004b24ee26bde0a963b99a9d4f23a0ba74b"
+    },
+    {
+      "path": "backend/app/src/teat-stream.service.ts",
+      "sha256": "de5d7a582361b26ed264dcb79efbfe78e182d7efc3e8edbe9f77d4994cab4a28"
+    },
+    {
+      "path": "backend/app/src/teat-integrations.controller.ts",
+      "sha256": "471f3fe7394df2ce25973f70517b7a5d2456e91e72767cd3438fd08eff4c9e72"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.ts",
+      "sha256": "05e6ee1304701ae471f2af1213a5f36c74c9e1e1557c34a47470957e69469106"
+    },
+    {
+      "path": "backend/database/seed/28-fixtures-teat-measures-alcohol.sql",
+      "sha256": "8ad56cc512239cbb11218d8ea8707da701b0173e9ba90567b7d34e914b06c87d"
+    },
+    {
+      "path": "backend/app/tests/e2e/policy-routes.e2e.spec.ts",
+      "sha256": "e20fa321c86d20b78e9f9884b3ba1f3897830fce2d0a1ef5a6c62dc5c5bca298"
+    },
+    {
+      "path": "backend/app/tests/e2e/teat-measures-alcohol.e2e.spec.ts",
+      "sha256": "c90ec42af212a2dc3eb721f5beb2c42f0994f89c13cf45f34294f0fdfc0865bd"
+    },
+    {
+      "path": "backend/app/tests/e2e/teat-stream.e2e.spec.ts",
+      "sha256": "9fc17bd13a029dd564adf159246cf366dd5d24850005c87e5ae3a103ab747179"
+    },
+    {
+      "path": "work/rounds/R-0008/contracts/CTG-0004.md",
+      "sha256": "dba259eab1676974c403910b01bd348dc2921a3e6d045fcc9e0abb3a2eca5850"
+    },
+    {
+      "path": "work/rounds/R-0008/reviews/delivery-review-CTG-0004-3.json",
+      "sha256": "ff6d95ecf76971600e16a8c1c7699e0b457968829525e91cd357a0c46c054829"
+    }
+  ],
+  "gates": {
+    "pnpm check": "pass",
+    "pnpm backend:test:ci": "pass (51 vitest runs, 1541 tests, 0 failed)",
+    "delivery-review": "PASS on cycle 3 (GPT-5.6 Terra): cycle 1 FAIL (5), cycle 2 FAIL (3), cycle 3 PASS"
+  },
+  "tasks": [
+    "TASK-0008",
+    "TASK-0009"
+  ],
+  "notes": "Blueprint bumps (BP-INF-MEASURES-001/BP-INF-ALCOHOL-001 1.2.0, inf-deadlines/inf-normative deps) and adendas \u00a715\u2013\u00a716 of CTG-0004 applied by the maestro as Architect; OD-T60\u2026OD-T65."
+}

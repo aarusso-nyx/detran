@@ -469,11 +469,18 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
   // CTG-0001 §5 (M4/M18, TASK-0003): AIT completo — archive, review da
   // apuração de concorrência e o comando de cancelamento. `create` reflete a
   // origem `teat-policy.ts` (`ait-cancel-request:create`), mais restrito que
-  // `INF_FIELD_LEGAL_ROLES` (sem `processing-operator`); os pares `read`,
-  // `update`, `delete` e o recurso `ait-cancel-request-event` são a
-  // superfície CRUD gerada, sem regra hoje (§11.7 do contrato) — literais
-  // (não `INF_READ_ROLES`/`INF_FIELD_LEGAL_ROLES`: essas consts só são
-  // declaradas depois deste bloco no arquivo, TDZ impede a referência aqui).
+  // `INF_FIELD_LEGAL_ROLES` (sem `processing-operator`); o par `read` e o
+  // recurso `ait-cancel-request-event` são a superfície CRUD gerada
+  // (literais, não `INF_READ_ROLES`/`INF_FIELD_LEGAL_ROLES`: essas consts só
+  // são declaradas depois deste bloco no arquivo, TDZ impede a referência
+  // aqui).
+  //
+  // CTG-0004 §15.3 (OD-T60, adenda pós-TASK-0009 iteração 1): `update`/
+  // `delete` de `ait-cancel-request` **removidas** — `AitCancelRequestController`
+  // gerado só expõe `list`/`get` desde CTG-0001 §12 (chave sem rota,
+  // `policy-routes.e2e.spec.ts` sentido 2); o Inspector ajusta
+  // `policy.spec.ts` C-0001-07 em paralelo (chaves ausentes = negativo
+  // universal).
   ['inf', 'ait', 'archive', ['traffic-authority']],
   ['inf', 'ait', 'review-concurrency', ['traffic-authority', 'AUDITOR']],
   [
@@ -500,19 +507,6 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
       'integration-operator',
     ],
   ],
-  [
-    'inf',
-    'ait-cancel-request',
-    'update',
-    [
-      'field-agent',
-      'field-supervisor',
-      'processing-operator',
-      'traffic-authority',
-      'technical-admin',
-    ],
-  ],
-  ['inf', 'ait-cancel-request', 'delete', ['technical-admin']],
   [
     'inf',
     'ait-cancel-request-event',
@@ -704,6 +698,27 @@ const TEAT_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
   ['inf', 'alcohol-procedure', 'record-psychomotor-signs', ['field-agent']],
   ['inf', 'alcohol-procedure', 'forward', ['field-agent']],
   ['inf', 'alcohol-procedure', 'close', ['field-agent', 'field-supervisor']],
+  // CTG-0004 §8 (M17/M18, TASK-0009, OD-T17): `ops:stream:read` concede a
+  // todos os oito papéis TEAT — o stream só entrega eventos cujo recurso o
+  // papel já lê (§7.2), não é ampliação. `ops:integration:{read,retry}`
+  // (route contract §4.6) ficam com integration-operator/technical-admin.
+  [
+    'ops',
+    'stream',
+    'read',
+    [
+      'field-agent',
+      'field-supervisor',
+      'processing-operator',
+      'traffic-authority',
+      'agency-admin',
+      'technical-admin',
+      'AUDITOR',
+      'integration-operator',
+    ],
+  ],
+  ['ops', 'integration', 'read', ['integration-operator', 'technical-admin']],
+  ['ops', 'integration', 'retry', ['integration-operator', 'technical-admin']],
   ['est', 'crash-record', 'start', ['field-agent']],
   ['est', 'crash-record', 'add-vehicle', ['field-agent']],
   ['est', 'crash-record', 'add-person', ['field-agent']],
@@ -1068,6 +1083,92 @@ const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['person-document', 'create', OPS_SNAPSHOT_SURFACE_ROLES],
   ['vehicle-snapshot', 'read', OPS_SNAPSHOT_SURFACE_ROLES],
   ['vehicle-snapshot', 'create', OPS_SNAPSHOT_SURFACE_ROLES],
+  // CTG-0004 §8 (M18, TASK-0009) e §15.7 (adenda, iteração 2): `update`/
+  // `delete` (e, para os poucos recursos sem nenhuma regra de escrita ainda,
+  // `create`) da superfície CRUD gerada de `ops/*` que `policy-routes.e2e.spec.ts`
+  // acusava sem chave — 66 pares, achado do maestro após CTG-0001/0002/0003
+  // (nenhum deles tocou `update`/`delete`, só `read`/`create`). §15.7:
+  // "nenhum grant por analogia" — só entra papel diferente de `technical-admin`
+  // quando CTG-0002 §8 ou CTG-0003 §7 (origem `teat-policy.ts`) sourceiam
+  // **a própria ação** (não o recurso em geral); nos demais, a entrada é só
+  // `['technical-admin']`, que não abre acesso a ninguém que já não o tenha
+  // (`isDetranActionAllowed` concede `technical-admin` por `GLOBAL_ADMIN_ROLES`
+  // independente de regra) — a entrada só fecha o sentido 1 da matriz.
+  //
+  // `numbering-range:update` é a única exceção com papel próprio: já sourceada
+  // em CTG-0002 §8 (`['numbering-range','update',['agency-admin','technical-admin']]`)
+  // e já implementada antes desta tarefa via `OPS_NUMBERING_ADMIN_ROLES`
+  // (linha `numbering-range/read/create/update` acima); só falta aqui o `delete`,
+  // sem fonte, `technical-admin`. Nenhum outro `update`/`create` abaixo tem
+  // fonte para a ação específica — todos técnical-admin-only.
+  ['agency-unit', 'update', ['technical-admin']],
+  ['agency-unit', 'delete', ['technical-admin']],
+  ['agency-jurisdiction', 'update', ['technical-admin']],
+  ['agency-jurisdiction', 'delete', ['technical-admin']],
+  ['agency-competence', 'update', ['technical-admin']],
+  ['agency-competence', 'delete', ['technical-admin']],
+  ['agent-profile', 'update', ['technical-admin']],
+  ['agent-profile', 'delete', ['technical-admin']],
+  ['operational-device', 'update', ['technical-admin']],
+  ['operational-device', 'delete', ['technical-admin']],
+  ['homologation', 'update', ['technical-admin']],
+  ['homologation', 'delete', ['technical-admin']],
+  ['application-version', 'update', ['technical-admin']],
+  ['application-version', 'delete', ['technical-admin']],
+  ['device-event', 'create', ['technical-admin']],
+  ['device-event', 'update', ['technical-admin']],
+  ['device-event', 'delete', ['technical-admin']],
+  ['operation', 'update', ['technical-admin']],
+  ['operation', 'delete', ['technical-admin']],
+  ['team', 'update', ['technical-admin']],
+  ['team', 'delete', ['technical-admin']],
+  ['team-agent', 'update', ['technical-admin']],
+  ['team-agent', 'delete', ['technical-admin']],
+  ['patrol-vehicle', 'update', ['technical-admin']],
+  ['patrol-vehicle', 'delete', ['technical-admin']],
+  ['measurement-instrument', 'update', ['technical-admin']],
+  ['measurement-instrument', 'delete', ['technical-admin']],
+  ['shift', 'update', ['technical-admin']],
+  ['shift', 'delete', ['technical-admin']],
+  ['approach', 'update', ['technical-admin']],
+  ['approach', 'delete', ['technical-admin']],
+  ['session-handoff', 'create', ['technical-admin']],
+  ['session-handoff', 'update', ['technical-admin']],
+  ['session-handoff', 'delete', ['technical-admin']],
+  ['person', 'update', ['technical-admin']],
+  ['person', 'delete', ['technical-admin']],
+  ['person-document', 'update', ['technical-admin']],
+  ['person-document', 'delete', ['technical-admin']],
+  ['vehicle', 'update', ['technical-admin']],
+  ['vehicle', 'delete', ['technical-admin']],
+  ['vehicle-snapshot', 'update', ['technical-admin']],
+  ['vehicle-snapshot', 'delete', ['technical-admin']],
+  // `evidence:update` já sourceado (CTG-0003 §7) antes desta tarefa; só falta
+  // `delete`, sem fonte.
+  ['evidence', 'delete', ['technical-admin']],
+  ['evidence-link', 'update', ['technical-admin']],
+  ['evidence-link', 'delete', ['technical-admin']],
+  ['custody-event', 'update', ['technical-admin']],
+  ['custody-event', 'delete', ['technical-admin']],
+  ['probative-package', 'update', ['technical-admin']],
+  ['probative-package', 'delete', ['technical-admin']],
+  ['probative-package-item', 'update', ['technical-admin']],
+  ['probative-package-item', 'delete', ['technical-admin']],
+  ['storage-intent', 'update', ['technical-admin']],
+  ['storage-intent', 'delete', ['technical-admin']],
+  ['numbering-range', 'delete', ['technical-admin']],
+  ['numbering-reservation', 'create', ['technical-admin']],
+  ['numbering-reservation', 'update', ['technical-admin']],
+  ['numbering-reservation', 'delete', ['technical-admin']],
+  ['numbering-consumption', 'create', ['technical-admin']],
+  ['numbering-consumption', 'update', ['technical-admin']],
+  ['numbering-consumption', 'delete', ['technical-admin']],
+  ['sync-queue-item', 'create', ['technical-admin']],
+  ['sync-queue-item', 'update', ['technical-admin']],
+  ['sync-queue-item', 'delete', ['technical-admin']],
+  ['sync-conflict', 'create', ['technical-admin']],
+  ['sync-conflict', 'update', ['technical-admin']],
+  ['sync-conflict', 'delete', ['technical-admin']],
 ];
 
 const INF_READ_ROLES: readonly DetranRole[] = [

@@ -1,4 +1,4 @@
-// Generated from BP-INF-ALCOHOL-001 v1.1.0 sha256:18decd0fa5855e93f40ce052c3ffb2ec4ad022530cd5da983fadf681a45bd246
+// Generated from BP-INF-ALCOHOL-001 v1.2.0 sha256:f54fa6e2f04e73d65b7b187ded6fe373d6b14c80f840688310d1f09b9420e20f
 import { Module } from '@nestjs/common';
 import { AlcoholProcedureController } from './controllers/alcohol-procedure.controller.js';
 import { AlcoholProcedureService } from './services/alcohol-procedure.service.js';
@@ -18,9 +18,12 @@ import { PsychomotorSignRepository } from './repositories/psychomotor-sign.repos
 import { AlcoholForwardingController } from './controllers/alcohol-forwarding.controller.js';
 import { AlcoholForwardingService } from './services/alcohol-forwarding.service.js';
 import { AlcoholForwardingRepository } from './repositories/alcohol-forwarding.repository.js';
+import { AlcoholCommandsController } from './alcohol-commands.controller.js';
+import { ALCOHOL_LIFECYCLE_PROVIDER } from './handwritten/alcohol-lifecycle.provider.js';
 
 @Module({
   controllers: [
+    AlcoholCommandsController,
     AlcoholProcedureController,
     BreathalyzerController,
     AlcoholTestController,
@@ -41,6 +44,7 @@ import { AlcoholForwardingRepository } from './repositories/alcohol-forwarding.r
     PsychomotorSignRepository,
     AlcoholForwardingService,
     AlcoholForwardingRepository,
+    ALCOHOL_LIFECYCLE_PROVIDER,
   ],
 })
 export class AlcoholModule {}

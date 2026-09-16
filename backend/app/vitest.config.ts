@@ -78,6 +78,9 @@ export default defineConfig({
       '@detran/inf-ait': fileURLToPath(
         new URL('../domains/inf/ait/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-deadlines': fileURLToPath(
+        new URL('../domains/inf/deadlines/src/index.ts', import.meta.url),
+      ),
       '@detran/inf-normative': fileURLToPath(
         new URL('../domains/inf/normative/src/index.ts', import.meta.url),
       ),

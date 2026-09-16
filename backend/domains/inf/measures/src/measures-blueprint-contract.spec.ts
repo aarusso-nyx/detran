@@ -20,9 +20,9 @@ const blueprint = JSON.parse(
   };
 };
 
-describe('BP-INF-MEASURES-001 v1.1.0', () => {
+describe('BP-INF-MEASURES-001 v1.2.0', () => {
   it('dado uma medida administrativa quando inspecionada então separa os prazos e restringe estados e limites', () => {
-    expect(blueprint.module.version).toBe('1.1.0');
+    expect(blueprint.module.version).toBe('1.2.0');
     const term = blueprint.database.entities.find(
       (entity) => entity.table === 'administrative_term',
     );

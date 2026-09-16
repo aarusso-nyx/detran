@@ -1,0 +1,48 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/measures/src/handwritten/release-retention.command.ts",
+      "line": 54,
+      "claim": "`release` nunca produz `REGULARIZADO` quando parte de `LIBERADO_COM_PRAZO` com `regularized_at` gravado e também não grava `measure_status_history`; ambos são pós-estados obrigatórios do contrato CTG-0004 §4.6, linhas 428-432.",
+      "fix": "Selecionar `REGULARIZADO` na condição canônica, registrar a linha de histórico na mesma transação e cobrir os dois ramos com teste."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/app/tests/e2e/teat-stream.e2e.spec.ts",
+      "line": 264,
+      "claim": "C-0004-42 foi substituído por `integration.item.changed`; o critério canônico exige explicitamente `ait.changed` para assinante com e sem `inf:ait:read` (CTG-0004 linhas 1150-1151). O relatório TASK-0008 confirma a adaptação em vez de registrar e resolver a contradição no contrato.",
+      "fix": "Restaurar C-0004-42 literal ou submeter a alteração do contrato como decisão do Architect/Owner antes de declarar o critério PASS."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/app/src/teat-stream.controller.ts",
+      "line": 21,
+      "claim": "O SSE fixa `POLL_INTERVAL_MS` e usa `setInterval` diretamente, contrariando o poller injetável exigido por CTG-0004 §7, linhas 781-782 e §12, linha 1189.",
+      "fix": "Introduzir `TeatStreamPoller`/porta injetável com default de 1000 ms e testar a injeção."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/alcohol/src/handwritten/record-test.command.ts",
+      "line": 77,
+      "claim": "A busca aceita qualquer `normative_metrological_table` ativa e não comprova que o catálogo vinculado está vigente, embora a pré-condição exija tabela ativa do catálogo vigente do órgão (CTG-0004 linhas 530-535).",
+      "fix": "Consultar/validar o catálogo associado como `active` no tenant antes de usar a tabela e adicionar casos positivo e negativo."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "docs/framework/blueprints/BP-INF-MEASURES-001.json",
+      "line": 7,
+      "claim": "Os blueprints de Measures e Alcohol permanecem em `1.1.0`, apesar do layout obrigatório determinar `1.1.0 → 1.2.0` (CTG-0004 linhas 1211-1227); os módulos regenerados também registram `v1.1.0`.",
+      "fix": "Elevar ambos para `1.2.0`, regenerar os artefatos e reexecutar os gates de blueprint/contrato."
+    }
+  ],
+  "notes": []
+}

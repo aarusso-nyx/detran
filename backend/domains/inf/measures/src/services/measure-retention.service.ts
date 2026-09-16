@@ -1,4 +1,4 @@
-// Generated from BP-INF-MEASURES-001 v1.1.0 sha256:0d61bf54d2c0383839c31d1ecb76100ecb64d1f60e1285f5d621451b36d3995c
+// Generated from BP-INF-MEASURES-001 v1.2.0 sha256:f6d05352d77e9c4f6fc86a4c3453ea23771ab90fc5f1cdb0482a10c0cb5dfb8b
 import { Injectable } from '@nestjs/common';
 import { MeasureRetentionRepository } from '../repositories/measure-retention.repository.js';
 import type { MeasureRetention } from '../entities/measure-retention.entity.js';

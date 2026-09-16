@@ -4,15 +4,47 @@
   "module": {
     "name": "Alcohol",
     "namespace": "inf",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "ddlFile": "33-inf-alcohol.sql",
     "dependencies": {
       "@detran/inf-ait": "workspace:*",
-      "@detran/inf-measures": "workspace:*"
+      "@detran/inf-measures": "workspace:*",
+      "@detran/inf-normative": "workspace:*"
     },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-ait",
+        "target": "../ait/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-measures",
+        "target": "../measures/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-normative",
+        "target": "../normative/src/index.ts"
+      }
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "alcohol-commands.controller",
+        "symbol": "AlcoholCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/alcohol-lifecycle.provider",
+        "symbol": "ALCOHOL_LIFECYCLE_PROVIDER"
+      }
+    ],
     "handwrittenExports": [
       "alcohol-lifecycle.service",
-      "alcohol-commands.controller"
+      "alcohol-commands.controller",
+      "handwritten/index"
     ],
     "owners": ["detran-inf"],
     "description": "Breathalyzer and alcohol-testing procedure flows ported from TEAT."
@@ -24,22 +56,79 @@
         "table": "alcohol_procedure",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "ait_id", "type": "uuid", "nullable": true },
-          { "name": "measure_id", "type": "uuid", "nullable": true },
-          { "name": "approach_id", "type": "uuid", "nullable": true },
-          { "name": "agent_id", "type": "uuid" },
-          { "name": "shift_id", "type": "uuid" },
-          { "name": "driver_person_id", "type": "uuid", "nullable": true },
-          { "name": "procedure_at", "type": "timestamptz" },
-          { "name": "location_json", "type": "jsonb", "nullable": true },
-          { "name": "procedure_type", "type": "varchar(60)" },
-          { "name": "outcome", "type": "varchar(80)" },
-          { "name": "status", "type": "varchar(40)", "default": "'draft'" },
-          { "name": "notes", "type": "text", "nullable": true },
-          { "name": "ait_local_id", "type": "varchar(120)", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "ait_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "measure_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "approach_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "agent_id",
+            "type": "uuid"
+          },
+          {
+            "name": "shift_id",
+            "type": "uuid"
+          },
+          {
+            "name": "driver_person_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "procedure_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "location_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "procedure_type",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "outcome",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'draft'"
+          },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "ait_local_id",
+            "type": "varchar(120)",
+            "nullable": true
+          },
           {
             "name": "sign_catalog_id",
             "type": "varchar(120)",
@@ -71,8 +160,16 @@
             "pii": "high",
             "retention": "forever"
           },
-          { "name": "vehicle_make", "type": "varchar(120)", "nullable": true },
-          { "name": "refused_procedures", "type": "boolean", "nullable": true },
+          {
+            "name": "vehicle_make",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "refused_procedures",
+            "type": "boolean",
+            "nullable": true
+          },
           {
             "name": "driver_statement_json",
             "type": "jsonb",
@@ -121,7 +218,10 @@
           {
             "name": "fk_inf_alcohol_ait",
             "columns": ["ait_id"],
-            "references": { "table": "inf.ait_ait", "columns": ["id"] }
+            "references": {
+              "table": "inf.ait_ait",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_inf_alcohol_measure",
@@ -134,12 +234,18 @@
           {
             "name": "fk_inf_alcohol_approach",
             "columns": ["approach_id"],
-            "references": { "table": "ops.ops_approach", "columns": ["id"] }
+            "references": {
+              "table": "ops.ops_approach",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_inf_alcohol_person",
             "columns": ["driver_person_id"],
-            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+            "references": {
+              "table": "ops.snapshots_person",
+              "columns": ["id"]
+            }
           }
         ]
       },
@@ -148,19 +254,48 @@
         "table": "alcohol_breathalyzer",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "traffic_agency_id", "type": "uuid" },
-          { "name": "serial_number", "type": "varchar(120)" },
-          { "name": "model", "type": "varchar(120)", "nullable": true },
-          { "name": "manufacturer", "type": "varchar(120)", "nullable": true },
-          { "name": "last_calibration_at", "type": "date", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "traffic_agency_id",
+            "type": "uuid"
+          },
+          {
+            "name": "serial_number",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "model",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "manufacturer",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "last_calibration_at",
+            "type": "date",
+            "nullable": true
+          },
           {
             "name": "calibration_valid_until",
             "type": "date",
             "nullable": true
           },
-          { "name": "status", "type": "varchar(40)", "default": "'active'" }
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'active'"
+          }
         ],
         "indexes": [
           {
@@ -175,13 +310,38 @@
         "table": "alcohol_test",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "procedure_id", "type": "uuid" },
-          { "name": "breathalyzer_id", "type": "uuid", "nullable": true },
-          { "name": "test_number", "type": "varchar(80)", "nullable": true },
-          { "name": "tested_at", "type": "timestamptz" },
-          { "name": "result_mg_l", "type": "numeric(8,3)", "nullable": true },
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "procedure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "breathalyzer_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "test_number",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "tested_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "result_mg_l",
+            "type": "numeric(8,3)",
+            "nullable": true
+          },
           {
             "name": "considered_mg_l",
             "type": "numeric(8,3)",
@@ -192,13 +352,21 @@
             "type": "numeric(8,3)",
             "nullable": true
           },
-          { "name": "counterproof", "type": "boolean", "default": "false" },
+          {
+            "name": "counterproof",
+            "type": "boolean",
+            "default": "false"
+          },
           {
             "name": "result_image_evidence_id",
             "type": "uuid",
             "nullable": true
           },
-          { "name": "status", "type": "varchar(40)", "default": "'recorded'" }
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'recorded'"
+          }
         ],
         "checks": [
           {
@@ -238,14 +406,41 @@
         "table": "alcohol_refusal",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "procedure_id", "type": "uuid" },
-          { "name": "refused_at", "type": "timestamptz" },
-          { "name": "kind", "type": "varchar(40)" },
-          { "name": "refusal_description", "type": "text" },
-          { "name": "witness_person_id", "type": "uuid", "nullable": true },
-          { "name": "evidence_id", "type": "uuid", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "procedure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "refused_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "refusal_description",
+            "type": "text"
+          },
+          {
+            "name": "witness_person_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "evidence_id",
+            "type": "uuid",
+            "nullable": true
+          }
         ],
         "checks": [
           {
@@ -265,7 +460,10 @@
           {
             "name": "fk_inf_alcohol_refusal_person",
             "columns": ["witness_person_id"],
-            "references": { "table": "ops.snapshots_person", "columns": ["id"] }
+            "references": {
+              "table": "ops.snapshots_person",
+              "columns": ["id"]
+            }
           },
           {
             "name": "fk_inf_alcohol_refusal_evidence",
@@ -282,15 +480,47 @@
         "table": "alcohol_psychomotor_sign",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "procedure_id", "type": "uuid" },
-          { "name": "sign_code", "type": "varchar(80)" },
-          { "name": "description", "type": "text" },
-          { "name": "observed", "type": "boolean", "default": "true" },
-          { "name": "sign_group", "type": "varchar(80)", "nullable": true },
-          { "name": "sign_status", "type": "varchar(20)", "nullable": true },
-          { "name": "method", "type": "varchar(120)", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "procedure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "sign_code",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "description",
+            "type": "text"
+          },
+          {
+            "name": "observed",
+            "type": "boolean",
+            "default": "true"
+          },
+          {
+            "name": "sign_group",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "sign_status",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "method",
+            "type": "varchar(120)",
+            "nullable": true
+          }
         ],
         "foreignKeys": [
           {
@@ -308,14 +538,41 @@
         "table": "alcohol_forwarding",
         "primaryKey": ["id"],
         "fields": [
-          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
-          { "name": "tenant_id", "type": "uuid" },
-          { "name": "procedure_id", "type": "uuid" },
-          { "name": "forwarding_type", "type": "varchar(80)" },
-          { "name": "destination", "type": "varchar(255)" },
-          { "name": "forwarded_at", "type": "timestamptz" },
-          { "name": "protocol", "type": "varchar(120)", "nullable": true },
-          { "name": "notes", "type": "text", "nullable": true }
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "procedure_id",
+            "type": "uuid"
+          },
+          {
+            "name": "forwarding_type",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "destination",
+            "type": "varchar(255)"
+          },
+          {
+            "name": "forwarded_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "protocol",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true
+          }
         ],
         "foreignKeys": [
           {
@@ -343,7 +600,11 @@
         "path": "breathalyzers",
         "resource": "breathalyzer"
       },
-      { "entity": "AlcoholTest", "path": "tests", "resource": "alcohol-test" },
+      {
+        "entity": "AlcoholTest",
+        "path": "tests",
+        "resource": "alcohol-test"
+      },
       {
         "entity": "AlcoholRefusal",
         "path": "refusals",
@@ -361,6 +622,10 @@
       }
     ]
   },
-  "auth": { "source": "TEAT_COMMAND_RULES" },
-  "audit": { "enabled": true }
+  "auth": {
+    "source": "TEAT_COMMAND_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
 }
