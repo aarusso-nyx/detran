@@ -375,6 +375,14 @@ describe('GET /v1/portal/identity/me (§3, §8; M4) — guarda fail-closed', () 
     process.env.DETRAN_LOCAL_CPF = cpf;
     const cpfHash = createHash('sha256').update(cpf).digest('hex');
 
+    // Idempotência contra banco persistente (Triagem TASK-0004, item 3): apaga o sujeito do CPF
+    // fixture do tenant local antes de exercitar o upsert, para `version` sempre começar de 1
+    // nesta execução (o cliente `pg` acima do arquivo já roda sob `app.role='owner'`).
+    await client.query(
+      `delete from portal.subject where tenant_id = $1 and cpf_hash = $2`,
+      [tenantId, cpfHash],
+    );
+
     const first = await request(app.getHttpServer())
       .get('/v1/portal/identity/me')
       .set(headers());
@@ -414,7 +422,7 @@ describe('GET /v1/portal/identity/me (§3, §8; M4) — guarda fail-closed', () 
     expect(afterLevelChange.rows[0]?.version).toBe(2);
   });
 
-  it('C-0001-42 — dado DETRAN_LOCAL_ROLES=field-agent com claims válidas quando GET me então 403 PORTAL.IDENTITY_NOT_CITIZEN', async () => {
+  it('C-0001-42 — dado DETRAN_LOCAL_ROLES=field-agent com claims válidas quando GET me então 403 da política STYNX (A3(a): field-agent é negado antes da guarda, sem code do Portal)', async () => {
     process.env.DETRAN_LOCAL_ROLES = 'field-agent';
     process.env.DETRAN_LOCAL_ASSURANCE_LEVEL = 'simples';
     process.env.DETRAN_LOCAL_CPF = '11111111111';
@@ -422,7 +430,8 @@ describe('GET /v1/portal/identity/me (§3, §8; M4) — guarda fail-closed', () 
       .get('/v1/portal/identity/me')
       .set(headers());
     expect(response.status, JSON.stringify(response.body)).toBe(403);
-    expect(response.body.code).toBe('PORTAL.IDENTITY_NOT_CITIZEN');
+    expect(response.body.code).not.toBe('PORTAL.IDENTITY_NOT_CITIZEN');
+    expect(response.body.code).not.toBe('PORTAL.ASSURANCE_NOT_VERIFIED');
   });
 
   it('C-0001-43 — dado DETRAN_LOCAL_ROLES=technical-admin sem claims quando GET me então 403 PORTAL.ASSURANCE_NOT_VERIFIED (a política concede "*"; a guarda nega)', async () => {

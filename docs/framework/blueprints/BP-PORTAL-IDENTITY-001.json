@@ -4,7 +4,7 @@
   "module": {
     "name": "Identity",
     "namespace": "portal",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "ddlFile": "61-portal-identity.sql",
     "dependencies": {
       "zod": "^4.6.5",
@@ -93,7 +93,8 @@
           {
             "name": "name",
             "type": "text",
-            "pii": "personal"
+            "pii": "personal",
+            "nullable": true
           },
           {
             "name": "govbr_level_observed",

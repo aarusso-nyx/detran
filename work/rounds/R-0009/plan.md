@@ -335,6 +335,14 @@ qualificada}` e `claims.cpf` (11 dígitos, `sub` de negócio). Perfil `local-san
   único por `(tenant_id, event_id, projection)` + `last_error`; `[DIVERGE-M8]` aceito (`protocol_seq` no DDL 19). (d) O maestro
   aplicou A1(d), A1(e) e A1(g) nos blueprints (`REQUESTS` v1.0.1, `INBOX` v1.0.1, `IDENTITY` v1.0.1 com provider `PortalClock`
   e dependência `@detran/inf-deadlines`), regenerou e rodou `pnpm install` (lockfile) no checkpoint.
+- **A3 (2026-09-16, após TASK-0004)** — (a) ordem das guardas: `DetranPolicyGuard` (global) roda antes de `PortalCitizenGuard`
+  (controlador); papéis fora da matriz `portal:*` recebem 403 da política **sem** `code` (STYNX `ForbiddenException`);
+  `PORTAL.IDENTITY_NOT_CITIZEN` cobre os principais que passam a política sem `CIDADAO` (admins globais `*`). C-0001-42 passa a
+  esperar 403 sem `code` para `field-agent`. (b) Rotas públicas `/v1/portal/*`: ator nominal `PORTAL_PUBLIC_ACTOR_ID` (UUID nulo)
+  - tenant pelo Host/`X-Tenant-Id`, com bypass documentado da membership no interceptor de tenancy **só** para essas rotas
+    (OD-P27 ao STYNX). (c) `DETRAN_PORTAL_HOST_RESOLUTION=on` faz o Host não mapeado responder 421 mesmo no perfil local (única
+    forma de provar §9 no e2e). (d) D13: `portal.subject.name` nulo admitido (blueprint `IDENTITY` v1.0.2). (e) `PortalClock`
+    com `America/Manaus` como fuso padrão nesta rodada; fuso por tenant em CTG-0002 (`auth.tenants.timezone`).
 
 ## Tarefas
 
@@ -424,6 +432,11 @@ decisão do maestro sob a instrução do Owner. Registrado aqui e no relatório 
 
 (uma linha por falha de gate: `TASK — gate — plant-bug | sensor-error | policy-issue | reference-gap — achado — ação`)
 
+- TASK-0004 — `pnpm --filter @detran/portal-identity test:unit` (C-0001-20a) — sensor-error — spec define relógio fixo mas não o injeta em `assertActLevel` (contrato §4 exige injeção) — TASK-0003 iteração 2: passar `clock` (5º argumento); código intacto.
+- TASK-0004 — `pnpm --filter @detran/app test:e2e` (C-0001-42) — reference-gap — contrato §3 fixa que a política roda antes da guarda; `field-agent` é negado pela política (403 STYNX sem `code`), logo `IDENTITY_NOT_CITIZEN` é inalcançável para esse papel no e2e — adenda A3; TASK-0003 iteração 2 ajusta a expectativa (403 sem `code`); `IDENTITY_NOT_CITIZEN` provado por `technical-admin` com claims (C-0001-09b).
+- TASK-0004 — e2e C-0001-41 (reexecução em banco persistente) — sensor-error — spec não limpa `portal.subject` do CPF fixture no `beforeAll` — TASK-0003 iteração 2: `delete` no `beforeAll`.
+- TASK-0004 — D13 (`portal.subject.name not null` × contrato) — reference-gap — blueprint `IDENTITY` v1.0.2 `name nullable` (maestro, Architect) + regeneração no checkpoint.
+
 ## Retomada
 
 **Retomada 2026-09-16 (maestro Fable 5.1)** por instrução explícita do Owner (`AUTHORIZATION.md`). Bootstrap
@@ -433,18 +446,18 @@ concluído: rebase sobre `0996391`; `pnpm install --frozen-lockfile` OK; `pnpm c
 
 Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 
-| Tarefa    | Estado      | Nota                                                                          |
-| --------- | ----------- | ----------------------------------------------------------------------------- |
-| TASK-0001 | completed   | relatório em `reports/TASK-0001.md`; divergências aceitas em A1               |
-| TASK-0002 | in_progress | idem, em paralelo                                                             |
-| TASK-0003 | completed   | relatório em `reports/TASK-0003.md`; 52 critérios → specs; seed 70 provado 3× |
-| TASK-0004 | in_progress | disparada após commit dos testes de TASK-0003                                 |
-| TASK-0005 | queued      | —                                                                             |
-| TASK-0006 | queued      | —                                                                             |
-| TASK-0007 | queued      | —                                                                             |
-| TASK-0008 | queued      | —                                                                             |
-| TASK-0009 | queued      | —                                                                             |
-| TASK-0010 | queued      | —                                                                             |
+| Tarefa    | Estado      | Nota                                                                                                          |
+| --------- | ----------- | ------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | completed   | relatório em `reports/TASK-0001.md`; divergências aceitas em A1                                               |
+| TASK-0002 | in_progress | idem, em paralelo                                                                                             |
+| TASK-0003 | completed   | iteração 2 verde (49/49 unit, 14/14 e2e ×2); relatório atualizado                                             |
+| TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
+| TASK-0005 | queued      | —                                                                                                             |
+| TASK-0006 | queued      | —                                                                                                             |
+| TASK-0007 | queued      | —                                                                                                             |
+| TASK-0008 | queued      | —                                                                                                             |
+| TASK-0009 | queued      | —                                                                                                             |
+| TASK-0010 | queued      | —                                                                                                             |
 
 Último veredito do reviewer: `prompt-review-3` PASS (após FAIL/FAIL de estrutura, ver §Bloqueios). Próximos passos: relatórios de TASK-0001/0002 → checkpoint → TASK-0003.
 

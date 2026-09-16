@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Identity — BP-PORTAL-IDENTITY-001",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Identidade federada do cidadao (ADR-0019 Decision 1; [WF-PORTAL-002] secao Estados; plan R-0009 M3-M6): guarda so o que o gov.br nao guarda — sujeito por hash de CPF, representacao (procuracao), matriz ato -> nivel de assinatura como dados (portal.act_level_policy) e vinculos (portal.entitlement). Nunca armazena token, credencial nem CPF em claro (RN-PORTAL-112). Nenhuma rota CRUD gerada (M1): as rotas de /v1/portal/* sao manuscritas em src/handwritten e usam os repositorios gerados. Publica NIVEL_ASSINATURA_ELEVADO e REPRESENTACAO_VALIDADA (ADR-0019 Ownership table).",
     "x-blueprint": "BP-PORTAL-IDENTITY-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -28,6 +28,7 @@
           },
           "name": {
             "type": "string",
+            "nullable": true,
             "x-pii": "personal"
           },
           "govbr_level_observed": {
@@ -62,7 +63,6 @@
         "required": [
           "tenant_id",
           "cpf_hash",
-          "name",
           "assurance_level_observed",
           "observed_at",
           "created_at"
@@ -78,6 +78,7 @@
           },
           "name": {
             "type": "string",
+            "nullable": true,
             "x-pii": "personal"
           },
           "govbr_level_observed": {
@@ -100,12 +101,7 @@
             "default": "1"
           }
         },
-        "required": [
-          "cpf_hash",
-          "name",
-          "assurance_level_observed",
-          "observed_at"
-        ]
+        "required": ["cpf_hash", "assurance_level_observed", "observed_at"]
       },
       "Representation": {
         "type": "object",

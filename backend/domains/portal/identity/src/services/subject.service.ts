@@ -1,4 +1,4 @@
-// Generated from BP-PORTAL-IDENTITY-001 v1.0.1 sha256:1a840b3372310d8bdecab94f05cd0978fdb1f53e677cc55361bf6d6f479c723c
+// Generated from BP-PORTAL-IDENTITY-001 v1.0.2 sha256:bbfa6f4431768ff2ab5f9af097062b47775c79afb1a954ff7fb21b2c7743e4ea
 import { Injectable } from '@nestjs/common';
 import { SubjectRepository } from '../repositories/subject.repository.js';
 import type { Subject } from '../entities/subject.entity.js';

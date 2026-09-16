@@ -1597,6 +1597,10 @@ export const DETRAN_POLICY_MATRIX: Readonly<
     ]),
     ['portal:appeal:create', ['CIDADAO']],
     ['portal:appeal:read-own', ['CIDADAO']],
+    // R-0009 CTG-0001 §3/§8 (M19, TASK-0004): única linha `portal:*` deste
+    // grupo; `GET /v1/portal/identity/me`. O bloco `PORTAL_RULES` completo e a
+    // remoção das duas linhas `portal:appeal:*` acima são CTG-0002 (TASK-0007).
+    ['portal:identity:read', ['CIDADAO']],
   ]) as Record<DetranPolicyKey, readonly DetranRole[]>,
 );
 

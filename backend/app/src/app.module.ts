@@ -61,6 +61,11 @@ import { SchedulingModule } from '@detran/ch-scheduling';
 import { TelehealthModule } from '@detran/ch-telehealth';
 import { ToxicologyModule } from '@detran/ch-toxicology';
 import { ComplaintsModule } from '@detran/portal-complaints';
+import { IdentityModule } from '@detran/portal-identity';
+import { RequestsModule } from '@detran/portal-requests';
+import { InboxModule } from '@detran/portal-inbox';
+import { CitizenServiceModule } from '@detran/portal-citizen-service';
+import { ProjectionsModule } from '@detran/portal-projections';
 import { AitModule } from '@detran/inf-ait';
 import { AlcoholModule } from '@detran/inf-alcohol';
 import { MeasuresModule } from '@detran/inf-measures';
@@ -94,7 +99,12 @@ import {
   detranTokenVerifier,
   detranRuntimeProfile,
   detranFeatureFlagSet,
+  detranPortalHostnameDirectory,
   isLocalRuntimeProfile,
+  portalHostOf,
+  portalRequestHostStorage,
+  seedPortalPublicRequest,
+  type PortalPublicRequestLike,
 } from './detran-runtime.js';
 import { TeatSyncModule } from './teat-sync.providers.js';
 import { TeatEvidencePortsModule } from './teat-evidence.providers.js';
@@ -172,7 +182,37 @@ function patchTenantContextInterceptorOrdering(): void {
       actor?: { id?: string };
       user?: { id?: string };
       tenantId?: string;
+      portalPublic?: { tenantId: string; actorId: string };
     }>();
+    if (request.portalPublic) {
+      // Rotas `@Public()` de `/v1/portal/*` (R-0009 CTG-0001 §8/§9, M11): sem
+      // sessão nem membership, o tenant já foi resolvido pelo Host/X-Tenant-Id
+      // em `seedPortalPublicRequest` (guard de autenticação do app). O
+      // interceptor de tenancy do STYNX exige X-Tenant-Id + ator com
+      // membership ativa — inaplicável a uma leitura pública —, por isso o
+      // contexto é semeado aqui com o ator nominal (OD-P27) e o interceptor
+      // publicado não é chamado para essas rotas.
+      const { tenantId, actorId } = request.portalPublic;
+      return new Observable((subscriber) => {
+        let subscription: { unsubscribe(): void } | undefined;
+        this.requestContextMutator.runWithRequestContext(
+          {
+            requestId: generateRequestId(),
+            startedAt: new Date(),
+            tenantId,
+            actorId,
+          },
+          () => {
+            subscription = next.handle().subscribe({
+              next: (value) => subscriber.next(value),
+              error: (error) => subscriber.error(error),
+              complete: () => subscriber.complete(),
+            });
+          },
+        );
+        return () => subscription?.unsubscribe();
+      });
+    }
     return new Observable((subscriber) => {
       let subscription: { unsubscribe(): void } | undefined;
       const actorId =
@@ -214,13 +254,21 @@ export class DetranLegacyAuthContextGuard implements CanActivate {
       DETRAN_PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    if (isPublic) return true;
     const request = context
       .switchToHttp()
-      .getRequest<{ path?: string; url?: string }>();
+      .getRequest<PortalPublicRequestLike>();
+    if (isPublic) {
+      // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
+      seedPortalPublicRequest(request);
+      return true;
+    }
     const path = request.path ?? request.url ?? '';
     if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
-    return this.inner.canActivate(context);
+    // R-0009 CTG-0001 §9: `TenantResolverContext` não expõe o Host; o guard
+    // interno (e `DetranTenantResolver.resolve`) roda dentro deste escopo.
+    return portalRequestHostStorage.run(portalHostOf(request.headers), () =>
+      this.inner.canActivate(context),
+    );
   }
 }
 
@@ -236,13 +284,21 @@ export class DetranStynxAuthContextGuard implements CanActivate {
       DETRAN_PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    if (isPublic) return true;
     const request = context
       .switchToHttp()
-      .getRequest<{ path?: string; url?: string }>();
+      .getRequest<PortalPublicRequestLike>();
+    if (isPublic) {
+      // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
+      seedPortalPublicRequest(request);
+      return true;
+    }
     const path = request.path ?? request.url ?? '';
     if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
-    return this.inner.canActivate(context);
+    // R-0009 CTG-0001 §9: `TenantResolverContext` não expõe o Host; o guard
+    // interno (e `DetranTenantResolver.resolve`) roda dentro deste escopo.
+    return portalRequestHostStorage.run(portalHostOf(request.headers), () =>
+      this.inner.canActivate(context),
+    );
   }
 }
 
@@ -254,7 +310,7 @@ class DetranDatabaseBinder implements OnModuleInit {
     private readonly requestContextMutator: RequestContextMutator,
   ) {}
 
-  onModuleInit(): void {
+  async onModuleInit(): Promise<void> {
     detranAuditSink.bindDatabase(this.database);
     detranPostgresReadiness.bindDatabase(this.database);
     detranPipelineSqlExecutor.bindDatabase(this.database);
@@ -262,6 +318,10 @@ class DetranDatabaseBinder implements OnModuleInit {
       this.requestContext,
       this.requestContextMutator,
     );
+    // R-0009 CTG-0001 §9 (M11): diretório Host → tenant carregado no
+    // bootstrap, fora do caminho da requisição.
+    detranPortalHostnameDirectory.bindDatabase(this.database);
+    await detranPortalHostnameDirectory.reload();
   }
 }
 
@@ -358,6 +418,14 @@ export class AppModule {
         RestrictionsModule,
         RetentionModule,
         ComplaintsModule,
+        // Portal do cidadão (R-0009 CTG-0001, plan M1/M24): `identity` traz
+        // as rotas manuscritas deste grupo; os outros quatro são montados
+        // como módulos puramente gerados (sem rotas) até CTG-0002.
+        IdentityModule,
+        RequestsModule,
+        InboxModule,
+        CitizenServiceModule,
+        ProjectionsModule,
         // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
         // handwritten AIT lifecycle commands (WP-T0).
         // Portas do protocolo de sincronização (CTG-0002 §4.8) antes dos

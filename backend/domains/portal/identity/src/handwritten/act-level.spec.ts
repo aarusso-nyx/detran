@@ -185,6 +185,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
         { cpf: '11111111111', assuranceLevel: 'qualificada' },
         'ato-x',
         '/resume/ato-x',
+        clock,
       ),
     ).rejects.toMatchObject({ code: 'PORTAL.INTERNAL' });
   });
@@ -199,6 +200,7 @@ describe('assertActLevel (§4, M4/M5)', () => {
         { cpf: '11111111111', assuranceLevel: 'qualificada' },
         'ato-x',
         '/resume/ato-x',
+        clock,
       ),
     ).rejects.toMatchObject({ code: 'PORTAL.INTERNAL' });
   });

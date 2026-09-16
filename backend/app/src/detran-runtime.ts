@@ -13,7 +13,9 @@ import type {
   TenantResolverContext,
   TokenVerifier,
 } from '@stynx-nyx/contracts';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { CognitoTokenVerifier } from '@stynx-nyx/auth';
+import { headerToString } from '@stynx-nyx/contracts';
 import {
   generateRequestId,
   RequestContext,
@@ -50,7 +52,11 @@ import {
 } from '@stynx-nyx/ratelimit';
 import type { StynxStorageModuleOptions } from '@stynx-nyx/storage';
 
-import { isDetranActionAllowed, permissionsForRoles } from '@detran/shared';
+import {
+  DetranError,
+  isDetranActionAllowed,
+  permissionsForRoles,
+} from '@detran/shared';
 import {
   InMemoryFeatureFlagProvider,
   type FlagSet,
@@ -327,6 +333,19 @@ export class DetranLocalTokenVerifier implements TokenVerifier {
         ...(process.env.DETRAN_LOCAL_DECISION_BODY
           ? { decision_body: process.env.DETRAN_LOCAL_DECISION_BODY }
           : {}),
+        // R-0009 CTG-0001 §2.3 (M3; ADR-0024 §6): o IdP gov.br é simulado —
+        // os valores são copiados literalmente e NÃO validados aqui; quem
+        // falha em valor inválido é a `PortalCitizenGuard` (fail-closed).
+        // Ausência da variável = ausência da claim.
+        ...(process.env.DETRAN_LOCAL_ASSURANCE_LEVEL
+          ? { assurance_level: process.env.DETRAN_LOCAL_ASSURANCE_LEVEL }
+          : {}),
+        ...(process.env.DETRAN_LOCAL_CPF
+          ? { cpf: process.env.DETRAN_LOCAL_CPF }
+          : {}),
+        ...(process.env.DETRAN_LOCAL_GOVBR_LEVEL
+          ? { govbr_level: process.env.DETRAN_LOCAL_GOVBR_LEVEL }
+          : {}),
       },
     };
     return { principal, token };
@@ -377,14 +396,195 @@ export function detranTokenVerifier(): TokenVerifier {
   });
 }
 
+type HostnameDirectoryDatabase = Pick<Database, 'tx' | 'withSystemContext'>;
+
+/**
+ * Host público → tenant (R-0009 CTG-0001 §9; plan M11): mapa em memória de
+ * `portal.public_hostname` (`enabled = true`, sem RLS por desenho — DDL 19),
+ * carregado no bootstrap do app (`DetranDatabaseBinder`) fora do caminho da
+ * requisição. `TenantResolver.resolve` é síncrono no STYNX 1.3.1, por isso o
+ * diretório não consulta o banco por requisição. Recarga por intervalo:
+ * valor sem fonte (source_pending, OD-P22) — só `reload()` explícito.
+ */
+export class PortalHostnameDirectory {
+  private database: HostnameDirectoryDatabase | undefined;
+  private entries = new Map<string, string>();
+
+  bindDatabase(database: HostnameDirectoryDatabase): void {
+    this.database = database;
+  }
+
+  async reload(): Promise<void> {
+    const database = this.database;
+    if (!database) {
+      throw new Error(
+        'DETRAN portal hostname directory requires the Database provider',
+      );
+    }
+    const rows = await database.withSystemContext(
+      'DETRAN portal hostname directory',
+      () =>
+        database.tx(
+          async (transaction) =>
+            (
+              await transaction.query<{ hostname: string; tenant_id: string }>(
+                `select hostname, tenant_id
+                   from portal.public_hostname
+                  where enabled = true`,
+              )
+            ).rows,
+          { role: 'owner', readonly: true, retry: false },
+        ),
+    );
+    this.entries = new Map(
+      rows.map((row) => [row.hostname.toLowerCase(), row.tenant_id]),
+    );
+  }
+
+  tenantIdFor(host: string | undefined): string | undefined {
+    return host ? this.entries.get(host) : undefined;
+  }
+}
+
+export const detranPortalHostnameDirectory = new PortalHostnameDirectory();
+
+/** Cabeçalho `Host` normalizado (minúsculo, sem porta) — CTG-0001 §9. */
+export function portalHostOf(
+  headers: Record<string, unknown>,
+): string | undefined {
+  const raw = headerToString(headers['host'])?.trim().toLowerCase();
+  if (!raw) return undefined;
+  const withoutPort = raw.replace(/:\d+$/u, '');
+  return withoutPort || undefined;
+}
+
+/**
+ * `TenantResolverContext` do STYNX (`{ principal, headerTenantId? }`) não
+ * expõe o `Host`: os guards de autenticação do app (`app.module.ts`) executam
+ * o guard interno dentro deste escopo, e `DetranTenantResolver.resolve` lê o
+ * Host daqui (CTG-0001 §9, "middleware/guard global do app que popula o
+ * mesmo contexto").
+ */
+export const portalRequestHostStorage = new AsyncLocalStorage<
+  string | undefined
+>();
+
+export interface PortalTenantResolutionInput {
+  /** `X-Tenant-Id` ou `principal.tenants[0]` (comportamento atual). */
+  sessionTenantId?: string;
+  /** `Host` normalizado por `portalHostOf`. */
+  host?: string;
+}
+
+/**
+ * R-0009 CTG-0001 §9 (M11): regras, nesta ordem —
+ * 1. sessão e Host mapeado divergem → 403 `PORTAL.SESSION_TENANT_MISMATCH`;
+ * 2. sessão → sessão; 3. Host mapeado → tenant do Host; 4/5. consulta ao Host
+ * ligada e nada mapeado → 421 `PORTAL.TENANT_UNRESOLVED`, senão perfil local
+ * → `LOCAL_TENANT_ID` (inalterado); 6. (inalcançável fora do local) erro.
+ * A consulta ao Host só existe fora do perfil local ou com
+ * `DETRAN_PORTAL_HOST_RESOLUTION=on`: sem a flag, o perfil local é idêntico
+ * ao de antes (nenhuma consulta a `public_hostname`).
+ */
 export class DetranTenantResolver implements TenantResolver {
+  constructor(
+    private readonly directory: PortalHostnameDirectory = detranPortalHostnameDirectory,
+  ) {}
+
   resolve(context: TenantResolverContext): string {
-    const tenantId = context.headerTenantId ?? context.principal.tenants[0];
-    if (tenantId) return tenantId;
+    return this.resolveTenant({
+      sessionTenantId: context.headerTenantId ?? context.principal.tenants[0],
+      host: portalRequestHostStorage.getStore(),
+    });
+  }
+
+  resolveTenant(input: PortalTenantResolutionInput): string {
     const profile = detranRuntimeProfile();
+    const hostLookup =
+      process.env.DETRAN_PORTAL_HOST_RESOLUTION === 'on' ||
+      !isLocalRuntimeProfile(profile);
+    const session = input.sessionTenantId || undefined;
+    const mapped = hostLookup
+      ? this.directory.tenantIdFor(input.host)
+      : undefined;
+    if (session && mapped && session !== mapped) {
+      throw new DetranError('PORTAL.SESSION_TENANT_MISMATCH', {
+        status: 403,
+        context: {},
+      });
+    }
+    if (session) return session;
+    if (mapped) return mapped;
+    // Com a consulta ao Host ligada (perfil não local ou flag), um Host não
+    // mapeado é 421 mesmo no perfil local — é a única forma de o e2e provar o
+    // caminho 5 (§9, C-0001-48); o padrão local (`LOCAL_TENANT_ID`) só vale
+    // com a flag desligada (C-0001-50, comportamento atual).
+    if (hostLookup) {
+      throw new DetranError('PORTAL.TENANT_UNRESOLVED', {
+        status: 421,
+        context: {},
+      });
+    }
     if (isLocalRuntimeProfile(profile)) return LOCAL_TENANT_ID;
     throw new Error(`Tenant context is required in ${profile} profile`);
   }
+}
+
+/** Prefixo das rotas do Portal (portal-route-contract.md §1.1). */
+export const PORTAL_ROUTE_PREFIX = '/v1/portal/';
+
+/**
+ * Ator nominal das rotas `@Public()` de `/v1/portal/*` (CTG-0001 §8: "não há
+ * actorId em rota pública"). `Database.tx({ role: 'app' })` do STYNX 1.3.1
+ * exige `tenantId` E `actorId` no `RequestContext`
+ * (`resolveExecutionContext` → `ActorContextMissingError`), logo a leitura
+ * pública de `brand_profile`/`service_catalog` precisa de um ator no
+ * contexto. UUID nulo (RFC 9562 §5.9) = "nenhum ator": `uuidOrNull` do sink
+ * de auditoria o descarta e nenhuma tabela o referencia. Valor sem fonte no
+ * contrato — registrado como OD-P27 (relatório de TASK-0004).
+ */
+export const PORTAL_PUBLIC_ACTOR_ID = '00000000-0000-0000-0000-000000000000';
+
+export interface PortalPublicRequestLike {
+  headers: Record<string, unknown>;
+  path?: string;
+  url?: string;
+  originalUrl?: string;
+  tenantId?: string;
+  /** Ator nominal lido pelo `RequestContextInterceptor` do STYNX core. */
+  actor?: { id: string };
+  /** Contexto semeado para rotas públicas do Portal (lido em `app.module.ts`). */
+  portalPublic?: { tenantId: string; actorId: string };
+}
+
+export function isPortalRoutePath(path: string): boolean {
+  return path.startsWith(PORTAL_ROUTE_PREFIX);
+}
+
+/**
+ * Rotas `@Public()` de `/v1/portal/*` (`GET brand`, `GET services[/{key}]`,
+ * CTG-0001 §8/§9): sem sessão, o tenant vem de `X-Tenant-Id` (semeia a
+ * sessão, route contract §1.5) e/ou do `Host`, pelas mesmas regras de
+ * `DetranTenantResolver`; o resultado fica em `request.tenantId`,
+ * `request.actor` (ator nominal) e `request.portalPublic`: o interceptor de
+ * tenancy patchado em `app.module.ts` pula a validação de membership do
+ * STYNX para essas rotas e o `RequestContextInterceptor` do STYNX core semeia
+ * o `RequestContext` a partir de `request.tenantId`/`request.actor.id`.
+ * Rotas públicas fora do Portal (webhooks PEC) não mudam.
+ */
+export function seedPortalPublicRequest(
+  request: PortalPublicRequestLike,
+  resolver: DetranTenantResolver = new DetranTenantResolver(),
+): void {
+  const path = request.path ?? request.originalUrl ?? request.url ?? '';
+  if (!isPortalRoutePath(path)) return;
+  const tenantId = resolver.resolveTenant({
+    sessionTenantId: headerToString(request.headers['x-tenant-id'])?.trim(),
+    host: portalHostOf(request.headers),
+  });
+  request.tenantId = tenantId;
+  request.actor = { id: PORTAL_PUBLIC_ACTOR_ID };
+  request.portalPublic = { tenantId, actorId: PORTAL_PUBLIC_ACTOR_ID };
 }
 
 export class DetranTenantEntitlementPolicy implements TenantEntitlementPolicy {

@@ -13,7 +13,7 @@ export interface components {
       /** Format: uuid */
       tenant_id: string;
       cpf_hash: string;
-      name: string;
+      name?: string | null;
       /** @enum {string|null} */
       govbr_level_observed?: 'bronze' | 'prata' | 'ouro' | 'qualificada' | null;
       /** @enum {string} */
@@ -29,7 +29,7 @@ export interface components {
     };
     CreateSubjectDto: {
       cpf_hash: string;
-      name: string;
+      name?: string | null;
       /** @enum {string|null} */
       govbr_level_observed?: 'bronze' | 'prata' | 'ouro' | 'qualificada' | null;
       /** @enum {string} */
