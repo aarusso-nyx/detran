@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Corrija o índice com os status reais; UC-BOAT-012 é aprovado e não é stub",
+  "description": "Corrija o índice com os status reais; UC-BOAT-012 é aprovado e não é stub. Transcreva UC-BOAT-013 para o dever de resposta ao titular de W-05, sem criar regra de negócio. Atualize apenas o baseline `artifactIdCount` de 521 para 522, se o checker confirmar um único novo artefato; preserve 446 tokens. Não promova status de outros artefatos.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-boat", "MOD-kb-manifest"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-b0"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-ef374730c9f1f275",
+  "acceptance_commands": [
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-ef374730c9f1f275",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

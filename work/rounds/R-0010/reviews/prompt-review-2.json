@@ -1,0 +1,176 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0010/prompts/TASK-0010.md",
+      "line": 25,
+      "claim": "o Engineer recebe `tools/contracts/tests/check-commands.test.mjs` em Pode tocar e escreve os proprios testes; isso quebra a triade (Constituicao Art. 24 e orchestra README §4.1, quem define a referencia nao atua sobre ela) e contradiz a regra repetida nos outros nove prompts, Testes so pelo Inspector",
+      "fix": "desdobrar TASK-0010 em par Inspector/Engineer: um prompt de inspector-tests escreve os casos BOAT conhecido/desconhecido, TEAT conhecido/desconhecido e rota presente/ausente em `tools/contracts/tests/check-commands.test.mjs`; o Engineer fica so com `tools/contracts/check-commands.mjs`"
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0010/prompts/TASK-0004.md",
+      "line": 52,
+      "claim": "a lista de acoes `est:crash-record` omite `create` e `read`, exigidas por boat-route-contract.md §3 (POST records, GET records/{id}/renaest, GET records/{id}/report) e §2 (CRUD gerado das dez colecoes, DELETE so technical-admin), e omite `est:crash-victim:read` com finalidade; policy.ts hoje nao tem nenhuma dessas entradas",
+      "fix": "acrescentar `create`, `read` e a leitura de `crash-victim` com `purpose` a lista vinculante de TASK-0004 e a tabela est:* x papeis de CTG-0001, com os papeis de §2/§3 e negativos exaustivos"
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0002.md",
+      "line": 57,
+      "claim": "criterio pede `pnpm verify:lifecycle-vocabulary` cobrindo est, mas `tools/check-lifecycle-vocabulary.ts` esta fixo em `14-inf-lifecycle-vocabulary.sql` e nas tabelas `inf.infraction_state_ref`/`inf.ait_state_ref`; o arquivo da ferramenta esta fora da fronteira de TASK-0002 (pertence a TASK-0004)",
+      "fix": "em TASK-0002 reduzir o criterio a `pnpm verify:lifecycle-vocabulary` continua OK (sem regressao inf) e manter a extensao ao est so como criterio de TASK-0004"
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0002.md",
+      "line": 58,
+      "claim": "`pnpm contracts:check` encadeia `generate-clients.mjs --check`, que compara `docs/framework/contracts/*.openapi.json` byte a byte com `packages/api-clients/src/generated`; ao gerar `BP-EST-CRASH-001.openapi.json` o gate fica vermelho por cliente ausente e `packages/api-clients/**` esta fora do Pode tocar",
+      "fix": "trocar por `node tools/contracts/generate-openapi.mjs --check` e `node tools/contracts/check-commands.mjs`, e registrar no prompt que o maestro roda `pnpm contracts:clients` no fecho do CTG-0001"
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0008.md",
+      "line": 47,
+      "claim": "mesmo defeito: o novo `BP-EST-CRASH-001.commands.openapi.json` tambem entra no gerador de clientes (o filtro e apenas `.openapi.json`), logo `pnpm contracts:check` nao pode fechar OK antes de `pnpm contracts:clients`, que o proprio prompt atribui ao maestro",
+      "fix": "criterio de TASK-0008 = `node tools/contracts/check-commands.mjs` OK e `pnpm contracts:test` verde; `pnpm contracts:check` so no checkpoint do maestro, depois de `contracts:clients`"
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0010.md",
+      "line": 44,
+      "claim": "TASK-0010 depende de TASK-0007 (controladores ja montados) e precede TASK-0008; ao acrescentar `backend/domains/est/crash/src` a CONTROLLER_ROOTS a regra 6 do gate (codigo para contrato) acusa missing-operation em toda rota BOAT, entao o criterio passe com as 92 operacoes TEAT e inalcancavel",
+      "fix": "inverter a ordem (TASK-0008 antes de TASK-0010) ou exigir de TASK-0010 apenas `pnpm contracts:test`, declarando que `check-commands.mjs` so e avaliado ponta a ponta no fecho do CTG-0002"
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0008.md",
+      "line": 43,
+      "claim": "`INVALID_CRASH_RECORD` sem prefixo nao e token de catalogo; os codigos canonicos sao `TEAT.SYNC_INVALID_CRASH_RECORD` (teat-error-catalog.md §1, recibo da fila) e `BOAT.SYNC_INVALID_CRASH_RECORD` (boat-error-catalog.md §3); o gate estendido por TASK-0010 e fechado por prefixo e rejeitaria a forma abreviada",
+      "fix": "fixar no prompt qual prefixo vale no recibo da fila (a fila e TEAT: `TEAT.SYNC_INVALID_CRASH_RECORD`) e citar `BOAT.SYNC_INVALID_CRASH_RECORD` apenas nas respostas do modulo est/crash"
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0008.md",
+      "line": 13,
+      "claim": "lista fechada insuficiente para a tarefa: falta `docs/framework/blueprints/BP-EST-CRASH-001.json` (o gate resolve `x-blueprint` contra ele, regra 2), falta a raiz dos controladores `backend/domains/est/crash/src/handwritten/` (regras 5 e 6, rotas realmente montadas) e falta `backend/database/seed/70-fixtures-est-crash.sql`, de onde devem sair os ids dos exemplos",
+      "fix": "acrescentar os tres caminhos a lista fechada de TASK-0008"
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0004.md",
+      "line": 13,
+      "claim": "TASK-0004 pode tocar `tools/check-lifecycle-vocabulary.ts` e deve estende-lo ao est, mas a lista fechada nao tem WF-BOAT-001, WF-BOAT-003 nem os DDL `14-inf-lifecycle-vocabulary.sql`/`70-est-crash.sql`; a ferramenta compara justamente os codigos do DDL com os tokens do workflow, entao o worker ficaria sem fonte",
+      "fix": "acrescentar WF-BOAT-001.md, WF-BOAT-003.md e os dois arquivos DDL a lista fechada de TASK-0004"
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0001.md",
+      "line": 13,
+      "claim": "a tarefa manda transcrever UC-BOAT-013 a partir de W-05, mas W-05 e definida em `docs/framework/product/domains/est/boat/screens/IU-BOAT-001.md` linha 51 e na `APP.md` linha 279, com base em [RN-BOAT-126]; nenhum desses arquivos esta na lista fechada, so JRN-BOAT-005",
+      "fix": "acrescentar `screens/IU-BOAT-001.md`, `APP.md` e a regra [RN-BOAT-126] a lista fechada de TASK-0001"
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0006.md",
+      "line": 13,
+      "claim": "as definicoes vinculantes (linha 47) mandam usar fixtures do CTG-0001 e o recibo da fila, mas a lista fechada nao tem `work/rounds/R-0010/contracts/CTG-0001.md` nem `docs/framework/arch/teat-error-catalog.md`",
+      "fix": "acrescentar CTG-0001.md e teat-error-catalog.md a lista fechada de TASK-0006"
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0007.md",
+      "line": 59,
+      "claim": "`backend:test:ci` e uma lista explicita de `--filter` no `package.json` da raiz; `@detran/est-crash` nao entra la e o `package.json` da raiz nao esta no Pode tocar de nenhuma tarefa, logo o criterio fica verde sem executar um unico teste do modulo novo",
+      "fix": "incluir `package.json` (raiz) na fronteira de TASK-0007 restrito a acrescentar `@detran/est-crash` em `backend:test:unit`, `backend:test:integration` e `backend:test:e2e`"
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0003.md",
+      "line": 53,
+      "claim": "`pnpm --filter @detran/est-crash test:unit` so resolve depois que o pacote novo do workspace e instalado e ligado; os workers estao proibidos de rodar `pnpm install` e nenhum prompt atribui esse passo ao maestro entre TASK-0002 e TASK-0003 (licao de lockfile de R-0008)",
+      "fix": "registrar no plano e no cabecalho de TASK-0003 que o maestro roda `pnpm install` no checkpoint apos TASK-0002, antes de liberar TASK-0003"
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0010/prompts/TASK-0001.md",
+      "line": 7,
+      "claim": "o prompt declara Architect (transcricao) enquanto `plan.md` linha 48 atribui Owner delegado a mesma tarefa (idem TASK-0009, plan.md linha 57); a tarefa cria caso de uso de produto, territorio do Owner por CLAUDE.md, e o manual transcriber-docs manda declarar Architect (transcricao)",
+      "fix": "alinhar a coluna Papel do plano ao texto do prompt, ou declarar no prompt Owner delegado com execucao transcritora, citando o ajuste de R-0006"
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/plan.md",
+      "line": 29,
+      "claim": "`est.renaest.transmit_period=monthly` e atribuido a H.54; o `parameter-catalogue.md` linha 97 registra `OD-B04/DT-017` como decision_ref, e H.54 cobre os 24 defaults de calibracao, que nao incluem esse parametro",
+      "fix": "corrigir a citacao do plano para OD-B04/DT-017 e manter H.42/H.43/H.45 onde de fato se aplicam"
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0002.md",
+      "line": 51,
+      "claim": "a definicao vinculante diz H.45: BAT 5, saude 5, AIT/evidencia 10 dentro do escopo `est.retention.*`; o catalogo so tem `est.retention.bat_years` e `est.retention.health_fields_years`, e os 10 anos sao `teat.retention.ait_years`",
+      "fix": "explicitar que os 10 anos vem de `teat.retention.ait_years` e que TASK-0002 nao cria linha `est.retention.*` de 10 anos sem OD"
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0005.md",
+      "line": 49,
+      "claim": "`pnpm contracts:check` nao le markdown; a entrega de TASK-0005 e `renaest-mapping.md` mais `CTG-0002.md`, entao o criterio passa sem verificar nada da entrega",
+      "fix": "trocar por um criterio verificavel: toda propriedade de `CrashReportInput` e `CrashCorrectionInput` em `packages/senatran-adapter/src/domain.ts` aparece na tabela, marcada como mapeada ou a confirmar (DT-061)"
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0003.md",
+      "line": 13,
+      "claim": "a tarefa e a matriz de transicoes [WF-BOAT-001]/[WF-BOAT-003] e os papeis por comando, mas a lista fechada nao tem os dois workflows nem `boat-route-contract.md`; o Inspector depende inteiramente de CTG-0001 para nao inventar transicao",
+      "fix": "acrescentar WF-BOAT-001.md, WF-BOAT-003.md e boat-route-contract.md §3 a lista fechada, ou exigir de TASK-0002 que CTG-0001 transcreva a matriz completa"
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0010/prompts/TASK-0009.md",
+      "line": 13,
+      "claim": "a lista fechada repete `docs/framework/arch/boat-build-pack.md` (linhas 18 e 20) e `work/rounds/R-0010/plan.md` (linhas 17 e 23)",
+      "fix": "remover as duas duplicatas"
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "work/rounds/R-0010/prompts/TASK-0002.md",
+      "line": 32,
+      "claim": "as referencias `est.*_ref` e o timer T-BOAT-TRANSM entram em `backend/database/ddl/14-inf-lifecycle-vocabulary.sql`, arquivo cujo cabecalho e cuja ferramenta de verificacao sao declaradamente do dominio inf; a ordem de aplicacao funciona (o schema est nasce em 01-schemas.sql), mas o nome e o escopo do gate passam a mentir",
+      "fix": "criar `backend/database/ddl/19-est-lifecycle-vocabulary.sql` dedicado e apontar a extensao do `check-lifecycle-vocabulary.ts` para ele, mantendo 14 restrito a inf"
+    }
+  ],
+  "notes": [
+    "Verificado no repositorio: DDL 70 esta livre (maior numero atual e 60-portal-complaints.sql) e `apply.sh` descobre os arquivos por find e sort, entao TASK-0002 nao precisa tocar `apply.sh`.",
+    "Verificado: `node tools/contracts/check-commands.mjs` hoje devolve OK com 92 operacoes, e `parseErrorCatalog` usa regex TEAT com catalogPath TEAT; a premissa de TASK-0010 esta correta.",
+    "Verificado: `policy.ts` ja traz `attach-sketch` com field-agent e processing-operator e `validate` com processing-operator e traffic-authority, ou seja a divergencia 1 de boat-route-contract.md §8 ja foi fechada em main; TASK-0009 deveria registrar isso ao atualizar o build pack.",
+    "Verificado: UC-BOAT-012 tem status approved no proprio arquivo enquanto o INDEX ainda o descreve como stub criado, e o baseline artifactIdCount do import-manifest.json e 521 com canonicalWorkflowTokenCount 446; os numeros de TASK-0001 batem.",
+    "Verificado: `tools/docs/kb/check.mjs` so varre docs/framework/product e o glossario, entao `renaest-mapping.md` nao altera contagem nem exige front-matter.",
+    "Modelo e esforco conferem com model-ladder.md, inclusive TASK-0007 em Terra, justificado por boat-build-pack.md linha 105 (Opus/Terra para WP-B1 e WP-B2).",
+    "Regra 10 de orchestra README §4 (pacote novo entra em backend/app/vitest.config.ts e backend/app/package.json) esta corretamente refletida em TASK-0004 e TASK-0007; o que falta e so a lista do package.json da raiz."
+  ]
+}

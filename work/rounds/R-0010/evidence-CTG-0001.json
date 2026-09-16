@@ -1,0 +1,90 @@
+{
+  "action": "Implement CTG-0001 WP-B0/B1: BOAT policy, EST crash blueprint and schema, generated backend package, fixtures, lifecycle vocabulary, purpose-audited victim reads and validation",
+  "round": "R-0010",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "commits": ["289916b39c37f4f1e3b93c1038e388248071c9f4"],
+  "artifacts": [
+    {
+      "path": "backend/app/src/app.module.ts",
+      "sha256": "d9518e5ce9ba5e1d085309a37072aa81e4a274300eec4d4205e3113dff8862ac"
+    },
+    {
+      "path": "backend/app/tests/e2e/policy-routes.e2e.spec.ts",
+      "sha256": "23b3e9ea0b1f9174e915f8aa7da2a9a983d5ae94c2e56e7eced7324898611b6b"
+    },
+    {
+      "path": "backend/database/ddl/19-est-lifecycle-vocabulary.sql",
+      "sha256": "c8cab76232abddf5ad23dc78e6d01739d4480b73e867bd27cbabe5f266294010"
+    },
+    {
+      "path": "backend/database/ddl/70-est-crash.sql",
+      "sha256": "0422277403d5896012a885545e6c4fa95bde04bde144cbe96e542c43c5f3c80a"
+    },
+    {
+      "path": "backend/database/seed/70-fixtures-est-crash.sql",
+      "sha256": "f61a574c4600c74f91576ede19df776a6dee223847c17923f4dec68dbfbd60a8"
+    },
+    {
+      "path": "backend/domains/est/crash/src/crash.module.ts",
+      "sha256": "28411c575f0c0d7a1f97d89d81d0844f70e7ed967749410107b5fe9d8b17e192"
+    },
+    {
+      "path": "backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts",
+      "sha256": "bb1672074db7fb8684858894efd913ccc7f09483c14a143c8d18d3c2f8ee473b"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.ts",
+      "sha256": "4bef79404ee0b83806b7221f43d5576c4cbba9f2b30bba14ae1f0d5838142109"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.spec.ts",
+      "sha256": "a2a892f63317b46ab6951cbfe7b46d27c61897da293f33179909dba8c219b4e9"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-EST-CRASH-001.json",
+      "sha256": "b47af7c82f17c4a1fa3e3eefb69f476ee022559780b97f30285d2582d18c8231"
+    },
+    {
+      "path": "docs/framework/contracts/BP-EST-CRASH-001.openapi.json",
+      "sha256": "f421af3e0b35bc75aa2745c4b578c4e3e1465b8421415f703c723c91758881d4"
+    },
+    {
+      "path": "docs/framework/product/domains/est/boat/use-cases/INDEX.md",
+      "sha256": "ad551a8785865022d2d30f41e09762e0088f944849e256ed23cf4421c02241ed"
+    },
+    {
+      "path": "docs/framework/product/domains/est/boat/use-cases/UC-BOAT-013.md",
+      "sha256": "3f1cfdcfaa5b1b99d9502127796bb9cea2482049ba47ceb222df74e09b81795e"
+    },
+    {
+      "path": "docs/meta/knowledge-base/import-manifest.json",
+      "sha256": "93ffe35a4b107f7d7198295f1caf1c1ceba9d9d450808e18f47790eb4e3abff1"
+    },
+    {
+      "path": "packages/api-clients/src/generated/BP-EST-CRASH-001.ts",
+      "sha256": "5da0fb939d363e6cb505de3d8e4d451ec27c03b3a7125185c887b94e29451ae2"
+    },
+    {
+      "path": "work/rounds/R-0010/contracts/CTG-0001.md",
+      "sha256": "4804537f867e0bc9642bf9d1219b8a0e8bbe16798cfe7d5e4662877e2e465ec4"
+    },
+    {
+      "path": "work/rounds/R-0010/reviews/delivery-review-CTG-0001-cycle-4.json",
+      "sha256": "74581d98bf33f520124c3c35bae36c7039a48b45dceb30c33bce8617734220a5"
+    }
+  ],
+  "gates": {
+    "pnpm check": "pass on final CTG-0001 source before commit: formatting, blueprint and contract drift, typecheck, architecture and policy gates",
+    "pnpm build": "pass on clean detached candidate 289916b39c37f4f1e3b93c1038e388248071c9f4",
+    "pnpm backend:db:reset": "pass on detran_r10 using clean candidate",
+    "bash backend/database/seed.sh": "pass on detran_r10 using clean candidate; seed twice had passed earlier",
+    "pnpm backend:test:ci": "pass on clean detached candidate 289916b39c37f4f1e3b93c1038e388248071c9f4 against detran_r10, all unit/integration/e2e tiers",
+    "policy-routes.e2e.spec.ts": "4 pass, including bidirectional EST route policy and purpose-audited victim item/collection reads",
+    "delivery-review": "PASS on restricted cycle 4, after cycle 2 REVIEW and cycle 3 REVIEW",
+    "format:check": "pass after INDEX correction",
+    "git diff --cached --check": "pass before commit"
+  },
+  "tasks": ["TASK-0001", "TASK-0002", "TASK-0003", "TASK-0004"],
+  "notes": "CTG-0002 REDs remain untracked and excluded from this candidate; start and all WP-B2 commands are allocated to TASK-0006/0007 by CTG-0001 adendas A-2/A-3. Candidate was tested in /tmp/detran-r0010-ctg1-verify."
+}

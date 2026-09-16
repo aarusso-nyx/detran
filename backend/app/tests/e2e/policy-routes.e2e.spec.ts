@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import type { NestFactory } from '@nestjs/core';
+import pg from 'pg';
+import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 /**
@@ -23,6 +25,15 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const TENANT_ID = '00000000-0000-7000-8000-00000000a001';
 const ACTOR_ID = '00000000-0000-4000-8000-0000b0000001';
+const BOAT_VICTIM = '00000000-0000-7000-8000-0000a3000001';
+const { Client } = pg;
+const auditClient = new Client({
+  host: process.env.DB_HOST ?? 'localhost',
+  port: Number(process.env.DB_PORT ?? '5432'),
+  user: process.env.DB_USER ?? 'postgres',
+  password: process.env.DB_PASSWORD ?? 'postgres',
+  database: process.env.DB_NAME ?? 'detran_r10',
+});
 
 let app: Awaited<ReturnType<typeof NestFactory.create>>;
 /**
@@ -43,11 +54,43 @@ interface RouteEntry {
 }
 
 /**
- * Escopo TEAT do teste (CTG-0004 §8, transcrito literalmente — nada além
- * dos prefixos listados entra em nenhuma das duas direções).
+ * Adenda A-2 de CTG-0001: enquanto TASK-0007 não montar os comandos WP-B2,
+ * o sentido 2 cobre somente as ações EST efetivamente montadas neste corte.
+ * A lista é temporária e explícita: start, add-vehicle, add-person,
+ * add-victim, record-duty, add-damage, add-witness, attach-sketch, link,
+ * record, complement, validate, close, cancel, transmit, rectify, archive e
+ * subject-request passam a fazer parte do gate quando as rotas forem montadas
+ * em CTG-0002. Isto preserva o gate verde de CTG-0001 sem esconder as REDs
+ * comportamentais de TASK-0006 em boat-crash-commands.e2e.spec.ts.
  */
+const EST_CTG_0001_MOUNTED_KEYS = new Set([
+  'est:crash-record:create',
+  'est:crash-record:read',
+  'est:crash-record:update',
+  'est:crash-record:delete',
+  ...[
+    'crash-vehicle',
+    'crash-person',
+    'crash-victim',
+    'crash-scene-duty',
+    'crash-damage',
+    'crash-witness',
+    'crash-sketch',
+    'crash-renaest-submission',
+    'crash-subject-request',
+  ].flatMap((resource) =>
+    ['read', 'create', 'update', 'delete'].map(
+      (action) => `est:${resource}:${action}`,
+    ),
+  ),
+  // `crash-link` tem operations=[] no blueprint e nenhuma rota neste corte;
+  // suas operações entram na allowlist quando CTG-0002 as montar.
+]);
+
+/** Escopo CTG-0004 §8, com a transição EST limitada pela adenda A-2 acima. */
 function inScope(key: string): boolean {
   const [domain, resource] = key.split(':');
+  if (domain === 'est') return EST_CTG_0001_MOUNTED_KEYS.has(key);
   if (domain === 'ops') return resource !== 'parameter';
   if (domain !== 'inf') return false;
   if (resource.startsWith('rait-')) return false;
@@ -161,6 +204,9 @@ beforeAll(async () => {
   process.env.DETRAN_LOCAL_ACTOR_ID = ACTOR_ID;
   process.env.DETRAN_LOCAL_ROLES = 'field-agent';
 
+  await auditClient.connect();
+  await auditClient.query(`select set_config('app.role', 'owner', false)`);
+
   const { NestFactory: factory } = await import('@nestjs/core');
   const { AppModule } = await import('../../src/app.module.js');
   app = await factory.create(AppModule.forRoot(), {
@@ -179,11 +225,12 @@ beforeAll(async () => {
   if (previousSpeedFlag === undefined)
     delete process.env.DETRAN_FEATURE_TEAT_SPEED_METERS;
   else process.env.DETRAN_FEATURE_TEAT_SPEED_METERS = previousSpeedFlag;
-});
+}, 30000);
 
 afterAll(async () => {
   await app?.close();
   await speedApp?.close();
+  await auditClient.end();
   for (const [key, value] of Object.entries(previousEnv)) {
     if (value === undefined) delete process.env[key];
     else process.env[key] = value;
@@ -261,5 +308,70 @@ describe('CTG-0004 §8 — política ⇔ rotas do escopo TEAT (M18)', () => {
       stillPresent,
       `Chaves que deveriam ter sido removidas mas ainda existem: ${stillPresent.join(', ')}`,
     ).toEqual([]);
+  });
+});
+
+describe('CTG-0001 — acesso BOAT a vítima', () => {
+  function boatHeaders(role: string): Record<string, string> {
+    process.env.DETRAN_LOCAL_ROLES = role;
+    return {
+      authorization: 'Bearer local',
+      'x-tenant-id': TENANT_ID,
+      'idempotency-key': `boat-${role}-${Date.now()}`,
+    };
+  }
+
+  it('dada vítima de fixture quando lida sem purpose então C-1-13 recusa e com purpose audita a finalidade', async () => {
+    const withoutPurpose = await request(app.getHttpServer())
+      .get(`/v1/est/crash/victims/${BOAT_VICTIM}`)
+      .set(boatHeaders('field-agent'));
+    expect(withoutPurpose.status, JSON.stringify(withoutPurpose.body)).toBe(
+      400,
+    );
+    expect(withoutPurpose.body.code).toBe('BOAT.VICTIM_PURPOSE_REQUIRED');
+
+    const withPurpose = await request(app.getHttpServer())
+      .get(`/v1/est/crash/victims/${BOAT_VICTIM}`)
+      .query({ purpose: 'revisao do atendimento de sinistro' })
+      .set(boatHeaders('field-agent'));
+    expect(withPurpose.status, JSON.stringify(withPurpose.body)).toBe(200);
+
+    const audit = await auditClient.query<{ count: string }>(
+      `select count(*)::text as count
+         from audit.events
+        where tenant_id = $1
+          and entity = 'est.crash_victim'
+          and details->'metadata'->>'purpose' = 'revisao do atendimento de sinistro'`,
+      [TENANT_ID],
+    );
+    expect(Number(audit.rows[0]?.count ?? 0)).toBeGreaterThan(0);
+  });
+
+  it('dada coleção de vítimas quando lida sem purpose então C-1-13 recusa e com purpose audita a finalidade', async () => {
+    const withoutPurpose = await request(app.getHttpServer())
+      .get('/v1/est/crash/victims')
+      .set(boatHeaders('field-agent'));
+    expect(withoutPurpose.status, JSON.stringify(withoutPurpose.body)).toBe(
+      400,
+    );
+    expect(withoutPurpose.body.code).toBe('BOAT.VICTIM_PURPOSE_REQUIRED');
+
+    const purpose = 'consulta de vitimas do sinistro';
+    const withPurpose = await request(app.getHttpServer())
+      .get('/v1/est/crash/victims')
+      .query({ purpose })
+      .set(boatHeaders('field-agent'));
+    expect(withPurpose.status, JSON.stringify(withPurpose.body)).toBe(200);
+
+    const audit = await auditClient.query<{ count: string }>(
+      `select count(*)::text as count
+         from audit.events
+        where tenant_id = $1
+          and entity = 'est.crash_victim'
+          and entity_id is null
+          and details->'metadata'->>'purpose' = $2`,
+      [TENANT_ID, purpose],
+    );
+    expect(Number(audit.rows[0]?.count ?? 0)).toBeGreaterThan(0);
   });
 });
