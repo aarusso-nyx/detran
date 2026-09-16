@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
-**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (política `est:*`, `UC-BOAT-013`, modelo, refs, fixtures): nenhum upstream. CTG-0002 (comandos, aplicador da fila, RENAEST, projeções, contratos): `teat-backend` R-0008 (`orchestra/teat-backend`, fila de sincronização e evidência) e `ops-agency` R-0005.
+**Concorrência:** abre já e **nenhum grupo está preso**: R-0005 e R-0008 estão em `main`. Fila de sincronização em `backend/domains/ops/offline-sync` (contrato em `work/rounds/R-0008/contracts/CTG-0002.md`; schema `docs/framework/schemas/teat-offline-sync-batch.schema.json`); evidência em `backend/domains/ops/evidence`; `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`) e `policy-routes.e2e.spec.ts` prontos (estender com `est:*`). Lock `policy.ts` com R-0007 `rait-backend` (blocos `est:*` × `RAIT_*`): quem mesclar depois integra `main`.
 **Janelas previstas:** 3.
 
 ## Metas

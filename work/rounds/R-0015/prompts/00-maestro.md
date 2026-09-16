@@ -43,7 +43,23 @@ Regras: (a) worktree e branch existentes → reutilize-os, nunca recrie; (b) `pl
 preenchido → você está **retomando**: continue do checkpoint, não replaneje; (c) branch
 `orchestra/boat-mobile` remoto sem worktree local → `git worktree add /Volumes/Thiamat II/stech/detran-worktrees/boat-mobile orchestra/boat-mobile`; (d) PR aberto
 de outra frente com lock comum ao seu grupo → registre em `plan.md` §Concorrência e trate como
-upstream (base empilhada ou espera). Só então rode o bootstrap:
+upstream (base empilhada ou espera).
+
+**Lições obrigatórias das rodadas fechadas** (R-0003…R-0008; detalhe em `waves.md` §Histórico):
+(1) crie `work/rounds/R-0015/AUTHORIZATION.md` no bootstrap, registrando que o Owner autorizou
+este prompt — sem ele `devai round close` responde `TASK_ROUND_INACTIVE`; (2) pacote de workspace
+novo exige `pnpm install` pelo maestro e commit do `pnpm-lock.yaml` antes do push (CI usa
+`--frozen-lockfile`); (3) toda edição de `docs/framework/arch/parameter-catalogue.md` é seguida de
+`pnpm parameters:generate`, e specs nunca contêm chaves de parâmetro como literal
+(`verify:parameter-catalogue`); (4) helper `.mjs` importado por spec TS precisa de `.d.mts` irmão;
+(5) pacote novo montado no `AppModule` precisa de alias em `backend/app/vitest.config.ts`;
+(6) workers não deixam `pnpm check` rodando em segundo plano — encerre processos perdidos pelo pid
+exato antes dos seus gates, nunca por padrão de nome; (7) `git add record/proofs` explícito em cada
+commit de evidência; (8) `audit observe` só no HEAD exato integrado; se outra rodada fechar antes,
+aceite a cadeia de `main`, observe o HEAD integrado e repita `round close` (o id de fechamento muda);
+(9) `seed.sh` faz parte do CI e a rodada dona das fixtures prova as duas execuções; (10) ciclos de
+revisão a partir do segundo restritos aos itens corrigidos; contradição entre contrato e código é
+resolvida pelo Architect por adenda numerada antes de redespachar. Só então rode o bootstrap:
 
 ```bash
 export NODE_AUTH_TOKEN="$(gh auth token)"
