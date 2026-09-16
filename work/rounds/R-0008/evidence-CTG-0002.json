@@ -1,0 +1,96 @@
+{
+  "action": "Implement WP-T2 CTG-0002: offline-sync protocol (batches, receipts, conflicts, concurrency by parameter), numbering, mobile bootstrap, shifts, handoff, device and homologation commands, AIT sync applier, ops blueprint deltas, seed 26, tests",
+  "round": "R-0008",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": ["cab0983", "b7a79f6c513aa065e99861a78c41061f5a42208d"],
+  "artifacts": [
+    {
+      "path": "backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts",
+      "sha256": "8dc337da0ae06402479f6f86d3127c039699bfc081abeed7990a29f6bb936bdc"
+    },
+    {
+      "path": "backend/domains/ops/offline-sync/src/handwritten/reserve-numbering.command.ts",
+      "sha256": "954ffc660904bb0447f30992ec78e2b17a3ddc15a2f253fc49038ff0e6bec6d7"
+    },
+    {
+      "path": "backend/domains/ops/offline-sync/src/handwritten/offline-sync.controller.ts",
+      "sha256": "36e7a814bfdb261783d66159ae2aba895fa21166f148b0c0290e696d56d6a2e4"
+    },
+    {
+      "path": "backend/domains/ops/field/src/handwritten/mobile-bootstrap.service.ts",
+      "sha256": "3b8bf6876a2b411f3ff438b65d847bb7fa4dc95a19482675be0a3b823c3c2592"
+    },
+    {
+      "path": "backend/domains/ops/field/src/handwritten/mobile-bootstrap.controller.ts",
+      "sha256": "d092786a5c5cbd73a1a36e41262e34d3d42bb05eccaf3db207d332d2fa79ba4b"
+    },
+    {
+      "path": "backend/domains/ops/field/src/handwritten/field-commands.controller.ts",
+      "sha256": "705aeefb77dde16bfb493988ad6daea4d02c267953f0cff88478e7b1980c36c7"
+    },
+    {
+      "path": "backend/domains/ops/core/src/index.ts",
+      "sha256": "56e2b9daf836029a917c373e35478eca985f4702f1aeef1e6e3f7d74ff4ac328"
+    },
+    {
+      "path": "backend/domains/ops/core/src/runtime.ts",
+      "sha256": "d3c184b6a940fbce8a0ab77fd32c95d55742cef215fb9fe9b46f9b649362ec8b"
+    },
+    {
+      "path": "backend/domains/inf/ait/src/handwritten/sync-applier.ts",
+      "sha256": "3f451b80b73f1804dfc09034b20a7976d1b52a6c75a4a17289321f52edbac96c"
+    },
+    {
+      "path": "backend/app/src/teat-sync.providers.ts",
+      "sha256": "649f111fb7835ed8c22fe6bde1fe925f2c3f25cc3d9abb0daef82e4045734b99"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.ts",
+      "sha256": "099423d689414ba88ff4851d4425eadf98e564dd531ace643bf60a4c5b3a9042"
+    },
+    {
+      "path": "backend/database/seed/26-fixtures-teat-field.sql",
+      "sha256": "8c2dbd6d472f8f3f184b172665db65f2db02f061f859d0cc7c7482017dd47f96"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-OPS-FIELD-001.json",
+      "sha256": "1d733dedb438b939c5b6cbebda82dc6accf415c792fb8da4e82bab6e90a36220"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-OPS-OFFLINE-SYNC-001.json",
+      "sha256": "c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-OPS-EVIDENCE-001.json",
+      "sha256": "7c0a0e3e7c424b57f2ad54fff4a784959470ca1969c50cf0cc9e0af6daaa16c4"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-OPS-SNAPSHOTS-001.json",
+      "sha256": "c995962d248172eeb08cd92993fc4cafac0eada70cdbf240c54a4c69ce94edc4"
+    },
+    {
+      "path": "backend/domains/ops/offline-sync/tests/integration/sync-batch.integration.spec.ts",
+      "sha256": "e00bd8b9a5243005e00af625b8b325ac0f437685cb1c2190c8230c23cff0d7da"
+    },
+    {
+      "path": "backend/app/tests/e2e/teat-field-sync.e2e.spec.ts",
+      "sha256": "8869294617daf97df7ef01c128143de6fffff3f368cd0c7e82bc0697fb25b3f0"
+    },
+    {
+      "path": "work/rounds/R-0008/contracts/CTG-0002.md",
+      "sha256": "62afaacfba350c58f8177ecfdd051527bc2d299acdef21587f54431cb77bb83b"
+    },
+    {
+      "path": "work/rounds/R-0008/reviews/delivery-review-CTG-0002-4.json",
+      "sha256": "831fa1a9cbc78b2d4019562361bea296b3e6e36bcf5951903c25281e2c19a9b1"
+    }
+  ],
+  "gates": {
+    "pnpm check": "pass",
+    "pnpm backend:test:ci": "pass (ops-offline-sync 27/44, ops-field 19/13, inf-ait 24, app e2e 58, shared 131)",
+    "delivery-review": "PASS on cycle 4 (GPT-5.6 Terra): cycle 1 FAIL (5), cycle 2 FAIL (order → adenda §14), cycle 3 REVIEW (§14 c), cycle 4 PASS"
+  },
+  "tasks": ["TASK-0004", "TASK-0005"],
+  "notes": "Blueprint deltas (operations list/get for command-owned POSTs, testAliases, zod/ops-parameter/inf-normative deps) applied by the maestro as Architect; adendas §12–§14 of CTG-0002."
+}
