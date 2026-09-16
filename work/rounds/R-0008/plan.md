@@ -432,6 +432,16 @@ de cada grupo só começam com o grupo anterior implementado (lock `MOD-shared-p
   Próximo: gates completos, delivery-review ciclo 3 (só C-5-25′), commit `feat(teat)` CTG-0005 (+docs), evidência seq. 5, PR #51, CI,
   merge, observe, `closure.json`, `round close`, waves/backlog, branch remota apagada, relatório final.
 
+- 2026-09-16 (checkpoint 11): CTG-0005 commitado (ed27610 + evidência seq. 5 em 48bcdb1), PR #51 aberto; primeira execução do CI
+  reprovou por `pnpm-lock.yaml` desatualizado (pacote novo `packages/api-clients` sem `pnpm install`) → corrigido em 5c1771f. Gates
+  finais: `pnpm check` exit 0, `backend:test:ci` exit 0 (51 execuções, 1561 testes) + unit 34/1278 no tree final; delivery-review ciclo 3
+  PASS. `AUTHORIZATION.md` criado pelo maestro a partir da instrução do Owner. Próximo: CI verde → merge → observe → `closure.json` →
+  `round close` → PR de fechamento → branch remota apagada → relatório final.
+
+- 2026-09-16 (checkpoint 12, fechamento): **PR #51 mesclado** em 3f8a817 (CI 5/5 após correção do lockfile; `audit observe`
+  EV-6bf500197fd3900b). `closure.json` escrito; `devai round close` → **PC-0005**. waves.md §Histórico e backlog.md preenchidos.
+  Resta: PR de fechamento (este commit) mesclado, branch remota `orchestra/teat-backend` apagada, relatório final ao Owner.
+
 ## Leitura
 
 HEAD lido: df1e1769941e527a07b6db7550aee84068f3a872. Lidos integralmente: `AGENTS.md`, `CODESTYLE.md`, `docs/meta/agents/README.md`,
