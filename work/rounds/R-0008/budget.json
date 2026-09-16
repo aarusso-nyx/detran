@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 3200000,
-  "estimated_output_total": 701000,
+  "estimated_input_total": 3580000,
+  "estimated_output_total": 841000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -309,6 +309,30 @@
       "output_tokens": 500,
       "status": "completed",
       "verdict": "PASS"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "input_tokens": 160000,
+      "output_tokens": 60000,
+      "status": "completed",
+      "note": "633k brutos (246 tool uses, 61 min)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "input_tokens": 220000,
+      "output_tokens": 80000,
+      "status": "in_progress",
+      "note": "iter1 883k brutos (533 tool uses, 90 min)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "ci-and-merge-CTG-0003",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "status": "completed",
+      "note": "PR #49 merged f04fd68; audit observe"
     }
   ]
 }
