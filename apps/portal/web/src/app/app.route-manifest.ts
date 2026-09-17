@@ -332,7 +332,6 @@ export const PORTAL_ROUTE_MANIFEST: readonly RouteManifestEntry[] = [
     module: 'atendimento',
     access: 'simples',
     entitlement: { kind: 'manifestation', param: 'manifestationId' },
-    serviceKey: 'acompanhar_manifestacao',
     journeys: ['JRN-PORTAL-009'],
   },
   {
