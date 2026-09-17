@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0014",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar a allowlist de namespaces i18n em tools/parameters/parser.mjs e verify.mjs (M10) e remover a exclusão por diretório de A7 até os testes de TASK-0002 passarem",
+  "description": "Fazer o verificador reconhecer a tabela 'Namespaces i18n' do catálogo, isentar literais dos namespaces listados, falhar em colisão/malformação e voltar a varrer packages/api-clients/src/generated.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-tools-parameters"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["od-p46"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-b9286fe20a986622",
+  "acceptance_commands": [
+    ["pnpm", "parameters:test"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "parameters:generate"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-17T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-b9286fe20a986622",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

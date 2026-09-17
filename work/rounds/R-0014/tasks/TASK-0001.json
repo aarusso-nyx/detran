@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0014",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever M10 (OD-P46): seção 'Namespaces i18n (allowlist do verificador)' e §Verificador fail-closed no parameter-catalogue.md; linha OD-P46 do build pack; caminho do catálogo i18n em portal-frontends.md §9",
+  "description": "Documentar, sem decidir, o contrato da allowlist de namespaces i18n decidido em plan.md M10 para que o Inspector e o Engineer o codifiquem; remover do texto a exclusão por diretório (A7) e registrar OD-P46 como resolvida nesta rodada.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-parameter-catalogue-doc",
+    "MOD-portal-build-pack-doc",
+    "MOD-portal-frontends-doc",
+    "MOD-decision-closure-plan-doc"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-p4", "od-p46"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-d62f42d122783d88",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-17T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-d62f42d122783d88",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
