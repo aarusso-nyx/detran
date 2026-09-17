@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "node"],
+    "paths": {
+      "@detran/api-clients/generated/*": [
+        "../../../packages/api-clients/src/generated/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.spec.ts",
+    "src/testing/**/*.ts",
+    "src/test-setup.ts",
+    "src/app/a11y/axe.spec-helper.ts",
+    "vitest.config.ts"
+  ]
+}

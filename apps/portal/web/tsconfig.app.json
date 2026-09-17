@@ -1,0 +1,19 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+    "paths": {
+      "@detran/api-clients/generated/*": [
+        "../../../packages/api-clients/src/generated/*"
+      ]
+    }
+  },
+  "files": ["src/main.ts"],
+  "include": ["src/**/*.d.ts"],
+  "exclude": [
+    "src/**/*.spec.ts",
+    "src/testing/**",
+    "src/test-setup.ts",
+    "src/app/a11y/axe.spec-helper.ts"
+  ]
+}
