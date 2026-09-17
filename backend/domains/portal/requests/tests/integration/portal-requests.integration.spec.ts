@@ -176,14 +176,17 @@ describe('CTG-0002 §3.3/§12 — sequência de protocolo coerente com o seed (C
         [TENANT_ID],
       );
       const fixtureNumbers = numbers.rows.map((row) => row.number);
-      // 5 protocolos + 9 manifestações do seed (CTG-0001 §10.5/§10.6) na mesma gramática
+      // 5 protocolos + 9 manifestações do seed (CTG-0001 §10.5/§10.6) na mesma
+      // gramática, com sufixo hexadecimal de 7 dígitos (contrato §12); só os
+      // números gerados por `protocolNumber` em produção são decimais `\d{7}`
+      // (TASK-0006 iteração 2).
       expect(
         fixtureNumbers.filter((number) =>
-          /^AM-FIXTURES-2026-\d{7}$/.test(number),
+          /^AM-FIXTURES-2026-[0-9a-f]{7}$/.test(number),
         ).length,
       ).toBeGreaterThanOrEqual(14);
       const maxSeeded = Math.max(
-        ...fixtureNumbers.map((number) => Number(number.slice(-7))),
+        ...fixtureNumbers.map((number) => parseInt(number.slice(-7), 16)),
       );
       expect(maxSeeded).toBe(14);
 

@@ -20,6 +20,7 @@ import {
   headers,
   importModule,
   newClient,
+  resetGoldenSubjectRows,
   resetLocalPortalRows,
   seedLocalTenant,
   setCitizen,
@@ -105,6 +106,20 @@ beforeAll(async () => {
      on conflict (id) do update set subject_id = excluded.subject_id`,
     [LOCAL.entitlement(1), TENANT_ID, subjects.prata, AITS.f2],
   );
+  // vínculo da prata sobre os alvos crash/exam (§3.2 consulta_bat/consulta_exame,
+  // mesma forma de …7020000b/…7020000c do seed 70 — TASK-0006 iteração 2)
+  await client.query(
+    `insert into portal.entitlement (id, tenant_id, subject_id, target_kind, target_id, relation, origin, valid_from, valid_until)
+     values ($1, $2, $3, 'crash', $4, 'interested_party', 'manual', '2026-01-01', null)
+     on conflict (id) do update set subject_id = excluded.subject_id`,
+    [LOCAL.entitlement(2), TENANT_ID, subjects.prata, EXTERNAL.crash],
+  );
+  await client.query(
+    `insert into portal.entitlement (id, tenant_id, subject_id, target_kind, target_id, relation, origin, valid_from, valid_until)
+     values ($1, $2, $3, 'exam', $4, 'interested_party', 'manual', '2026-01-01', null)
+     on conflict (id) do update set subject_id = excluded.subject_id`,
+    [LOCAL.entitlement(3), TENANT_ID, subjects.prata, EXTERNAL.exam],
+  );
   // …70f00001 copiada para o tenant local com o cpf_hash da prata (§12)
   await client.query(
     `insert into portal.infraction_view (id, tenant_id, ait_id, subject_cpf_hash, ait_number, plate, occurred_at, framing_label, amount, situation, deadlines_json, points_status, actions_json, notices_json, payment_json, last_event_id, last_event_version)
@@ -121,6 +136,9 @@ afterEach(() => {
 afterAll(async () => {
   await app?.close();
   await failingApp?.close();
+  if (subjects.ouro) {
+    await resetGoldenSubjectRows(client, subjects.ouro);
+  }
   await client.end();
   delete process.env.DETRAN_LOCAL_ROLES;
   delete process.env.DETRAN_LOCAL_ASSURANCE_LEVEL;
@@ -738,7 +756,8 @@ describe('CTG-0002 §2.3 — withdraw, ownership, recibo, decisão, diligência 
 
     const another = await createRequest(prata, {
       serviceKey: 'consulta_bat',
-      targetKind: 'none',
+      targetKind: 'crash',
+      targetId: EXTERNAL.crash,
       channel: 'portal',
     });
     const notConfirmed = await api()
@@ -783,7 +802,8 @@ describe('CTG-0002 §2.3 — withdraw, ownership, recibo, decisão, diligência 
 
     const draftRequest = await createRequest(prata, {
       serviceKey: 'consulta_exame',
-      targetKind: 'none',
+      targetKind: 'exam',
+      targetId: EXTERNAL.exam,
       channel: 'portal',
     });
     const noProtocol = await api()

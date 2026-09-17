@@ -397,6 +397,68 @@ export async function resetLocalPortalRows(client: pg.Client): Promise<void> {
   );
 }
 
+/**
+ * Limpa, ao final de `portal-requests.e2e.spec.ts`, as linhas do tenant local
+ * criadas para um sujeito específico (o sujeito ouro, CPF fixture
+ * `33333333333` — plan.md §Triagem, TASK-0006 iteração 2): sem isso,
+ * `portal-identity.e2e.spec.ts` C-0001-41 (`delete from portal.subject`)
+ * viola FK numa segunda execução contra banco persistente. Ordem das FKs
+ * (DDL 61/62): idempotency_record, consequence_ack, request_draft,
+ * request_attachment, protocol, evaluation, request, representation,
+ * entitlement — nunca `portal.subject` em si (compartilhado com outros
+ * arquivos e2e).
+ */
+export async function resetGoldenSubjectRows(
+  client: pg.Client,
+  subjectId: string,
+): Promise<void> {
+  await asOwner(client);
+  const requestIds = (
+    await client.query<{ id: string }>(
+      `select id from portal.request where tenant_id = $1 and subject_id = $2`,
+      [TENANT_ID, subjectId],
+    )
+  ).rows.map((row) => row.id);
+  await client.query(
+    `delete from portal.idempotency_record where tenant_id = $1 and subject_id = $2`,
+    [TENANT_ID, subjectId],
+  );
+  if (requestIds.length > 0) {
+    await client.query(
+      `delete from portal.consequence_ack where tenant_id = $1 and request_id = any($2::uuid[])`,
+      [TENANT_ID, requestIds],
+    );
+    await client.query(
+      `delete from portal.request_draft where tenant_id = $1 and request_id = any($2::uuid[])`,
+      [TENANT_ID, requestIds],
+    );
+    await client.query(
+      `delete from portal.request_attachment where tenant_id = $1 and request_id = any($2::uuid[])`,
+      [TENANT_ID, requestIds],
+    );
+    await client.query(
+      `delete from portal.protocol where tenant_id = $1 and request_id = any($2::uuid[])`,
+      [TENANT_ID, requestIds],
+    );
+    await client.query(
+      `delete from portal.evaluation where tenant_id = $1 and subject_kind = 'request' and subject_id = any($2::uuid[])`,
+      [TENANT_ID, requestIds],
+    );
+  }
+  await client.query(
+    `delete from portal.request where tenant_id = $1 and subject_id = $2`,
+    [TENANT_ID, subjectId],
+  );
+  await client.query(
+    `delete from portal.representation where tenant_id = $1 and representative_subject_id = $2`,
+    [TENANT_ID, subjectId],
+  );
+  await client.query(
+    `delete from portal.entitlement where tenant_id = $1 and subject_id = $2`,
+    [TENANT_ID, subjectId],
+  );
+}
+
 export interface CitizenEnv {
   cpf: string;
   level: 'simples' | 'avancada' | 'qualificada';
