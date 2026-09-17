@@ -3,9 +3,9 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 903000,
-  "estimated_output_total": 128000,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4.",
+  "estimated_input_total": 963000,
+  "estimated_output_total": 140000,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -105,6 +105,14 @@
       "status": "completed",
       "verdict": "PASS",
       "note": "ciclo restrito a A3"
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0001-close-W1",
+      "input_tokens": 60000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "gates, delivery-reviews, commits, evidência, PR #60, merge, audit observe, checkpoint 2"
     }
   ]
 }

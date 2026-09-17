@@ -330,24 +330,27 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
 
 ## Retomada
 
-**Checkpoint 1 (2026-09-17, janela 1; `budget.json` ≈ 690 k únicos de entrada, limiar de 80 %
-atingido — o maestro prossegue até fechar o CTG-0001 por ser o ponto natural de parada).**
+**Checkpoint 2 (2026-09-17, fim da janela 1 — orçamento da janela ultrapassado; `budget.json`).**
 
-- Concluídas: TASK-0001 (docs allowlist, OD-P46), TASK-0002 (specs; iteração 2 restrita a A1/A2 em
-  curso), TASK-0003 (`verify.mjs`/`parser.mjs`; 25/25; verify OK com 14 namespaces), TASK-0004
-  (scaffold `apps/portal/web`; 262/263 specs; `pnpm check` só vermelho pelos 3 erros de tipagem
-  dos stubs — A2 — e pelo caso do `brand.service.spec.ts` — A1). Relatórios em `reports/`.
-- Em curso: TASK-0002 iteração 2 (Inspector, A1/A2). Depois: maestro retira `resolveJsonModule:
-false` de `apps/portal/web/tsconfig.spec.json` se o Inspector remover o `@ts-expect-error`;
-  gates completos (`pnpm check`); `delivery-review-CTG-0001` (Terra); commit(s) do CTG-0001
-  (inclui `pnpm-lock.yaml`, `packages/ui/package.json`, artefatos regenerados de parâmetros);
-  evidência `evidence-CTG-0001.json`; push + PR 1; merge; `audit observe`.
-- Pendentes: CTG-0002 (TASK-0005 → 0006 → 0007; prompts prontos; disparam após o merge do PR 1),
-  CTG-0003…0005 (prompts a escrever nas janelas 2–4; TASK-0008…0012).
-- Último veredito do reviewer: `prompt-review-2` = PASS.
-- Estado do git: branch `orchestra/portal-pwa` (nunca publicado, base `59423c9`); working tree
-  com todas as mudanças do CTG-0001 **não commitadas** — um novo maestro deve rodar os gates e
-  seguir de "gates completos" acima; nunca `git stash` (worktree compartilhada).
+- **CTG-0001 fechado e mesclado**: PR **#60** (`feat(portal-web): first app scaffold … + i18n
+namespace allowlist (OD-P46)`), merge `1396f1a6d7cedf2afe5b0f90b9ef1be164c86015` em `main`,
+  CI verde (foundation, backend-kernel, evidence-gate, senatran-mock, senatran-mock-tests);
+  `delivery-review-CTG-0001-2` PASS; evidência generic sequence 1 (head `640e0f99…`);
+  `audit observe` do merge → `EV-1ccc334f256359b6`, commitado neste branch.
+- Concluídas: TASK-0001, TASK-0002 (2 iterações), TASK-0003, TASK-0004 (2 iterações).
+- **Próximos passos (janela 2, novo maestro pelo mesmo prompt):** (1) `git fetch` +
+  `git merge --no-edit origin/main` (branch publicado; nunca rebase); (2) disparar **TASK-0005**
+  (fichas, Sonnet) → **TASK-0006** (i18n, Sonnet) → **TASK-0007** (Inspector, Sonnet) — prompts
+  prontos em `prompts/`, `compositions.json` com os PC-ids, prompt-review-2 PASS cobre os sete
+  prompts; (3) gates (`node tools/docs/kb/check.mjs` → 549/446; `pnpm --filter @detran/portal-web
+test`; `pnpm check`); (4) `delivery-review-CTG-0002` → commit → evidência → PR 2 → merge →
+  `audit observe`; (5) escrever os prompts de TASK-0008/0009 (CTG-0003) e submetê-los a
+  prompt-review antes de disparar. Adenda de código pendente para o CTG-0003: reexportar
+  `BpPortal*Commands` em `packages/api-clients/src/index.ts` e remover o alias `paths` do app.
+- Pendentes: CTG-0003…0005 (TASK-0008…0012); `waves.md` §Histórico e `backlog.md` no fechamento.
+- Último veredito do reviewer: `delivery-review-CTG-0001-2` = PASS.
+- Estado do git: `orchestra/portal-pwa` publicado, = `origin/main` (`1396f1a`) + commit da
+  observação de auditoria; working tree limpa.
 
 ## Leitura
 
