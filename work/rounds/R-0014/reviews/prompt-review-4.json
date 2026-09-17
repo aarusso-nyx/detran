@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0014",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0014/plan.md",
+      "line": 204,
+      "claim": "TASK-0008 continua dependente de TASK-0007, não de TASK-0019; o mesmo ocorre em TASK-0015 (linha 207) e TASK-0017 (linha 210). Assim, os Inspectors podem executar antes dos Architects recém-adicionados, e as tríades declaradas na linha 216 não são formalmente executáveis.",
+      "fix": "Alterar as dependências para TASK-0019 → TASK-0008, TASK-0020 → TASK-0015 e TASK-0021 → TASK-0017."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0014/prompts/TASK-0014.md",
+      "line": 135,
+      "claim": "Embora a linha 24 determine não alterar o baseline se faltar ficha A/B, esta instrução ainda exige incondicionalmente `baselines.artifactIdCount` = 549; os critérios, declarados obrigatórios na linha 149, também exigem `kb:check` verde com 549 na linha 151. Isso torna impossível a rota de bloqueio explicitamente prevista.",
+      "fix": "Tornar a exigência de 549 e o `kb:check` 549 condicionais à presença das 27 fichas; na rota bloqueada, exigir as 9 fichas C e o registro do bloqueio, sem exigir a alteração do baseline."
+    }
+  ],
+  "notes": []
+}

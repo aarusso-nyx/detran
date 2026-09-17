@@ -22,8 +22,9 @@ export interface RouteManifestFixtureEntry {
   readonly journeys: readonly string[];
 }
 
-// Catálogo fechado de serviceKey (route-manifest.md §Invariantes,
-// backend/database/seed/70-fixtures-portal.sql).
+// Catálogo fechado de serviceKey (route-manifest.md §Invariantes — A4: todo `serviceKey` ∈
+// chaves de `portal.service_catalog` ∪ {`junta_medica`}; `acompanhar_manifestacao` e
+// `procuracao` não são serviços do catálogo, backend/database/seed/70-fixtures-portal.sql).
 export const PORTAL_SERVICE_KEYS = [
   'consulta_multas',
   'defesa_previa',
@@ -39,10 +40,8 @@ export const PORTAL_SERVICE_KEYS = [
   'consulta_exame',
   'junta_medica',
   'manifestar',
-  'acompanhar_manifestacao',
   'avaliar',
   'lgpd_declaracao',
-  'procuracao',
 ] as const;
 
 export const PORTAL_ROUTE_MANIFEST_FIXTURE: readonly RouteManifestFixtureEntry[] =
@@ -337,7 +336,8 @@ export const PORTAL_ROUTE_MANIFEST_FIXTURE: readonly RouteManifestFixtureEntry[]
       module: 'atendimento',
       access: 'simples',
       entitlement: { kind: 'manifestation', param: 'manifestationId' },
-      serviceKey: 'acompanhar_manifestacao',
+      // A4: acompanhar não é serviço próprio do catálogo (parte de "Registrar manifestação");
+      // sem serviceKey, só entitlementGuard('manifestation').
       journeys: ['JRN-PORTAL-009'],
     },
     {

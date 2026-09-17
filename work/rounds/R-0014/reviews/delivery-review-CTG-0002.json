@@ -1,0 +1,26 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/screens/legal-texts.spec.ts",
+      "line": 44,
+      "claim": "O teste reduziu o contrato dos quatro efeitos do SNE a uma contagem; portanto aceita quaisquer quatro chaves-filhas. O prompt ainda exige nomes explícitos, enquanto a regra canônica RN-PORTAL-123 enumera os quatro efeitos obrigatórios.",
+      "fix": "Fixar as quatro chaves canônicas `ciencia_ficta`, `substituicao`, `responsabilidade` e `cancelamento` no spec; registrar a correção do prompt divergente em adenda, sem manter a asserção apenas quantitativa."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/screens/screen-sheets.spec.ts",
+      "line": 75,
+      "claim": "A vedação de citar rota de outra tela foi limitada a paths compostos. Isso deixa sem cobertura as rotas de um segmento, embora TASK-0007 exija nenhuma rota de outra tela.",
+      "fix": "Extrair somente spans que representem rotas (por exemplo, iniciados por `/`) e comparar todos os paths do manifesto, inclusive os de um segmento, evitando a colisão com nomes de módulos sem reduzir a asserção."
+    }
+  ],
+  "notes": [
+    "A4, a remoção de `acompanhar_manifestacao`, o catálogo de 16 service keys e as OD-P52 a OD-P56 estão alinhados ao plano e às fontes citadas."
+  ]
+}

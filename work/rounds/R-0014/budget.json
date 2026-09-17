@@ -1,11 +1,11 @@
 {
   "round": "R-0014",
-  "window": 1,
+  "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 903000,
-  "estimated_output_total": 128000,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4.",
+  "estimated_input_total": 1690000,
+  "estimated_output_total": 285300,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -105,6 +105,173 @@
       "status": "completed",
       "verdict": "PASS",
       "note": "ciclo restrito a A3"
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0001-close-W1",
+      "input_tokens": 60000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "gates, delivery-reviews, commits, evidência, PR #60, merge, audit observe, checkpoint 2"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W2",
+      "input_tokens": 40000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "estimativa de esforço (§Estimativa), redivisão de TASK-0005 em 3 lotes, redecomposição do CTG-0003 em 3 tríades, checkpoint api-clients"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3",
+      "input_tokens": 81000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "FAIL",
+      "note": "tríade sem Architect no CTG-0003; baseline indeterminado em TASK-0014"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-4",
+      "input_tokens": 28000,
+      "output_tokens": 800,
+      "status": "completed",
+      "verdict": "FAIL",
+      "note": "dependências não substituídas (realinhamento do Prettier); 549 incondicional"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5",
+      "input_tokens": 35000,
+      "output_tokens": 300,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "sonnet",
+      "input_tokens": 81000,
+      "output_tokens": 25000,
+      "status": "completed",
+      "note": "324k brutos, 69 chamadas, 12 min; lote A; OD-P52/P53 propostas"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0013",
+      "model": "sonnet",
+      "input_tokens": 79000,
+      "output_tokens": 24000,
+      "status": "completed",
+      "note": "316k brutos, 63 chamadas, 10 min; lote B; OD-P54 (renumerada)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0014",
+      "model": "sonnet",
+      "input_tokens": 82000,
+      "output_tokens": 25000,
+      "status": "completed",
+      "note": "330k brutos, 87 chamadas, 11 min; lote C + baseline 549"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "sonnet",
+      "input_tokens": 64000,
+      "output_tokens": 30000,
+      "status": "completed",
+      "note": "254k brutos, 50 chamadas, 11 min; 435 chaves; OD-P55/P56"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iteration-2",
+      "model": "sonnet",
+      "input_tokens": 3000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "A4: junta_medica"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004-iteration-3",
+      "model": "opus",
+      "input_tokens": 2000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "A4: manifesto"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002-iteration-3",
+      "model": "sonnet",
+      "input_tokens": 5000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "A4: fixture; 261/261"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007",
+      "model": "sonnet",
+      "input_tokens": 65000,
+      "output_tokens": 18000,
+      "status": "completed",
+      "note": "258k brutos, 59 chamadas, 11 min; 5 specs, 211 casos; 3 defeitos reais de catálogo → TASK-0006 it. 3"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iteration-3",
+      "model": "sonnet",
+      "input_tokens": 3000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "3 defeitos; 472/472"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-iteration-2",
+      "model": "sonnet",
+      "input_tokens": 3000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "typecheck do spec; 472/472"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002",
+      "input_tokens": 103000,
+      "output_tokens": 1200,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "2 achados high nos specs do Inspector → A5"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-iteration-3",
+      "model": "sonnet",
+      "input_tokens": 4000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "A5; 472/472"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-2",
+      "input_tokens": 49000,
+      "output_tokens": 500,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito a A5"
     }
-  ]
+  ],
+  "forecast": {
+    "CTG-0002": "350–450k",
+    "CTG-0003": "1.0–1.3M (3 tríades, 3 PRs)",
+    "CTG-0004": "500–700k",
+    "CTG-0005": "150k",
+    "total_remaining": "2.1–2.6M únicos"
+  }
 }
