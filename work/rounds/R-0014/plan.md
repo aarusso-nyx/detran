@@ -128,7 +128,7 @@ retomar: state.url } })`; ordem `simples < avancada < qualificada`; nunca exige 
   pedido → `badge` é `portal.situation.badge_of.<STATE>` (valor = uma das 5), transcrita de
   [WF-PORTAL-001]/[RN-PORTAL-112]; token sem fonte → **sem chave** e OD proposta. Textos jurídicos
   versionados: `portal.legal.<documento>.<versão>` com `<documento>` ∈ `consequencias_desistencia`,
-  `consequencias_indicacao`, `efeitos_sne` (quatro efeitos), `renuncia_40` (H.53: só texto, flag
+  `consequencias_indicacao`, `efeitos_sne` (quatro efeitos de [RN-PORTAL-123]: `ciencia_ficta`, `substituicao`, `responsabilidade`, `cancelamento` — A5), `renuncia_40` (H.53: só texto, flag
   `portal.waiver_40_term` desligada) e `<versão>` = `v1`; erros `portal.errors.<code minúsculo>`
   (catálogo §8). O catálogo entra em código **no mesmo PR** da allowlist (CTG-0001) e só com os
   namespaces `portal.shell`, `portal.states`, `portal.common`, `portal.a11y` (rótulos do shell, dos
@@ -308,7 +308,7 @@ Verificado em 2026-09-17 (`git log --oneline -30 origin/main`, `gh pr list --sta
 
 ## Triagem
 
-(preenchido por falha de gate: `plant-bug | sensor-error | policy-issue | reference-gap`)
+- 2026-09-17 CTG-0002 `pnpm check` → `typecheck` de `screen-sheets.spec.ts` (TS2677, 3× TS4111): **plant-bug** (spec do Inspector sem typecheck; o critério de TASK-0007 não incluía `typecheck` — lacuna do prompt) → iteração restrita de TASK-0007; a partir do CTG-0003 todo prompt de Inspector do app inclui `pnpm --filter @detran/portal-web typecheck` como critério.
 
 ## Adendas
 
@@ -342,13 +342,40 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
   são removidos; a tela `/servico-indisponivel/:serviceKey` já cobre o caso sem motivo
   (`portal.states.service_unavailable`). Nenhum spec muda (os stubs fixam `reason` só no caso
   `delegacao_indisponivel_r0007`).
+- **A5 (2026-09-17, delivery-review-CTG-0002 REVIEW).** (a) Os quatro efeitos da adesão ao SNE
+  são os de [RN-PORTAL-123] como TASK-0006 os transcreveu — `ciencia_ficta`, `substituicao`,
+  `responsabilidade`, `cancelamento` — e não a paráfrase do prompt de TASK-0006/0007 ("canal
+  exclusivo, desconto de 60 %, cancelamento a qualquer tempo"); `legal-texts.spec.ts` fixa as quatro
+  chaves `portal.legal.efeitos_sne.v1.<efeito>` por nome, nunca só por contagem; M9 passa a citar
+  esses nomes. (b) `screen-sheets.spec.ts` verifica "Identidade não cita rota de outra tela" para
+  **todos** os paths do manifesto, inclusive os de um segmento, extraindo da ficha só os spans com
+  forma de rota (iniciados por `/`, ex.: `/autos`), o que evita a colisão com nomes de módulo.
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,
   CTG-0003); OD-P49 destino do link "Atendimento presencial" do rodapé (`supportUrl` × Carta de
   Serviços); OD-P50 comportamento quando `GET /v1/portal/services` falha (guarda rejeita × tela de
   indisponibilidade); OD-P51 `maxAge` estático do `dataGroup` offline e persistência do cache
-  cifrado (`sessionStorage` × IndexedDB) com chave por `sid`. Adenda de código pendente para o
+  cifrado (`sessionStorage` × IndexedDB) com chave por `sid`. **OD propostas pelas fichas (CTG-0002, numeração do Architect):** OD-P52 — nível de assinatura de T-08 (desistência): manifesto `simples` × [RN-PORTAL-101] "avançada" por paralelismo de forma (ficha segue o manifesto; Owner/LEGAL decide); OD-P53 — nível de T-09 (adesão SNE): contrato §5.1 `simples` × RN-101/spec §4 "simples→avançada" (ficha segue o contrato); OD-P54 — especificação operacional do offline de T-16/T-17 (limiar de bateria crítica, autenticação local; `source_pending`). - **A4 (2026-09-17, TASK-0006 — `serviceKey` sem serviço no catálogo).** O catálogo canônico
+  ([WF-PORTAL-001] §Catálogo, 15 serviços; fixture `portal.service_catalog` com 15 linhas, sem
+  `junta_medica` por OD-P19 e com `cancelamento_sne`) não tem serviço "acompanhar manifestação":
+  acompanhar é parte de "Registrar manifestação". Como `ServiceCatalogFacade.availability` devolve
+  `unavailable` para chave ausente, a rota T-22 (`ouvidoria/:manifestationId`) ficaria sempre
+  bloqueada. Correção: **T-22 perde o `serviceKey`** (fica só `entitlementGuard('manifestation')`)
+  em `route-manifest.md`, `app.route-manifest.ts` e `src/testing/route-manifest.fixture.ts`; a
+  matriz de guardas passa a ter 18 rotas com `serviceKey` (era 19). `junta_medica` **mantém** o
+  `serviceKey` (serviço canônico; ausente da fixture por OD-P19 → a rota cai na tela de
+  indisponibilidade, comportamento correto) e ganha `portal.services.junta_medica` = "Requerer
+  junta médica ou psicológica" ([WF-PORTAL-001] §Catálogo). `cancelamento_sne` fica sem chave até
+  OD-P55. Invariante do manifesto: todo `serviceKey` ∈ chaves de `service_catalog` ∪
+  {`junta_medica`}.
+- **OD propostas por TASK-0006:** OD-P55 — catálogo de serviços: fixture com 15 linhas × "18"
+  citados no prompt (erro do maestro: 18 eram chaves de `act_level_policy`), e nome cidadão de
+  `cancelamento_sne` (sem linha em [WF-PORTAL-001]); OD-P56 — `badge_of` para os 9 estados do
+  pedido sem correspondência inequívoca (`IDENTIFICADO`, `SERVICO_SELECIONADO`,
+  `ELEGIBILIDADE_VERIFICADA`, `INELEGIVEL`, `PEDIDO_EM_COMPOSICAO`, `AGUARDANDO_NIVEL_ASSINATURA`,
+  `AGUARDANDO_PAGAMENTO`, `PROTOCOLADO`, `AVALIACAO_OFERECIDA`) — Owner (linguagem cidadã).
+  Adenda de código pendente para o
   CTG-0003: reexportar `BpPortal*Commands` em `packages/api-clients/src/index.ts` e remover o alias
   `paths` `@detran/api-clients/generated/*` do app.
 
