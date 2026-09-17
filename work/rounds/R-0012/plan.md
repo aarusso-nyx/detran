@@ -39,17 +39,19 @@
 
 ## Tarefas
 
-| Tarefa    | Papel        | Perfil              | Modelo/esforço | Lock                                                      | Depende de           | Entrega                                                                                                                                   |
-| --------- | ------------ | ------------------- | -------------- | --------------------------------------------------------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect    | architect-blueprint | Opus / alto    | `MOD-rait-web-arch`                                       | —                    | decisões do app (forma dos schemas, estrutura de pastas §12, clientes gerados, regra de lint), lista fechada de rotas → fichas, critérios |
-| TASK-0002 | Owner deleg. | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens`, `MOD-kb-manifest`             | TASK-0001            | fichas `IU-RAIT-002…` (metade das rotas: operação e protocolo), manifesto                                                                 |
-| TASK-0003 | Owner deleg. | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-2`                              | TASK-0001            | fichas restantes (colegiado, gestão, integração); `rait-web-forms.md`                                                                     |
-| TASK-0004 | Inspector    | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests`                                      | TASK-0001            | testes: roteamento por rota × papel mínimo (todas as rotas da §4), schemas dos 16 formulários, regra de lint (caso negativo)              |
-| TASK-0005 | Engineer     | engineer-frontend   | Opus / médio   | `MOD-rait-web-app`, `MOD-packages-ui`, `MOD-package-json` | TASK-0004            | pacote, rotas, `core/`, `shared/` (22 componentes), `data/api`, i18n; `pnpm check` estendido; testes verdes                               |
-| TASK-0006 | Engineer     | engineer-frontend   | Sonnet / médio | `MOD-rait-web-forms`                                      | TASK-0003, TASK-0005 | 16 schemas com gates no cabeçalho; lint; testes verdes                                                                                    |
-| TASK-0007 | Owner deleg. | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                                | TASK-0006            | build pack (gates reais), `rait-web-frontend.md`, backlog                                                                                 |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                      | Depende de           | Entrega                                                                                                                                                                                                                                                                                            |
+| --------- | -------------------- | ------------------- | -------------- | --------------------------------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect            | architect-blueprint | Opus / alto    | `MOD-rait-web-arch`                                       | —                    | decisões do app (forma dos schemas, estrutura de pastas §12, clientes gerados, regra de lint), lista fechada de rotas → fichas, critérios; resolução de OD-P46: allowlist de namespaces i18n em `parameter-catalogue.md` §Regras lida por `tools/parameters/verify.mjs` (decisão registrada na OD) |
+| TASK-0002 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens`, `MOD-kb-manifest`             | TASK-0001            | fichas `IU-RAIT-002…` (metade das rotas: operação e protocolo), manifesto                                                                                                                                                                                                                          |
+| TASK-0003 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-2`                              | TASK-0001            | fichas restantes (colegiado, gestão, integração); `rait-web-forms.md`                                                                                                                                                                                                                              |
+| TASK-0004 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests`                                      | TASK-0001            | testes: roteamento por rota × papel mínimo (todas as rotas da §4), schemas dos 16 formulários, regra de lint (caso negativo); caso positivo/negativo do verificador de parâmetros para a allowlist i18n em `tools/parameters/tests`                                                                |
+| TASK-0005 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-app`, `MOD-packages-ui`, `MOD-package-json` | TASK-0004            | pacote, rotas, `core/`, `shared/` (22 componentes), `data/api`, i18n; `pnpm check` estendido; testes verdes; `verify.mjs` com allowlist i18n; este app é o padrão de estrutura para R-0013…R-0016                                                                                                  |
+| TASK-0006 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-rait-web-forms`                                      | TASK-0003, TASK-0005 | 16 schemas com gates no cabeçalho; lint; testes verdes                                                                                                                                                                                                                                             |
+| TASK-0007 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                                | TASK-0006            | build pack (gates reais), `rait-web-frontend.md`, backlog                                                                                                                                                                                                                                          |
 
 CTG-0001 = 0002/0003 (fichas, PR próprio); CTG-0002 = 0004…0006 (app). TASK-0001 e 0007 simples.
+
+**Checkpoint de dependências:** após TASK-0005 criar `apps/rait/web/package.json`, o maestro roda `pnpm install`, guarda o `pnpm-lock.yaml` para o commit do grupo, estende `pnpm check` e só então libera o Inspector a rodar TASK-0004 contra o app; `pnpm contracts:clients` antes de TASK-0005 para os clientes RAIT de R-0007.
 
 ## Critérios de aceitação (comandos → resultado)
 
@@ -77,6 +79,19 @@ CTG-0001 = 0002/0003 (fichas, PR próprio); CTG-0002 = 0004…0006 (app). TASK-0
   o `pnpm-lock.yaml` (commit separado "chore(deps)").
 - Angular 22 (`OnPush` default, router `always`, TS 6): notas em `wp0-stynx-1-3-1-migration.md` §7.
 - Fichas são corpus de produto: linguagem e tokens canônicos do KB; nenhuma tela fora da §4.
+
+## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
+
+- Transcrição de fichas, contratos, i18n e docs é ato de **Architect** (`transcriber-docs`); tarefas assim aparecem como "Architect (transcr.)".
+- Nenhum Engineer ou transcriber entrega o teste do próprio artefato: contratos → `contracts:test` pelo Inspector; fichas/i18n → teste tela ↔ ficha ↔ rota pelo Inspector.
+- Ciclos de review a partir do segundo restritos aos itens corrigidos; contradições contrato × código resolvidas pelo Architect por adenda numerada em `plan.md` antes de redespachar.
+- O CTG seguinte só começa a escrever depois do merge do anterior ou nasce em branch empilhado; nunca commits novos no branch de um PR aberto; integrar `main` por merge, nunca `--force`.
+- Listas de leitura dos workers fechadas e completas (DDL gerado, blueprint, `seed.sh`, fixtures, specs de referência como `backend/app/tests/e2e/policy-routes.e2e.spec.ts`); lacuna aqui foi `reference-gap` em R-0010.
+- Pacote de workspace novo: o maestro roda `pnpm install`, guarda o `pnpm-lock.yaml` para o commit do grupo e só então libera o Inspector (CI é `--frozen-lockfile`).
+- Chaves i18n não são parâmetros (OD-P46): o namespace deste app entra na allowlist de i18n do `parameter-catalogue.md` lida por `tools/parameters/verify.mjs`; se R-0012 ainda não tiver mesclado essa regra, esta rodada a aplica (nunca exclusão por diretório).
+- Testes de roteamento cobrem papéis com e sem acesso (presença e ausência), não só o papel mínimo.
+- Este app define o padrão de scaffold; documentar em `docs/framework/arch/detran-ui-guide.md` §Apps a estrutura adotada para os apps seguintes copiarem.
+- O job `foundation` do CI passa a construir um app Angular: verificar tempo e cache antes de estender `pnpm check`; se ultrapassar o orçamento do job, abrir job próprio em vez de enfraquecer o gate.
 
 ## Concorrência
 
