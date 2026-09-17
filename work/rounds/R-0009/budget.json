@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1700000,
-  "estimated_output_total": 527500,
+  "estimated_input_total": 1740000,
+  "estimated_output_total": 531500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela de 700k pode ser excedida por instrução do Owner (AUTHORIZATION.md), como em R-0008.",
   "entries": [
     {
@@ -173,6 +173,15 @@
       "output_tokens": 45000,
       "status": "completed",
       "note": "brutos ≈327k (com complemento stream), 52 chamadas, 18 min"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-it4",
+      "model": "sonnet",
+      "input_tokens": 40000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "note": "brutos ≈158k, 32 chamadas, 8 min"
     }
   ]
 }

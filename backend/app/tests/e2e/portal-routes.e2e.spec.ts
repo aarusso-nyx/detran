@@ -197,6 +197,16 @@ afterEach(() => {
 
 afterAll(async () => {
   await app?.close();
+  // TASK-0006 iteração 4: sem isto, os `inbox_item`/`manifestation`/`entitlement`/…
+  // do tenant local inseridos acima (subjects prata/ouro/bronze) sobrevivem à
+  // execução e, numa 2ª rodada de `test:e2e` sem reseed, `portal-identity.e2e.spec.ts`
+  // C-0001-41 (`delete from portal.subject`) viola `fk_portal_inbox_item_subject`
+  // ao apagar o sujeito ouro (`LOCAL.inboxOther` ainda o referencia). Reusa o
+  // helper genérico já chamado no `beforeAll` (idempotente contra banco
+  // persistente; não toca `portal.subject`/`act_level_policy`/`service_catalog`/
+  // brand/hostname — seguro mesmo com `portal-stream.e2e.spec.ts` rodando depois,
+  // que já reseta o próprio estado no seu `beforeAll`).
+  await resetLocalPortalRows(client);
   await client.end();
   delete process.env.DETRAN_LOCAL_ROLES;
   delete process.env.DETRAN_LOCAL_ASSURANCE_LEVEL;

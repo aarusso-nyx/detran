@@ -506,7 +506,7 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0003 | completed   | iteração 2 verde (49/49 unit, 14/14 e2e ×2); relatório atualizado                                             |
 | TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
 | TASK-0005 | completed   | relatório em `reports/TASK-0005.md`; A4; branch temporário `tmp/r9-ctg2-wip` até o merge do PR #54            |
-| TASK-0006 | in_progress | iteração 3 (restrita): C-0002-77 (parâmetros do tenant local), C-0002-79 (papel)                              |
+| TASK-0006 | completed   | 4 iterações (84 critérios; correções restritas em it.2–4); relatório em `reports/TASK-0006.md`                |
 | TASK-0007 | completed   | relatório em `reports/TASK-0007.md`; 3 contradições de spec → §Triagem (TASK-0006 it.2)                       |
 | TASK-0008 | completed   | relatório em `reports/TASK-0008.md`; 142/144 e2e; A6; 2 itens → TASK-0006 it.3                                |
 | TASK-0009 | completed   | relatório em `reports/TASK-0009.md`; 47 operações (139 no gate); clientes gerados pelo maestro                |
