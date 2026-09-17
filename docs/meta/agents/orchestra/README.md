@@ -143,11 +143,76 @@ existe); o RAIT diz que os DDL "34…37 já foram incluídos" no `apply.sh`, mas
 `80-dashboard.sql`, `38/39/57/58-inf-*.sql`, `13/16/17/18/19-ops-*.sql` e `61…64-portal-*.sql`;
 a tarefa de documentação de cada rodada corrige o build pack correspondente.
 
+## 10. Histórico — lições e recomendações por rodada
+
+A tabela por rodada (aberturas, merges, tokens) vive em `waves.md` §Histórico; esta seção guarda o
+follow-up qualitativo de cada maestro: o que custou tempo, o que funcionou e o que muda no método.
+
+### R-0009 `portal-backend` (Fable 5.1, 2026-09-16, PC-0006 — PRs #54, #56, #57)
+
+**O que custou tempo (e o que evitar)**
+
+1. **Fronteira de escrita do Engineer sobre blueprints.** A rubrica do reviewer (Art. 6/10) derrubou
+   o plano duas vezes porque os prompts deixavam o Engineer editar `module.handwritten*` em
+   `docs/framework/blueprints`. A solução que passou (`plan.md` M24) — o Architect declara os símbolos
+   manuscritos com nomes fixos e o Engineer os cria — funcionou, ao preço de `typecheck` vermelho
+   dentro do CTG. `engineer-backend.md` §Pode tocar ainda diz o contrário e precisa ser alinhado.
+2. **Contrato escrito em paralelo ao blueprint.** TASK-0001 e TASK-0002 correram juntas para ganhar
+   tempo; o preço foi a lista D1–D13 de diferenças DDL × contrato que Inspector e Engineers tiveram de
+   reconciliar. Só compensa quando as M-decisões já fixam colunas; caso contrário, serializar.
+3. **`main` avançou com o PR aberto e trabalho local não publicado.** Parquear a tarefa seguinte num
+   branch temporário, integrar `main`, mesclar e reaplicar funcionou, mas é manual e frágil. Mais
+   simples: abrir o PR do CTG só quando o CTG seguinte ainda não começou, ou trabalhá-lo num branch
+   empilhado desde o início.
+4. **Regeneração cara.** `blueprints:generate` roda o Prettier em todos os blueprints (7–20 min por
+   execução); quatro regenerações por ajustes pequenos. Agrupar toda mudança de blueprint num único
+   checkpoint por CTG.
+5. **Testes não idempotentes em banco persistente.** Três iterações do Inspector foram só limpeza
+   entre arquivos e2e (FK em `portal.subject`). O CI usa banco limpo e não acusa; localmente custa
+   reseeds. Todo arquivo e2e limpa no `afterAll` o que criou.
+6. **Defeito latente fora da frente.** `OpsParameterService` comparava `Date` com string e nunca
+   encontrava parâmetro em banco real desde R-0004 — só apareceu quando o Portal leu um parâmetro por
+   HTTP. Nenhum teste anterior exercitava o caminho real; vale um teste de integração no dono.
+7. **Heurística do verificador de parâmetros × chaves i18n.** `portal.<x>.<y>` é candidato a
+   parâmetro; os clientes gerados carregam chaves i18n e ficaram vermelhos. Exclusão estrita aplicada
+   (A7), mas o problema volta quando `i18n/portal.pt-BR.json` entrar em código (OD-P46).
+
+**O que funcionou bem**
+
+- **Adendas numeradas (A1–A7)** para reconciliar contrato × código × canônico sem redespachar tarefas
+  inteiras; o reviewer as aceitou como base de julgamento.
+- **Ciclos restritos** de review (cada ciclo só sobre o que mudou): 3 prompt-reviews e 4
+  delivery-reviews, nenhum achado novo sobre texto inalterado.
+- **Iterações restritas do Inspector** (Sonnet, 4–14 min cada) para defeitos de spec, em vez de reabrir
+  a tarefa.
+- **Fakes do Inspector fixando assinaturas** antes dos Engineers (A5(f)): TASK-0007/0008 entregaram
+  142/144 e2e de primeira; as duas falhas eram de ambiente/spec.
+- **Delegações como porta + `SERVICE_UNAVAILABLE` com motivo** quando o upstream (R-0007) não existe:
+  a frente fechou sem esperar e R-0007 só troca o mapa em `portal-delegation.providers.ts`.
+
+**Recomendações ao método**
+
+1. **§4** — adotar M24 como regra: o Architect declara `module.handwritten*` com símbolos fixos no
+   blueprint; o Engineer só cria os arquivos; `typecheck` vermelho é estado esperado entre as duas
+   tarefas do mesmo CTG. Alinhar `engineer-backend.md` §Pode tocar.
+2. **§1/§4** — política de PR: um CTG por PR **e** o CTG seguinte só começa a escrever depois do merge,
+   ou nasce num branch empilhado; nunca commits novos no branch de um PR aberto.
+3. **`model-ladder.md` §Orçamento** — custo real de R-0009: Opus 240–740 k brutos por tarefa; Sonnet
+   80–330 k; uma rodada de 2 CTG e 10 tarefas ≈ 2,1 M únicos / 4,6 M brutos numa janela estendida.
+4. **`inspector-tests.md`** — idempotência em banco persistente (limpeza no `afterAll`, `DB_NAME`
+   explícito no env da rodada) como critério padrão do tier e2e.
+5. **Gate de parâmetros** — decidir OD-P46 antes de R-0014: prefixo reservado para i18n ou allowlist
+   declarada no catálogo, em vez de exclusão por diretório.
+6. **`blueprints:generate`** — formatar só os blueprints tocados (ou aceitar `--only <BP>`).
+7. **Prompt do maestro §5** — distinguir FAIL por contradição canônica (parar e reportar) de FAIL por
+   estrutura de fronteira corrigível (ciclo extra permitido, registrado em §Bloqueios); R-0008 e R-0009
+   já operaram assim por decisão do Owner.
+
 ## Arquivos deste método
 
 | Arquivo                                 | Uso                                                                 |
 | --------------------------------------- | ------------------------------------------------------------------- |
-| `README.md`                             | este método                                                         |
+| `README.md`                             | este método (+ §10 histórico de lições por rodada)                  |
 | `model-ladder.md`                       | escada de modelos, esforço e escolha por tipo de tarefa             |
 | `waves.md`                              | frentes, dependências, locks, família do maestro, rodadas           |
 | `maestro-prompt.template.md`            | prompt único da orquestra (agnóstico de família)                    |
