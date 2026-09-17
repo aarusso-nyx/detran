@@ -2,9 +2,12 @@
 // CRLV-e com validade — os únicos conteúdos offline do Portal ([UC-PORTAL-011] AC-4). Cifra com
 // AES-GCM (`crypto.subtle`) e chave derivada (HKDF) do `sid` da sessão STYNX, mantida só em
 // memória e nunca persistida; o texto cifrado fica em `sessionStorage` (morre com a aba, como a
-// chave). Sem `sid` (sessão inativa) nada é gravado nem lido. Testes no CTG-0003.
+// chave). Sem `sid` (sessão inativa) nada é gravado nem lido. Contrato testável: CTG-0003a §7
+// (validade devolvida pelo servidor, nunca calculada; `now` vem do `PortalClock`; `clear()` no
+// logout pela `PortalSessionFacade`).
 import { Injectable, inject } from '@angular/core';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
+import { PortalClock } from './clock';
 
 export type OfflineDocumentKind = 'cnh-e' | 'crlv-e';
 
@@ -50,6 +53,7 @@ function fromBase64(text: string): Uint8Array<ArrayBuffer> {
 @Injectable({ providedIn: 'root' })
 export class OfflineDocumentStore {
   private readonly session = inject(StynxSessionService);
+  private readonly clock = inject(PortalClock);
   private readonly encoder = new TextEncoder();
   private readonly decoder = new TextDecoder();
   private keyCache: { sid: string; key: Promise<CryptoKey> } | null = null;
@@ -84,10 +88,14 @@ export class OfflineDocumentStore {
     store.setItem(this.storageKey(kind), JSON.stringify(envelope));
   }
 
-  /** Devolve o documento se existir, decifrar e ainda estiver dentro da validade. */
+  /**
+   * Devolve o documento se existir, decifrar e ainda estiver dentro da validade
+   * (`validUntil > now`; a validade é a devolvida pelo servidor). Entrada vencida, cifrada com
+   * outro `sid` ou corrompida é removida e devolve `null`.
+   */
   async get<T = unknown>(
     kind: OfflineDocumentKind,
-    now: Date = new Date(),
+    now: Date = this.clock.now(),
   ): Promise<OfflineDocument<T> | null> {
     const key = await this.sessionKey();
     const store = storage();
