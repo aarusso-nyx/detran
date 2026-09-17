@@ -20,7 +20,7 @@
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
   (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (reconciliação do corpus), CTG-0002 (126 fichas, i18n, transições, diagramas) e CTG-0003 (provisionamento offline: ADR, blueprint, rotas — R-0005 em `main`): nenhum upstream. CTG-0004 (apps mobile e web): `rait-web` R-0012 (lock `packages/ui`); schemas, `@detran/api-clients` e contratos do TEAT já em `main` (R-0008)**. No bootstrap, registre em `plan.md`
+  **merge de cada grupo acoplado**: **CTG-0001 (reconciliação do corpus), CTG-0002 (126 fichas, i18n, transições, diagramas) e CTG-0003 (provisionamento offline: ADR, blueprint, rotas — R-0005 em `main`): nenhum upstream. CTG-0004 (apps mobile e web): `rait-web` R-0012 (lock `packages/ui`, padrão de scaffold); schemas, `@detran/api-clients` e contratos do TEAT já em `main` (R-0008). Allowlist de namespaces i18n no catálogo de parâmetros (OD-P46, método §4.17) precisa estar em `main` (R-0012) antes de qualquer `i18n/*.json` entrar em código — senão esta rodada a aplica (`teat.*` já é prefixo de parâmetros vigentes)**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
