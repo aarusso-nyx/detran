@@ -4,9 +4,12 @@
   "module": {
     "name": "Inbox",
     "namespace": "portal",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "ddlFile": "63-portal-inbox.sql",
     "dependencies": {
+      "@detran/portal-identity": "workspace:*",
+      "@detran/portal-requests": "workspace:*",
+      "@detran/inf-deadlines": "workspace:*",
       "zod": "^4.6.5"
     },
     "devDependencies": {
@@ -17,8 +20,52 @@
       {
         "package": "@detran/shared",
         "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/portal-identity",
+        "target": "../identity/src/index.ts"
+      },
+      {
+        "package": "@detran/portal-requests",
+        "target": "../requests/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../../inf/deadlines/src/index.ts"
       }
     ],
+    "handwrittenExports": ["handwritten/index"],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/inbox.controller",
+        "symbol": "PortalInboxController"
+      },
+      {
+        "target": "handwritten/sne-enrollment.controller",
+        "symbol": "PortalSneEnrollmentController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/inbox.service",
+        "symbol": "PortalInboxService"
+      },
+      {
+        "target": "handwritten/sne-enrollment.service",
+        "symbol": "PortalSneEnrollmentService"
+      }
+    ],
+    "moduleImports": [
+      {
+        "package": "@detran/portal-identity",
+        "symbol": "IdentityModule"
+      },
+      {
+        "package": "@detran/portal-requests",
+        "symbol": "RequestsModule"
+      }
+    ],
+    "moduleExports": ["PortalSneEnrollmentService"],
     "owners": ["detran-portal"],
     "description": "Caixa do cidadao (ADR-0019 Decision 3; [WF-PORTAL-003] secao Estados e secao Prazos; plan R-0009 M15): itens da caixa como projecao de eventos mais fatos de ciencia (portal.acknowledgement_evidence), adesao ao SNE como macro-estado do vinculo (NAO_ADERIDO_SNE | ADERIDO_SNE) e assinaturas push. A leitura de um item SNE grava a evidencia e publica NOTIFICACAO_CIENCIA na outbox (topic portal), idempotente; a ciencia efetiva do aviso e do modulo inf/notification (ADR-0016). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica INBOX_LIDO, NOTIFICACAO_CIENCIA, SNE_ADESAO_SOLICITADA e SNE_CANCELAMENTO_SOLICITADO (M21)."
   },

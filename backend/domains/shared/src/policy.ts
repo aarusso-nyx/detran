@@ -1632,6 +1632,44 @@ const DASHBOARD_RULES: Array<[string, string, string, readonly DetranRole[]]> =
     ['dashboard', 'kpi', 'read', ['agency-admin', 'dash-operator', 'AUDITOR']],
   ];
 
+/**
+ * `portal:*` matrix — R-0009 CTG-0002 §10 (M19). Só `CIDADAO` (ADR-0005; ADR-0019 §1). Papéis globais
+ * (`GLOBAL_ADMIN_ROLES`) passam por `isDetranActionAllowed` e são barrados pela `PortalCitizenGuard`
+ * (CTG-0001 §3) — exceção declarada em policy.spec.ts. `portal:manifestation:manifest` é rota
+ * `@Public()` (H.51): a linha existe para a matriz política ⇔ rotas fechar nos dois sentidos.
+ */
+const PORTAL_RULES: Array<[string, string, string, readonly DetranRole[]]> = [
+  ['portal', 'identity', 'read', ['CIDADAO']],
+  ['portal', 'identity', 'elevate', ['CIDADAO']],
+  ['portal', 'identity', 'represent', ['CIDADAO']],
+  ['portal', 'identity', 'update', ['CIDADAO']],
+  ['portal', 'ait', 'read', ['CIDADAO']],
+  ['portal', 'request', 'create', ['CIDADAO']],
+  ['portal', 'request', 'compose', ['CIDADAO']],
+  ['portal', 'request', 'submit', ['CIDADAO']],
+  ['portal', 'request', 'withdraw', ['CIDADAO']],
+  ['portal', 'request', 'read', ['CIDADAO']],
+  ['portal', 'request', 'respond', ['CIDADAO']],
+  ['portal', 'request', 'evaluate', ['CIDADAO']],
+  ['portal', 'inbox', 'read', ['CIDADAO']],
+  ['portal', 'inbox', 'acknowledge', ['CIDADAO']],
+  ['portal', 'sne-enrollment', 'read', ['CIDADAO']],
+  ['portal', 'sne-enrollment', 'enroll', ['CIDADAO']],
+  ['portal', 'sne-enrollment', 'cancel', ['CIDADAO']],
+  ['portal', 'push-subscription', 'create', ['CIDADAO']],
+  ['portal', 'document', 'read', ['CIDADAO']],
+  ['portal', 'vehicle', 'read', ['CIDADAO']],
+  ['portal', 'vehicle', 'issue', ['CIDADAO']],
+  ['portal', 'crash', 'read', ['CIDADAO']],
+  ['portal', 'exam', 'read', ['CIDADAO']],
+  ['portal', 'manifestation', 'manifest', ['CIDADAO']],
+  ['portal', 'manifestation', 'read', ['CIDADAO']],
+  ['portal', 'manifestation', 'acknowledge', ['CIDADAO']],
+  ['portal', 'evaluation', 'evaluate', ['CIDADAO']],
+  ['portal', 'service-charter', 'read', ['CIDADAO']],
+  ['portal', 'stream', 'read', ['CIDADAO']],
+];
+
 export const DETRAN_POLICY_MATRIX: Readonly<
   Record<DetranPolicyKey, readonly DetranRole[]>
 > = Object.freeze(
@@ -1667,12 +1705,10 @@ export const DETRAN_POLICY_MATRIX: Readonly<
       teat(domain, resource, action),
       roles,
     ]),
-    ['portal:appeal:create', ['CIDADAO']],
-    ['portal:appeal:read-own', ['CIDADAO']],
-    // R-0009 CTG-0001 §3/§8 (M19, TASK-0004): única linha `portal:*` deste
-    // grupo; `GET /v1/portal/identity/me`. O bloco `PORTAL_RULES` completo e a
-    // remoção das duas linhas `portal:appeal:*` acima são CTG-0002 (TASK-0007).
-    ['portal:identity:read', ['CIDADAO']],
+    ...PORTAL_RULES.map(([domain, resource, action, roles]) => [
+      teat(domain, resource, action),
+      roles,
+    ]),
   ]) as Record<DetranPolicyKey, readonly DetranRole[]>,
 );
 

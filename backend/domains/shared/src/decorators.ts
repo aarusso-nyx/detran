@@ -1,5 +1,11 @@
 import { applyDecorators, SetMetadata } from '@nestjs/common';
 import { Idempotent } from '@stynx-nyx/idempotency';
+/**
+ * R-0009 CTG-0002 §4 (M9, adenda A4(a)): as rotas do Portal que assumem a
+ * idempotência no handler (`PortalIdempotencyService`) anulam o `@Idempotent()`
+ * herdado de `@Action` com `@NoIdempotent()` ao lado do `@Action`.
+ */
+export { NoIdempotent } from '@stynx-nyx/idempotency';
 import { RateLimit } from '@stynx-nyx/ratelimit';
 export { Audit, type AuditMetadata } from '@stynx-nyx/backend';
 

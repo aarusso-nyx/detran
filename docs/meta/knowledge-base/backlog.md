@@ -87,6 +87,27 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
       parâmetros para a constante que a origem usa sem fonte normativa — OD-T14
 - [ ] teat: **`batches/{id}/retransmit` e `GET certificates`** (route contract §4.6) ficam fora por falta de
       entidade de lote de integração em `ops` e de fonte para validade mTLS — OD-T43
+- [ ] portal/rait: **R-0007 `rait-backend` precisa mesclar em `main` para as delegações reais do Portal**
+      (`defesa_previa`, `recurso_jari`, `recurso_cetran`, `indicacao_condutor`, `pagamento`): até lá
+      `POST requests` responde `PORTAL.SERVICE_UNAVAILABLE {unavailableReason:'delegacao_indisponivel_r0007'}`
+      na verificação de elegibilidade e o teste de delegação real com alvo real fica `it.todo` citando
+      R-0007 (`work/rounds/R-0009/plan.md` M8/M23; `portal-build-pack.md` §3)
+- [ ] portal: **adesão/cancelamento reais de SNE via `SnePort`** (`packages/senatran-adapter`) não
+      implementados em R-0009: `portal.sne_enrollment` grava o pedido e publica
+      `SNE_ADESAO_SOLICITADA`/`SNE_CANCELAMENTO_SOLICITADO` sem chamar o SNE nacional — OD-P16 (R-0014 WP-P6)
+- [ ] portal: **`lgpd_declaracao` (escopo `declaracao_completa`/`correcao`/`eliminacao`) depende do módulo
+      `@stynx-nyx/privacy` não montado no app**: rota responde `SERVICE_UNAVAILABLE` com
+      `unavailableReason:'privacy_endpoint_pendente'`; catálogo marca o serviço `partially_available`
+      (só `confirmacao`) — OD-P17 (R-0014)
+- [ ] portal: **`junta_medica` fora do catálogo de 15 serviços** (delegação PEC sem comando) e projetores
+      `crash_view`/`exam_view` só com tabela + esqueleto (`applyEvent` registrando `last_event_id`, sem
+      produtor real) — OD-P19 (R-0010/PEC)
+- [ ] portal: **3 dos 15 estados de `inf.infraction_state_ref` sem rótulo cidadão** em
+      `INFRACTION_SITUATION_MAP` (`AIT_LAVRADO`, `PENALIDADE_A_APLICAR`, `AGUARDANDO_RECURSO_2A`): evento
+      com esses estados falha o projetor (`last_error`), nunca rótulo inventado — OD-P20 (linguagem cidadã,
+      LEGAL/Owner)
+- [ ] portal: **CNH-e/CRLV-e assinados e credenciais institucionais do IdP gov.br real** ficam para R-0014
+      WP-P6 (OD-P15, ADR-0018); nesta rodada só IdP simulado nos perfis `test`/`local`
 
 ## Rodada RAIT — time multidisciplinar (2026-08-24)
 
@@ -415,6 +436,12 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       `portal-build-pack.md` (WP-P0…P6; 13 questões OD-P01…P13)
 - [ ] **Reconciliar `use-cases/INDEX.md` do PORTAL** (marca todos como `draft`; arquivos são `approved`/`reviewed`)
       e registrar uma RN dedicada ao ato de adesão ao SNE (UC-PORTAL-007 cita "backlog BPO/LEGAL") (added 2026-09-13)
+- [x] **`portal-backend` R-0009 (2026-09-16, PR #54/#56)**: WP-P0…P3 — ADR-0024 (gov.br via Cognito);
+      cinco pacotes `@detran/portal-{identity,requests,inbox,citizen-service,projections}` (DDL
+      19/61…65/14/11); rotas `/v1/portal/*`, projeções (ADR-0020), SSE, política `portal:*`; contratos
+      `BP-PORTAL-*.commands.openapi.json` (138 operações). OD-P02 e OD-P13 fechadas (ver
+      `decision-closure-plan.md` §PORTAL); OD-P14…P46 abertas na implementação
+      (`portal-build-pack.md` §4)
 - [x] **Pacote BOAT (2026-09-13)**: `boat-frontends.md`, `boat-route-contract.md`, `boat-error-catalog.md`,
       `boat-build-pack.md` (WP-B0…B5; 13 questões OD-B01…B13)
 - [ ] **BOAT — reconciliar `policy.ts` (`est:crash-record:*`) com o corpus e criar UC-BOAT-013** (dever de

@@ -165,10 +165,19 @@ if (process.argv.includes('--check-usage')) {
     'dashboard',
   ];
   let usageErrors = 0;
+  // R-0009 (plan.md A7): the OpenAPI clients under packages/api-clients are
+  // generated from docs/framework/contracts and carry citizen-facing i18n
+  // label keys (`portal.requests.nextAction.<STATE>`) as literal types; they
+  // cannot read a parameter, so they are not usage candidates. Every other
+  // generated artifact stays in the scan.
+  const excludedDirectories = [
+    join(root, 'packages/api-clients/src/generated'),
+  ];
   async function walk(dir) {
     for (const item of await readdir(dir, { withFileTypes: true })) {
       if (['tests', 'dist', 'node_modules'].includes(item.name)) continue;
       const path = join(dir, item.name);
+      if (excludedDirectories.includes(path)) continue;
       if (item.isDirectory()) await walk(path);
       else if (/\.(?:ts|js|mjs|tsx|jsx)$/.test(item.name)) {
         const text = await readFile(path, 'utf8');

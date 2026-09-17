@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Inbox — BP-PORTAL-INBOX-001",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Caixa do cidadao (ADR-0019 Decision 3; [WF-PORTAL-003] secao Estados e secao Prazos; plan R-0009 M15): itens da caixa como projecao de eventos mais fatos de ciencia (portal.acknowledgement_evidence), adesao ao SNE como macro-estado do vinculo (NAO_ADERIDO_SNE | ADERIDO_SNE) e assinaturas push. A leitura de um item SNE grava a evidencia e publica NOTIFICACAO_CIENCIA na outbox (topic portal), idempotente; a ciencia efetiva do aviso e do modulo inf/notification (ADR-0016). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica INBOX_LIDO, NOTIFICACAO_CIENCIA, SNE_ADESAO_SOLICITADA e SNE_CANCELAMENTO_SOLICITADO (M21).",
     "x-blueprint": "BP-PORTAL-INBOX-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"

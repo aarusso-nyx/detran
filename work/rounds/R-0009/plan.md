@@ -343,6 +343,60 @@ qualificada}` e `claims.cpf` (11 dígitos, `sub` de negócio). Perfil `local-san
     (OD-P27 ao STYNX). (c) `DETRAN_PORTAL_HOST_RESOLUTION=on` faz o Host não mapeado responder 421 mesmo no perfil local (única
     forma de provar §9 no e2e). (d) D13: `portal.subject.name` nulo admitido (blueprint `IDENTITY` v1.0.2). (e) `PortalClock`
     com `America/Manaus` como fuso padrão nesta rodada; fuso por tenant em CTG-0002 (`auth.tenants.timezone`).
+- **A4 (2026-09-16, após TASK-0005)** — divergências de `contracts/CTG-0002.md` §15 **aceitas** como escritas no contrato
+  (o canônico prevalece; o código segue o contrato): (a) `[DIVERGE-M9-kernel]`: o kernel STYNX (`@Action` ⇒ `@Idempotent()`)
+  já trata `Idempotency-Key` (400 sem código, replay, 422 em corpo divergente); para cumprir M9 (409 `PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY`
+  `{ key }` + `portal.idempotency_record`) as rotas M9 usam `@NoIdempotent()` + `PortalIdempotencyService`; `@detran/shared`
+  reexporta `NoIdempotent` em `decorators.ts`; `assertIfMatch(header, version, 'PORTAL')` (TASK-0007; locks
+  `MOD-shared-decorators`, `MOD-shared-if-match`, `MOD-app-delegation-providers`). (b) OD-P30: autenticação oportunista em
+  `POST manifestations` (`@Public()` + `@Resource/@Action`; extensão do guard de auth do app — H.51 "anônimo para manifestar,
+  simples para acompanhar"); TASK-0008 ganha lock `MOD-app-module` (guard público) e `MOD-app-national-read-providers`.
+  (c) `[DIVERGE-M12]` `emissao_crlv`, `[DIVERGE-M8/M12]` `actions.pay`, `[DIVERGE-M24]` `moduleExports`/`dependencies`,
+  `[DIVERGE-M15]`/`[DIVERGE-M16]` `topic = type`, `[DIVERGE-M10]` evento sem CPF, `[DIVERGE-M18]` `data` reformatado,
+  `[DIVERGE-route-contract]` (`representedName`, `scores` aninhado, `category` na caixa), `[DIVERGE-CTG-0001]` (representation
+  sem `version`; `EVALUATION_NOT_OFFERED` × `REQUEST_STATE_INVALID`; chaves de `effects_ack` do seed), `[DIVERGE-M19]` (guarda
+  própria de `manifest`) — aceitas. (d) `GET content/points-explainer` fica fora desta rodada (OD-P31); produtor de
+  `inbox_item`/push fora de M16 (OD-P40). (e) `tools/contracts/check-commands.mjs` (`CONTROLLER_ROOTS` + catálogo do Portal) é
+  alteração de ferramenta: feita pelo **maestro (Engineer)** no checkpoint de TASK-0009, não pelo transcritor. (f) `pnpm install`
+  (deps workspace novas dos quatro pacotes) feito pelo maestro após TASK-0005. (g) Numeração de DDL: `19-portal-platform.sql`
+  convive com `19-est-lifecycle-vocabulary.sql` (R-0010, PR #55) por ordem lexicográfica, como já ocorre com `13-ops-*`.
+- **A5 (2026-09-16, após TASK-0006)** — (a) `rebuild` (CTG-0002 §7.1 × §7.3): reaplicar a janela **sem** apagar linhas
+  nunca projetadas — `rebuild` apaga apenas as linhas da projeção cujo `last_event_id` pertence à janela reaplicada (ou
+  cujo `ait_id`/`request_id`/`subject_cpf_hash` é tocado por evento da janela); linhas com sentinela D10 (fixtures sem
+  evento) são preservadas; C-0002-57 vale como escrito (snapshot → rebuild → linhas iguais). (b) Segunda avaliação:
+  a guarda de estado responde primeiro (`PORTAL.REQUEST_STATE_INVALID` em `CONCLUIDO`; `PORTAL.EVALUATION_NOT_OFFERED` fora
+  de `AVALIACAO_OFERECIDA`); `PORTAL.EVALUATION_ALREADY_SUBMITTED` só quando o pedido ainda está em `AVALIACAO_OFERECIDA` e a
+  linha de `evaluation` já existe (índice único) — e2e aceita qualquer dos 409, unit prova o único. (c) `policy.spec.ts`:
+  o `it` de TASK-0003 sobre `portal:appeal:*` passa a AUSENTE (M19). (d) Seed `71-fixtures-portal-events.sql` aceito no
+  lugar de editar o 70. (e) `@detran/inf-deadlines` entra em `BP-PORTAL-PROJECTIONS-001` v1.0.2 (`dependencies` +
+  `testAliases`; maestro como Architect, regenerado no checkpoint) e em `backend/app/package.json` (TASK-0008, wiring).
+  (f) Assinaturas fixadas pelos fakes do Inspector (relatório TASK-0006 item 7) valem como contrato para TASK-0007/0008:
+  `create(tx, identity, body, headers)`, `updateDraft/submit/withdraw/evaluate(tx, identity, id, body, headers)`,
+  `respondDiligence(tx, identity, id, did, body, headers)`, `manifest(tx, identity|null, body, headers)`,
+  `acknowledge(tx, identity, id)`, `evaluate(tx, identity, body, headers)`, `read(tx, subject, id)`,
+  `enroll(tx, subject, identity, body)`, `cancel(tx, subject, identity, reason?)`, `applyEvent(event, tx)` → `ApplyOutcome`,
+  `reshape(topic, payload, row?)`, `listSince(cursor, scope, limit)`, `protocolNumber(tx, slug, today, requestId)`,
+  `new ReadServiceDelegationTarget(serviceKey, readResource, targetKinds)`; SQL dentro do subconjunto documentado em
+  `requests/tests/support/fake-sql.ts`; headers em minúsculas; `actor.id` = `RequestContext.snapshot().actorId`.
+- **A6 (2026-09-16, após TASK-0008)** — (a) `rebuild` implementado como `reset` por projeção (zera colunas derivadas de
+  evento e `last_event_id` → sentinela D10, preserva identidade/`situation` em `infraction_view`; `crash_view`/`exam_view`
+  só sentinela; `process_timeline`/`points_view` apagadas) — **aceito** como a leitura correta de A5(a). (b)
+  `PORTAL_PROJECTION_POLLER` no módulo global `PortalNationalReadPortsModule` (visibilidade Nest) — aceito. (c) Defeito
+  pré-existente de `ops/parameter` (`OpsParameterService.select` comparava `Date` com string; toda leitura em banco real
+  devolvia 404) corrigido pelo **maestro (Engineer)** com comparação por dia ISO — `plant-bug` de R-0004 registrado em
+  §Triagem; lock `MOD-ops-parameter` tocado fora da frente por necessidade do gate (mudança mínima, testes de
+  `ops-parameter` verdes). (d) O e2e do app provisiona os parâmetros `portal.*` do tenant local copiando as linhas do
+  tenant canônico de `ops.parameter` (TASK-0006 iteração 3; nunca literal de chave nos specs). (e) C-0002-79: a
+  chamada "sem sessão" no perfil `test` precisa de papel fora da matriz (`field-agent`) ou de `DETRAN_LOCAL_ROLES` vazio
+  (TASK-0006 iteração 3).
+- **A7 (2026-09-16, gate de CTG-0002)** — `verify:parameter-catalogue --check-usage` acusava as chaves de rótulo i18n
+  (`portal.requests.nextAction.<STATE>`, `portal.evaluations.publicIndicator`) nos clientes gerados
+  `packages/api-clients/src/generated/BP-PORTAL-*.commands.ts` (tipos `const` transcritos dos contratos). Chaves i18n do
+  Portal começam por `portal.` e têm ≥ 2 pontos, colidindo com a heurística de candidato do verificador; os clientes gerados
+  não leem parâmetro. Decisão: excluir **só** `packages/api-clients/src/generated` da varredura de uso (comentário no
+  verificador; nenhuma allowlist de chaves), manter todo o resto; a doc do verificador (`parameter-catalogue.md`
+  §"Verificador fail-closed") é atualizada por TASK-0010; a colisão heurística × i18n vira OD-P46 (Architect: prefixo
+  ou allowlist declarada para chaves i18n quando `i18n/portal.pt-BR.json` entrar em código, R-0014).
 
 ## Tarefas
 
@@ -436,6 +490,13 @@ decisão do maestro sob a instrução do Owner. Registrado aqui e no relatório 
 - TASK-0004 — `pnpm --filter @detran/app test:e2e` (C-0001-42) — reference-gap — contrato §3 fixa que a política roda antes da guarda; `field-agent` é negado pela política (403 STYNX sem `code`), logo `IDENTITY_NOT_CITIZEN` é inalcançável para esse papel no e2e — adenda A3; TASK-0003 iteração 2 ajusta a expectativa (403 sem `code`); `IDENTITY_NOT_CITIZEN` provado por `technical-admin` com claims (C-0001-09b).
 - TASK-0004 — e2e C-0001-41 (reexecução em banco persistente) — sensor-error — spec não limpa `portal.subject` do CPF fixture no `beforeAll` — TASK-0003 iteração 2: `delete` no `beforeAll`.
 - maestro (merge de `origin/main` #55) — `pnpm backend:test:ci` (`est-crash` `boat-contract.integration` "seed.sh roda duas vezes") — sensor-error (ambiente) — o spec de R-0010 roda `seed.sh` com `DB_NAME ?? 'detran_r10'`, banco sem o DDL do Portal; com `DB_NAME=detran_r9` (agora em `env-detran-r9.sh`) passa 21/21 — nenhum código alterado; CI usa `DB_NAME=detran`.
+- TASK-0007 — e2e `portal-requests` C-0002-70 — sensor-error — spec usa `targetKind:'none'` para `consulta_bat`/`consulta_exame`; contrato §3.2 fixa `crash`/`exam` — TASK-0006 iteração 2: corrigir o spec.
+- TASK-0007 — integration `portal-requests` C-0002-30 — sensor-error — spec espera protocolos `\d{7}`; fixtures do seed 70 usam sufixo hex (contrato §12) — TASK-0006 iteração 2: aceitar os números das fixtures (só os gerados por `protocolNumber` são `\d{7}`).
+- TASK-0007 — e2e entre arquivos (C-0001-41 × `portal-requests.e2e`) — sensor-error — `portal-requests.e2e` deixa linhas do sujeito ouro no tenant local; `delete from portal.subject` de C-0001-41 viola FK em banco persistente — TASK-0006 iteração 2: limpeza em `afterAll` de `portal-requests.e2e` (requests, protocols, idempotency_record, representation do sujeito).
+- TASK-0008 — e2e `portal-routes` C-0002-77 — plant-bug (pré-existente, R-0004 `ops/parameter`) — `OpsParameterService.select` comparava `Date` (pg `date`) com string → parâmetro nunca encontrado — corrigido pelo maestro (A6(c)); + sensor-error: e2e não provisiona parâmetros do tenant local — TASK-0006 iteração 3.
+- TASK-0008 — e2e `portal-routes` C-0002-79 (última asserção) — sensor-error — verificador local sintetiza principal sem `Authorization` com os papéis correntes — TASK-0006 iteração 3 (A6(e)).
+- TASK-0009 — `pnpm contracts:test` C-5-16 — sensor-error — o teste de R-0008 fixa `operations=92`; com os 47 contratos do Portal o gate conta 139 — contagem atualizada pelo maestro (Engineer) em `tools/contracts/tests/check-commands.test.mjs` (asserção mantida, só o número).
+- maestro (gate CTG-0002) — `pnpm check` → `verify:parameter-catalogue --check-usage` — sensor-error — chaves i18n nos clientes gerados do Portal lidas como candidatas a parâmetro — A7: `packages/api-clients/src/generated` fora da varredura de uso.
 - TASK-0004 — D13 (`portal.subject.name not null` × contrato) — reference-gap — blueprint `IDENTITY` v1.0.2 `name nullable` (maestro, Architect) + regeneração no checkpoint.
 
 ## Retomada
@@ -453,14 +514,14 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0002 | in_progress | idem, em paralelo                                                                                             |
 | TASK-0003 | completed   | iteração 2 verde (49/49 unit, 14/14 e2e ×2); relatório atualizado                                             |
 | TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
-| TASK-0005 | queued      | —                                                                                                             |
-| TASK-0006 | queued      | —                                                                                                             |
-| TASK-0007 | queued      | —                                                                                                             |
-| TASK-0008 | queued      | —                                                                                                             |
-| TASK-0009 | queued      | —                                                                                                             |
-| TASK-0010 | queued      | —                                                                                                             |
+| TASK-0005 | completed   | relatório em `reports/TASK-0005.md`; A4; branch temporário `tmp/r9-ctg2-wip` até o merge do PR #54            |
+| TASK-0006 | completed   | 4 iterações (84 critérios; correções restritas em it.2–4); relatório em `reports/TASK-0006.md`                |
+| TASK-0007 | completed   | relatório em `reports/TASK-0007.md`; 3 contradições de spec → §Triagem (TASK-0006 it.2)                       |
+| TASK-0008 | completed   | relatório em `reports/TASK-0008.md`; 142/144 e2e; A6; 2 itens → TASK-0006 it.3                                |
+| TASK-0009 | completed   | relatório em `reports/TASK-0009.md`; 47 operações (139 no gate); clientes gerados pelo maestro                |
+| TASK-0010 | completed   | relatório em `reports/TASK-0010.md`; docs no PR #56                                                           |
 
-Último veredito do reviewer: `prompt-review-3` PASS (após FAIL/FAIL de estrutura, ver §Bloqueios). Próximos passos: relatórios de TASK-0001/0002 → checkpoint → TASK-0003.
+Checkpoint 1 (2026-09-16): CTG-0001 concluído — commits `93a754d…104e5c8`, `delivery-review-CTG-0001` REVIEW → `-2` PASS, evidência generic seq. 1, **PR #54** aberto contra `main` (CI em curso). Branch **publicado**: integrar `origin/main` só com `git merge --no-edit`. Checkpoint 2 (2026-09-16): **PR #54 mesclado** em `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8` (CI 5/5; `audit observe` EV-999a0329d451aa89, commit `b912555`); branch temporário `tmp/r9-ctg2-wip` reintegrado (`ba72228`) e apagado. Checkpoint 3 (2026-09-16): CTG-0002 concluído — TASK-0005…0009 completas (`b427153…f6a253f`), gates verdes (`pnpm check`, `backend:test:ci` 142/144 + 2 todo R-0007, `rls-smoke`, seed 2×), `delivery-review-CTG-0002` **PASS** (1 nota low corrigida em `f6a253f`), evidência generic seq. 2. Último veredito: `delivery-review-CTG-0002` PASS. Próximos passos: TASK-0005 (contrato CTG-0002 + wiring M24 dos 4 blueprints) → TASK-0006 → TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010; merge do PR #54 quando CI verde; `audit observe` no sha do merge.
 
 ## Leitura
 

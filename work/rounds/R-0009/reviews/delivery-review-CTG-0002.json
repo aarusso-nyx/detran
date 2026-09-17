@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0009",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "backend/app/src/portal-stream.controller.ts",
+      "line": 203,
+      "claim": "Se a conexão fecha entre o registro dos handlers e a atribuição das duas inscrições do poller, cleanup marca closed e chama os no-ops iniciais; a verificação posterior chama cleanup novamente, mas ele retorna cedo. As inscrições reais ficam ativas.",
+      "fix": "Separar a marcação de closed do cancelamento, ou cancelar explicitamente as inscrições recém-criadas quando closed já for true."
+    }
+  ],
+  "notes": [
+    "A entrega fecha os critérios de política com grants positivos e negativos exaustivos, mantém a integração nacional na composição via senatran-adapter e registra as divergências/ODs no contrato e nas adendas."
+  ]
+}

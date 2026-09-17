@@ -1,4 +1,4 @@
-// Generated from BP-PORTAL-CITIZEN-SERVICE-001 v1.0.0 sha256:adb8933e9c3c31077273c68bff12efa5e0bfefa8843cdc29798c6d43fa63a246
+// Generated from BP-PORTAL-CITIZEN-SERVICE-001 v1.0.1 sha256:81c05ec48ec8ab36465ae1b250c4a59f59931b99835bfd1ef52f3b10520f9029
 import { Module } from '@nestjs/common';
 import { ManifestationController } from './controllers/manifestation.controller.js';
 import { ManifestationService } from './services/manifestation.service.js';
@@ -9,9 +9,20 @@ import { ManifestationExtensionRepository } from './repositories/manifestation-e
 import { ServiceCatalogController } from './controllers/service-catalog.controller.js';
 import { ServiceCatalogService } from './services/service-catalog.service.js';
 import { ServiceCatalogRepository } from './repositories/service-catalog.repository.js';
+import { PortalManifestationsController } from './handwritten/manifestations.controller.js';
+import { PortalEvaluationsController } from './handwritten/evaluations.controller.js';
+import { PortalServiceCharterController } from './handwritten/service-charter.controller.js';
+import { PortalManifestationService } from './handwritten/manifestation.service.js';
+import { PortalEvaluationService } from './handwritten/evaluation.service.js';
+import { IdentityModule } from '@detran/portal-identity';
+import { RequestsModule } from '@detran/portal-requests';
 
 @Module({
+  imports: [IdentityModule, RequestsModule],
   controllers: [
+    PortalManifestationsController,
+    PortalEvaluationsController,
+    PortalServiceCharterController,
     ManifestationController,
     ManifestationExtensionController,
     ServiceCatalogController,
@@ -23,6 +34,8 @@ import { ServiceCatalogRepository } from './repositories/service-catalog.reposit
     ManifestationExtensionRepository,
     ServiceCatalogService,
     ServiceCatalogRepository,
+    PortalManifestationService,
+    PortalEvaluationService,
   ],
 })
 export class CitizenServiceModule {}

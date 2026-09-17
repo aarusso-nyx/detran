@@ -1,4 +1,4 @@
--- Generated from BP-PORTAL-INBOX-001 v1.0.1 sha256:1ddffdafcda20768cbaa66e39e4ee4f5346513517e6bb95c6216878d42314ccd
+-- Generated from BP-PORTAL-INBOX-001 v1.0.2 sha256:c04ef2d9c11828696abb081206e353636a01f9f86c39e28acfc0ada5addf53da
 
 -- Regenerable-only DDL for BP-PORTAL-INBOX-001; request-path writes use role_app_backend.
 

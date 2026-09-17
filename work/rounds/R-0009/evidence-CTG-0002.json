@@ -1,0 +1,197 @@
+{
+  "action": "Implement WP-P2/WP-P3 CTG-0002: contract CTG-0002 and M24 wiring of four blueprints, PORTAL_RULES policy (29 keys, portal:appeal:* removed), identity routes (elevation/representations/preferences), request lifecycle with immediate protocol, delegation port (UnavailableDelegationTarget until R-0007), idempotency 409, citizen inbox with SNE acknowledgement evidence, SNE enrolment, ombudsman manifestations/evaluations, five projections with replay, cached national reads through senatran-adapter, SSE /v1/portal/stream, five command contracts (47 operations) and request-draft schema, tests (84 criteria) \u2014 plus pre-existing ops/parameter Date defect fix and gate extensions",
+  "round": "R-0009",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": [
+    "b4271531ef2f99abdcecf3e71f635b700072f1ed",
+    "58e649d0ebf8bf17441e9ea5ea50f93bf7d28b72",
+    "78981620ad89a6cf6b3a720a0fbe1127931a8cff",
+    "b9125559fa4aab364c2f1bfd73f6b12d4cffe234",
+    "ba7222869fe17b2179e1ba35fcdfa54c82a8b00c",
+    "9d9c2fdff8abdc96ca24d9d80a407484a9f3bca6",
+    "f22cba6a41ffeeebe6eaf90178b99b84bfc49aef",
+    "56eda8a2e3fdd83697cd56a1a21b601762adcaad",
+    "e12e9a481b4fa6a094f94cb10ea49a8a7a9ceef1",
+    "6080b43be061d9d92ab838a4030acec578d9ecb1",
+    "b8d01e2f5e73238742ebcd2d3993ae0144ed5bab",
+    "2d84ae67173e72c3c03cfdb1d4fec094194dca86",
+    "4a725cc8ea70c9782ce633707a29fe19cc1618e0",
+    "9f4b789fba2a2cf3caf13738a8550f469d453c4c",
+    "8dd60a9be45f2e15bffe5c60cf30b4efa2cfb796",
+    "3ceeede96d78666f1c3ad410c3a4a1f11e2b4061",
+    "f6a253fc77bc6bd2c3b69a65fc86d4a44f6c46ab"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0009/contracts/CTG-0002.md",
+      "sha256": "bab0daf1acd6033dbc6789367870cecc1b70039a31012a2b60606ae18dcc3b7f"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-PORTAL-REQUESTS-001.json",
+      "sha256": "1861cc41e71895a553a106b4be9f7f02958d1829af65885904d1c8f6a9aeb07c"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-PORTAL-INBOX-001.json",
+      "sha256": "c04ef2d9c11828696abb081206e353636a01f9f86c39e28acfc0ada5addf53da"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-PORTAL-CITIZEN-SERVICE-001.json",
+      "sha256": "81c05ec48ec8ab36465ae1b250c4a59f59931b99835bfd1ef52f3b10520f9029"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-PORTAL-PROJECTIONS-001.json",
+      "sha256": "5deaf3bb32dddcda371d363d5b4d7c5b8f3e0ec17cea92357ccf01a121943012"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.ts",
+      "sha256": "f85060aa8cbca414a5af4ef9df849a15f90008b6a320fa7f3df686641220715f"
+    },
+    {
+      "path": "backend/domains/shared/src/decorators.ts",
+      "sha256": "3a7967479b21eae7834824d7487c6107ab905ccc29599126f497bcc86880cc0b"
+    },
+    {
+      "path": "backend/domains/shared/src/errors/if-match.ts",
+      "sha256": "2a8ecd951a4b7267c3d0382085a097f419cc4e496e3e85dd9401784c747ab9d6"
+    },
+    {
+      "path": "backend/domains/portal/requests/src/handwritten/requests.service.ts",
+      "sha256": "8e1586fb9b8d58459327c7f249815f59c2eef2fe2f8ad548b7fd8cbc1abebcd7"
+    },
+    {
+      "path": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+      "sha256": "6f536950ee4d78ce0a4cead64a77a0dd1d7a7489d45690340814b45d8897180d"
+    },
+    {
+      "path": "backend/domains/portal/requests/src/handwritten/idempotency.service.ts",
+      "sha256": "843bc18477d2336e9125ecd4dd01b1b01c896be8b6959c90c27f8fb0bd34c447"
+    },
+    {
+      "path": "backend/domains/portal/requests/src/handwritten/protocol.ts",
+      "sha256": "3604aac3e1d94a4ca9f842e732ced8085351ab1bc0dccbabb712362ec56f2572"
+    },
+    {
+      "path": "backend/domains/portal/requests/src/handwritten/delegation/delegation.service.ts",
+      "sha256": "2422a48f9431b217715526110ce75fa16a265cc76c0e45ab2ecb9eb905daed85"
+    },
+    {
+      "path": "backend/domains/portal/inbox/src/handwritten/inbox.service.ts",
+      "sha256": "449305d60bf813f0f854076b56e01c8e31e2bbf64d5f3000812d65a7ce8cb841"
+    },
+    {
+      "path": "backend/domains/portal/inbox/src/handwritten/sne-enrollment.service.ts",
+      "sha256": "a89a41b4a760a7ff82338288c716e66e0bcdb900d3e3ce5754b3489be965c776"
+    },
+    {
+      "path": "backend/domains/portal/citizen-service/src/handwritten/manifestation.service.ts",
+      "sha256": "5907292502c380486177617c257e8bc4f578ff1a7235c17abd498a25f580e492"
+    },
+    {
+      "path": "backend/domains/portal/citizen-service/src/handwritten/portal-timers.ts",
+      "sha256": "733f04daa9f147a986aee35361e226f9a743950981c8510fb3beee597fe60a7e"
+    },
+    {
+      "path": "backend/domains/portal/projections/src/handwritten/infraction-view.projection.ts",
+      "sha256": "6ae3a2d746608a5a539cb935141d30a36262d535a3900b8f98cd19082f15b19f"
+    },
+    {
+      "path": "backend/domains/portal/projections/src/handwritten/projectors.service.ts",
+      "sha256": "6a13b1b75d6eab5bb3a228ee028fd2e1e88924c0fbe01d5e1526940d87d2a934"
+    },
+    {
+      "path": "backend/domains/portal/projections/src/handwritten/national-reads.service.ts",
+      "sha256": "972c9481d77c1f775cf55a9573a0dbc89791e8d9607c643394b94f75804be9a9"
+    },
+    {
+      "path": "backend/app/src/portal-stream.controller.ts",
+      "sha256": "8f187ada148e689b7103eb2c1e0796fb3ecacb803cee7c676eeaddf065d84349"
+    },
+    {
+      "path": "backend/app/src/portal-stream.service.ts",
+      "sha256": "01539d0b9a611ad5f036395e7646440c6c3b99aa2c0101d549b8edf5bf8ce280"
+    },
+    {
+      "path": "backend/app/src/portal-delegation.providers.ts",
+      "sha256": "2faf9068727185f20116f76a6645168bfd0588fb56b8bf52540f53387f45f0cc"
+    },
+    {
+      "path": "backend/app/src/portal-national-read.providers.ts",
+      "sha256": "c6accacce49487883f0520c76ca7e7b263af3f4e8f7b08d15561d03cb765772d"
+    },
+    {
+      "path": "backend/app/src/app.module.ts",
+      "sha256": "4d550cc9ad2cbec5e135fe8eed8c2c28f8fe34cde3a6f981d38989ef7f9f5cb2"
+    },
+    {
+      "path": "backend/domains/ops/parameter/src/handwritten/parameter.service.ts",
+      "sha256": "561fb7744b88d989e26dca3ec6e7e71380f6087c3458ec00337728269ecf833e"
+    },
+    {
+      "path": "tools/contracts/check-commands.mjs",
+      "sha256": "ac3c39edc8e414c016c8636fe892d157bd3766c4c24503b4cae1ebbd6365d06a"
+    },
+    {
+      "path": "tools/parameters/verify.mjs",
+      "sha256": "4442d3c855c8fdc902ef0678f0e467f520076f2827bfbbb2a43b412edae11f5d"
+    },
+    {
+      "path": "docs/framework/contracts/BP-PORTAL-IDENTITY-001.commands.openapi.json",
+      "sha256": "896210aa8cfb7bc76517d15ba2021ac75201c7da2b3879ebcdaf8295e9372ee8"
+    },
+    {
+      "path": "docs/framework/contracts/BP-PORTAL-REQUESTS-001.commands.openapi.json",
+      "sha256": "c7eb826904fd70766e8ffc993d2a7790e831a79eaea8494889827a143317a56d"
+    },
+    {
+      "path": "docs/framework/contracts/BP-PORTAL-INBOX-001.commands.openapi.json",
+      "sha256": "0919f18a7b008b9420310db19c7c02c2bd91b45e90a3cecfee157e17dc493fe3"
+    },
+    {
+      "path": "docs/framework/contracts/BP-PORTAL-CITIZEN-SERVICE-001.commands.openapi.json",
+      "sha256": "0fb4d8da13fc9dc6cfba07ef081200f77c19da6889cbdfb07634442fa5fde5bb"
+    },
+    {
+      "path": "docs/framework/contracts/BP-PORTAL-PROJECTIONS-001.commands.openapi.json",
+      "sha256": "6c16f53ce24abe4b1e38c1d6e39180de4ec79d38611c1cb92156573e48e1c351"
+    },
+    {
+      "path": "docs/framework/schemas/portal-request-draft.schema.json",
+      "sha256": "281f4bce9aeacc6d80889dff6690cb2ade19b02a1ad6178ce9bbf769dcfb7c85"
+    },
+    {
+      "path": "backend/database/seed/71-fixtures-portal-events.sql",
+      "sha256": "826e442a8a17d600c55f17fbd0ea7213bb5c5dc83b0c71fc051aea7e03f0ac1e"
+    },
+    {
+      "path": "backend/app/tests/e2e/portal-requests.e2e.spec.ts",
+      "sha256": "12a8b6ff891a64017b96a1331952751d07afdbf6b53d12696e08dd443e637119"
+    },
+    {
+      "path": "backend/app/tests/e2e/portal-routes.e2e.spec.ts",
+      "sha256": "a752908e9227ea72f14b2eb39300e535280718bae8c9bef13e049e4c795a3a0f"
+    },
+    {
+      "path": "backend/app/tests/e2e/portal-stream.e2e.spec.ts",
+      "sha256": "9de09b7e6633124188f855ea6adb46247774402d0cac66eff660fddd1b3faee6"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.spec.ts",
+      "sha256": "76c6e20b5eaf5743008131147dbd4daaaa16310345b49c7b60353e4f0b74b4d8"
+    },
+    {
+      "path": "backend/app/tests/e2e/policy-routes.e2e.spec.ts",
+      "sha256": "071357e2b151341255fdc0fe618c2ebd3b4209d10fa4cd49506cf0ef770338f8"
+    }
+  ],
+  "gates": {
+    "pnpm check": "pass (format, kb 522/446, blueprints:check, contracts:check 139 ops/58 clients, contracts:test 35, parameter-catalogue 87/18 with A7 exclusion, typecheck, decorators 960, rls-ddl, lifecycle-vocabulary, senatran boundary, pec parity/superset)",
+    "pnpm backend:test:ci": "pass (unit/integration/e2e all packages; app e2e 142 passed | 2 todo citing R-0007)",
+    "pnpm backend:rls-smoke": "pass",
+    "seed.sh x2 (detran_r9)": "pass",
+    "delivery-review": "PASS on cycle 1 (GPT-5.6 Terra) with one low note (stream cleanup race) fixed in f6a253f",
+    "prompt-review": "PASS on cycle 3 (shared with CTG-0001)"
+  },
+  "tasks": ["TASK-0005", "TASK-0006", "TASK-0007", "TASK-0008", "TASK-0009"],
+  "notes": "Adendas A4\u2013A7 (plan.md) by the maestro as Architect: @NoIdempotent + PortalIdempotencyService for M9, opportunistic auth on POST manifestations (OD-P30), rebuild as per-projection reset, ops/parameter Date defect (plant-bug R-0004) fixed by the maestro, check-commands.mjs and verify.mjs extensions. Delegations to RAIT/infraction/payment remain SERVICE_UNAVAILABLE until R-0007 (M8/M23). OD-P28\u2026P46 proposed."
+}

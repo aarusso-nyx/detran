@@ -281,5 +281,12 @@ somente se tiver dois ou mais pontos e começar por um destes prefixos: `rait`,
 `dashboard`. Literais desconhecidos de um ponto são ambíguos com entidades de
 auditoria, como `portal.complaint`, e não são candidatos. Não existe allowlist
 silenciosa: todo candidato desconhecido falha com arquivo, linha e literal.
+`packages/api-clients/src/generated` fica fora desta varredura de uso (R-0009, A7): os
+clientes de comando gerados (`BP-PORTAL-*.commands.ts`) transcrevem, como tipos `const`, as
+chaves de rótulo i18n do Portal (`portal.requests.nextAction.<STATE>`,
+`portal.evaluations.publicIndicator`), que colidem com a heurística acima (prefixo `portal.`
+e dois ou mais pontos) sem ler nenhum parâmetro; nenhuma chave entra em allowlist, só esse
+diretório gerado sai da varredura. A colisão entre a heurística e as chaves i18n do Portal é
+`OD-P46` (`docs/framework/arch/portal-build-pack.md` §4).
 
 A conversão de `inf.normative_agency_parameter` em view está fora deste contrato.

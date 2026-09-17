@@ -110,6 +110,13 @@ import {
   seedPortalPublicRequest,
   type PortalPublicRequestLike,
 } from './detran-runtime.js';
+import { PortalDelegationTargetsModule } from './portal-delegation.providers.js';
+import { PortalNationalReadPortsModule } from './portal-national-read.providers.js';
+import { PortalStreamController } from './portal-stream.controller.js';
+import {
+  PORTAL_STREAM_POLLER,
+  PortalStreamService,
+} from './portal-stream.service.js';
 import { TeatSyncModule } from './teat-sync.providers.js';
 import { TeatEvidencePortsModule } from './teat-evidence.providers.js';
 import { TeatSnapshotPortsModule } from './teat-snapshots.providers.js';
@@ -321,6 +328,53 @@ export class BoatVictimPurposeInterceptor {
   }
 }
 
+/**
+ * R-0009 CTG-0002 §2.8 (adenda A4(b), OD-P30): a única rota `@Public()` com
+ * autenticação OPORTUNISTA é `POST /v1/portal/manifestations` (H.51 "anônimo
+ * para manifestar, simples para acompanhar"). Quando o cabeçalho
+ * `Authorization` está presente, o guard interno tenta autenticar (principal e
+ * tenancy STYNX normais); qualquer falha → segue anônimo
+ * (`seedPortalPublicRequest`). Nunca 401/403 nessa rota.
+ */
+export function isPortalOptionalAuthPath(
+  path: string,
+  method: string | undefined,
+): boolean {
+  return (
+    (method ?? '').toUpperCase() === 'POST' &&
+    path.split('?', 1)[0] === '/v1/portal/manifestations'
+  );
+}
+
+type PortalPublicRequest = PortalPublicRequestLike & {
+  method?: string;
+  originalUrl?: string;
+};
+
+async function activatePublicPortalRoute(
+  request: PortalPublicRequest,
+  authenticate: () => boolean | Promise<boolean>,
+): Promise<boolean> {
+  const path = request.path ?? request.originalUrl ?? request.url ?? '';
+  const authorization = request.headers?.authorization;
+  const hasAuthorization =
+    typeof authorization === 'string' && authorization.trim().length > 0;
+  if (isPortalOptionalAuthPath(path, request.method) && hasAuthorization) {
+    try {
+      const authenticated = await portalRequestHostStorage.run(
+        portalHostOf(request.headers),
+        () => authenticate(),
+      );
+      if (authenticated) return true;
+    } catch {
+      // credencial inválida/expirada: a manifestação segue anônima (§2.8)
+    }
+  }
+  // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
+  seedPortalPublicRequest(request);
+  return true;
+}
+
 @Injectable()
 export class DetranLegacyAuthContextGuard implements CanActivate {
   constructor(
@@ -333,13 +387,11 @@ export class DetranLegacyAuthContextGuard implements CanActivate {
       DETRAN_PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    const request = context
-      .switchToHttp()
-      .getRequest<PortalPublicRequestLike>();
+    const request = context.switchToHttp().getRequest<PortalPublicRequest>();
     if (isPublic) {
-      // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
-      seedPortalPublicRequest(request);
-      return true;
+      return activatePublicPortalRoute(request, () =>
+        this.inner.canActivate(context),
+      );
     }
     const path = request.path ?? request.url ?? '';
     if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
@@ -363,13 +415,11 @@ export class DetranStynxAuthContextGuard implements CanActivate {
       DETRAN_PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    const request = context
-      .switchToHttp()
-      .getRequest<PortalPublicRequestLike>();
+    const request = context.switchToHttp().getRequest<PortalPublicRequest>();
     if (isPublic) {
-      // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
-      seedPortalPublicRequest(request);
-      return true;
+      return activatePublicPortalRoute(request, () =>
+        this.inner.canActivate(context),
+      );
     }
     const path = request.path ?? request.url ?? '';
     if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
@@ -500,6 +550,12 @@ export class AppModule {
         // Portal do cidadão (R-0009 CTG-0001, plan M1/M24): `identity` traz
         // as rotas manuscritas deste grupo; os outros quatro são montados
         // como módulos puramente gerados (sem rotas) até CTG-0002.
+        // CTG-0002 §3.2/§14 (TASK-0007): o mapa `PORTAL_DELEGATION_TARGETS`
+        // (global) é composto antes dos módulos que o consomem.
+        // CTG-0002 §8/§14 (TASK-0008): portas nacionais, leitor de parâmetros e
+        // poller das projeções (global) antes de `ProjectionsModule`.
+        PortalNationalReadPortsModule,
+        PortalDelegationTargetsModule,
         IdentityModule,
         RequestsModule,
         InboxModule,
@@ -535,6 +591,8 @@ export class AppModule {
       ],
       controllers: [
         TeatStreamController,
+        // CTG-0002 §9 (TASK-0008): SSE do cidadão.
+        PortalStreamController,
         TeatIntegrationsController,
         PecProcessParametersController,
         PecRenachProcessController,
@@ -560,6 +618,13 @@ export class AppModule {
         // (`teat-stream.service.ts`); testes injetam outra implementação.
         {
           provide: TEAT_STREAM_POLLER,
+          useFactory: () => createDefaultTeatStreamPoller(),
+        },
+        // CTG-0002 §9 (M18, TASK-0008): SSE do Portal e a porta do seu poller —
+        // mesma fábrica do TEAT (única chamadora de `setInterval`).
+        PortalStreamService,
+        {
+          provide: PORTAL_STREAM_POLLER,
           useFactory: () => createDefaultTeatStreamPoller(),
         },
         TeatIntegrationsService,

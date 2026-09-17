@@ -4,9 +4,11 @@
   "module": {
     "name": "CitizenService",
     "namespace": "portal",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "ddlFile": "64-portal-citizen-service.sql",
     "dependencies": {
+      "@detran/portal-identity": "workspace:*",
+      "@detran/portal-requests": "workspace:*",
       "@detran/inf-deadlines": "workspace:*",
       "zod": "^4.6.5"
     },
@@ -20,8 +22,51 @@
         "target": "../../shared/src/index.ts"
       },
       {
+        "package": "@detran/portal-identity",
+        "target": "../identity/src/index.ts"
+      },
+      {
+        "package": "@detran/portal-requests",
+        "target": "../requests/src/index.ts"
+      },
+      {
         "package": "@detran/inf-deadlines",
         "target": "../../inf/deadlines/src/index.ts"
+      }
+    ],
+    "handwrittenExports": ["handwritten/index"],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/manifestations.controller",
+        "symbol": "PortalManifestationsController"
+      },
+      {
+        "target": "handwritten/evaluations.controller",
+        "symbol": "PortalEvaluationsController"
+      },
+      {
+        "target": "handwritten/service-charter.controller",
+        "symbol": "PortalServiceCharterController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/manifestation.service",
+        "symbol": "PortalManifestationService"
+      },
+      {
+        "target": "handwritten/evaluation.service",
+        "symbol": "PortalEvaluationService"
+      }
+    ],
+    "moduleImports": [
+      {
+        "package": "@detran/portal-identity",
+        "symbol": "IdentityModule"
+      },
+      {
+        "package": "@detran/portal-requests",
+        "symbol": "RequestsModule"
       }
     ],
     "owners": ["detran-portal"],

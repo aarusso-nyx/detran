@@ -1,0 +1,2074 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Portal Identidade — comandos manuscritos (BP-PORTAL-IDENTITY-001)",
+    "version": "1.0.0",
+    "description": "Rotas manuscritas de identidade (conta, elevação de nível, representações, preferências) e as rotas públicas de marca/Carta de Serviços, montadas em PortalMeController, PortalAssuranceController, PortalRepresentationsController, PortalPreferencesController e PortalPublicController.",
+    "x-blueprint": "BP-PORTAL-IDENTITY-001",
+    "x-commands": true,
+    "x-source": "portal-route-contract.md §2, §3; CTG-0001 §8; CTG-0002 §2.1"
+  },
+  "paths": {
+    "/v1/portal/identity/me": {
+      "get": {
+        "tags": ["identity"],
+        "operationId": "portalMeGet",
+        "summary": "Lê a conta do cidadão (upsert do sujeito) e os requisitos de nível por ato.",
+        "x-policy": "portal:identity:read",
+        "x-audit": "PORTAL_IDENTITY_READ",
+        "x-command": "backend/domains/portal/identity/src/handwritten/me.controller.ts",
+        "x-contract": "CTG-0001 §8",
+        "responses": {
+          "200": {
+            "description": "Conta do cidadão.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "subjectId",
+                    "cpf",
+                    "name",
+                    "assuranceLevel",
+                    "govbrLevelObservedAt",
+                    "actRequirements",
+                    "representations",
+                    "preferences",
+                    "heldDataSummary"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "subjectId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "cpf": {
+                      "type": "string",
+                      "pattern": "^\\d{11}$"
+                    },
+                    "name": {
+                      "type": ["string", "null"]
+                    },
+                    "assuranceLevel": {
+                      "type": "string",
+                      "enum": ["simples", "avancada", "qualificada"]
+                    },
+                    "govbrLevelObservedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "actRequirements": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["actKey", "minimumAssurance", "allowed"],
+                        "properties": {
+                          "actKey": {
+                            "type": "string"
+                          },
+                          "minimumAssurance": {
+                            "type": "string",
+                            "enum": [
+                              "none",
+                              "simples",
+                              "avancada",
+                              "qualificada"
+                            ]
+                          },
+                          "allowed": {
+                            "type": "boolean"
+                          },
+                          "reason": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "representations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "representedName": {
+                            "type": "string"
+                          },
+                          "scope": {
+                            "type": "string",
+                            "enum": ["ait", "all"]
+                          },
+                          "validUntil": {
+                            "type": ["string", "null"],
+                            "format": "date"
+                          }
+                        }
+                      }
+                    },
+                    "preferences": {
+                      "type": "null",
+                      "description": "x-source-pending: @stynx-nyx/preferences não montado (CTG-0002 PUT preferences)."
+                    },
+                    "heldDataSummary": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "subjectId": "00000000-0000-7000-8000-000070000005",
+                  "cpf": "55555555555",
+                  "name": "Procurador (fixture)",
+                  "assuranceLevel": "avancada",
+                  "govbrLevelObservedAt": "2026-09-14T12:00:00-04:00",
+                  "actRequirements": [
+                    {
+                      "actKey": "consulta_multas",
+                      "minimumAssurance": "simples",
+                      "allowed": true
+                    },
+                    {
+                      "actKey": "defesa_previa",
+                      "minimumAssurance": "avancada",
+                      "allowed": true
+                    }
+                  ],
+                  "representations": [
+                    {
+                      "id": "00000000-0000-7000-8000-000070100001",
+                      "representedName": "Cidadã Prata (fixture)",
+                      "scope": "ait",
+                      "validUntil": "2027-09-14"
+                    }
+                  ],
+                  "preferences": null,
+                  "heldDataSummary": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/identity/assurance/elevations": {
+      "post": {
+        "tags": ["identity"],
+        "operationId": "portalAssuranceElevationCreate",
+        "summary": "Inicia a elevação de nível de assinatura (redirect gov.br).",
+        "x-policy": "portal:identity:elevate",
+        "x-audit": "PORTAL_IDENTITY_ELEVATE",
+        "x-command": "backend/domains/portal/identity/src/handwritten/assurance.controller.ts",
+        "x-contract": "CTG-0002 §2.1",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssuranceElevationCreateDto"
+              },
+              "example": {
+                "targetLevel": "avancada",
+                "method": "biographic",
+                "resumeRoute": "/portal/requests"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Corpo fora da forma.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'elevacao_govbr_pendente_r0014' (OD-P15).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/identity/assurance/elevations/{id}/complete": {
+      "post": {
+        "tags": ["identity"],
+        "operationId": "portalAssuranceElevationComplete",
+        "summary": "Completa a elevação de nível a partir do retorno gov.br.",
+        "x-policy": "portal:identity:elevate",
+        "x-audit": "PORTAL_IDENTITY_ELEVATE",
+        "x-command": "backend/domains/portal/identity/src/handwritten/assurance.controller.ts",
+        "x-contract": "CTG-0002 §2.1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssuranceElevationCompleteDto"
+              },
+              "example": {
+                "resumeToken": "fixture-resume-token"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "id não é uuid, ou corpo fora da forma.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'elevacao_govbr_pendente_r0014' (OD-P15).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/identity/representations": {
+      "post": {
+        "tags": ["identity"],
+        "operationId": "portalRepresentationCreate",
+        "summary": "Registra procuração/representação apresentada pelo cidadão.",
+        "x-policy": "portal:identity:represent",
+        "x-audit": "PORTAL_REPRESENTATION_CREATE",
+        "x-command": "backend/domains/portal/identity/src/handwritten/representations.controller.ts",
+        "x-contract": "CTG-0002 §2.1",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RepresentationCreateDto"
+              },
+              "example": {
+                "representedCpf": "22222222222",
+                "representedName": "Cidadã Prata (fixture)",
+                "instrumentDocumentId": "00000000-0000-7000-8000-00007ff90001",
+                "scope": "ait",
+                "validUntil": "2027-09-14"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Procuração apresentada (aguarda validação interna, OD-P37).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "representedName",
+                    "scope",
+                    "validUntil",
+                    "state"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "representedName": {
+                      "type": "string"
+                    },
+                    "scope": {
+                      "type": "string",
+                      "enum": ["ait", "all"]
+                    },
+                    "validUntil": {
+                      "type": ["string", "null"],
+                      "format": "date"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "PROCURACAO_APRESENTADA"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "00000000-0000-7000-8000-000070100001",
+                  "representedName": "Cidadã Prata (fixture)",
+                  "scope": "ait",
+                  "validUntil": "2027-09-14",
+                  "state": "PROCURACAO_APRESENTADA"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo fora da forma, representedCpf = cpf do próprio sujeito, ou validUntil no passado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo do exigido por 'procuracao'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["identity"],
+        "operationId": "portalRepresentationList",
+        "summary": "Lista as representações apresentadas pelo sujeito da sessão.",
+        "x-policy": "portal:identity:read",
+        "x-command": "backend/domains/portal/identity/src/handwritten/representations.controller.ts",
+        "x-contract": "CTG-0002 §2.1",
+        "responses": {
+          "200": {
+            "description": "Representações do sujeito (todos os estados).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "representedName": {
+                        "type": "string"
+                      },
+                      "scope": {
+                        "type": "string",
+                        "enum": ["ait", "all"]
+                      },
+                      "validUntil": {
+                        "type": ["string", "null"],
+                        "format": "date"
+                      },
+                      "state": {
+                        "type": "string",
+                        "enum": [
+                          "PROCURACAO_APRESENTADA",
+                          "PROCURACAO_VALIDADA",
+                          "PROCURACAO_RECUSADA"
+                        ]
+                      },
+                      "refusalReason": {
+                        "type": ["string", "null"]
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": "00000000-0000-7000-8000-000070100001",
+                    "representedName": "Cidadã Prata (fixture)",
+                    "scope": "ait",
+                    "validUntil": "2027-09-14",
+                    "state": "PROCURACAO_VALIDADA",
+                    "refusalReason": null
+                  }
+                ]
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/identity/representations/{id}": {
+      "delete": {
+        "tags": ["identity"],
+        "operationId": "portalRepresentationDelete",
+        "summary": "Revoga (não apaga) uma representação do sujeito da sessão.",
+        "x-policy": "portal:identity:represent",
+        "x-audit": "PORTAL_REPRESENTATION_DELETE",
+        "x-command": "backend/domains/portal/identity/src/handwritten/representations.controller.ts",
+        "x-contract": "CTG-0002 §2.1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Representação revogada (valid_until = ontem).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "state", "validUntil"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "validUntil": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "00000000-0000-7000-8000-000070100001",
+                  "state": "PROCURACAO_VALIDADA",
+                  "validUntil": "2026-09-13"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='representation'; id inexistente ou de outro sujeito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/identity/preferences": {
+      "put": {
+        "tags": ["identity"],
+        "operationId": "portalPreferencesUpdate",
+        "summary": "Atualiza preferências de canal (push/email/sne).",
+        "x-policy": "portal:identity:update",
+        "x-audit": "PORTAL_PREFERENCES_UPDATE",
+        "x-command": "backend/domains/portal/identity/src/handwritten/preferences.controller.ts",
+        "x-contract": "CTG-0002 §2.1",
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "\"<portal.subject.version>\"; ausente → 428 PORTAL.IF_MATCH_REQUIRED.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesUpdateDto"
+              },
+              "example": {
+                "channel": "email"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Corpo fora da forma.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'preferences_substrato_pendente' (OD-P38).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.IF_MATCH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 428
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/brand": {
+      "get": {
+        "tags": ["identity"],
+        "operationId": "portalBrandGet",
+        "summary": "Lê a marca do tenant resolvido pelo Host (rota pública).",
+        "x-command": "backend/domains/portal/identity/src/handwritten/public.controller.ts",
+        "x-contract": "CTG-0001 §8",
+        "responses": {
+          "200": {
+            "description": "Marca do tenant.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "shortName": {
+                      "type": "string"
+                    },
+                    "legalName": {
+                      "type": "string"
+                    },
+                    "primaryColor": {
+                      "type": "string"
+                    },
+                    "supportUrl": {
+                      "type": "string"
+                    },
+                    "privacyUrl": {
+                      "type": "string"
+                    },
+                    "accessibilityUrl": {
+                      "type": "string"
+                    },
+                    "serviceContact": {
+                      "type": "string"
+                    },
+                    "locale": {
+                      "type": "string"
+                    },
+                    "timeZone": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "displayName": "Portal DETRAN-AM (fixture)",
+                  "shortName": "DETRAN-AM",
+                  "legalName": "Departamento Estadual de Trânsito do Amazonas (fixture)",
+                  "primaryColor": "#0a5b8c",
+                  "supportUrl": "https://portal.detran-am.fixtures.invalid/suporte",
+                  "privacyUrl": "https://portal.detran-am.fixtures.invalid/privacidade",
+                  "accessibilityUrl": "https://portal.detran-am.fixtures.invalid/acessibilidade",
+                  "serviceContact": "atendimento@detran-am.fixtures.invalid",
+                  "locale": "pt-BR",
+                  "timeZone": "America/Manaus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='brand'; tenant sem linha de marca.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/services": {
+      "get": {
+        "tags": ["identity"],
+        "operationId": "portalServiceList",
+        "summary": "Lista a Carta de Serviços do tenant (rota pública).",
+        "x-command": "backend/domains/portal/identity/src/handwritten/public.controller.ts",
+        "x-contract": "CTG-0001 §8",
+        "responses": {
+          "200": {
+            "description": "Carta de Serviços (15 na fixture: 9 available, 2 partially_available, 4 unavailable).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceCatalogItem"
+                  }
+                },
+                "example": [
+                  {
+                    "serviceKey": "consulta_multas",
+                    "route": "/servicos/consulta-multas",
+                    "category": "inf",
+                    "title": "Consulta de multas (fixture)",
+                    "summary": "Consulta de multas (fixture)",
+                    "requirements": ["Conta gov.br"],
+                    "deliveryChannel": "portal",
+                    "legalDeadline": "source_pending (OD-P26)",
+                    "cost": "gratuito",
+                    "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+                    "responsibleParty": "DETRAN-AM",
+                    "normativeReference": "source_pending (OD-P26)",
+                    "availability": "available",
+                    "minimumAssurance": "simples",
+                    "version": 1,
+                    "effectiveFrom": "2026-01-01"
+                  }
+                ]
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/services/{serviceKey}": {
+      "get": {
+        "tags": ["identity"],
+        "operationId": "portalServiceGet",
+        "summary": "Lê um serviço da Carta de Serviços (rota pública).",
+        "x-command": "backend/domains/portal/identity/src/handwritten/public.controller.ts",
+        "x-contract": "CTG-0001 §8",
+        "parameters": [
+          {
+            "name": "serviceKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Um serviço.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceCatalogItem"
+                },
+                "example": {
+                  "serviceKey": "defesa_previa",
+                  "route": "/servicos/defesa-previa",
+                  "category": "inf",
+                  "title": "Defesa prévia (fixture)",
+                  "summary": "Defesa prévia (fixture)",
+                  "requirements": [
+                    "Conta gov.br",
+                    "Nível avançado (prata, ouro ou e-Notariado)"
+                  ],
+                  "deliveryChannel": "portal",
+                  "legalDeadline": "source_pending (OD-P26)",
+                  "cost": "gratuito",
+                  "accessibilityNote": "Conforme declaração de acessibilidade (RN-PORTAL-113)",
+                  "responsibleParty": "DETRAN-AM",
+                  "normativeReference": "source_pending (OD-P26)",
+                  "availability": "unavailable",
+                  "unavailableReason": "delegacao_indisponivel_r0007",
+                  "alternativeChannelNote": "Atendimento presencial ([REF-DETRANAM-SERVICOS])",
+                  "minimumAssurance": "avancada",
+                  "version": 1,
+                  "effectiveFrom": "2026-01-01"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='service'; serviceKey inexistente no tenant.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AssuranceElevationCreateDto": {
+        "type": "object",
+        "required": ["targetLevel", "method", "resumeRoute"],
+        "additionalProperties": false,
+        "properties": {
+          "targetLevel": {
+            "type": "string",
+            "const": "avancada"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["biographic", "biometric", "icp"]
+          },
+          "resumeRoute": {
+            "type": "string",
+            "pattern": "^/"
+          }
+        }
+      },
+      "AssuranceElevationCompleteDto": {
+        "type": "object",
+        "required": ["resumeToken"],
+        "additionalProperties": false,
+        "properties": {
+          "resumeToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "RepresentationCreateDto": {
+        "type": "object",
+        "required": [
+          "representedCpf",
+          "representedName",
+          "instrumentDocumentId",
+          "scope"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "representedCpf": {
+            "type": "string",
+            "pattern": "^\\d{11}$"
+          },
+          "representedName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "instrumentDocumentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["ait", "all"]
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "PreferencesUpdateDto": {
+        "type": "object",
+        "required": ["channel"],
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "type": "string",
+            "enum": ["push", "email", "sne"]
+          },
+          "pushSubscription": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "endpoint": {
+                "type": "string",
+                "format": "uri"
+              },
+              "keys": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "p256dh": {
+                    "type": "string"
+                  },
+                  "auth": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ServiceCatalogItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "serviceKey": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "requirements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deliveryChannel": {
+            "type": "string"
+          },
+          "legalDeadline": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "string"
+          },
+          "accessibilityNote": {
+            "type": "string"
+          },
+          "responsibleParty": {
+            "type": "string"
+          },
+          "normativeReference": {
+            "type": "string"
+          },
+          "availability": {
+            "type": "string",
+            "enum": ["available", "partially_available", "unavailable"]
+          },
+          "unavailableReason": {
+            "type": "string"
+          },
+          "alternativeChannelNote": {
+            "type": ["string", "null"]
+          },
+          "minimumAssurance": {
+            "type": "string",
+            "enum": ["none", "simples", "avancada", "qualificada"]
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "effectiveFrom": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  }
+}
