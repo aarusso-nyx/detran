@@ -1,0 +1,1463 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Portal Atendimento — comandos manuscritos (BP-PORTAL-CITIZEN-SERVICE-001)",
+    "version": "1.0.0",
+    "description": "Manifestações (Lei 13.460), avaliações e Carta de Serviços por prazo, montados em PortalManifestationsController, PortalEvaluationsController e PortalServiceCharterController.",
+    "x-blueprint": "BP-PORTAL-CITIZEN-SERVICE-001",
+    "x-commands": true,
+    "x-source": "portal-route-contract.md §8; CTG-0002 §2.6"
+  },
+  "paths": {
+    "/v1/portal/manifestations": {
+      "post": {
+        "tags": ["manifestation"],
+        "operationId": "portalManifestationCreate",
+        "summary": "Registra manifestação (anônima ou identificada; nunca recusada — RN-PORTAL-109).",
+        "x-policy": "portal:manifestation:manifest",
+        "x-audit": "PORTAL_MANIFESTATION_MANIFEST",
+        "x-command": "backend/domains/portal/citizen-service/src/handwritten/manifestations.controller.ts",
+        "x-contract": "CTG-0002 §2.6",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManifestationCreateDto"
+              },
+              "example": {
+                "kind": "reclamacao",
+                "text": "Texto da manifestação (fixture)",
+                "confidential": false,
+                "anonymous": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comprovante imediato (MANIFESTACAO_REGISTRADA → COMPROVANTE_EMITIDO na mesma transação).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "manifestationId",
+                    "protocol",
+                    "receivedAt",
+                    "state",
+                    "agencyDueOn",
+                    "anonymous"
+                  ],
+                  "properties": {
+                    "manifestationId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "protocol": {
+                      "type": "string"
+                    },
+                    "receivedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "COMPROVANTE_EMITIDO"
+                    },
+                    "agencyDueOn": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "anonymous": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "example": {
+                  "manifestationId": "00000000-0000-7000-8000-000070700001",
+                  "protocol": "AM-FIXTURES-2026-000000e",
+                  "receivedAt": "2026-09-14T12:00:00-04:00",
+                  "state": "COMPROVANTE_EMITIDO",
+                  "agencyDueOn": "2026-10-14",
+                  "anonymous": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "kind ausente/fora da taxonomia, ou Idempotency-Key ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.MANIFESTATION_KIND_INVALID",
+                        "PORTAL.VALIDATION_FAILED"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["manifestation"],
+        "operationId": "portalManifestationList",
+        "summary": "Lista as manifestações do sujeito da sessão.",
+        "x-policy": "portal:manifestation:read",
+        "x-command": "backend/domains/portal/citizen-service/src/handwritten/manifestations.controller.ts",
+        "x-contract": "CTG-0002 §2.6",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Manifestações do sujeito (anônimas não são listáveis).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["items", "total", "page", "pageSize"],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "manifestationId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "state": {
+                            "type": "string"
+                          },
+                          "protocol": {
+                            "type": "string"
+                          },
+                          "kind": {
+                            "type": "string"
+                          },
+                          "receivedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "deadlines": {
+                            "type": "object",
+                            "properties": {
+                              "agencyDueOn": {
+                                "type": "string",
+                                "format": "date"
+                              },
+                              "extended": {
+                                "type": ["object", "null"]
+                              }
+                            }
+                          },
+                          "decision": {
+                            "type": ["object", "null"]
+                          },
+                          "evaluationOffered": {
+                            "type": "boolean"
+                          },
+                          "evaluated": {
+                            "type": "boolean"
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "pageSize": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "items": [
+                    {
+                      "manifestationId": "00000000-0000-7000-8000-000070700008",
+                      "state": "AVALIACAO_OFERECIDA",
+                      "protocol": "AM-FIXTURES-2026-000000c",
+                      "kind": "reclamacao",
+                      "receivedAt": "2026-07-10T12:00:00-04:00",
+                      "deadlines": {
+                        "agencyDueOn": "2026-08-09",
+                        "extended": null
+                      },
+                      "decision": {
+                        "text": "fixture",
+                        "decidedAt": "2026-08-01T00:00:00-04:00"
+                      },
+                      "evaluationOffered": true,
+                      "evaluated": false
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "pageSize": 20
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'acompanhar_manifestacao'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/manifestations/{id}": {
+      "get": {
+        "tags": ["manifestation"],
+        "operationId": "portalManifestationGet",
+        "summary": "Lê o detalhe de uma manifestação do sujeito da sessão.",
+        "x-policy": "portal:manifestation:read",
+        "x-command": "backend/domains/portal/citizen-service/src/handwritten/manifestations.controller.ts",
+        "x-contract": "CTG-0002 §2.6",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item da lista + text/confidential.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "example": {
+                  "manifestationId": "00000000-0000-7000-8000-000070700008",
+                  "state": "AVALIACAO_OFERECIDA",
+                  "protocol": "AM-FIXTURES-2026-000000c",
+                  "kind": "reclamacao",
+                  "receivedAt": "2026-07-10T12:00:00-04:00",
+                  "text": "Texto da manifestação (fixture)",
+                  "confidential": false
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'acompanhar_manifestacao'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='manifestation'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/manifestations/{id}/acknowledge": {
+      "post": {
+        "tags": ["manifestation"],
+        "operationId": "portalManifestationAcknowledge",
+        "summary": "Dá ciência da decisão (CIENCIA_AO_USUARIO → ENCERRADA → AVALIACAO_OFERECIDA).",
+        "x-policy": "portal:manifestation:acknowledge",
+        "x-audit": "PORTAL_MANIFESTATION_ACKNOWLEDGE",
+        "x-command": "backend/domains/portal/citizen-service/src/handwritten/manifestations.controller.ts",
+        "x-contract": "CTG-0002 §2.6",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ciência registrada; avaliação oferecida.",
+            "headers": {
+              "ETag": {
+                "description": "\"<version>\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "manifestationId",
+                    "state",
+                    "acknowledgedAt",
+                    "evaluationOffered",
+                    "version"
+                  ],
+                  "properties": {
+                    "manifestationId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "AVALIACAO_OFERECIDA"
+                    },
+                    "acknowledgedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "evaluationOffered": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "manifestationId": "00000000-0000-7000-8000-000070700006",
+                  "state": "AVALIACAO_OFERECIDA",
+                  "acknowledgedAt": "2026-09-14T12:00:00-04:00",
+                  "evaluationOffered": true,
+                  "version": 2
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'acompanhar_manifestacao'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='manifestation'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Fora de CIENCIA_AO_USUARIO.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.MANIFESTATION_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/evaluations": {
+      "post": {
+        "tags": ["evaluation"],
+        "operationId": "portalEvaluationCreate",
+        "summary": "Avalia um pedido ou manifestação concluídos.",
+        "x-policy": "portal:evaluation:evaluate",
+        "x-audit": "PORTAL_EVALUATION_EVALUATE",
+        "x-command": "backend/domains/portal/citizen-service/src/handwritten/evaluations.controller.ts",
+        "x-contract": "CTG-0002 §2.6",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvaluationCreateDto"
+              },
+              "example": {
+                "subjectKind": "manifestation",
+                "subjectId": "00000000-0000-7000-8000-000070700008",
+                "scores": {
+                  "satisfaction": 5,
+                  "quality": 5,
+                  "deadline": 5,
+                  "clarity": 5,
+                  "channel": 5
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Avaliação registrada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "evaluationId",
+                    "subjectKind",
+                    "subjectId",
+                    "state",
+                    "submittedAt",
+                    "publicNotice"
+                  ],
+                  "properties": {
+                    "evaluationId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "subjectKind": {
+                      "type": "string",
+                      "enum": ["request", "manifestation"]
+                    },
+                    "subjectId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": ["AVALIADA", "CONCLUIDO"]
+                    },
+                    "submittedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "publicNotice": {
+                      "type": "string",
+                      "const": "portal.evaluations.publicIndicator"
+                    }
+                  }
+                },
+                "example": {
+                  "evaluationId": "00000000-0000-7000-8000-000071100002",
+                  "subjectKind": "manifestation",
+                  "subjectId": "00000000-0000-7000-8000-000070700008",
+                  "state": "AVALIADA",
+                  "submittedAt": "2026-09-14T12:00:00-04:00",
+                  "publicNotice": "portal.evaluations.publicIndicator"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo fora da forma, ou Idempotency-Key ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'avaliar'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='manifestation' (ownership).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Fora de AVALIACAO_OFERECIDA, avaliação já existente, ou corpo divergente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.EVALUATION_ALREADY_SUBMITTED",
+                        "PORTAL.EVALUATION_NOT_OFFERED",
+                        "PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY",
+                        "PORTAL.REQUEST_STATE_INVALID"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/service-charter/{serviceKey}/deadline": {
+      "get": {
+        "tags": ["service-charter"],
+        "operationId": "portalServiceCharterDeadlineGet",
+        "summary": "Lê o prazo máximo declarado por um serviço (Lei 13.460 art. 7º §2º IV).",
+        "x-policy": "portal:service-charter:read",
+        "x-command": "backend/domains/portal/citizen-service/src/handwritten/service-charter.controller.ts",
+        "x-contract": "CTG-0002 §2.6",
+        "parameters": [
+          {
+            "name": "serviceKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prazo do serviço.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "serviceKey",
+                    "legalDeadline",
+                    "normativeReference",
+                    "availability"
+                  ],
+                  "properties": {
+                    "serviceKey": {
+                      "type": "string"
+                    },
+                    "legalDeadline": {
+                      "type": "string"
+                    },
+                    "normativeReference": {
+                      "type": "string"
+                    },
+                    "availability": {
+                      "type": "string",
+                      "enum": [
+                        "available",
+                        "partially_available",
+                        "unavailable"
+                      ]
+                    }
+                  }
+                },
+                "example": {
+                  "serviceKey": "consulta_multas",
+                  "legalDeadline": "source_pending (OD-P26)",
+                  "normativeReference": "source_pending (OD-P26)",
+                  "availability": "available"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='service'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ManifestationCreateDto": {
+        "type": "object",
+        "required": ["kind"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "reclamacao",
+              "denuncia",
+              "sugestao",
+              "elogio",
+              "solicitacao"
+            ]
+          },
+          "text": {
+            "type": "string"
+          },
+          "confidential": {
+            "type": "boolean"
+          },
+          "attachmentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "anonymous": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EvaluationCreateDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["subjectKind", "subjectId", "scores"],
+        "properties": {
+          "subjectKind": {
+            "type": "string",
+            "enum": ["request", "manifestation"]
+          },
+          "subjectId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scores": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "satisfaction",
+              "quality",
+              "deadline",
+              "clarity",
+              "channel"
+            ],
+            "properties": {
+              "satisfaction": {
+                "type": "integer"
+              },
+              "quality": {
+                "type": "integer"
+              },
+              "deadline": {
+                "type": "integer"
+              },
+              "clarity": {
+                "type": "integer"
+              },
+              "channel": {
+                "type": "integer"
+              }
+            }
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        }
+      }
+    }
+  }
+}

@@ -713,8 +713,10 @@ test('C-5-15 — dado um decorador de rota com argumento não literal quando che
   }
 });
 
-test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=92', async () => {
+// R-0009 (plan.md §Triagem): 92 operações do TEAT (R-0008) + 47 do Portal
+// (BP-PORTAL-*.commands.openapi.json, CTG-0002 §2 + stream §9) = 139.
+test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=139', async () => {
   const result = checkCommands();
   assert.equal(result.ok, true, JSON.stringify(result.problems, null, 2));
-  assert.equal(result.operations, 92);
+  assert.equal(result.operations, 139);
 });

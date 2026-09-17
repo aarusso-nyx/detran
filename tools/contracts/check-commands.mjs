@@ -135,7 +135,15 @@ export function scanControllers(controllerRoots) {
     const isAppSrc =
       toPosix(absoluteRoot) === toPosix(path.resolve(root, 'backend/app/src'));
     for (const file of findFilesBelow(absoluteRoot)) {
-      if (isAppSrc && !path.basename(file).startsWith('teat-')) continue;
+      // App-level composition controllers: TEAT (R-0008) and Portal (R-0009,
+      // `portal-stream.controller.ts`); everything else under backend/app/src
+      // (PEC webhooks, runtime) is documented elsewhere.
+      if (
+        isAppSrc &&
+        !path.basename(file).startsWith('teat-') &&
+        !path.basename(file).startsWith('portal-')
+      )
+        continue;
       if (flagGated.has(toPosix(file))) continue;
       const source = ts.createSourceFile(
         file,

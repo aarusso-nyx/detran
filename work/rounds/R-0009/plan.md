@@ -487,6 +487,7 @@ decisão do maestro sob a instrução do Owner. Registrado aqui e no relatório 
 - TASK-0007 — e2e entre arquivos (C-0001-41 × `portal-requests.e2e`) — sensor-error — `portal-requests.e2e` deixa linhas do sujeito ouro no tenant local; `delete from portal.subject` de C-0001-41 viola FK em banco persistente — TASK-0006 iteração 2: limpeza em `afterAll` de `portal-requests.e2e` (requests, protocols, idempotency_record, representation do sujeito).
 - TASK-0008 — e2e `portal-routes` C-0002-77 — plant-bug (pré-existente, R-0004 `ops/parameter`) — `OpsParameterService.select` comparava `Date` (pg `date`) com string → parâmetro nunca encontrado — corrigido pelo maestro (A6(c)); + sensor-error: e2e não provisiona parâmetros do tenant local — TASK-0006 iteração 3.
 - TASK-0008 — e2e `portal-routes` C-0002-79 (última asserção) — sensor-error — verificador local sintetiza principal sem `Authorization` com os papéis correntes — TASK-0006 iteração 3 (A6(e)).
+- TASK-0009 — `pnpm contracts:test` C-5-16 — sensor-error — o teste de R-0008 fixa `operations=92`; com os 47 contratos do Portal o gate conta 139 — contagem atualizada pelo maestro (Engineer) em `tools/contracts/tests/check-commands.test.mjs` (asserção mantida, só o número).
 - TASK-0004 — D13 (`portal.subject.name not null` × contrato) — reference-gap — blueprint `IDENTITY` v1.0.2 `name nullable` (maestro, Architect) + regeneração no checkpoint.
 
 ## Retomada
@@ -508,7 +509,7 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0006 | in_progress | iteração 3 (restrita): C-0002-77 (parâmetros do tenant local), C-0002-79 (papel)                              |
 | TASK-0007 | completed   | relatório em `reports/TASK-0007.md`; 3 contradições de spec → §Triagem (TASK-0006 it.2)                       |
 | TASK-0008 | completed   | relatório em `reports/TASK-0008.md`; 142/144 e2e; A6; 2 itens → TASK-0006 it.3                                |
-| TASK-0009 | queued      | —                                                                                                             |
+| TASK-0009 | completed   | relatório em `reports/TASK-0009.md`; 47 operações (139 no gate); clientes gerados pelo maestro                |
 | TASK-0010 | queued      | —                                                                                                             |
 
 Checkpoint 1 (2026-09-16): CTG-0001 concluído — commits `93a754d…104e5c8`, `delivery-review-CTG-0001` REVIEW → `-2` PASS, evidência generic seq. 1, **PR #54** aberto contra `main` (CI em curso). Branch **publicado**: integrar `origin/main` só com `git merge --no-edit`. Checkpoint 2 (2026-09-16): **PR #54 mesclado** em `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8` (CI 5/5; `audit observe` EV-999a0329d451aa89, commit `b912555`); branch temporário `tmp/r9-ctg2-wip` reintegrado (`ba72228`) e apagado. Último veredito: `delivery-review-CTG-0001-2` PASS. Próximos passos: TASK-0005 (contrato CTG-0002 + wiring M24 dos 4 blueprints) → TASK-0006 → TASK-0007 → TASK-0008 → TASK-0009 → TASK-0010; merge do PR #54 quando CI verde; `audit observe` no sha do merge.
