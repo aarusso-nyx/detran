@@ -60,7 +60,7 @@ workspace:*` (tipos), `@stynx-nyx/{angular,angular-auth,angular-i18n,angular-ui,
 1.3.1`. Nenhuma outra dependência sem adenda.
 - **M3 — Runner de testes.** `vitest` + `jsdom` como `packages/ui` e `detran-ui-guide.md` §5:
   `vitest.config.ts` (`environment: 'jsdom'`, `globals: true`, `include: ['src/**/*.spec.ts']`,
-  `setupFiles: ['src/test-setup.ts']`); `src/test-setup.ts` importa `@angular/compiler` e faz
+  `setupFiles: ['src/test-setup.ts']`); `src/test-setup.ts` importa `@angular/compiler` e faz (A7: `vitest.config.ts` aplica `angularJitApplicationTransform` para as APIs `input()`/`output()`/`model()`/`viewChild()`)
   `TestBed.initTestEnvironment(BrowserTestingModule, platformBrowserTesting())` + `afterEach(() =>
 TestBed.resetTestingModule())`. **Specs nunca inicializam o ambiente.** Componentes usam
   `template:`/`styles:` inline (JIT nos testes; AOT no build). Lighthouse CI **não** entra (exige
@@ -119,7 +119,7 @@ retomar: state.url } })`; ordem `simples < avancada < qualificada`; nunca exige 
   `data-screen="T-nn"` ou `data-screen=""`), uma por rota até o CTG-0003.
 - **M9 — i18n.** Catálogo único `src/app/i18n/portal.pt-BR.json` (spec §9), carregado por
   `loadCatalog: () => import('./i18n/portal.pt-BR.json').then((m) => m.default)`
-  (`resolveJsonModule`). Chaves `portal.<namespace>.<…>` só nos namespaces da allowlist (M10).
+  (`resolveJsonModule`). Chaves `portal.<namespace>.<…>` só nos namespaces da allowlist (M10). Placeholders na sintaxe do motor STYNX: `{nome}` (A7c), nunca `{{nome}}`.
   **Mapa de tradução** = subárvore `portal.situation.*`: `portal.situation.infraction.<situation>`
   (7 situações que o backend emite: `aguardando_defesa`, `em_defesa`, `penalidade_aplicada`,
   `em_recurso`, `encerrada`, `arquivada`, `cancelada` — `INFRACTION_SITUATION_MAP`),
@@ -319,6 +319,10 @@ Verificado em 2026-09-17 (`git log --oneline -30 origin/main`, `gh pr list --sta
 
 - 2026-09-17 CTG-0002 `pnpm check` → `typecheck` de `screen-sheets.spec.ts` (TS2677, 3× TS4111): **plant-bug** (spec do Inspector sem typecheck; o critério de TASK-0007 não incluía `typecheck` — lacuna do prompt) → iteração restrita de TASK-0007; a partir do CTG-0003 todo prompt de Inspector do app inclui `pnpm --filter @detran/portal-web typecheck` como critério.
 
+## Pendências de cobertura
+
+- 2026-09-17 CTG-0003a: Inspector (TASK-0008) entregou C-3a-99 (axe por estado em todos os 11 componentes) e C-3a-100 (ciclo de `Tab`) **parcialmente** — cobertura não reduzida, só não estendida por volume; **resolvido** na iteração 3 de TASK-0008 (exigência do delivery-review-CTG-0003a): axe por estado nos 11 compartilhados e ciclo de `Tab` no diálogo/triplet; apanhou um defeito real (input de arquivo sem nome acessível) corrigido por TASK-0009 it. 3.
+
 ## Adendas
 
 - **A1 (2026-09-17, TASK-0004 B-T4-1 — spec × contrato de `GET brand`).** O contrato
@@ -359,6 +363,41 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
   esses nomes. (b) `screen-sheets.spec.ts` verifica "Identidade não cita rota de outra tela" para
   **todos** os paths do manifesto, inclusive os de um segmento, extraindo da ficha só os spans com
   forma de rota (iniciados por `/`, ex.: `/autos`), o que evita a colisão com nomes de módulo.
+- **A6 (2026-09-17, ratificações do contrato `contracts/CTG-0003a.md`, TASK-0019).** (a)
+  [DIVERGE-4] `ResumeService` ganha `peek()` (leitura sem consumo); `core/auth-flow.service.ts`
+  passa a usar `peek()?.route` no callback OIDC — o Engineer (TASK-0009) pode tocar essa linha.
+  (b) [DIVERGE-5] M17: `<alvo>` = `'none'` quando `targetKind: 'none'` no `createRequest`, e
+  `requestId` no `submit`. (c) [DIVERGE-16] `ActRequirement.allowed` obrigatório (o Inspector
+  ajusta o stub). (d) OD-P58: as chaves i18n dos compartilhados do par 1 (lista fechada no contrato
+  §11) são acrescentadas ao catálogo **agora** pelo transcriber (TASK-0006 it. 4), com texto em
+  linguagem cidadã derivado da spec §5.2/fichas/ux-notes §c e fonte por chave no relatório; a
+  revisão do Owner (linguagem cidadã) é o gate do WP-P4 já previsto. (e) OD-P66: o limite "10 MB"
+  vem da spec §7 (`10 · 1024 · 1024` documentado como convenção de engenharia); a linha
+  `portal.attachment.*` no `parameter-catalogue.md` fica para o fechamento (TASK-0012) — não entra
+  neste CTG. (f) [DIVERGE-3]/OD-P59: formas 2xx ausentes → `source_pending` no contrato; a UI
+  mostra estado indisponível (M15), nunca simula. (g) OD-P57…P67 registradas; transcrição ao
+  build pack em TASK-0012.
+- **A7 (2026-09-17, TASK-0009 — bloqueios B1…B12).** (a) **M3 corrigido**: o runner `vitest`
+  puro não aplica a transformação JIT do Angular e as APIs de inicialização por signals
+  (`input()`, `output()`, `model()`, `viewChild()`) não entram nos metadados do componente —
+  `setInput` vira no-op e todo spec de componente falha (NG0950/NG0303). `vitest.config.ts` ganha
+  o plugin `angular-jit-initializer-apis` (`angularJitApplicationTransform` de
+  `@angular/compiler-cli`, já instalado), aplicado pelo maestro (arquivo do padrão de app; R-0012
+  copia): 22 → falhas remanescentes são defeitos de spec. (b) [C-3a-60 × contrato §5.4] no 403
+  `ASSURANCE_INSUFFICIENT` do `submit`, o `ServiceWizard` **não** emite `elevationRequested`
+  (não há método escolhido): volta ao passo `assinatura`, mostra o banner com `nextStep:
+'elevation'` e deixa o `SignatureStep` emitir quando o cidadão escolher o caminho; o Inspector
+  ajusta C-3a-60. (c) B7: o motor de i18n do STYNX 1.3.1 interpola `{x}`, não `{{x}}` — as 10
+  chaves do catálogo com `{{…}}` passam a `{…}` (transcriber, TASK-0006 it. 5); M9 registra a
+  sintaxe. (d) B2…B6, B9…B12 são defeitos de spec/stub (síncrono × `crypto.subtle` assíncrono —
+  aguardar a promessa/`vi.waitFor` antes do `expectOne`; `flush` de blob; hex de 64 caracteres;
+  `DataTransfer` ausente no jsdom → polyfill em `src/testing/`; `resetTestingModule` entre
+  reconfigurações; `brand.service.spec` com `serviceContact` ([DIVERGE-9]); literal `rait.errors.x`
+  → usar um prefixo fora das superfícies do verificador, ex. `zz.errors.x`; `no-unused-vars`;
+  `NavigationError` do harness do triplet) → iteração restrita do Inspector (TASK-0008 it. 2).
+  (e) OD propostas por TASK-0009 registradas: OD-P68 (rótulo de fechar aviso, hint do upload
+  assinado e `ackLabelKey` de `consequencias_indicacao`/`renuncia_40` — extensão de OD-P58);
+  a sintaxe de placeholder é decidida em (c), não OD.
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,
