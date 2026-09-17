@@ -1,10 +1,10 @@
 {
   "round": "R-0014",
-  "window": 2,
+  "window": 3,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1690000,
-  "estimated_output_total": 285300,
+  "estimated_input_total": 1892000,
+  "estimated_output_total": 310800,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
@@ -265,6 +265,40 @@
       "status": "completed",
       "verdict": "PASS",
       "note": "ciclo restrito a A5"
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0002-close-W2",
+      "input_tokens": 50000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "gates, delivery-reviews, commits, evidência seq 2, PR #61, merge, observe"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W3-CTG3a",
+      "input_tokens": 30000,
+      "output_tokens": 14000,
+      "status": "completed",
+      "note": "prompts da tríade CTG-0003a (0019/0008/0009), M17"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-6",
+      "input_tokens": 71000,
+      "output_tokens": 1200,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "5 achados (leituras, caminho, fingerprint→M17, fronteira, escada de modelos)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7",
+      "input_tokens": 51000,
+      "output_tokens": 300,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
     }
   ],
   "forecast": {

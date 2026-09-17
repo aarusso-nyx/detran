@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0019",
+  "round_id": "R-0014",
+  "status": "in_progress",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contrato do par 1 (CTG-0003a): APIs do PortalClient de comandos, ErrorBoundary, SessionFacade, onze compartilhados §5.2, 14 schemas + FormGate, OfflineDocumentStore; critérios C-3a-nn",
+  "description": "Fixar a referência que o Inspector codifica e o Engineer implementa; nada de código (Art. 10).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r14-contracts-3a"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003a",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["wp-p5"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-a909d6727bbe5a61",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-17T18:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-a909d6727bbe5a61",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
