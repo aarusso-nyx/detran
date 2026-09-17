@@ -381,27 +381,20 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
 
 ## Retomada
 
-**Checkpoint 2 (2026-09-17, fim da janela 1 — orçamento da janela ultrapassado; `budget.json`).**
+**Checkpoint 3 (2026-09-17, janela 2 — CTG-0002 em PR).**
 
-- **CTG-0001 fechado e mesclado**: PR **#60** (`feat(portal-web): first app scaffold … + i18n
-namespace allowlist (OD-P46)`), merge `1396f1a6d7cedf2afe5b0f90b9ef1be164c86015` em `main`,
-  CI verde (foundation, backend-kernel, evidence-gate, senatran-mock, senatran-mock-tests);
-  `delivery-review-CTG-0001-2` PASS; evidência generic sequence 1 (head `640e0f99…`);
-  `audit observe` do merge → `EV-1ccc334f256359b6`, commitado neste branch.
-- Concluídas: TASK-0001, TASK-0002 (2 iterações), TASK-0003, TASK-0004 (2 iterações).
-- **Próximos passos (janela 2, novo maestro pelo mesmo prompt):** (1) `git fetch` +
-  `git merge --no-edit origin/main` (branch publicado; nunca rebase); (2) disparar **TASK-0005**
-  (fichas, Sonnet) → **TASK-0006** (i18n, Sonnet) → **TASK-0007** (Inspector, Sonnet) — prompts
-  prontos em `prompts/`, `compositions.json` com os PC-ids, prompt-review-2 PASS cobre os sete
-  prompts; (3) gates (`node tools/docs/kb/check.mjs` → 549/446; `pnpm --filter @detran/portal-web
-test`; `pnpm check`); (4) `delivery-review-CTG-0002` → commit → evidência → PR 2 → merge →
-  `audit observe`; (5) escrever os prompts de TASK-0008/0009 (CTG-0003) e submetê-los a
-  prompt-review antes de disparar. Adenda de código pendente para o CTG-0003: reexportar
-  `BpPortal*Commands` em `packages/api-clients/src/index.ts` e remover o alias `paths` do app.
-- Pendentes: CTG-0003…0005 (TASK-0008…0012); `waves.md` §Histórico e `backlog.md` no fechamento.
-- Último veredito do reviewer: `delivery-review-CTG-0001-2` = PASS.
-- Estado do git: `orchestra/portal-pwa` publicado, = `origin/main` (`1396f1a`) + commit da
-  observação de auditoria; working tree limpa.
+- CTG-0001: mesclado (PR #60, `1396f1a`, `EV-1ccc334f256359b6`).
+- **CTG-0002: PR #61 aberto** (commits `46f03fc` fichas, `4d6b016` i18n + testes, `8cb4e88`
+  artefatos, `508059e` evidência generic sequence 2, head `10ecc09d…`); `delivery-review-CTG-0002-2`
+  PASS; `pnpm check` EXIT 0 (549/446, 472/472). **Próximo passo:** acompanhar o CI
+  (`gh pr checks 61`), `gh pr merge 61 --merge` com CI verde, `git fetch` + `git merge --no-edit
+origin/main`, `audit observe` no SHA exato do merge, commit da observação.
+- Concluídas: TASK-0001…0007, 0013, 0014 (iterações: 0002 ×3, 0004 ×3, 0006 ×3, 0007 ×3).
+- Pendentes: CTG-0003a (TASK-0019 → 0008 → 0009), 0003b (0020 → 0015 → 0016), 0003c (0021 →
+  0017 → 0018) — prompts a escrever (janela 3), com `pnpm --filter @detran/portal-web typecheck`
+  como critério de todo Inspector (§Triagem); CTG-0004 (0010/0011); CTG-0005 (0012).
+- Último veredito do reviewer: `delivery-review-CTG-0002-2` = PASS.
+- Git: `orchestra/portal-pwa` publicado, working tree limpa.
 
 ## Leitura
 
