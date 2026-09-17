@@ -3,7 +3,7 @@ id: ARCH-PORTAL-FRONTENDS
 title: apps/portal/web — especificação completa do portal do cidadão (módulos, telas, rotas, componentes, jornadas, ações)
 status: draft
 apps: [portal]
-updated: 2026-09-13
+updated: 2026-09-17
 ---
 
 # Portal do cidadão — `apps/portal/web`
@@ -25,17 +25,17 @@ vale o artefato de produto.
 
 ## 1. Stack, princípios e fronteiras
 
-| Item           | Decisão                                                                                                                                                                                                                                                                                |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework      | Angular 22 (ADR-0015), standalone, `OnPush`, signals; PWA (service worker, manifesto, instalável); **modo offline só para CNH-e e CRLV-e** ([UC-PORTAL-011] AC-4, [JRN-PORTAL-006]) via cache cifrado do documento                                                                     |
-| Kit            | `@detran/ui` (feedback pt-BR, tema, primitivos STYNX) — o shell é próprio (`CitizenShell`: cabeçalho com marca do órgão, navegação de 5 destinos, rodapé com Carta de Serviços, canal presencial e acessibilidade); nenhum componente do RAIT ou do TEAT é reutilizado ([RN-RAIT-134]) |
-| Identidade     | Cognito federado ao **gov.br OIDC** (ADR-0019); papel `CIDADAO`; representação por procuração como atributo da sessão, não papel; nível de assinatura como claim assinada (`assurance_level`: `simples` \| `avancada` \| `qualificada`), nunca aceito do cliente                       |
-| Marca e tenant | tenant resolvido pelo `Host` no servidor (`platform.public_hostname`); `GET /v1/portal/brand` público; `runtime-config.js` só com `tenantId`, `oidcAuthority`, `clientId`                                                                                                              |
-| API            | somente `/v1/portal/*` (`portal-route-contract.md`), mesma origem; **nenhuma** chamada a sistemas nacionais, ao RAIT ou ao TEAT a partir do browser; o Portal lê **projeções** (ADR-0020) e emite **comandos delegados** (ADR-0019)                                                    |
-| Estado         | signals + facades por feature; sem NgRx; rascunhos de pedido persistidos no servidor (`portal/requests` em `PEDIDO_EM_COMPOSICAO`), não em `localStorage`                                                                                                                              |
-| Idioma         | pt-BR, linguagem cidadã; catálogo `i18n/portal.pt-BR.json` com o **mapa de tradução** dos estados internos (RAIT/PEC/BOAT → situação cidadã) como única fonte                                                                                                                          |
-| Acessibilidade | WCAG 2.1 AA + eMAG (DT-028) em todas as 27 telas; guia e boleto acessíveis mediante solicitação ([RN-PORTAL-114]); skip link, `aria-live` em estados, sem remoção de foco                                                                                                              |
-| Fronteiras     | o Portal nunca decide mérito, nunca calcula prazo legal, nunca registra veículo/CNH/sinistro: exibe, compõe e protocola; prazos chegam calculados e rotulados ("seu prazo" × "prazo do órgão")                                                                                         |
+| Item           | Decisão                                                                                                                                                                                                                                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework      | Angular 22 (ADR-0015), standalone, `OnPush`, signals; PWA (service worker, manifesto, instalável); **modo offline só para CNH-e e CRLV-e** ([UC-PORTAL-011] AC-4, [JRN-PORTAL-006]) via cache cifrado do documento                                                                                                                                |
+| Kit            | `@detran/ui` (feedback pt-BR, tema, primitivos STYNX) — o shell é próprio (`CitizenShell`: cabeçalho com marca do órgão, navegação de 5 destinos, rodapé com Carta de Serviços, canal presencial e acessibilidade); nenhum componente do RAIT ou do TEAT é reutilizado ([RN-RAIT-134])                                                            |
+| Identidade     | Cognito federado ao **gov.br OIDC** (ADR-0019); papel `CIDADAO`; representação por procuração como atributo da sessão, não papel; nível de assinatura como claim assinada (`assurance_level`: `simples` \| `avancada` \| `qualificada`), nunca aceito do cliente                                                                                  |
+| Marca e tenant | tenant resolvido pelo `Host` no servidor (`platform.public_hostname`); `GET /v1/portal/brand` público; `runtime-config.js` só com `tenantId`, `oidcAuthority`, `clientId`                                                                                                                                                                         |
+| API            | somente `/v1/portal/*` (`portal-route-contract.md`), mesma origem; **nenhuma** chamada a sistemas nacionais, ao RAIT ou ao TEAT a partir do browser; o Portal lê **projeções** (ADR-0020) e emite **comandos delegados** (ADR-0019)                                                                                                               |
+| Estado         | signals + facades por feature; sem NgRx; rascunhos de pedido persistidos no servidor (`portal/requests` em `PEDIDO_EM_COMPOSICAO`), não em `localStorage`                                                                                                                                                                                         |
+| Idioma         | pt-BR, linguagem cidadã; catálogo `apps/portal/web/src/app/i18n/portal.pt-BR.json` com o **mapa de tradução** dos estados internos (RAIT/PEC/BOAT → situação cidadã) como única fonte; só os namespaces `portal.<namespace>` declarados na allowlist do `parameter-catalogue.md` §Namespaces i18n são reconhecidos pelo verificador de parâmetros |
+| Acessibilidade | WCAG 2.1 AA + eMAG (DT-028) em todas as 27 telas; guia e boleto acessíveis mediante solicitação ([RN-PORTAL-114]); skip link, `aria-live` em estados, sem remoção de foco                                                                                                                                                                         |
+| Fronteiras     | o Portal nunca decide mérito, nunca calcula prazo legal, nunca registra veículo/CNH/sinistro: exibe, compõe e protocola; prazos chegam calculados e rotulados ("seu prazo" × "prazo do órgão")                                                                                                                                                    |
 
 ## 2. Invariantes de interface (valem para toda tela)
 
@@ -227,6 +227,10 @@ apps/portal/web/src/app/
   data/       api/portal.client.ts (gerado), models/
   i18n/       portal.pt-BR.json (inclui o mapa de tradução de estados)
 ```
+
+Caminho completo: `apps/portal/web/src/app/i18n/portal.pt-BR.json`; só os namespaces
+declarados na allowlist do `parameter-catalogue.md` §Namespaces i18n (allowlist do
+verificador) são reconhecidos por `verify:parameter-catalogue --check-usage`.
 
 ## 10. Dependências de backend (pré-requisitos de release)
 

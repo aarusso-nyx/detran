@@ -1,0 +1,38 @@
+## RAIT
+
+| Chave | Tipo | Default | Status | pend. | legal | Decisão | Consumidor |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `rait.pool.limit` | N | 12 | vigente | não | não | OD-001 | worklist |
+| `rait.source.pending` | S | — | proposta | sim | não | DT-001 | worklist |
+| `deadline.T-VOTO` | N | 30 | proposta | não | não | H.54 | deadline |
+| `rait.legal.deadline` | N | 30 | vigente | não | sim | DT-110 | deadline |
+
+## TEAT
+
+| Chave | Tipo | Default | Status | pend. | legal | Decisão | Consumidor |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `teat.speed_meters` | F | false | vigente | não | não | H.54 | speed |
+
+## PORTAL
+
+| Chave | Tipo | Default | Status | pend. | legal | Decisão | Consumidor |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `portal.card_payment` | S | off | vigente | não | não | DT-031 | payment |
+
+## BOAT
+
+| Chave | Tipo | Default | Status | pend. | legal | Decisão | Consumidor |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `est.renaest.transmit_period` | S | monthly | vigente | não | não | DT-017 | renaest |
+
+## DASHBOARD
+
+| Chave | Tipo | Default | Status | pend. | legal | Decisão | Consumidor |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `dashboard.heartbeat_minutes` | N | 15 | vigente | não | não | H.54 | monitor |
+
+## Namespaces i18n (allowlist do verificador)
+
+| Namespace | App | Catálogo | Decisão |
+| --- | --- | --- | --- |
+| `portal.errors` | apps/portal/web | src/app/i18n/portal.pt-BR.json | OD-001 |

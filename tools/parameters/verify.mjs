@@ -6,18 +6,30 @@ import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { parseCatalogue } from './parser.mjs';
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
+const realCataloguePath = join(
+  root,
+  'docs/framework/arch/parameter-catalogue.md',
+);
 const sourceOption = process.argv.includes('--source')
   ? process.argv[process.argv.indexOf('--source') + 1]
+  : undefined;
+const catalogueOption = process.argv.includes('--catalogue')
+  ? process.argv[process.argv.indexOf('--catalogue') + 1]
   : undefined;
 const generatedRootOption = process.argv.includes('--generated-root')
   ? process.argv[process.argv.indexOf('--generated-root') + 1]
   : undefined;
-const sourceArg =
-  sourceOption ?? join(root, 'docs/framework/arch/parameter-catalogue.md');
-const modelSource = process.argv.includes('--check-usage')
-  ? join(root, 'docs/framework/arch/parameter-catalogue.md')
-  : sourceArg;
-const model = await parseCatalogue(modelSource).catch((error) => {
+// `--source` keeps its two historical meanings: the catalogue to generate
+// from for `--check-generated`, and the file/directory to scan for
+// `--check-usage`. `--catalogue` is the single, explicit way to pick the
+// catalogue the model is built from for every mode; it defaults to the real
+// catalogue for `--check-usage` (where `--source` means the scan target) and
+// to `--source` (or the real catalogue) otherwise.
+const sourceArg = sourceOption ?? realCataloguePath;
+const catalogueArg =
+  catalogueOption ??
+  (process.argv.includes('--check-usage') ? realCataloguePath : sourceArg);
+const model = await parseCatalogue(catalogueArg).catch((error) => {
   console.error(error.message);
   process.exit(1);
 });
@@ -113,7 +125,7 @@ if (process.argv.includes('--check-generated')) {
     [
       join(root, 'tools/parameters/generate-seed.mjs'),
       '--source',
-      sourceArg,
+      catalogueArg,
       '--out-dir',
       temp,
     ],
@@ -152,6 +164,9 @@ if (process.argv.includes('--check-generated')) {
 if (process.argv.includes('--check-usage')) {
   const target = resolve(sourceOption ?? root);
   const known = new Set(model.entries.map((entry) => entry.key));
+  const i18nNamespaces = new Set(
+    model.i18nNamespaces.map((namespace) => namespace.namespace),
+  );
   const prefixes = [
     'rait',
     'collection',
@@ -165,19 +180,18 @@ if (process.argv.includes('--check-usage')) {
     'dashboard',
   ];
   let usageErrors = 0;
-  // R-0009 (plan.md A7): the OpenAPI clients under packages/api-clients are
-  // generated from docs/framework/contracts and carry citizen-facing i18n
-  // label keys (`portal.requests.nextAction.<STATE>`) as literal types; they
-  // cannot read a parameter, so they are not usage candidates. Every other
-  // generated artifact stays in the scan.
-  const excludedDirectories = [
-    join(root, 'packages/api-clients/src/generated'),
-  ];
+  // M10 (work/rounds/R-0014/plan.md; OD-P46): the only isolation for a
+  // literal that is not a known parameter key is the i18n namespace
+  // allowlist in §Namespaces i18n of parameter-catalogue.md — never a
+  // directory exclusion. The scan covers every directory of the repository;
+  // only tests, dist and node_modules are ignored.
+  function isI18nLiteral(parts) {
+    return parts.length >= 3 && i18nNamespaces.has(`${parts[0]}.${parts[1]}`);
+  }
   async function walk(dir) {
     for (const item of await readdir(dir, { withFileTypes: true })) {
       if (['tests', 'dist', 'node_modules'].includes(item.name)) continue;
       const path = join(dir, item.name);
-      if (excludedDirectories.includes(path)) continue;
       if (item.isDirectory()) await walk(path);
       else if (/\.(?:ts|js|mjs|tsx|jsx)$/.test(item.name)) {
         const text = await readFile(path, 'utf8');
@@ -187,6 +201,7 @@ if (process.argv.includes('--check-usage')) {
           const literal = match[1];
           const parts = literal.split('.');
           if (known.has(literal)) continue;
+          if (isI18nLiteral(parts)) continue;
           if (parts.length >= 3 && prefixes.includes(parts[0])) {
             usageErrors += 1;
             console.error(`${path}: unknown parameter literal ${literal}`);
@@ -203,6 +218,7 @@ if (process.argv.includes('--check-usage')) {
       const parts = literal.split('.');
       if (
         !known.has(literal) &&
+        !isI18nLiteral(parts) &&
         parts.length >= 3 &&
         prefixes.includes(parts[0])
       ) {
@@ -215,5 +231,5 @@ if (process.argv.includes('--check-usage')) {
 }
 if (!process.exitCode)
   console.log(
-    `verify:parameter-catalogue: OK (${model.entries.length} entries, ${model.entries.filter((entry) => entry.value_type === 'F').length} flags, 0 errors)`,
+    `verify:parameter-catalogue: OK (${model.entries.length} entries, ${model.entries.filter((entry) => entry.value_type === 'F').length} flags, ${model.i18nNamespaces.length} i18n namespaces, 0 errors)`,
   );

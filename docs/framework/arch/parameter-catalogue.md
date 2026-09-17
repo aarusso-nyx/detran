@@ -3,7 +3,7 @@ id: ARCH-PARAMETER-CATALOGUE
 title: Catálogo de parâmetros e flags — chaves, defaults, status, fonte e decisão vinculada (seed de ops.parameter, ADR-0021)
 status: draft
 apps: [rait, teat, portal, boat, dashboard]
-updated: 2026-09-16
+updated: 2026-09-17
 ---
 
 # Catálogo de parâmetros e flags
@@ -127,6 +127,32 @@ registro em `open-decisions-rait.md`, nos §4 dos build packs ou em `open-issues
 | `dashboard.critical_extinction.notify_legal` | F    | true                                         | vigente  | não     | não   | OD-D11, H.54  | `CRITICO_EXTINCAO`                     |
 | `dashboard.origin_resources_enabled`         | F    | true                                         | vigente  | não     | não   | OD-D13, H.54  | D-14/D-16                              |
 
+## Namespaces i18n (allowlist do verificador)
+
+Uma chave i18n não é um parâmetro: ela não entra nas cinco tabelas acima. Um namespace de
+i18n entra nesta tabela somente para que `verify:parameter-catalogue --check-usage`
+(`tools/parameters/verify.mjs`) deixe de tratar seus literais como candidato a parâmetro
+desconhecido — nunca por exclusão de diretório. Origem: `OD-P46`
+(`docs/framework/arch/portal-build-pack.md` §4) e método §4.17
+(`docs/meta/agents/orchestra/README.md`).
+
+| Namespace              | App               | Catálogo                         | Decisão |
+| ---------------------- | ----------------- | -------------------------------- | ------- |
+| `portal.shell`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.common`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.states`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.errors`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.situation`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.screens`       | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.forms`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.legal`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.requests`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.evaluations`   | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.notifications` | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.documents`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.services`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.a11y`          | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+
 ## Regras do catálogo
 
 1. Nenhuma constante silenciosa: todo valor que aparece numa OD tem linha aqui.
@@ -221,6 +247,31 @@ adicional é preservado nos metadados gerados; cada token adicional que também 
 `H.<n>`, `OD-*` ou `DT-*` precisa resolver nessas fontes. Não se escolhe um token
 por semelhança nem se inventa uma referência ausente.
 
+### Namespaces i18n
+
+O parser reconhece exclusivamente a primeira tabela Markdown sob o heading
+`Namespaces i18n`, com exatamente as quatro colunas `Namespace | App | Catálogo |
+Decisão`, na mesma disciplina de gramática das cinco tabelas de parâmetros.
+
+`Namespace` é um literal `<prefixo>.<segmento>` em que `<prefixo>` é um dos
+prefixos literais permitidos de uma das cinco superfícies (§Superfície, chave e
+valores de linha) e `<segmento>` casa `[a-z][a-z0-9_]*`. A unicidade do
+`Namespace` é obrigatória na tabela. A célula `Decisão` segue a mesma regra de
+resolução da célula `Decisão` das tabelas de parâmetros: só `H.<n>`, `OD-*` ou
+`DT-*` são elegíveis e a decisão selecionada precisa existir em ao menos uma das
+mesmas fontes (`decision-closure-plan.md`, `steering.md`, `open-decisions-rait.md`,
+`open-issues.md`, cédulas do Owner).
+
+Fail-closed: um namespace que seja prefixo (`<ns>.`) de qualquer chave das cinco
+tabelas de parâmetros falha a execução; um namespace cujo `<prefixo>` seja
+estranho aos prefixos das superfícies falha; a tabela ausente, malformada ou com
+célula vazia falha.
+
+A allowlist de namespaces i18n não gera artefato e não entra no seed — mas, como o
+gerador coloca o SHA-256 desta fonte no cabeçalho dos artefatos gerados, toda
+edição deste arquivo, inclusive desta tabela, exige rodar `pnpm
+parameters:generate` para os artefatos deixarem de ficar `stale`.
+
 ### Saídas determinísticas
 
 O gerador lê esta fonte como bytes UTF-8, calcula seu SHA-256 e coloca a identidade
@@ -273,20 +324,26 @@ inferência. Ele também verifica que nenhuma linha `legal_readonly=true` seja
 tratada como editável pelo contrato de geração.
 
 Para detectar uso em código, o verificador examina literais de string estáticos em
-código, ignorando testes, `dist` e `node_modules`. Qualquer literal exatamente
-igual a uma chave do catálogo conta como uso, inclusive uma chave de um ponto como
+código. A varredura cobre **todo** diretório do repositório; só `tests`, `dist` e
+`node_modules` são ignorados — não há exclusão por diretório para nenhum outro
+caso, inclusive código gerado. Qualquer literal exatamente igual a uma chave do
+catálogo conta como uso, inclusive uma chave de um ponto como
 `teat.speed_meters`. Um literal que não esteja no catálogo é candidato desconhecido
 somente se tiver dois ou mais pontos e começar por um destes prefixos: `rait`,
 `collection`, `deadline`, `session`, `teat`, `sync`, `portal`, `privacy`, `est` ou
-`dashboard`. Literais desconhecidos de um ponto são ambíguos com entidades de
-auditoria, como `portal.complaint`, e não são candidatos. Não existe allowlist
-silenciosa: todo candidato desconhecido falha com arquivo, linha e literal.
-`packages/api-clients/src/generated` fica fora desta varredura de uso (R-0009, A7): os
-clientes de comando gerados (`BP-PORTAL-*.commands.ts`) transcrevem, como tipos `const`, as
-chaves de rótulo i18n do Portal (`portal.requests.nextAction.<STATE>`,
-`portal.evaluations.publicIndicator`), que colidem com a heurística acima (prefixo `portal.`
-e dois ou mais pontos) sem ler nenhum parâmetro; nenhuma chave entra em allowlist, só esse
-diretório gerado sai da varredura. A colisão entre a heurística e as chaves i18n do Portal é
-`OD-P46` (`docs/framework/arch/portal-build-pack.md` §4).
+`dashboard` — **exceto** quando os dois primeiros segmentos do literal formam um
+namespace declarado em §Namespaces i18n (allowlist do verificador); nesse caso o
+literal não é candidato, porque é uma chave i18n, não um parâmetro. Literais
+desconhecidos de um ponto são ambíguos com entidades de auditoria, como
+`portal.complaint`, e não são candidatos. A allowlist de namespaces i18n é a
+única isenção da heurística: nunca por diretório. Assim, com a varredura cobrindo
+todo diretório, os rótulos `portal.requests.nextAction.<STATE>` e
+`portal.evaluations.publicIndicator` — transcritos como tipos `const` nos
+clientes de comando gerados (`BP-PORTAL-*.commands.ts`,
+`packages/api-clients/src/generated`) — deixam de ser candidatos porque seus dois
+primeiros segmentos formam, respectivamente, os namespaces `portal.requests` e
+`portal.evaluations` da allowlist. Não existe allowlist silenciosa: a única
+allowlist é a declarada em §Namespaces i18n e lida pelo verificador; todo outro
+candidato desconhecido falha com arquivo, linha e literal.
 
 A conversão de `inf.normative_agency_parameter` em view está fora deste contrato.
