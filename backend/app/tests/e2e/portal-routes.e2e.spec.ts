@@ -28,6 +28,7 @@ import {
   importModule,
   newClient,
   resetLocalPortalRows,
+  seedLocalParameters,
   seedLocalTenant,
   setCitizen,
   subjectIdOf,
@@ -113,6 +114,7 @@ beforeAll(async () => {
   process.env.DETRAN_LOCAL_ROLES = 'CIDADAO';
   await client.connect();
   await seedLocalTenant(client);
+  await seedLocalParameters(client);
   await resetLocalPortalRows(client);
 
   const projections = (await importModule('@detran/portal-projections')) as {
@@ -803,10 +805,21 @@ describe('CTG-0002 §2.6/§2.8 — atendimento (C-0002-79, C-0002-80, C-0002-81)
     expect(withoutKey.body.code).toBe('PORTAL.VALIDATION_FAILED');
     expect(withoutKey.body.context).toEqual({ fields: ['Idempotency-Key'] });
 
+    // C-0002-79 / A6(e) (TASK-0006 iteração 3): sem `Authorization`, o
+    // verificador local (`DetranLocalTokenVerifier`, perfil `test`) sintetiza
+    // um principal mesmo assim, com os papéis correntes de
+    // `DETRAN_LOCAL_ROLES` (aqui ainda 'CIDADAO', herdado do `setCitizen`
+    // acima) — o que passaria pela política e devolveria 200. Como em
+    // `portal-stream.e2e.spec.ts` (C-0002-82), usa-se um papel fora da
+    // matriz `portal:*` para expor a ausência de sessão; o valor anterior é
+    // restaurado depois.
+    const previousLocalRoles = process.env.DETRAN_LOCAL_ROLES;
+    process.env.DETRAN_LOCAL_ROLES = 'field-agent';
     const noSession = await request(app.getHttpServer())
       .get('/v1/portal/manifestations')
       .set({ 'x-tenant-id': TENANT_ID });
     expect([401, 403]).toContain(noSession.status);
+    process.env.DETRAN_LOCAL_ROLES = previousLocalRoles;
   });
 
   it("C-0002-80 — dado manifestação CIENCIA_AO_USUARIO quando POST acknowledge então 200 'AVALIACAO_OFERECIDA'; de novo então 409; POST evaluations { subjectKind:'manifestation' } então 201 'AVALIADA'; de novo então 409; manifestação EM_ANALISE então 409 EVALUATION_NOT_OFFERED { state:'EM_ANALISE' }", async () => {

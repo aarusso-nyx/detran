@@ -282,6 +282,34 @@ export async function asOwner(client: pg.Client): Promise<void> {
   ]);
 }
 
+/**
+ * C-0002-77 / A6(d) (TASK-0006 iteração 3): provisiona, para o tenant local,
+ * os parâmetros `portal.*`/`privacy.*` copiando as linhas do tenant canônico
+ * de `ops.parameter` (`select … where key like`, nunca o literal de uma
+ * chave) — sem isso `PortalNationalReadsService` (§8) não encontra
+ * `portal.read_cache_ttl_minutes` para o tenant local e todo GET cacheado
+ * falha. `on conflict do nothing` pelo índice natural (tenant_id,
+ * traffic_agency_id, surface, key, effective_from): idempotente contra banco
+ * persistente, sem depender de limpeza no `afterAll`.
+ */
+export async function seedLocalParameters(client: pg.Client): Promise<void> {
+  await asOwner(client);
+  await client.query(
+    `insert into ops.parameter (
+       tenant_id, traffic_agency_id, scope, surface, key, value_json, value_type,
+       status, source_pending, legal_readonly, decision_ref, legal_basis, reason,
+       version, effective_from, effective_to, changed_by
+     )
+     select $1, traffic_agency_id, scope, surface, key, value_json, value_type,
+       status, source_pending, legal_readonly, decision_ref, legal_basis, reason,
+       version, effective_from, effective_to, changed_by
+     from ops.parameter
+     where tenant_id = $2 and (key like 'portal.%' or key like 'privacy.%')
+     on conflict do nothing`,
+    [TENANT_ID, CANONICAL_TENANT_ID],
+  );
+}
+
 /** Mesmo `beforeAll` de portal-identity.e2e.spec.ts (tenant local, marca, hostname, políticas, catálogo). */
 export async function seedLocalTenant(client: pg.Client): Promise<void> {
   await asOwner(client);
