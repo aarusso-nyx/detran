@@ -429,19 +429,23 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
 
 ## Retomada
 
-**Checkpoint 3 (2026-09-17, janela 2 — CTG-0002 em PR).**
+**Checkpoint 4 (2026-09-17, janela 3 — CTG-0003a em PR).**
 
-- CTG-0001: mesclado (PR #60, `1396f1a`, `EV-1ccc334f256359b6`).
-- **CTG-0002: PR #61 aberto** (commits `46f03fc` fichas, `4d6b016` i18n + testes, `8cb4e88`
-  artefatos, `508059e` evidência generic sequence 2, head `10ecc09d…`); `delivery-review-CTG-0002-2`
-  PASS; `pnpm check` EXIT 0 (549/446, 472/472). **Próximo passo:** acompanhar o CI
-  (`gh pr checks 61`), `gh pr merge 61 --merge` com CI verde, `git fetch` + `git merge --no-edit
-origin/main`, `audit observe` no SHA exato do merge, commit da observação.
-- Concluídas: TASK-0001…0007, 0013, 0014 (iterações: 0002 ×3, 0004 ×3, 0006 ×3, 0007 ×3).
-- Pendentes: CTG-0003a (TASK-0019 → 0008 → 0009), 0003b (0020 → 0015 → 0016), 0003c (0021 →
-  0017 → 0018) — prompts a escrever (janela 3), com `pnpm --filter @detran/portal-web typecheck`
-  como critério de todo Inspector (§Triagem); CTG-0004 (0010/0011); CTG-0005 (0012).
-- Último veredito do reviewer: `delivery-review-CTG-0002-2` = PASS.
+- CTG-0001: mesclado (PR #60). CTG-0002: mesclado (PR #61, `2888c9b`, `EV-976c235d27abf061`).
+- **CTG-0003a: PR #62 aberto** (commits `0d789f8` runner JIT + i18n, `8d2bc34` par 1, `25b270b`
+  artefatos, `3508462` evidência generic sequence 3, head `6050fd53…`); `delivery-review-CTG-0003a-2`
+  PASS; `pnpm check` EXIT 0 (711/714). **Próximo passo:** CI verde → `gh pr merge 62 --merge` →
+  `git fetch` + `git merge --no-edit origin/main` → `audit observe` no SHA do merge → commit.
+- Concluídas: TASK-0001…0009, 0013, 0014, 0019 (iterações: 0002 ×3, 0004 ×3, 0006 ×5, 0007 ×3,
+  0008 ×3, 0009 ×3).
+- Pendentes: CTG-0003b (TASK-0020 → 0015 → 0016; prompts a escrever, derivando dos de 0019/0008/0009
+  com escopo da trilha de apelação; os Inspectors incluem `typecheck` e cobertura integral de axe/Tab
+  desde o primeiro ciclo), CTG-0003c (0021 → 0017 → 0018), CTG-0004 (0010/0011), CTG-0005 (0012).
+- Lições desta janela para o método: (1) runner de app precisa da transformação JIT do Angular
+  (A7a) — fixado no padrão; (2) placeholders i18n na sintaxe do motor (`{x}`); (3) o reviewer não
+  aceita cobertura "parcial" declarada — completar antes do ciclo; (4) inspetor de matriz grande em
+  Sonnet/médio rendeu bem (3 iterações, 780 k brutos acumulados).
+- Último veredito do reviewer: `delivery-review-CTG-0003a-2` = PASS.
 - Git: `orchestra/portal-pwa` publicado, working tree limpa.
 
 ## Leitura
