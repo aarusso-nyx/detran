@@ -6,6 +6,17 @@ Accepted on 2026-09-13 by Owner decision (steering G.37), on the Architect's pro
 line of `BUILD-PLAN.md` (`domains/portal`, gov.br federation) and the model of `APP-PORTAL`
 ("orchestrator of a shop window, never a system of record").
 
+Implementação: PR #54 (R-0009, CTG-0001, 2026-09-16) — identity, model and fixtures
+(`BP-PORTAL-IDENTITY-001`, `BP-PORTAL-REQUESTS-001`, `BP-PORTAL-INBOX-001`,
+`BP-PORTAL-CITIZEN-SERVICE-001`, `BP-PORTAL-PROJECTIONS-001`; ADR-0024 realises point 1); PR #56
+(CTG-0002, routes, delegation, projections, `portal:*` policy, contracts). The eight-state graph
+sketched in §2 above is superseded by the fixed 13-state `[WF-PORTAL-001]` machine (OD-P13,
+closed; `work/rounds/R-0009/contracts/CTG-0001.md` §6). Real delegation of `defesa_previa`,
+`recurso_jari`, `recurso_cetran`, `indicacao_condutor` and `pagamento` stays out until R-0007
+merges to `main` (`PORTAL.SERVICE_UNAVAILABLE`, `portal-build-pack.md` §3); real SNE enrolment,
+the privacy endpoint, signed CNH-e/CRLV-e and `junta_medica` are R-0014/R-0010 (`portal-build-pack.md`
+§4, OD-P16/P17/P19).
+
 ## Context
 
 The PORTAL corpus is complete at product level (four workflows, 20 use cases, 28 rules, 27
