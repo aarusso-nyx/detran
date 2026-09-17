@@ -48,4 +48,14 @@ export type * as BpOpsOfflineSync001 from './generated/BP-OPS-OFFLINE-SYNC-001.j
 export type * as BpOpsParameter001 from './generated/BP-OPS-PARAMETER-001.js';
 export type * as BpOpsSnapshots001Commands from './generated/BP-OPS-SNAPSHOTS-001.commands.js';
 export type * as BpOpsSnapshots001 from './generated/BP-OPS-SNAPSHOTS-001.js';
+export type * as BpPortalCitizenService001Commands from './generated/BP-PORTAL-CITIZEN-SERVICE-001.commands.js';
+export type * as BpPortalCitizenService001 from './generated/BP-PORTAL-CITIZEN-SERVICE-001.js';
 export type * as BpPortalComplaints001 from './generated/BP-PORTAL-COMPLAINTS-001.js';
+export type * as BpPortalIdentity001Commands from './generated/BP-PORTAL-IDENTITY-001.commands.js';
+export type * as BpPortalIdentity001 from './generated/BP-PORTAL-IDENTITY-001.js';
+export type * as BpPortalInbox001Commands from './generated/BP-PORTAL-INBOX-001.commands.js';
+export type * as BpPortalInbox001 from './generated/BP-PORTAL-INBOX-001.js';
+export type * as BpPortalProjections001Commands from './generated/BP-PORTAL-PROJECTIONS-001.commands.js';
+export type * as BpPortalProjections001 from './generated/BP-PORTAL-PROJECTIONS-001.js';
+export type * as BpPortalRequests001Commands from './generated/BP-PORTAL-REQUESTS-001.commands.js';
+export type * as BpPortalRequests001 from './generated/BP-PORTAL-REQUESTS-001.js';

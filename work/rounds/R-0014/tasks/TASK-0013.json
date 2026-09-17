@@ -1,19 +1,19 @@
 {
   "schemaVersion": "2.0.0",
-  "id": "TASK-0006",
+  "id": "TASK-0013",
   "round_id": "R-0014",
   "status": "queued",
   "discipline": "architect",
   "discipline_specialization": "transcriber-docs",
-  "title": "Transcrever o catálogo i18n apps/portal/web/src/app/i18n/portal.pt-BR.json (M9): mapa de tradução portal.situation.*, textos jurídicos portal.legal.*.v1, erros portal.errors.*, rótulos do shell, dos estados e das 27 telas",
-  "description": "Única fonte de rótulos cidadãos do Portal; chaves só nos namespaces da allowlist M10; token interno sem rótulo na fonte fica sem chave e vira OD. Depende dos três lotes de fichas (TASK-0005/0013/0014).",
+  "title": "Transcrever as fichas IU-PORTAL-T10…T18 (lote B, M11)",
+  "description": "Uma ficha por tela do inventário IU-PORTAL-001 no padrão de dez seções da origem, com estados obrigatórios e chaves i18n portal.screens.t<nn>.*; nada sem fonte.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-portal-i18n"],
+  "target_modules": ["MOD-product-portal-screens-B"],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "architect",
-  "upstream_task_id": "TASK-0014",
+  "upstream_task_id": "TASK-0004",
   "db_isolation": "database",
   "iteration_count": 0,
   "max_iterations": 2,
@@ -21,10 +21,11 @@
   "tags": ["wp-p4"],
   "branch": "orchestra/portal-pwa",
   "worktree_id": "WT-portal-pwa",
-  "prompt_composition_id": "PC-b9c231f45294e99b",
+  "prompt_composition_id": "PC-50819801dbd0c821",
   "acceptance_commands": [
-    ["pnpm", "format:check"],
-    ["pnpm", "verify:parameter-catalogue"]
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "format:check"]
   ],
   "created_at": "2026-09-17T12:00:00.000Z",
   "executor": {
@@ -36,7 +37,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-b9c231f45294e99b",
+    "prompt_composition_id": "PC-50819801dbd0c821",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

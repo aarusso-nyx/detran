@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0014",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0014/plan.md",
+      "line": 203,
+      "claim": "A redivisão declara CTG-0003a, CTG-0003b e CTG-0003c como pares Inspector → Engineer, sem tarefa Architect em nenhum dos três grupos; isso contraria a tríade obrigatória e a exigência de uma tarefa por papel.",
+      "fix": "Adicionar a tarefa Architect antecedente a cada subgrupo, com contrato, guardas e critérios explícitos, antes de TASK-0008, TASK-0015 e TASK-0017."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0014/prompts/TASK-0014.md",
+      "line": 24,
+      "claim": "O prompt autoriza ajustar o baseline para uma contagem observada indeterminada se os lotes A/B faltarem, embora M11 fixe 522 → 549 e a própria fronteira de escrita fixa 522 → 549.",
+      "fix": "Se A/B não estiverem em disco, registrar bloqueio e não alterar o baseline; permitir a escrita somente para 549 após verificar os 27 artefatos."
+    }
+  ],
+  "notes": []
+}

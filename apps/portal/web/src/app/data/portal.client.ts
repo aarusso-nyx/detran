@@ -6,8 +6,10 @@
 // módulos de feature (CTG-0003).
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import type { paths as IdentityPaths } from '@detran/api-clients/generated/BP-PORTAL-IDENTITY-001.commands';
+import type { BpPortalIdentity001Commands } from '@detran/api-clients';
 import { firstValueFrom } from 'rxjs';
+
+type IdentityPaths = BpPortalIdentity001Commands.paths;
 
 export const PORTAL_API_PREFIX = '/v1/portal';
 
