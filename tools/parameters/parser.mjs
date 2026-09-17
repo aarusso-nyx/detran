@@ -19,6 +19,13 @@ const HEADERS = [
   'Decisão',
   'Consumidor',
 ];
+const NAMESPACE_HEADERS = ['Namespace', 'App', 'Catálogo', 'Decisão'];
+const NAMESPACE_PREFIXES = Object.values(TABLES).flatMap(([, prefixes]) =>
+  prefixes.map((prefix) => prefix.slice(0, -1)),
+);
+const NAMESPACE_PATTERN = new RegExp(
+  `^(?:${NAMESPACE_PREFIXES.join('|')})\\.[a-z][a-z0-9_]*$`,
+);
 const REFS = /\b(?:H\.\d+|OD-[A-Z0-9-]+|DT-[A-Z0-9-]+)\b/g;
 const COMPACT_RANGE =
   /\b(H\.\d+|(?:OD|DT)-[A-Z0-9-]+)\s*(?:…|\.\.\.)\s*(H\.\d+|(?:OD|DT)-[A-Z0-9-]+|[A-Z]+-?\d+|\d+)\b/g;
@@ -174,6 +181,88 @@ function headingRows(lines, source) {
   return headings;
 }
 
+function parseNamespaceTable(lines, source, entries) {
+  const headingIndex = lines.findIndex((line) =>
+    /^##\s+Namespaces i18n\b/.test(line),
+  );
+  if (headingIndex < 0) return [];
+  const nextHeading = lines.findIndex(
+    (line, lineIndex) => lineIndex > headingIndex && /^##\s+/.test(line),
+  );
+  const end = nextHeading < 0 ? lines.length : nextHeading;
+  let row = headingIndex + 1;
+  while (row < end && !lines[row].trim().startsWith('|')) row += 1;
+  if (row >= end)
+    throw new Error(`${source}:${headingIndex + 1}: namespace table missing`);
+  const header = cells(lines[row]);
+  if (
+    header.length !== NAMESPACE_HEADERS.length ||
+    header.some((value, i) => value !== NAMESPACE_HEADERS[i])
+  )
+    throw new Error(
+      `${source}:${row + 1}: namespace header must be ${NAMESPACE_HEADERS.join('|')}`,
+    );
+  const separator = cells(lines[row + 1] ?? '');
+  if (
+    separator.length !== NAMESPACE_HEADERS.length ||
+    separator.some((value) => !/^:?-{3,}:?$/.test(value))
+  )
+    throw new Error(
+      `${source}:${row + 2}: namespace separator must have four cells`,
+    );
+  row += 2;
+  const namespaces = [];
+  const seenNamespaces = new Set();
+  while (row < lines.length && lines[row].trim().startsWith('|')) {
+    const values = cells(lines[row]);
+    if (
+      values.length !== NAMESPACE_HEADERS.length ||
+      values.some((value) => value === '')
+    )
+      throw new Error(`${source}:${row + 1}: malformed or empty namespace row`);
+    const [namespace, app, catalogue, decision] = values;
+    if (!NAMESPACE_PATTERN.test(namespace))
+      throw new Error(
+        `${source}:${row + 1}: invalid i18n namespace ${namespace}`,
+      );
+    if (seenNamespaces.has(namespace))
+      throw new Error(
+        `${source}:${row + 1}: duplicate i18n namespace ${namespace}`,
+      );
+    seenNamespaces.add(namespace);
+    const tokens = decision.match(REFS) ?? [];
+    const selected =
+      tokens.filter((token) => /^H\./.test(token)).at(-1) ??
+      tokens.find((token) => /^(?:OD|DT)-/.test(token));
+    if (!selected)
+      throw new Error(
+        `${source}:${row + 1}: decision reference missing for namespace ${namespace}`,
+      );
+    namespaces.push({
+      namespace,
+      app,
+      catalogue,
+      decision_ref: selected,
+      decision_tokens: tokens,
+      line: row + 1,
+    });
+    row += 1;
+  }
+  if (lines.slice(row, end).some((line) => line.trim().startsWith('|')))
+    throw new Error(
+      `${source}:${row + 1}: multiple tables for Namespaces i18n`,
+    );
+  for (const item of namespaces) {
+    const prefix = `${item.namespace}.`;
+    const colliding = entries.find((entry) => entry.key.startsWith(prefix));
+    if (colliding)
+      throw new Error(
+        `${source}:${item.line}: i18n namespace ${item.namespace} collides with parameter key ${colliding.key} at ${source}:${colliding.line}`,
+      );
+  }
+  return namespaces;
+}
+
 export async function parseCatalogue(source) {
   const bytes = await readFile(source);
   const text = bytes.toString('utf8');
@@ -267,6 +356,7 @@ export async function parseCatalogue(source) {
     if (lines.slice(row, end).some((line) => line.trim().startsWith('|')))
       throw new Error(`${source}:${row + 1}: multiple tables for ${heading}`);
   }
+  const i18nNamespaces = parseNamespaceTable(lines, source, entries);
   const resolvedDecisions = await decisionReferences();
   for (const entry of entries)
     for (const token of entry.decision_tokens) {
@@ -275,9 +365,17 @@ export async function parseCatalogue(source) {
           `${source}:${entry.line}: unresolved decision ${token}`,
         );
     }
+  for (const namespace of i18nNamespaces)
+    for (const token of namespace.decision_tokens) {
+      if (!resolvedDecisions.has(token))
+        throw new Error(
+          `${source}:${namespace.line}: unresolved decision ${token}`,
+        );
+    }
   return {
     source,
     sourceHash: createHash('sha256').update(bytes).digest('hex'),
     entries,
+    i18nNamespaces,
   };
 }

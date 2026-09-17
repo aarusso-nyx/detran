@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0014",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes tela ↔ ficha ↔ rota ↔ i18n (manifesto × fichas × catálogo) em apps/portal/web e tools/docs",
+  "description": "Provar que cada tela do manifesto tem ficha com as dez seções e os estados obrigatórios, que as chaves declaradas nas fichas existem no catálogo, que o mapa de tradução está completo e que nenhum valor do catálogo é um token interno.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-web-tests", "MOD-tools-docs-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p4", "wp-p5"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-e8cf47d565263454",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-17T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-e8cf47d565263454",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

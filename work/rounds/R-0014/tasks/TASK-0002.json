@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0014",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes da allowlist i18n do verificador de parâmetros (tools/parameters/tests) e os specs do scaffold de apps/portal/web (bootstrap, shell, manifesto de rotas, matriz de guardas com presença e ausência, axe nas rotas anônimas, chaves i18n ⊆ catálogo/allowlist)",
+  "description": "Codificar os critérios de M3, M7, M8, M9 e M10 antes das implementações de TASK-0003 e TASK-0004; os specs do app podem falhar nesta entrega (typecheck vermelho é esperado dentro do CTG).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-tools-parameters-tests", "MOD-portal-web-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-p5", "od-p46"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-d2d5c504d39a9cfc",
+  "acceptance_commands": [
+    ["pnpm", "parameters:test"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-17T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-d2d5c504d39a9cfc",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

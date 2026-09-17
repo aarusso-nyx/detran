@@ -104,6 +104,7 @@ admitindo selo prata, parecer jurídico único).
 | OD-P04, OD-P08, OD-P09 | B   | `privacy.public_regime_days` pendente                  | parecer LEGAL (DT-042)                                                                                                                              |
 | OD-P11, OD-P12         | C   | `portal.read_cache_ttl_minutes`, `portal.mobile_shell` | Architect em WP-P1                                                                                                                                  |
 | OD-P13                 | C   | —                                                      | **fechada** (R-0009, M7): `@stynx-nyx/flow` avaliado e descartado; máquina fixa de 13 estados em código                                             |
+| OD-P46                 | C   | allowlist de namespaces i18n no catálogo de parâmetros | **fechada** em R-0014 (Owner, 2026-09-17; M10)                                                                                                      |
 
 ### BOAT
 
