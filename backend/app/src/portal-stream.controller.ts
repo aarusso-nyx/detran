@@ -142,11 +142,21 @@ export class PortalStreamController {
     let closed = false;
     let unsubscribeHeartbeat: () => void = () => undefined;
     let unsubscribePoller: () => void = () => undefined;
+    // `closed` and the cancellation are kept separate on purpose
+    // (delivery-review-CTG-0002 nota low): a `close` that fires between the
+    // handler registration and the two `schedule` calls below marks the
+    // stream closed while the subscriptions still hold the initial no-ops;
+    // the explicit `cancel()` after scheduling then cancels the real ones.
+    const cancel = (): void => {
+      unsubscribeHeartbeat();
+      unsubscribePoller();
+      unsubscribeHeartbeat = () => undefined;
+      unsubscribePoller = () => undefined;
+    };
     const cleanup = (): void => {
       if (closed) return;
       closed = true;
-      unsubscribeHeartbeat();
-      unsubscribePoller();
+      cancel();
     };
     req.on('close', cleanup);
     res.on('close', cleanup);
@@ -200,7 +210,10 @@ export class PortalStreamController {
     unsubscribePoller = this.poller.schedule(() => {
       void tick();
     });
-    if (closed) cleanup();
+    if (closed) {
+      cancel();
+      return;
+    }
 
     await tick();
   }
