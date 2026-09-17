@@ -389,6 +389,14 @@ qualificada}` e `claims.cpf` (11 dígitos, `sub` de negócio). Perfil `local-san
   tenant canônico de `ops.parameter` (TASK-0006 iteração 3; nunca literal de chave nos specs). (e) C-0002-79: a
   chamada "sem sessão" no perfil `test` precisa de papel fora da matriz (`field-agent`) ou de `DETRAN_LOCAL_ROLES` vazio
   (TASK-0006 iteração 3).
+- **A7 (2026-09-16, gate de CTG-0002)** — `verify:parameter-catalogue --check-usage` acusava as chaves de rótulo i18n
+  (`portal.requests.nextAction.<STATE>`, `portal.evaluations.publicIndicator`) nos clientes gerados
+  `packages/api-clients/src/generated/BP-PORTAL-*.commands.ts` (tipos `const` transcritos dos contratos). Chaves i18n do
+  Portal começam por `portal.` e têm ≥ 2 pontos, colidindo com a heurística de candidato do verificador; os clientes gerados
+  não leem parâmetro. Decisão: excluir **só** `packages/api-clients/src/generated` da varredura de uso (comentário no
+  verificador; nenhuma allowlist de chaves), manter todo o resto; a doc do verificador (`parameter-catalogue.md`
+  §"Verificador fail-closed") é atualizada por TASK-0010; a colisão heurística × i18n vira OD-P46 (Architect: prefixo
+  ou allowlist declarada para chaves i18n quando `i18n/portal.pt-BR.json` entrar em código, R-0014).
 
 ## Tarefas
 
@@ -488,6 +496,7 @@ decisão do maestro sob a instrução do Owner. Registrado aqui e no relatório 
 - TASK-0008 — e2e `portal-routes` C-0002-77 — plant-bug (pré-existente, R-0004 `ops/parameter`) — `OpsParameterService.select` comparava `Date` (pg `date`) com string → parâmetro nunca encontrado — corrigido pelo maestro (A6(c)); + sensor-error: e2e não provisiona parâmetros do tenant local — TASK-0006 iteração 3.
 - TASK-0008 — e2e `portal-routes` C-0002-79 (última asserção) — sensor-error — verificador local sintetiza principal sem `Authorization` com os papéis correntes — TASK-0006 iteração 3 (A6(e)).
 - TASK-0009 — `pnpm contracts:test` C-5-16 — sensor-error — o teste de R-0008 fixa `operations=92`; com os 47 contratos do Portal o gate conta 139 — contagem atualizada pelo maestro (Engineer) em `tools/contracts/tests/check-commands.test.mjs` (asserção mantida, só o número).
+- maestro (gate CTG-0002) — `pnpm check` → `verify:parameter-catalogue --check-usage` — sensor-error — chaves i18n nos clientes gerados do Portal lidas como candidatas a parâmetro — A7: `packages/api-clients/src/generated` fora da varredura de uso.
 - TASK-0004 — D13 (`portal.subject.name not null` × contrato) — reference-gap — blueprint `IDENTITY` v1.0.2 `name nullable` (maestro, Architect) + regeneração no checkpoint.
 
 ## Retomada
