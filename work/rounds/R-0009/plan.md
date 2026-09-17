@@ -378,6 +378,17 @@ qualificada}` e `claims.cpf` (11 dígitos, `sub` de negócio). Perfil `local-san
   `reshape(topic, payload, row?)`, `listSince(cursor, scope, limit)`, `protocolNumber(tx, slug, today, requestId)`,
   `new ReadServiceDelegationTarget(serviceKey, readResource, targetKinds)`; SQL dentro do subconjunto documentado em
   `requests/tests/support/fake-sql.ts`; headers em minúsculas; `actor.id` = `RequestContext.snapshot().actorId`.
+- **A6 (2026-09-16, após TASK-0008)** — (a) `rebuild` implementado como `reset` por projeção (zera colunas derivadas de
+  evento e `last_event_id` → sentinela D10, preserva identidade/`situation` em `infraction_view`; `crash_view`/`exam_view`
+  só sentinela; `process_timeline`/`points_view` apagadas) — **aceito** como a leitura correta de A5(a). (b)
+  `PORTAL_PROJECTION_POLLER` no módulo global `PortalNationalReadPortsModule` (visibilidade Nest) — aceito. (c) Defeito
+  pré-existente de `ops/parameter` (`OpsParameterService.select` comparava `Date` com string; toda leitura em banco real
+  devolvia 404) corrigido pelo **maestro (Engineer)** com comparação por dia ISO — `plant-bug` de R-0004 registrado em
+  §Triagem; lock `MOD-ops-parameter` tocado fora da frente por necessidade do gate (mudança mínima, testes de
+  `ops-parameter` verdes). (d) O e2e do app provisiona os parâmetros `portal.*` do tenant local copiando as linhas do
+  tenant canônico de `ops.parameter` (TASK-0006 iteração 3; nunca literal de chave nos specs). (e) C-0002-79: a
+  chamada "sem sessão" no perfil `test` precisa de papel fora da matriz (`field-agent`) ou de `DETRAN_LOCAL_ROLES` vazio
+  (TASK-0006 iteração 3).
 
 ## Tarefas
 
@@ -474,6 +485,8 @@ decisão do maestro sob a instrução do Owner. Registrado aqui e no relatório 
 - TASK-0007 — e2e `portal-requests` C-0002-70 — sensor-error — spec usa `targetKind:'none'` para `consulta_bat`/`consulta_exame`; contrato §3.2 fixa `crash`/`exam` — TASK-0006 iteração 2: corrigir o spec.
 - TASK-0007 — integration `portal-requests` C-0002-30 — sensor-error — spec espera protocolos `\d{7}`; fixtures do seed 70 usam sufixo hex (contrato §12) — TASK-0006 iteração 2: aceitar os números das fixtures (só os gerados por `protocolNumber` são `\d{7}`).
 - TASK-0007 — e2e entre arquivos (C-0001-41 × `portal-requests.e2e`) — sensor-error — `portal-requests.e2e` deixa linhas do sujeito ouro no tenant local; `delete from portal.subject` de C-0001-41 viola FK em banco persistente — TASK-0006 iteração 2: limpeza em `afterAll` de `portal-requests.e2e` (requests, protocols, idempotency_record, representation do sujeito).
+- TASK-0008 — e2e `portal-routes` C-0002-77 — plant-bug (pré-existente, R-0004 `ops/parameter`) — `OpsParameterService.select` comparava `Date` (pg `date`) com string → parâmetro nunca encontrado — corrigido pelo maestro (A6(c)); + sensor-error: e2e não provisiona parâmetros do tenant local — TASK-0006 iteração 3.
+- TASK-0008 — e2e `portal-routes` C-0002-79 (última asserção) — sensor-error — verificador local sintetiza principal sem `Authorization` com os papéis correntes — TASK-0006 iteração 3 (A6(e)).
 - TASK-0004 — D13 (`portal.subject.name not null` × contrato) — reference-gap — blueprint `IDENTITY` v1.0.2 `name nullable` (maestro, Architect) + regeneração no checkpoint.
 
 ## Retomada
@@ -492,9 +505,9 @@ Estado das tarefas: (atualizado pelo maestro a cada checkpoint)
 | TASK-0003 | completed   | iteração 2 verde (49/49 unit, 14/14 e2e ×2); relatório atualizado                                             |
 | TASK-0004 | completed   | relatório em `reports/TASK-0004.md`; 2 contradições → §Triagem/A3; `pnpm install` + regen v1.0.2 pelo maestro |
 | TASK-0005 | completed   | relatório em `reports/TASK-0005.md`; A4; branch temporário `tmp/r9-ctg2-wip` até o merge do PR #54            |
-| TASK-0006 | completed   | relatório em `reports/TASK-0006.md`; 84 critérios → specs; A5                                                 |
+| TASK-0006 | in_progress | iteração 3 (restrita): C-0002-77 (parâmetros do tenant local), C-0002-79 (papel)                              |
 | TASK-0007 | completed   | relatório em `reports/TASK-0007.md`; 3 contradições de spec → §Triagem (TASK-0006 it.2)                       |
-| TASK-0008 | in_progress | disparada em paralelo com TASK-0006 it.2 (arquivos disjuntos)                                                 |
+| TASK-0008 | completed   | relatório em `reports/TASK-0008.md`; 142/144 e2e; A6; 2 itens → TASK-0006 it.3                                |
 | TASK-0009 | queued      | —                                                                                                             |
 | TASK-0010 | queued      | —                                                                                                             |
 

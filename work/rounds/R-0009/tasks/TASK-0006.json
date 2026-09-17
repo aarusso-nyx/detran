@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0006",
   "round_id": "R-0009",
-  "status": "completed",
+  "status": "in_progress",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Codificar os critérios C-0002-nn em testes: rotas (vínculo 404, idempotência, protocolo antes da validação, SERVICE_UNAVAILABLE com motivo, DELEGATION_FAILED com alvo falso, todo R-0007), replay das projeções, SSE, policy.spec portal:* e policy-routes estendido",
@@ -19,7 +19,7 @@
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0005",
   "db_isolation": "database",
-  "iteration_count": 1,
+  "iteration_count": 3,
   "max_iterations": 2,
   "priority": 2,
   "tags": ["wp-p2"],
@@ -43,5 +43,15 @@
     "prompt_composition_id": "PC-0c41ca7454a22ea1",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
-  }
+  },
+  "iteration_trail": [
+    {
+      "iteration": 2,
+      "reason": "sensor-error C-0002-30/70 + limpeza entre arquivos e2e (triagem TASK-0007)"
+    },
+    {
+      "iteration": 3,
+      "reason": "sensor-error C-0002-77 (parâmetros do tenant local) e C-0002-79 (papel) — A6(d)/(e)"
+    }
+  ]
 }
