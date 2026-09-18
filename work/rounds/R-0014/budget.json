@@ -1,10 +1,10 @@
 {
   "round": "R-0014",
-  "window": 2,
+  "window": 3,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1690000,
-  "estimated_output_total": 285300,
+  "estimated_input_total": 2572000,
+  "estimated_output_total": 505000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
@@ -265,6 +265,147 @@
       "status": "completed",
       "verdict": "PASS",
       "note": "ciclo restrito a A5"
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0002-close-W2",
+      "input_tokens": 50000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "gates, delivery-reviews, commits, evidência seq 2, PR #61, merge, observe"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W3-CTG3a",
+      "input_tokens": 30000,
+      "output_tokens": 14000,
+      "status": "completed",
+      "note": "prompts da tríade CTG-0003a (0019/0008/0009), M17"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-6",
+      "input_tokens": 71000,
+      "output_tokens": 1200,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "5 achados (leituras, caminho, fingerprint→M17, fronteira, escada de modelos)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7",
+      "input_tokens": 51000,
+      "output_tokens": 300,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0019",
+      "model": "opus",
+      "input_tokens": 84000,
+      "output_tokens": 45000,
+      "status": "completed",
+      "note": "336k brutos, 74 chamadas, 27 min; contrato 1457 linhas, 101 critérios, 22 DIVERGE, OD-P57…P67"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iteration-4",
+      "model": "sonnet",
+      "input_tokens": 10000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "note": "OD-P58: 26 chaves"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "model": "sonnet",
+      "input_tokens": 132000,
+      "output_tokens": 45000,
+      "status": "completed",
+      "note": "529k brutos, 182 chamadas, 39 min; 29 specs + 5 stubs; 514 testes (36 vermelhos por módulos ausentes); C-3a-99/100 parciais"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "model": "opus",
+      "input_tokens": 138000,
+      "output_tokens": 60000,
+      "status": "completed",
+      "note": "551k brutos, 131 chamadas, 49 min; 32 módulos; 646/671 sob JIT; 12 bloqueios (B1 runner → A7; B7 catálogo; B8 contrato; demais specs)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iteration-5",
+      "model": "sonnet",
+      "input_tokens": 4000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "A7c: 10 placeholders"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-iteration-2",
+      "model": "sonnet",
+      "input_tokens": 30000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "118k brutos incrementais, 83 chamadas, 12 min; B2…B12; 671/675, 1 defeito real (downloadReceipt Blob)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009-iteration-2",
+      "model": "opus",
+      "input_tokens": 3000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Blob de erro em downloadReceipt; pnpm check EXIT 0; 672/675"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003a",
+      "input_tokens": 128000,
+      "output_tokens": 800,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "1 achado: completar C-3a-99/100 (cobertura parcial declarada)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-iteration-3",
+      "model": "sonnet",
+      "input_tokens": 33000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "132k brutos incrementais, 60 chamadas, 9 min; C-3a-99/100 completos; 1 defeito real de a11y (input de arquivo sem nome)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009-iteration-3",
+      "model": "opus",
+      "input_tokens": 5000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "note": "nome acessível do input de arquivo; pnpm check EXIT 0; 711/714"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003a-2",
+      "input_tokens": 53000,
+      "output_tokens": 400,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito à cobertura C-3a-99/100"
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0003a-close-W3",
+      "input_tokens": 60000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "A6/A7, runner JIT, gates, 2 delivery-reviews, commits, evidência seq 3, PR #62"
     }
   ],
   "forecast": {

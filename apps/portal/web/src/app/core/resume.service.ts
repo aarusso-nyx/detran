@@ -1,7 +1,8 @@
 // ResumeService (portal-frontends.md §5.1; [UC-PORTAL-019] AC-4): guarda a rota e o rascunho ao
 // redirecionar para a elevação de nível e retoma onde parou. Estado em memória espelhado em
 // `sessionStorage` (sobrevive ao redirect OIDC, morre com a aba); nunca `localStorage` (spec §1
-// "Estado"). `resume()` é de uso único: devolve e limpa.
+// "Estado"). `resume()` é de uso único: devolve e limpa; `peek()` lê sem consumir ([DIVERGE-4]):
+// o callback OIDC só precisa da rota, e o `ServiceWizard.resumeFrom` consome o ponto.
 import { Injectable } from '@angular/core';
 
 export interface ResumePoint {
@@ -32,8 +33,13 @@ export class ResumeService {
     }
   }
 
+  /** Devolve o ponto sem limpá-lo (leitura não consumidora, [DIVERGE-4]). */
+  peek(): ResumePoint | null {
+    return this.point ?? this.read();
+  }
+
   resume(): ResumePoint | null {
-    const point = this.point ?? this.read();
+    const point = this.peek();
     this.clear();
     return point;
   }

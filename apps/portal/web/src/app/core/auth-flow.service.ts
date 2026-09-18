@@ -29,13 +29,14 @@ export class AuthFlowService {
 
   /**
    * Conclui a sessão STYNX a partir da URL de retorno e navega à rota retomada (ou a
-   * `/inicio`). Devolve `false` quando não há sessão a concluir.
+   * `/inicio`). Devolve `false` quando não há sessão a concluir. Lê o ponto com `peek()`
+   * ([DIVERGE-4], A6(a)): o rascunho é consumido pelo `ServiceWizard.resumeFrom`, não aqui.
    */
   async completeLogin(url: string): Promise<boolean> {
     if (!this.stynx) return false;
     const state = await this.stynx.completeLogin(url);
     if (!state.active) return false;
-    const target = this.resume.resume()?.route ?? DEFAULT_LANDING_ROUTE;
+    const target = this.resume.peek()?.route ?? DEFAULT_LANDING_ROUTE;
     await this.router.navigateByUrl(target);
     return true;
   }

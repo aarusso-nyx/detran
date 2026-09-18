@@ -15,6 +15,8 @@ export interface AvailableBrand {
   readonly privacyUrl?: string;
   readonly accessibilityUrl?: string;
   readonly primaryColor?: string;
+  /** Contato do atendimento (`GET brand`, A1; formato `source_pending` — a fixture traz um e-mail). */
+  readonly serviceContact?: string;
 }
 
 export interface UnavailableBrand {
@@ -38,6 +40,7 @@ function toBrandState(profile: BrandProfile): BrandState {
     privacyUrl: profile.privacyUrl,
     accessibilityUrl: profile.accessibilityUrl,
     primaryColor: profile.primaryColor,
+    serviceContact: profile.serviceContact,
   };
 }
 

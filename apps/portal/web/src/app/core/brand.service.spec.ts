@@ -54,6 +54,8 @@ describe('BrandService', () => {
       privacyUrl: 'https://exemplo.detran.gov.br/privacidade',
       accessibilityUrl: 'https://exemplo.detran.gov.br/acessibilidade',
       primaryColor: '#0B5FFF',
+      // [DIVERGE-9]/A1: AvailableBrand ganha serviceContact (AlternativeChannelNote §5.10).
+      serviceContact: 'atendimento@exemplo.detran.gov.br',
     });
   });
 

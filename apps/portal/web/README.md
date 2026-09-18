@@ -47,11 +47,15 @@ src/app/
   app.route-manifest.ts   PORTAL_ROUTE_MANIFEST (38 rotas — fonte única das rotas e dos testes)
   core/                   citizen-shell, brand.service, session.facade, auth-flow.service,
                           entitlement.facade, service-catalog.facade, resume.service,
-                          error-boundary, offline-document.store, runtime-config,
-                          title.strategy, i18n-fallback, manifest-routes, guards/, pages/
+                          error-boundary, error-banner.component, field-errors.directive,
+                          clock, offline-document.store, runtime-config, title.strategy,
+                          i18n-fallback, manifest-routes, guards/, pages/
   features/<module>/      <module>.routes.ts (lazy; caminhos completos derivados do manifesto)
-  shared/                 placeholder-page.component (rotas ainda não construídas)
-  data/                   portal.client.ts (wrapper tipado por @detran/api-clients)
+  shared/                 placeholder-page.component (rotas ainda não construídas) e os onze
+                          compartilhados do par 1 (CTG-0003a §5) + service-wizard.store
+  forms/                  14 schemas zod + form-gate.ts + attachments.ts (M12; CTG-0003a §6)
+  data/                   portal.client.ts (leituras e comandos), idempotency-key.ts,
+                          portal-command.models.ts
   i18n/                   portal.pt-BR.json (catálogo plano, chave = caminho pontuado)
   a11y/                   axe.spec-helper.ts (Inspector)
 src/testing/              stubs e harness dos specs (Inspector)
@@ -101,3 +105,40 @@ src/testing/              stubs e harness dos specs (Inspector)
   (shell `prefetch`, sem `runtime-config.js`). O cache offline de CNH-e/CRLV-e é do CTG-0003
   (`OfflineDocumentStore`, validade do documento; forma do `dataGroup`, se houver, em OD-P51);
   qualquer outra rota offline mostra `portal.states.offline` sem prometer envio posterior.
+
+## Par 1 do app funcional (CTG-0003a): núcleo, compartilhados, schemas
+
+- `data/portal.client.ts`: comandos do ciclo comum (`createRequest`, `saveDraft`,
+  `requestAttachmentUpload`, `uploadToSignedUrl`, `completeAttachment`, `submitRequest`,
+  `withdrawRequest`, `respondDiligence`, `elevateAssurance`, `completeElevation`,
+  `downloadReceipt`) sobre o `HttpClient` com `observe: 'response'` (`ETag` →
+  `CommandResult.etag`). `If-Match` é sempre o `etag` lido (`null` omite o cabeçalho; o servidor
+  responde 428). `Idempotency-Key` determinística `<ato>:<alvo>:<fingerprint>` (M17;
+  `data/idempotency-key.ts`: `canonicalJson` + SHA-256 via `crypto.subtle`), recalculada a cada
+  chamada. Única saída de `/v1/portal/*`: o `PUT` na URL assinada do storage, por `fetch` puro,
+  sem `Authorization` e com `credentials: 'omit'`. As formas 2xx que o OpenAPI ainda não declara
+  ficam em `data/portal-command.models.ts` (OD-P59; a UI nunca simula resultado, M15).
+- `core/error-boundary.ts`: `classifyError` (`code`, `status`, `messageKey`, `context`,
+  `fields`, `retryAfter`) e `presentError` → `ErrorPresentation` (severidade, próximo passo e
+  rota, canal alternativo) pela tabela `ERROR_PRESENTATION` dos 67 códigos do catálogo. Nunca
+  navega para `context.resumeRoute` do servidor; a rota de retomada é a do app.
+  `core/error-banner.component.ts` (`portal-error-banner`, `StynxBanner` do kit, `role="alert"`
+  com foco para erro, `role="status"` para avisos) e `core/field-errors.directive.ts`
+  (`form[portalFieldErrors]`: `aria-invalid`/`aria-describedby` e foco no primeiro campo).
+- `core/session.facade.ts`: `account`, `representations`, `loading`, `loadError`, `load()`,
+  `requirementFor()`, `canPerform()` (fail-closed: ato desconhecido → `false`),
+  `requestElevation()` (grava o `ResumePoint` ANTES do `POST`) e `completeElevation()`. Sessão
+  inativa → conta zerada e `OfflineDocumentStore.clear()`; o `ResumeService` sobrevive ao
+  redirecionamento OIDC (`peek()` no callback, `resume()` só no `ServiceWizard.resumeFrom`).
+- `core/clock.ts` (`PortalClock`): único relógio do domínio (`acceptedAt` do diálogo de
+  consequência, validade do cache offline); os specs o substituem por `useValue`.
+- `shared/`: `citizen-status-badge` (+ `badgeOf`, única relação estado → badge, lida do
+  catálogo), `deadline-card` (sem aritmética de datas), `action-triplet` (sempre as três ações),
+  `service-wizard` + `service-wizard.store` (provido no componente; a feature lê o store pelo
+  injector do componente e projeta o formulário do passo 2), `prefilled-field`,
+  `attachment-uploader`, `consequence-dialog`, `signature-step`, `protocol-receipt`,
+  `alternative-channel-note`, `assurance-explainer`. Nenhum calcula prazo, tempestividade,
+  elegibilidade ou nível: tudo chega do servidor; tokens crus só em `data-*`.
+- `forms/`: um schema zod por ato (`<Nome>Schema`, `strict`) e o `<NOME>_GATE: FormGate`
+  transcrito da spec §7 — documentação verificável que nunca decide permissão; nenhum arquivo de
+  `forms/` importa facade, guardas ou relógio.
