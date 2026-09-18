@@ -1,10 +1,10 @@
 {
   "round": "R-0014",
-  "window": 3,
+  "window": 4,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2572000,
-  "estimated_output_total": 505000,
+  "estimated_input_total": 2597000,
+  "estimated_output_total": 514000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
@@ -406,6 +406,14 @@
       "output_tokens": 12000,
       "status": "completed",
       "note": "A6/A7, runner JIT, gates, 2 delivery-reviews, commits, evidência seq 3, PR #62"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W4-CTG3b",
+      "input_tokens": 25000,
+      "output_tokens": 9000,
+      "status": "completed",
+      "note": "merge #62 + observe; prompts da tríade CTG-0003b; prompt-review-8 bloqueado por usage limit do Codex"
     }
   ],
   "forecast": {

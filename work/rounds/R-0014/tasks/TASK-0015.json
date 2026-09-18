@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0015",
+  "round_id": "R-0014",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Testes do par 2 (CTG-0003b): leituras, facades, PaymentComparison, ProcessTimeline, 13 páginas — critérios C-3b-nn, axe integral",
+  "description": "Codificar 100 % dos critérios antes da implementação; typecheck limpo salvo módulos ausentes; cobertura integral desde o primeiro ciclo.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-web-tests-appeal"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003b",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0020",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-p5"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-78eb6b3ca7200229",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-18T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-78eb6b3ca7200229",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
