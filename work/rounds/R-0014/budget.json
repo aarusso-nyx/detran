@@ -3,8 +3,8 @@
   "window": 4,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2597000,
-  "estimated_output_total": 514000,
+  "estimated_input_total": 2747000,
+  "estimated_output_total": 520500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
@@ -414,6 +414,26 @@
       "output_tokens": 9000,
       "status": "completed",
       "note": "merge #62 + observe; prompts da tríade CTG-0003b; prompt-review-8 bloqueado por usage limit do Codex"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8",
+      "model": "claude/opus",
+      "input_tokens": 90000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "desvio de família (Owner, B2): 6 high + 3 low, todos aplicados"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-9",
+      "model": "claude/opus",
+      "input_tokens": 60000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
     }
   ],
   "forecast": {
