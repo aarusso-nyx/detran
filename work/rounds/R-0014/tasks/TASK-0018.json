@@ -1,31 +1,32 @@
 {
   "schemaVersion": "2.0.0",
-  "id": "TASK-0016",
+  "id": "TASK-0018",
   "round_id": "R-0014",
-  "status": "in_progress",
+  "status": "queued",
   "discipline": "engineer",
   "discipline_specialization": "engineer-frontend",
-  "title": "Implementar o par 2 (CTG-0003b) até os specs de TASK-0015 passarem",
-  "description": "Trilha de apelação conforme contracts/CTG-0003b.md.",
+  "title": "Implementar o par 3 (CTG-0003c) até os specs de TASK-0017 passarem",
+  "description": "Greenfield + PWA conforme contracts/CTG-0003c.md.",
   "lifecycle": "supported",
   "target_modules": [
-    "MOD-portal-web-features-appeal",
-    "MOD-portal-web-shared-3b",
-    "MOD-portal-web-data-3b"
+    "MOD-portal-web-features-greenfield",
+    "MOD-portal-web-shared-3c",
+    "MOD-portal-web-data-3c",
+    "MOD-portal-web-core-pages"
   ],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0003b",
+  "coupled_task_group": "CTG-0003c",
   "coupled_pipeline_position": "engineer",
-  "upstream_task_id": "TASK-0015",
+  "upstream_task_id": "TASK-0017",
   "db_isolation": "database",
   "iteration_count": 0,
   "max_iterations": 2,
-  "priority": 4,
+  "priority": 5,
   "tags": ["wp-p5"],
   "branch": "orchestra/portal-pwa",
   "worktree_id": "WT-portal-pwa",
-  "prompt_composition_id": "PC-eb5f0779ba7d6f50",
+  "prompt_composition_id": "PC-dd7a2e2a47dc9996",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
     ["pnpm", "--filter", "@detran/portal-web", "lint"],
@@ -33,7 +34,7 @@
     ["pnpm", "--filter", "@detran/portal-web", "build"],
     ["pnpm", "check"]
   ],
-  "created_at": "2026-09-18T12:00:00.000Z",
+  "created_at": "2026-09-18T20:00:00.000Z",
   "executor": {
     "kind": "agent",
     "runtime": "claude-cli",
@@ -43,7 +44,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5"
     },
-    "prompt_composition_id": "PC-eb5f0779ba7d6f50",
+    "prompt_composition_id": "PC-dd7a2e2a47dc9996",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

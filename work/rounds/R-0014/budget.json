@@ -3,8 +3,8 @@
   "window": 4,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2747000,
-  "estimated_output_total": 520500,
+  "estimated_input_total": 3243000,
+  "estimated_output_total": 657000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
@@ -431,6 +431,61 @@
       "model": "claude/opus",
       "input_tokens": 60000,
       "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0020",
+      "model": "opus",
+      "input_tokens": 110000,
+      "output_tokens": 50000,
+      "status": "completed",
+      "note": "438k brutos, 89 chamadas, 35 min; contrato ~1000 linhas, 107 critérios, 18 DIVERGE, OD-P69…P82"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iteration-6",
+      "model": "sonnet",
+      "input_tokens": 15000,
+      "output_tokens": 6000,
+      "status": "completed",
+      "note": "OD-P70/P68: 48 chaves"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0015",
+      "model": "sonnet",
+      "input_tokens": 186000,
+      "output_tokens": 60000,
+      "status": "completed",
+      "note": "746k brutos, 223 chamadas, 43 min; 23 specs + harness com HttpClient; 754 testes (18 vermelhos por módulos ausentes / placeholders)"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W4-CTG3c",
+      "input_tokens": 30000,
+      "output_tokens": 14000,
+      "status": "completed",
+      "note": "prompts da tríade CTG-0003c (0021/0017/0018)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-10",
+      "model": "claude/opus",
+      "input_tokens": 95000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "4 high + 7 low, todos aplicados"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-11",
+      "model": "claude/opus",
+      "input_tokens": 60000,
+      "output_tokens": 1500,
       "status": "completed",
       "verdict": "PASS",
       "note": "ciclo restrito"
