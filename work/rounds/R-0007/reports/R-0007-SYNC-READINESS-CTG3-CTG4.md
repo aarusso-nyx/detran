@@ -1,6 +1,6 @@
 # R-0007 — sync e prontidão para CTG-0003/CTG-0004
 
-Data: 2026-09-19  
+Data: 2026-09-19
 Papel: Engineer (integração) / Inspector (observação dos gates)
 
 ## Identidade do candidato
