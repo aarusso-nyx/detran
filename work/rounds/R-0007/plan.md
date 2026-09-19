@@ -1,5 +1,17 @@
 # R-0007 — frente `rait-backend` (WP-B + WP-C do RAIT: rotas de comando, motor de prazos, SSE e contratos de comando)
 
+> SYNC/READINESS CTG-0003/0004 (2026-09-19): o checkpoint aprovado de
+> CTG-0001/0002 (`a72f6ce9`) foi preservado em
+> `codex/r0007-ctg2-pass-20260919` e integrado localmente ao `origin/main`
+> `b0df484d` pelos merges `ad243346` e `660e9e80`. `pnpm check` passou;
+> backend unit/integration passou; app E2E passou 355/355 (2 todo); o sensor
+> de upgrade reconciliado ao inventário atual passou 18/18; cadeia DEVAI,
+> formatação e publicação documental passaram. Relatório completo em
+> `reports/R-0007-SYNC-READINESS-CTG3-CTG4.md`. A worktree está pronta para
+> iniciar **CTG-0003/TASK-0009**. CTG-0004 está preparada, mas preserva a
+> dependência serial: TASK-0013 só é elegível após TASK-0012 concluir CTG-0003.
+> Nenhum push, PR, merge em `main` ou despacho de worker foi inferido.
+
 > CTG-0002 — CONCLUÍDA (2026-09-19): os 20 comandos,
 > decisão OWNER de signatários (presidente + relatores dos itens, com ausência
 > formal registrada), confiança fail-closed, blueprints, upgrade e composição
