@@ -7,6 +7,9 @@
 // `source_pending` não têm forma fechada (OD-P72/OD-P74): a UI só os renderiza quando presentes e
 // nunca simula o que falta (M15).
 import type {
+  BpPortalCitizenService001Commands,
+  BpPortalIdentity001Commands,
+  BpPortalInbox001Commands,
   BpPortalProjections001Commands,
   BpPortalRequests001Commands,
 } from '@detran/api-clients';
@@ -292,3 +295,282 @@ export interface RequestDetail {
   readonly decision: Decision | null;
   readonly actions: RequestActions;
 }
+
+// —— par 3 (contrato CTG-0003c §2.1): caixa, SNE, push/preferências, documentos, veículos,
+// sinistros, exames e atendimento. Mesma regra do par 2: o que o OpenAPI fixa é derivado; o
+// que ele deixa livre (`{ [key]: unknown }`) é transcrito de `portal-route-contract.md` §6/§7/§8
+// como forma proposta, marcada `source_pending` (OD-P91), sem validação em tempo de execução —
+// a UI só renderiza o campo quando presente e nunca simula o que falta (M15).
+
+type InboxOps = BpPortalInbox001Commands.operations;
+type InboxSchemas = BpPortalInbox001Commands.components['schemas'];
+type CitizenOps = BpPortalCitizenService001Commands.operations;
+type CitizenSchemas = BpPortalCitizenService001Commands.components['schemas'];
+type IdentitySchemas = BpPortalIdentity001Commands.components['schemas'];
+
+// —— caixa do cidadão (contrato §6; BP-PORTAL-INBOX-001) ——
+
+/** `{ kind?: 'acao_necessaria' | 'informativo'; read?: 'true' | 'false'; page?; pageSize? }`. */
+export type InboxListQuery = NonNullable<
+  InboxOps['portalInboxList']['parameters']['query']
+>;
+
+/** `{ items: InboxItemRaw[]; total; page; pageSize }` — itens com campos opcionais no gerado. */
+export type InboxListPage = ResponseJson<InboxOps['portalInboxList'], 200>;
+
+export type InboxKind = 'acao_necessaria' | 'informativo';
+export type InboxSource = 'sne' | 'portal';
+/** Token → `data-category` (rótulo: `portal.notifications.category.<token>`, OD-P89). */
+export type InboxCategory = 'SNE' | 'PROCESSO' | 'OUVIDORIA' | 'SISTEMA';
+
+export interface InboxDeadline {
+  /** ISO date do servidor. */
+  readonly dueOn: string;
+  readonly ownedBy: 'citizen' | 'agency';
+}
+
+export type InboxItem = Omit<
+  InboxListPage['items'][number],
+  'kind' | 'source' | 'category' | 'deadline'
+> & {
+  readonly id: string;
+  readonly kind: InboxKind;
+  readonly source: InboxSource;
+  readonly category: InboxCategory;
+  readonly deadline: InboxDeadline | null;
+  /** SÓ para `source: 'sne'`; data calculada pelo servidor — nunca derivada de `availableOn` ([DIVERGE-4]). */
+  readonly fictitiousAcknowledgementOn: string | null;
+};
+
+/** `{ id; readOn; acknowledgementEvidence: { acknowledgedAt?; displayedSha256? } | null }`. */
+export type InboxReadResult = ResponseJson<
+  InboxOps['portalInboxItemRead'],
+  200
+>;
+
+// —— SNE (contrato §5.1/§6) ——
+
+/** `{ email?; phone?; channel?: 'push'|'email'|'sne'; consent: { textVersion; effectsAck: WireSneEffect[] } }`. */
+export type SneEnrollmentCreateBody = InboxSchemas['SneEnrollmentCreateDto'];
+/** `{ reason? }`. */
+export type SneEnrollmentCancelBody = InboxSchemas['SneEnrollmentCancelDto'];
+/** Enum do fio (OpenAPI/schema; OD-P61): ciencia_ficta|canal_exclusivo|desconto_60|cancelamento. */
+export type WireSneEffect =
+  SneEnrollmentCreateBody['consent']['effectsAck'][number];
+export type SneChannel = NonNullable<SneEnrollmentCreateBody['channel']>;
+/** `{ enrolled: boolean; since: string | null; channel: SneChannel | null; cancelable: boolean }`. */
+export type SneEnrollment = ResponseJson<
+  InboxOps['portalSneEnrollmentGet'],
+  200
+>;
+export type SneEnrolled = ResponseJson<
+  InboxOps['portalSneEnrollmentCreate'],
+  201
+>;
+/** `{ enrolled: false; since: null; channel; cancelable: false; cancelledAt }`. */
+export type SneCancelled = ResponseJson<
+  InboxOps['portalSneEnrollmentDelete'],
+  200
+>;
+
+// —— push e preferências ——
+
+/** `{ endpoint; keys: { p256dh; auth } }`. */
+export type PushSubscriptionCreateBody =
+  InboxSchemas['PushSubscriptionCreateDto'];
+/** `{ id; endpoint; createdAt }`. */
+export type PushSubscriptionCreated = ResponseJson<
+  InboxOps['portalPushSubscriptionCreate'],
+  201
+>;
+/** `{ channel; pushSubscription? }`. */
+export type PreferencesUpdateBody = IdentitySchemas['PreferencesUpdateDto'];
+/** Forma PROPOSTA: `PUT preferences` não declara 2xx (OD-P87/OD-P59) — ambos os campos `source_pending`. */
+export interface PreferencesUpdated {
+  readonly channel: PreferencesUpdateBody['channel'];
+  readonly version: number | null;
+}
+
+// —— documentos e veículos (contrato §7; BP-PORTAL-PROJECTIONS-001) ——
+
+/** `{ license: { [key]: unknown }; qrVerification: null; documentBytes: null; category: 'C'; cachedAt }`. */
+export type CnhRead = ResponseJson<ProjectionsOps['portalDocumentCnhGet'], 200>;
+
+/** Forma PROPOSTA de `license` (contrato §7; OD-P35/OD-P91): todos os campos `source_pending`. */
+export interface CnhLicense {
+  readonly status: 'valida' | 'vencida' | 'suspensa' | 'cassada' | null;
+  readonly validUntil: string | null;
+  readonly categories: readonly string[];
+  readonly restrictions: readonly string[];
+}
+
+/** `{ items: { [key]: unknown }[]; cachedAt: string | null }` (OD-P36). */
+export type VehicleListPage = ResponseJson<
+  ProjectionsOps['portalVehicleList'],
+  200
+>;
+
+/** Forma PROPOSTA do item (contrato §7 `[{ vehicleId, plate, renavamMasked: never, model }]`; OD-P36/OD-P91). */
+export interface Vehicle {
+  readonly vehicleId: string;
+  readonly plate: string;
+  readonly model: string | null;
+}
+
+/** contrato §7; vocabulário de `status`/`reason` `source_pending` (tokens → `data-*`). */
+export interface ClearanceItem {
+  readonly kind: 'tributo' | 'encargo' | 'multa' | 'dpvat';
+  readonly amount: number | null;
+  readonly status: string;
+  readonly blocking: boolean;
+  readonly reason: string | null;
+}
+
+export interface ClearanceRestriction {
+  /** Token → `data-token`; vocabulário `source_pending`. */
+  readonly kind: string;
+  readonly blocking: boolean;
+}
+
+/** Catálogo §5 `CRLV_SUSPENDED_ENFORCEABILITY_NOT_BLOCKING { aitIds[] }`; forma do item `source_pending`. */
+export interface ClearanceSuspended {
+  readonly aitId: string;
+}
+
+/** Gerado: `{ …, canIssue: boolean; cachedAt: string }`; itens transcritos do contrato §7 (OD-P21/OD-P91). */
+export type VehicleClearance = Omit<
+  ResponseJson<ProjectionsOps['portalVehicleClearanceGet'], 200>,
+  'items' | 'restrictions' | 'suspendedEnforceability'
+> & {
+  readonly items: readonly ClearanceItem[];
+  readonly restrictions: readonly ClearanceRestriction[];
+  readonly suspendedEnforceability: readonly ClearanceSuspended[];
+};
+
+/** Forma PROPOSTA (`POST crlv-e` sem 2xx no OpenAPI — [DIVERGE-9]/[DIVERGE-10]; OD-P91). */
+export interface CrlvIssued {
+  readonly documentBytes: string | null;
+  readonly qrVerification: string | null;
+  readonly issuedAt: string;
+  /** `source_pending` — necessário ao `OfflineDocumentStore.put` (M14). */
+  readonly validUntil: string | null;
+  /** Preenchido pelo cliente a partir do parâmetro da rota (§7.1; [DIVERGE-13]). */
+  readonly vehicleId: string;
+}
+
+// —— sinistros e exames (contrato §7; OD-P19) ——
+
+export type CrashListPage = ResponseJson<
+  ProjectionsOps['portalCrashList'],
+  200
+>;
+
+/** `summary` livre (OD-P19/OD-P91). */
+export type CrashSummary = Required<
+  Pick<
+    CrashListPage['items'][number],
+    'crashId' | 'stateLabel' | 'thirdPartyFieldsSuppressed'
+  >
+> & { readonly summary: Readonly<Record<string, unknown>> };
+
+/** `{ crashId; stateLabel (já traduzido pelo servidor); summary: { [key]: unknown }; thirdPartyFieldsSuppressed }`. */
+export type CrashDetail = ResponseJson<ProjectionsOps['portalCrashGet'], 200>;
+
+export type ExamListPage = ResponseJson<ProjectionsOps['portalExamList'], 200>;
+
+export type ExamSummary = Required<
+  Pick<ExamListPage['items'][number], 'examId' | 'legalLabel'>
+> & { readonly validUntil: string | null; readonly boardDueOn: string | null };
+
+/** `{ examId; legalLabel: string; validUntil: string | null; boardDueOn: string | null }`. */
+export type ExamDetail = ResponseJson<ProjectionsOps['portalExamGet'], 200>;
+
+// —— atendimento (contrato §8; BP-PORTAL-CITIZEN-SERVICE-001) ——
+
+/** `{ kind; text?; confidential?; attachmentIds?; anonymous? }`. */
+export type ManifestationCreateBody = CitizenSchemas['ManifestationCreateDto'];
+/** `{ subjectKind: 'request'|'manifestation'; subjectId; scores{…}; comment? }`. */
+export type EvaluationCreateBody = CitizenSchemas['EvaluationCreateDto'];
+/** `{ page?; pageSize? }`. */
+export type ManifestationListQuery = NonNullable<
+  CitizenOps['portalManifestationList']['parameters']['query']
+>;
+export type ManifestationListPage = ResponseJson<
+  CitizenOps['portalManifestationList'],
+  200
+>;
+
+/** [WF-PORTAL-004] §Estados (9); chaves `portal.situation.manifestation.<STATE>` (OD-P89). */
+export type ManifestationState =
+  | 'MANIFESTACAO_REGISTRADA'
+  | 'COMPROVANTE_EMITIDO'
+  | 'EM_ANALISE'
+  | 'INFORMACAO_SOLICITADA_AO_AGENTE'
+  | 'DECISAO_FINAL_ELABORADA'
+  | 'CIENCIA_AO_USUARIO'
+  | 'ENCERRADA'
+  | 'AVALIACAO_OFERECIDA'
+  | 'AVALIADA';
+
+/** 5 tipos (`ManifestationCreateDto.kind`). */
+export type ManifestationKind = ManifestationCreateBody['kind'];
+
+/** contrato §8 `extended?{ justification, on }`; fixture `manifestation_extension`. */
+export interface ManifestationExtension {
+  readonly justification: string;
+  readonly on: string;
+  /** Fixture `new_due_on`; `source_pending` no contrato. */
+  readonly newDueOn: string | null;
+}
+
+export interface ManifestationDeadlines {
+  /** ÚNICO relógio exibido ([RN-PORTAL-109] 4/5); `info_due_on` nunca chega. */
+  readonly agencyDueOn: string;
+  readonly extended: ManifestationExtension | null;
+}
+
+/** `@example` `{ text, decidedAt }`. */
+export interface ManifestationDecision {
+  readonly text: string | null;
+  readonly decidedAt: string | null;
+}
+
+/** Itens de `portalManifestationList` (gerado com campos opcionais; `@example` fixa os nomes). */
+export interface ManifestationSummary {
+  readonly manifestationId: string;
+  readonly state: ManifestationState;
+  readonly protocol: string;
+  readonly kind: ManifestationKind;
+  readonly receivedAt: string;
+  readonly deadlines: ManifestationDeadlines;
+  readonly decision: ManifestationDecision | null;
+  readonly evaluationOffered: boolean;
+  readonly evaluated: boolean;
+}
+
+/** OpenAPI: `{ [key]: unknown }` (OD-P91); `@example`: "item da lista + text/confidential". */
+export interface ManifestationDetail extends ManifestationSummary {
+  readonly text: string | null;
+  readonly confidential: boolean;
+}
+
+/** `{ manifestationId; protocol; receivedAt; state: 'COMPROVANTE_EMITIDO'; agencyDueOn; anonymous }`. */
+export type ManifestationCreated = ResponseJson<
+  CitizenOps['portalManifestationCreate'],
+  201
+>;
+/** `{ manifestationId; state: 'AVALIACAO_OFERECIDA'; acknowledgedAt; evaluationOffered: true; version }` (ETag "<version>"). */
+export type ManifestationAcknowledged = ResponseJson<
+  CitizenOps['portalManifestationAcknowledge'],
+  200
+>;
+/** `{ evaluationId; subjectKind; subjectId; state; submittedAt; publicNotice }`. */
+export type EvaluationCreated = ResponseJson<
+  CitizenOps['portalEvaluationCreate'],
+  201
+>;
+/** `{ serviceKey; legalDeadline; normativeReference; availability }` (fixture: "source_pending (OD-P26)"). */
+export type ServiceCharterDeadline = ResponseJson<
+  CitizenOps['portalServiceCharterDeadlineGet'],
+  200
+>;

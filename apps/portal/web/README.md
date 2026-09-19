@@ -185,3 +185,51 @@ src/testing/              stubs e harness dos specs (Inspector)
   do servidor; delegações reais (`422 SERVICE_UNAVAILABLE { delegacao_indisponivel_r0007 }`)
   aparecem como indisponíveis com motivo e canal, nunca simuladas (M15). Sem `canDeactivate`
   neste par (OD-P79); polling/SSE, `/sne` e "formato acessível" persistente ficam para o par 3.
+
+## Par 3 do app funcional (CTG-0003c): greenfield + PWA
+
+- `data/portal.client.ts`: leituras e comandos do par 3 (`getService`, `listInbox`,
+  `markInboxRead`, `getSneEnrollment`, `enrollSne`, `cancelSne`, `createPushSubscription`,
+  `updatePreferences`, `getCnh`, `downloadCnhDocument`, `listVehicles`, `getVehicleClearance`,
+  `issueCrlv`, `listCrashes`, `getCrash`, `listExams`, `getExam`, `listManifestations`,
+  `getManifestation`, `createManifestation`, `acknowledgeManifestation`, `createEvaluation`,
+  `getServiceCharterDeadline`) — `Idempotency-Key` sempre nos comandos (`<ato>:<alvo|none>:<fp>`),
+  `If-Match` só em `PUT preferences` (valor do chamador; `null` omite e o servidor responde 428 —
+  OD-P87), `cancelSne` sem corpo envia `{}`, `downloadCnhDocument` em blob com o erro decodificado.
+  Tipos em `data/portal-read.models.ts` (só `import type` do gerado; formas livres transcritas do
+  contrato de rotas e marcadas `source_pending` — OD-P91).
+- `core/realtime.service.ts` (`RealtimeService`, `providedIn: 'root'`): `GET /v1/portal/stream`
+  por um transporte injetável (`PortalStreamTransport`; implementação padrão pelo `HttpClient`
+  STYNX com `observe: 'events'` + `partialText` — o `EventSource` nativo não envia o bearer,
+  [DIVERGE-1]/OD-P96), parser incremental do `text/event-stream`, `on(type)`, `events`, `tick`;
+  queda → `polling` a cada `POLLING_INTERVAL_MS` (60 s, único intervalo) com reabertura no mesmo
+  compasso; `429 RATE_LIMITED { retryAfter }` adia a reabertura; `401`/`403` param; sessão
+  inativa → `stop()`; reabertura sem frame = `204` → próxima abertura sem `Last-Event-ID`.
+  `core/push.service.ts` (`PushService`): `SwPush` (opcional fora de `provideServiceWorker`) +
+  `POST push-subscriptions`, só por gesto explícito; `PUSH_SERVER_PUBLIC_KEY` é `null` (OD-P88) →
+  push `unavailable`.
+- Páginas reais do `core` (`app.routes.ts` só mudou no mapa `CORE_PAGES`): `/inicio`
+  (`core/pages/inicio.page.ts` + `inicio.facade.ts`: três leituras em paralelo, cada uma com o seu
+  estado; pendências ordenadas SÓ pelo `dueOn` recebido; "Falta 1 passo" pelo `ResumeService`),
+  `/conta` (titular sem máscara; representações em lista sem seleção — OD-P48; "sair" =
+  `StynxSessionService.logout()`, [DIVERGE-29] resolvido), `/acessibilidade` (declaração estática)
+  e `/` (catálogo real pelo cache do par 1; falha não esconde a entrada gov.br — OD-P50).
+- Sete compartilhados novos em `shared/`: `notification-list` (ciência ficta TAL COMO recebida,
+  [DIVERGE-4]), `sne-consent` (quatro efeitos antes do botão; `effectsAck` com o enum do fio,
+  OD-P61; sem faixa de pagamento), `digital-document-card` (categoria A exige QR; senão C),
+  `clearance-status` (três seções; multa sob recurso nunca bloqueia; nenhuma soma), `own-data-panel`
+  (sem máscara; correção ao lado do dado), `manifestation-form` (recebimento irrecusável; sem anexos,
+  [DIVERGE-19]) e `evaluation-form` (escala pendente — OD-P65 — numérica sem min/max).
+- Oito módulos com facades providas na página e 14 páginas: `notificacoes` (T-12, preferências,
+  T-09), `documentos` (T-16, `/veiculos`, T-17 — `OfflineDocumentStore` só com validade do servidor
+  e categoria A; documento offline só do MESMO veículo, [DIVERGE-13]), `sinistros` (T-18 com busca
+  LOCAL, [DIVERGE-14]; T-19), `exames` (T-20 com `legalLabel` tal qual; junta pelo ciclo comum com
+  início por ato do cidadão), `atendimento` (T-21/T-22/T-26; `POST evaluations` para pedido e
+  manifestação, [DIVERGE-18]), `privacidade` (T-24 pelo ciclo comum `lgpd_declaracao`),
+  `assinatura` (T-27; navegação ao `redirectUrl` é da página) e `catalogo` (T-25 lista/detalhe;
+  T-15 estática — OD-P90). Nenhuma rota do manifesto usa `PlaceholderPageComponent`.
+- Regras transversais mantidas: nenhum prazo, ciência ficta, validade ou fila calculados no cliente;
+  tokens só em `data-*`; offline é classificado SÓ pelo `ErrorBoundary` (status 0 e browser
+  desconectado — A12(a)); nenhuma facade lê `navigator`; indisponibilidades do backend (M15)
+  mostradas com motivo e canal, nunca simuladas. A regra §3.9 da rota funcional vive em
+  `core/functional-route.ts` (`functionalRouteFor`), usada pela Carta de Serviços e pela home.

@@ -11,22 +11,31 @@ import {
   ownsFirstSegment,
   type ManifestRouteOptions,
 } from './core/manifest-routes';
+import { AcessibilidadePageComponent } from './core/pages/acessibilidade.page';
 import { AuthCallbackPageComponent } from './core/pages/auth-callback.page';
+import { ContaPageComponent } from './core/pages/conta.page';
 import { EntitlementMissingPageComponent } from './core/pages/entitlement-missing.page';
 import { HomePageComponent } from './core/pages/home.page';
+import { InicioPageComponent } from './core/pages/inicio.page';
 import { NotFoundPageComponent } from './core/pages/not-found.page';
 import { ServiceUnavailablePageComponent } from './core/pages/service-unavailable.page';
 
-/** Páginas do `core` por caminho do manifesto; as demais rotas do `core` são placeholder. */
+/** Páginas do `core` por caminho do manifesto (todas reais desde o CTG-0003c). */
 const CORE_PAGES: Readonly<Record<string, ManifestRouteOptions>> = {
   '': { component: HomePageComponent, title: 'portal.shell.title.home' },
-  acessibilidade: { title: 'portal.shell.title.acessibilidade' },
+  acessibilidade: {
+    component: AcessibilidadePageComponent,
+    title: 'portal.shell.title.acessibilidade',
+  },
   'auth/callback': {
     component: AuthCallbackPageComponent,
     title: 'portal.shell.title.auth_callback',
   },
-  inicio: { title: 'portal.shell.title.inicio' },
-  conta: { title: 'portal.shell.title.conta' },
+  inicio: {
+    component: InicioPageComponent,
+    title: 'portal.shell.title.inicio',
+  },
+  conta: { component: ContaPageComponent, title: 'portal.shell.title.conta' },
   'vinculo/por-que-nao-vejo': {
     component: EntitlementMissingPageComponent,
     title: 'portal.shell.title.vinculo',
