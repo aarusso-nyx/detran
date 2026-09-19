@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0021",
+  "round_id": "R-0014",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contrato do par 3 (CTG-0003c, greenfield + PWA): PortalClient, facades, sete compartilhados, RealtimeService/PushService, 14 telas + core; critérios C-3c-nn",
+  "description": "Fixar a referência do par 3; nada de código (Art. 10).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r14-contracts-3c"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003c",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0016",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-p5"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-82022fff2194ed6b",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-18T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-82022fff2194ed6b",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

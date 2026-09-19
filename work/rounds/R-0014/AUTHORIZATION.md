@@ -31,3 +31,10 @@ deployment, force-push, or mutation outside this repository. The session worktre
 `orchestra/portal-pwa` before any publication) stands in for
 `/Volumes/Thiamat II/stech/detran-worktrees/portal-pwa`, which does not exist. It was written by
 the maestro from the Owner's instruction, not by the Owner; the Owner may revoke or amend it.
+
+## Amendment 1 (Owner, 2026-09-18)
+
+While the Codex CLI is at its usage limit (reset announced for 2026-09-19 05:10), the Owner
+authorised running the reviewer through the `claude` bridge with Opus 5 (a same-family review —
+deviation from `orchestra/README.md` §2 / Art. 18, 23), temporary and recorded in `plan.md`
+§Bloqueios B2; the Codex reviewer resumes as soon as the limit resets.

@@ -1,0 +1,56 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "apps/portal/web/src/app/features/pagamento/pages/pagamento-preservando-recurso.page.spec.ts",
+      "line": 290,
+      "claim": "Achado 1 do ciclo anterior (C-3b-103 parcial) NÃO foi corrigido nem ratificado. A árvore continua com 30 casos de axe nas 13 telas (2–3 por tela; T-23 com um só, l. 290), nenhum de `loading` e nenhum de `offline`, e as outras três asserções do critério continuam inexistentes: `grep -rn \"status_region\" --include=*.spec.ts` → 0 ocorrências, `querySelectorAll('h1')` → 0 ocorrências, nenhuma asserção de foco no banner `severity: 'error'`. A adenda A10 não trata do achado, `plan.md` §Pendências de cobertura (l. 323-325) só registra a pendência de 2026-09-17 do CTG-0003a, e `reports/TASK-0015-iteration-3.md` l. 20 declara explicitamente que o item 'não consta da mensagem restrita da coordenação e não foi tocado'. É a mesma cobertura parcial não declarada que o CTG-0003a recusou.",
+      "fix": "Iteração restrita do Inspector (TASK-0015): um caso de axe por estado da tabela §7 em cada uma das 13 telas (incl. `loading` e `offline`; `partial` em T-13/T-23) e asserções explícitas de `h1` único, `aria-label`=`portal.a11y.status_region` e foco no banner de erro; OU, se a redução for decidida, registrá-la em `plan.md` §Pendências de cobertura com a adenda/OD que a autoriza, como foi feito no CTG-0003a."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/pagamento/pages/pagamento.page.spec.ts",
+      "line": 258,
+      "claim": "Achado 2 do ciclo anterior (C-3b-84 condicional) NÃO foi corrigido: `const submitReq = await vi.waitFor(...).catch(() => null)` (l. 249-257) e o bloco `if (submitReq) { … }` (l. 258-279) continuam idênticos; as três asserções do critério [negativo] de M15/OD-P74 (`portal-protocol-receipt`, `portal.states.unavailable_in_version`, `not.toMatch(/pixCopyPaste|barcode|\\d{44,}/)`) seguem dentro do `if`. Uma regressão que suprima o `POST …/submit` deixa o `it` verde sem verificar nada — o gate 'nunca um boleto/PIX simulado' desaparece silenciosamente. Nenhuma adenda (A10 a…i) cobre o achado e `reports/TASK-0015-iteration-3.md` l. 20 confirma que não foi tocado.",
+      "fix": "Iteração restrita do Inspector: remover o `.catch(() => null)` e o `if`, deixando o `expectOne` do `submit` como asserção obrigatória (o fluxo por `upload` de A9(d) já chega lá) e as três asserções no corpo do `it`."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/autos/static-analysis.appeal.spec.ts",
+      "line": 65,
+      "claim": "Achado 3 do ciclo anterior (C-3b-104 com escape silencioso) NÃO foi corrigido: `if (!req) { onLineSpy.mockRestore(); return; }` (l. 65-68) continua no arquivo, precedido pelo comentário de l. 52-55 que ainda afirma 'Até TASK-0016 a rota ainda renderiza `PlaceholderPageComponent` … nenhuma leitura HTTP é disparada' — premissa falsa nesta entrega (`features/autos/pages/ait-detail.page.ts` existe e a rota monta a página real). O `it` termina verde sem executar nenhuma asserção se a leitura não aparecer em 300 ms: skip implícito. Nenhuma adenda cobre o achado; `reports/TASK-0015-iteration-3.md` l. 20 confirma que não foi tocado.",
+      "fix": "Iteração restrita do Inspector: `expectOne` obrigatório da leitura de `/v1/portal/aits/{id}` (sem `.catch`/`return`), comentário de l. 52-55 removido por obsoleto, mantendo as asserções de `portal.states.offline`, `role=\"alert\"` e ausência de retry automático."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "work/rounds/R-0014/plan.md",
+      "line": 431,
+      "claim": "O cabeçalho de A10 transcreve o veredito anterior como 'delivery-review-CTG-0003b REVIEW — 3 high + 6 low', mas `reviews/delivery-review-CTG-0003b.json` traz 6 `high` + 6 `low`. Os três `high` omitidos são exatamente os achados 1, 2 e 3 acima (axe por estado, `.catch` de C-3b-84, escape de C-3b-104) — nenhum aparece em A10(a…i) nem na mensagem restrita da coordenação, e por isso atravessaram o ciclo sem correção e sem registro em §Fora de escopo. A contagem errada no documento da rodada é a causa mecânica da entrega incompleta.",
+      "fix": "Corrigir o cabeçalho de A10 para '6 high + 6 low' e acrescentar itens (j)/(k)/(l) com o destino dos três achados (corrigir na iteração restrita ou registrar a redução em §Pendências de cobertura)."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "apps/portal/web/src/app/shared/payment-comparison.component.ts",
+      "line": 9,
+      "claim": "A correção do achado `low` sobre o `locale` ficou meio-feita: A10(i) abre **OD-P101** para a origem do `locale`, mas a OD não é citada onde a decisão foi tomada — o cabeçalho do componente (l. 8-9) diz apenas 'o `GET brand` não expõe `locale`, CTG-0003a A1 — ver relatório', sem `OD-*`, e `reports/TASK-0016-iteration-2.md` l. 30-31 ainda registra 'OD-P87 (origem do `locale` para `Intl`)' — número que A10(i) e `contracts/CTG-0003c.md` (l. 2011, §2.3) atribuem à origem do `If-Match` de `PUT preferences`. Duas decisões diferentes sob o mesmo número nos registros da rodada, e OD-P101 só existe dentro do texto de A10.",
+      "fix": "Citar `OD-P101` no cabeçalho de `payment-comparison.component.ts` (§4.3.2), corrigir a linha do relatório de TASK-0016 it. 2 e listar OD-P101 com enunciado próprio junto das demais OD propostas do par 2 (A9(h)/A10)."
+    }
+  ],
+  "notes": [
+    "Segundo ciclo: avaliei apenas as correções dos 12 achados do `delivery-review-CTG-0003b.json`; nenhum achado novo sobre texto não alterado foi levantado.",
+    "Os nove itens da mensagem do maestro conferem: (1) `methodReason` invertido — `if (serverMethods !== null) return serverMethods.includes(method) ? null : 'server'` antes da flag (`payment-comparison.component.ts:530-541`) e C-3b-87 de volta a `cartao`/`data-reason=\"server\"` com `available:['pix','debito','boleto']` (`pagamento-preservando-recurso.page.spec.ts:156-158, 224-238`); (2) composição T-13/T-23 ratificada por A10(b) (código inalterado: `pagamento.page.ts:110/128`); (3) T-05 ratificado por A10(c), cabeçalho do formulário documenta o caminho pelo `SignatureStep` (`indicacao-condutor-form.component.ts:4-8`); (4) `runAit` ratificado por A10(d) (`autos.facade.ts:158-179`); (5) `amount === null` → `portal.forms.pagamento.valor_indisponivel` (`payment-comparison.component.ts:10, 184`) com o spec ajustado; (6) `, button` removido nas três asserções (`ait-detail.page.spec.ts:255`, `request-detail.page.spec.ts:167`, `pagamento.page.spec.ts:344`); (7) C-3b-70 reescrito com rebaixamento da sessão após a navegação e asserção do `AssuranceExplainer` restaurada (`defesa-previa.page.spec.ts`, `data-required=\"avancada\"`/`data-current=\"simples\"`; o stub já expunha `assuranceLevelSignal`); (8) `<select>` sem filtro com `selectedIndex = -1` em `afterRenderEffect` nas duas listas (`ait-list.page.ts:249-257`, `request-list.page.ts:258-263`); (9) locale → A10(i)/OD-P101, com a ressalva do achado acima.",
+    "Não reexecutei gates (o prompt fixa trabalho somente de leitura); julguei sobre a árvore staged e os números do maestro (74 arquivos, 909 passed | 7 todo).",
+    "Fronteira de escrita (itens 3/9) continua OK: o staged toca só `apps/portal/web/**` e `work/rounds/R-0014/**`; nenhum `packages/**`, nenhum arquivo gerado, nenhum `it.skip`/`.only` introduzido pelas iterações A10.",
+    "O texto do contrato não foi alterado pelas ratificações: §4.3.2 (l. 730-731) ainda diz `portal.states.empty` e `Intl.NumberFormat(brand.locale)`, e C-3b-36 (l. 1228) idem — as adendas A10(e)/(i) prevalecem, mas convém consolidar isso no fechamento (TASK-0012) para o par 3 não reler o texto antigo.",
+    "`.catch(() => null)` também aparece em `ait-detail.page.spec.ts:71` e `decisao.page.spec.ts:78`, mas ali são *helpers* de flush opcional (`pointsReq?.flush(...)`, `requestReq?.flush(...)`) em leituras secundárias, não asserções de critério dentro de `if` — não são os achados 2/3 e não os levanto como novos; ao corrigir 2/3, preservar a distinção.",
+    "`work/rounds/R-0014/contracts/CTG-0003c.md` está na worktree como untracked e fora do staged, como o maestro declarou; não o avaliei."
+  ]
+}

@@ -1,10 +1,10 @@
 {
   "round": "R-0014",
-  "window": 3,
+  "window": 4,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2572000,
-  "estimated_output_total": 505000,
+  "estimated_input_total": 4065000,
+  "estimated_output_total": 870000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
   "entries": [
     {
@@ -406,6 +406,210 @@
       "output_tokens": 12000,
       "status": "completed",
       "note": "A6/A7, runner JIT, gates, 2 delivery-reviews, commits, evidência seq 3, PR #62"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W4-CTG3b",
+      "input_tokens": 25000,
+      "output_tokens": 9000,
+      "status": "completed",
+      "note": "merge #62 + observe; prompts da tríade CTG-0003b; prompt-review-8 bloqueado por usage limit do Codex"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8",
+      "model": "claude/opus",
+      "input_tokens": 90000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "desvio de família (Owner, B2): 6 high + 3 low, todos aplicados"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-9",
+      "model": "claude/opus",
+      "input_tokens": 60000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0020",
+      "model": "opus",
+      "input_tokens": 110000,
+      "output_tokens": 50000,
+      "status": "completed",
+      "note": "438k brutos, 89 chamadas, 35 min; contrato ~1000 linhas, 107 critérios, 18 DIVERGE, OD-P69…P82"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iteration-6",
+      "model": "sonnet",
+      "input_tokens": 15000,
+      "output_tokens": 6000,
+      "status": "completed",
+      "note": "OD-P70/P68: 48 chaves"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0015",
+      "model": "sonnet",
+      "input_tokens": 186000,
+      "output_tokens": 60000,
+      "status": "completed",
+      "note": "746k brutos, 223 chamadas, 43 min; 23 specs + harness com HttpClient; 754 testes (18 vermelhos por módulos ausentes / placeholders)"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W4-CTG3c",
+      "input_tokens": 30000,
+      "output_tokens": 14000,
+      "status": "completed",
+      "note": "prompts da tríade CTG-0003c (0021/0017/0018)"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-10",
+      "model": "claude/opus",
+      "input_tokens": 95000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "4 high + 7 low, todos aplicados"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-11",
+      "model": "claude/opus",
+      "input_tokens": 60000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0016",
+      "model": "opus",
+      "input_tokens": 203000,
+      "output_tokens": 80000,
+      "status": "completed",
+      "note": "810k brutos, 210 chamadas, 80 min; 13 páginas + facades + 2 compartilhados; 830/881; 44 falhas por mecânica de spec/contradições → A9"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0015-iteration-2",
+      "model": "sonnet",
+      "input_tokens": 25000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "87k brutos incrementais, 112 chamadas, 22 min; A9 + bloqueios 1…9; 909/916"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003b",
+      "model": "claude/opus",
+      "input_tokens": 140000,
+      "output_tokens": 6000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "3 high + 6 low → A10"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0016-iteration-2",
+      "model": "opus",
+      "input_tokens": 5000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "note": "A10 a/e/h"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0015-iteration-3",
+      "model": "sonnet",
+      "input_tokens": 15000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "A10 a/e/f/g; 909/916"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0021",
+      "model": "opus",
+      "input_tokens": 144000,
+      "output_tokens": 65000,
+      "status": "completed",
+      "note": "575k brutos, 117 chamadas, 54 min; contrato 2076 linhas, 115 critérios, 32 DIVERGE, OD-P87…P100"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003b-2",
+      "model": "claude/opus",
+      "input_tokens": 80000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "3 high remanescentes do ciclo 1 (omitidos pelo maestro na leitura) + 2 low"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-iteration-7",
+      "model": "sonnet",
+      "input_tokens": 30000,
+      "output_tokens": 14000,
+      "status": "completed",
+      "note": "OD-P89(a): 119 chaves do par 3"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0015-iteration-4",
+      "model": "sonnet",
+      "input_tokens": 60000,
+      "output_tokens": 20000,
+      "status": "completed",
+      "note": "247k brutos incrementais, 118 chamadas, 27 min; a11y por estado nas 13 telas (74 casos), escapes removidos; 969/976"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0016-iteration-3",
+      "model": "opus",
+      "input_tokens": 1000,
+      "output_tokens": 500,
+      "status": "completed",
+      "note": "OD-P101 no cabeçalho"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003b-3",
+      "model": "claude/opus",
+      "input_tokens": 70000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "1 high residual (unavailable em 3 telas) + 1 low (errata OD-P101)"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0015-iteration-5",
+      "model": "sonnet",
+      "input_tokens": 4000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "unavailable T-03/04/05; 972/979"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003b-4",
+      "model": "claude/opus",
+      "input_tokens": 45000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
     }
   ],
   "forecast": {
