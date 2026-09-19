@@ -1,0 +1,91 @@
+{
+  "action": "Deliver R-0014 CTG-0005 (closure documentation): portal build pack WP-P4…P6 marked executed with OD-P47…P108 transcribed (64 rows), portal-frontends §9/§10 at end-of-round state, parameter catalogue OD-P66 (proposta) with regenerated artefacts, orchestra method §4.17/§4.18/§10 (R-0014 history incl. Codex execution), engineer-frontend app pattern (R-0012 copies), backlog, screen sheets T10…T18 i18n keys, CTG-0003c A12(j) amendments, closure draft",
+  "round": "R-0014",
+  "coupled_task_group": "CTG-0005",
+  "role": "engineer",
+  "commits": [
+    "7d497f78c5dfaf9b09b95265415a9b3889ff504f",
+    "9696b85e2cc0e58730605dac142fa55608a9fedd"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/framework/arch/portal-build-pack.md",
+      "sha256": "f33ad934ace392a8bce6e8518dfc92be0b8405e8169affcfe9b15bcf07a857b5"
+    },
+    {
+      "path": "docs/framework/arch/portal-frontends.md",
+      "sha256": "e74e381fb87a2b27d891cd4f4ea26c2cadcd5aca55635624c6e1679009f10c2a"
+    },
+    {
+      "path": "docs/framework/arch/parameter-catalogue.md",
+      "sha256": "f669a42133007d0f6b88209b3e20d0fad72f432ee25a4869d579132b0c157a2a"
+    },
+    {
+      "path": "backend/database/seed/05-parameters.sql",
+      "sha256": "fa54aa5caf137b511b9075badb64bc29b5ce34b8582a21182491ea3ede774c9f"
+    },
+    {
+      "path": "docs/meta/agents/orchestra/README.md",
+      "sha256": "dfd0ab4556a0b1c0d6b9b211a7ffc39d025d7e17091011b2132de3cd53c1bf46"
+    },
+    {
+      "path": "docs/meta/agents/engineer-frontend.md",
+      "sha256": "b43021227ebc9024b20593781b2fa6c6d5750a08c8c16be8d8d44f9dd9ec9fb5"
+    },
+    {
+      "path": "docs/meta/knowledge-base/backlog.md",
+      "sha256": "e7e5086524a9370b306443603aeb5f0bd196d48d810ec0102754101c923cca97"
+    },
+    {
+      "path": "docs/meta/knowledge-base/decision-closure-plan.md",
+      "sha256": "aa38a7ac5a8c66a819881728b13af1a61c201709b2d74fb1916c8682f697efdc"
+    },
+    {
+      "path": "work/rounds/R-0014/contracts/CTG-0003c.md",
+      "sha256": "f50843b800d47c1d6dae7ae3bc88a6d04b3bafc4d0b3b895aa0f6a352c6e14d6"
+    },
+    {
+      "path": "work/rounds/R-0014/closure.md",
+      "sha256": "60820913cd287476f4c315de1131d3b7c65c93e54051f4fd96a11d3eea063b55"
+    },
+    {
+      "path": "work/rounds/R-0014/plan.md",
+      "sha256": "e4e2bbf5afdbc1fa383b13ea4ab44d433bdc83fec903b21d72dd8df71c8a88ad"
+    },
+    {
+      "path": "work/rounds/R-0014/reviews/delivery-review-CTG-0005-3.json",
+      "sha256": "8dc44fa1d4e951816ca167ce7fa9a21b0963ecd32d46cad965411be236692a1f"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "EXIT 0 (pnpm-check-ctg5-2.log)"
+    },
+    {
+      "name": "node tools/docs/kb/check.mjs | pnpm docs:kb:publish-check",
+      "result": "pass",
+      "note": "OK (549 artifacts, 446 canonical tokens); 201 files"
+    },
+    {
+      "name": "pnpm verify:parameter-catalogue",
+      "result": "pass",
+      "note": "OK (89 entries, 18 flags, 14 i18n namespaces)"
+    },
+    {
+      "name": "pnpm format:check",
+      "result": "pass"
+    },
+    {
+      "name": "delivery-review (codex/gpt-5.6-terra)",
+      "result": "pass",
+      "note": "REVIEW → REVIEW → PASS (cycle 3)"
+    }
+  ],
+  "tasks": ["TASK-0012 (it. 1 Luna, it. 2–3 Terra)"],
+  "decisions": [
+    "adenda A25",
+    "OD-P66 registered (proposta); OD-P102 open as future unification"
+  ]
+}
