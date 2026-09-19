@@ -6,13 +6,12 @@
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
   "title": "Implementar projetores BOAT e gate de fronteiras de domínio",
-  "description": "Implementar três projetores consumidores, replay idempotente com ledger transacional, leitura segura e verify:domain-boundaries contra testes RED.",
+  "description": "Estender PortalProjectors e CrashViewProjector com deduplicação factual e tick anti-join, implementar Dashboard/Espelho e o verificador direto de fronteiras contra REDs reconciliados.",
   "lifecycle": "supported",
   "target_modules": [
     "MOD-portal-crash-view",
     "MOD-dashboard-crashes",
-    "MOD-integration-renaest-mirror",
-    "MOD-app-composition"
+    "MOD-integration-renaest-mirror"
   ],
   "target_substrates": ["F2"],
   "target_invariants": [],
@@ -25,11 +24,11 @@
   "tags": ["wp-b2", "wp-p", "projections"],
   "branch": "orchestra/boat-backend",
   "worktree_id": "WT-boat-backend",
-  "prompt_composition_id": "PC-a51025a66cd1f870",
+  "prompt_composition_id": "PC-efecafda406caaaa",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/app", "test:integration"],
     ["pnpm", "--filter", "@detran/app", "test:e2e"],
-    ["pnpm", "verify:domain-boundaries"],
+    ["node", "tools/domain-boundaries/verify.mjs"],
     ["pnpm", "blueprints:check"],
     ["pnpm", "verify:rls-ddl"],
     ["pnpm", "typecheck"],
@@ -46,7 +45,7 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-terra"
     },
-    "prompt_composition_id": "PC-a51025a66cd1f870",
+    "prompt_composition_id": "PC-efecafda406caaaa",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   },

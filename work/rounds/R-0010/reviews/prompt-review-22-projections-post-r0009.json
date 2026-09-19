@@ -1,0 +1,87 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/contracts/boat-projections.md",
+      "line": 102,
+      "claim": "O produtor BOAT grava DUAS linhas de outbox por fato: `boat-commands.service.ts:355-388` faz dois `outbox.append` com `type: 'crash.changed'` e `type: <domainEvent>`, e `backend/app/src/boat-renaest-transmission.service.ts:418-424` repete o padrão quando `emitSse`. Como `SqlTeatEventOutbox.append` gera `gen_random_uuid()` por linha e a chave de idempotência é `type:aggregate.id:aggregate.version` (`backend/domains/shared/src/events/outbox.ts:52-54`), as duas linhas têm `event.id` distintos com o mesmo `event.name`, `aggregate.id` e `aggregate.version`. O ledger por `(tenant_id, event_id, projection)` não detecta essa duplicata, logo o mesmo fato é aplicado duas vezes e `dashboard.crash_aggregate` conta em dobro — o contrário de C-2-14.",
+      "fix": "Em §1.3(3) e §2, fixar a deduplicação do FATO por `(event.name, aggregate.id, aggregate.version)` além do `event_id` (ou consumir exclusivamente o tópico nomeado, mantendo `crash.changed` só para `SINISTRO_RECEBIDO_SINCRONIZACAO`, `crash-sync-applier.ts:150-161`), e exigir em TASK-0013 um RED que insira as duas linhas reais e prove um único efeito por consumidor."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0010/contracts/boat-projections.md",
+      "line": 150,
+      "claim": "A extensão descrita não corresponde à superfície real. `PROJECTOR_BY_AGGREGATE_KIND` mapeia a chave `crash` (`projectors.service.ts:108-113`) e `CrashViewProjector.apply` devolve `not_consumed` para tudo que não seja `CRASH_AGGREGATE_KIND = 'crash'` (`crash-view.projection.ts:17,48-50`), enquanto o contrato §1 fixa `crash-record`/`crash-renaest-submission` — que é o que o produtor emite. A janela é `topic like 'inf.%' or 'rait.%'` (`WINDOW_SQL`, `projectors.service.ts:163-166`), e nenhum produtor escreve tópico `est.*`: `topic` recebe `envelope.type`, isto é `crash.changed`, `crash.renaest.changed` ou o token `SINISTRO_*` (`sql-outbox.ts:58-72`).",
+      "fix": "Substituir \"eventos `est.*`/BOAT\" pelos pontos de extensão verificáveis: acrescentar `crash-record` e `crash-renaest-submission` a `PROJECTOR_BY_AGGREGATE_KIND`, alinhar `CRASH_AGGREGATE_KIND`, e listar os tópicos reais (`crash.changed`, `crash.renaest.changed` e os tokens `SINISTRO_*`) na janela, preservando `inf.%`/`rait.%`."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/contracts/boat-projections.md",
+      "line": 153,
+      "claim": "O contrato proíbe cursor exclusivo de `(created_at, id)` mas não nomeia o método existente que o usa: `PortalProjectors.tick` (`projectors.service.ts:282-301`) descobre pela `max(applied_at)` (`LAST_APPLIED_SQL`) mais `created_at > $3` (`WINDOW_SINCE_SQL`, linhas 160-171) — exatamente o padrão excluído. Estendida a janela para BOAT, `tick` passa a ser o caminho vivo e descarta silenciosamente o evento comitado tarde, deixando a exigência de commit tardio satisfeita apenas num método novo e violada em produção.",
+      "fix": "Nomear `tick`/`LAST_APPLIED_SQL`/`WINDOW_SINCE_SQL` em §2.1 e exigir descoberta incremental por anti-join no ledger (`not exists` em `portal.projection_applied_event` para a projeção), com RED dedicado em TASK-0013 sobre `tick` e não só sobre o replay incremental."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 36,
+      "claim": "O RED exigido \"por tenant\" de `event.schemaVersion` separada de `aggregate.version` é insatisfazível no Portal: `portal.crash_view` não tem coluna de versão alguma e `portal.projection_applied_event` só tem `event_id, projection, applied_at, last_error` (`backend/database/ddl/65-portal-projections.sql:75-92,113-126`), e TASK-0014 está proibida de alterar a DDL 65 (contrato §3.1, linha 254). O próprio contrato limita a exigência de campos distintos aos \"novos consumidores\" (§2, linhas 122-123), mas TASK-0014 linha 40 manda \"Guarde `event.schemaVersion` e `aggregate.version` distintamente\" sem ressalva — o Inspector produziria um RED que só ficaria verde tocando DDL sob lock.",
+      "fix": "Dizer em TASK-0013 e TASK-0014 que, no Portal, a separação é comportamental (rejeição controlada de versão de schema ausente/não suportada, sem reutilizar `aggregate.version` como schema), e que a persistência em colunas distintas vale apenas para os ledgers/efeitos de `dashboard.crashes` e `integration.renaest_mirror`."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0014.md",
+      "line": 28,
+      "claim": "A lista \"Pode tocar\" autoriza `backend/app/src/app.module.ts` (linha 28) e o `package.json` da raiz (linha 32), que são dois dos três arquivos de composição que `work/rounds/R-0010/plan.md:23-24` declara ocupados por R-0007 — \"Nenhum Engineer pode tocá-los até a liberação explícita\". Os três continuam divergentes de `origin/main` (`git diff --stat origin/main`: app.module.ts, package.json, pnpm-lock.yaml). O próprio prompt se contradiz na linha 11, onde diz que a montagem em `app.module.ts` \"permanece parada até R-0007 liberar esse arquivo e o lockfile\".",
+      "fix": "Mover `backend/app/src/app.module.ts` e o `package.json` da raiz para \"Não pode tocar\" enquanto não houver liberação documentada de R-0007, mantendo em \"Pode tocar\" apenas `backend/app/vitest.config.ts` e `backend/app/package.json`, e registrar a montagem Dashboard/Espelho como tarefa serializada posterior (TASK-0017/0020)."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0010/tasks/TASK-0014.json",
+      "line": 32,
+      "claim": "O critério de aceitação `[\"pnpm\",\"verify:domain-boundaries\"]` (também em `prompts/TASK-0014.md:47`) é inalcançável nesta iteração: não existe script `verify:domain-boundaries` no `package.json` da raiz (`grep` sem ocorrência) e registrá-lo exige justamente o arquivo retido por R-0007.",
+      "fix": "Trocar o comando por `node tools/domain-boundaries/verify.mjs` mais `node --test tools/domain-boundaries/tests/*.test.mjs` enquanto o lock durar, atribuindo ao maestro o registro do script na raiz após a liberação de R-0007."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 26,
+      "claim": "Os REDs de Dashboard/Espelho não têm como alcançar os providers a partir de `@detran/app`: `backend/app/vitest.config.ts` só tem alias para `@detran/portal-projections` (linha 147), `backend/app/package.json` não declara os dois pacotes novos, e `CrashesModule`/`RenaestMirrorModule` não estão em `app.module.ts` — e os três arquivos que resolveriam isso pertencem a TASK-0014, não a TASK-0013.",
+      "fix": "Instruir TASK-0013 a instanciar `DashboardCrashesProjection` e `RenaestMirrorProjection` por import relativo com `new URL(..., import.meta.url)` (padrão já usado na iteração anterior), reservando `app.get(...)` ao Portal, que está montado."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 43,
+      "claim": "O critério \"Cada teste novo ... cobre ramo positivo e negativo\" colide com a restrição `source_pending`: não há vínculo canônico de titularidade disponível (contrato §2.2 linhas 211-214; `reports/TASK-0013-progress.md:11`), e a linha 47 do mesmo prompt proíbe inventar identidade confiável. O ramo positivo da leitura cidadã só sairia fabricando `subject_cpf_hash`.",
+      "fix": "Excetuar explicitamente o ramo positivo da leitura cidadã, registrando-o como `source_pending` até haver vínculo canônico, e manter a exigência positivo/negativo apenas para os ramos existentes (ledger, replay, RLS, supressão, gate)."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 28,
+      "claim": "O arquivo permitido `backend/database/seed/71-fixtures-boat-projections.sql` colide com o seed 71 já entregue por R-0009, `backend/database/seed/71-fixtures-portal-events.sql`; `seed.sh` aplica em ordem lexical, e o novo arquivo passaria a rodar antes do de R-0009 sob o mesmo prefixo.",
+      "fix": "Renomear o arquivo permitido para `backend/database/seed/72-fixtures-boat-projections.sql`."
+    }
+  ],
+  "notes": [
+    "Item 1 confere: o contrato (§2.1 linhas 139-144, §3.1 linhas 250-256) e os três prompts reutilizam `PortalProjectors`, `CrashViewProjector`, `PortalCrashesController` e `portal.projection_applied_event`, e proíbem nominalmente `BoatProjectionsReplayService`, `PortalCrashProjection`, `boat-crash.projection.ts` e segundo coordenador Portal. Verificado contra a superfície real: `ProjectionsModule` exporta `PortalProjectors` (projections.module.ts:65), `handwritten/index.ts` exporta os três símbolos, e `BP-PORTAL-PROJECTIONS-001` declara `handwrittenProviders: PortalProjectors` e `handwrittenExports: handwritten/index`.",
+    "Item 4 confere: TASK-0012 permanece `completed` com `iteration_count: 1`; a emenda pós-R-0009 aparece apenas em `contracts/boat-projections.md` e nos prompts (git diff da árvore), sem tocar `BP-PORTAL-PROJECTIONS-001.json`, `backend/database/ddl/65-portal-projections.sql` nem fontes geradas Portal; a emenda limitada da ADR-0001 para `integration.renaest_mirror` já está integrada (linhas 31-32 e 50).",
+    "Item 5 confere integralmente: sha256 dos prompts 0012/0013/0014 = d1a6dd4e…, 0c032ba6…, 35d5cecd…, iguais aos de `compositions.json` e prefixos de `PC-d1a6dd4ec656f7e2`, `PC-0c032ba68f59ae44`, `PC-35d5cecdb2e70b48`; modelos terra/terra/terra, esforços high/medium/high; `upstream_task_id` TASK-0012→0013→0014; status `TASK-0012=completed`, `TASK-0013=queued` (iteration 1 de 2), `TASK-0014=queued` (iteration 0 de 2).",
+    "Item 6 confere: a invalidação de `prompt-review-21-projections-correction.json` está documentada em `plan.md` (§Auditoria de continuidade 2026-09-19, linhas 27-31) e em `reports/TASK-0013-progress.md:11`; os testes atuais `boat-projections.integration.spec.ts` (linhas 44, 352-358) e `boat-projections.e2e.spec.ts` ainda importam os símbolos inexistentes, confirmando que os REDs precisam ser refeitos.",
+    "Esta revisão não libera nenhum Engineer. Mesmo após correção dos achados, TASK-0014 permanece bloqueada até liberação documentada de `app.module.ts`, `package.json` e `pnpm-lock.yaml` por R-0007 e até novos REDs válidos de TASK-0013 com lock de composição registrado.",
+    "Fato adicional sem achado: os pacotes gerados `backend/domains/dashboard/crashes/**` e `backend/domains/integration/renaest-mirror/**` e as DDLs 71/72 já existem e importam `handwritten/dashboard-crashes.projection.js` e `handwritten/renaest-mirror.projection.js`, que ainda não existem — o typecheck desses pacotes é RED legítimo até TASK-0014."
+  ]
+}

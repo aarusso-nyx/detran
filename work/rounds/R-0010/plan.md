@@ -8,33 +8,43 @@
 ## Auditoria de continuidade — 2026-09-19
 
 `origin/main=fc26bd20ec350f5fcfbf9c3470d776b11eddd0e7`; a worktree R-0010 permanece
-em `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8`, 83 commits atrás, com 161
-entradas locais. A branch é publicada e deve integrar `main` por merge, nunca
-rebase. Antes disso, o maestro cria recuperação verificável e um checkpoint das
-alterações CTG-0002. A interseção entre a árvore local e `HEAD..origin/main` está
-limitada a `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`.
+sincronizada em `d15edae90fc306f2702965fc3c9154377b49494a`, merge local de
+`origin/main` sobre o checkpoint CTG-0002
+`5b16f739cab5bf93a6c286c3d1245c863fa54a76`. Antes do merge, o maestro
+preservou as 161 entradas locais em recuperação externa com manifesto, patches,
+arquivo compactado e SHA-256. A integração foi automática, sem conflito manual;
+`pnpm install --frozen-lockfile` e o typecheck de `@detran/app` passaram.
 
 - **R-0009 liberou seus locks:** PRs #54, #56 e #57 estão integrados e a closure
   registra CTG-0001/CTG-0002 concluídos. Isto libera a dependência Portal da
   tríade de projeções.
-- **R-0007 ainda não liberou composição:** CTG-0001/CTG-0002 estão fechados em
-  checkpoint local, mas a integração de `origin/main` segue ativa e sem PR; os
-  três arquivos de composição acima continuam ocupados. Nenhum Engineer pode
-  tocá-los até a liberação explícita.
-- **Pode continuar após o merge local de `main`:** TASK-0007 nos caminhos
-  disjuntos; correção Architect de TASK-0012 e TASK-0013; TASK-0019 (somente
-  testes); TASK-0015, pois a R-0007 confirmou a transferência dos locks de
-  documentos/ADR/catálogo/estratégia.
-- **Não despachar ainda:** TASK-0014 porque o contrato/testes de projeções ainda
-  modelam um segundo serviço Portal, enquanto R-0009 integrou
-  `PortalProjectors` e `CrashViewProjector`; primeiro emendar contrato, testes e
-  prompts e obter novo `prompt-review` PASS. TASK-0017 e TASK-0020 aguardam a
-  composição R-0007 e suas tasks predecessor. TASK-0008/0009/0010/0011 e
-  TASK-0016 aguardam suas dependências topológicas.
-- **Sequência segura:** recuperar/checkpointar a árvore local; integrar
-  `origin/main`; reconciliar Portal em TASK-0012/0013; executar TASK-0019 e
-  TASK-0015 em caminhos disjuntos; somente depois abrir os Engineers
-  serializados TASK-0014 → TASK-0017 → TASK-0020.
+- **R-0007 liberou composição:** CTG-0001/CTG-0002 estão fechados em
+  checkpoint local. Em 2026-09-19, a R-0007 concluiu sua integração local de
+  `origin/main`, deixou a worktree limpa em
+  `5912475bff24e0acd5436a52cd4a0458659b89aa` e liberou explicitamente
+  `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`. Ainda não
+  há push/PR da R-0007; os Engineers da R-0010 podem usar os arquivos em série,
+  registrando eventual conflito futuro na integração por PR.
+- **Continuidade executada:** TASK-0015 concluiu contrato/ADR/estratégia do
+  relatório preliminar, mantendo C-2-13 aberto nos itens `source_pending` de
+  PDF/A e assinatura. TASK-0019 concluiu os REDs do job: cinco REDs pela
+  ausência de TASK-0020 e três checks estáticos do DDL 75 verdes; E2E em banco
+  isolado permanece pendente. A reconciliação Architect de TASK-0012/0013/0014
+  removeu as APIs Portal paralelas e invalidou `prompt-review-21`; nova revisão
+  formal é obrigatória antes de redisparar TASK-0013.
+- **Projeções liberadas para Engineer:** `prompt-review-25` = PASS e TASK-0013
+  iteração 2 concluída: integração dirigida 5 RED/1 PASS, gate 3 REDs pela
+  ausência de `tools/domain-boundaries/verify.mjs`; E2E teve `sensor-error` por
+  banco isolado sem os DDLs Portal. TASK-0014 pode ser despachada após o próximo
+  checkpoint/merge de `main`, mantendo montagem/manifests como passo serializado
+  do maestro. TASK-0017 e TASK-0020 aguardam apenas suas predecessoras e a ordem
+  serial. TASK-0008/0009/0010/0011 e TASK-0016 aguardam dependências
+  topológicas/autoridade ainda descritas nos contratos.
+- **Sequência segura atual:** checkpointar os contratos/REDs, integrar o avanço
+  corrente de `main` e despachar TASK-0014. Investigar/fechar as fontes
+  `source_pending` antes de TASK-0016. Depois executar os Engineers serializados
+  TASK-0014 → TASK-0017 → TASK-0020 e continuar TASK-0007/0008/0011/0010/0009
+  conforme suas dependências.
 
 ## Metas
 

@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 36,
+      "claim": "A ordem de retirada é mais estreita que o conteúdo inválido do arquivo. `backend/app/tests/e2e/boat-projections.e2e.spec.ts` tem um único teste (`:75-76`, `describe('C-2-13 — emissão BOAT para projeções')`), inteiramente de emissão do produtor: além de `payload.schemaVersion` (`:107`, `:113-114`), ele exige `events.rows` com duas linhas de `SINISTRO_INICIADO`/`SINISTRO_REGISTRADO` (`:99-105`), e §1.3(4) linhas 116-119 do contrato declara `SINISTRO_REGISTRADO` emissão não verificável nas fontes de TASK-0007. Retirando literalmente só a asserção de `schemaVersion`, sobra no e2e um RED de emissão que TASK-0014 não pode tornar verde (fronteira do produtor, `prompts/TASK-0014.md:34`), reproduzindo exatamente o que `:40` proíbe (\"REDs exclusivos da ausência de TASK-0014\").",
+      "fix": "Trocar a frase por ordem de substituir o cenário de emissão do produtor por inteiro (asserções de `payload.schemaVersion` e da emissão de `SINISTRO_REGISTRADO`), deixando o e2e com os cenários de consumidor já pedidos na mesma linha — a prova `source_pending` pela rota Portal existente."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 26,
+      "claim": "A anotação de `Pode tocar` contradiz a nova ordem: `:26` marca `backend/app/tests/e2e/boat-projections.e2e.spec.ts` como \"(novo)\", enquanto `:36` manda remover asserção existente dele. O arquivo já existe na worktree (132 linhas, criado na iteração 1 invalidada, `reports/TASK-0013-progress.md:5`), e `tasks/TASK-0013.json` está em `iteration_count: 1` de `max_iterations: 2`.",
+      "fix": "Em `:26`, trocar \"(novo)\" por \"(reescrito a partir da iteração anterior)\" nos dois arquivos de teste já existentes, mantendo \"(novo)\" apenas para `tools/domain-boundaries/tests/verify-domain-boundaries.test.mjs` e a fixture 72."
+    }
+  ],
+  "notes": [
+    "Item 1 confirmado nos três lugares e sem resíduo da redação anterior: `contracts/boat-projections.md:355-359` (§6) diz que o par emitido hoje, sem `schemaVersion`, \"prova rejeição controlada tipada sem efeito nem ledger: é RED legítimo da ausência de TASK-0014, entra na contagem e deve ficar verde\"; `prompts/TASK-0013.md:36` repete a frase; §1.3(1) linhas 91-97 passou a encerrar com \"O ramo de sucesso do par emitido hoje permanece pendência de TASK-0007; sua rejeição controlada é requisito de TASK-0014\". Não há mais ocorrência de \"fora dos REDs que TASK-0014 deve tornar verdes\".",
+    "O RED promovido é de fato alcançável dentro da fronteira de TASK-0014, o que era o risco do achado 24. Hoje o despacho Portal devolve `skipped: 'not_consumed'` para envelope que não casa (`backend/domains/portal/projections/src/handwritten/projectors.service.ts:230-237`), sem erro tipado e sem ledger; o ledger só é escrito depois, em `applyTo` (`:325-337`, `INSERT_APPLIED_SQL` com `last_error`). §2.1 linha 186 exige \"falha de modo tipado antes de ledger ou efeito\", e `prompts/TASK-0014.md:24` autoriza \"extensão do dispatcher\" em `projectors.service.ts`. Logo o alvo verde é a troca de `not_consumed` silencioso por rejeição tipada pré-ledger, sem violar \"conserve dispatcher, transação e ledger existentes\".",
+    "Item 2 confirmado e coerente entre contrato, prompt e relatório: §6 linha 359, `prompts/TASK-0013.md:36` e `reports/TASK-0013-progress.md:7` limitam a pendência de TASK-0007 ao ramo de sucesso do par legado. O contrato não fixa token de erro (§2.1 linha 188 manda reutilizar códigos já expostos e proíbe criar `BOAT.PROJECTIONS_*`; §2.2 linha 257 fala em \"erro tipado já definido pelo consumidor\"), mas nenhuma cláusula obriga o Inspector a fixar string de código — a asserção verificável é falha tipada + zero efeito + zero linha de ledger, satisfeita por qualquer código que TASK-0014 reutilize (Portal já expõe `PortalError`).",
+    "Item 3 parcialmente coberto, conforme os dois achados acima: a ordem existe em `prompts/TASK-0013.md:36` e o relatório foi atualizado — `reports/TASK-0013-progress.md:9` já diz que a asserção E2E \"é inválida nesta tríade, pois pertence a TASK-0007, e TASK-0013 deve removê-la ao reescrever a suíte\", substituindo a redação que a revisão 24 citou.",
+    "Item 4 confere por cálculo: sha256 de `prompts/TASK-00{12,13,14}.md` é `240bba3b3cea3d20…`, `834a95b71002361f…` e `efecafda406caaaa…`, idênticos a `compositions.json` (linhas 78, 86, 94) e aos prefixos `PC-240bba3b3cea3d20`, `PC-834a95b71002361f`, `PC-efecafda406caaaa`, replicados em `prompt_composition_id` raiz e de `executor` nos três `tasks/`. O PC de TASK-0013 acompanhou a reescrita (não há mais `PC-a2b7efba36ca6d93` nem `PC-402306020144e6eb`). Modelos terra/terra/terra, esforços high/medium/high, `upstream_task_id` TASK-0012→0013→0014, status `completed` (1/2), `queued` (1/2), `queued` (0/2).",
+    "Resíduo histórico sem achado próprio: `plan.md:151-157` ainda enumera \"o E2E dirigido é RED por `schemaVersion` não emitido\" na contagem da execução anterior. É registro datado de 2026-09-16, já superado por `reports/TASK-0013-progress.md:3,9` (\"REDs originais invalidados\"); convém anotar a invalidação nesse bloco quando o maestro atualizar o checkpoint.",
+    "Este PASS libera apenas a nova iteração Inspector de TASK-0013 (iteração 2 de 2). TASK-0014 continua bloqueada pelos REDs ainda não produzidos e pelos locks R-0007 sobre `backend/app/src/app.module.ts`, `package.json` raiz e `pnpm-lock.yaml`; o registro de `verify:domain-boundaries` no manifesto raiz permanece passo posterior do maestro (§4 linhas 304-308, `prompts/TASK-0014.md:45`)."
+  ]
+}

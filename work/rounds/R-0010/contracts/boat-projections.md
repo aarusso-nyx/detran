@@ -93,13 +93,20 @@ o registro individual em `est.*`.
    satisfaz `event.schema_version` e `event.aggregate.version` independentes.
    O projetor não pode assumir `1` nem reutilizar a versão do agregado como
    schema. O produtor deve emitir a versão de schema antes de um consumidor
-   aceitar a forma canônica.
+   aceitar a forma canônica. O ramo de sucesso do par emitido hoje permanece
+   pendência de TASK-0007; sua rejeição controlada é requisito de TASK-0014.
 2. O envelope escrito usa `occurredAt`, `tenantId`, `domainEvent` e `data`,
    enquanto a linha tem `tenant_id` e `id`. A normalização descrita em §1 é a
    única interpretação autorizada; não há segundo evento derivado de SSE.
-3. O aplicador de sincronização registra apenas `crash.changed` para
-   `SINISTRO_RECEBIDO_SINCRONIZACAO`; os comandos gravam também tópico nomeado.
-   O consumo usa `event.name`, portanto não depende da duplicação de tópico.
+3. O fato de comando/transmissão grava duas linhas: uma com `type`/`topic`
+   técnico (`crash.changed` ou `crash.renaest.changed`) e outra nomeada com
+   `type`/`topic = domainEvent`; os UUIDs são diferentes apesar de
+   `event.name`, agregado e versão serem os mesmos. O consumidor deduplica o
+   fato por `(event.name, event.aggregate.id, event.aggregate.version)` antes
+   do ledger: aceita exclusivamente a linha nomeada. A exceção é
+   `SINISTRO_RECEBIDO_SINCRONIZACAO`, que o aplicador grava apenas como
+   `crash.changed` e que permanece consumível nesse tópico. Assim, SSE continua
+   observável, mas não duplica efeito ou contagem.
 4. `SINISTRO_REGISTRADO` e `PEDIDO_TITULAR_REGISTRADO` são exigidos pelo
    contrato de rotas, mas não são emissões literais verificáveis nas fontes de
    TASK-0007 examinadas. Nenhum projetor deve inventá-los; a cobertura do
@@ -118,9 +125,14 @@ o registro individual em `est.*`.
    `(tenant_id, projection_name, event_id)`. O Portal reutiliza
    `portal.projection_applied_event` e sua coluna existente `projection`, cuja
    chave equivalente é `(tenant_id, event_id, projection)`.
-3. Duplicata encontra o ledger e não reaplica. Um evento novo conserva
-   `event_schema_version` e `aggregate_version` em campos diferentes, tanto no
-   efeito como no ledger dos novos consumidores.
+3. A seleção canônica primeiro deduplica o fato por `(event.name,
+event.aggregate.id, event.aggregate.version)` e só então o ledger por
+   `event_id` evita reexecução da mesma linha. Um evento novo conserva
+   `event_schema_version` e `aggregate_version` em campos diferentes no efeito
+   e no ledger de `dashboard.crashes` e `integration.renaest_mirror`. Portal
+   não altera DDL 65: nele a separação é comportamental — schema ausente/não
+   suportado é rejeitado sem reutilizar `aggregate.version` como schema, efeito
+   ou ledger.
 4. Replay integral seleciona os eventos canônicos de todos os tenants sob
    contexto individual e reconstrói o consumidor a partir de tabelas vazias.
    Replay incremental seleciona eventos cujo ledger daquele consumidor ainda
@@ -134,62 +146,55 @@ o registro individual em `est.*`.
    transiciona `FECHADO` para `INTEGRADO`. Essa transição pertence ao worker de
    origem que recebeu o protocolo.
 
-### 2.1 Entry point verificável de replay
+### 2.1 Entry points verificáveis de replay
 
-TASK-0014 implementa e exporta `BoatProjectionsReplayService` em
-`backend/app/src/boat-projections.replay.ts`. O serviço é o único entry point
-de replay que TASK-0013 invoca, pela instância Nest já autenticada ou por
-injeção do provider; não há rota HTTP nova nem chamada direta a um projetor.
+R-0009 já materializou e exportou `PortalProjectors` pelo
+`BP-PORTAL-PROJECTIONS-001`: ele contém `CrashViewProjector`, o dispatcher, o
+ledger `portal.projection_applied_event` e os entry points `applyEvent`,
+`rebuild` e `rebuildAll`. TASK-0014 estende esses artefatos existentes; não
+cria `PortalCrashProjection`, `boat-crash.projection.ts` ou
+`BoatProjectionsReplayService`.
 
-```ts
-export type BoatProjectionsReplayMode = 'full' | 'incremental';
+Para Portal, a aplicação unitária usa
+`PortalProjectors.applyEvent(event, tx)` dentro de transação já tenant-scoped.
+O replay integral de BOAT usa
+`PortalProjectors.rebuild(tenantId, 'crash_view')`. TASK-0014 estende
+`PROJECTOR_BY_AGGREGATE_KIND` com `crash-record` e
+`crash-renaest-submission`, alinha `CRASH_AGGREGATE_KIND` a esses valores e
+mantém o caso histórico `crash`. A janela preserva `inf.%`/`rait.%` e acrescenta
+os tópicos reais `crash.changed`, `crash.renaest.changed` e os tokens
+`SINISTRO_*`; o dispatcher consome as linhas técnicas somente na exceção de
+sincronização descrita em §1.3(3), e as demais apenas no tópico nomeado.
 
-export type BoatProjectionsReplayResult = {
-  mode: BoatProjectionsReplayMode;
-  tenantId: string;
-  scanned: number;
-  applied: {
-    portalCrashView: number;
-    dashboardCrashes: number;
-    renaestMirror: number;
-  };
-  duplicates: number;
-};
+O incremental vivo é o `PortalProjectors.tick`, não um método paralelo.
+TASK-0014 substitui `LAST_APPLIED_SQL` e `WINDOW_SINCE_SQL`, que usam
+`max(applied_at)` e `created_at > ...`, por seleção com anti-join ao ledger:
+para cada candidato BOAT de `crash_view`, `not exists` em
+`portal.projection_applied_event` com o mesmo `event_id` e
+`projection = 'crash_view'`. A seleção canônica ocorre antes desse anti-join.
+O mesmo princípio vale para os demais consumidores da janela, preservando
+`inf.*`/`rait.*`. Um evento que comita tarde permanece candidato. O método
+recebe o tenant somente no modo de job já previsto pelo serviço e, em
+request/teste com contexto ativo, preserva o tenant do `RequestContext` e RLS.
 
-export class BoatProjectionsReplayService {
-  replay(input?: {
-    mode?: BoatProjectionsReplayMode;
-  }): Promise<BoatProjectionsReplayResult>;
-}
-```
+Dashboard e espelho mantêm entry points de aplicação e replay nos seus próprios
+providers manuscritos. Cada entry point recebe o contexto autenticado ou de job
+já autorizado, não aceita CPF, hash de CPF ou alegação de titularidade para
+escolher tenant, e reporta somente o resultado do seu consumidor. Não há um
+coordenador de replay Portal paralelo.
 
-`tenantId` no retorno é somente o tenant efetivo para diagnóstico de teste; o
-método não aceita `tenantId` de entrada. Ele obtém o tenant e o ator do
-`RequestContext` já autorizado, abre as transações com esse contexto e deixa
-RLS limitar a leitura da outbox, os efeitos e os ledgers. Contexto sem tenant
-falha antes de qualquer SQL com `BOAT.PROJECTIONS_TENANT_REQUIRED`.
-
-`full` reconstrói somente as três projeções daquele tenant a partir da forma
-canônica da outbox. `incremental` busca, para o mesmo tenant, eventos canônicos
-sem ledger de cada consumidor; ele não avança um cursor exclusivo de
-`(created_at, id)`. Assim, uma transação que comita tarde continua elegível
-mesmo quando seu `created_at` é anterior ao último evento processado.
-
-Envelope inválido falha com `BOAT.PROJECTIONS_ENVELOPE_INVALID` e schema
-ausente ou não suportado com `BOAT.PROJECTIONS_SCHEMA_UNSUPPORTED`. Nenhuma
-dessas falhas retorna `BoatProjectionsReplayResult`, cria ledger de sucesso,
-incrementa `applied` ou deixa efeito parcial. Em particular, schema não
-suportado é uma falha tipada da chamada `replay`, e não um item contado como
-`rejected`; TASK-0013 deve esperar essa falha e verificar a ausência de efeito
-e ledger. Falha de transação, RLS ou projetor é propagada e reverte o efeito e
-o ledger daquela aplicação.
+Envelope inválido ou schema ausente/não suportado falha de modo tipado antes de
+ledger ou efeito. A implementação deve reutilizar os códigos já expostos pelo
+consumidor quando existirem; não cria `BOAT.PROJECTIONS_*` apenas para esta
+rodada. Falha de transação, RLS ou projetor é propagada e reverte o efeito e o
+ledger daquela aplicação.
 
 ### 2.2 Leituras internas verificáveis e falha transacional
 
-TASK-0014 exporta as leituras abaixo como providers internos, sem controller ou
-rota HTTP. TASK-0013 as invoca no mesmo `RequestContext` autorizado usado para
-`replay`; nenhuma recebe `tenantId`, CPF, `subject_cpf_hash` ou alegação de
-titularidade como argumento.
+TASK-0014 exporta a leitura Dashboard abaixo como provider interno, sem
+controller ou rota HTTP. TASK-0013 a invoca no mesmo `RequestContext`
+autorizado usado pelo replay; ela não recebe `tenantId`, CPF,
+`subject_cpf_hash` ou alegação de titularidade como argumento.
 
 ```ts
 export type DashboardCrashCell = {
@@ -224,37 +229,16 @@ sempre `blocked`. Portanto os testes podem demonstrar célula com `n < 10`, a
 célula/total secundário que evitaria subtração e a impossibilidade de publicar
 P-09, sem criar superfície pública.
 
-```ts
-export type PortalCrashCitizenRead =
-  | {
-      access: 'denied';
-      reason: 'source_pending' | 'not_holder' | 'state_not_visible';
-    }
-  | {
-      access: 'granted';
-      state: 'FECHADO' | 'INTEGRADO';
-      subject: { masked: false; summary: Record<string, unknown> };
-      thirdParties: readonly {
-        masked: true;
-        summary: Record<string, unknown>;
-      }[];
-    };
-
-export class PortalCrashProjection {
-  readInternal(crashId: string): Promise<Record<string, unknown> | null>;
-  readCitizen(crashId: string): Promise<PortalCrashCitizenRead>;
-}
-```
-
-`PortalCrashProjection` é o provider declarado em §3.1 para
-`backend/domains/portal/projections/src/handwritten/boat-crash.projection.ts`;
-R-0009 continua dono do wiring no blueprint Portal. `readCitizen` resolve a
-relação somente do vínculo de identidade autenticada já presente no
-`RequestContext`: `source_pending` devolve `access: 'denied'`, e um CPF, hash
-ou parâmetro do chamador não muda esse resultado. Quando o vínculo já for
-confiável, o titular recebe seus próprios campos sem máscara e terceiros só
-recebem resumos mascarados; saúde fica fora de ambos os resumos públicos.
-`readInternal` não torna a projeção uma rota cidadã.
+Não há API `PortalCrashProjection.readCitizen`. A superfície cidadã é a já
+materializada `PortalCrashesController`, guardada por identidade e entitlement.
+TASK-0014 estende `CrashViewProjector` e, se a regra de visibilidade exigir
+filtro adicional, o controlador existente. Enquanto a fonte canônica não
+carregar vínculo de titularidade autorizado, `CrashViewProjector` não cria uma
+linha publicável; CPF ou hash fornecido pela requisição não completa o evento.
+Com vínculo canônico autorizado, o controlador existente preserva a relação
+autenticada, limita a exposição a `FECHADO`/`INTEGRADO`, mantém terceiros
+mascarados e exclui saúde do resumo. Nenhum provider paralelo é criado para
+simular essa decisão.
 
 O teste de rollback usa uma linha de outbox de
 `SINISTRO_SITUACAO_NACIONAL` com envelope estruturalmente válido, mas
@@ -266,12 +250,12 @@ nem efeito no espelho nem linha em
 `integration.renaest_mirror_applied_event` para aquele `event_id`.
 
 Os testes cross-tenant instalam `RequestContext` do tenant A ou B antes de cada
-chamada a `replay`, `readInternal` ou `readCitizen`; não selecionam tenant por
-argumento. Replay `full` reconstrói o tenant do contexto e `incremental`
-reencontra evento sem ledger que tenha comitado tarde. Para schema não
-suportado, o teste chama `replay` e espera
-`BOAT.PROJECTIONS_SCHEMA_UNSUPPORTED`, sem resultado de replay, efeito ou
-ledger.
+aplicação ou leitura; não selecionam tenant por argumento de superfície
+cidadã. Eles exercitam `PortalProjectors` para Portal e os providers próprios
+para Dashboard/Espelho. Replay `full` reconstrói o consumidor no tenant
+autorizado e o incremental reencontra evento sem ledger que tenha comitado
+tarde. Para schema não suportado, cada teste espera o erro tipado já definido
+pelo consumidor, sem resultado de sucesso, efeito ou ledger.
 
 ## 3. Consumidores
 
@@ -286,25 +270,12 @@ terceiros veem os campos de terceiros mascarados e dados de saúde jamais entram
 no envelope público. Isso aplica RN-PORTAL-118 sem converter a projeção em
 prova de identidade.
 
-R-0009 mantém o lock do blueprint e do DDL Portal. Ao liberar o wiring M24,
-deve acrescentar exatamente ao `module` de
-`BP-PORTAL-PROJECTIONS-001.json`:
-
-```json
-{
-  "handwrittenProviders": [
-    {
-      "target": "handwritten/boat-crash.projection",
-      "symbol": "PortalCrashProjection"
-    }
-  ],
-  "handwrittenExports": ["handwritten/boat-crash.projection"]
-}
-```
-
-O acréscimo é aditivo às listas já existentes e gera o provider/export para
-`backend/domains/portal/projections/src/handwritten/boat-crash.projection.ts`.
-TASK-0012 não altera o blueprint, DDL 65 ou fontes geradas do Portal.
+R-0009 já concluiu o wiring M24: o blueprint registra `PortalProjectors`,
+`ProjectionsModule` o exporta e `handwritten/index.ts` já exporta
+`CrashViewProjector`. TASK-0014 altera somente os arquivos manuscritos
+existentes `projectors.service.ts`, `crash-view.projection.ts` e, se o filtro de
+visibilidade o exigir, `crashes.controller.ts`. Não altera blueprint, DDL 65,
+fontes geradas nem cria outro provider/export Portal.
 
 ### 3.2 Dashboard — `dashboard.crashes`
 
@@ -337,8 +308,11 @@ exclusiva em `packages/senatran-adapter`.
 
 ## 4. Fronteira entre domínios
 
-TASK-0014 implementa `pnpm verify:domain-boundaries` em
-`tools/domain-boundaries/verify.mjs`. O gate percorre código de backend e falha
+TASK-0014 implementa `tools/domain-boundaries/verify.mjs`. Enquanto R-0007
+retiver o `package.json` raiz, o comando verificável é
+`node tools/domain-boundaries/verify.mjs`; o maestro registra o script
+`verify:domain-boundaries` no manifesto raiz somente após a liberação. O gate
+percorre código de backend e falha
 para SQL ou acesso de repository que nomeie schema de outro domínio. A exceção
 é estrita: o arquivo deve terminar em `*.projection.ts` e declarar no próprio
 módulo uma lista não vazia, literal e exportada:
@@ -375,12 +349,19 @@ gerado por esta tarefa.
 
 ## 6. Verificação exigida em TASK-0013/0014
 
-Os testes cobrem C-2-13/C-2-14 por tenant: replay integral e incremental,
-duplicata, versões separadas, schema incompatível sem avanço, commit tardio,
-RLS entre tenants, atomicidade ledger+efeito, ausência de escrita em `est.*` e
-SSE fora da reconstrução. Eles também cobrem Portal `source_pending`, a relação
-titular/terceiro e estados publicados; Dashboard com ambas as supressões e P-09
-fechado; Espelho sem transição BOAT; e os casos permitido/proibido do gate.
+Os testes cobrem C-2-13/C-2-14 por tenant: replay integral, `tick` incremental,
+efeito/ledger único para duas linhas **canônicas** do mesmo fato com
+`schemaVersion` suportado na fixture, commit tardio, RLS entre tenants,
+atomicidade ledger+efeito, ausência de escrita em `est.*` e SSE fora da
+reconstrução. Em cenário separado, o par tal como emitido hoje, sem
+`schemaVersion`, prova rejeição controlada tipada sem efeito nem ledger: é RED
+legítimo da ausência de TASK-0014, entra na contagem e deve ficar verde. Só o
+ramo de sucesso desse par legado permanece pendência de TASK-0007 e fora do
+conjunto verde. Portal prova separação de versão por comportamento;
+Dashboard/Espelho a persistem em campos distintos. Eles também cobrem Portal
+`source_pending`; o ramo cidadão positivo permanece `source_pending` até existir
+vínculo canônico, sem fixture de CPF/hash. Dashboard cobre ambas as supressões e
+P-09 fechado; Espelho não transiciona BOAT; o gate tem casos permitido/proibido.
 
 ## OD
 
