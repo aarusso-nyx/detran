@@ -544,6 +544,23 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
   localmente o maestro sobe o mock com o mesmo trecho do job (`senatran-mock db:reset && build &&
 node dist/apps/api/src/main.js`). Sem mock disponível o spec de jornada **falha** (nunca
   `skip`).
+- **A14 (2026-09-19, contrato `contracts/CTG-0004.md`, TASK-0022 it. 1+2 — Codex Terra).**
+  Ratificadas: (a) **[DIVERGE-1]** as fixtures do CPF Prata `22222222222` entram no mock em
+  commit separado (TASK-0011): `20-read.sql` (`senatran.condutor` A/2030-12-31/AD/"", `senatran.veiculo`
+  chassi `9BWZZZ377VT002222`, placa `PRT2A22`, `FIAT/ARGO 1.0`), `85-cdt.sql` (AIT `A0022222`),
+  `80-sne.sql`; nunca mapear Prata ao CPF `52998224725`. (b) **[DIVERGE-2]** `SnePort.cancelNotification`
+  não é cancelamento de adesão → cancelamento SNE segue local (OD-P106). (c) **[DIVERGE-3]**
+  `quadroObservacoesCnh` sem delimitador → uma restrição por texto não vazio. (d) §3 fechado com a
+  fonte real do mock (`senatran.condutor`/`senatran.veiculo`, `ref_situacao_cnh`): `status`
+  A/V/S/C → valida/vencida/suspensa/cassada, `B` → `null` (OD-P103 redefinida: rótulo cidadão de
+  `B`); `validUntil` = data ISO; `categories` por letra; `vehicleId` = UUIDv5(`detran.portal.vehicle`,
+  chassi) — RENAVAM nunca sai do backend; quitação só `multa` por `getPaymentQuote` (OD-P104);
+  `POST crlv-e` hoje 422 `documento_assinado_pendente_r0014` (OD-P105). (e) Blueprints intocados
+  (OpenAPI mantém `unknown`; o app não muda). (f) OD-P107 (mapa adapter → `PORTAL.*`), OD-P108
+  (rota `DELETE push-subscriptions` inexistente no contrato — não se testa nem se implementa),
+  OD-P88 segue `source_pending`. (g) Iteração 1 deixou §3 `source_pending` por ler só `85-cdt.sql`
+  — lição: o prompt do Architect deve apontar a fonte de dados **do serviço** (`cdt.service.ts`),
+  não só o seed homônimo. Total 74 critérios C-4-01…74.
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,

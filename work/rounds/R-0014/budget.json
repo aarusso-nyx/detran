@@ -3,8 +3,8 @@
   "window": 4,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 4926000,
-  "estimated_output_total": 1071000,
+  "estimated_input_total": 5056000,
+  "estimated_output_total": 1086300,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada). Janela 4 encerrada com ≈4,93 M únicos acumulados; a partir de 2026-09-19 os workers e o reviewer rodam no Codex (B3), com custo registrado por *.worker.json/*.bridge.json.",
   "entries": [
     {
@@ -698,6 +698,51 @@
       "output_tokens": 20000,
       "status": "completed",
       "note": "fecho do CTG-0003c (A11/A12, PR #64, observe) e preparação da retomada com Codex (B3/A13): worker.sh + teste, Amendment 2, prompts TASK-0022/0010/0011/0012/0017-it5, task JSONs codex-cli, prompt-review-12, detran_r14 + mock provados"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0022",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 40000,
+      "output_tokens": 8000,
+      "status": "completed",
+      "note": "Codex (B3) via worker.sh, ≈10 min; contrato 254 linhas, 70 critérios; §3 source_pending por fonte errada → it. 2"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0022-iteration-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 25000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "Codex; §3 fechado (condutor/veiculo do mock), matriz §1 verificável, C-4-71…74; 305 linhas"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0017-iteration-5",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 5000,
+      "output_tokens": 500,
+      "status": "completed",
+      "note": "Codex; uma linha (>= 1000); 9/9"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-12",
+      "input_tokens": 40000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "Codex Terra; 4 high de locks/leitura → corrigidos"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-12-2",
+      "input_tokens": 20000,
+      "output_tokens": 300,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
     }
   ],
   "forecast": {

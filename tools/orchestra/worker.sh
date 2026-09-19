@@ -2,8 +2,8 @@
 # Executor de workers pela CLI do Codex (docs/meta/agents/orchestra/README.md §2 — desvio
 # autorizado pelo Owner em R-0014 AUTHORIZATION.md Amendment 2: workers da outra família enquanto
 # a família do maestro está no limite de uso). O worker escreve na worktree dentro da sua fronteira
-# (sandbox workspace-write), nunca executa git (regra do prompt; o maestro confere `git status`
-# antes e depois), e o relatório final vai para <relatorio.md>; o transcript JSONL fica ao lado.
+# (sandbox workspace-write), nunca executa git (regra do prompt; o transcript JSONL é conferido e o
+# maestro confere `git status`), e o relatório final vai para <relatorio.md>; o transcript fica ao lado.
 #
 # Uso: tools/orchestra/worker.sh <modelo> <esforco> <prompt.md> <relatorio.md> [<worktree>]
 #   codex exec -m <modelo> -c model_reasoning_effort=<esforco> -C <worktree> -s workspace-write \
@@ -25,7 +25,11 @@ codex exec -m "$model" -c "model_reasoning_effort=\"$effort\"" -C "$cwd" -s work
   --skip-git-repo-check --json -o "$out" - < "$prompt" > "${out%.md}.jsonl"
 ended="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 head_after="$(git -C "$cwd" rev-parse HEAD)"
-[[ "$head_before" == "$head_after" ]] || { echo "worker: HEAD mudou durante a tarefa ($head_before → $head_after) — worker executou git" >&2; exit 5; }
+# O worker nunca executa git: a prova é o transcript (todo comando fica em `command_execution`).
+# O HEAD pode mudar por commits do maestro em paralelo; por isso é só registrado, não comparado.
+if grep -o '"type":"command_execution","command":"[^"]*' "${out%.md}.jsonl" | grep -Eq '(^|[^a-z-])git( |$)'; then
+  echo "worker: o transcript contém um comando git — fronteira violada (${out%.md}.jsonl)" >&2; exit 5
+fi
 
 sha() { shasum -a 256 "$1" | cut -d' ' -f1; }
 record="${out%.md}.worker.json"
@@ -40,7 +44,8 @@ cat > "$record" <<JSON
   "report_sha256": "$(sha "$out")",
   "transcript": "${out%.md}.jsonl",
   "cwd": "$cwd",
-  "head": "$head_after",
+  "head_before": "$head_before",
+  "head_after": "$head_after",
   "started_at": "$started",
   "ended_at": "$ended"
 }
