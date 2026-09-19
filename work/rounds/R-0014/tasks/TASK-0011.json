@@ -8,7 +8,13 @@
   "title": "Integração nacional pelo mock: mapeamentos CNH-e/CRLV-e, SNE via SnePort, push, lint de payload, job backend-kernel com o mock antes do e2e",
   "description": "Implementar o layout do contrato até os e2e de TASK-0010 passarem; nunca tocar em specs.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-portal-national-read", "MOD-app-portal-providers"],
+  "target_modules": [
+    "MOD-portal-national-read",
+    "MOD-app-portal-providers",
+    "MOD-ci-backend-kernel",
+    "MOD-senatran-mock-seeds",
+    "MOD-seed-portal"
+  ],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0004",

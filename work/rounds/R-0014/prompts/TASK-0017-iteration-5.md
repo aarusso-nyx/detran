@@ -5,8 +5,11 @@
 > tarefa; sua **última mensagem é o relatório**. Nunca `git`, nunca instalar, nunca produção,
 > nunca `work/rounds/**`. Ninguém responde durante a execução.
 
-Papel: **Inspector** (Art. 6). Leia: `work/rounds/R-0014/plan.md` §Adendas A12 (item (g) e a nota
-final sobre C-3c-78); `work/rounds/R-0014/contracts/CTG-0003c.md` critério C-3c-78;
+Papel: **Inspector** (Art. 6). Leitura obrigatória (lista fechada): `AGENTS.md`; `CODESTYLE.md`
+§Tests; `docs/meta/agents/inspector-tests.md`; `work/rounds/R-0014/reports/TASK-0017-iteration-4.md`
+(relatório anterior — esta iteração julga **somente** a nota residual do
+`reviews/delivery-review-CTG-0003c-2.json`, sem reabrir o resto); `work/rounds/R-0014/plan.md`
+§Adendas A12 (item (g) e a nota final sobre C-3c-78); `work/rounds/R-0014/contracts/CTG-0003c.md` critério C-3c-78;
 `apps/portal/web/src/app/core/realtime.service.spec.ts` (inteiro) e
 `apps/portal/web/src/app/core/realtime.service.ts` (só leitura).
 
