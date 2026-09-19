@@ -7,10 +7,15 @@
 // servidor responde 428) e `Idempotency-Key` determinística `<ato>:<alvo>:<fingerprint>` (M17,
 // §2.2), recalculada a cada chamada. Nenhum método captura erros: a promessa rejeita com o
 // `HttpErrorResponse` original e o chamador classifica com `presentError` (§3).
+// Leituras do par 2 (contrato CTG-0003b §2.3): query por `HttpParams` só com as chaves presentes
+// (números por `String()`), nenhuma envia `Idempotency-Key` nem `If-Match`; `getRequest` observa a
+// resposta para devolver o `ETag` (`If-Match` do `withdraw`, §2.2). Corpos tipados `{ [key]: unknown }`
+// no OpenAPI ([DIVERGE-1]) são entregues por asserção de tipo, sem transformação de dados.
 import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
+  HttpParams,
   type HttpResponse,
 } from '@angular/common/http';
 import { Injectable, Injector, inject } from '@angular/core';
@@ -28,6 +33,17 @@ import type {
   ElevationCompleted,
   ElevationStarted,
 } from './portal-command.models';
+import type {
+  AitDetail,
+  AitListPage,
+  AitListQuery,
+  AitPoints,
+  Decision,
+  PointsSummary,
+  RequestDetail,
+  RequestListPage,
+  RequestListQuery,
+} from './portal-read.models';
 
 type IdentityPaths = BpPortalIdentity001Commands.paths;
 type RequestsOps = BpPortalRequests001Commands.operations;
@@ -157,6 +173,18 @@ async function decodeBlobError(error: unknown): Promise<unknown> {
     statusText: error.statusText,
     url: error.url ?? undefined,
   });
+}
+
+/** `HttpParams` só com as chaves presentes (`undefined` omitido; números por `String()`). */
+function queryParams(
+  query: Readonly<Record<string, string | number | undefined>>,
+): HttpParams {
+  let params = new HttpParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value === undefined) continue;
+    params = params.set(key, String(value));
+  }
+  return params;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -382,6 +410,71 @@ export class PortalClient {
     } catch (error: unknown) {
       throw await decodeBlobError(error);
     }
+  }
+
+  // —— leituras do par 2 (contrato CTG-0003b §2.3) ——
+
+  /** GET /v1/portal/aits?vehicle&status&page&pageSize — chaves `undefined` omitidas da query. */
+  listAits(query: AitListQuery = {}): Promise<AitListPage> {
+    return firstValueFrom(
+      this.http.get<AitListPage>(this.url('/aits'), {
+        params: queryParams(query),
+      }),
+    );
+  }
+
+  /** GET /v1/portal/aits/{aitId} — 404 NOT_FOUND{kind:'ait'} = sem vínculo (contrato §1.2). */
+  getAit(aitId: string): Promise<AitDetail> {
+    return this.get<AitDetail>(`/aits/${encodeURIComponent(aitId)}`);
+  }
+
+  /** GET /v1/portal/aits/{aitId}/points — `points` sempre null nesta rodada (OD-P34). */
+  getAitPoints(aitId: string): Promise<AitPoints> {
+    return this.get<AitPoints>(`/aits/${encodeURIComponent(aitId)}/points`);
+  }
+
+  /** GET /v1/portal/points-summary — zero pontos quando sem linha (nunca 404, UC-010). */
+  getPointsSummary(): Promise<PointsSummary> {
+    return this.get<PointsSummary>('/points-summary');
+  }
+
+  /** GET /v1/portal/requests?state&kind&period&page&pageSize. */
+  listRequests(query: RequestListQuery = {}): Promise<RequestListPage> {
+    return firstValueFrom(
+      this.http.get<RequestListPage>(this.url('/requests'), {
+        params: queryParams(query),
+      }),
+    );
+  }
+
+  /**
+   * GET /v1/portal/requests/{id} — `observe: 'response'`; `etag` do cabeçalho (§2.2). Resolvida
+   * no próprio `next` da resposta (como `firstValueFrom`), sem envelope `async`: as facades de
+   * leitura refletem a resposta nos signals no tick seguinte à sua chegada.
+   */
+  getRequest(requestId: string): Promise<CommandResult<RequestDetail>> {
+    return new Promise((resolve, reject) => {
+      this.http
+        .get<RequestDetail>(
+          this.url(`/requests/${encodeURIComponent(requestId)}`),
+          { observe: 'response' },
+        )
+        .subscribe({
+          next: (response) =>
+            resolve({
+              body: response.body as RequestDetail,
+              etag: response.headers.get('ETag'),
+            }),
+          error: (error: unknown) => reject(error),
+        });
+    });
+  }
+
+  /** GET /v1/portal/requests/{id}/decision — 404 NOT_FOUND{kind:'decision'} = ainda sem decisão. */
+  getDecision(requestId: string): Promise<Decision> {
+    return this.get<Decision>(
+      `/requests/${encodeURIComponent(requestId)}/decision`,
+    );
   }
 
   private url(path: string): string {

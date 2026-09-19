@@ -142,3 +142,46 @@ src/testing/              stubs e harness dos specs (Inspector)
 - `forms/`: um schema zod por ato (`<Nome>Schema`, `strict`) e o `<NOME>_GATE: FormGate`
   transcrito da spec §7 — documentação verificável que nunca decide permissão; nenhum arquivo de
   `forms/` importa facade, guardas ou relógio.
+
+## Par 2 do app funcional (CTG-0003b): trilha de apelação
+
+- `data/portal.client.ts`: sete leituras (`listAits`, `getAit`, `getAitPoints`,
+  `getPointsSummary`, `listRequests`, `getRequest`, `getDecision`) — query por `HttpParams` só
+  com as chaves presentes, `encodeURIComponent` nos caminhos, nenhuma envia `Idempotency-Key`
+  nem `If-Match`; `getRequest` observa a resposta e devolve `CommandResult<RequestDetail>` com
+  o `ETag` (o `If-Match` do `withdraw`). Tipos em `data/portal-read.models.ts` (só `import type`
+  do gerado; os corpos que o OpenAPI deixa livres são transcritos do contrato de rotas —
+  `source_pending` marca o que OD-P69/P72/P74 ainda não fecham) e `data/read-status.ts`
+  (`ReadStatus` + `readStatusFor(presentation)`: mapeia a apresentação do `ErrorBoundary` ao
+  estado da tela; nunca lê `navigator`).
+- Facades por módulo, `@Injectable()` sem `providedIn`, providas na página (estado por
+  navegação, sem cache): `features/autos/autos.facade.ts` (T-14/T-01; filtro e paginação no
+  servidor; lista e resumo de pontos independentes; pontos do AIT lidos depois do detalhe),
+  `features/processos/processos.facade.ts` (T-06…T-11; ordenação por urgência SÓ pelo
+  `nextAction.dueOn` recebido, comparado como texto ISO; `withdraw` com `If-Match` do `ETag`;
+  `respondDiligence`; `nextStepRoute`), `features/{defesa,indicacao,pagamento}/*.facade.ts`
+  (contexto do ato, alvo do wizard, retomada por `shared/wizard-resume.ts` — `ResumeService` ou
+  pedido aberto em composição —, `existingRequestId`, `deadlines` sem transformação). As
+  leituras das facades de lista/detalhe resolvem ao despachar e entregam o resultado pelos
+  signals; os comandos resolvem com a resposta e releem o detalhe.
+- `shared/payment-comparison.component.ts` (`portal-payment-comparison`): faixas LADO A LADO num
+  único `fieldset`, ordem `PAYMENT_TIER_ORDER`, sem destaque; faixa que renuncia → advertência
+  antes do clique e `waiverRequested` (a página abre o `ConsequenceDialog` `renuncia_40` e só então
+  `selectTier`); faixa 40 visível e indisponível com motivo (`PAYMENT_FLAGS`, H.53/OD-P05, em
+  `features/pagamento/payment-flags.ts`); valores e datas formatados pelos pipes do kit no locale
+  do runtime de i18n; nenhum cálculo. `shared/process-timeline.component.ts`
+  (`portal-process-timeline`): ordem recebida, texto do catálogo por evento (token só em
+  `data-*`), "com você × com o órgão" pelos `deadlines[]`/diligências, documentos baixáveis ou
+  "indisponível" (nunca link vazio). `shared/prefilled-summary.component.ts`: um
+  `PrefilledField` por chave do mapa fechado `PREFILLED_LABEL_KEYS` (vazio até OD-P82).
+- 13 páginas em `features/{autos,defesa,indicacao,pagamento,processos}/pages/`, cada uma com
+  `host: { 'data-screen': 'T-nn' }`, `<h1 tabindex="-1">` focado ao concluir o carregamento,
+  região de estado `role="status"` (e, nas leituras, uma região `role="alert"`) presentes desde o
+  carregamento, `PortalErrorBannerComponent` para erros e `AlternativeChannelNote` em toda tela
+  de ato e indisponibilidade. Rotas: `moduleRoutes(module, { path: { component, title } })` —
+  guardas continuam vindo do manifesto. Os links levam o atributo `routerLink` espelhando a rota
+  (localização por atributo, como `data-*`).
+- Não há tabela de prazo, tempestividade, fila, nível ou disponibilidade no cliente: tudo chega
+  do servidor; delegações reais (`422 SERVICE_UNAVAILABLE { delegacao_indisponivel_r0007 }`)
+  aparecem como indisponíveis com motivo e canal, nunca simuladas (M15). Sem `canDeactivate`
+  neste par (OD-P79); polling/SSE, `/sne` e "formato acessível" persistente ficam para o par 3.
