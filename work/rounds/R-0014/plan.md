@@ -479,24 +479,24 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
 
 ## Retomada
 
-**Checkpoint 4 (2026-09-17, janela 3 — CTG-0003a em PR).**
+**Checkpoint 5 (2026-09-18, janela 4 — CTG-0003b em PR; par 3 em curso).**
 
-- CTG-0001: mesclado (PR #60). CTG-0002: mesclado (PR #61, `2888c9b`, `EV-976c235d27abf061`).
-- **CTG-0003a: PR #62 aberto** (commits `0d789f8` runner JIT + i18n, `8d2bc34` par 1, `25b270b`
-  artefatos, `3508462` evidência generic sequence 3, head `6050fd53…`); `delivery-review-CTG-0003a-2`
-  PASS; `pnpm check` EXIT 0 (711/714). **Próximo passo:** CI verde → `gh pr merge 62 --merge` →
-  `git fetch` + `git merge --no-edit origin/main` → `audit observe` no SHA do merge → commit.
-- Concluídas: TASK-0001…0009, 0013, 0014, 0019 (iterações: 0002 ×3, 0004 ×3, 0006 ×5, 0007 ×3,
-  0008 ×3, 0009 ×3).
-- Pendentes: CTG-0003b (TASK-0020 → 0015 → 0016; prompts a escrever, derivando dos de 0019/0008/0009
-  com escopo da trilha de apelação; os Inspectors incluem `typecheck` e cobertura integral de axe/Tab
-  desde o primeiro ciclo), CTG-0003c (0021 → 0017 → 0018), CTG-0004 (0010/0011), CTG-0005 (0012).
-- Lições desta janela para o método: (1) runner de app precisa da transformação JIT do Angular
-  (A7a) — fixado no padrão; (2) placeholders i18n na sintaxe do motor (`{x}`); (3) o reviewer não
-  aceita cobertura "parcial" declarada — completar antes do ciclo; (4) inspetor de matriz grande em
-  Sonnet/médio rendeu bem (3 iterações, 780 k brutos acumulados) — registrar em `waves.md` §Histórico (TASK-0012) o ajuste da heurística da escada, citando TASK-0008.
-- Último veredito do reviewer: `delivery-review-CTG-0003a-2` = PASS.
-- Git: `orchestra/portal-pwa` publicado, working tree limpa.
+- CTG-0001 (#60), CTG-0002 (#61), CTG-0003a (#62, `ddca527`, `EV-87c4bc8c41a7ee99`): mesclados.
+- **CTG-0003b: PR #63 aberto** (commits `eb3d656f`, `240f1366`, `b7346c0d`, `6166434b`, `343c92c4`;
+  evidência generic sequence 4, head `14aefcb3…`); `delivery-review-CTG-0003b-4` PASS (Claude/Opus,
+  desvio B2). **Próximo:** CI verde → `gh pr merge 63 --merge` → merge de `origin/main` → `audit
+observe` → commit.
+- **CTG-0003c em curso sobre a mesma worktree, sem commits até o merge do PR 3b** (regra §4.18 —
+  "nunca commits novos no branch de um PR aberto"): contrato `contracts/CTG-0003c.md` pronto
+  (TASK-0021, 115 critérios, OD-P87…P100), chaves i18n OD-P89 já no catálogo (commitadas no PR 3b),
+  TASK-0017 (Inspector) disparada com baseline 74 arquivos / 972 testes; depois TASK-0018 (Engineer),
+  delivery-review, PR 3c.
+- Pendentes: CTG-0004 (0010/0011), CTG-0005 (0012).
+- Lições desta janela: o maestro deve ler o veredito **inteiro** (o ciclo 2 do par 2 cobrou três
+  `high` omitidos por leitura truncada); reviewer Claude devolve o JSON entre cercas e, às vezes,
+  ecoa o veredito anterior — extrair o último bloco com `mode`/`verdict`.
+- Git: `orchestra/portal-pwa` publicado; working tree com `contracts/CTG-0003c.md` e
+  `tasks/TASK-0021.json` (par 3) não commitados.
 
 ## Leitura
 
