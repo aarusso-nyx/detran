@@ -1,6 +1,8 @@
 # R-0014 — frente `portal-pwa` (WP-P4…P6 do PORTAL: fichas, mapa de tradução, i18n, PWA e homologação)
 
-**Status:** **aberta em 2026-09-17** pelo maestro Fable 5.1 (janela 1 de 4; `AUTHORIZATION.md`).
+**Status:** **fechada em 2026-09-19 como PC-0007** (PRs #60…#66; último merge `48d103fc`,
+`EV-5b7c9c092cf57216`; evidências generic sequence 1…7). Aberta em 2026-09-17 pelo maestro Fable 5.1
+(janela 1 de 4; `AUTHORIZATION.md` + amendments 1–2).
 Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`. Worktree da sessão
 `/Volumes/Thiamat II/stech/detran/.claude/worktrees/r-0009-maestro-execution-33aaac` (substitui
 `detran-worktrees/portal-pwa`, inexistente), branch `orchestra/portal-pwa` (renomeado antes de
@@ -715,26 +717,14 @@ SENATRAN_MOCK_BASE_URL: http://127.0.0.1:3001 }` para `db:reset`, `build`, `node
 
 ## Retomada
 
-**Checkpoint 8 (2026-09-19, janela 5 — CTG-0004 mesclado; resta o CTG-0005).**
+**Checkpoint 9 — final (2026-09-19): rodada fechada como PC-0007.**
 
-- CTG-0001…0003c (PRs #60…#64) e **CTG-0004 (PR #65, `11d939f6`, evidência generic sequence 6,
-  observação `EV-631e1db24c09716e`)** mesclados. WP-P4, WP-P5 e WP-P6 executados.
-- Execução por Codex (B3/A13) provada no CTG-0004: contrato em 2 iterações; Inspector em 11;
-  Engineer em 5; review FAIL → FAIL (contestado, A24) → PASS. Decisões A13…A24. Lições: apontar ao
-  Architect a fonte de dados **do serviço** (não o seed homônimo); Codex trunca comandos > 30 s —
-  suítes em segundo plano com log + polling; sandbox sem `pkill`; `worker.sh` confere `git` pelo
-  transcript e libera rede; specs de Codex tendem a asserções por conjunto de status e escapes
-  condicionais — vedá-los no prompt (A15); um app isolado por arquivo (A18); nomes de variáveis
-  `SENATRAN_*_BASE_URL` nunca em `backend/**` (A19(c)).
-- **Próximo — CTG-0005:** `tools/orchestra/worker.sh gpt-5.6-luna low work/rounds/R-0014/prompts/TASK-0012.md work/rounds/R-0014/reports/TASK-0012.md`
-  (o prompt cita OD-P47…P10n → agora OD-P47…P108 e adendas A1…A24; o maestro atualiza o prompt
-  antes do disparo e recalcula `compositions.json`) → gates (`docs:kb:check`, `docs:kb:publish-check`,
-  `verify:parameter-catalogue`, `format:check`, `pnpm check`) → `delivery-review-CTG-0005` (Codex)
-  → commit → evidência (generic sequence 7) → PR 5 → merge → `audit observe` no HEAD final →
-  `closure.json` → `devai round close` → apagar o branch remoto → relatório final (§10) a partir de
-  `closure.md`.
-- Git: `orchestra/portal-pwa` = `origin/main` `11d939f6` + observação + este checkpoint; working
-  tree limpa após o commit.
+- PRs #60…#66 mesclados; observações em cada merge (última `EV-5b7c9c092cf57216` em `48d103fc`);
+  `devai round close` → `record/proofs/compliance/closures/PC-0007.json`; `closure.json` e
+  `closure.md` na pasta da rodada. PR de fechamento com estes artefatos, `waves.md` (PC-0007) e este
+  checkpoint; depois o branch remoto `orchestra/portal-pwa` é apagado.
+- Pendências herdadas (backlog): R-0007 (delegações), OD-P15/P16/P17/P19/P88 (homologação real),
+  OD-P61, OD-P102…P108, B1 (Lighthouse CI); R-0012 copia o padrão de app (`engineer-frontend.md`).
 
 ---
 
