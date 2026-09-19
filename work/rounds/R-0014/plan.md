@@ -667,6 +667,23 @@ SENATRAN_MOCK_BASE_URL: http://127.0.0.1:3001 }` para `db:reset`, `build`, `node
   **OD-P61**). O canônico (contrato de rotas + OpenAPI) prevalece sobre a paráfrase; mudar o enum
   aqui quebraria OpenAPI, app e seed sem decisão do Owner. Nenhuma alteração; ciclo 3 restrito
   com as fontes. Se o reviewer mantiver o FAIL, aplica-se §6 (desempate pela outra família: Opus).
+- **A25 (2026-09-19, TASK-0012 it. 1 — Codex Luna insuficiente; escalada a Terra).** A entrega
+  (88 linhas em 20 arquivos) resumiu OD-P47…P108 num parágrafo, não marcou WP-P4…P6 como
+  executados, não tocou `orchestra/README.md` (§4.17/§4.18/§10) e criou dois **parâmetros novos**
+  `portal.attachment.max_size_mb` (int 10) e `portal.attachment.accepted_types` (json "tipos aceitos
+  pela spec §7" — não é valor) como `vigente`, o que torna os gerados obsoletos
+  (`verify:parameter-catalogue`). Decisões: (a) escada §6 "segunda falha → nível acima": it. 2 em
+  **Terra/alto**, com lista de entregáveis verificável (uma linha por OD; seções nomeadas). (b)
+  OD-P66 no catálogo: `portal.attachment.max_size_mb` int **10** e `portal.attachment.accepted_types`
+  json **`["application/pdf","image/jpeg","image/png"]`** (spec §7; `upload_hint`/`anexos_hint`
+  do catálogo i18n), ambos status **`proposta`** (o app usa `ATTACHMENT_MAX_BYTES`/`accept` fixos —
+  A6(e); ninguém lê o parâmetro ainda), fonte "spec §7; A6(e); OD-P66"; o maestro roda
+  `pnpm parameters:generate` (Engineer, por script — ADR-0007) e commita os gerados junto.
+  (c) As fichas T10…T18 corrigidas na it. 1 ficam (tabela ficha → chave conferida). Ciclos do
+  review: 1 REVIEW (§10 de `portal-frontends.md` desatualizado → it. 3), 2 REVIEW (citação "M9"
+  ambígua → corrigida pelo maestro: CTG-0004 §5 / M9 de R-0009); OD-P66 registrada em
+  `decision-closure-plan.md` pelo maestro (o verificador exige a referência na KB); a linha
+  OD-P102 do build pack alinhada ao backlog ("aberta, unificação futura").
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,

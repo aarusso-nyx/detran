@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "docs/framework/arch/portal-frontends.md",
+      "line": 251,
+      "claim": "A linha atribui a inscrição push entregue ao `work/rounds/R-0014/plan.md` M9, mas M9 dessa rodada define i18n; a repetição na linha 263 preserva a mesma referência ambígua. A prova canônica da inscrição é CTG-0004 §5, que distingue inscrição de envio/VAPID.",
+      "fix": "Substituir a referência a M9 por `work/rounds/R-0014/contracts/CTG-0004.md` §5 (ou declarar explicitamente M9 de R-0009) e manter que só a inscrição foi entregue; VAPID e envio permanecem `source_pending`."
+    }
+  ],
+  "notes": [
+    "A consolidação da tabela agora separa entregas contra mock, dependências de R-0007 e ODs pendentes; OD-P102 está coerente com o build pack e o backlog."
+  ]
+}
