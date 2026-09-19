@@ -138,13 +138,15 @@ function sameJson(left, right) {
 }
 
 function environment(url) {
+  const password = decodeURIComponent(url.password);
   return {
     ...process.env,
     DB_NAME: database,
     DB_HOST: url.hostname,
     DB_PORT: url.port || '5432',
     DB_USER: decodeURIComponent(url.username),
-    DB_PASSWORD: decodeURIComponent(url.password),
+    DB_PASSWORD: password,
+    PGPASSWORD: password,
   };
 }
 
