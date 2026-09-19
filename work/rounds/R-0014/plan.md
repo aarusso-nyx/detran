@@ -408,6 +408,46 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
   as que citam `portal.states.retry|unavailable` ([DIVERGE-10/11]) são corrigidas no CTG-0005
   (TASK-0012), não agora; (c) [DIVERGE-9] T-08 com consequência inline; [DIVERGE-12] T-23 acessível
   por T-13; [DIVERGE-5] diálogo de consequência antes do `save()` na indicação.
+- **A9 (2026-09-18, TASK-0016 — bloqueios 1…10 do par 2).** Ratificações do Architect: (a)
+  semântica das leituras das facades (`AutosFacade`/`ProcessosFacade`): a promessa resolve ao
+  **despachar** a leitura e o resultado chega pelos signals (como implementado; o contrato §3 não
+  fixava) — `load()` das facades de ato mantém semântica de conclusão. (b) [DIVERGE] `StynxTableComponent`
+  1.3.1 só renderiza texto por célula (não hospeda links, `data-token` nem componentes por linha,
+  exigidos pelo contrato §6 para T-14/T-06) → lista semântica (`<ol>`/`<dl>`) + `StynxPaginationComponent`
+  (0-based ↔ 1-based) — registrado para o kit (OD-P83 proposta ao par 3/R-0012: extensão do kit).
+  (c) C-3b-70: a rota `avancada` com persona `simples` é bloqueada pelo `assuranceGuard` (M8,
+  intocável) — o spec monta com `avancada` e simula a insuficiência pelo `minimumAssurance` do 201. (d) C-3b-85/87: enquanto OD-P60 pender, a assinatura nos specs de T-13/T-23 é por `upload`
+  (`signatureRef` do anexo), nunca `govbr` sem `signatureRef`. (e) C-3b-75: a asserção
+  `not.toContain('parecer')` é contraditória com `portal.forms.recurso_cetran.hint`/`t04.intro` —
+  substitui-se por "o parecer não é editável" (sem `textarea`/`input` para ele). (f) Bloqueios
+  1, 2, 6, 7, 8, 9 são mecânica de spec (dupla montagem no mesmo `it` → `resetTestingModule` ou um
+  `it` por cenário; asserções síncronas em zoneless → `vi.waitFor`; checkbox do diálogo com `bubbles`
+  - `await`; passo 2 só após o 201; `dirname(fileURLToPath(import.meta.url))`; literais `rait.*`
+    montados por `join('.')`) → TASK-0015 it. 2. (g) `angular.json` `maximumWarning` do bundle inicial
+    sobe para 600 kB (maestro; leituras novas no chunk inicial — 503,87 kB); o erro fica em 1 MB.
+    (h) OD propostas por TASK-0016: OD-P84 rótulo da opção "sem filtro" dos `<select>` de T-14/T-06;
+    OD-P85 enum canônico de `driver.category`/`driver.cnhUf` (hoje listas públicas CTB/IBGE no
+    cliente); OD-P86 `FieldErrorsDirective` preservar `aria-describedby` alheios (par 1); **OD-P101** origem do `locale` para `Intl` (`AvailableBrand` não o expõe; hoje o do runtime de i18n).
+- **A10 (2026-09-18, delivery-review-CTG-0003b REVIEW — 6 high + 6 low; os três primeiros `high` — C-3b-103 parcial, C-3b-84 condicional, C-3b-104 com escape — foram omitidos pelo maestro na leitura do veredito e entraram como (j)/(k)/(l) após o ciclo 2).** (a) Precedência de
+  disponibilidade dos meios de pagamento: **o servidor prevalece** (`payment.methods`/422
+  `PAYMENT_METHOD_UNAVAILABLE` → `data-reason="server"`) e as flags estáticas (`PAYMENT_FLAGS`,
+  H.53/OD-P05) só quando o servidor não se pronuncia — como o contrato §4.2; `methodReason`
+  invertido (Engineer) e C-3b-87 volta a `cartao` (Inspector). (b) Composição de T-13/T-23
+  **ratificada**: a `PaymentComparison` é renderizada pela página assim que o `payment` chega
+  (antes do `POST requests`, como C-3b-86/87 exigem) e `PagamentoForm` é o passo 2 lógico do
+  wizard (grava em `wizard.values` → `saveAndContinue`); contrato §3.4/§4.4/§6 T-13/T-23 leem-se
+  assim. (c) T-05: o documento assinado do caminho (b) entra pelo `SignatureStep` (`upload` →
+  `signatureRef`), não por `AttachmentUploader` no passo 2 — `IndicacaoCondutorSchema` é estrito
+  sem `attachmentIds`; OD-P81 estendida (onde gravar anexos da indicação no rascunho). (d) `runAit`:
+  pontos lidos **após** o detalhe (falha do detalhe não pede pontos) — ratificado; contrato §3.2
+  "em paralelo" lê-se "na mesma carga". (e) `amount === null` → `portal.forms.pagamento.valor_indisponivel`
+  (não `portal.states.empty`); C-3b-36 idem. (f) Asserções de "retry" só por
+  `[data-next-step="retry"]` (sem `, button`). (g) C-3b-70: insuficiência simulada com nível de
+  sessão abaixo do exigido (stub rebaixa `assuranceLevel` após a navegação) preservando a asserção
+  do `AssuranceExplainer`; nunca `qualificada` como exigência. (h) `<select>` de T-14/T-06 sem
+  filtro: não ligar `[value]` quando a query não tem filtro (até OD-P84). (j) C-3b-103: um caso de `axe` por estado da tabela §7 em cada uma das 13 telas (inclusive `loading` e `offline`; `partial` em T-13/T-23), `h1` único, `aria-label` = `portal.a11y.status_region` na região de status e foco no banner `severity: 'error'` — cobertura integral, sem redução. (k) C-3b-84: `expectOne` do `submit` obrigatório (sem `.catch(() => null)`/`if`); as três asserções negativas de M15/OD-P74 no corpo do `it`. (l) C-3b-104: `expectOne` obrigatório da leitura de `/v1/portal/aits/{id}` (sem `if (!req) return`), comentário obsoleto removido. (i) **OD-P101** (renumerada: OD-P87 é a origem do `If-Match` de `PUT preferences`, contrato do par 3) — origem do
+  `locale` para `Intl` (expor em `BrandService.state()`/`AvailableBrand` no par 3 ou usar o do
+  runtime de i18n, como hoje).
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,

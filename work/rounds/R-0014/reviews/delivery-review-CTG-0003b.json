@@ -1,0 +1,115 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "apps/portal/web/src/app/features/pagamento/pages/pagamento-preservando-recurso.page.spec.ts",
+      "line": 274,
+      "claim": "C-3b-103 entregue parcial: o contrato exige `axe` em CADA estado da tabela §7 (loading, ready, empty, not_found, error, unavailable, offline, partial) para as 13 telas, mas há 30 casos de axe ao todo — 2 a 3 por tela, nenhum de `loading` e nenhum de `offline`, e T-23 com um único estado (`preserving_appeal`; sem not_found/erro/indisponível/partial). Além disso as três outras asserções de C-3b-103 não existem em nenhum spec do par: `h1` único (nenhum `querySelectorAll('h1')`), região de estado com `aria-label` `portal.a11y.status_region` (0 ocorrências em specs) e foco no banner de erro. É exatamente a 'cobertura parcial declarada' que `plan.md` §Retomada manda evitar desde o primeiro ciclo neste CTG e que o delivery-review do CTG-0003a recusou (§Pendências de cobertura).",
+      "fix": "Iteração restrita do Inspector (TASK-0015): um caso de axe por estado da tabela §7 em cada uma das 13 telas (incl. loading e offline; partial em T-13 e T-23) e asserções explícitas de `h1` único, `aria-label`=`portal.a11y.status_region` e foco no banner `severity: 'error'`; ou, se a cobertura integral for reduzida por decisão, registrar a redução em `plan.md` §Pendências de cobertura com a OD/adenda que a autoriza."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/pagamento/pages/pagamento.page.spec.ts",
+      "line": 258,
+      "claim": "C-3b-84 (critério [negativo] de M15/OD-P74) é condicional: `const submitReq = await vi.waitFor(...).catch(() => null)` (l. 249-257) e todas as asserções do critério — `portal-protocol-receipt`, `portal.states.unavailable_in_version` para o documento de arrecadação e `not.toMatch(/pixCopyPaste|barcode|\\d{44,}/)` — ficam dentro de `if (submitReq) { … }`. Se o `POST …/submit` deixar de ocorrer (regressão no ciclo assinar→protocolar), o teste passa verde sem verificar nada: o gate 'nunca um boleto/PIX simulado' deixa de existir silenciosamente.",
+      "fix": "Remover o `.catch(() => null)` e o `if`: `expectOne` do `submit` como asserção obrigatória (o fluxo por `upload` da adenda A9(d) já chega lá) e manter as três asserções no corpo do `it`."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/autos/static-analysis.appeal.spec.ts",
+      "line": 65,
+      "claim": "C-3b-104 (offline transversal) tem escape silencioso: `if (!req) { onLineSpy.mockRestore(); return; }` — o `it` termina verde quando a leitura HTTP não aparece em 300 ms. O comentário (l. 51-54) justifica o guarda pelo estado anterior à TASK-0016 ('a rota ainda renderiza PlaceholderPageComponent'), premissa que deixou de valer nesta entrega e que a iteração 2 do Inspector não retirou. Um `it` que pode passar sem executar nenhuma asserção é skip implícito (§4.5 do método; rubrica 7).",
+      "fix": "Iteração restrita do Inspector: trocar o `vi.waitFor(...).catch(() => null)` + `return` por `expectOne` obrigatório da leitura de `/v1/portal/aits/{id}` e manter as asserções de `portal.states.offline` / `role=\"alert\"` / ausência de retry automático."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "apps/portal/web/src/app/shared/payment-comparison.component.ts",
+      "line": 522,
+      "claim": "Contradição contrato × código resolvida sem adenda do Architect: `methodReason` dá precedência à flag estática sobre a resposta do servidor (`cartao` com `flags.cardPayment=false` → `data-reason=\"portal.card_payment\"` mesmo sob `422 PAYMENT_METHOD_UNAVAILABLE`), enquanto o contrato §4.2 diz que `payment.methods` do servidor 'prevalece sobre estas flags' e C-3b-87 fixa `cartao` com `data-reason=\"server\"`. O Inspector reescreveu o critério para `boleto` com `available:['pix','debito']` (spec l. 156 e comentário l. 223-225) — a adenda A9 ratifica só (c), (d) e (e), não esta.",
+      "fix": "Adenda numerada do Architect (A10) ratificando a precedência flag → servidor e a reescrita de C-3b-87 (`boleto`), OU inverter a precedência em `methodReason` e repor o critério original com `cartao`."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "apps/portal/web/src/app/features/pagamento/pages/pagamento.page.ts",
+      "line": 108,
+      "claim": "Composição de T-13/T-23 diverge do contrato §3.4 ('a página hospeda `<portal-service-wizard>` … e projeta o formulário do passo 2') e §4.4 ('`PagamentoFormComponent` (passo 2 projetado no wizard)'): a página renderiza `<portal-pagamento-form>` fora do wizard (l. 108-127) e instancia `<portal-service-wizard #wizard … />` sem conteúdo projetado (l. 128). O relatório do Engineer registra a decisão (C-3b-86/87 exigem a comparação antes do `POST requests`), mas nenhuma adenda a ratifica; consequência observável: a comparação aparece antes de o pedido existir e o passo 'composicao' do wizard fica vazio nas duas telas de pagamento.",
+      "fix": "Adenda do Architect ratificando a composição (comparação fora do `ng-content`, `PagamentoForm` como passo 2 lógico) e ajustando §4.4/§6 T-13/T-23; ou projetar o formulário no wizard e reescrever C-3b-86/87."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "apps/portal/web/src/app/features/indicacao/components/indicacao-condutor-form.component.ts",
+      "line": 6,
+      "claim": "T-05 entrega sem um componente que o contrato §6 lista: 'AttachmentUploader (caminho b) quando `signatures.owner|driver === 'upload'`'. O formulário não importa nem renderiza `AttachmentUploaderComponent` (só `PrefilledSummary` + campos + assinaturas); o cabeçalho do arquivo justifica pela estrita `IndicacaoCondutorSchema` sem `attachmentIds` e delega ao `SignatureStep`. A justificativa consta do relatório do Engineer, mas não há adenda do Architect nem OD — e o caminho (b) de [RN-PORTAL-104] fica sem lugar de envio no passo 2.",
+      "fix": "Adenda do Architect ratificando 'documento assinado entra pelo SignatureStep' (e corrigindo §6 T-05), ou OD sobre onde `attachmentIds` do caminho (b) é gravado no rascunho da indicação (extensão de OD-P81)."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "apps/portal/web/src/app/features/autos/autos.facade.ts",
+      "line": 158,
+      "claim": "`runAit` lê `getAitPoints` SEQUENCIALMENTE, depois do detalhe (l. 173-178), enquanto o contrato §3.2 documenta 'GET aits/{id} (+ GET aits/{id}/points em paralelo…)'. Diferença observável no caminho de erro: com 404/503 no detalhe, os pontos não são pedidos. Nenhum critério é violado (C-3b-12 só exige uma chamada e isolamento da falha) e o cabeçalho do arquivo documenta a escolha, mas ela não está em §Fora de escopo do relatório nem em adenda.",
+      "fix": "Ratificar em adenda (leitura de pontos após o detalhe) ou disparar as duas leituras juntas."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "apps/portal/web/src/app/shared/payment-comparison.component.ts",
+      "line": 182,
+      "claim": "Faixa com `amount === null` mostra `portal.states.empty` = 'Nenhum registro encontrado.' no lugar do valor — texto genérico de lista vazia onde se espera um valor monetário ([IU-PORTAL-001] §E, linguagem cidadã). O contrato §4.3.2 pedia `portal.states.empty` 'chave própria: OD-P70', e OD-P70 já entregou `portal.forms.pagamento.valor_indisponivel` = 'Valor não disponível no momento' (TASK-0006 it. 6), que ficou sem uso. A nota do maestro ('`amount` null → \"valor indisponível\" com chave') não corresponde ao código.",
+      "fix": "Trocar por `portal.forms.pagamento.valor_indisponivel` (mantendo `data-amount=\"unavailable\"`) e ajustar C-3b-36 e §4.3.2."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/autos/pages/ait-detail.page.spec.ts",
+      "line": 256,
+      "claim": "Asserção de 'botão retry' enfraquecida por seletor alternativo: `root.querySelector('[data-next-step=\"retry\"], button')` (mesmo padrão em `features/processos/pages/request-detail.page.spec.ts:168` e `features/pagamento/pages/pagamento.page.spec.ts:345`) — qualquer `<button>` da página satisfaz o critério. O `PortalErrorBanner` já expõe `data-next-step` no contêiner (`core/error-banner.component.ts`), então o seletor preciso é suficiente.",
+      "fix": "Remover o `, button` das três asserções, deixando só `[data-next-step=\"retry\"]`."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "apps/portal/web/src/app/features/defesa/pages/defesa-previa.page.spec.ts",
+      "line": 208,
+      "claim": "C-3b-70 simula a insuficiência de nível com `minimumAssurance: 'qualificada'` no 201 — nível que [RN-PORTAL-101]/M8 dizem que nunca é exigido —, e por isso o próprio spec troca a asserção do contrato ('e o AssuranceExplainer do par 1') por `portal.errors.assurance_qualified_never_required` (l. 263-268). A mecânica decorre de A9(c), mas o efeito é que o estado real 'sem permissão' de T-02 (exigência `avancada` com sessão `simples`) continua sem teste e um elemento do critério foi substituído sem adenda.",
+      "fix": "Registrar em adenda a substituição do `AssuranceExplainer` por `assurance_qualified_never_required` em C-3b-70, ou simular a insuficiência com nível de sessão abaixo do exigido (stub que rebaixa `assuranceLevel` após a navegação), preservando a asserção do explainer."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "apps/portal/web/src/app/features/autos/pages/ait-list.page.ts",
+      "line": 107,
+      "claim": "Os `<select>` de T-14 (`name=\"status\"`, 7 opções) e T-06 (`name=\"state\"`, 13 opções) não têm opção 'sem filtro', mas o valor ligado é `facade.query().status ?? ''`: sem filtro nenhum `<option>` casa com `''` e o navegador exibe a primeira situação como selecionada enquanto a lista vem inteira — o controle informa um estado que não é o do dado. A lacuna está registrada (OD-P84, A9(h)), mas C-3b-60 fixa 'exatamente 7 opções', o que impede a correção sem mexer no critério.",
+      "fix": "Ao fechar OD-P84, ajustar também C-3b-60 (7 tokens + 1 opção 'todas') ou, até lá, não ligar `[value]` quando a query não tem filtro."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "apps/portal/web/src/app/shared/payment-comparison.component.ts",
+      "line": 9,
+      "claim": "O contrato §4.3.2 manda formatar `amount` com `Intl.NumberFormat(brand.locale, …)` (`locale` de `GET brand`, CTG-0003a A1), mas `AvailableBrand` do par 1 (congelado) não expõe `locale`; a entrega usa o locale do runtime de i18n. Inspector e Engineer apontaram a lacuna nos relatórios, porém nenhuma OD foi aberta para a origem do `locale` (A9(h) propõe só OD-P84/85/86) — fonte pendente sem `OD-*` contraria a regra 'nada inventado / lacuna vira OD'.",
+      "fix": "Abrir OD (ex.: OD-P87) para expor `locale` em `BrandService.state()`/`AvailableBrand` e citar a decisão em §4.3.2."
+    }
+  ],
+  "notes": [
+    "Gates não foram reexecutados por mim (o prompt fixa trabalho somente de leitura); julguei sobre a árvore staged e os números do maestro. O log citado (`pnpm-check-ctg3b.log`) não está na worktree — registrar o caminho ou anexar ao evidence.",
+    "Item 1 (papel) OK: TASK-0020 Architect, TASK-0015 Inspector, TASK-0016 Engineer, TASK-0006 it.6 Architect (transcr.); item 3/§9 (fronteira) OK — o staged só toca `apps/portal/web/**` e `work/rounds/R-0014/**`; nenhum arquivo 'Generated from BP-…', nenhum `packages/**`, nenhum `zz-*.spec.ts` remanescente.",
+    "Item 7 OK no essencial: nenhum `it.skip`/`.only`; os 7 `it.todo` citam OD-P54/P59/P60/P72/P74/P76; nenhum arquivo gerado editado à mão. As três mudanças de asserção com adenda (A9c/d/e) conferem; as ressalvas estão nos achados acima.",
+    "Item 8/9 OK: nenhum `new Date`/`Date.now`/`getTime`/`localStorage`/`navigator.onLine` em código de produção do par (só em specs de análise estática); nenhuma URL externa nos arquivos do §1; ordenação por urgência só por comparação de texto ISO; tokens crus só em `data-*`/`data-reason`.",
+    "Item 13 OK: a exaustividade de presença/ausência continua em `app.guards-matrix.spec.ts` (persona anônima/simples/avancada/qualificada × disponibilidade × vínculo para todas as rotas do manifesto), agora montando páginas reais; C-3b-54 cobre as 10 rotas com vínculo e C-3b-55 os 4 serviços `unavailable` das fixtures.",
+    "`ProcessTimeline` (7 estados) e `PaymentComparison` (6 casos) têm axe por estado — a lacuna de a11y é só nas 13 páginas; em `PaymentComparison` os casos 'flag off' e 'cartão desabilitado' repetem o estado padrão (PAYMENT_FLAGS já desliga ambos) e o estado `disabled` (wizard ocupado) de C-3b-43 não é coberto.",
+    "Chaves i18n órfãs criadas na iteração 6 do transcriber: `portal.forms.pagamento.valor_indisponivel`, `portal.forms.pagamento.tier.integral_juros` (o rótulo usado é `portal.screens.t23.field.valor_integral`), `portal.common.action.dismiss` e `portal.forms.assinatura.upload_hint` (alvo é o par 1, congelado). Sem gate que as detecte (o scanner verifica usado ⊆ catálogo, não o inverso).",
+    "`angular.json` `maximumWarning` 500 → 600 kB (A9(g), maestro): é afrouxamento de limiar, ainda que só de aviso e com `maximumError` em 1 MB; vale registrar o valor real (503,87 kB) no fechamento para que o par 3 não use os 96 kB de folga sem revisão.",
+    "`src/testing/router-harness.ts` passou a receber `readonly unknown[]` no lugar de `Provider[]` para aceitar `ModuleWithProviders` e componentes standalone: perde-se tipagem nos 50 specs anteriores; aceitável como infraestrutura de teste, mas convém restringir a `Provider | ModuleWithProviders<unknown> | Type<unknown>` no par 3.",
+    "A semântica ratificada em A9(a) (leituras das facades resolvem ao despachar) faz `loadList/loadDetail/loadDecision(): Promise<void>` não significar 'concluído' — armadilha para chamadores futuros; o par 3 deveria tipar isso explicitamente (ex.: `dispatch*`) ou documentar no contrato §3."
+  ]
+}
