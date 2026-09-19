@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-INTEGRATION-RENAEST-MIRROR-001",
+  "module": {
+    "name": "RenaestMirror",
+    "namespace": "integration",
+    "version": "1.0.0",
+    "ddlFile": "72-integration-renaest-mirror.sql",
+    "dependencies": {
+      "@detran/shared": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/renaest-mirror.projection",
+        "symbol": "RenaestMirrorProjection"
+      }
+    ],
+    "handwrittenExports": ["handwritten/renaest-mirror.projection"],
+    "owners": ["detran-senatran-adapter"],
+    "description": "Espelho consumidor integration.renaest_mirror fisicamente em backend/domains/integration/renaest-mirror e logicamente do adapter (ADR-0001 amendment; ADR-0020 Decision 1, 3 e 4; C-2-14). O projetor manuscrito recebe eventos e recibos BOAT canonicos da integration.outbox, mantendo somente protocolo, situacao nacional, retificacoes e ledger local. Ele nao chama SENATRAN, nao tem FK para est.*, nao le est.* exceto pela leitura de evento permitida em arquivo *.projection.ts, e nunca altera o estado BOAT."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "RenaestMirror",
+        "table": "renaest_mirror",
+        "primaryKey": ["id"],
+        "description": "Espelho por sinistro do protocolo e da situacao nacional recebidos em SINISTRO_TRANSMITIDO, SINISTRO_SITUACAO_NACIONAL e SINISTRO_RETIFICADO. retifications_json conserva somente fatos de retificacao necessarios ao painel de integracao, sem dados pessoais ou de saude.",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "crash_id", "type": "uuid" },
+          { "name": "protocol", "type": "varchar(160)", "nullable": true },
+          {
+            "name": "national_status",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "rectifications_json",
+            "type": "jsonb",
+            "default": "'[]'::jsonb"
+          },
+          { "name": "last_event_id", "type": "uuid" },
+          { "name": "event_schema_version", "type": "integer" },
+          { "name": "aggregate_version", "type": "integer" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_integration_renaest_mirror_crash",
+            "columns": ["tenant_id", "crash_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_integration_renaest_mirror_status",
+            "columns": ["tenant_id", "national_status"]
+          },
+          {
+            "name": "ix_integration_renaest_mirror_protocol",
+            "columns": ["tenant_id", "protocol"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_integration_renaest_mirror_status",
+            "expression": "national_status is null or national_status in ('RECEBIDO','EM_ANALISE','CONSOLIDADO','REJEITADO')"
+          },
+          {
+            "name": "ck_integration_renaest_mirror_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "RenaestMirrorAppliedEvent",
+        "table": "renaest_mirror_applied_event",
+        "primaryKey": ["id"],
+        "description": "Ledger idempotente de integration.renaest_mirror. O efeito no espelho e a linha desta chave unica sao atomicos sob RLS, para replay integral e incremental sem duplicar recibo ou retificacao.",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "projection_name", "type": "varchar(80)" },
+          { "name": "event_id", "type": "uuid" },
+          { "name": "event_schema_version", "type": "integer" },
+          { "name": "aggregate_version", "type": "integer" },
+          { "name": "applied_at", "type": "timestamptz", "default": "now()" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_integration_renaest_mirror_applied_event",
+            "columns": ["tenant_id", "projection_name", "event_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_integration_renaest_mirror_replay",
+            "columns": ["tenant_id", "projection_name", "applied_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_integration_renaest_mirror_applied_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/integration/renaest-mirror/",
+    "resources": [
+      {
+        "entity": "RenaestMirror",
+        "path": "mirrors",
+        "resource": "renaest-mirror",
+        "operations": []
+      },
+      {
+        "entity": "RenaestMirrorAppliedEvent",
+        "path": "applied-events",
+        "resource": "renaest-mirror-applied-event",
+        "operations": []
+      }
+    ]
+  },
+  "auth": {
+    "source": "INTEGRATION_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

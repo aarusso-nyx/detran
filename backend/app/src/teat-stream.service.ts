@@ -53,6 +53,8 @@ export const STREAM_RESOURCE_BY_TYPE: Readonly<Record<string, string>> = {
   'measure.changed': 'inf:administrative-measure',
   'alcohol.changed': 'inf:alcohol-procedure',
   'shift.changed': 'ops:shift',
+  'crash.changed': 'est:crash-record',
+  'crash.renaest.changed': 'est:crash-renaest-submission',
 };
 
 /** O servidor só emite quando o principal lê o recurso do `type` (§7.2). */

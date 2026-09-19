@@ -1,0 +1,71 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0021.md",
+      "line": 35,
+      "claim": "O critério delega ao maestro o ambiente que decide a segunda asserção, mas não dá ao worker nenhum valor de conexão: `ops-modules.e2e.spec.ts:13-16` cai no default `postgresql://postgres:postgres@localhost:5432/detran` e `AgencyUnitRepository.findAll` (backend/domains/ops/agency/src/repositories/agency-unit.repository.ts:31-39) executa `select * from ops.agency_unit` sem filtro de tenant — o isolamento é 100% RLS. Rodando sem `STYNX_APP_DATABASE_URL`/`STYNX_READER_DATABASE_URL` sob `role_app_backend`, a app conecta como superusuário, a RLS é ignorada e o segundo teste falha com a unidade do tenant …0302 no corpo, exatamente a asserção que o prompt proíbe afrouxar.",
+      "fix": "Incluir no prompt o preâmbulo exato de ambiente (nome do banco isolado / `DETRAN_TEST_DATABASE_URL`, mais `STYNX_APP_DATABASE_URL` e `STYNX_READER_DATABASE_URL` com identidade `role_app_backend`) e a regra: corpo não vazio em `/v1/ops/agency/units` significa ambiente errado (RLS burlada), nunca teste a ajustar — reportar ao maestro."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0021.md",
+      "line": 16,
+      "claim": "A lista fechada cita `work/rounds/R-0010/contracts/CTG-0002.md` (adenda A-2) como contrato desta tarefa, mas a adenda A-2 (CTG-0002.md:224-238) trata exclusivamente do sensor TEAT `teat-field-sync.e2e.spec.ts` C-0002-44 e de `BOAT.SYNC_INVALID_CRASH_RECORD`; não há uma linha sobre a fixture OPS. Nenhum texto de contrato governa TASK-0021, e o worker que ler A-2 encontrará semântica de outra tarefa.",
+      "fix": "Trocar a referência por `plan.md` §Triagem (primeiro marcador, diagnóstico OPS 403 `TENANT_ACCESS_DENIED`) e registrar a fronteira desta correção em adenda própria (A-3) de CTG-0002 antes do disparo."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0021.md",
+      "line": 31,
+      "claim": "O prompt manda usar \"identidades locais existentes no teste\", mas `ops-modules.e2e.spec.ts` só define `localTenantId`; o ator `00000000-0000-4000-8000-000000000002` vem do default de `detran-runtime.ts:72`, e slug/nome/e-mail não são citados. `auth.tenants.slug`, `uq_auth_tenants_name` e `auth.users.email` são únicos globalmente (02-auth.sql:2-47), logo qualquer valor divergente colide com as mesmas linhas criadas por `inf-ait-routes.e2e.spec.ts:39-53`, `pec-idempotency.e2e.spec.ts:25-38` e `portal-identity.e2e.spec.ts:202-216` no mesmo banco.",
+      "fix": "Acrescentar a seção §Definições do `worker-prompt.template.md` fixando os valores canônicos a copiar: tenant `…0001` slug `local-e2e` nome `Local E2E`, usuário `…0002` e-mail `local-e2e@detran.invalid`, membership `is_active = true`."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0021.md",
+      "line": 23,
+      "claim": "A exigência de limpar tenant/usuário/membership no `afterAll` diverge das três specs irmãs, que inserem a identidade local de forma idempotente e nunca a apagam; `auth.tenants` cascateia para users, memberships, roles, groups e sessions (02-auth.sql) e o tier e2e roda tudo no mesmo processo (`vitest.config.ts`, `fileParallelism: false`), tornando a fixture compartilhada dependente da ordem de arquivos.",
+      "fix": "Adotar explicitamente a convenção de `inf-ait-routes.e2e.spec.ts` (upsert idempotente sem remoção da identidade local compartilhada), mantendo o cleanup apenas da unidade do outro tenant já existente."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0010/prompts/TASK-0021.md",
+      "line": 19,
+      "claim": "A lista fechada manda ler `detran-runtime.ts` (974 linhas) e `app.module.ts` (629 linhas) inteiros para dois fatos pontuais, contrariando a parcimônia do README §5.",
+      "fix": "Ancorar as leituras: `detran-runtime.ts:60-80` (identidade local) e `app.module.ts:159-230` (`patchTenantContextInterceptorOrdering`, exigência de X-Tenant-Id + ator com membership ativa)."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0021.md",
+      "line": 36,
+      "claim": "`git diff --check` aparece como critério de aceitação do worker, enquanto a linha 3 proíbe qualquer execução de git; o parêntese \"(o maestro usa git)\" reconhece a contradição em vez de removê-la.",
+      "fix": "Mover `git diff --check` para os gates do maestro e deixar no worker apenas `pnpm format:check` e o comando dirigido de vitest."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0010/tasks/TASK-0021.json",
+      "line": 11,
+      "claim": "`MOD-app-e2e-ops-modules` não aparece em nenhuma outra tarefa nem na tabela §Tarefas de `plan.md`, que é o registro de locks da rodada; a tarefa é declarada em `coupled_task_group: CTG-0002` com `upstream_task_id: TASK-0006` e tag `wp-b2`, embora repare fixture legada de OPS sem relação com o escopo de CTG-0002 (§1 do contrato), o que a arrasta para o PR e a evidência daquele grupo.",
+      "fix": "Registrar a linha de lock de TASK-0021 em `plan.md` §Tarefas e justificar o agrupamento em adenda de CTG-0002, ou tratá-la como reparo fora do grupo acoplado."
+    }
+  ],
+  "notes": [
+    "Item 1: papel Inspector é compatível — a fronteira é um arquivo `*.e2e.spec.ts` e nenhuma linha de `src/` de produção.",
+    "Item 3 (FKs): a fronteira basta. A cadeia exigida é auth.tenants → auth.users(tenant_id) → auth.memberships(tenant_id,user_id), toda inserível pelo cliente owner da própria spec; `ops.agency_unit.tenant_id` não tem FK (13-ops-agency.sql:7-16), então a unidade do tenant …0302 continua dispensando linha em auth.tenants.",
+    "Item 4 (comando): `pnpm --filter @detran/app exec vitest run --config vitest.config.ts tests/e2e/ops-modules.e2e.spec.ts` é executável — `vitest` é devDependency de `@detran/app` e `DETRAN_TEST_TIER=e2e` seleciona `tests/e2e/**` em `vitest.config.ts`; `pnpm format:check` existe na raiz; 2/2 corresponde aos dois `it` do arquivo.",
+    "Item 6/13: o prompt preserva as duas provas (montagem 200 nas 8 rotas e corpo vazio cross-tenant) e proíbe skip/todo e asserção mais fraca; não há implementação acoplada, logo a tríade não é reaberta. O veredito libera apenas TASK-0021.",
+    "Item 5 (seed): o tenant local …0001 não existe em `backend/database/seed/` (o canônico semeado é …a001), e a regra 5 do `worker-prompt.template.md` desaconselha criar tenants próprios; a criação na spec segue precedente de três specs irmãs, mas vale registrar como dívida a promoção dessa identidade local para `backend/database/seed/`, fora da fronteira deste Inspector.",
+    "Item 12 (modelo): `luna`/`medium` para Inspector confere com `model-ladder.md` (linha 28); `compositions.json` PC-d5a19f9afaa349c7 bate com o sha256 do prompt."
+  ]
+}

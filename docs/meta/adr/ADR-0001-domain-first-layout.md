@@ -26,6 +26,11 @@ around applications:
   evidence custody, offline sync).
 - Transversal elements: `portal` and `dashboard` backend domains (aggregates and
   read-models across domains), `senatran-mock` and `packages/senatran-adapter`.
+- `integration` is a limited physical home for a consumer projection whose logical
+  owner is an adapter. It is currently authorised only for
+  `backend/domains/integration/renaest-mirror`: the package owns
+  `integration.renaest_mirror` as a rebuildable read model under ADR-0020, while
+  `packages/senatran-adapter` retains exclusive ownership of every SENATRAN call.
 - Top-level `backend/` (composition root + domain packages + DDL) is a sibling of
   `apps/`, which holds **frontends only**; each app actually builds with its own
   package.json. `apps/pec/web` is a reserved slot (pec is backend-only today).
@@ -40,8 +45,11 @@ around applications:
   `apps/` plus their domain modules.
 - The `vam` slot documents the deliberate non-goal: RENAVAM build-out is deferred by
   decision and must not be started without an owner decision.
-- Cross-domain code has exactly two sanctioned homes — `backend/domains/shared`
-  (thin, detran-specific) and the stynx platform (generic) — preventing a relapse
-  into app-siloed duplication.
+- Cross-domain code has exactly two general sanctioned homes —
+  `backend/domains/shared` (thin, detran-specific) and the stynx platform
+  (generic). The limited `integration.renaest_mirror` exception above is a physical
+  adapter-owned projection package, not a third general cross-domain utility home;
+  it may receive canonical BOAT events and receipts but may not call SENATRAN or
+  write back to `est.*`.
 - Package-boundary discipline (explicit deps) is enforceable in CI and is a
   precondition for the module-by-module migration of ADR-0004.

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0016",
+  "round_id": "R-0010",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Provar o relatório preliminar PDF/A e a falha de conformidade",
+  "description": "Escrever testes RED para renderização pela fachada, template e política versionados, bytes PDF/A-2b conformes, hash e imutabilidade, isolamento tenant e rejeição de PDF inválido; não aceitar marcador textual como prova de conformidade.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-shared-documents",
+    "MOD-est-document-template",
+    "MOD-adr-0018",
+    "MOD-inf-normative-document-catalogue"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0015",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 16,
+  "tags": ["wp-b2", "documents", "adenda-a1"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-449797d942c60f16",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "--filter", "@detran/est-crash", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "--filter", "@detran/app", "test:real"]
+  ],
+  "created_at": "2026-09-16T21:40:50Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-449797d942c60f16",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

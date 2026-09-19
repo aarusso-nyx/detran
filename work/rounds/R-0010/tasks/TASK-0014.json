@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0014",
+  "round_id": "R-0010",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar projetores BOAT e gate de fronteiras de domínio",
+  "description": "Implementar três projetores consumidores, replay idempotente com ledger transacional, leitura segura e verify:domain-boundaries contra testes RED.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-crash-view",
+    "MOD-dashboard-crashes",
+    "MOD-integration-renaest-mirror",
+    "MOD-app-composition"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-b2", "wp-p", "projections"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-a51025a66cd1f870",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/app", "test:integration"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "verify:domain-boundaries"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "typecheck"],
+    ["pnpm", "format:check"],
+    ["node", "--test", "tools/domain-boundaries/tests/*.test.mjs"]
+  ],
+  "created_at": "2026-09-16T18:45:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-a51025a66cd1f870",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0013"
+}

@@ -21,6 +21,7 @@ import {
   type SyncEntityApplier,
 } from '@detran/ops-core';
 import { AitSyncApplier } from '@detran/inf-ait';
+import { CrashSyncApplier } from '@detran/est-crash';
 import { SqlTeatEventOutbox } from '@detran/shared';
 
 /** Porta "a entidade já foi aplicada?" do AIT, consumida por CTG-0003. */
@@ -53,6 +54,7 @@ export const TEAT_SYNC_APPLIERS_PROVIDER = {
       outbox: new SqlTeatEventOutbox(),
       clock: systemOpsClock,
     }),
+    new CrashSyncApplier(),
   ],
 };
 

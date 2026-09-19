@@ -1,10 +1,40 @@
 # R-0010 — frente `boat-backend` (WP-B0…B3 do BOAT: política, modelo `est/crash`, comandos, sincronização, RENAEST e contratos)
 
-**Status:** prompts aprovados por `reviews/prompt-review-6.json` (`PASS`); correção de TASK-0003 aprovada por `prompt-review-8.json` (`PASS`). TASK-0001…0006 concluídas; CTG-0001 aprovado pelo reviewer (`delivery-review-CTG-0001-cycle-4.json`), commitado em `289916b` e com evidência DEVAI sequência 1; PR pendente. TASK-0007 em curso, com REDs do Inspector para CTG-0002. Checkpoint de orçamento da janela 2 em §Retomada. Aberto sobre `origin/main` em
-`09963911d3d37e4e2ce7e7d79f853bf78f6a71a9`; autorização do Owner em
+**Status:** prompts aprovados por `reviews/prompt-review-6.json` (`PASS`); correção de TASK-0003 aprovada por `prompt-review-8.json` (`PASS`). TASK-0001…0006 concluídas; CTG-0001 aprovado pelo reviewer (`delivery-review-CTG-0001-cycle-4.json`), commitado em `289916b`, com evidência DEVAI sequência 1 e integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e` (todos os checks verdes). `audit observe` do SHA integrado concluiu como `EV-8b74b129c7661f24`; o artefato e a cadeia anterior estão preservados em snapshot externo, pois `origin/main` avançou a cadeia com R-0009. TASK-0007 em curso; TASK-0018 e TASK-0021 concluídas. Gates `pnpm backend:test:ci` e `pnpm check` PASS após integração R-0009, mas CTG-0002 permanece aberto até projeções, documentos e job. Checkpoint atual da janela 4 em §Retomada. HEAD local após fast-forward `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8`, mesmo SHA de `origin/main` (PR #54 Portal integrado); branch remota R-0010 ainda em `433eb0d0344136d98e116ba07367c39fd01a9030`; autorização do Owner em
 `AUTHORIZATION.md`. Reviewer: Opus via `tools/orchestra/bridge.sh claude`.
-**Concorrência:** abre já e **nenhum grupo está preso**: R-0005 e R-0008 estão em `main`. Fila de sincronização em `backend/domains/ops/offline-sync` (contrato em `work/rounds/R-0008/contracts/CTG-0002.md`; schema `docs/framework/schemas/teat-offline-sync-batch.schema.json`); evidência em `backend/domains/ops/evidence`; `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`) e `policy-routes.e2e.spec.ts` prontos (estender com `est:*`). Lock `policy.ts` com R-0007 `rait-backend` (blocos `est:*` × `RAIT_*`): quem mesclar depois integra `main`.
+**Concorrência:** R-0005, R-0008 e R-0009 estão em `main`. Fila de sincronização em `backend/domains/ops/offline-sync` (contrato em `work/rounds/R-0008/contracts/CTG-0002.md`; schema `docs/framework/schemas/teat-offline-sync-batch.schema.json`); evidência em `backend/domains/ops/evidence`; `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`) e `policy-routes.e2e.spec.ts` prontos (estender com `est:*`). Na inspeção de 2026-09-19, a worktree R-0007 `rait-backend` só mantém alterações nos três caminhos de composição `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`; os caminhos de documentos/ADR/catálogo normativo não aparecem modificados. A R-0007 confirmou documentalmente que `MOD-shared-documents`, `MOD-adr-0018`, `MOD-inf-normative-document-catalogue` e `MOD-rait-test-strategy` foram liberados no fechamento local de CTG-0001/CTG-0002. Os Engineers de projeções/job/documentos serializam `app.module.ts`.
 **Janelas previstas:** 3.
+
+## Auditoria de continuidade — 2026-09-19
+
+`origin/main=fc26bd20ec350f5fcfbf9c3470d776b11eddd0e7`; a worktree R-0010 permanece
+em `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8`, 83 commits atrás, com 161
+entradas locais. A branch é publicada e deve integrar `main` por merge, nunca
+rebase. Antes disso, o maestro cria recuperação verificável e um checkpoint das
+alterações CTG-0002. A interseção entre a árvore local e `HEAD..origin/main` está
+limitada a `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`.
+
+- **R-0009 liberou seus locks:** PRs #54, #56 e #57 estão integrados e a closure
+  registra CTG-0001/CTG-0002 concluídos. Isto libera a dependência Portal da
+  tríade de projeções.
+- **R-0007 ainda não liberou composição:** CTG-0001/CTG-0002 estão fechados em
+  checkpoint local, mas a integração de `origin/main` segue ativa e sem PR; os
+  três arquivos de composição acima continuam ocupados. Nenhum Engineer pode
+  tocá-los até a liberação explícita.
+- **Pode continuar após o merge local de `main`:** TASK-0007 nos caminhos
+  disjuntos; correção Architect de TASK-0012 e TASK-0013; TASK-0019 (somente
+  testes); TASK-0015, pois a R-0007 confirmou a transferência dos locks de
+  documentos/ADR/catálogo/estratégia.
+- **Não despachar ainda:** TASK-0014 porque o contrato/testes de projeções ainda
+  modelam um segundo serviço Portal, enquanto R-0009 integrou
+  `PortalProjectors` e `CrashViewProjector`; primeiro emendar contrato, testes e
+  prompts e obter novo `prompt-review` PASS. TASK-0017 e TASK-0020 aguardam a
+  composição R-0007 e suas tasks predecessor. TASK-0008/0009/0010/0011 e
+  TASK-0016 aguardam suas dependências topológicas.
+- **Sequência segura:** recuperar/checkpointar a árvore local; integrar
+  `origin/main`; reconciliar Portal em TASK-0012/0013; executar TASK-0019 e
+  TASK-0015 em caminhos disjuntos; somente depois abrir os Engineers
+  serializados TASK-0014 → TASK-0017 → TASK-0020.
 
 ## Metas
 
@@ -56,8 +86,9 @@
 | TASK-0011 | Inspector            | inspector-tests     | Luna / médio   | `MOD-contracts-check-tests`                                                    | TASK-0008            | testes de catálogos TEAT/BOAT por prefixo e correspondência bidirecional de rotas                                                                             |
 | TASK-0010 | Engineer             | engineer-backend    | Luna / médio   | `MOD-contracts-check`                                                          | TASK-0011            | gate de comandos: catálogos TEAT/BOAT por prefixo, controladores est/crash; satisfaz testes do Inspector                                                      |
 | TASK-0009 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                                     | TASK-0010            | build pack (DDL 70), closure plan, backlog                                                                                                                    |
+| TASK-0021 | Inspector            | inspector-tests     | Luna / médio   | `MOD-app-e2e-ops-modules`                                                      | TASK-0006            | fixture canônica da tenancy no E2E OPS pós-R-0009; HTTP 200 e lista vazia cross-tenant preservados                                                            |
 
-CTG-0001 = 0001…0004; CTG-0002 = 0005…0008 + 0010…0011. Um PR por CTG. TASK-0008 → TASK-0011 → TASK-0010 → TASK-0009; a numeração preserva os IDs iniciais.
+CTG-0001 = 0001…0004; CTG-0002 = 0005…0008 + 0010…0011 + 0021 (reparo de sensor pós-R-0009, CTG-0002 adenda A-4). Um PR por CTG. TASK-0008 → TASK-0011 → TASK-0010 → TASK-0009; a numeração preserva os IDs iniciais.
 
 **Checkpoint de dependências:** após TASK-0002 o maestro roda `pnpm install`, preserva a atualização de `pnpm-lock.yaml` para o commit do grupo após PASS do reviewer, roda `pnpm contracts:clients` para o OpenAPI gerado e só então libera TASK-0003. Após TASK-0008, o maestro roda `pnpm contracts:clients` antes de TASK-0011; após TASK-0010, roda `pnpm contracts:check`; o Engineer de TASK-0007 inclui `@detran/est-crash` nos três scripts `backend:test:*` da raiz.
 
@@ -104,6 +135,110 @@ antes de cada PR; integrar avanços por merge normal após o primeiro push.
 
 ## Bloqueios
 
+**Avanço independente dos locks (2026-09-16):** TASK-0012 concluída,
+`reports/TASK-0012.md`; emenda ADR-0001, contrato BOAT e blueprints de
+Dashboard/Espelho entregues. `pnpm blueprints:generate`, `pnpm blueprints:check`,
+`pnpm verify:rls-ddl`, `pnpm install` e apply completo em banco isolado
+`detran_boat_r0010_projection_test` passaram. BP/DDL/pacote gerado Portal
+mantiveram hash idêntico. TASK-0013 foi despachada para REDs em arquivos
+próprios. Emissor BOAT ainda carece de `schemaVersion` separado de
+`aggregate.version`; os projetores devem rejeitar a forma incompleta.
+
+**REDs de projeção (2026-09-16):** TASK-0013 em revisão, com relatório
+`reports/TASK-0013-progress.md`. Após adenda de API no contrato, 9 REDs de
+integração são exclusivos dos serviços/projetores ausentes, o E2E dirigido é
+RED por `schemaVersion` não emitido e 3 REDs do gate decorrem do script
+`verify.mjs` ausente. Typecheck/Prettier PASS; fixtures isoladas foram limpas.
+O ramo positivo de titularidade confiável carece de fonte/fixture autorizada.
+TASK-0014 não foi despachada.
+
+**Projeções — revisão 21 PASS (2026-09-16):** após corrigir os oito
+achados da revisão 20, `reviews/prompt-review-21-projections-correction.json`
+liberou TASK-0012 e, depois de contrato/geração, TASK-0013. R-0010 não edita
+BP/DDL Portal; TASK-0012 especifica a declaração BOAT e R-0009 mantém o wiring
+M24 e `MOD-portal-projections-hw`. TASK-0014 continua parada até liberação
+documentada desses locks e de `app.module.ts`/lockfile por R-0007. O maestro
+confere diff vazio do BP/DDL/pacote gerado Portal após `pnpm blueprints:generate`
+(geração global), além de `pnpm blueprints:check`. A linha de locks desta tríade
+é `MOD-adr-0001` (TASK-0012), `MOD-dashboard-crashes`,
+`MOD-integration-renaest-mirror`, e `MOD-portal-crash-view` (TASK-0013/0014
+sob liberação de R-0009).
+
+**Projeções — revisão 20 FAIL (2026-09-16):** o Owner aprovou a opção 1
+para `backend/domains/integration/renaest-mirror`, mas a revisão restrita
+`reviews/prompt-review-20-projections.json` rejeitou o despacho da tríade.
+R-0009 ainda retém os locks do blueprint/DDL Portal (TASK-0005, wiring M24)
+e `MOD-portal-projections-hw` (TASK-0008); PR #54 integrou a base, mas não
+transferiu esses locks. É necessária liberação documentada de R-0009 ou
+repartição da responsabilidade de wiring/projetor antes de novo prompt-review.
+A revisão apontou ainda contrato obrigatório do gate `verify:domain-boundaries`,
+`handwrittenProviders`/`handwrittenExports` nos blueprints novos, serialização
+explícita de `app.module.ts` com R-0007 e alinhamentos de caminhos/critérios.
+Nenhum worker TASK-0012…0014 foi despachado. Pelo §5 de `00-maestro.md`,
+FAIL interrompe esta tríade até resolução documentada; o restante de CTG-0002
+não pode ser declarado concluído.
+
+**Integração com R-0009 (2026-09-16):** PR #54 foi mesclado; o worktree
+R-0010 avançou por fast-forward até `1175f4f` e recuperou as alterações locais
+após snapshot externo verificado em `/tmp/r0010-pre-main-1789597298`
+(124 arquivos, SHA-256 do tar
+`6db34dbfb9e1e6a35706e8253a28e5cc4293c0fb6d1359b34e53baf53eb514a8`).
+Conflitos em `package.json` e `record/proofs/chain.json` resolvidos: scripts
+Portal preservados, teste E2E EST adicionado, cadeia canônica de R-0009
+preservada. A observação `EV-8b74b129c7661f24` permanece no snapshot e nos
+artefatos de auditoria locais, mas seu registro anterior não foi sobreposto
+à cadeia que avançou em R-0009. Nova evidência deve ser anexada pela CLI DEVAI
+sobre o head atual, sem edição manual da cadeia. `portal.crash_view` e ledger
+já existem no BP Portal e DDL 65; a implementação BOAT só projeta ali.
+
+**Ownership do espelho (decisão Owner de 2026-09-16):** opção 1 aprovada: pacote
+físico `backend/domains/integration/renaest-mirror`, propriedade lógica do
+adapter conforme ADR-0020 e emenda limitada de ADR-0001 por TASK-0012.
+Chamadas SENATRAN seguem exclusivas de `packages/senatran-adapter`. A tríade
+de projeções depende de revisão de prompts PASS antes do despacho.
+
+**Tríade independente do job:** `prompt-review-12-job.json` devolveu `PASS`
+restrito a TASK-0018…0020, com um low sobre leitura de `01-schemas.sql`;
+`prompt-review-13-job-low.json` confirmou `PASS` da correção e novos hashes.
+TASK-0018 Architect foi concluída (contrato de job e A-3); OD-B14/B15 ainda
+bloqueiam TASK-0019/0020. Isto não libera as tríades de projeção ou
+documentos. `prompt-review-16-ops-fixture` deu PASS e TASK-0021 foi concluída.
+
+**Janela 4, prompt-review-9 = FAIL (2026-09-16):** nenhuma TASK-0012…0020
+foi despachada. O veredito exaustivo está em
+`reviews/prompt-review-9.json`. Achados estruturais: (1) propriedade/lock de
+`portal.crash_view` colide com R-0009 `portal-backend`; decidir dono do
+blueprint/DDL e obter liberação documentada ou limitar esta rodada à projeção
+manuscrita; (2) `backend/domains/integration/renaest-mirror` foi escolhido no
+prompt do Engineer sem namespace sancionado por ADR-0001/ADR-0020; Architect
+deve fixar ownership antes de fronteira de implementação; (3) manifests de
+pacotes gerados não podem ser editados à mão; (4) aliases/dependências dos
+pacotes novos no app e runner de teste do gate de fronteiras faltam; (5) os
+testes E2E do relatório não são executados nos critérios; (6) `@stynx-nyx/pdf-a`
+tem stubs, enquanto validação real requer adaptador concreto como
+`@stynx-nyx/pdf-a-vera-docker` e estratégia de CI; (7) leituras STYNX jobs
+omitem scheduler, registry, cron, types e backoff. Há também quatro achados
+low no arquivo de veredito. Pelo §5 do prompt do maestro, parar e reportar.
+Este era o estado da revisão 9; as revisões restritas posteriores estão em
+§Retomada e não liberam as tríades alheias.
+
+**Lock externo de documentos:** R-0007 confirmou em resposta de coordenação
+que mantém alterações não integradas em `shared/documents`, `app.module` e
+lockfile, com TASK-0020/0021 ainda previstas; não concedeu transferência do
+lock nem ETA. O desenho em arquivo disjunto pode avançar após correção/revisão
+dos prompts, mas nenhuma escrita compartilhada será despachada até base exata
+e serialização acordadas. O PR #54 de R-0009 `portal-backend` foi integrado; a
+projeção Portal usa os artefatos já presentes em `main`.
+
+**Resolução parcial da revisão 9:** o PR #54 de R-0009 já contém
+`BP-PORTAL-PROJECTIONS-001`, DDL 65 e `portal.crash_view`, conforme inspeção
+read-only do branch `orchestra/portal-backend` e corpo do PR. R-0009 mantém
+ownership desses artefatos; R-0010 fica com o projetor BOAT, somente depois
+do merge de #54 e integração de `origin/main` por merge normal. A localização
+do pacote `integration.renaest_mirror` foi aprovada pelo Owner como opção 1;
+TASK-0012 registra a emenda limitada em ADR-0001 e o ownership lógico do
+adapter antes da implementação. Os demais achados de `prompt-review-9` estão em correção.
+
 Histórico do gate: `prompt-review-2.json` foi **FAIL** estrutural. O reviewer constatou que TASK-0010
 atribui testes e implementação ao mesmo Engineer, contrariando a tríade do
 Art. 24. A revisão também apontou critérios inalcançáveis no sequenciamento de
@@ -115,6 +250,59 @@ TASK-0003. Os achados completos, com arquivo/linha/correção sugerida, estão e
 ao reviewer produziu JSON inválido e foi rejeitado pela ponte, sem veredito.
 
 ## Triagem
+
+- Integração pós-R-0009, gate `backend:test:ci`: primeira execução parou em
+  `portal-identity` por instalação ausente no worktree; `pnpm install
+--frozen-lockfile` restaurou os links de workspace sem mudar o lockfile.
+  Nova execução passou unit/integration e falhou em 3/135 testes E2E do app:
+  OPS cross-tenant e dois de TEAT stream. **Triagem `sensor-error` do ambiente**:
+  as URLs app/reader apontavam a `postgres` superuser, que ignora RLS.
+  Com conexão app/reader assumindo `role_app_backend`, TEAT stream passou 8/8.
+  OPS ainda recebeu `403 TENANT_ACCESS_DENIED`; consulta ao banco isolado
+  confirmou que a fixture legada não cria tenant/usuário/membership local
+  exigidos pelo interceptor STYNX agora montado pelo Portal. TASK-0021
+  Inspector proposta para reparar só a fixture, mantendo asserções 200 e
+  lista vazia cross-tenant. `prompt-review-14-ops-fixture.json` devolveu
+  `REVIEW` com dois highs corrigíveis (ambiente DB fechado e referência
+  contratual própria) e cinco lows; prompt, CTG-0002 adenda A-4 e lock no
+  plano foram corrigidos. `prompt-review-15-ops-fixture` teve saída JSON
+  inválida rejeitada pela ponte, sem veredito aceito; retentativa mínima
+  `prompt-review-16-ops-fixture.json` devolveu `PASS`; TASK-0021 Inspector
+  concluiu o reparo da fixture, com E2E dirigido 2/2 PASS sob
+  `role_app_backend` e asserções preservadas. Nenhuma falha foi
+  classificada como bug de produto sem esse diagnóstico.
+  Para o próximo gate, `STYNX_OWNER_DATABASE_URL` usa o principal `postgres`
+  apenas no banco isolado; `STYNX_APP_DATABASE_URL` e
+  `STYNX_READER_DATABASE_URL` usam a mesma URL de teste com
+  `?options=-c%20role%3Drole_app_backend`, verificado por `psql` como
+  `current_user=role_app_backend`. O banco `detran_boat_r0010_opsfixture` foi
+  criado/resetado e seedado somente para a execução dirigida de TASK-0021.
+
+- Integração pós-R-0009, `pnpm check`: passou por KB, publicação seca,
+  blueprints e catálogo de parâmetros; parou apenas em TS18046 no C-0002-44
+  de TASK-0006 A-2 (`body.items` tipado `unknown`). O mesmo Inspector corrigiu
+  somente o cast local; `@detran/app typecheck` PASS e E2E dirigido 2/2 PASS
+  sob `role_app_backend`. Reexecução de `pnpm check` em curso.
+
+- Integração pós-R-0009, `backend:test:ci` repetido após TASK-0021 e cast
+  C-0002-44: **PASS** no `detran_boat_r0010_pretriage` resetado/seedado,
+  owner separado da conexão app/reader como `role_app_backend`; app E2E
+  11 arquivos e 135/135 testes PASS. Isto valida o corte implementado, não
+  substitui os sensores ainda pendentes de projeções, documentos e job.
+
+- CTG-0002 pré-gate em banco isolado `detran_boat_r0010_pretriage`:
+  `apply.sh --full` e `seed.sh` duas vezes PASS; `pnpm backend:test:ci`
+  passou unit e integration, mas app E2E teve 1 falha em 121 testes
+  (`teat-field-sync.e2e.spec.ts` C-0002-44). Classificação `sensor-error`:
+  o teste R-0008 ainda envia `{crash:{local_protocol:'BOAT-0001'}}` e espera
+  `received`/`TEAT.SYNC_DESTINATION_NOT_WIRED`, cenário anterior ao applier
+  BOAT. Com o destino montado, o payload inválido corretamente recebe
+  `rejected`/`BOAT.SYNC_INVALID_CRASH_RECORD` conforme CTG-0002 §3.
+  Inspector deve atualizar o sensor para a semântica atual com asserção
+  equivalente ou mais forte, sem afrouxar a autorização C-0002-44; o fallback
+  de implantação continua coberto no teste unitário de offline-sync. Depois,
+  repetir o tier completo no mesmo banco isolado resetado. A alteração de
+  fronteira de escrita do Inspector exige adenda/prompt-review antes do patch.
 
 - TASK-0003 tentativa 0: `reference-gap` — a lista fechada de leitura não incluía
   `19-est-lifecycle-vocabulary.sql`, `70-est-crash.sql`, o blueprint gerado e
@@ -154,8 +342,279 @@ ao reviewer produziu JSON inválido e foi rejeitado pela ponte, sem veredito.
   leitura, sincroniza o índice UC e retira `start` provisório; o Architect
   amplia o blueprint para chave natural, tipo de retificação e check do espelho,
   e o Inspector atualiza fixtures/testes. Repetir gates e revisão restrita.
+- TASK-0006 escalado, correção adicional: `sensor-error` — o helper
+  `canonicalCrashPayload(localId, {record: null})` convertia `null` no registro
+  padrão, gerando corpo/hash idênticos ao caso válido. O Inspector preservou
+  `null`; o caso C-2-09 isolado passou, inclusive recibo
+  `BOAT.SYNC_INVALID_CRASH_RECORD` e rollback.
+- TASK-0007 tentativa 1: `reference-gap` — comandos e applier BOAT foram
+  implementados e os HTTPs básicos passaram, mas `DocumentsFacade` de
+  ADR-0018 só tem interface, os três read models de ADR-0020 não têm
+  blueprint/DDL e `T-BOAT-TRANSM` não tem scheduler nem contexto tenant de
+  execução. Uma classe inerte ou bytes com marcador PDF/A não fecham
+  C-2-08/13/14. Adenda A-1 em CTG-0002 enviada ao reviewer antes de novos
+  prompts; Engineer escalado continua somente nas superfícies autorizadas.
+- TASK-0007 teste global inicial: `sensor-error` até prova contrária — o
+  Engineer executou o E2E global enquanto o maestro rodava o tier completo
+  CTG-0001 no mesmo `detran_r10`. Repetir em banco isolado antes de classificar
+  40 falhas TEAT/PEC como regressão ou baseline.
+
+## Adenda A-1 de CTG-0002 — decomposição para retomada
+
+Os substratos abaixo são necessários para fechar C-2-08/13/14. Eles não
+alteram os critérios existentes nem autorizam implementação antes de prompts
+e `prompt-review` com `PASS`. Formalizar cada linha em `tasks/TASK-nnnn.json`
+e `prompts/TASK-nnnn.md` na próxima janela, com composição PC e fronteiras
+fechadas. A ordem em cada tríade é Architect → Inspector → Engineer; os
+Engineers não editam testes, blueprint gerado ou `pnpm-lock.yaml` à mão.
+
+| IDs            | Tríade / lock                                                                                                                                                       | Fonte e entrega                                                                                                                                                                                                                                  |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| TASK-0012…0014 | projeções; `MOD-adr-0001` (TASK-0012), `MOD-dashboard-crashes`, `MOD-integration-renaest-mirror`, `MOD-portal-crash-view` (TASK-0013/0014, sob liberação de R-0009) | ADR-0020, CTG-0002 A-1: três blueprints de consumidor, DDL/RLS, eventos canônicos, ledger idempotente, projetores `*.projection.ts`, gate `verify:domain-boundaries`, replay/duplicata/commit tardio, supressão primária e secundária.           |
+| TASK-0015…0017 | documentos; `MOD-shared-documents`, `MOD-est-document-template`, `MOD-adr-0018`                                                                                     | ADR-0018 e UC-1.251: adenda ao ADR e catálogo canônico, template versionado do relatório preliminar, assinatura/PDF-A; Inspector prova bytes conformes e falha de conformidade; Engineer monta fachada STYNX. Coordenar antes o lock com R-0007. |
+| TASK-0018…0020 | job; `MOD-jobs-substrate`, `MOD-auth-tenancy`, `MOD-ops-parameter`                                                                                                  | STYNX jobs + CTG-0002 §4: agendamento mensal, descoberta autorizada de tenant e identidade do sistema, execução sob RLS, retry/idempotência e testes de múltiplos tenants; preserva `runOnce` tenant-scoped de TASK-0007.                        |
+
+O maestro executa `pnpm blueprints:generate` e `pnpm blueprints:check` após
+TASK-0012 e antes de TASK-0013. Instala dependências e atualiza
+`pnpm-lock.yaml` depois das decisões Architect. Os Engineers TASK-0014,
+TASK-0017 e TASK-0020 são serializados: todos montam componentes em
+`backend/app/src/app.module.ts`, e TASK-0014/0020 também podem tocar o
+`package.json` raiz. `TASK-0007` só fica concluída após essas três tríades, gates globais
+e revisão de entrega do CTG-0002. TASK-0008/0011/0010/0009 seguem a ordem
+original após estabilização dos comandos e substratos. Nenhuma publicação de
+P-09 ou rota cidadã de BAT é inferida de projeção interna: identidade confiável
+do titular e os controles de RN-DASH-161 permanecem fronteiras explícitas.
 
 ## Retomada
+
+### Decisão do Owner — job mensal
+
+Em resposta à proposta explícita do maestro (conta técnica auditável por
+tenant, descoberta restrita de tenants ativos e execução no dia 1 às 12h no
+fuso de `auth.tenants.timezone`), o Owner respondeu **“job mensal aprovado”**.
+Tratar como aprovação de OD-B14/B15 **nesses limites exatos**: uma identidade
+técnica por tenant com provisionamento/revogação auditáveis; enumeração somente
+de tenants ativos e vínculos ativos; processamento de `est.*` e
+`integration.outbox` com `role_app_backend` e RLS; âncora civil dia 1, 12h,
+no fuso do tenant. O controle administrativo não recebe acesso owner-role ao
+domínio. Não ampliar essa resposta para aprovar STYNX jobs sem prova de
+propagação de `actorId` nem para definir `layout_version` nacional. TASK-0018
+retorna para emenda A-3/contrato e eventual DDL 75; depois revisar TASK-0019
+e TASK-0020 contra o contrato fixado e despachar Inspector → Engineer.
+O espelho RENAEST continua sem decisão de propriedade física.
+
+TASK-0018 Architect retomou e escreveu contrato atualizado, adenda A-3 e
+`backend/database/ddl/75-boat-renaest-job.sql` (identidade técnica, trilha,
+descoberta e ledger mensal). `pnpm format:check` e `pnpm verify:rls-ddl`
+passaram; um reset completo em banco isolado `detran_boat_r0010_job_review`
+aplicou DDL 75, e a checagem de privilégios confirmou que
+`role_app_backend` não pode executar as funções administrativas nem ler a
+tabela de identidades diretamente. O mesmo papel pode inserir no ledger
+tenant-scoped sob RLS. A porta administrativa concreta ainda precisa fixar
+como um operador confiável provisiona/revoga e como o orquestrador chama a
+descoberta sem conceder funções `SECURITY DEFINER` a `role_app_backend`.
+Membership ativa sozinha não autentica o administrador; o job permanece
+falha-segura até essa porta e os testes de TASK-0019/0020.
+
+### Parada por dependências externas — 2026-09-16
+
+`git fetch -q origin --prune` confirmou HEAD local e `origin/main` em
+`1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8`, branch remoto R-0010 ainda
+em `433eb0d0344136d98e116ba07367c39fd01a9030`; a árvore CTG-0002 segue
+sem commit/staging. A tarefa R-0007 está ativa e ainda sem PR aberto, mantendo
+o lock de `shared/documents`, `app.module.ts` e `pnpm-lock.yaml`. A tríade de
+documentos tem `prompt-review-19-documents-interface.json=PASS`, mas não pode
+ser despachada antes da integração e da revalidação do lock. Projeções aguardam
+decisão Owner sobre eventual emenda limitada de ADR-0001 para o pacote físico
+do espelho RENAEST; job aguarda OD-B14 (identidade técnica/descoberta de tenants)
+e OD-B15 (âncora mensal/horário). As consultas ao Owner seguem sem resposta
+registrada. Nenhuma das três tríades pendentes recebeu código de produção.
+Na retomada, confirmar respostas e `origin/main`/R-0007, integrar main conforme
+regra de branch publicado, revalidar prompts/contratos contra a base final e
+somente então despachar Architect → Inspector → Engineer. CTG-0002 e a rodada
+continuam abertos até os gates, review, evidência, PR/CI/merge e fechamento.
+
+### Janela 5 — revisão de documentos em correção
+
+`reviews/prompt-review-19-documents-interface.json` deu **PASS** para os três
+prompts e confirmou o desencaixe `convert`/`validate`; liberação de despacho
+continua condicionada ao lock R-0007. Os três achados low são obrigações do
+maestro/Architect na execução, sem mudança de prompt aprovado:
+
+1. O contrato D-13-nn de TASK-0015 especifica que a ponte devolve `RenderResult`
+   com `bytes`, `sha256` e `pageCount` derivados **dos bytes convertidos** que
+   passaram pelo veraPDF, e `metadata.profile='pdf-a'`. TASK-0016 testa que
+   hash do documento entregue/selado iguala SHA-256 desses mesmos bytes;
+   TASK-0017 não pode preservar hash ou páginas do render Chromium anterior.
+2. TASK-0015 identifica a dependência concreta do conversor PDF/A-2b (pacote
+   npm, binário ou imagem por digest). O maestro a provisiona antes do gate
+   `test:real` do Inspector; TASK-0017 provisiona a mesma dependência na job
+   `boat-documents-real`, além de Chromium e veraPDF por digest. Falta de
+   conversor é bloqueio, não `skip`.
+3. TASK-0015 calcula limite do tier `real` maior ou igual à soma dos tempos
+   máximos de launch Chromium, conversão e veraPDF, com margem documentada.
+   TASK-0017 aplica o valor em `backend/app/vitest.config.ts`; estouro do
+   Inspector por infraestrutura é bloqueio reportado, sem reduzir timeout
+   nem enfraquecer asserções.
+
+O código STYNX fornece um `DEFAULT_VERAPDF_IMAGE` já com digest em
+`packages/pdf-a-vera-docker/src/constants.ts`; isso não dispensa TASK-0015
+de confirmar fonte, identidade da imagem e disponibilidade no ambiente de
+execução. O `PASS` é de prompts, não de PDF/A, C-2-13 ou entrega.
+
+`reviews/prompt-review-18-documents-correction.json` deu **PASS** com duas
+observações low: instalar dependências antes do RED `test:real` do Inspector e
+incluir `pnpm backend:test:ci` no JSON da TASK-0017. Ambas foram incorporadas.
+Uma checagem direta dos tipos STYNX detectou ainda que
+`PdfAConformanceAdapter` de `@stynx-nyx/pdf` exige `convert(input, request)`,
+mas `VeraPdfDockerValidator` implementa somente `validate(bytes, opts)`;
+o README descreve um encaixe direto que o código não oferece. Os prompts
+agora exigem ponte real de conversão PDF/A-2b seguida de validação veraPDF,
+com fonte/dependência e teste de bytes positivos. TASK-0015 decide a ponte;
+se não houver conversão comprovada, C-2-13 permanece aberto. O maestro
+declara/instala dependências e atualiza lockfile após o contrato Architect e
+antes do Inspector, somente após a R-0007 liberar os arquivos comuns.
+Essas alterações posteriores ao PASS da revisão 18 requerem nova revisão
+restrita antes de qualquer despacho.
+
+`reviews/prompt-review-17-documents.json` devolveu **REVIEW** (3 high, 1 low).
+O reviewer confirmou as correções da revisão 9, mas encontrou que os prompts
+não liam os READMEs STYNX de render/assinatura/storage, prometiam conformidade
+real em `e2e`/`backend-kernel` contra a ADR-0018 §Decision 5, não tinham
+responsável por provisionar Chromium/veraPDF no CI e não comprovavam a fonte
+de bytes PDF/A-2b positivos nem o digest da imagem. TASK-0015…0017 e seus
+JSONs/PC IDs foram corrigidos: provedores reais ficam no tier `real`,
+`e2e` cobre HTTP/tenant com runner injetável, a TASK-0015 especifica e
+documenta uma job BOAT de PR bloqueante para `test:real` e a TASK-0017 escreve
+essa job após lock livre. O Architect deve provar bytes conformes no caminho
+de produção e resolver digest imutável com fonte; sem isso C-2-13 fica aberto.
+**Ainda não há PASS da nova revisão nem liberação do lock R-0007**. Próximo
+passo: validar formatos/hashes e solicitar revisão restrita de correção; só
+depois da R-0007 integrada despachar a tríade na ordem Architect → Inspector
+→ Engineer. As decisões pendentes do Owner sobre espelho/job continuam abertas.
+
+### Checkpoint da janela 4 — integração R-0009 e gates CTG-0002
+
+Atualização de retomada: `git fetch -q origin --prune` confirmou
+`origin/main=1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8`. A R-0007 continuava
+ativa e sem PR aberto; seu lock de documentos permanece ocupado. A revisão
+restrita da tríade TASK-0015…0017 está preparada em
+`reviews/prompt-review-17-documents.md`, com Prettier e hashes/PC IDs dos três
+prompts verificados. Ainda **não** foi enviada ao Opus nem possui veredito; no
+próximo orçamento, invocar a ponte e aceitar somente JSON válido. A janela 4
+está em 636.000/800.000 tokens estimados, perto do checkpoint de 640.000;
+parada antes de nova chamada de reviewer conforme §0 do maestro.
+
+- **Identidade e recuperação:** worktree `boat-backend`, branch publicado
+  `orchestra/boat-backend`; HEAD local e `origin/main` em
+  `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8`, branch remoto em
+  `433eb0d0344136d98e116ba07367c39fd01a9030`. A integração foi por
+  fast-forward local após snapshot verificado em
+  `/tmp/r0010-pre-main-1789597298` (SHA-256
+  `6db34dbfb9e1e6a35706e8253a28e5cc4293c0fb6d1359b34e53baf53eb514a8`);
+  novo snapshot em `/tmp/r0010-ctg2-checkpoint-1789599514` (SHA-256
+  `8bb535904b4f9655eafc4e538052978505f84c7607892ca2fa32f5f03c31c274`).
+  Nenhum arquivo CTG-0002 foi commitado ou staged. Não rebasear o branch publicado.
+- **CTG-0001:** PR #55 mesclado em
+  `4f0345532433fb37670447fe22f32bc95ffc0f9e`; `audit observe`
+  `EV-8b74b129c7661f24` do SHA exato preservado no snapshot. A cadeia local
+  segue o head de R-0009 `ab381e9bef8d44090adc01cae72d6768df59dec6feba85fa784d1ee9cc1c5f76`;
+  `devai evidence verify` PASS. Não mesclar cadeias manualmente.
+- **CTG-0002 implementado até aqui:** comandos/applier BOAT, outbox,
+  `RenaestPort.runOnce` tenant-scoped, SSE e wiring; A-2 do contrato fixa
+  `BOAT.SYNC_INVALID_CRASH_RECORD` para a recusa do applier. Inspector corrigiu
+  C-0002-44 e a tipagem do teste, preservando as asserções relevantes.
+  TASK-0021 corrigiu somente a fixture OPS pós-R-0009 para tenant/ator/membership.
+  Em banco isolado com app/reader sob `role_app_backend`, `pnpm backend:test:ci`
+  PASS, inclusive 135/135 E2E de app (`/tmp/r0010-rls-backend-ci.log`).
+  `git diff --check`, `format:check`, `blueprints:check` e cadeia DEVAI PASS.
+  `pnpm check` completo pós-correção **PASS** (`/tmp/r0010-postfix-check.log`):
+  930 handlers, 218 tabelas de tenant cobertas por RLS, fronteira SENATRAN,
+  paridade e superset PEC aprovados.
+- **Prompts e dependências:** revisão Opus `prompt-review-9` FAIL levou a
+  correções. TASK-0018 Architect teve `prompt-review-13-job-low` PASS e
+  completou `docs/framework/contracts/boat-renaest-job.md`, mas a ativação do
+  job aguarda OD-B14 (descoberta ativa de tenants e conta técnica por tenant)
+  e OD-B15 (âncora mensal e horário). O Owner foi consultado; não inferir
+  aprovação do silêncio. O Owner também foi consultado sobre a emenda limitada
+  de ADR-0001 para o pacote físico `backend/domains/integration/renaest-mirror`.
+  Sem essa escolha, a tríade de projeções TASK-0012…0014 não avança.
+  TASK-0015…0017 aguarda o lock de documentos/app/lockfile de R-0007;
+  a tarefa R-0007 continuava ativa na última consulta de status;
+  a R-0009 já integrou os artefatos Portal necessários. TASK-0021 teve
+  `prompt-review-16-ops-fixture` PASS e foi concluída. As tríades remanescentes
+  ainda exigem revisão formal PASS dos prompts antes do disparo.
+- **Próximo passo:** obter o resultado do `pnpm check`; depois das respostas
+  do Owner e da liberação de R-0007, atualizar contratos/prompts/PC IDs,
+  revisar pela família Opus, executar Architect → Inspector → Engineer de cada
+  tríade, fechar TASK-0007/0008/0011/0010/0009 e CTG-0002 com gates completos,
+  delivery-review PASS, evidência, PR/CI/merge, observação do HEAD integrado e
+  fechamento da rodada. Sem projeções, PDF/A e job operacional, CTG-0002 não
+  está concluído.
+
+### Checkpoint da janela 4 — prompt-review-9 FAIL
+
+Foram criados `tasks/TASK-0012.json`…`TASK-0020.json` e os nove prompts
+correspondentes, com SHA-256/PC IDs em `compositions.json`; JSON e Prettier
+passaram. A revisão Opus `reviews/prompt-review-9.json` retornou **FAIL**
+com oito achados high e quatro low, listados em §Bloqueios. Nenhum novo worker
+foi disparado. TASK-0006 recebeu relatório corrigido sobre o helper C-2-09.
+O estado git/CTG-0001/CTG-0002 do checkpoint da janela 3 abaixo continua
+válido, sujeito a novo `git fetch` na retomada. Próximo passo é resolver a
+propriedade de `portal.crash_view` com R-0009 e a localização sancionada do
+espelho com o Architect, corrigir os nove prompts/JSONs/PC IDs e obter nova
+revisão conforme §5. Não implementar PDF/A usando stub nem escrever em
+arquivos sob lock de R-0007. Após veredito `PASS`, seguir as tríades na ordem
+Architect → Inspector → Engineer e os gates completos do CTG-0002.
+
+### Checkpoint da janela 3 — 2026-09-16
+
+Entrada estimada 640.000/800.000 (limiar de 80%). Parada conforme §§0 e 9
+do prompt do maestro. O objetivo da rodada continua aberto até o merge final.
+
+- **Entrada git:** worktree `/Volumes/Thiamat II/stech/detran-worktrees/boat-backend`,
+  branch publicado `orchestra/boat-backend`, HEAD local
+  `433eb0d0344136d98e116ba07367c39fd01a9030`; `origin/main` em
+  `4f0345532433fb37670447fe22f32bc95ffc0f9e`. Não há conteúdo staged;
+  arquivos novos receberam `git add -N` apenas para diff. O branch publicado
+  deve integrar `origin/main` por `git merge --no-edit`, nunca rebase, depois de
+  resguardar as alterações CTG-0002 em commit próprio ou outro procedimento
+  reversível e verificável. Fazer `git fetch -q origin` antes de integrar.
+- **CTG-0001 concluído:** commit candidato `289916b39c37f4f1e3b93c1038e388248071c9f4`,
+  evidência em `433eb0d0344136d98e116ba07367c39fd01a9030`, review Opus
+  `delivery-review-CTG-0001-cycle-4.json` = PASS. Checkout isolado passou
+  install frozen, build, reset/seed e `pnpm backend:test:ci`. PR #55 teve cinco
+  checks verdes e foi mesclado no SHA de `origin/main` acima. `audit observe`
+  exato do merge = `EV-8b74b129c7661f24`; cadeia verificada com head
+  `02a42a264207a26b69a717c39f08b6c744131c6217464b1c7052100c8c00e1ff`.
+  `record/proofs/chain.json` e a observação sob `.devai/state/audit-observations/`
+  estão na árvore de trabalho, ainda não commitados.
+- **CTG-0002 em curso:** TASK-0005 produziu mapping/contrato. TASK-0006 criou
+  REDs HTTP/adapter e passou C-2-09 isolado após corrigir o helper de teste.
+  TASK-0007 escalada implementou comandos, applier, wiring e `runOnce`
+  tenant-scoped; BOAT E2E 21/21, testes est/offline/adapter e typechecks
+  direcionados passaram. Não fechar TASK-0007: faltam scheduler e descoberta
+  de tenant, três projeções com replay e PDF/A real. O primeiro E2E global
+  concorreu com outro tier no mesmo banco e deve ser refeito em DB isolado.
+- **Contrato/adenda:** `contracts/CTG-0002.md` A-1 preserva C-2-05/06/08/13/14.
+  Revisões Opus `ctg-0002-adenda-a1-review.json` e `...-review-2.json` deram
+  REVIEW; as correções da segunda foram incorporadas e formatadas, mas não há
+  veredito PASS para novos prompts. `plan.md` §Adenda A-1 de CTG-0002 delimita
+  três tríades TASK-0012…0020 para projeções, documento e job. Os JSONs de
+  tarefa e prompts ainda não existem. Antes de despachar, formalizá-los com
+  fronteiras, locks e critérios, e obter `prompt-review` PASS pela ponte Claude
+  Opus. Coordenar o lock ADR-0018/documentos com R-0007. Só o maestro usa git,
+  instala dependências e altera o lockfile. Não editar irmãos em `../`.
+- **Próxima sequência:** formalizar e revisar prompts; executar as três
+  tríades Architect → Inspector → Engineer; concluir TASK-0007, 0008, 0011,
+  0010 e 0009; rodar gates completos em DB isolado, delivery-review Opus PASS,
+  evidência DEVAI e PR/CI/merge CTG-0002; observar HEAD integrado, fechar
+  rodada, atualizar histórico/backlog e remover branch remoto conforme §9.
+  Antes de PR, integrar `origin/main` pela regra de branch publicado, repetir
+  gates e revalidar review se o diff mudar de forma substantiva. Sem evidência
+  de PDF/A, replay idempotente e scheduler operacional, não declarar CTG-0002
+  concluído. Identidade do titular permanece `source_pending`; rota cidadã
+  não se abre por CPF apresentado.
 
 Checkpoint da janela 2 em 2026-09-16: entrada estimada 790.000/800.000
 (limiar de 80% = 640.000), incluindo a revisão de entrega com diff completo.

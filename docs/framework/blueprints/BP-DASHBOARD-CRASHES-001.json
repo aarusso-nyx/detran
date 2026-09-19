@@ -1,0 +1,139 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-DASHBOARD-CRASHES-001",
+  "module": {
+    "name": "Crashes",
+    "namespace": "dashboard",
+    "version": "1.0.0",
+    "ddlFile": "71-dashboard-crashes.sql",
+    "dependencies": {
+      "@detran/ops-parameter": "workspace:*",
+      "@detran/shared": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-parameter",
+        "target": "../../ops/parameter/src/index.ts"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/dashboard-crashes.projection",
+        "symbol": "DashboardCrashesProjection"
+      }
+    ],
+    "handwrittenExports": ["handwritten/dashboard-crashes.projection"],
+    "owners": ["detran-dashboard"],
+    "description": "Agregacao interna de sinistros para dashboard.crashes (ADR-0020 Decision 1, 3 e 4; C-2-13/14; RN-DASH-161 e RN-BOAT-131). O projetor manuscrito consome somente o envelope canonico BOAT da integration.outbox, guarda event_schema_version separado de aggregate_version e registra efeito e ledger na mesma transacao. Nao ha rota publica, dado individual, escrita em est.* ou habilitacao de P-09; leitura e exportacao aplicam dashboard.cell_threshold=10 com supressao primaria e secundaria antes da entrega."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "CrashAggregate",
+        "table": "crash_aggregate",
+        "primaryKey": ["id"],
+        "description": "Celula interna agregada por tenant, periodo, municipio e gravidade. Nao contem identificador de pessoa, veiculo, localizacao precisa ou dados de saude; o projetor mantem as versoes distintas do envelope e do agregado para replay auditavel.",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "period_start", "type": "date" },
+          { "name": "municipality_code", "type": "varchar(20)" },
+          { "name": "severity", "type": "varchar(60)" },
+          { "name": "crash_count", "type": "integer", "default": "0" },
+          { "name": "last_event_id", "type": "uuid" },
+          { "name": "event_schema_version", "type": "integer" },
+          { "name": "aggregate_version", "type": "integer" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_crash_aggregate_cell",
+            "columns": [
+              "tenant_id",
+              "period_start",
+              "municipality_code",
+              "severity"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_crash_aggregate_period",
+            "columns": ["tenant_id", "period_start", "severity"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_crash_aggregate_count_non_negative",
+            "expression": "crash_count >= 0"
+          },
+          {
+            "name": "ck_dashboard_crash_aggregate_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "CrashProjectionAppliedEvent",
+        "table": "crash_projection_applied_event",
+        "primaryKey": ["id"],
+        "description": "Ledger idempotente de dashboard.crashes. A chave (tenant_id, projection_name, event_id) permite replay integral ou incremental sem aceitar o mesmo evento duas vezes; insercao do ledger e efeito agregado compartilham a mesma transacao sob RLS.",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "projection_name", "type": "varchar(80)" },
+          { "name": "event_id", "type": "uuid" },
+          { "name": "event_schema_version", "type": "integer" },
+          { "name": "aggregate_version", "type": "integer" },
+          { "name": "applied_at", "type": "timestamptz", "default": "now()" }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_crash_projection_applied_event",
+            "columns": ["tenant_id", "projection_name", "event_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_crash_projection_replay",
+            "columns": ["tenant_id", "projection_name", "applied_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_crash_projection_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/dashboard/crashes/",
+    "resources": [
+      {
+        "entity": "CrashAggregate",
+        "path": "aggregates",
+        "resource": "crash-aggregate",
+        "operations": []
+      },
+      {
+        "entity": "CrashProjectionAppliedEvent",
+        "path": "applied-events",
+        "resource": "crash-projection-applied-event",
+        "operations": []
+      }
+    ]
+  },
+  "auth": {
+    "source": "DASHBOARD_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

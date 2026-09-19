@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0021",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Repare a fixture E2E OPS após a montagem da tenancy de R-0009, preservando prova cross-tenant",
+  "description": "Somente setup/cleanup do tenant, usuario e membership local em ops-modules.e2e.spec.ts; asserções e autorização permanecem intactas.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-app-e2e-ops-modules"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-b2", "post-r0009", "e2e-fixture"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-6f4bb6e0c48c4e5b",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "exec",
+      "vitest",
+      "run",
+      "--config",
+      "vitest.config.ts",
+      "tests/e2e/ops-modules.e2e.spec.ts"
+    ],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-16T22:34:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-6f4bb6e0c48c4e5b",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0006"
+}

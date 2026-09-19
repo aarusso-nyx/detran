@@ -54,6 +54,10 @@ const OUTCOME_BY_CODE: Readonly<Record<string, ItemOutcome>> = {
     conflictType: 'domain',
   },
   'TEAT.SYNC_ITEM_CONFLICT': { status: 'conflict', conflictType: 'domain' },
+  // The BOAT natural-key collision remains recoverable by retransmission,
+  // but it does not open the TEAT supervisor queue: there is no BOAT-side
+  // resolution command for it in CTG-0002.
+  'BOAT.SYNC_DUPLICATE_NATURAL_KEY': { status: 'conflict' },
   'TEAT.SYNC_CONCURRENCY_SUSPECT': {
     status: 'conflict',
     conflictType: 'concurrency',

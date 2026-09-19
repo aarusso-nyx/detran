@@ -140,6 +140,10 @@ import {
   PEC_RENACH_PORT,
   PecRenachTransmissionService,
 } from './pec-renach-transmission.service.js';
+import {
+  BOAT_RENAEST_PORT,
+  BoatRenaestTransmissionService,
+} from './boat-renaest-transmission.service.js';
 import { RenachWebhookGuard } from './renach-webhook.guard.js';
 import { PecToxicologyInboundController } from './pec-toxicology-inbound.controller.js';
 import { PecToxicologyInboundService } from './pec-toxicology-inbound.service.js';
@@ -566,6 +570,7 @@ export class AppModule {
         PecProcessParametersService,
         PecRenachProcessService,
         PecRenachTransmissionService,
+        BoatRenaestTransmissionService,
         PecToxicologyInboundService,
         PecSefazService,
         PecAuditQueryService,
@@ -574,6 +579,10 @@ export class AppModule {
         {
           provide: PEC_RENACH_PORT,
           useFactory: () => createSenatranAdapter().ports.renach,
+        },
+        {
+          provide: BOAT_RENAEST_PORT,
+          useFactory: () => createSenatranAdapter().ports.renaest,
         },
         {
           provide: PEC_SEFAZ_PORT,

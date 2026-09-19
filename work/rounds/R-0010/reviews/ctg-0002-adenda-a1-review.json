@@ -1,0 +1,55 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 166,
+      "claim": "A adenda descreve a lacuna do substrato de documentos apenas como 'implementação concreta e adaptação STYNX de PDF/A não montadas', mas omite a lacuna de catálogo: `DOCUMENT_KINDS` (backend/domains/shared/src/documents/document-kind.ts) tem 12 tokens, todos `inf`, sem nenhum para relatório preliminar/BAT; `RenderedDocument.kind` é `DocumentKind` e `render(templateKey, data)` exige um template versionado que ADR-0018 Decision 2 escopa ao domínio `inf` (`inf.normative_document_template`), enquanto BOAT é `est`. ADR-0018 Decision 3 ainda exige linha de `inf.signature_policy` com `pdfaRequired` para o tipo. Sem essa decisão de fronteira/propriedade o Engineer teria de inventar token de catálogo para satisfazer C-2-13.",
+      "fix": "Acrescentar ao item 5 e à Ordem de retomada que o Architect decide, antes do prompt do Engineer: (a) o token de `DocumentKind` do relatório preliminar/BAT e sua chave de template; (b) quem possui esse template e a linha de `signature_policy` (`inf/normative` generalizado ou catálogo `est`), sem inventar token; (c) `pdfaRequired`/`PdfaConformance='PDF/A-2b'` e política de assinatura aplicável ao BAT."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 146,
+      "claim": "O item 1 cobre a não-escrita de volta em `est.*` só por teste e não cita ADR-0020 Decision 4, que exige o gate `verify:domain-boundaries` (entregável de WP-B) falhando em SQL/repositório que referencie schema de outro domínio fora de arquivos `*.projection.ts` que declarem seus eventos de origem. O gate não existe no repositório (nenhum script `domain-boundaries`, nenhum `*.projection.ts` em `backend/`), e a adenda não o nomeia nem fixa a convenção de nome dos projetores.",
+      "fix": "Incluir no item 1: projetores nomeados `*.projection.ts` declarando eventos de origem, e o gate `verify:domain-boundaries` (ADR-0020 Decision 4) como entregável do Engineer junto com os três projetores."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 158,
+      "claim": "Atribuição invertida: por RN-DASH-161:79-82 e docs/meta/knowledge-base/open-issues.md:60, DT-029 é a própria decisão do Owner (2026-08-28) que manda publicar já com limiar conservador; H.54 (2026-09-13) apenas confirma. O que não bloqueia a primeira publicação é o parecer jurídico (consulta única, item 14), não 'o parecer DT-029'. A adenda chama H.54 de 'decisão posterior' e DT-029 de 'parecer'.",
+      "fix": "Reescrever: 'DT-029 (Owner, 2026-08-28; confirmada em H.54, 2026-09-13) fixa `dashboard.cell_threshold=10` com supressão primária e secundária; o parecer jurídico valida o número depois e não bloqueia a primeira publicação.'"
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 160,
+      "claim": "A reconciliação do texto vencido aponta só IU-DASH-001 §D, mas o mesmo bloqueio vencido persiste em docs/framework/arch/dashboard-frontends.md:50 ('P-09 não é construído até o parecer do limiar de célula (DT-029)') e :86 (D-13 'bloqueado (DT-029); placeholder'), além de docs/framework/arch/dashboard-frontends.md:164. Reconciliar apenas §D deixa o corpus contraditório sobre o mesmo fato.",
+      "fix": "Estender a frase de reconciliação a `dashboard-frontends.md` §11/D-13 e à linha de bloqueios, atribuindo-a à tarefa de documentação (TASK-0009), sem antecipar P-09 em TASK-0007."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 152,
+      "claim": "'mascara campos de terceiros, nunca o documento inteiro' é ambíguo e não corresponde à regra do corpus: RN-PORTAL-118 estabelece que o mascaramento é controle de acesso de terceiros, nunca do titular, e boat-route-contract.md §7 diz 'titular sem máscara, terceiros mascarados'. Lido como formato de máscara (parcial × integral do número de documento), vira regra de produto sem fonte.",
+      "fix": "Substituir por 'mascaramento é controle de acesso de terceiros, nunca do titular (RN-PORTAL-118); o titular vê o próprio dado sem máscara', sem prescrever formato de mascaramento."
+    }
+  ],
+  "notes": [
+    "C-2-05/06/08/13/14 preservados: a adenda reafirma explicitamente que nenhuma lacuna é licença para retirá-los, e nega equivalências fracas (marcador `%PDF`, classe de job sem agendamento, consulta direta ao agregado). Não inventa regra de produto: limiar 10, `est.renaest.transmit_period=monthly` e `layout_version` source_pending citam parâmetros e OD/DT existentes (OD-B04/DT-017, OD-B08/DT-061, OD-B09/DT-029).",
+    "Não há decisão do Owner que bloqueie a projeção interna agora: DT-029 respondido em 2026-08-28 e confirmado em H.54 (RN-DASH-161:79), `dashboard.cell_threshold=10` vigente (parameter-catalogue.md:113), IU-DASH-001 §E registra P-09 destravado com supressão secundária. O bloqueio remanescente em IU-DASH-001 §D e em dashboard-frontends.md é texto vencido, não decisão viva.",
+    "Substratos ausentes conferem com a worktree: nenhum `*.projection.ts` em `backend/`; schema `dashboard` inexistente em 01-schemas.sql e não citado nos GRANTs de 20-rls-policies.sql (`portal` só existe porque 60-portal-complaints.sql cria schema e grants no próprio DDL gerado — padrão que valida o 'blueprint e DDL próprios' da adenda); `backend/domains/shared/src/documents/` só contém tipos; `backend/app/src/app.module.ts` monta apenas `StynxStorageModule`, e `@stynx-nyx/pdf`, `pdf-a`, `signature` e `jobs` não estão em `backend/app/package.json` — a montagem implica dependência nova + lockfile, item que convém nomear no prompt do Engineer.",
+    "Crítica de cursor tecnicamente correta: `integration.outbox.created_at` usa `clock_timestamp()` no insert (04-integration-storage.sql:15), logo a ordem de commit pode inverter a ordem de `created_at`; o ledger `(tenant_id, projection_name, event_id)` sobre `outbox.id` é a chave idempotente certa. A outbox não tem coluna `version`, então `event.version` precisa viver no `payload` — vale explicitar no contrato de eventos que o Architect vai escrever.",
+    "Divergência de build pack a reconciliar (não é contradição da adenda): boat-build-pack.md:69-70 lista as três projeções como entregável de WP-B2, enquanto ADR-0020 §Consequências as coloca em WP-P depois de WP-B. A separação proposta pela adenda é a leitura consistente com o ADR; registrar a correção do build pack em TASK-0009.",
+    "Item 6 (job/tenant) está correto quanto ao substrato: `role_app_backend` é NOBYPASSRLS (01-schemas.sql), então 'jamais conexão owner-role para contornar RLS' é verificável; `runOnce` tenant-scoped como componente testável que não fecha C-2-08 é a fronteira certa. Antes da primeira publicação agregada, implementation-gate-2026-09-13.md:135 ainda lista DT-047/049 ao lado do parecer de DT-029 — irrelevante para a projeção interna, mas convém constar como condição de publicação."
+  ]
+}

@@ -6,8 +6,19 @@
     "namespace": "est",
     "version": "1.0.0",
     "ddlFile": "70-est-crash.sql",
-    "handwrittenExports": [],
-    "handwrittenControllers": [],
+    "handwrittenExports": ["handwritten/index"],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/boat-commands.controller",
+        "symbol": "BoatCrashCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/boat-commands.service",
+        "symbol": "BoatCrashCommandsService"
+      }
+    ],
     "owners": ["detran-est"],
     "description": "BOAT crash records and related entities from WF-BOAT-001 and WF-BOAT-003."
   },

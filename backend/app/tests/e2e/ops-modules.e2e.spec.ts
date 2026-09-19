@@ -7,6 +7,7 @@ import { AppModule } from '../../src/app.module.js';
 
 const { Client } = pg;
 const localTenantId = '00000000-0000-7000-8000-000000000001';
+const localActorId = '00000000-0000-4000-8000-000000000002';
 const otherTenantId = '00000000-0000-7000-8000-000000000302';
 const trafficAgencyId = '00000000-0000-4000-8000-000000000303';
 const otherTenantUnitId = '00000000-0000-7000-8000-000000000304';
@@ -22,6 +23,22 @@ beforeAll(async () => {
   process.env.DETRAN_LOCAL_ROLES = 'ADMIN';
   await client.connect();
   await client.query(`select set_config('app.role', 'owner', false)`);
+  await client.query(
+    `insert into auth.tenants (id, slug, name) values ($1, 'local-e2e', 'Local E2E')
+     on conflict (id) do update set name = excluded.name`,
+    [localTenantId],
+  );
+  await client.query(
+    `insert into auth.users (id, tenant_id, email, display_name)
+     values ($1, $2, 'local-e2e@detran.invalid', 'Local E2E')
+     on conflict (id) do update set tenant_id = excluded.tenant_id`,
+    [localActorId, localTenantId],
+  );
+  await client.query(
+    `insert into auth.memberships (tenant_id, user_id) values ($1, $2)
+     on conflict (tenant_id, user_id) do update set is_active = true`,
+    [localTenantId, localActorId],
+  );
   await client.query(
     `insert into ops.agency_unit (id, tenant_id, traffic_agency_id, name)
      values ($1, $2, $3, 'Unidade cross-tenant E2E')

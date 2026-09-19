@@ -1,10 +1,10 @@
 {
   "round": "R-0010",
-  "window": 3,
+  "window": 5,
   "window_input_budget": 800000,
   "checkpoint_threshold": 640000,
-  "estimated_input_total": 320000,
-  "estimated_output_total": 39000,
+  "estimated_input_total": 268000,
+  "estimated_output_total": 43100,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -256,6 +256,486 @@
       "output_tokens": 3000,
       "status": "completed",
       "note": "289916b isolated checkout: frozen install, build, DB reset/seed and backend:test:ci all PASS; DEVAI evidence sequence 1 chain valid"
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "CTG-0001-PR55",
+      "window": 3,
+      "input_tokens": 12000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "PR #55 five required checks PASS; merged as 4f0345532433fb37670447fe22f32bc95ffc0f9e; exact-head audit EV-8b74b129c7661f24"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-attempt-1",
+      "window": 3,
+      "input_tokens": 85000,
+      "output_tokens": 9000,
+      "status": "completed",
+      "note": "Partial BOAT commands/applier/wiring; substrate gaps identified"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-escalated",
+      "window": 3,
+      "input_tokens": 85000,
+      "output_tokens": 10000,
+      "status": "completed-partial",
+      "note": "Tenant-scoped RENAEST worker and BOAT HTTP 21/21 PASS; scheduler, projections and PDF/A require A-1 substrate tasks"
+    },
+    {
+      "kind": "worker",
+      "id": "CTG-0002-projection-design",
+      "window": 3,
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "note": "Read-only Architect gap analysis for consumer-owned projections and replay"
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0002-adenda-A1-review",
+      "window": 3,
+      "input_tokens": 25000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "One high: document kind/template/signature ownership omitted; four lows",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0002-adenda-A1-review-2",
+      "window": 3,
+      "input_tokens": 20000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Restricted review: one medium task-boundary finding and six lows; all textual corrections applied; no PASS claimed",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "CTG-0002-A1-decomposition-checkpoint",
+      "window": 3,
+      "input_tokens": 68000,
+      "output_tokens": 6000,
+      "status": "completed",
+      "note": "Corrected A-1 after second REVIEW; planned TASK-0012..0020 triads and wrote exact window-3 checkpoint; no worker prompt-review PASS yet"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "TASK-0012-0014-prompt-draft",
+      "window": 4,
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "Architect planning agent drafted projection triad prompts and JSONs; no dispatch"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "TASK-0015-0017-prompt-draft",
+      "window": 4,
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "Architect planning agent drafted document triad prompts and JSONs; no dispatch"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "TASK-0018-0020-prompt-draft",
+      "window": 4,
+      "input_tokens": 35000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "Architect planning agent drafted job triad prompts and JSONs; no dispatch"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "CTG-0002-prompt-composition",
+      "window": 4,
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "Maestro checked scopes, PC hashes, current branch and R-0007 lock; compiled prompt review"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-9",
+      "window": 4,
+      "input_tokens": 65000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "Claude Opus exhaustive prompt review returned FAIL; eight high and four low; no workers dispatched",
+      "verdict": "FAIL"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "prompt-review-9-corrections",
+      "window": 4,
+      "input_tokens": 65000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "Corrected portal ownership, generated manifests, alias/gate runner, PDF/A validator and STYNX job read sets; integration package awaits Owner choice"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "CTG-0002-isolated-pretriage",
+      "window": 4,
+      "input_tokens": 30000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Fresh DB apply+seed twice PASS; backend:test:ci unit/integration PASS, app E2E 120/121 with one legacy C-0002-44 sensor failure"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "TASK-0006-A2-prompt",
+      "window": 4,
+      "input_tokens": 20000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Architect A-2 to preserve authorization and update legacy BOAT fallback test; no Inspector dispatched"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-10-task6-a2",
+      "window": 4,
+      "input_tokens": 25000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "Opus REVIEW exposed receipt-code schema conflict before Inspector retry",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-11-task6-a2",
+      "window": 4,
+      "input_tokens": 25000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Opus PASS after Architect A-2 supersession and TASK-0008 enum scope correction",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "inspector",
+      "id": "TASK-0006-A2",
+      "window": 4,
+      "input_tokens": 18000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "note": "Directed isolated E2E 26/26 PASS; C-0002-44 asserts BOAT rejected receipt, rollback, queue and authorization"
+    },
+    {
+      "kind": "maestro-integration",
+      "id": "R0009-main-fast-forward",
+      "window": 4,
+      "input_tokens": 18000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "note": "Checksum-backed recovery snapshot, main fast-forward, stash restore, package script union and canonical R9 chain preserved; db apply/seed, format and chain verify PASS"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-12-job",
+      "window": 4,
+      "input_tokens": 30000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "Restricted job triad review PASS with one low schema-read finding"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-13-job-low",
+      "window": 4,
+      "input_tokens": 15000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "Restricted low correction PASS; TASK-0018 dispatched"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "TASK-0021-fixture-prompt",
+      "window": 4,
+      "input_tokens": 12000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Defined isolated Inspector fixture repair after R9 tenant interceptor; pending cross-family prompt review"
+    },
+    {
+      "kind": "architect",
+      "id": "TASK-0018",
+      "window": 4,
+      "input_tokens": 35000,
+      "output_tokens": 6000,
+      "status": "completed",
+      "note": "Job contract and CTG A-3 written; format and RLS DDL PASS; OD-B14/B15 block scheduler activation"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-14-ops-fixture",
+      "window": 4,
+      "input_tokens": 28000,
+      "output_tokens": 2200,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "Two high prompt defects: missing exact RLS DB environment and wrong CTG A-2 reference; five lows corrected in follow-up"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-15-ops-fixture",
+      "window": 4,
+      "input_tokens": 18000,
+      "output_tokens": 1500,
+      "status": "invalid-output",
+      "note": "Restricted correction review produced malformed JSON; bridge rejected it and no formal verdict was accepted; minimal retry prompt-review-16 dispatched"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-16-ops-fixture",
+      "window": 4,
+      "input_tokens": 12000,
+      "output_tokens": 800,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "Minimal valid JSON retry closed seven prompt-review-14 corrections; TASK-0021 Inspector dispatched"
+    },
+    {
+      "kind": "inspector",
+      "id": "TASK-0021",
+      "window": 4,
+      "input_tokens": 16000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Post-R9 OPS fixture canonicalized; directed E2E 2/2 PASS under role_app_backend; assertions unchanged"
+    },
+    {
+      "kind": "inspector",
+      "id": "TASK-0006-A2-type-retry",
+      "window": 4,
+      "input_tokens": 9000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "TS18046 cast only; app typecheck and directed E2E 2/2 PASS"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "R9-postmerge-backend-ci",
+      "window": 4,
+      "input_tokens": 12000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Fresh isolated DB, app/reader role_app_backend; backend:test:ci PASS including app E2E 135/135"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "R9-postmerge-check-postfix",
+      "window": 4,
+      "input_tokens": 18000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Post-R9 pnpm check PASS after Inspector TS18046 repair; 930 handlers, 218 tenant RLS tables, SENATRAN boundary and PEC parity/superset green"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "R9-postmerge-checkpoint-w4",
+      "window": 4,
+      "input_tokens": 20000,
+      "output_tokens": 2500,
+      "status": "checkpoint",
+      "note": "Recorded exact post-R9 HEAD, recovery snapshots, passing full gates, prompt review/worker status and Owner/upstream dependencies; no CTG-0002 delivery claim"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "documents-review-preparation-w4",
+      "window": 4,
+      "input_tokens": 10000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "Prepared restricted Opus prompt-review-17 for corrected documents triad; verified prompt SHA/PC IDs, Prettier and unchanged origin/main; R-0007 lock remains active"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-17-documents",
+      "window": 5,
+      "input_tokens": 30000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "Three high and one low: missing STYNX render/signature/storage sources, real-tier/CI contradiction, positive PDF/A source and digest provenance"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "documents-prompt-correction-17",
+      "window": 5,
+      "input_tokens": 18000,
+      "output_tokens": 3500,
+      "status": "completed",
+      "note": "Reconciled ADR-0018 real tier with PR CI job ownership, fail-closed positive bytes and immutable image provenance; updated tasks, acceptance commands and prompt hashes"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-18-documents-correction",
+      "window": 5,
+      "input_tokens": 18000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "Corrected document triad accepted with two low findings on pre-Inspector deps and backend:test:ci acceptance"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "documents-interface-correction",
+      "window": 5,
+      "input_tokens": 16000,
+      "output_tokens": 2800,
+      "status": "completed",
+      "note": "Verified STYNX convert versus validate type mismatch; required real PDF/A conversion bridge, addressed low findings and refreshed prompt hashes; review19 dispatched"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-19-documents-interface",
+      "window": 5,
+      "input_tokens": 19000,
+      "output_tokens": 2600,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "Verified convert/validate mismatch correction and earlier lows; three new low implementation details recorded in plan"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "documents-review19-low-resolution",
+      "window": 5,
+      "input_tokens": 5000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Pinned post-conversion RenderResult hash/pages, converter provisioning and real-tier timeout obligations in plan without changing approved prompts"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "post-documents-review19-checkpoint",
+      "window": 5,
+      "input_tokens": 6000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Review19 PASS and lows pinned in plan; R-0007 active, no PR open, origin/main unchanged; formatting and diff whitespace green"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "external-dependencies-audit-w5",
+      "window": 5,
+      "input_tokens": 6000,
+      "output_tokens": 1000,
+      "status": "blocked",
+      "note": "Fresh fetch confirms origin/main unchanged and R-0007 active with no PR; Owner mirror and OD-B14/B15 decisions still unanswered; recorded exact resumption checkpoint"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "owner-job-approval-w5",
+      "window": 5,
+      "input_tokens": 8000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "Owner approved prior explicit monthly job proposal; recorded OD-B14/B15 exact limits and re-dispatched TASK-0018 Architect for contract/DDL amendment"
+    },
+    {
+      "kind": "architect",
+      "id": "TASK-0018-owner-adenda",
+      "window": 5,
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "status": "completed-with-administrative-port-gap",
+      "note": "Owner OD-B14/B15 incorporated; DDL75 identity/discovery/ledger, contract A-3; format and RLS DDL PASS; admin caller boundary remains fail-closed"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "TASK-0018-ddl-live-review",
+      "window": 5,
+      "input_tokens": 9000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "Full isolated DB reset applied DDL75; app role has no EXECUTE on admin functions or SELECT on identity table; ledger INSERT allowed under RLS"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "owner-mirror-option1-w5",
+      "window": 5,
+      "input_tokens": 7500,
+      "output_tokens": 1200,
+      "status": "completed",
+      "note": "Owner chose option 1; revised projection prompts, ADR amendment scope, task targets and composition hashes"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-20-projections",
+      "window": 5,
+      "input_tokens": 12000,
+      "output_tokens": 2500,
+      "status": "fail",
+      "note": "Opus FAIL: R-0009 Portal BP and handwritten locks unresolved; contract/gate/blueprint exports corrections needed; no projection worker dispatched"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "projection-prompt-correction-w5",
+      "window": 5,
+      "input_tokens": 7000,
+      "output_tokens": 1100,
+      "status": "completed",
+      "note": "Corrected review20 findings without touching R-0009 Portal BP or handwritten package; updated PC hashes and test acceptance"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-21-projections-correction",
+      "window": 5,
+      "input_tokens": 11000,
+      "output_tokens": 2500,
+      "status": "pass",
+      "note": "Opus PASS with three lows; Architect/Inspector disjoint work released; Engineer waits R-0009 and R-0007 locks"
+    },
+    {
+      "kind": "architect",
+      "id": "TASK-0012-owner-option1",
+      "window": 5,
+      "input_tokens": 25000,
+      "output_tokens": 4500,
+      "status": "completed",
+      "note": "Contract, limited ADR-0001 amendment and disjoint Dashboard/RENAEST mirror blueprints under prompt-review21 PASS"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "TASK-0012-blueprints-generation",
+      "window": 5,
+      "input_tokens": 6500,
+      "output_tokens": 900,
+      "status": "completed",
+      "note": "pnpm blueprints:generate/check PASS; Portal blueprint, DDL65 and generated package hash unchanged; pnpm verify:rls-ddl PASS 225 tables; pnpm install updated lockfile for 56 projects"
+    },
+    {
+      "kind": "inspector",
+      "id": "TASK-0013-projections-red",
+      "window": 5,
+      "input_tokens": 22000,
+      "output_tokens": 4000,
+      "status": "in-review",
+      "note": "RED suite and contract API amendments; 9 integration, 1 E2E and 3 domain-gate REDs; positive citizen identity branch lacks authorized source"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "TASK-0012-isolated-ddl-apply",
+      "window": 5,
+      "input_tokens": 3000,
+      "output_tokens": 500,
+      "status": "completed",
+      "note": "Full apply.sh reset in detran_boat_r0010_projection_test PASS; DDL71/72 applied"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "TASK-0013-red-review",
+      "window": 5,
+      "input_tokens": 9000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "Corrected false mirror event, schema-version equality, RequestContext, missing replay invocation and cleanup; isolated DB fixture residue 0"
     }
   ]
 }

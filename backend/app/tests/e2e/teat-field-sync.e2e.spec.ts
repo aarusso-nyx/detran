@@ -92,8 +92,8 @@ function syncBatchBody(): Record<string, unknown> {
     device_batch_id: `e2e-${randomUUID().slice(0, 8)}`,
     items: [
       {
-        // `crash-record` é reconhecido como suportado e não tem destino nesta
-        // rodada (§4.3): o lote responde 200 e nada de domínio é tocado.
+        // `crash-record` é reconhecido como suportado; o applier BOAT valida o
+        // payload e rejeita este registro inválido sem tocar o domínio.
         entity_type: 'crash-record',
         local_entity_id: randomUUID(),
         idempotency_key: `e2e-item-${randomUUID().slice(0, 8)}`,
@@ -229,20 +229,56 @@ describe('CTG-0002 §5.1/§5.13 — política de leitura e submissão (C-0002-43
     expect(response.status).toBe(403);
   });
 
-  it('C-0002-44 — dado DETRAN_LOCAL_ROLES=field-agent quando POST /v1/ops/offline-sync/sync-batches então 200 com receipts e warnings', async () => {
+  it('C-0002-44 — dado DETRAN_LOCAL_ROLES=field-agent quando POST /v1/ops/offline-sync/sync-batches então 200 com recibo BOAT rejeitado e sem efeito de domínio', async () => {
+    const body = syncBatchBody();
+    const item = (
+      body.items as {
+        idempotency_key: string;
+        local_entity_id: string;
+      }[]
+    )[0]!;
+    const idempotencyKey = item.idempotency_key;
+    const localEntityId = item.local_entity_id;
     const response = await request(server())
       .post('/v1/ops/offline-sync/sync-batches')
       .set(headers('field-agent'))
-      .send(syncBatchBody());
-    expect(response.status).toBe(200);
+      .send(body);
+    expect(response.status, JSON.stringify(response.body)).toBe(200);
     expect(response.body).toMatchObject({
       receipts: expect.any(Array),
       warnings: expect.any(Array),
     });
     expect(response.body.receipts[0]).toMatchObject({
-      status: 'received',
-      error_code: 'TEAT.SYNC_DESTINATION_NOT_WIRED',
+      status: 'rejected',
+      error_code: 'BOAT.SYNC_INVALID_CRASH_RECORD',
+      server_entity_id: null,
     });
+    const [queue, receipt, aggregate] = await Promise.all([
+      client.query<{ status: string; error_code: string | null }>(
+        `select status, error_code from ops.sync_queue_item
+          where tenant_id = $1 and idempotency_key = $2`,
+        [TENANT_ID, idempotencyKey],
+      ),
+      client.query<{ status: string; reason_code: string | null }>(
+        `select status, reason_code from ops.sync_receipt
+          where tenant_id = $1 and idempotency_key = $2`,
+        [TENANT_ID, idempotencyKey],
+      ),
+      client.query<{ count: string }>(
+        `select count(*)::text as count from est.crash_record
+          where tenant_id = $1 and source_local_id = $2`,
+        [TENANT_ID, localEntityId],
+      ),
+    ]);
+    expect(queue.rows[0]).toMatchObject({
+      status: 'rejected',
+      error_code: 'BOAT.SYNC_INVALID_CRASH_RECORD',
+    });
+    expect(receipt.rows[0]).toMatchObject({
+      status: 'rejected',
+      reason_code: 'BOAT.SYNC_INVALID_CRASH_RECORD',
+    });
+    expect(Number(aggregate.rows[0]?.count ?? 0)).toBe(0);
   });
 
   it('C-0002-44 — dado DETRAN_LOCAL_ROLES=field-supervisor quando POST /v1/ops/offline-sync/sync-batches então 403', async () => {
