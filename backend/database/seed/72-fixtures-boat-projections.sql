@@ -1,6 +1,9 @@
 -- R-0010 TASK-0013 C-2-13/C-2-14: fixture sintética sem dados pessoais.
 -- Duas linhas canônicas do mesmo fato possuem UUIDs distintos, mesma tupla
 -- (domainEvent, aggregate.id, aggregate.version) e schemaVersion explícita.
+select set_config('app.role', 'owner', false);
+select set_config('app.tenant_id', '00000000-0000-7000-8000-00000000a001', false);
+
 insert into integration.outbox
   (id, tenant_id, topic, aggregate_type, aggregate_id, payload, idempotency_key, status, created_at, available_at)
 values

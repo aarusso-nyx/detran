@@ -46,6 +46,16 @@ arquivo compactado e SHA-256. A integração foi automática, sem conflito manua
   TASK-0014 → TASK-0017 → TASK-0020 e continuar TASK-0007/0008/0011/0010/0009
   conforme suas dependências.
 
+**Execução após a auditoria:** TASK-0014 foi concluída e montada pelo maestro.
+Em banco isolado com apply/seed completos, a suíte dirigida de projeções passou
+6/6; app typecheck, gate de fronteiras e seus testes 3/3 passaram. TASK-0020
+implementou scheduler mensal, ledger tenant-scoped, claim/idempotência, contexto
+técnico e wiring; unit app passou 69/69 e o E2E dirigido do DDL/job passou 3/3.
+TASK-0020 permanece `in_progress`, pois a descoberta administrativa de tenants
+não tem porta autorizada: o DDL 75 nega EXECUTE a `role_app_backend` e o provider
+permanece fail-closed, sem owner-role. TASK-0016/0017 continuam paradas pelas
+fontes `source_pending` de PDF/A/assinatura registradas por TASK-0015.
+
 ## Metas
 
 1. **Reconciliação e política** (WP-B0): `policy.ts` `est:crash-record:*` alinhado ao corpus

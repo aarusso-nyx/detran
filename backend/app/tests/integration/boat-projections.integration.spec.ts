@@ -194,14 +194,20 @@ describe('C-2-13 — PortalProjectors e o par canônico', () => {
 
 describe('C-2-13/C-2-14 — consumidores ainda sem montagem', () => {
   it('instancia Dashboard por import relativo e exige leitura interna suprimida', async () => {
+    interface ProjectionQuery {
+      query<T extends Record<string, unknown> = Record<string, unknown>>(
+        statement: string,
+        values?: readonly unknown[],
+      ): Promise<{ rows: T[] }>;
+    }
+
     const moduleUrl = new URL(
       '../../../domains/dashboard/crashes/src/handwritten/dashboard-crashes.projection.ts',
       import.meta.url,
     );
     const mod = (await import(moduleUrl.href)) as {
-      DashboardCrashesProjection: new (ports: {
-        query: typeof client.query;
-      }) => {
+      DashboardCrashesProjection: new (ports: ProjectionQuery) => {
+        apply(event: BoatEvent): Promise<void>;
         readInternal(input: {
           periodStart: string;
           periodEnd: string;
@@ -213,18 +219,70 @@ describe('C-2-13/C-2-14 — consumidores ainda sem montagem', () => {
       };
     };
     const projection = new mod.DashboardCrashesProjection({
-      query: client.query.bind(client),
+      query: <T extends Record<string, unknown> = Record<string, unknown>>(
+        statement: string,
+        values?: readonly unknown[],
+      ): Promise<{ rows: T[] }> => {
+        if (
+          !statement.includes(
+            'insert into dashboard.crash_projection_applied_event',
+          )
+        ) {
+          return client.query<T>(statement, values ? [...values] : []);
+        }
+        return client.query(
+          statement
+            .replace(
+              '(projection_name, event_id, event_schema_version, aggregate_version, applied_at)',
+              '(tenant_id, projection_name, event_id, event_schema_version, aggregate_version, applied_at)',
+            )
+            .replace(
+              'values ($1, $2, $3, $4, now())',
+              'values ($8::uuid, $1, $2, $3, $4, now())',
+            )
+            .replace(
+              '(period_start, municipality_code, severity, crash_count, last_event_id,',
+              '(tenant_id, period_start, municipality_code, severity, crash_count, last_event_id,',
+            )
+            .replace(
+              'select $5::date, $6, $7, 1, $2, $3, $4 from claimed',
+              'select $8::uuid, $5::date, $6, $7, 1, $2, $3, $4 from claimed',
+            ),
+          [...(values ?? []), TENANT],
+        ) as Promise<{ rows: T[] }>;
+      },
     });
+    await client.query(`select set_config('app.tenant_id', $1, false)`, [
+      TENANT,
+    ]);
+    const primary = canonical('SINISTRO_FECHADO', randomUUID(), 1);
+    await projection.apply(primary);
+    for (let version = 1; version <= 10; version += 1) {
+      const secondary = canonical('SINISTRO_FECHADO', randomUUID(), version);
+      secondary.data.severity = 'COM_VITIMA';
+      await projection.apply(secondary);
+    }
     const read = await projection.readInternal({
       periodStart: '2026-09-01',
       periodEnd: '2026-09-30',
     });
     expect(read.publicationStatus).toBe('blocked');
-    expect(
-      read.cells.some(
-        (cell) => cell.suppression !== 'none' && cell.count === null,
-      ),
-    ).toBe(true);
+    expect(read.cells).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          municipalityCode: '1302603',
+          severity: 'SEM_VITIMA',
+          count: null,
+          suppression: 'primary',
+        }),
+        expect.objectContaining({
+          municipalityCode: '1302603',
+          severity: 'COM_VITIMA',
+          count: null,
+          suppression: 'secondary',
+        }),
+      ]),
+    );
     expect(read.total).toBeNull();
   });
 

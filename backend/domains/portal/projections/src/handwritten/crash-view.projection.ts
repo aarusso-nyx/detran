@@ -1,4 +1,6 @@
-// Source events: aggregate.kind = 'crash' (type est.crash.*) — esqueleto (produtor R-0010, OD-P19)
+// Source events: SINISTRO_* (aggregate.kind = crash | crash-record |
+// crash-renaest-submission). A leitura cruzada permitida continua no dispatcher
+// da outbox; este projetor só recebe o envelope canônico.
 //
 // Projeção `portal.crash_view` (work/rounds/R-0009/contracts/CTG-0002.md §7.2;
 // plan R-0009 M16): só a tabela + projetor esqueleto — um evento de agregado
@@ -14,7 +16,11 @@ import {
   type Projector,
 } from './projection-contract.js';
 
-export const CRASH_AGGREGATE_KIND = 'crash';
+export const CRASH_AGGREGATE_KIND = [
+  'crash',
+  'crash-record',
+  'crash-renaest-submission',
+] as const;
 
 const ROW_SQL = `select id from portal.crash_view where crash_id = $1 for update`;
 
@@ -39,14 +45,24 @@ export async function touchSkeletonRow(
 
 export class CrashViewProjector implements Projector {
   readonly projection = 'crash_view' as const;
-  readonly sourceEvents = ['est.crash.* (aggregate.kind = crash)'] as const;
+  readonly sourceEvents = [
+    'SINISTRO_* (aggregate.kind = crash | crash-record | crash-renaest-submission)',
+  ] as const;
 
   apply(
     event: PortalConsumedEvent,
     context: ProjectionContext,
   ): Promise<ProjectionResult> {
-    if (event.aggregate.kind !== CRASH_AGGREGATE_KIND) {
+    if (!CRASH_AGGREGATE_KIND.includes(event.aggregate.kind as never)) {
       return Promise.resolve({ kind: 'skipped', reason: 'not_consumed' });
+    }
+    if (
+      event.aggregate.kind !== 'crash' &&
+      event.data.identityStatus === 'source_pending'
+    ) {
+      // CPF ou hash enviado pela requisição não é vínculo canônico. A linha
+      // cidadão só nasce quando o emissor trouxer a relação autorizada.
+      return Promise.resolve({ kind: 'applied' });
     }
     return touchSkeletonRow(
       context.tx,

@@ -42,9 +42,11 @@ describe('substrato e isolamento do job T-BOAT-TRANSM', () => {
           and c.relname = any($1::text[])
         order by c.relname`,
       [
-        'boat_renaest_execution',
-        'boat_renaest_identity',
-        'boat_renaest_identity_event',
+        [
+          'boat_renaest_execution',
+          'boat_renaest_identity',
+          'boat_renaest_identity_event',
+        ],
       ],
     );
     expect(result.rows).toHaveLength(3);
@@ -81,9 +83,11 @@ describe('substrato e isolamento do job T-BOAT-TRANSM', () => {
           and routine_name = any($1::text[])
           and grantee = 'role_app_backend'`,
       [
-        'discover_active_boat_renaest_tenants',
-        'provision_boat_renaest_identity',
-        'revoke_boat_renaest_identity',
+        [
+          'discover_active_boat_renaest_tenants',
+          'provision_boat_renaest_identity',
+          'revoke_boat_renaest_identity',
+        ],
       ],
     );
     expect(result.rows).toEqual([]);
