@@ -194,8 +194,8 @@ jobs:
       - name: Verify blueprint regeneration has no drift
         run: pnpm blueprints:check
 
-      - name: Run backend unit and integration tiers
-        run: pnpm backend:test:unit && pnpm backend:test:integration
+      - name: Run governed backend test sequence
+        run: pnpm backend:test:ci
 
       - name: Verify SENATRAN boundary and generated contract drift
         run: |
