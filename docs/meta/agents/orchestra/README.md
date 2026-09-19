@@ -89,15 +89,20 @@ O detalhe está em `maestro-prompt.template.md`.
 16. **e2e idempotente em banco persistente** (R-0009): cada arquivo limpa no `afterAll` o que criou;
     `DB_NAME` explícito no env da rodada (`work/rounds/R-nnnn/env-detran-rN.sh`); o CI usa banco
     limpo e não acusa.
-17. **Chaves i18n não são parâmetros** (OD-P46): o verificador de parâmetros só reconhece chaves
-    declaradas no catálogo ou namespaces i18n listados numa allowlist do próprio catálogo — nunca
-    exclusão por diretório. Resolver no primeiro frontend (R-0012) antes de qualquer `i18n/*.json`
-    entrar em código.
+17. **Chaves i18n não são parâmetros** (OD-P46, fechada): a allowlist vive em
+    `parameter-catalogue.md` §Namespaces i18n e é lida por `tools/parameters/verify.mjs`; o
+    verificador reconhece somente parâmetros declarados ou esses namespaces. Exclusão por diretório
+    é proibida; R-0014 resolveu OD-P46 no primeiro frontend.
 18. **Checkpoint de dependências entre tarefas**: pacote de workspace novo → o maestro roda
     `pnpm install`, guarda o `pnpm-lock.yaml` para o commit do grupo e só então libera o Inspector;
     contrato novo → `pnpm contracts:clients` antes dos testes que o consomem; o CTG seguinte só
     começa a escrever depois do merge do anterior, ou nasce em branch empilhado (nunca commits novos
-    no branch de um PR aberto).
+    no branch de um PR aberto). Em R-0014: nunca commits em branch de PR aberto; vereditos são
+    lidos integralmente; toda tríade declara Architect explícito; `typecheck` é critério do
+    Inspector; iterações paralelas exigem fronteiras disjuntas (A12) e regra transversal só muda no
+    módulo dono (A12(a)); asserções por conjunto de status e escapes condicionais são vedados
+    (A15); um app isolado por arquivo de spec (A18); nomes `SENATRAN_*_BASE_URL` nunca aparecem em
+    `backend/**` (A19(c)).
 
 ## 5. Parcimônia de tokens
 
@@ -228,6 +233,43 @@ follow-up qualitativo de cada maestro: o que custou tempo, o que funcionou e o q
 7. **Prompt do maestro §5** — distinguir FAIL por contradição canônica (parar e reportar) de FAIL por
    estrutura de fronteira corrigível (ciclo extra permitido, registrado em §Bloqueios); R-0008 e R-0009
    já operaram assim por decisão do Owner.
+
+### R-0014 `portal-pwa` (Fable 5.1 → maestro Opus 5 na janela 4; workers/reviewer Codex a partir de 2026-09-19 — B3; PRs #60…#65)
+
+**O que custou tempo**
+
+1. Prompt-reviews FAIL por estrutura exigiram reescrita antes de disparar workers; B0 é um desvio
+   registrado, não autorização para ignorar o veredito.
+2. A9/A10 deixaram cobertura inicialmente declarada parcial; o Inspector precisou torná-la integral.
+3. A12 tornou explícita a regra transversal: o `ErrorBoundary`, módulo dono, absorve status 0.
+4. O Codex trunca comandos acima de 30 s; as suítes precisaram de processo em segundo plano, log e
+   polling pelo maestro.
+5. O sandbox não disponibiliza `pkill`; o isolamento de processos precisa vir do arquivo de spec.
+6. Asserções por conjunto de status e escapes condicionais esconderam casos e foram vedados em A15.
+7. O Inspector fez 11 iterações no CTG-0004; isso expôs lacunas de fixtures, não justificou reduzir
+   cobertura.
+8. A fonte homônima do seed não bastou para o contrato: o Architect precisou ler a fonte do serviço.
+
+**O que funcionou**
+
+1. Tríade com Architect explícito em cada CTG; contrato antes de Inspector e Engineer.
+2. O contrato como spec manteve decisões e negativas verificáveis durante as iterações.
+3. `tools/orchestra/worker.sh` registrou executor, hashes e a proibição de `git` do worker.
+4. A ponte de revisão com fontes, ratificada em A24, evitou alterar enum/OpenAPI por paráfrase.
+5. Fronteiras disjuntas permitiram as iterações paralelas de A12 sem corrida de escrita.
+
+**Números e recomendações**
+
+1. `budget.json`: 6.959.875 tokens estimados de entrada e 1.262.818 de saída; janela 4 encerrou
+   com aproximadamente 4,93 M únicos acumulados.
+2. Reviews: CTG-0001 4, CTG-0002 2, CTG-0003a 2, CTG-0003b 6, CTG-0003c 2 e CTG-0004 3;
+   prompt-reviews 12 ciclos (incluindo ciclos restritos).
+3. CTG-0004: contrato em 2 iterações, Inspector em 11 e Engineer em 5; delivery-review
+   FAIL → FAIL contestado → PASS.
+4. Manter Architect explícito, leitura integral do veredito e `typecheck` no critério de Inspector.
+5. Para matriz grande, usar Sonnet/médio ou Terra/médio; não reduzir o conjunto de estados.
+6. Proibir escapes condicionais e manter um app isolado por arquivo de spec.
+7. Registrar variáveis de mock só no shell/CI: `SENATRAN_*_BASE_URL` não entra em `backend/**`.
 
 ## Arquivos deste método
 

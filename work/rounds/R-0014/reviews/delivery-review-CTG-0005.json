@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/framework/arch/portal-frontends.md",
+      "line": 244,
+      "claim": "A tabela de pré-requisitos ainda declara domínio `portal`, projeções e dependências como `pendente (WP-P1/P2)`, mas o novo estado final da rodada afirma entregas de WP-P6 e fechamentos do CTG-0004; a seção §10 não foi consolidada para o estado ao fim de R-0014 exigido pela tarefa.",
+      "fix": "Atualizar as linhas 244–251 para o estado canônico ao fim de R-0014, distinguindo o que foi entregue contra mock, o que permanece `source_pending`/R-0007 e os ODs pendentes; manter a síntese das linhas 256–260 coerente com a tabela."
+    }
+  ],
+  "notes": [
+    "A regeneração dos três artefatos de parâmetros está consistente com as entradas `portal.attachment.*`; a execução local do verificador foi impedida pelo sandbox ao criar diretório temporário."
+  ]
+}

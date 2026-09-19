@@ -502,3 +502,18 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       a partir da onda 3, abrir a próxima frente de uma família quando a anterior daquela família mesclar (added 2026-09-14)
 - [x] **WP-T2 + WP-T3 teat-backend (R-0008)**: comandos manuscritos de AIT, bootstrap/turno/handoff, numeração e sincronização, evidência, snapshots, normativo, medidas, alcoolemia, velocidade, SSE e integrações (CTG-0001…0004, PRs #47–#50, 2026-09-15/16), contratos de comando + gate + clientes tipados + schemas + docs (CTG-0005, PR #51) e fechamento `PC-0005` em 2026-09-16; OD-T13…OD-T73 em `open-decisions-rait.md` §F; status HTTP divergentes (OD-T70/T71), enum do recibo (OD-T72), `integration.item.changed` (OD-T73) e `BP-INF-SPEED-001.commands` (OD-T66) roteados a rodadas futuras.
 - [x] **WP-T1 ops-agency (R-0005)**: agência, modelos ops, deltas inf e fixtures entregues nos CTG-0001/0002 (PRs #40/#41, 2026-09-14), CTG-0003 (PR #42), documentação final (PR #44) e fechamento `PC-0003` em 2026-09-15; `shift.status`, demais vocabulários source-pending e provisioning (R-0013/WP-T5) permanecem roteados a WP-T2+.
+- [ ] **PORTAL OD-P15 — gov.br real**: credenciais e retorno institucional; dono Architect-backend/Owner; fonte `plan.md` A14 e CTG-0004 §10.
+- [ ] **PORTAL OD-P16 — SNE real**: homologar `SnePort` além do mock; dono Architect-backend; fonte `plan.md` A14 e CTG-0004 §10.
+- [ ] **PORTAL OD-P17 — privacy**: montar `@stynx-nyx/privacy`; dono Architect-backend/Owner; fonte CTG-0004 §10.
+- [ ] **PORTAL OD-P19 — junta médica**: produtor PEC/BOAT e comando; dono PEC/BOAT; fonte CTG-0004 §10.
+- [ ] **PORTAL OD-P61 — enum legal SNE**: reconciliar enum do fio e textos legais; dono Owner/LEGAL + Architect-backend; fonte `plan.md` A24.
+- [ ] **PORTAL OD-P88 — VAPID**: fonte auditável de `applicationServerKey`; dono Architect + maestro; fonte CTG-0003c §10.
+- [ ] **PORTAL OD-P102 — ErrorBoundary**: acompanhar unificação futura, sem regra duplicada; dono Architect; fonte `plan.md` A12(a).
+- [ ] **PORTAL OD-P103 — CNH B**: rótulo cidadão de BLOQUEADA; dono Owner + Architect-backend; fonte CTG-0004 §10.
+- [ ] **PORTAL OD-P104 — quitação**: fonte de restrições, suspensão e `canIssue`; dono Architect-backend; fonte CTG-0004 §10.
+- [ ] **PORTAL OD-P105 — CRLV-e**: porta, bytes, QR e emissão; dono Architect-backend; fonte CTG-0004 §10.
+- [ ] **PORTAL OD-P106 — cancelamento SNE**: operação cidadã no adapter; dono Architect-backend; fonte CTG-0004 §10.
+- [ ] **PORTAL OD-P107 — adapter → PORTAL**: mapa completo de erros; dono Architect-backend; fonte CTG-0004 §10.
+- [ ] **PORTAL OD-P108 — DELETE push**: rota canônica; dono Architect-backend; fonte CTG-0004 §10.
+- [ ] **PORTAL B1 — Lighthouse CI**: somente ferramenta offline/instalável; até lá `axe` por rota; dono maestro; fonte `plan.md` B1/M3.
+- [ ] **PORTAL A12(j) — elevação**: manter contrato sem degrau `access`, banner de qualificada e heurística C-3c-78; dono Architect/transcriber; fonte `contracts/CTG-0003c.md` §3.8, §8.

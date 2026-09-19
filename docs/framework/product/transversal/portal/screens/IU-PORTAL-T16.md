@@ -89,7 +89,7 @@ motivo com link de pagamento antes de negar a emissão (alt. 2b).
 | sem elegibilidade | `portal.screens.t16.state.nao_valida` | caminho de regularização ([UC-PORTAL-011] alt. 2a)   |
 | erro recuperável  | `portal.screens.t16.state.pendencia`  | ir ao módulo de pagamento                            |
 | sem permissão     | n/a — é sempre a própria CNH          | —                                                    |
-| indisponível      | `portal.states.unavailable`           | dado em cache com data da consulta ([RN-PORTAL-117]) |
+| indisponível      | `portal.states.service_unavailable`   | dado em cache com data da consulta ([RN-PORTAL-117]) |
 
 ## Chaves i18n
 

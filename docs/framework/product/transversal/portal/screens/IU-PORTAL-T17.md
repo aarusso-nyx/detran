@@ -88,7 +88,7 @@ emissão (AC-2).
 | sem elegibilidade | `portal.states.ineligible`           | ir a "por que não vejo isto"                         |
 | erro recuperável  | `portal.screens.t17.state.pendencia` | ir ao pagamento (T-13)                               |
 | sem permissão     | tratado pelo guarda (redireciona)    | `/vinculo/por-que-nao-vejo`                          |
-| indisponível      | `portal.states.unavailable`          | dado em cache com data da consulta ([RN-PORTAL-117]) |
+| indisponível      | `portal.states.service_unavailable`  | dado em cache com data da consulta ([RN-PORTAL-117]) |
 
 ## Chaves i18n
 

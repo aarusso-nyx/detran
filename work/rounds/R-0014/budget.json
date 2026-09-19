@@ -3,8 +3,8 @@
   "window": 4,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 6959875,
-  "estimated_output_total": 1262818,
+  "estimated_input_total": 7506652,
+  "estimated_output_total": 1320530,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada). Janela 4 encerrada com ≈4,93 M únicos acumulados; a partir de 2026-09-19 os workers e o reviewer rodam no Codex (B3), com custo registrado por *.worker.json/*.bridge.json.",
   "entries": [
     {
@@ -922,6 +922,68 @@
       "output_tokens": 30000,
       "status": "completed",
       "note": "A14…A24, 15 iterações de workers, gates ×4, 3 ciclos de review, commits, evidência seq 6, PR"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0012",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 106958,
+      "output_tokens": 10989,
+      "status": "completed",
+      "note": "Codex (B3); brutos 2646734 entrada (2539776 em cache), 10989 saída; únicos = entrada não cacheada"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0012-iteration-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 179990,
+      "output_tokens": 26360,
+      "status": "completed",
+      "note": "Codex (B3); brutos 5820438 entrada (5640448 em cache), 26360 saída; únicos = entrada não cacheada"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0012-iteration-3",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 49829,
+      "output_tokens": 5363,
+      "status": "completed",
+      "note": "Codex (B3); brutos 451237 entrada (401408 em cache), 5363 saída; únicos = entrada não cacheada"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0005",
+      "input_tokens": 50000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "§10 portal-frontends desatualizado"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0005-2",
+      "input_tokens": 50000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "citação M9 ambígua"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0005-3",
+      "input_tokens": 50000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "verdict": "PASS",
+      "note": "ciclo restrito"
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0005-close-W5",
+      "input_tokens": 60000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "A25, OD-P66 na KB, parameters:generate, 3 ciclos de review, commits, evidência seq 7, PR 5, round close"
     }
   ],
   "forecast": {

@@ -83,14 +83,14 @@ lista já carregada permanece, sem erro bloqueante.
 
 ## Estados obrigatórios
 
-| Estado            | Texto cidadão (chave i18n)                | Ação seguinte                     |
-| ----------------- | ----------------------------------------- | --------------------------------- |
-| carregando        | `portal.states.loading`                   | —                                 |
-| vazio             | `portal.screens.t12.empty`                | —                                 |
-| sem elegibilidade | n/a — caixa do próprio sujeito            | —                                 |
-| erro recuperável  | `portal.states.retry`                     | tentar novamente                  |
-| sem permissão     | n/a — caixa do próprio sujeito            | —                                 |
-| indisponível      | `portal.screens.t12.state.sem_tempo_real` | lista carregada permanece visível |
+| Estado            | Texto cidadão (chave i18n)                           | Ação seguinte                     |
+| ----------------- | ---------------------------------------------------- | --------------------------------- |
+| carregando        | `portal.states.loading`                              | —                                 |
+| vazio             | `portal.screens.t12.empty`                           | —                                 |
+| sem elegibilidade | n/a — caixa do próprio sujeito                       | —                                 |
+| erro recuperável  | `portal.states.error` + `portal.common.action.retry` | tentar novamente                  |
+| sem permissão     | n/a — caixa do próprio sujeito                       | —                                 |
+| indisponível      | `portal.screens.t12.state.sem_tempo_real`            | lista carregada permanece visível |
 
 ## Chaves i18n
 
@@ -99,5 +99,5 @@ lista já carregada permanece, sem erro bloqueante.
 - `portal.screens.t12.state.sem_tempo_real` — "Não conseguimos atualizar em tempo real agora —
   mostrando o que já foi carregado." ([RN-PORTAL-124] item 4; `portal-frontends.md` §8)
 - `portal.screens.t12.cmd.marcar_lida` — "Marcar como lida"
-- `portal.screens.t12.field.canal` — "Recebido por {{source}}" (`sne` ou "canal do PORTAL")
+- `portal.screens.t12.field.canal` — "Recebido por {source}" (`sne` ou "canal do PORTAL")
   ([RN-PORTAL-124] dever 1)

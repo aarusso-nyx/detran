@@ -95,16 +95,17 @@ admitindo selo prata, parecer jurídico único).
 
 ### PORTAL
 
-| Item(s)                | Via | Ponte C                                                | Saída                                                                                                                                               |
-| ---------------------- | --- | ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OD-P01                 | A   | `portal.act_level_policy` vigente                      | capturado; resta CETRAN-AM/ouvidoria                                                                                                                |
-| OD-P02                 | A   | `portal.act_level_policy` vigente                      | **fechada** por H.50 (Owner, R-0009): prata ou ouro = avançada; risco (PN 001/2025 só nomeia ouro) registrado em ADR-0024 §Decisão 2/§Consequências |
-| OD-P06, OD-P10         | B   | `portal.ombudsman_level`, taxonomia                    | cédula 06                                                                                                                                           |
-| OD-P03, OD-P05, OD-P07 | C   | flags                                                  | fechados por DT-026/031/066                                                                                                                         |
-| OD-P04, OD-P08, OD-P09 | B   | `privacy.public_regime_days` pendente                  | parecer LEGAL (DT-042)                                                                                                                              |
-| OD-P11, OD-P12         | C   | `portal.read_cache_ttl_minutes`, `portal.mobile_shell` | Architect em WP-P1                                                                                                                                  |
-| OD-P13                 | C   | —                                                      | **fechada** (R-0009, M7): `@stynx-nyx/flow` avaliado e descartado; máquina fixa de 13 estados em código                                             |
-| OD-P46                 | C   | allowlist de namespaces i18n no catálogo de parâmetros | **fechada** em R-0014 (Owner, 2026-09-17; M10)                                                                                                      |
+| Item(s)                | Via | Ponte C                                                                        | Saída                                                                                                                                               |
+| ---------------------- | --- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OD-P01                 | A   | `portal.act_level_policy` vigente                                              | capturado; resta CETRAN-AM/ouvidoria                                                                                                                |
+| OD-P02                 | A   | `portal.act_level_policy` vigente                                              | **fechada** por H.50 (Owner, R-0009): prata ou ouro = avançada; risco (PN 001/2025 só nomeia ouro) registrado em ADR-0024 §Decisão 2/§Consequências |
+| OD-P06, OD-P10         | B   | `portal.ombudsman_level`, taxonomia                                            | cédula 06                                                                                                                                           |
+| OD-P03, OD-P05, OD-P07 | C   | flags                                                                          | fechados por DT-026/031/066                                                                                                                         |
+| OD-P04, OD-P08, OD-P09 | B   | `privacy.public_regime_days` pendente                                          | parecer LEGAL (DT-042)                                                                                                                              |
+| OD-P11, OD-P12         | C   | `portal.read_cache_ttl_minutes`, `portal.mobile_shell`                         | Architect em WP-P1                                                                                                                                  |
+| OD-P13                 | C   | —                                                                              | **fechada** (R-0009, M7): `@stynx-nyx/flow` avaliado e descartado; máquina fixa de 13 estados em código                                             |
+| OD-P46                 | C   | allowlist de namespaces i18n no catálogo de parâmetros                         | **fechada** em R-0014 (Owner, 2026-09-17; M10)                                                                                                      |
+| OD-P66                 | C   | `portal.attachment.max_size_mb`, `portal.attachment.accepted_types` (proposta) | R-0014 A6(e)/A25: 10 MB e PDF/JPEG/PNG da spec §7 fixos no app (`ATTACHMENT_MAX_BYTES`); parâmetro lido em rodada futura                            |
 
 ### BOAT
 

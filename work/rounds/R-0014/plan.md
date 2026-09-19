@@ -667,6 +667,23 @@ SENATRAN_MOCK_BASE_URL: http://127.0.0.1:3001 }` para `db:reset`, `build`, `node
   **OD-P61**). O canônico (contrato de rotas + OpenAPI) prevalece sobre a paráfrase; mudar o enum
   aqui quebraria OpenAPI, app e seed sem decisão do Owner. Nenhuma alteração; ciclo 3 restrito
   com as fontes. Se o reviewer mantiver o FAIL, aplica-se §6 (desempate pela outra família: Opus).
+- **A25 (2026-09-19, TASK-0012 it. 1 — Codex Luna insuficiente; escalada a Terra).** A entrega
+  (88 linhas em 20 arquivos) resumiu OD-P47…P108 num parágrafo, não marcou WP-P4…P6 como
+  executados, não tocou `orchestra/README.md` (§4.17/§4.18/§10) e criou dois **parâmetros novos**
+  `portal.attachment.max_size_mb` (int 10) e `portal.attachment.accepted_types` (json "tipos aceitos
+  pela spec §7" — não é valor) como `vigente`, o que torna os gerados obsoletos
+  (`verify:parameter-catalogue`). Decisões: (a) escada §6 "segunda falha → nível acima": it. 2 em
+  **Terra/alto**, com lista de entregáveis verificável (uma linha por OD; seções nomeadas). (b)
+  OD-P66 no catálogo: `portal.attachment.max_size_mb` int **10** e `portal.attachment.accepted_types`
+  json **`["application/pdf","image/jpeg","image/png"]`** (spec §7; `upload_hint`/`anexos_hint`
+  do catálogo i18n), ambos status **`proposta`** (o app usa `ATTACHMENT_MAX_BYTES`/`accept` fixos —
+  A6(e); ninguém lê o parâmetro ainda), fonte "spec §7; A6(e); OD-P66"; o maestro roda
+  `pnpm parameters:generate` (Engineer, por script — ADR-0007) e commita os gerados junto.
+  (c) As fichas T10…T18 corrigidas na it. 1 ficam (tabela ficha → chave conferida). Ciclos do
+  review: 1 REVIEW (§10 de `portal-frontends.md` desatualizado → it. 3), 2 REVIEW (citação "M9"
+  ambígua → corrigida pelo maestro: CTG-0004 §5 / M9 de R-0009); OD-P66 registrada em
+  `decision-closure-plan.md` pelo maestro (o verificador exige a referência na KB); a linha
+  OD-P102 do build pack alinhada ao backlog ("aberta, unificação futura").
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,
@@ -698,49 +715,26 @@ SENATRAN_MOCK_BASE_URL: http://127.0.0.1:3001 }` para `db:reset`, `build`, `node
 
 ## Retomada
 
-**Checkpoint 7 (2026-09-19, janela 4 → retomada com Codex — B3/A13).**
+**Checkpoint 8 (2026-09-19, janela 5 — CTG-0004 mesclado; resta o CTG-0005).**
 
-- CTG-0001…0003c mesclados (PRs #60…#64; WP-P4 e WP-P5 fechados); último `audit observe`
-  `EV-e8514b9464f0b049` (`4c3be453`); branch `orchestra/portal-pwa` = `origin/main` + observação +
-  este checkpoint.
-- **Preparado para a retomada:** `AUTHORIZATION.md` Amendment 2; `tools/orchestra/worker.sh`
-  (+ teste em `verify:orchestra-bridge`); prompts `TASK-0022.md`, `TASK-0010.md`, `TASK-0011.md`,
-  `TASK-0012.md`, `TASK-0017-iteration-5.md`; `tasks/TASK-0022|0010|0011|0012.json` (executor
-  `codex-cli`); `compositions.json`; `reviews/prompt-review-12.md`; banco `detran_r14` criado e
-  semeado (`env-detran-r14.sh`); mock provado (`/health` ok) e parado.
-- **Roteiro de retomada (maestro, na ordem):**
-  1. `tools/orchestra/bridge.sh codex gpt-5.6-terra work/rounds/R-0014/reviews/prompt-review-12.md work/rounds/R-0014/reviews/prompt-review-12.json`
-     → ciclos restritos até PASS (recalcular `compositions.json` e `prompt_composition_id` dos
-     JSONs se um prompt mudar).
-  2. Ambiente: `source work/rounds/R-0014/env-detran-r14.sh`; subir o mock:
-     `DB_NAME=senatran DATABASE_URL=postgresql://postgres:postgres@localhost:5432/senatran PORT=3001 pnpm --dir senatran-mock db:reset && pnpm --dir senatran-mock build && node senatran-mock/dist/apps/api/src/main.js > /tmp/senatran-mock-r14.log 2>&1 &`
-     e esperar `curl -fsS http://127.0.0.1:3001/health`.
-  3. `tools/orchestra/worker.sh gpt-5.6-terra high work/rounds/R-0014/prompts/TASK-0022.md work/rounds/R-0014/reports/TASK-0022.md`
-     → ler o relatório inteiro; ratificar/registrar em adenda A14; se tocou blueprints, conferir
-     `pnpm blueprints:check && pnpm contracts:check && pnpm typecheck`; delivery-review parcial
-     não é exigido (contrato) — segue para o Inspector.
-  4. `tools/orchestra/worker.sh gpt-5.6-terra medium work/rounds/R-0014/prompts/TASK-0010.md work/rounds/R-0014/reports/TASK-0010.md`
-     (com o mock vivo e o env carregado no shell que chama o worker) → conferir `git status`
-     (só `backend/app/tests/e2e/**`), baseline e vermelhos esperados.
-  5. `tools/orchestra/worker.sh gpt-5.6-terra medium work/rounds/R-0014/prompts/TASK-0011.md work/rounds/R-0014/reports/TASK-0011.md`
-     → gates: `pnpm --filter @detran/app test:e2e` verde com o mock; `pnpm backend:test:ci`;
-     `pnpm check`; `pnpm --filter @detran/portal-web typecheck|test`.
-  6. `tools/orchestra/worker.sh gpt-5.6-luna low work/rounds/R-0014/prompts/TASK-0017-iteration-5.md work/rounds/R-0014/reports/TASK-0017-iteration-5.md`
-     (pode rodar em paralelo ao passo 3; fronteira disjunta).
-  7. Iterações: escrever `prompts/TASK-nnnn-iteration-k.md` autossuficiente (A13(d)) e repetir o
-     worker; `delivery-review-CTG-0004` pela ponte Codex (Sol se houver blueprint/contrato mudado)
-     → commits (contrato+blueprints / testes+impl / seeds do mock / round) → evidência (generic
-     sequence 6) → `git merge --no-edit origin/main` → push → PR 4 → CI → merge → `audit observe`.
-  8. CTG-0005: `worker.sh gpt-5.6-luna low prompts/TASK-0012.md reports/TASK-0012.md` (após o
-     merge do PR 4, para citar o HEAD real) → `delivery-review-CTG-0005` → commit → evidência
-     (sequence 7) → PR 5 → merge → `audit observe` no HEAD final → `closure.json` → `devai round
-close` → apagar o branch remoto → relatório final (§10) a partir de `closure.md`.
-- Custos até aqui (janela 4): ≈ 4,9 M únicos de entrada acumulados na rodada; Codex a partir daqui
-  (B3), contabilizado em `budget.json` pelas notas de cada `*.worker.json`/`*.bridge.json`.
-- Lições novas: A12 (regra transversal só no módulo dono; iterações paralelas com fronteiras
-  disjuntas); prompts para Codex são autossuficientes — sem retomada de contexto, o prompt de
-  iteração aponta o relatório anterior.
-- Git: `orchestra/portal-pwa` publicado; working tree limpa após o commit deste checkpoint.
+- CTG-0001…0003c (PRs #60…#64) e **CTG-0004 (PR #65, `11d939f6`, evidência generic sequence 6,
+  observação `EV-631e1db24c09716e`)** mesclados. WP-P4, WP-P5 e WP-P6 executados.
+- Execução por Codex (B3/A13) provada no CTG-0004: contrato em 2 iterações; Inspector em 11;
+  Engineer em 5; review FAIL → FAIL (contestado, A24) → PASS. Decisões A13…A24. Lições: apontar ao
+  Architect a fonte de dados **do serviço** (não o seed homônimo); Codex trunca comandos > 30 s —
+  suítes em segundo plano com log + polling; sandbox sem `pkill`; `worker.sh` confere `git` pelo
+  transcript e libera rede; specs de Codex tendem a asserções por conjunto de status e escapes
+  condicionais — vedá-los no prompt (A15); um app isolado por arquivo (A18); nomes de variáveis
+  `SENATRAN_*_BASE_URL` nunca em `backend/**` (A19(c)).
+- **Próximo — CTG-0005:** `tools/orchestra/worker.sh gpt-5.6-luna low work/rounds/R-0014/prompts/TASK-0012.md work/rounds/R-0014/reports/TASK-0012.md`
+  (o prompt cita OD-P47…P10n → agora OD-P47…P108 e adendas A1…A24; o maestro atualiza o prompt
+  antes do disparo e recalcula `compositions.json`) → gates (`docs:kb:check`, `docs:kb:publish-check`,
+  `verify:parameter-catalogue`, `format:check`, `pnpm check`) → `delivery-review-CTG-0005` (Codex)
+  → commit → evidência (generic sequence 7) → PR 5 → merge → `audit observe` no HEAD final →
+  `closure.json` → `devai round close` → apagar o branch remoto → relatório final (§10) a partir de
+  `closure.md`.
+- Git: `orchestra/portal-pwa` = `origin/main` `11d939f6` + observação + este checkpoint; working
+  tree limpa após o commit.
 
 ---
 
