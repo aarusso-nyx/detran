@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
 import {
   Body,
   Controller,
@@ -21,35 +21,5 @@ export class RaitImpedimentController {
   }
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({
-    action: 'INF_RAIT_IMPEDIMENT_CREATE',
-    entity: 'inf.rait_impediment',
-  })
-  create(@Body() dto: CreateRaitImpedimentDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({
-    action: 'INF_RAIT_IMPEDIMENT_UPDATE',
-    entity: 'inf.rait_impediment',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateRaitImpedimentDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({
-    action: 'INF_RAIT_IMPEDIMENT_DELETE',
-    entity: 'inf.rait_impediment',
-  })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }

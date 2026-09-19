@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
 export interface RaitPoolMember {
   id: string;
   tenant_id: string;
@@ -12,6 +12,13 @@ export interface RaitPoolMember {
   unjustified_absence_count: number;
   is_substitute: boolean;
   jurisdiction?: string | null;
+  agency_jurisdiction_id?: string | null;
+  representation_block?: string | null;
+  institutional_seat_ref?: string | null;
+  appointment_act_ref?: string | null;
+  institutional_valid_from?: string | null;
+  institutional_valid_to?: string | null;
+  institutional_identity_hash?: string | null;
   created_at: string;
   updated_at?: string | null;
 }

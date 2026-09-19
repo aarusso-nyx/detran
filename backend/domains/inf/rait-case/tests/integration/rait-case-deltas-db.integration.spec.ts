@@ -8,11 +8,14 @@ import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const { Client } = pg;
-const client = new Client({
-  connectionString:
-    process.env.DETRAN_TEST_DATABASE_URL ??
-    'postgresql://postgres:postgres@localhost:5432/detran',
-});
+const connectionString = process.env.DETRAN_TEST_DATABASE_URL;
+if (!connectionString)
+  throw new Error(
+    'DETRAN_TEST_DATABASE_URL is required; fallback is forbidden',
+  );
+if (new URL(connectionString).pathname.slice(1) !== 'detran_r7_ctg1_a2')
+  throw new Error('DETRAN_TEST_DATABASE_URL must target detran_r7_ctg1_a2');
+const client = new Client({ connectionString });
 
 const TENANT = '00000000-0000-7000-8000-00000000a001';
 const OTHER_TENANT = randomUUID();
@@ -29,6 +32,7 @@ const PENDING_CONTENT_0001 = '00000000-0000-7000-8000-000036000001';
 const REDIRECT_0002 = '00000000-0000-7000-8000-000037000002';
 const DRAFT_0001 = '00000000-0000-7000-8000-000038000001';
 const AUTHOR_ANA = '00000000-0000-4000-8000-0000b0000001';
+const POOL_DEFESA = '00000000-0000-7000-8000-000020000001';
 
 async function asOwner<T>(work: () => Promise<T>): Promise<T> {
   await client.query('begin');
@@ -353,5 +357,55 @@ describe('inf.{rait_pending_content,rait_redirect,rait_draft} — deltas v1.1.0 
         [TENANT],
       ),
     ).toBe(4);
+  });
+
+  it('dado agency_jurisdiction_id inexistente quando o caso é atualizado então a FK v1.1.2 rejeita', async () => {
+    await expect(
+      asOwner(() =>
+        client.query(
+          'update inf.rait_case set agency_jurisdiction_id = $1 where id = $2',
+          [randomUUID(), CASE_0001],
+        ),
+      ),
+    ).rejects.toMatchObject({ code: '23503' });
+  });
+
+  it('dada minuta submetida sem document_id quando inserida então a completude estrutural v1.1.2 rejeita', async () => {
+    await expect(
+      asOwner(() =>
+        client.query(
+          `insert into inf.rait_draft
+             (tenant_id, case_id, version, author_id, content_hash, status, submitted_at)
+           values ($1, $2, 99, $3, $4, 'submetida', now())`,
+          [TENANT, CASE_0007, AUTHOR_ANA, 'a'.repeat(64)],
+        ),
+      ),
+    ).rejects.toMatchObject({ code: '23514' });
+  });
+
+  it('dada decisão de circuito 1 sem par de assinatura PAdES-TSA quando inserida então as constraints v1.1.2 rejeitam', async () => {
+    await expect(
+      asOwner(() =>
+        client.query(
+          `insert into inf.rait_decision
+             (tenant_id, case_id, circuit, decision_kind, grounds, decided_by)
+           values ($1, $2, 1, 'indeferida', 'fundamentação fixture', $3)`,
+          [TENANT, CASE_0007, AUTHOR_ANA],
+        ),
+      ),
+    ).rejects.toMatchObject({ code: '23514' });
+  });
+
+  it('dado membro autoridade sem agency_jurisdiction_id quando inserido então a obrigatoriedade condicional v1.1.1 rejeita', async () => {
+    await expect(
+      asOwner(() =>
+        client.query(
+          `insert into inf.rait_pool_member
+             (tenant_id, pool_id, person_id, member_role, status)
+           values ($1, $2, $3, 'autoridade', 'ATIVO')`,
+          [TENANT, POOL_DEFESA, randomUUID()],
+        ),
+      ),
+    ).rejects.toMatchObject({ code: '23514' });
   });
 });

@@ -1,0 +1,129 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "attempt": 2,
+  "cycle": 1,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "work/rounds/R-0007/prompts/TASK-0014.md",
+      "line": 36,
+      "claim": "O sensor bidirecional e criado como backend/app/tests/e2e/policy-routes.spec.ts, mas backend/app/vitest.config.ts inclui no tier e2e somente tests/e2e/**/*.e2e.spec.ts e usa passWithNoTests true; o arquivo nunca e coletado e pnpm --filter @detran/app test:e2e fica verde sem executar a paridade rota x regra. O criterio da rodada em plan.md linha 117, que afirma que backend:test:e2e inclui policy-routes.spec.ts, e inatingivel com esse nome.",
+      "fix": "Renomear para backend/app/tests/e2e/policy-routes.e2e.spec.ts em TASK-0014 pode tocar, nas leituras de TASK-0015 e TASK-0017 e em plan.md linhas 32, 101, 108 e 117; alternativamente estender o include do tier e2e do app, o que exigiria autorizar backend/app/vitest.config.ts na tarefa do Inspector."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0007/prompts/TASK-0015.md",
+      "line": 71,
+      "claim": "Os criterios de TASK-0015 sao apenas tres test:unit, shared test, app typecheck e verify:senatran-boundary; faltam pnpm --filter @detran/app build, pnpm --filter @detran/app test:e2e e pnpm backend:test:ci exigidos literalmente pela regra obrigatoria de plan.md linha 106 e pelo criterio de aceitacao de plan.md linha 122. Em toda a decomposicao nenhuma tarefa executa o build do app, de modo que a regressao de resolucao de dist descrita em orchestra/README.md §4 item 10 voltaria a passar despercebida ate o PR.",
+      "fix": "Acrescentar pnpm --filter @detran/app build, pnpm --filter @detran/app test:e2e e pnpm backend:test:ci aos criterios do prompt e a acceptance_commands de tasks/TASK-0015.json, recalcular o sha256 e o pc_id em compositions.json."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0007/prompts/TASK-0014.md",
+      "line": 44,
+      "claim": "A fronteira se contradiz: Pode tocar autoriza backend/domains/shared/src/policy.spec.ts e Nao pode tocar proibe backend/domains/**/src/**, que cobre exatamente esse arquivo. E a mesma classe de defeito que o ciclo anterior marcou como high em TASK-0001, e deixa ambigua a unica tarefa responsavel pela matriz exaustiva de policy do CTG-0004.",
+      "fix": "Substituir o padrao amplo pela lista explicita de fontes proibidas (backend/domains/inf/*/src/**, backend/domains/shared/src/policy.ts, backend/domains/shared/src/roles.ts, backend/app/src/**), preservando a excecao de policy.spec.ts."
+    },
+    {
+      "severity": "medium",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0014.md",
+      "line": 72,
+      "claim": "O criterio pnpm --filter @detran/app test:e2e com resultado esperado sensores executam nao e atingivel na posicao de Inspector: backend/app/package.json ainda nao declara inf-rait-org, inf-collection, inf-rait-integration nem inf-infraction, e backend/app/vitest.config.ts nao tem alias para inf-infraction, inf-deadlines e inf-notification; o Inspector esta proibido de tocar package.json e o wiring so chega em TASK-0015.",
+      "fix": "Declarar o resultado esperado como falha admissivel por wiring ausente, nos mesmos termos ja usados para o checker, ou mover a declaracao de dependencias e aliases do app para uma preparacao do maestro anterior a TASK-0014."
+    },
+    {
+      "severity": "medium",
+      "item": 16,
+      "file": "work/rounds/R-0007/compositions.json",
+      "line": 25,
+      "claim": "TASK-0004, TASK-0008, TASK-0012 e TASK-0016 estao compostas com gpt-5.6-terra (nivel medio) nas tarefas e em compositions.json, enquanto plan.md linhas 57, 61, 65 e 69 as declara Luna/baixo e model-ladder.md coloca regeneracao de blueprints e contratos guiada por script no nivel pequeno com esforco baixo. Plano e artefatos de disparo divergem.",
+      "fix": "Alinhar tasks/TASK-0004, 0008, 0012 e 0016 e compositions.json a gpt-5.6-luna com esforco baixo, ou corrigir a tabela do plano e registrar o ajuste em waves.md §Historico."
+    },
+    {
+      "severity": "medium",
+      "item": 3,
+      "file": "work/rounds/R-0007/prompts/TASK-0016.md",
+      "line": 32,
+      "claim": "Pode tocar usa prosa em vez de caminhos reais completos: os tres blueprints listados e OpenAPI gerados correspondentes. Isso viola a regra obrigatoria de plan.md linha 104, que exige caminhos reais completos e recusa expressoes descritivas como fronteira, e e o unico prompt de hook que nao segue o padrao ja aplicado em TASK-0004, TASK-0008 e TASK-0012.",
+      "fix": "Listar docs/framework/blueprints/BP-INF-RAIT-ORG-001.json, BP-INF-COLLECTION-001.json e BP-INF-RAIT-INTEGRATION-001.json e os tres docs/framework/contracts/BP-*-001.openapi.json correspondentes por caminho completo."
+    },
+    {
+      "severity": "medium",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0006.md",
+      "line": 59,
+      "claim": "TASK-0006 autoriza escrever backend/domains/inf/rait-worklist/tests/integration/** e rait-session/tests/integration/**, mas nenhum criterio seu roda test:integration; TASK-0007 acrescenta os dois filtros ao script raiz tambem sem criterio que os execute. Os sensores de integracao de worklist e session so seriam exercidos em TASK-0017, tres tarefas e um PR depois.",
+      "fix": "Acrescentar pnpm --filter @detran/inf-rait-worklist test:integration e pnpm --filter @detran/inf-rait-session test:integration aos criterios de TASK-0006 e TASK-0007, como ja e feito para o caso em TASK-0002 e TASK-0003."
+    },
+    {
+      "severity": "medium",
+      "item": 13,
+      "file": "work/rounds/R-0007/prompts/TASK-0011.md",
+      "line": 50,
+      "claim": "A tarefa manda acrescentar infraction ao gate raiz e TASK-0015 linha 60 manda acrescentar org, collection e integration, mas backend:test:integration e backend:test:unit no package.json da raiz ja enumeram inf-infraction, inf-collection, inf-rait-org e inf-rait-integration desde R-0006. A lacuna real, apontada em plan.md linha 180, e apenas case, worklist e session. Instruir a inclusao do que ja existe convida a entrada duplicada no script.",
+      "fix": "Reescrever as duas instrucoes como verificacao (confirmar que os filtros ja constam e acrescentar somente o que faltar) e manter a criacao efetiva restrita a TASK-0003 (case) e TASK-0007 (worklist e session)."
+    },
+    {
+      "severity": "medium",
+      "item": 2,
+      "file": "work/rounds/R-0007/prompts/TASK-0011.md",
+      "line": 31,
+      "claim": "Pode tocar autoriza backend/domains/inf/deadlines/src/** por inteiro, mas a leitura fechada traz apenas deadlines/tests/** e nao inclui nem os fontes do DeadlineEngine nem docs/framework/arch/rait-deadline-engine.md, que so TASK-0009 leu. O Engineer teria de pesquisar fora da lista para estender o unico calculador de prazos.",
+      "fix": "Acrescentar backend/domains/inf/deadlines/src/** e docs/framework/arch/rait-deadline-engine.md a leitura obrigatoria de TASK-0011."
+    },
+    {
+      "severity": "medium",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0001.md",
+      "line": 48,
+      "claim": "TASK-0001 contrata o formato dos sete arquivos OpenAPI de comando, o comportamento fail-closed do checker e a saida dos clientes sem ler tools/contracts/generate-openapi.mjs, que e o script que pnpm contracts:check executa, e define events[] por comando sem ler docs/framework/arch/rait-events-sse-contract.md. O contrato que os Inspectors devem seguir sem pesquisar nasce sem a fonte do seu proprio gate.",
+      "fix": "Acrescentar tools/contracts/generate-openapi.mjs e docs/framework/arch/rait-events-sse-contract.md a leitura obrigatoria fechada de TASK-0001."
+    },
+    {
+      "severity": "medium",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0002.md",
+      "line": 39,
+      "claim": "Nenhum prompt de Inspector fixa o sufixo de arquivo exigido pelos includes por tier (tests/integration/**/*.integration.spec.ts e tests/e2e/**/*.e2e.spec.ts); como todos os vitest.config.ts de dominio e o do app usam passWithNoTests true, um sensor com nome fora do padrao deixa o criterio verde sem nenhum teste executado.",
+      "fix": "Declarar o padrao de nome exigido por tier nas secoes Pode tocar de TASK-0002, TASK-0006, TASK-0010 e TASK-0014 e exigir no relatorio a contagem de arquivos e casos coletados por comando."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0007/prompts/TASK-0015.md",
+      "line": 60,
+      "claim": "A tarefa de wiring fala em montar dependencias workspace e aliases sem nomear @detran/inf-infraction, @detran/inf-deadlines e @detran/inf-notification, que continuam ausentes de backend/app/package.json e de backend/app/vitest.config.ts, embora o sensor bidirecional de policy-routes precise enxergar as rotas de comando da infracao entregues no CTG-0003.",
+      "fix": "Enumerar no prompt os pacotes a montar no AppModule, no manifest do app e nos aliases do Vitest, incluindo infraction, deadlines e notification."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0015.md",
+      "line": 71,
+      "claim": "O resultado esperado 0 falhas diretas nao e verificavel: nao define o que conta como falha indireta e permite que o worker declare PASS com testes vermelhos.",
+      "fix": "Usar 0 falhas, como nos demais prompts de Engineer, e listar a parte que so fecha em TASK-0016 como excecao nomeada."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0007/budget.json",
+      "line": 9,
+      "claim": "As entradas cobrem apenas o planejamento do maestro e a chamada do reviewer; as 18 tarefas de worker, as revisoes de entrega e as quatro janelas previstas em plan.md linha 7 nao tem estimativa, de modo que estimated_input_total 360000 nao sustenta o corte por janela descrito em orchestra/README.md §5.",
+      "fix": "Acrescentar entradas estimadas por tarefa e por CTG, com a convencao de tokens unicos de model-ladder.md, antes do primeiro disparo."
+    }
+  ],
+  "notes": [
+    "Os dezoito sha256 de prompts/TASK-*.md conferem byte a byte com compositions.json e cada pc_id e o prefixo PC- seguido dos primeiros 16 hexadigitos do hash correspondente.",
+    "Os oito achados high do ciclo valido da tentativa 1 estao endereçados: policy-routes nasce em tarefa Inspector, cada CTG tem etapa Architect antes do Engineer, os hooks so sao aplicados depois dos alvos manuscritos, PREP-DEPS mantem instalacao e lockfile no maestro e os sete ids canonicos de contrato estao corretos em TASK-0017.",
+    "Valores citados nos prompts foram conferidos na fonte: WIP 45 com alerta acima de 60 e T-CLAIM de 2 dias uteis em OD-004/OD-005 e em parameter-catalogue.md; alert-only de T-PAR-3A e T-PRESC-5A em OD-301 com H.46; OD-304 e OD-305 conforme citados; sustentacao oral omitida e nao configuravel em OD-002.",
+    "node tools/docs/kb/check.mjs devolve OK com 521 artefatos e 446 tokens canonicos, exatamente o criterio de plan.md linha 125.",
+    "Todos os caminhos citados nas leituras fechadas existem na worktree, inclusive os sete blueprints, os DDL 34 a 39, 57 e 58 e os manuais de perfil.",
+    "Nenhuma contradicao constitucional, de ADR ou de fronteira nacional foi encontrada; por isso o veredito e REVIEW e nao FAIL. Os tres high sao corrigiveis por edicao de criterios, de nome de arquivo de sensor e de fronteira, sem alterar nenhuma decisao de desenho."
+  ]
+}

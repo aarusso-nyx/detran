@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-SESSION-001 v1.1.0 sha256:24f07dd684f9142de9db5e84913c3e2899499e68aebd1d6ac33dc0a03c5eca01
+// Generated from BP-INF-RAIT-SESSION-001 v1.2.2 sha256:0a9063935f0017c3da8110a51763354850095992f1a56199395ef7eda620a45b
 export * from './controllers/rait-session.controller.js';
 export * from './dto/create-rait-session.dto.js';
 export * from './entities/rait-session.entity.js';
@@ -29,4 +29,26 @@ export * from './dto/create-rait-minutes.dto.js';
 export * from './entities/rait-minutes.entity.js';
 export * from './repositories/rait-minutes.repository.js';
 export * from './services/rait-minutes.service.js';
+export * from './controllers/rait-session-minutes-snapshot.controller.js';
+export * from './dto/create-rait-session-minutes-snapshot.dto.js';
+export * from './entities/rait-session-minutes-snapshot.entity.js';
+export * from './repositories/rait-session-minutes-snapshot.repository.js';
+export * from './services/rait-session-minutes-snapshot.service.js';
+export * from './controllers/rait-session-minutes-manifest.controller.js';
+export * from './dto/create-rait-session-minutes-manifest.dto.js';
+export * from './entities/rait-session-minutes-manifest.entity.js';
+export * from './repositories/rait-session-minutes-manifest.repository.js';
+export * from './services/rait-session-minutes-manifest.service.js';
+export * from './controllers/rait-minutes-required-signer.controller.js';
+export * from './dto/create-rait-minutes-required-signer.dto.js';
+export * from './entities/rait-minutes-required-signer.entity.js';
+export * from './repositories/rait-minutes-required-signer.repository.js';
+export * from './services/rait-minutes-required-signer.service.js';
+export * from './controllers/rait-minutes-signature-receipt.controller.js';
+export * from './dto/create-rait-minutes-signature-receipt.dto.js';
+export * from './entities/rait-minutes-signature-receipt.entity.js';
+export * from './repositories/rait-minutes-signature-receipt.repository.js';
+export * from './services/rait-minutes-signature-receipt.service.js';
 export * from './rait-session.module.js';
+export * from './handwritten/rait-session-commands.controller.js';
+export * from './handwritten/rait-session-command.service.js';

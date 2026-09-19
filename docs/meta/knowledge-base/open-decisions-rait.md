@@ -40,6 +40,124 @@ construção não bloqueie. A decisão contrária exige mudança dos artefatos c
 | OD-019 | **Advertência por escrito** (CTB art. 267): mesma máquina com `penalidade=advertencia` ou ramo próprio                                                                                    | mesma máquina; sem pontuação e sem pagamento; recurso à JARI condicionado — **vigente (H.54/H.57)**                                                                                                                                                                                              | agregado da infração; Portal                                                                | [WF-INF-003] §Decisões pendentes                                |
 | OD-020 | **Migração de pins para STYNX 1.3.1 / Angular 22**: janela e responsável do WP-0 (decisão de adoção já tomada, G.34)                                                                      | WP-0 antes de qualquer código do `apps/rait/web` — **cédula 02** (janela e responsável) — **H.41**: já, PR único                                                                                                                                                                                 | todo o frontend; `@detran/ui`                                                               | ADR-0015, `rait-build-pack.md`                                  |
 
+### OD-016 — decisão do Owner em 2026-09-16
+
+**Leitura vigente:** as emendas ao final desta seção fixam o default sem
+comprovação, a definitividade pela política atual, a preservação do mecanismo
+de revisão para mudança normativa e o cálculo da idade no ato de qualificação.
+As decisões anteriores permanecem registradas para rastreabilidade.
+
+A premissa histórica da tabela acima permanece registrada. O Owner resolveu a
+ordem relativa e a semântica dos casos não apurados em
+[ADR-0024](../adr/ADR-0024-rait-legal-priority-owner-policy.md): após risco de
+prescrição, PCD e 80+ no mesmo nível, depois 60+, depois ausência de prioridade
+comprovada; desempate por `protocolled_at` e `id`. Preservam-se todas as bases
+comprovadas, usando o maior nível aplicável para ordenar. `legal_priority = null`
+significa **não apurado**, excluído do `claim-next` automático até saneamento.
+
+**Status:** decisão de produto aceita para preparação e implementação. O Owner
+atestou a validação jurídica da política de comprovação/default/definitividade
+e, expressamente na emenda abaixo, da igualdade de nível PCD = 80+, encerrando
+esse gate específico. A igualdade PCD = 80+ é política do Owner, não uma
+ordenação total atribuída à lei. O requerimento com prova da idade já registrado
+permanece preservado. A atestação não encerra outras pendências LEGAL não
+abrangidas nem libera os requisitos técnicos de despacho da campanha R-0007.
+
+O ciclo de implementação deve reconciliar o placeholder textual preexistente de
+`rait.priority.legal_bases` no catálogo/seed com a política aprovada, sua validação
+e os dados existentes, sem inferir defaults do texto (ver ADR-0024).
+
+#### Emenda do Owner em 2026-09-16 — arranjo de menor esforço
+
+Registro histórico, parcialmente superado pela emenda vigente abaixo.
+
+O Owner decidiu: "Ok, eu como OWNER Decido adotar esse arranjo de menor esforço."
+`rait-secretary` registra o requerimento e a comprovação e confirma a prioridade
+no protocolo mediante prova válida, sem etapa ordinária de `rait-analyst`.
+O mero registro/anexo não ativa prioridade: a confirmação é uma decisão
+expressa, vedada a concessão automática sem prova. `rait-coordinator` revoga ou
+corrige excepcionalmente prioridade já confirmada, mediante motivo e nova
+revisão auditável que preserve a decisão anterior, suas bases e o histórico;
+não se admite apagamento ou rebaixamento silencioso via CRUD genérico.
+`agency-admin` permanece responsável pelos parâmetros, sem decidir prioridade
+de casos por este arranjo; `AUDITOR` permanece em leitura.
+
+Casos sem prova permanecem `legal_priority = null`, não apurados, excluídos do
+`claim-next` automático; não são convertidos em "ausência de prioridade
+comprovada". Na data desta emenda histórica, permaneciam a ordenação anterior
+e o gate jurídico pré-entrega/merge, incluindo a adequação da atribuição à
+secretaria; as atestações posteriores abaixo atualizam essas pendências.
+
+**Pendências delimitadas:** definir critérios de prova válida por categoria e
+para concluir "ausência de prioridade comprovada"; definir com o Owner o
+tratamento de prova apresentada após o protocolo antes de implementar esse
+fluxo. A emenda não institui fila, endpoint ou autoridade para a secretaria
+rever prioridade já confirmada. Detalhes e fronteiras em
+[ADR-0024](../adr/ADR-0024-rait-legal-priority-owner-policy.md).
+
+#### Emenda do Owner em 2026-09-16 — política de comprovação
+
+- Idade: data de nascimento comprovada por documento/CNH, para as faixas 60+
+  e 80+ na qualificação do protocolo.
+- PCD: documento anexado e validado pelo `rait-secretary` no ato do protocolo.
+- Ausência de prioridade comprovada é o default ao concluir a qualificação
+  no protocolo; não se exige prova negativa específica.
+- Não são admitidas provas apresentadas ou invalidadas após o protocolo para
+  essa qualificação. O protocolo é definitivo na qualificação do ordenamento.
+- `null` designa não apurado antes do protocolo, excluído do `claim-next`;
+  ausência de comprovação após o protocolo é semanticamente `none`, cujo
+  literal persistido deve ser fechado no contrato, e não `null`.
+
+O Owner declarou que essas decisões já foram validadas pelo jurídico.
+Registra-se a atestação do Owner, sem alegar consulta independente ao parecer.
+Encerra-se a pendência da política de comprovação/default/definitividade e da
+validação de PCD pela secretaria no protocolo. Esta atestação, isoladamente,
+não abrangia a precedência PCD = 80+, confirmada expressamente pelo Owner na
+emenda específica abaixo, nem outras pendências LEGAL não abrangidas.
+
+A política atual impede revogação/correção pelo `rait-coordinator` que altere
+a qualificação definitiva do ordenamento. A emenda seguinte preserva o
+mecanismo para mudança normativa futura.
+Permanecem os demais papéis, as bases comprovadas e o histórico, risco de
+prescrição primeiro, PCD = 80+ > 60+ > ausência de prioridade comprovada e
+desempate por `protocolled_at` e `id`.
+
+#### Emenda vigente do Owner em 2026-09-16 — revisões e referência da idade
+
+O Owner determinou preservar a possibilidade de alterações posteriores:
+a definitividade é decisão vigente do órgão e pode ser alterada por portaria.
+Preserva-se a capacidade de correção/revogação excepcional pelo
+`rait-coordinator`, com motivo, nova revisão auditável e preservação da decisão
+anterior, suas bases e histórico. Sua utilização para alterar o ordenamento
+pós-protocolo depende de mudança normativa por portaria e da correspondente
+política autorizada pelo Owner, versionada e auditável. A política atual
+continua vedando prova nova ou invalidação posterior para requalificação.
+Esta emenda supera a interpretação de retirada do mecanismo, sem presumir
+portaria já editada ou nova validação jurídica independente.
+
+O Owner fixou o **ato de qualificação** como referência do cálculo da idade,
+inclusive no protocolo postal, a partir da data de nascimento comprovada por
+documento/CNH. A postagem ECT mantém sua função cronológica e de tempestividade
+em UC-RAIT-001, sem definir a idade, validar prova retroativamente ou autorizar
+recálculo automático posterior. Encerra-se essa pendência de decisão.
+
+Restam fechamento técnico do vocabulário, migração auditável do acervo `null`
+sem conversão indiscriminada em `none`, aplicação da política vigente ao
+mecanismo de revisões preservado e reconciliação do contrato. Ver
+[ADR-0024](../adr/ADR-0024-rait-legal-priority-owner-policy.md).
+
+#### Emenda do Owner em 2026-09-16 — validação jurídica de PCD = 80+
+
+O Owner esclareceu: "O gate jurídico já validou PCD = 80." A declaração se
+refere à igualdade de nível entre PCD e a faixa 80+ já decidida, sem restringir
+a faixa à idade exatamente igual a 80 anos. Registra-se a atestação do Owner
+de validação jurídica já ocorrida, sem alegar exame independente do parecer.
+
+O gate jurídico específico de PCD = 80+ está encerrado; indicações anteriores
+de pendência desse gate ficam superadas. Preservam-se as demais políticas de
+OD-016 e os requisitos técnicos de contrato, revisão e despacho de R-0007.
+O encerramento não se estende a outras pendências LEGAL do corpus.
+
 ## B. Dependentes do Regimento Interno da JARI-AM (Res. CONTRAN 357/2010 delega ao regimento; DT-060)
 
 | ID     | Questão                                                                                                       | Premissa adotada                                                                                                 | Destrava / bloqueia                                                                    | Afeta                              |

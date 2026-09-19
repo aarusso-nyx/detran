@@ -115,11 +115,66 @@ function tableSql(module, entity) {
     `${columns.join(',\n')},`,
     `  constraint pk_${entity.table} primary key (${entity.primaryKey.join(', ')})${(entity.checks ?? []).map((check) => `,\n  constraint ${check.name} check (${check.expression})`).join('')}${(entity.foreignKeys ?? []).map((foreignKey) => `,\n  constraint ${foreignKey.name} foreign key (${foreignKey.columns.join(', ')}) references ${foreignKey.references.table} (${foreignKey.references.columns.join(', ')})`).join('')}`,
     ');',
+    ...entity.fields
+      .filter((field) => field.additive)
+      .map(
+        (field) =>
+          `alter table ${module.namespace}.${entity.table} add column if not exists ${field.name} ${field.type}${field.default === undefined ? '' : ` default ${field.default}`}${field.nullable ? '' : ' not null'};`,
+      ),
+    ...(entity.checks ?? [])
+      .filter((check) => check.additive)
+      .map(
+        (check) => `do $$ begin
+  if not exists (select 1 from pg_constraint where conname = '${check.name}' and conrelid = '${module.namespace}.${entity.table}'::regclass) then
+    alter table ${module.namespace}.${entity.table} add constraint ${check.name} check (${check.expression})${check.notValid ? ' not valid' : ''};
+  end if;
+end $$;`,
+      ),
     ...indexes.map(
       (i) =>
         `create ${i.unique ? 'unique ' : ''}index if not exists ${i.name ?? `${i.unique ? 'ux' : 'ix'}_${entity.table}_${i.columns.join('_')}`} on ${module.namespace}.${entity.table}${i.method ? ` using ${i.method}` : ''} (${i.columns.join(', ')})${i.where ? ` where ${i.where}` : ''};`,
     ),
+    ...indexes
+      .filter(
+        (index) =>
+          index.constraint === true &&
+          index.unique &&
+          !index.where &&
+          index.name,
+      )
+      .map(
+        (index) => `do $$ begin
+  if not exists (select 1 from pg_constraint where conname = '${index.name}' and conrelid = '${module.namespace}.${entity.table}'::regclass) then
+    alter table ${module.namespace}.${entity.table} add constraint ${index.name} unique using index ${index.name};
+  end if;
+end $$;`,
+      ),
   ].join('\n');
+}
+function deferredForeignKeySql(module, entity, foreignKey) {
+  const referencedUniqueIndex = foreignKey.referencedUniqueIndex;
+  const prerequisite = referencedUniqueIndex
+    ? `create unique index if not exists ${referencedUniqueIndex.name} on ${foreignKey.references.table} (${foreignKey.references.columns.join(', ')});\n\n`
+    : '';
+  return `${prerequisite}do $$ begin
+  if not exists (select 1 from pg_constraint where conname = '${foreignKey.name}' and conrelid = '${module.namespace}.${entity.table}'::regclass) then
+    alter table ${module.namespace}.${entity.table} add constraint ${foreignKey.name}
+      foreign key (${foreignKey.columns.join(', ')}) references ${foreignKey.references.table} (${foreignKey.references.columns.join(', ')});
+  end if;
+end $$;`;
+}
+function immutableSql(module, entity) {
+  const table = `${module.namespace}.${entity.table}`;
+  const protectedUpdate = entity.immutableColumns?.length
+    ? `update of ${entity.immutableColumns.join(', ')} or delete`
+    : 'update or delete';
+  return `drop trigger if exists ${entity.table}_immutable on ${table};
+create trigger ${entity.table}_immutable before ${protectedUpdate} on ${table}
+  for each row execute function ${module.namespace}.reject_immutable_blueprint_row();
+drop trigger if exists ${entity.table}_no_truncate on ${table};
+drop trigger if exists ${entity.table}_immutable_truncate on ${table};
+create trigger ${entity.table}_no_truncate before truncate on ${table}
+  for each statement execute function ${module.namespace}.reject_immutable_blueprint_row();`;
 }
 function dto(bp, sha, entity) {
   const fields = entity.fields.filter(
@@ -373,6 +428,22 @@ function packageFiles(bp, sha, module, entities) {
     `-- Regenerable-only DDL for ${bp.id}; request-path writes use role_app_backend.`,
     `create schema if not exists ${module.namespace};`,
     ...entities.map((e) => tableSql(module, e)),
+    ...entities.flatMap((entity) =>
+      (entity.deferredForeignKeys ?? []).map((foreignKey) =>
+        deferredForeignKeySql(module, entity, foreignKey),
+      ),
+    ),
+    ...(entities.some((entity) => entity.immutable)
+      ? [
+          `create or replace function ${module.namespace}.reject_immutable_blueprint_row()
+returns trigger language plpgsql as $$ begin
+  raise exception 'Immutable blueprint row cannot be changed' using errcode = '42501';
+end $$;`,
+          ...entities
+            .filter((entity) => entity.immutable)
+            .map((entity) => immutableSql(module, entity)),
+        ]
+      : []),
     ...entities.map(
       (e) =>
         `select auth.create_rls_policy('${module.namespace}', '${e.table}');`,

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0063",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Versionar blueprints para sessão, paridade e atas confiáveis",
+  "description": "Architect 1/1 versionou worklist para 1.4.0 (SHA-256 f27e53d88bde25a8b98e1b8e156b4ab97a455df045065529d6a2d07c96932130) e session para 1.2.0 (SHA-256 43494ca8d309b54e3505f687506e8e7b1ac72352fdd4f192058482b2ff227c0c): identidade CETRAN verificável; dependências case/worklist/deadlines; versões otimistas; composição congelada; cadeia SESSION_MINUTES multi-signatário conforme ADR-0027; voto, ata, snapshot, manifesto, signatários e recibos imutáveis; somente list/get nos cinco recursos públicos e operations [] em oral-arguments e quatro entidades internas, sem hooks/runtime. Duas gerações completas exit 0 foram idênticas (agregado SHA-256 ad9109eb613a04e11bb7f4f38665f2985109ba8b98e35729209ca84b24b371c5). DDL35 b91d7ed8b329778c3a43eec161c997c8bf9b19e5fa91a9d46dcfb1e4d9a823c1 e DDL36 aee247d53ff9d181b8f19774f496a6eaac80d5fcfbead70558b0c87de1e083ed foram aplicados em ordem, duas vezes e transacionalmente no DB dedicado detran_r7_ctg1_a2, sem reset/seed/full; 20 casos, 4 sessões e 3 itens preservados. Sensores SQL TASK-0047 2/2 e TASK-0049 3/3 PASS; blueprint/contract/RLS (193 tabelas), typechecks e diff-check PASS; hashes Inspector intactos.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-bp-rait-worklist",
+    "MOD-bp-rait-session",
+    "MOD-generated-tree"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0049",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "session-blueprint"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-a4b4c3796d0bc874",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "typecheck"]
+  ],
+  "created_at": "2026-09-19T07:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-a4b4c3796d0bc874",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Blueprint/schema/operations session e representação; runtime/hooks fora."
+  }
+}

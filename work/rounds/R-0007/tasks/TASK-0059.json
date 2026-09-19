@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0059",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fechar contrato técnico dos comandos CTG-0002",
+  "description": "Architect 1/1 publicou o contrato técnico final: API tipada de preparação/recuperação server-owned separada de assinatura; trust SESSION_MINUTES com capability, manifesto/hash e recibos múltiplos; porta pública same-transaction do caso; DI de Clock/deadlines/parâmetros; CETRAN verificável; votos/atas imutáveis; migração aditiva; ordem e ownership até TASK-0008. Único OWNER_DECISION_REQUIRED: divergência entre presidente+relatores e presidente+secretaria na ata de sessão; positivo final permanece fail-closed. Evidência: relatório SHA-256 d01d5d5ac8a5c01bddbb70beca43fe9744a78b6c2d507abb9dfaefeb1556610e e adendo numerado presentes; Prettier estrito, contracts:check, referências/caminhos, JSON e diff-check PASS.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-contract-document-trust",
+    "MOD-bp-rait-worklist",
+    "MOD-bp-rait-session"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0058",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "technical-contract"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-2d8b614995d93aa4",
+  "acceptance_commands": [
+    [
+      "test",
+      "-s",
+      "work/rounds/R-0007/reports/CTG-0002-TECHNICAL-CLOSURE-CONTRACT.md"
+    ],
+    ["pnpm", "contracts:check"]
+  ],
+  "created_at": "2026-09-19T01:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-2d8b614995d93aa4",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Contrato técnico somente; sem implementação ou sensor."
+  }
+}

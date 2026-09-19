@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0047",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Congelar RED produtivo de sessão e pauta",
+  "description": "Inspector 1/2 congelou cinco sensores novos. RED funcional: serviço 6, policy 11, HTTP 8, auditoria 7 e integração 1; 11 checks DB/RLS passaram com role_app_backend e rollback. Hashes: unit abdd4dc819801fb789ae4f1bbbbc773aafe4a0ad19324330bbdfa010728dc63c; integration 90e29b008aae8f2d45c9d661a93467a1c65d6b78b531edfd19c3fd5f7b355d54; policy d881bac3204701d93489511d75015478e97a11906e5082e7922d5452aa2cac23; e2e d7ac98e4c3ed3dcb5a33fa2a1af9a7a350b926048d3a9f86ca30e1b19f98cab5; audit ad196aa64636c02e3bada299c5a5dc652ebd769b61b7d853ff44dafba73e590b.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-worklist-session", "MOD-bp-rait-session"],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0062",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "session-agenda"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-33ffc2d8d2273f61",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-session", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"]
+  ],
+  "created_at": "2026-09-19T05:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-33ffc2d8d2273f61",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente novos sensores de sessão/pauta; sem produção ou schema."
+  }
+}

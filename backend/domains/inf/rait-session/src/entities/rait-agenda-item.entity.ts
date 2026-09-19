@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-SESSION-001 v1.1.0 sha256:24f07dd684f9142de9db5e84913c3e2899499e68aebd1d6ac33dc0a03c5eca01
+// Generated from BP-INF-RAIT-SESSION-001 v1.2.2 sha256:0a9063935f0017c3da8110a51763354850095992f1a56199395ef7eda620a45b
 export interface RaitAgendaItem {
   id: string;
   tenant_id: string;
@@ -18,6 +18,7 @@ export interface RaitAgendaItem {
   withdrawn_reason?: string | null;
   view_requested_by?: string | null;
   view_due_on?: string | null;
+  version: number;
   created_at: string;
   updated_at?: string | null;
 }

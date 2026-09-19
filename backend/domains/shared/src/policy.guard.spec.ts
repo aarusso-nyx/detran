@@ -17,6 +17,12 @@ class PublicController {
   callback(): void {}
 }
 
+@Resource('inf:rait-case')
+class RaitController {
+  @Action('admit')
+  admit(): void {}
+}
+
 function executionContext(
   classRef: new () => object,
   handler: (...args: never[]) => unknown,
@@ -83,5 +89,54 @@ describe('DetranPolicyGuard', () => {
         executionContext(PublicController, PublicController.prototype.callback),
       ),
     ).toBe(true);
+  });
+
+  it('dado papel negado em recurso inf:rait-* quando o guard compartilhado avalia então preserva ForbiddenException', () => {
+    let thrown: unknown;
+    try {
+      guard.canActivate(
+        executionContext(RaitController, RaitController.prototype.admit, {
+          roles: ['rait-secretary'],
+          permissions: [],
+        }),
+      );
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(ForbiddenException);
+    expect(thrown).toMatchObject({ status: 403 });
+    expect(JSON.stringify(thrown)).not.toContain('RAIT.');
+  });
+
+  it('dado papel negado fora de inf:rait-* quando o guard avalia então preserva ForbiddenException sem prefixo RAIT', () => {
+    let thrown: unknown;
+    try {
+      guard.canActivate(
+        executionContext(
+          ProtectedController,
+          ProtectedController.prototype.finalize,
+          { roles: ['CIDADAO'], permissions: [] },
+        ),
+      );
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(ForbiddenException);
+    expect(JSON.stringify(thrown)).not.toContain('RAIT.');
+  });
+
+  it('dado ausência de principal em recurso inf:rait-* quando o guard avalia então preserva a falha de autenticação vigente', () => {
+    let thrown: unknown;
+    try {
+      guard.canActivate(
+        executionContext(RaitController, RaitController.prototype.admit),
+      );
+    } catch (error) {
+      thrown = error;
+    }
+    expect(thrown).toBeInstanceOf(ForbiddenException);
+    expect(thrown).toMatchObject({
+      message: 'Missing authenticated DETRAN principal',
+    });
   });
 });

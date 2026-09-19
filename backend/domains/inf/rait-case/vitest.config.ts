@@ -16,6 +16,18 @@ export default defineConfig({
       '@detran/inf-ait': fileURLToPath(
         new URL('../ait/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-deadlines': fileURLToPath(
+        new URL('../deadlines/src/index.ts', import.meta.url),
+      ),
+      '@detran/ops-evidence': fileURLToPath(
+        new URL('../../ops/evidence/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-infraction': fileURLToPath(
+        new URL('../infraction/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-notification': fileURLToPath(
+        new URL('../notification/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {

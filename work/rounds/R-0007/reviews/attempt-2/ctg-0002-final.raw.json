@@ -1,0 +1,171 @@
+{
+  "is_error": false,
+  "duration_api_ms": 552501,
+  "num_turns": 65,
+  "stop_reason": "tool_use",
+  "session_id": "1a8ed7f8-3692-48c3-a484-bacffa04c995",
+  "total_cost_usd": 12.049310000000002,
+  "usage": {
+    "input_tokens": 82,
+    "cache_creation_input_tokens": 218996,
+    "cache_read_input_tokens": 5659574,
+    "output_tokens": 40147,
+    "output_tokens_details": { "thinking_tokens": 26278 },
+    "server_tool_use": { "web_search_requests": 0, "web_fetch_requests": 0 },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 218996,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 13947,
+        "cache_read_input_tokens": 218175,
+        "cache_creation_input_tokens": 821,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 821
+        },
+        "type": "message",
+        "model": null
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 1561,
+      "outputTokens": 17,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.0016460000000000001,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty"
+    },
+    "claude-fable-5": {
+      "inputTokens": 82,
+      "outputTokens": 40147,
+      "cacheReadInputTokens": 5659574,
+      "cacheCreationInputTokens": 218996,
+      "webSearchRequests": 0,
+      "costUSD": 12.047664000000001,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "canonicalModel": "claude-fable-5",
+      "provider": "firstParty"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "{\"mode\":\"delivery-review\",\"round\":\"R-0007\",\"verdict\":\"FAIL\",\"findings\":[{\"severity\":\"high\",\"item\":2,\"file\":\"backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts\",\"line\":1034,\"claim\":\"sign-minutes (and publish at line 1128) execute UPDATE on inf.rait_minutes, but the unconditional trigger rait_minutes_immutable (backend/database/ddl/36-inf-rait-session.sql:435) rejects every UPDATE/DELETE on that table, so signed_at/ATA_ASSINADA and published_at can never be persisted by the shipped commands. The frozen sensors (unit dispatch, composition-only E2E) never reach this write, and the TASK-0067/TASK-0068 chain independently proves the trigger blocks exactly this kind of post-insert mutation, so the PASS evidence does not cover the positive sign/publish path.\",\"fix\":\"Reconcile blueprint/DDL and runtime in a versioned blueprint change: either model signature/publication completion in mutable state outside the immutable minutes row (e.g., derive ATA_ASSINADA from receipts and record publication in an append-only artifact) or scope the trigger to the contracted immutable columns; then freeze a sensor that proves the positive sign→publish path against the real DDL with a fake trust provider.\"},{\"severity\":\"high\",\"item\":2,\"file\":\"backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts\",\"line\":798,\"claim\":\"accept-batch-item updates only rait_batch_item/rait_batch: it performs no same-transaction case transition (DISTRIBUIDO→EM_INSTRUCAO) and arms no T-VOTO timer, and RaitCaseTransitionPort (backend/domains/inf/rait-case/src/handwritten/rait-case-transition.port.ts:17) omits the acceptBatchItem operation required by CTG-0002-TECHNICAL-CLOSURE-CONTRACT.md §4/§5; publish likewise arms no T-R2 timer. The final-candidate claim that worklist transitions cases through the public port in the same transaction is not true for any worklist command.\",\"fix\":\"Extend the case transition port with the contracted acceptBatchItem(DISTRIBUIDO→EM_INSTRUCAO) operation, call it from accept-batch-item in the same transaction, and arm T-VOTO (accept) and T-R2 (publish) through the deadline engine and inf.rait_clock in the same transaction, with frozen sensors first.\"},{\"severity\":\"high\",\"item\":4,\"file\":\"backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts\",\"line\":948,\"claim\":\"Production draw only flips state to LOTE_SORTEADO: it generates no server-side seed, no canonical ordered snapshot, no member→case assignments and no per-item T-CLAIM (claim_due_on), and no production code writes inf.rait_batch_draw_snapshot or inf.rait_batch_minutes_manifest (only seeds/fixtures do). Consequently approve-batch's snapshot/manifest verification and accept-batch-item's claim_due_on guard can only succeed against seeded rows, contradicting CTG-0002 §4 and CTG-0002-BATCH-TRUST-CONTRACT.md §1 which require the server to freeze the reproducible snapshot during draw. The batch trust chain is fail-closed but never server-originated.\",\"fix\":\"Implement draw to persist the reproducible snapshot (seed, algorithm/version, ordered case ids, eligible order, loads, result, tie-break), assign members, arm T-CLAIM per item via the deadline engine, and prepare the batch minutes manifest server-side, all in the command transaction, proven by frozen sensors.\"},{\"severity\":\"high\",\"item\":2,\"file\":\"backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts\",\"line\":1177,\"claim\":\"The success ETag cannot round-trip as If-Match: recordMutation emits W/\\\"<id>:<updated_at>\\\" while requireExpectedVersion (line 114) accepts only a numeric version token (\\\"N\\\"), so a client using the returned ETag always gets 412 RAIT.VERSION_CONFLICT; the session service has the mirrored defect (rait-session-command.service.ts:1374 expects version-first, recordMutation at line 1410 emits updated_at-first). This breaks the contracted §2 envelope (post-transaction version ETag confronted by If-Match) for every mutation command in sequence.\",\"fix\":\"Emit the post-transaction aggregate version in the ETag and parse exactly the same representation in the If-Match guard in both services, with a frozen round-trip sensor (command A returns ETag, command B succeeds with it).\"},{\"severity\":\"low\",\"item\":1,\"file\":\"backend/domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts\",\"line\":197,\"claim\":\"The sign route is exposed as POST /v1/inf/rait/minutes/:id/commands/sign while the nominal matrix (CTG-0002-ROUTE-OWNERSHIP.md line 38, item #19) and CTG-0002.md §5 contract POST /minutes/{id}/sign; the frozen E2E sensor locked in the /commands/sign variant. The command still exists exactly once with no CRUD collision, so this is a bounded nominal-path drift, not a duplicate or bypass.\",\"fix\":\"Align the route and the nominal matrix in one governed change (either move the handler to /minutes/{id}/sign or amend the matrix/contract by Architect addendum) and update the frozen sensor in the same bounded slice.\"},{\"severity\":\"low\",\"item\":3,\"file\":\"backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts\",\"line\":1167,\"claim\":\"audit.write records a hardcoded role literal ('rait-coordinator' for every worklist command; 'rait-secretary' in rait-session-command.service.ts:1404 for every session command) regardless of the authenticated actor's actual role, degrading audit fidelity even though exactly one success audit row per command is correctly written in the same transaction.\",\"fix\":\"Record the actor's effective canonical role (or the policy key that authorized the command) in the audit row instead of a fixed literal.\"},{\"severity\":\"low\",\"item\":3,\"file\":\"backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts\",\"line\":942,\"claim\":\"declare-batch-item-impediment emits only rait.impediment.declared, omitting the rait.assignment.changed event contracted by matrix row #8, and reassign emits a single rait.assignment.changed although the contract requires one event per confirmed change (release plus new assignment); recordMutation supports only one outbox event per command.\",\"fix\":\"Allow recordMutation to emit the full contracted event set per command and add the missing rait.assignment.changed emissions, covered by sensors that assert the exact outbox topics.\"},{\"severity\":\"low\",\"item\":2,\"file\":\"backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts\",\"line\":667,\"claim\":\"vote does not verify the agenda item has been read (read_at) before accepting a vote ('item lido em votação' in CTG-0002 §5), and the president/secretary commands open, close-agenda, adjourn and convene-extraordinary rely on exact-role policy without revalidating in the database that the acting person is the session's chair/secretary (proclaim and read do perform that binding check), weakening the contracted DB revalidation of the member binding.\",\"fix\":\"Add the read_at guard to vote and a chair/secretary attendance-binding check under lock for the presidency commands, mirroring the existing proclaim check.\"},{\"severity\":\"low\",\"item\":3,\"file\":\"backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts\",\"line\":1340,\"claim\":\"T-CONV business days are computed inline with generate_series over current_date plus inf.rait_holiday instead of the contracted @detran/inf-deadlines engine, and guard decisions use current_date/clock_timestamp (e.g., open at line 335, view at line 602, worklist today() at line 1134 of rait-worklist-command.service.ts) rather than a single captured Clock snapshot; values remain server-owned and transaction-scoped, so this is a bounded deviation from the closure contract's Clock rules, not a client-trust hole.\",\"fix\":\"Route business-day computations through the deadline engine factory with an explicitly captured per-command Clock, passing the same snapshot to guards, timestamps and events.\"},{\"severity\":\"low\",\"item\":8,\"file\":\"work/rounds/R-0007/reports/CTG-0002-FINAL-CANDIDATE.md\",\"line\":34,\"claim\":\"The 'pnpm check PASS integral' claim covering the post-TASK-0077 tooling bytes is asserted only in this composition report: TASK-0077's frozen record evidences parameters:test 26/26, verify:parameter-catalogue (87/18/0) and git diff --check, but no task record captures a full pnpm check run after the final tooling fix. The report honestly does not present the earlier backend:test:ci run (TASK-0073, PASS incl. upgrade 18/18; app E2E 123/123 in TASK-0072) as covering later tooling bytes, so this is a bounded evidence-traceability gap, not a misrepresentation.\",\"fix\":\"Record an attributable full pnpm check execution (task record or gate log with the frozen manifest hash) after the last tooling change, as the report's own closure condition already requires for doctor/evidence-chain/git diff.\"}],\"notes\":[\"Verified strengths: exactly 20 nominal commands exist once (8 worklist in rait-worklist-commands.controller.ts, 12 session in rait-session-commands.controller.ts); both blueprints declare operations ['list','get'] for all exposed resources, [] for internal snapshot/manifest/signer/receipt entities and [] for oral-arguments; policy.ts installs strict exact-role grants for all nominal keys with the global-admin shortcut explicitly bypassed (RAIT_STRICT_COMMAND_RULES) and inf:rait-oral-argument:create disabled; no oral-argument route or toggle exists.\",\"Item 4 largely holds where server-owned artifacts exist: DocumentTrustHttpAdapter is fail-closed (missing config/capability/non-2xx/partial or divergent receipt all fail before any positive effect), sessionMinutes capability is distinct from batch and DECISAO_DEFESA, and document-trust-session-minutes.spec.ts freezes exact positive/negative receipt validation without claiming real cryptography. The batch-side gap is that no command originates the snapshot/manifest (high finding, item 4).\",\"Item 5 is implemented per the OWNER decision: required signers are the effective chair plus the rapporteurs of the items, a rapporteur absent in the server-owned attendance snapshot is excluded (absence frozen in the immutable rait_session_minutes_snapshot), inf:rait-minutes:sign grants only rait-chair/rait-rapporteur, and the secretary creates/publishes without being a required signer by role.\",\"Item 6 holds: DDL35/DDL36 are additive (add column if not exists, guarded constraints), tenant-first composite FKs, ux_inf_rait_pool_member_tenant_id is created (36:412) before the composite attendance FK (36:416), the manifest FK is preceded by the required composite uniqueness (35:253 before 35:280), immutability triggers cover votes/minutes/snapshot/manifest/signers/receipts, the v1.1.0 fixture is a plausible frozen historical schema, and seed 20-fixtures-rait.sql inserts the minutes row with published_at atomically (line 167) with no post-insert update.\",\"Item 7: the historical FAIL records (TASK-0065, 0067, 0069, 0071, 0073, 0075) form an honest audit trail, each cause closed by a bounded later task (TASK-0066, 0068, 0070, 0072, 0074, 0076, 0077) without erasing counters. However, the frozen CTG-0002 sensors are predominantly dispatch-level fixture runtimes and route-composition E2E (single handler per route, no CRUD writes, no oral-arguments, non-404 probes); they do not exercise positive command behavior against the real DDL, which is why the four high structural gaps went undetected by a green suite.\",\"Verdict rationale: FAIL because four high findings are structural/contract gaps — sign/publish are blocked by the shipped immutability trigger, the contracted same-transaction case transition and timer arming at accept/publish are absent, draw never originates the server-owned reproducible snapshot the trust chain depends on, and the ETag/If-Match envelope cannot round-trip. Each is correctable inside CTG-0002 scope with sensors-first bounded slices; no evidence fabrication was found.\"]}",
+  "structured_output": {
+    "mode": "delivery-review",
+    "round": "R-0007",
+    "verdict": "FAIL",
+    "findings": [
+      {
+        "severity": "high",
+        "item": 2,
+        "file": "backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts",
+        "line": 1034,
+        "claim": "sign-minutes (and publish at line 1128) execute UPDATE on inf.rait_minutes, but the unconditional trigger rait_minutes_immutable (backend/database/ddl/36-inf-rait-session.sql:435) rejects every UPDATE/DELETE on that table, so signed_at/ATA_ASSINADA and published_at can never be persisted by the shipped commands. The frozen sensors (unit dispatch, composition-only E2E) never reach this write, and the TASK-0067/TASK-0068 chain independently proves the trigger blocks exactly this kind of post-insert mutation, so the PASS evidence does not cover the positive sign/publish path.",
+        "fix": "Reconcile blueprint/DDL and runtime in a versioned blueprint change: either model signature/publication completion in mutable state outside the immutable minutes row (e.g., derive ATA_ASSINADA from receipts and record publication in an append-only artifact) or scope the trigger to the contracted immutable columns; then freeze a sensor that proves the positive sign→publish path against the real DDL with a fake trust provider."
+      },
+      {
+        "severity": "high",
+        "item": 2,
+        "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+        "line": 798,
+        "claim": "accept-batch-item updates only rait_batch_item/rait_batch: it performs no same-transaction case transition (DISTRIBUIDO→EM_INSTRUCAO) and arms no T-VOTO timer, and RaitCaseTransitionPort (backend/domains/inf/rait-case/src/handwritten/rait-case-transition.port.ts:17) omits the acceptBatchItem operation required by CTG-0002-TECHNICAL-CLOSURE-CONTRACT.md §4/§5; publish likewise arms no T-R2 timer. The final-candidate claim that worklist transitions cases through the public port in the same transaction is not true for any worklist command.",
+        "fix": "Extend the case transition port with the contracted acceptBatchItem(DISTRIBUIDO→EM_INSTRUCAO) operation, call it from accept-batch-item in the same transaction, and arm T-VOTO (accept) and T-R2 (publish) through the deadline engine and inf.rait_clock in the same transaction, with frozen sensors first."
+      },
+      {
+        "severity": "high",
+        "item": 4,
+        "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+        "line": 948,
+        "claim": "Production draw only flips state to LOTE_SORTEADO: it generates no server-side seed, no canonical ordered snapshot, no member→case assignments and no per-item T-CLAIM (claim_due_on), and no production code writes inf.rait_batch_draw_snapshot or inf.rait_batch_minutes_manifest (only seeds/fixtures do). Consequently approve-batch's snapshot/manifest verification and accept-batch-item's claim_due_on guard can only succeed against seeded rows, contradicting CTG-0002 §4 and CTG-0002-BATCH-TRUST-CONTRACT.md §1 which require the server to freeze the reproducible snapshot during draw. The batch trust chain is fail-closed but never server-originated.",
+        "fix": "Implement draw to persist the reproducible snapshot (seed, algorithm/version, ordered case ids, eligible order, loads, result, tie-break), assign members, arm T-CLAIM per item via the deadline engine, and prepare the batch minutes manifest server-side, all in the command transaction, proven by frozen sensors."
+      },
+      {
+        "severity": "high",
+        "item": 2,
+        "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+        "line": 1177,
+        "claim": "The success ETag cannot round-trip as If-Match: recordMutation emits W/\"<id>:<updated_at>\" while requireExpectedVersion (line 114) accepts only a numeric version token (\"N\"), so a client using the returned ETag always gets 412 RAIT.VERSION_CONFLICT; the session service has the mirrored defect (rait-session-command.service.ts:1374 expects version-first, recordMutation at line 1410 emits updated_at-first). This breaks the contracted §2 envelope (post-transaction version ETag confronted by If-Match) for every mutation command in sequence.",
+        "fix": "Emit the post-transaction aggregate version in the ETag and parse exactly the same representation in the If-Match guard in both services, with a frozen round-trip sensor (command A returns ETag, command B succeeds with it)."
+      },
+      {
+        "severity": "low",
+        "item": 1,
+        "file": "backend/domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts",
+        "line": 197,
+        "claim": "The sign route is exposed as POST /v1/inf/rait/minutes/:id/commands/sign while the nominal matrix (CTG-0002-ROUTE-OWNERSHIP.md line 38, item #19) and CTG-0002.md §5 contract POST /minutes/{id}/sign; the frozen E2E sensor locked in the /commands/sign variant. The command still exists exactly once with no CRUD collision, so this is a bounded nominal-path drift, not a duplicate or bypass.",
+        "fix": "Align the route and the nominal matrix in one governed change (either move the handler to /minutes/{id}/sign or amend the matrix/contract by Architect addendum) and update the frozen sensor in the same bounded slice."
+      },
+      {
+        "severity": "low",
+        "item": 3,
+        "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+        "line": 1167,
+        "claim": "audit.write records a hardcoded role literal ('rait-coordinator' for every worklist command; 'rait-secretary' in rait-session-command.service.ts:1404 for every session command) regardless of the authenticated actor's actual role, degrading audit fidelity even though exactly one success audit row per command is correctly written in the same transaction.",
+        "fix": "Record the actor's effective canonical role (or the policy key that authorized the command) in the audit row instead of a fixed literal."
+      },
+      {
+        "severity": "low",
+        "item": 3,
+        "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+        "line": 942,
+        "claim": "declare-batch-item-impediment emits only rait.impediment.declared, omitting the rait.assignment.changed event contracted by matrix row #8, and reassign emits a single rait.assignment.changed although the contract requires one event per confirmed change (release plus new assignment); recordMutation supports only one outbox event per command.",
+        "fix": "Allow recordMutation to emit the full contracted event set per command and add the missing rait.assignment.changed emissions, covered by sensors that assert the exact outbox topics."
+      },
+      {
+        "severity": "low",
+        "item": 2,
+        "file": "backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts",
+        "line": 667,
+        "claim": "vote does not verify the agenda item has been read (read_at) before accepting a vote ('item lido em votação' in CTG-0002 §5), and the president/secretary commands open, close-agenda, adjourn and convene-extraordinary rely on exact-role policy without revalidating in the database that the acting person is the session's chair/secretary (proclaim and read do perform that binding check), weakening the contracted DB revalidation of the member binding.",
+        "fix": "Add the read_at guard to vote and a chair/secretary attendance-binding check under lock for the presidency commands, mirroring the existing proclaim check."
+      },
+      {
+        "severity": "low",
+        "item": 3,
+        "file": "backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts",
+        "line": 1340,
+        "claim": "T-CONV business days are computed inline with generate_series over current_date plus inf.rait_holiday instead of the contracted @detran/inf-deadlines engine, and guard decisions use current_date/clock_timestamp (e.g., open at line 335, view at line 602, worklist today() at line 1134 of rait-worklist-command.service.ts) rather than a single captured Clock snapshot; values remain server-owned and transaction-scoped, so this is a bounded deviation from the closure contract's Clock rules, not a client-trust hole.",
+        "fix": "Route business-day computations through the deadline engine factory with an explicitly captured per-command Clock, passing the same snapshot to guards, timestamps and events."
+      },
+      {
+        "severity": "low",
+        "item": 8,
+        "file": "work/rounds/R-0007/reports/CTG-0002-FINAL-CANDIDATE.md",
+        "line": 34,
+        "claim": "The 'pnpm check PASS integral' claim covering the post-TASK-0077 tooling bytes is asserted only in this composition report: TASK-0077's frozen record evidences parameters:test 26/26, verify:parameter-catalogue (87/18/0) and git diff --check, but no task record captures a full pnpm check run after the final tooling fix. The report honestly does not present the earlier backend:test:ci run (TASK-0073, PASS incl. upgrade 18/18; app E2E 123/123 in TASK-0072) as covering later tooling bytes, so this is a bounded evidence-traceability gap, not a misrepresentation.",
+        "fix": "Record an attributable full pnpm check execution (task record or gate log with the frozen manifest hash) after the last tooling change, as the report's own closure condition already requires for doctor/evidence-chain/git diff."
+      }
+    ],
+    "notes": [
+      "Verified strengths: exactly 20 nominal commands exist once (8 worklist in rait-worklist-commands.controller.ts, 12 session in rait-session-commands.controller.ts); both blueprints declare operations ['list','get'] for all exposed resources, [] for internal snapshot/manifest/signer/receipt entities and [] for oral-arguments; policy.ts installs strict exact-role grants for all nominal keys with the global-admin shortcut explicitly bypassed (RAIT_STRICT_COMMAND_RULES) and inf:rait-oral-argument:create disabled; no oral-argument route or toggle exists.",
+      "Item 4 largely holds where server-owned artifacts exist: DocumentTrustHttpAdapter is fail-closed (missing config/capability/non-2xx/partial or divergent receipt all fail before any positive effect), sessionMinutes capability is distinct from batch and DECISAO_DEFESA, and document-trust-session-minutes.spec.ts freezes exact positive/negative receipt validation without claiming real cryptography. The batch-side gap is that no command originates the snapshot/manifest (high finding, item 4).",
+      "Item 5 is implemented per the OWNER decision: required signers are the effective chair plus the rapporteurs of the items, a rapporteur absent in the server-owned attendance snapshot is excluded (absence frozen in the immutable rait_session_minutes_snapshot), inf:rait-minutes:sign grants only rait-chair/rait-rapporteur, and the secretary creates/publishes without being a required signer by role.",
+      "Item 6 holds: DDL35/DDL36 are additive (add column if not exists, guarded constraints), tenant-first composite FKs, ux_inf_rait_pool_member_tenant_id is created (36:412) before the composite attendance FK (36:416), the manifest FK is preceded by the required composite uniqueness (35:253 before 35:280), immutability triggers cover votes/minutes/snapshot/manifest/signers/receipts, the v1.1.0 fixture is a plausible frozen historical schema, and seed 20-fixtures-rait.sql inserts the minutes row with published_at atomically (line 167) with no post-insert update.",
+      "Item 7: the historical FAIL records (TASK-0065, 0067, 0069, 0071, 0073, 0075) form an honest audit trail, each cause closed by a bounded later task (TASK-0066, 0068, 0070, 0072, 0074, 0076, 0077) without erasing counters. However, the frozen CTG-0002 sensors are predominantly dispatch-level fixture runtimes and route-composition E2E (single handler per route, no CRUD writes, no oral-arguments, non-404 probes); they do not exercise positive command behavior against the real DDL, which is why the four high structural gaps went undetected by a green suite.",
+      "Verdict rationale: FAIL because four high findings are structural/contract gaps — sign/publish are blocked by the shipped immutability trigger, the contracted same-transaction case transition and timer arming at accept/publish are absent, draw never originates the server-owned reproducible snapshot the trust chain depends on, and the ETag/If-Match envelope cannot round-trip. Each is correctable inside CTG-0002 scope with sensors-first bounded slices; no evidence fabrication was found."
+    ]
+  },
+  "ttft_ms": 4753,
+  "ttft_stream_ms": 1546,
+  "time_to_request_ms": 567,
+  "type": "result",
+  "duration_ms": 552954,
+  "uuid": "8bcecb15-d2c7-4a30-ba93-33b4f5442371"
+}

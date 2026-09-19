@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0035",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Correção delimitada da ordenação legal claim-next",
+  "description": "SQL review1 F3 Engineer completed 1/1 after TASK0034 true RED: frozen test SHA 05cbba71637227831a72cf5489b3ab86f8c10a71c6b508f55671a71116853e64 unchanged, 35/35 GREEN independently reproduced. Sole service file SHA ce2d7d6973270ecf048bf24c12f85fdbf38a3b21b90fc02b0fbfe3c22bfbaaeb to 203e03be93c8e99a5144655aa237317af119bc500a149a92be6f011e6e4da6e8, only claim-next ORDER BY rank/ties. Prettier and git diff check PASS. No DB, Clock, shared or R-0010 lock; typecheck/build not claimed. Estimate 25000/5000 window20 not measured.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-case"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0034",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": ["attempt-2", "c4-od-v3", "sql1-corrective", "dispatched-completed"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-8942785ef00798dd",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:unit",
+      "--passWithNoTests=false",
+      "tests/unit/rait-case-command-contract.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-17T00:15:15Z",
+  "completed_at": "2026-09-17T00:37:30Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-8942785ef00798dd",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Correção delimitada da ordenação legal claim-next",
+    "planned_files": [
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts"
+    ]
+  }
+}

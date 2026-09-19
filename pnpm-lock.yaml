@@ -1017,6 +1017,18 @@ importers:
       '@detran/inf-ait':
         specifier: workspace:*
         version: link:../ait
+      '@detran/inf-deadlines':
+        specifier: workspace:*
+        version: link:../deadlines
+      '@detran/inf-infraction':
+        specifier: workspace:*
+        version: link:../infraction
+      '@detran/inf-notification':
+        specifier: workspace:*
+        version: link:../notification
+      '@detran/ops-evidence':
+        specifier: workspace:*
+        version: link:../../ops/evidence
       '@detran/shared':
         specifier: workspace:*
         version: link:../../shared
@@ -1113,6 +1125,9 @@ importers:
 
   backend/domains/inf/rait-session:
     dependencies:
+      '@detran/inf-deadlines':
+        specifier: workspace:*
+        version: link:../deadlines
       '@detran/inf-rait-case':
         specifier: workspace:*
         version: link:../rait-case
@@ -1150,6 +1165,9 @@ importers:
 
   backend/domains/inf/rait-worklist:
     dependencies:
+      '@detran/inf-deadlines':
+        specifier: workspace:*
+        version: link:../deadlines
       '@detran/inf-rait-case':
         specifier: workspace:*
         version: link:../rait-case

@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0045",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever RED dos seis comandos restantes de worklist",
+  "description": "Ciclo corretivo OWNER: seis comandos worklist e política nominal em sensores executáveis, inclusive E2E de rota; preservar TASK-0006 2/2.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-worklist-tests",
+    "MOD-shared-policy-tests",
+    "MOD-app-e2e-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0044",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "worklist"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-274a7e25dbd01368",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:integration",
+      "--passWithNoTests=false"
+    ],
+    ["pnpm", "--filter", "@detran/shared", "test", "--passWithNoTests=false"]
+  ],
+  "created_at": "2026-09-18T03:21:54Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-274a7e25dbd01368",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente novos sensores worklist/policy/E2E, sem produto ou gerados."
+  }
+}

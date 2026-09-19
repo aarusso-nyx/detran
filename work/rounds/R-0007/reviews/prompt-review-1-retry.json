@@ -1,0 +1,78 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0007/prompts/TASK-0010.md",
+      "line": 40,
+      "claim": "TASK-0010 e um Engineer e recebe autorizacao para escrever backend/app/tests/e2e/policy-routes.spec.ts, o sensor bidirecional rota x politica. Isso viola a triade do Art. 24 e o Art. 10: o teste que mede a matriz de politica escrita pelos Engineers de TASK-0003, 0005 e 0009 esta sendo redigido pela mesma disciplina que a implementa, sem Inspector interposto. Os Inspectors de R-0007 estao explicitamente proibidos de tocar esse sensor.",
+      "fix": "Mover policy-routes.spec.ts para uma tarefa de Inspector (ampliar TASK-0008, que ja detem backend/app/tests/e2e, ou criar TASK-0012 inspector antes de TASK-0010) e retirar o arquivo da fronteira e da entrega de TASK-0010, ajustando a linha 56 de plan.md."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0007/prompts/TASK-0001.md",
+      "line": 47,
+      "claim": "Contradicao de fronteira dentro do proprio prompt: a secao Pode tocar autoriza arquivos gerados por pnpm blueprints:generate e a Tarefa manda regenerar a arvore, mas a secao Nao pode tocar proibe backend/** de forma absoluta. tools/blueprints/generate.mjs escreve em backend/domains/<namespace>/<modulo>, ou seja, todo o produto da regeneracao cai na area proibida, e a ressalva salvo autorizacao explicita acima esta anexada apenas ao ultimo marcador, nao ao backend/**.",
+      "fix": "Substituir o marcador backend/** por uma exclusao com excecao explicita, por exemplo backend/** exceto a arvore regenerada pelos sete blueprints por pnpm blueprints:generate, mantendo proibido qualquer arquivo gerado editado a mao."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0007/prompts/TASK-0001.md",
+      "line": 57,
+      "claim": "TASK-0001 declara handwrittenControllers, handwrittenProviders e handwrittenExports nos sete blueprints e regenera, mas os arquivos manuscritos correspondentes so nascem em TASK-0003, 0005, 0007 e 0009. O gerador emite import { X } from ./<target>.js no <modulo>.module.ts e export * from ./<target>.js no index.ts, logo o typecheck de rait-worklist, rait-session, rait-org, collection e rait-integration quebra ao fim de TASK-0001. A acceptance pnpm check de tasks/TASK-0001.json roda pnpm typecheck e e inatingivel, e CTG-0001 deixa de ser um PR mesclavel por si, contrariando plan.md linha 59.",
+      "fix": "Declarar em TASK-0001 apenas os hooks cujos arquivos manuscritos chegam no mesmo CTG-0001 (rait-case e shared) e mover a declaracao de hooks dos demais modulos para uma etapa de Architect dentro de CTG-0002, CTG-0003 e CTG-0004, antes do Engineer de cada grupo; alternativamente exigir que o mesmo CTG entregue os arquivos manuscritos referenciados."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 64,
+      "claim": "O criterio exige policy.spec.ts com 100 por cento dos pares inf:rait-*:<verbo>, positivos e negativos, conforme orchestra README secao 4 item 8, mas nenhuma tarefa da rodada pode escrever backend/domains/shared/src/policy.spec.ts: os Inspectors de TASK-0002, 0004 e 0008 tem backend/domains/shared/** em Nao pode tocar, os Engineers de TASK-0003, 0005 e 0009 so recebem policy.ts, e TASK-0010 tem policy.ts proibido e nao lista o spec. O spec atual traz uma unica assercao agregada de RAIT, sem a matriz por par como a do bloco DASHBOARD.",
+      "fix": "Dar a um Inspector a fronteira backend/domains/shared/src/policy.spec.ts, com lock proprio de modulo por CTG, e incluir ali os positivos por papel listado e negativos para todo papel canonico omitido, preservando literalmente os grants de OD-309."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/prompts/TASK-0009.md",
+      "line": 36,
+      "claim": "TASK-0009 monta modulos em backend/app/src/app.module.ts, mas nao recebe backend/app/package.json nem backend/app/vitest.config.ts. backend/app/package.json hoje nao declara @detran/inf-rait-org, @detran/inf-collection nem @detran/inf-rait-integration, e vitest.config.ts nao tem alias para @detran/inf-infraction. Sem esses dois arquivos o typecheck e o build de @detran/app dentro de pnpm check nao resolvem os pacotes montados. E exatamente a licao registrada em orchestra README secao 4 item 10 apos R-0006.",
+      "fix": "Acrescentar backend/app/package.json e backend/app/vitest.config.ts a Pode tocar de TASK-0009, com o lock correspondente na tabela de plan.md, e exigir no criterio de aceitacao pnpm --filter @detran/app typecheck alem do test:e2e."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0007/prompts/TASK-0010.md",
+      "line": 42,
+      "claim": "O cabecalho do prompt proibe instalar pacotes, mas a tarefa exige criar contracts:clients com openapi-typescript, que nao existe em devDependencies da raiz, criar o novo pacote de workspace packages/api-clients coberto pelo glob packages/* de pnpm-workspace.yaml e alterar pnpm-lock.yaml. O lockfile nao pode ser reescrito a mao e pnpm contracts:clients nao roda sem o binario instalado, portanto a aceitacao geracao determinista sem erro e inatingivel.",
+      "fix": "O maestro adiciona openapi-typescript como devDependency da raiz e roda pnpm install antes do disparo, deixando TASK-0010 apenas com o script e a saida gerada; ou autorizar explicitamente pnpm add -D -w openapi-typescript e pnpm install no prompt, removendo a proibicao generica para esta tarefa."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "work/rounds/R-0007/prompts/TASK-0010.md",
+      "line": 33,
+      "claim": "Dois dos sete contratos usam identificadores de blueprint inexistentes: BP-INF-RAIT-INFRACTION-001 e BP-INF-RAIT-FINANCE-001. Os blueprints e contratos canonicos sao BP-INF-INFRACTION-001 e BP-INF-COLLECTION-001; nao ha modulo finance no repositorio, o pacote e @detran/inf-collection, e o prefixo rait no agregado de cobranca contraria ADR-0017 secao 1, que define collection sem prefixo rait. O checker fail-closed que mapeia contrato para controlador nasceria ancorado em nomes que nao existem.",
+      "fix": "Renomear para BP-INF-INFRACTION-001.commands.openapi.json e BP-INF-COLLECTION-001.commands.openapi.json em TASK-0010 e na meta 3 de plan.md, alinhando tambem o rotulo de lock MOD-rait-finance com o modulo real collection."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 67,
+      "claim": "O criterio afirma que pnpm backend:test:ci fica verde cobrindo os tiers de rait-case, worklist e session, mas o script backend:test:integration da raiz nao inclui @detran/inf-rait-case, @detran/inf-rait-worklist nem @detran/inf-rait-session. Os testes de integracao criados por TASK-0002 e TASK-0004 nunca rodam no gate de CI, e nenhuma tarefa esta encarregada de acrescentar esses filtros: apenas TASK-0010 pode tocar package.json da raiz e sua tarefa nao menciona isso.",
+      "fix": "Incluir na entrega de TASK-0010, ou numa tarefa de Engineer de wiring, a adicao de @detran/inf-rait-case, @detran/inf-rait-worklist e @detran/inf-rait-session a backend:test:integration na raiz, com o criterio pnpm backend:test:ci verde apos a mudanca."
+    }
+  ],
+  "notes": [
+    "Verificados e corretos: os onze sha256 de compositions.json batem com os prompts; node tools/docs/kb/check.mjs devolve 521 artefatos e 446 tokens canonicos como o plano afirma.",
+    "A correcao anunciada foi confirmada: nenhum Engineer recebe index.ts ou <modulo>.module.ts gerados, TASK-0001 altera apenas hooks manuscritos nos sete blueprints, e blueprints:check aparece nas aceitacoes de TASK-0001, 0003, 0005, 0007 e 0009.",
+    "Nenhum valor inventado nos itens conferidos: OD-309 corresponde literalmente as linhas 1081 e 1083 de policy.ts; H.46 alerta sem declaracao de oficio e o override alert_only existem no catalogo de parametros; H.53 desconto 40 por cento fora do SNE desligado; H.54 e H.57 com jeton pendente de fonte; WIP 45 com alerta acima de 60 e T-CLAIM de 2 dias uteis; limiar de 100 linhas para aprovacao do DPO; SSE com ULID, replay de 24 h, heartbeat de 20 s, 5 conexoes e 8 KB.",
+    "Fronteira SENATRAN e motor de prazos bem tratados: packages/senatran-adapter proibido nos Engineers, calculo de prazo restrito a @detran/inf-deadlines, e o DeadlineEngine de R-0006 e de fato handwritten, sem blueprint, o que torna legitima a fronteira src/** de TASK-0007.",
+    "Divergencias menores nao classificadas como high: tasks/TASK-0008.json acrescenta MOD-rait-stream-tests e tasks/TASK-0010.json acrescenta MOD-policy-routes-tests, ambos ausentes da tabela de locks de plan.md; TASK-0005 e TASK-0009 usam os rotulos em prosa src/controllers gerados em vez de caminhos; TASK-0011 le work/rounds/R-0007/reports/TASK-*.md, que ainda nao existem e dependem do maestro grava-los."
+  ]
+}

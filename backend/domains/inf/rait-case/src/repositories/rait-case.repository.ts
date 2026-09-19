@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.0 sha256:f85c2f343d3739d77786d05e0f2f98d07e00de6ca63aa3aaa743b5b949714f62
+// Generated from BP-INF-RAIT-CASE-001 v1.1.7 sha256:682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -20,10 +20,11 @@ const WRITABLE_FIELDS = new Set<string>([
   'circuit',
   'state',
   'intake_channel',
-  'protocolled_at',
   'admitted_at',
   'judge_body_received_at',
+  'judge_body_received_on',
   'cetran_received_at',
+  'cetran_received_on',
   'remitted_at',
   'decided_at',
   'communicated_at',
@@ -34,8 +35,8 @@ const WRITABLE_FIELDS = new Set<string>([
   'withdrawal_document_id',
   'last_movement_at',
   'pending_completion',
-  'legal_priority',
   'unit_id',
+  'agency_jurisdiction_id',
   'version',
 ]);
 

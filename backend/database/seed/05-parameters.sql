@@ -1,4 +1,4 @@
--- Generated from parameter-catalogue.md sha256:46e1a81e8e98465aad5b1a1fb5c1fbdcf6eaa3814614dc817fe8965b65c7890a
+-- Generated from parameter-catalogue.md sha256:744b46722d02f6d958c18864e1411f0dbf0e7cb544876354c0d5bada2e79690b
 -- Applied by backend/database/seed.sh after apply.sh: the tenant context below satisfies auth.enforce_tenant_id().
 select set_config('app.role', 'owner', false);
 select set_config('app.tenant_id', '00000000-0000-7000-8000-00000000a001', false);
@@ -22,7 +22,7 @@ VALUES
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.jeton.monthly_cap', 'null', 'int', 'proposta', true, false, 'OD-012', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.signing.schedule', '"escala semanal por circunscrição"', 'json', 'proposta', true, false, 'OD-013', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.refund.index', '"IPCA-E"', 'enum', 'vigente', false, false, 'OD-015', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
-('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.priority.legal_bases', '"[{60+:1},{80+:2}] + PcD"', 'json', 'vigente', false, false, 'OD-016', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
+('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.priority.legal_bases', '{"schemaVersion":1,"policyCode":"ADR-0024-2026-09-16","basisRanks":{"pcd":2,"age_80_plus":2,"age_60_plus":1},"noneRank":0,"postProtocolRevision":"forbidden"}', 'json', 'vigente', false, false, 'OD-016', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.export.dpo_threshold_rows', '100', 'int', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.retention.closed_case_years', '5', 'anos', 'vigente', false, false, 'H.45', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'rait.warning.same_machine', 'true', 'F', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),

@@ -16,6 +16,46 @@ import {
 import { withTenantContext } from './tenant-context.js';
 
 describe('DETRAN unified policy kit', () => {
+  it('permite protocol somente ao rait-secretary com a política canônica', () => {
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-secretary'], permissions: [] },
+        'inf:rait-case',
+        'protocol',
+      ),
+    ).toBe(true);
+  });
+
+  it.each(DETRAN_ROLES.filter((role) => role !== 'rait-secretary'))(
+    'nega protocol ao papel isolado %s',
+    (role) => {
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'inf:rait-case',
+          'protocol',
+        ),
+      ).toBe(false);
+    },
+  );
+
+  it.each([
+    ['admin wildcard', ['ADMIN'], ['*']],
+    ['resource wildcard', ['rait-analyst'], ['inf:rait-case:*']],
+    ['command permission spoof', ['rait-analyst'], ['inf:rait-case:protocol']],
+  ])(
+    'nega protocol por %s sem rait-secretary ativo',
+    (_name, roles, permissions) => {
+      expect(
+        isDetranActionAllowed(
+          { roles, permissions },
+          'inf:rait-case',
+          'protocol',
+        ),
+      ).toBe(false);
+    },
+  );
+
   it('deduplicates only TEAT auditor into the PEC AUDITOR role', () => {
     expect(DETRAN_ROLES).toHaveLength(36);
     expect(ROLE_ALIASES.auditor).toBe('AUDITOR');
@@ -263,6 +303,74 @@ describe('DETRAN unified policy kit', () => {
       ),
     ).rejects.toThrow('active request context');
     expect(tx).not.toHaveBeenCalled();
+  });
+});
+
+describe('CTG-0002 worklist and session command policy matrix', () => {
+  const commandRules = [
+    ['rait-schedule', 'create', ['rait-coordinator']],
+    ['rait-schedule', 'publish', ['rait-coordinator']],
+    ['rait-batch', 'create', ['rait-secretary']],
+    ['rait-batch', 'approve', ['rait-chair']],
+    ['rait-batch-item', 'accept', ['rait-rapporteur']],
+    ['rait-batch-item', 'impediment', ['rait-rapporteur']],
+    [
+      'rait-assignment',
+      'reassign',
+      ['rait-coordinator', 'rait-manager', 'rait-chair'],
+    ],
+    ['rait-batch', 'draw', ['rait-secretary']],
+    ['rait-session', 'close-agenda', ['rait-chair']],
+    ['rait-session', 'open', ['rait-chair']],
+    ['rait-session', 'adjourn', ['rait-chair', 'rait-secretary']],
+    ['rait-session', 'convene-extraordinary', ['rait-chair']],
+    ['rait-agenda-item', 'read', ['rait-rapporteur']],
+    ['rait-agenda-item', 'view', ['rait-rapporteur']],
+    ['rait-agenda-item', 'withdraw', ['rait-chair']],
+    ['rait-vote', 'create', ['rait-chair', 'rait-rapporteur']],
+    ['rait-agenda-item', 'proclaim', ['rait-chair']],
+    ['rait-minutes', 'create', ['rait-secretary']],
+    ['rait-minutes', 'sign', ['rait-chair', 'rait-rapporteur']],
+    ['rait-minutes', 'publish', ['rait-secretary']],
+  ] as const;
+
+  it.each(commandRules)(
+    'dado o comando CTG-0002 %s:%s quando avaliado então permite somente os papéis canônicos',
+    (resource, action, allowedRoles) => {
+      for (const role of allowedRoles) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            `inf:${resource}`,
+            action,
+          ),
+        ).toBe(true);
+      }
+
+      for (const role of DETRAN_ROLES.filter(
+        (candidate) => !(allowedRoles as readonly string[]).includes(candidate),
+      )) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            `inf:${resource}`,
+            action,
+          ),
+        ).toBe(false);
+      }
+    },
+  );
+
+  it('dada uma tentativa de criar sustentação oral quando avaliada então nenhum papel canônico é autorizado', () => {
+    for (const role of DETRAN_ROLES) {
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'inf:rait-oral-argument',
+          'create',
+        ),
+      ).toBe(false);
+    }
   });
 });
 
@@ -887,6 +995,18 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
   };
 
   /**
+   * `create` em escala e lote é rota de comando CTG-0002, embora compartilhe
+   * o verbo da superfície gerada. A concessão estatutária estrita é avaliada
+   * antes do atalho administrativo; os outros verbos continuam sem matriz.
+   */
+  const STRICT_COMMAND_GRANTS: Readonly<
+    Record<string, Readonly<Record<string, readonly string[]>>>
+  > = {
+    'rait-schedule': { create: ['rait-coordinator'] },
+    'rait-batch': { create: ['rait-secretary'] },
+  };
+
+  /**
    * Só confere as 4 chaves de ação **gerada** (`read`/`create`/`update`/
    * `delete`) do recurso — nunca todas as chaves `inf:<recurso>:*`, porque
    * várias destas 23 já têm ações de comando pré-existentes fora deste
@@ -907,12 +1027,14 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
 
   function expectDeniedForEveryRole(resource: string): void {
     for (const action of GENERATED_ACTIONS) {
+      const strictRoles = STRICT_COMMAND_GRANTS[resource]?.[action];
       const exceptionRoles =
         PRE_EXISTING_COMMAND_GRANTS[resource]?.[action] ?? [];
       for (const role of DETRAN_ROLES) {
-        const expected =
-          (GLOBAL_ADMIN_ROLES as readonly string[]).includes(role) ||
-          exceptionRoles.includes(role);
+        const expected = strictRoles
+          ? strictRoles.includes(role)
+          : (GLOBAL_ADMIN_ROLES as readonly string[]).includes(role) ||
+            exceptionRoles.includes(role);
         expect(
           isDetranActionAllowed(
             { roles: [role], permissions: [] },
@@ -962,4 +1084,89 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
       expectResourceHasNoGeneratedMatrixEntry(resource);
     });
   }
+});
+
+describe('CTG-0001 — matriz exaustiva dos comandos do caso RAIT', () => {
+  const COMMAND_RULES: ReadonlyArray<
+    readonly [string, string, readonly string[]]
+  > = [
+    ['inf:rait-case', 'admit', ['rait-analyst']],
+    ['inf:rait-case', 'reject', ['rait-analyst']],
+    ['inf:rait-case', 'remit-jari', ['rait-secretary']],
+    ['inf:rait-case', 'receive-judging-body', ['rait-secretary']],
+    ['inf:rait-case', 'submit-draft', ['rait-analyst']],
+    ['inf:rait-decision', 'sign', ['rait-signing-authority']],
+    ['inf:rait-decision', 'return-draft', ['rait-signing-authority']],
+    ['inf:rait-case', 'withdraw', ['rait-secretary']],
+    ['inf:rait-case', 'redirect', ['rait-secretary']],
+    ['inf:rait-case', 'resolve-pending-content', ['rait-secretary']],
+    ['inf:rait-case', 'claim-next', ['rait-analyst']],
+    ['inf:rait-case', 'answer-inquiry', ['rait-analyst', 'rait-rapporteur']],
+    ['inf:rait-case', 'extend-inquiry', ['rait-analyst', 'rait-rapporteur']],
+  ];
+  const GLOBAL_ADMIN_ROLES = new Set([
+    'ADMIN',
+    'GESTOR_DETRAN',
+    'SUPORTE',
+    'technical-admin',
+  ]);
+
+  for (const [resource, action, positiveRoles] of COMMAND_RULES) {
+    it(`dado o par ${resource}:${action} quando cada papel canônico é avaliado então concede só os papéis do contrato`, () => {
+      for (const role of DETRAN_ROLES) {
+        const expected =
+          GLOBAL_ADMIN_ROLES.has(role) || positiveRoles.includes(role);
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            resource,
+            action,
+          ),
+          `${resource}:${action} para ${role}`,
+        ).toBe(expected);
+      }
+    });
+  }
+
+  it('dado expire quando um papel humano tenta executar então a política permanece fechada', () => {
+    const globalAdminRoles = new Set([
+      'ADMIN',
+      'GESTOR_DETRAN',
+      'SUPORTE',
+      'technical-admin',
+    ]);
+    for (const role of DETRAN_ROLES) {
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'inf:rait-inquiry',
+          'expire',
+        ),
+      ).toBe(globalAdminRoles.has(role));
+    }
+  });
+
+  it('preserva OD-309 somente nos dois pares de comando explicitamente nomeados', () => {
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-signing-authority'], permissions: [] },
+        'inf:rait-suspension-act',
+        'create',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['rait-chair'], permissions: [] },
+        'inf:rait-suspension-act',
+        'create',
+      ),
+    ).toBe(true);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['AUDITOR'], permissions: [] },
+        'inf:rait-export',
+        'create',
+      ),
+    ).toBe(true);
+  });
 });

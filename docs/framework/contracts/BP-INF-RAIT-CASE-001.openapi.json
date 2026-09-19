@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RaitCase — BP-INF-RAIT-CASE-001",
-    "version": "1.1.0",
-    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4).",
+    "version": "1.1.7",
+    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10.",
     "x-blueprint": "BP-INF-RAIT-CASE-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
   },
@@ -23,32 +23,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitCase"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-case"],
-        "operationId": "createRaitCase",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitCaseDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitCase"
                 }
               }
             }
@@ -1597,9 +1571,19 @@
             "format": "date-time",
             "nullable": true
           },
+          "judge_body_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
           "cetran_received_at": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "cetran_received_on": {
+            "type": "string",
+            "format": "date",
             "nullable": true
           },
           "remitted_at": {
@@ -1661,6 +1645,11 @@
             "nullable": true
           },
           "unit_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agency_jurisdiction_id": {
             "type": "string",
             "format": "uuid",
             "nullable": true
@@ -1742,10 +1731,6 @@
             "type": "string",
             "maxLength": 30
           },
-          "protocolled_at": {
-            "type": "string",
-            "format": "date-time"
-          },
           "admitted_at": {
             "type": "string",
             "format": "date-time",
@@ -1756,9 +1741,19 @@
             "format": "date-time",
             "nullable": true
           },
+          "judge_body_received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
           "cetran_received_at": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "cetran_received_on": {
+            "type": "string",
+            "format": "date",
             "nullable": true
           },
           "remitted_at": {
@@ -1814,12 +1809,12 @@
             "type": "boolean",
             "default": "false"
           },
-          "legal_priority": {
+          "unit_id": {
             "type": "string",
-            "maxLength": 30,
+            "format": "uuid",
             "nullable": true
           },
-          "unit_id": {
+          "agency_jurisdiction_id": {
             "type": "string",
             "format": "uuid",
             "nullable": true
@@ -1834,8 +1829,7 @@
           "protocol_number",
           "instance",
           "circuit",
-          "intake_channel",
-          "protocolled_at"
+          "intake_channel"
         ]
       },
       "RaitParty": {
@@ -2107,6 +2101,290 @@
           "storage_key",
           "filename",
           "content_hash"
+        ]
+      },
+      "RaitPriorityAssessment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "priority"]
+          },
+          "assessed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assessed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "qualification_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "policy_parameter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "policy_version": {
+            "type": "integer"
+          },
+          "policy_snapshot": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "revision",
+          "outcome",
+          "assessed_at",
+          "assessed_by",
+          "qualification_on",
+          "timezone",
+          "policy_parameter_id",
+          "policy_version",
+          "policy_snapshot",
+          "created_at"
+        ],
+        "description": "ADR-0024 e CTG-0001-C4-OD V3: qualificacao no protocolo, politica e instante preservados; revision posterior reservada e vedada na politica atual."
+      },
+      "CreateRaitPriorityAssessmentDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "revision": {
+            "type": "integer"
+          },
+          "outcome": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "priority"]
+          },
+          "assessed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "assessed_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "qualification_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "policy_parameter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "policy_version": {
+            "type": "integer"
+          },
+          "policy_snapshot": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "case_id",
+          "revision",
+          "outcome",
+          "assessed_at",
+          "assessed_by",
+          "qualification_on",
+          "timezone",
+          "policy_parameter_id",
+          "policy_version",
+          "policy_snapshot"
+        ]
+      },
+      "RaitPriorityBasis": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assessment_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "basis_code": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["pcd", "age_60_plus", "age_80_plus"]
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["attached_document", "presented_document", "presented_cnh"]
+          },
+          "source_ref": {
+            "type": "string",
+            "x-pii": "indirect",
+            "x-retention": "processo+20a"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "evidence_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "assessment_id",
+          "basis_code",
+          "verified_at",
+          "verified_by",
+          "source_kind",
+          "source_ref",
+          "created_at"
+        ],
+        "description": "ADR-0024 e CTG-0001-C4-OD V3: todas as provas do ato, anexo PCD obrigatorio; documento/CNH apresentado para idade sem upload obrigatorio."
+      },
+      "CreateRaitPriorityBasisDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assessment_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "basis_code": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["pcd", "age_60_plus", "age_80_plus"]
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_kind": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["attached_document", "presented_document", "presented_cnh"]
+          },
+          "source_ref": {
+            "type": "string",
+            "x-pii": "indirect",
+            "x-retention": "processo+20a"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "x-pii": "direct",
+            "x-retention": "processo+20a"
+          },
+          "evidence_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          }
+        },
+        "required": [
+          "case_id",
+          "assessment_id",
+          "basis_code",
+          "verified_at",
+          "verified_by",
+          "source_kind",
+          "source_ref"
         ]
       },
       "RaitPendingContent": {
@@ -2673,6 +2951,11 @@
             "format": "date-time",
             "nullable": true
           },
+          "answered_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
           "outcome": {
             "type": "string",
             "maxLength": 20,
@@ -2737,6 +3020,11 @@
             "format": "date-time",
             "nullable": true
           },
+          "answered_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
           "outcome": {
             "type": "string",
             "maxLength": 20,
@@ -2750,6 +3038,253 @@
           "subject",
           "requested_by",
           "due_on"
+        ]
+      },
+      "RaitInquiryDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inquiry_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "attached_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "inquiry_id",
+          "document_id",
+          "attached_by",
+          "created_at"
+        ],
+        "description": "Relacao interna entre resposta de diligencia e documento existente; sem CRUD HTTP."
+      },
+      "CreateRaitInquiryDocumentDto": {
+        "type": "object",
+        "properties": {
+          "inquiry_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "attached_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["inquiry_id", "document_id", "attached_by"]
+      },
+      "RaitPendingDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pending_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "attached_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "pending_id",
+          "document_id",
+          "attached_by",
+          "created_at"
+        ],
+        "description": "Relacao interna entre resolucao de pendencia e documento existente; sem CRUD HTTP."
+      },
+      "CreateRaitPendingDocumentDto": {
+        "type": "object",
+        "properties": {
+          "pending_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attached_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "attached_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": ["pending_id", "document_id", "attached_by"]
+      },
+      "RaitWithdrawalAttestation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signer_party_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "verification_method": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["physical_verified", "digital_verified"]
+          },
+          "evidence_ref": {
+            "type": "string"
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recorded_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "document_id",
+          "signer_party_id",
+          "verification_method",
+          "evidence_ref",
+          "verified_at",
+          "recorded_by",
+          "created_at"
+        ],
+        "description": "Atestado interno verificavel do termo de desistência fisico ou digital; sem CRUD HTTP."
+      },
+      "CreateRaitWithdrawalAttestationDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signer_party_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "verification_method": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": ["physical_verified", "digital_verified"]
+          },
+          "evidence_ref": {
+            "type": "string"
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recorded_by": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "case_id",
+          "document_id",
+          "signer_party_id",
+          "verification_method",
+          "evidence_ref",
+          "verified_at",
+          "recorded_by"
         ]
       },
       "RaitDraft": {

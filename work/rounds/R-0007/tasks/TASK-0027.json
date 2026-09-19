@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0027",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Parser estrito do parâmetro legal",
+  "description": "C4-OD V3 Engineer completed GREEN after frozen TASK-0026 RED. Prompt SHA-256: 7a3a1e5c65bc014e700eefcbb44f56188e2877231c17e0fa6493fc91ad333a0e. Iteration 1/1; pnpm parameters:test 26/26, zero skip. Parser SHA-256 cd3d7319ccef36c2ac6ce4ffa912ddf05dff7bb668bd7d37145ed2f3af9b865c; frozen sensor ae5fc14de2fb8afb3b0157e25ddcc3164729ddefb68da81d5b0eb90103f50916 unchanged. Evidence generic R-0007 sequence 2; budget estimates not measured.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-parameter-parser"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0026",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3", "dispatched"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-7a3a1e5c65bc014e",
+  "acceptance_commands": [["pnpm", "parameters:test"]],
+  "created_at": "2026-09-16T18:10:57Z",
+  "spawned_at": "2026-09-16T19:48:42Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-7a3a1e5c65bc014e",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Parser estrito do parâmetro legal",
+    "planned_files": ["tools/parameters/parser.mjs"]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0058",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Reconciliar sensores de capability e eventos worklist",
+  "description": "Inspector 1/1 reconciliou os dois sensores sem tocar produção: document-trust-batch agora distingue health (capability batchDistributionMinutes, PAdES-B-LT, TSA e OCSP/CRL) de verify (recibo) e passa 11/11; worklist exige events: [] e outbox vazio para create-schedule e approve-batch, preservando escrita, auditoria e idempotência. O sensor worklist coleta 51 cenários, 45 PASS e 6 RED esperados contra os eventos sentinela vazios atuais (positivo, replay idêntico e replay divergente para cada comando). Typecheck shared/worklist, Prettier e diff --check PASS. SHA-256: document-trust-batch 368e35c96c65c2719b00a13559983074ed64a2731facac995cbab17f5dd131f0; rait-worklist-corrective dd0d2fdee50d6441181a32b71d9f1ff29c1238a72c852f8d39e44275a8f755c3. RED é prova de produção, não falha de coleta nem alegação de CTG-0002 GREEN.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-document-trust",
+    "MOD-contract-worklist-session"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0057",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "sensor-repair"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-8e04ccc4165bc918",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "typecheck"]
+  ],
+  "created_at": "2026-09-19T00:30:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-8e04ccc4165bc918",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente dois sensores contraditórios; sem produção ou schema."
+  }
+}

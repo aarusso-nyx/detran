@@ -1,6 +1,6 @@
-// Generated from parameter-catalogue.md sha256:46e1a81e8e98465aad5b1a1fb5c1fbdcf6eaa3814614dc817fe8965b65c7890a
+// Generated from parameter-catalogue.md sha256:744b46722d02f6d958c18864e1411f0dbf0e7cb544876354c0d5bada2e79690b
 export const PARAMETER_CATALOGUE_SOURCE_SHA256 =
-  '46e1a81e8e98465aad5b1a1fb5c1fbdcf6eaa3814614dc817fe8965b65c7890a';
+  '744b46722d02f6d958c18864e1411f0dbf0e7cb544876354c0d5bada2e79690b';
 export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.wip.limit',
@@ -260,13 +260,23 @@ export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.priority.legal_bases',
     value_type: 'json',
-    value_json: '[{60+:1},{80+:2}] + PcD',
+    value_json: {
+      schemaVersion: 1,
+      policyCode: 'ADR-0024-2026-09-16',
+      basisRanks: {
+        pcd: 2,
+        age_80_plus: 2,
+        age_60_plus: 1,
+      },
+      noneRank: 0,
+      postProtocolRevision: 'forbidden',
+    },
     status: 'vigente',
     source_pending: false,
     legal_readonly: false,
     decision_ref: 'OD-016',
     decision_tokens: ['OD-016'],
-    consumer: 'ordem única',
+    consumer: 'ordem única; ADR-0024; parser/seed pendentes do ciclo C4-OD',
     surface: 'rait',
     provenance: {
       line: 39,

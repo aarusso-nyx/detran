@@ -1,0 +1,41 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "backend/database/seed.sh",
+      "line": 60,
+      "claim": "O gate legacy-upgrade conta inf.rait_case sem definir app.role/app.tenant_id; sob FORCE RLS com DB_USER não-owner a contagem lê 0 e o perfil é recusado mesmo com baseline presente. É fail-closed (recusa antes de escrever, como exigido), mas pode produzir recusa falsa dependente do usuário de conexão.",
+      "fix": "Definir contexto (set_config de app.role/app.tenant_id) na consulta do gate ou documentar no cabeçalho que DB_USER deve ser owner/bypass-RLS."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-seed-profiles.integration.spec.ts",
+      "line": 90,
+      "claim": "No timeout de 120s o SIGKILL atinge apenas o wrapper bash; o psql filho pode sobreviver como processo órfão segurando conexão no banco scratch (o drop with force mitiga, mas repete a lição de processos órfãos de R-0008).",
+      "fix": "Spawnar com detached:true e matar o process group (process.kill(-child.pid, 'SIGKILL')) no timeout."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/database/seed/21-fixtures-rait-fresh.sql",
+      "line": 7,
+      "claim": "O insert do pool fresh não define a coluna active, e inf.rait_record_initial_priority exige p.active no gate de membership da secretaria; a correção depende de um default de DDL (34-inf-rait-case.sql) que esta revisão não pôde confirmar. Se o default não for true, a falha é ruidosa (fail-closed), não silenciosa.",
+      "fix": "Tornar explícito active = true no insert de inf.rait_pool do fixture fresh."
+    }
+  ],
+  "notes": [
+    "Hashes SHA-256 dos cinco arquivos-alvo conferidos e idênticos aos declarados antes do julgamento.",
+    "Q1 verificada: 20-fixtures-rait.sql permanece a única fonte dos 20 casos legados; seus ON CONFLICT DO UPDATE não tocam id, protocolled_at nem legal_priority, nenhuma chamada a inf.rait_record_initial_priority foi adicionada (nenhuma reapuração de null nem prova inventada), e seed.sh recusa legacy-upgrade com exit 2 antes de qualquer -f quando a contagem dos 20 IDs difere de 20.",
+    "Q2 verificada: seed.sh executa cada perfil em uma única invocação psql com --single-transaction (uma conexão, commit atômico — sem commit parcial); SEED_PROFILE inválido falha com exit 2; o default fresh é deliberado e documentado no cabeçalho e exercido pelo sensor; 21-fixtures-rait-fresh.sql insere o caso como role_app_backend (gatilhos DDL19 ativos, marker de inserção), captura via \\gset se houve inserção e só chama a qualificação none pelo secretário (b0000005, member_role secretaria) com assessed_at = protocolled_at quando o caso foi de fato inserido — reaplicação não requalifica nem duplica; 05-parameters.sql termina em ON CONFLICT DO NOTHING (sem overwrite silencioso), e o value_json de rait.priority.legal_bases é byte-idêntico ao snapshot exigido em ddl/19 linhas 108 e 175.",
+    "Q3 verificada no essencial: o sensor novo exige URLs explícitas por env (falha na coleta se ausentes — sem falso PASS), recusa reutilizar/destruir scratch pré-existente, cria e destrói apenas o banco que criou, roda apply.sh e seed.sh integrais e afere cardinalidade (1 caso, 1 assessment revision=1 outcome=none, 0 bases, assessed=protocolled, 0 legados), trigger rait_priority_case_guard habilitado, idempotência por igualdade profunda do snapshot e recusa de legacy-upgrade com estado inalterado; rait-case-runtime.integration.spec.ts mantém exatamente os dois casos runtime (codec date/timestamptz e associação cruzada sob RLS) e não contém mais sensor de primeiro INSERT.",
+    "Q4 verificada: RaitOperationClock implementa a porta Clock oficial (backend/domains/inf/deadlines/src/types.ts:47 — now()/today(tenantTz): LocalDate), rejeita instante não-finito e tz vazio via RangeError no construtor (tz IANA inválido falha no Intl.DateTimeFormat) antes de qualquer escrita, congela um snapshot imutável por capture com dia civil derivado uma única vez e recusa today() com tz divergente; o comentário e o desenho adiam corretamente o wiring na RaitDeadlineEngineFactory, coerente com ADR-0025 (lido na íntegra).",
+    "Lacunas concretas que motivam REVIEW em vez de PASS: (a) ADR-0024 não foi lido — a política foi verificada apenas pela igualdade do JSON policyCode ADR-0024-2026-09-16 entre 05-parameters.sql:25 e ddl/19, não pelo texto do ADR; (b) a remoção do antigo sensor de primeiro INSERT foi confirmada somente dentro do arquivo runtime alvo, sem varredura dos demais specs (ex.: rait-priority-upgrade.integration.spec.ts não lido); (c) o default de rait_pool.active (finding item 2) não foi conferido no DDL. Nenhuma dessas lacunas aponta defeito estrutural observado.",
+    "Fatos de execução declarados (fresh 2x, recusa 0/20, sensor 1/1 PASS) são consistentes com o código lido, mas não foram reexecutados nem adotados como prova própria.",
+    "Nenhum finding high; os três lows não são impedimento de despacho. Este parecer não declara CTG-0001 concluído, não afirma SQL aplicado em produção e não autoriza merge."
+  ]
+}

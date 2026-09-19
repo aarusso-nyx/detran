@@ -19,6 +19,9 @@ import {
 const keys = [
   'DATABASE_URL',
   'DETRAN_AUTH_MODE',
+  'DETRAN_LOCAL_ACTOR_ID',
+  'DETRAN_LOCAL_ROLES',
+  'DETRAN_LOCAL_TENANT_ID',
   'DETRAN_RUNTIME_PROFILE',
   'NODE_ENV',
   'STYNX_APP_DATABASE_URL',
@@ -64,6 +67,24 @@ describe('DETRAN runtime hooks', () => {
     await expect(
       new DetranLocalTokenVerifier().verifyAuthorizationHeader(undefined),
     ).rejects.toThrow('not allowed in production');
+  });
+
+  it('reads the local actor for each test-profile verification', async () => {
+    process.env.DETRAN_RUNTIME_PROFILE = 'test';
+    process.env.DETRAN_LOCAL_ACTOR_ID = '00000000-0000-4000-8000-0000b0000001';
+    const verifier = new DetranLocalTokenVerifier();
+    await expect(
+      verifier.verifyAuthorizationHeader('Bearer local'),
+    ).resolves.toMatchObject({
+      principal: { id: '00000000-0000-4000-8000-0000b0000001' },
+    });
+
+    process.env.DETRAN_LOCAL_ACTOR_ID = '00000000-0000-4000-8000-0000b0000005';
+    await expect(
+      verifier.verifyAuthorizationHeader('Bearer local'),
+    ).resolves.toMatchObject({
+      principal: { id: '00000000-0000-4000-8000-0000b0000005' },
+    });
   });
 
   it('fails non-local verifier construction without Cognito', () => {

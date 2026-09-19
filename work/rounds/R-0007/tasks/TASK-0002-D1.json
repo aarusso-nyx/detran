@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0020",
+  "round_id": "R-0007",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Provar defeitos em PostgreSQL e HTTP reais",
+  "description": "C4 historical execution state preserved (3/4). V3 active prompt SHA-256: 2a5a3b4ddd44130cda2fdf0a95e13eae37c82085d1759ec51d68bf2ec92377f7. V3 package preparation only; future execution still requires independent PASS and dispatch. Historical prompt composition remains in compositions.json.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-case-tests",
+    "MOD-shared-document-tests",
+    "MOD-shared-policy-tests",
+    "MOD-policy-routes-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0025",
+  "db_isolation": "database",
+  "iteration_count": 3,
+  "max_iterations": 4,
+  "priority": 2,
+  "tags": [
+    "attempt-2",
+    "delivery-recovery-c3",
+    "alias-TASK-0002-D1",
+    "c4-od-v3"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-c2946159f03f9085",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "test",
+      "src/policy.spec.ts",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/rait-case-runtime.integration.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-15T23:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-c2946159f03f9085",
+    "max_iterations": 4,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "C4-OD V3 future bounded inspector task; active prompt work/rounds/R-0007/prompts/TASK-0020-V3.md",
+    "planned_files": [
+      "backend/domains/inf/rait-case/tests/unit/rait-case-behavioral-matrix.spec.ts",
+      "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts",
+      "backend/domains/inf/rait-case/tests/unit/rait-case-delivery-c3.spec.ts",
+      "backend/domains/inf/rait-case/tests/unit/rait-case-di-c4.spec.ts",
+      "backend/domains/inf/rait-case/tests/integration/rait-case-command-contract.integration.spec.ts",
+      "backend/domains/inf/rait-case/tests/integration/rait-case-deltas-db.integration.spec.ts",
+      "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.integration.spec.ts",
+      "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.fixture.ts",
+      "backend/domains/shared/src/documents/document-trust.spec.ts",
+      "backend/domains/shared/src/policy.guard.spec.ts",
+      "backend/domains/shared/src/policy.spec.ts",
+      "backend/app/tests/e2e/rait-case-commands.e2e.spec.ts",
+      "backend/app/tests/shared/rait-case-command.fixture.ts",
+      "backend/app/src/rait-transactional-audit.interceptor.spec.ts",
+      "backend/app/src/detran-error.filter.spec.ts",
+      "backend/app/src/detran-policy-error.guard.spec.ts",
+      "backend/app/vitest.config.ts"
+    ]
+  }
+}

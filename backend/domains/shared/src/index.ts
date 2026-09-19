@@ -1,5 +1,6 @@
 export * from './decorators.js';
 export * from './documents/index.js';
+export * from './errors/index.js';
 export * from './policy.js';
 export * from './policy.guard.js';
 export * from './roles.js';

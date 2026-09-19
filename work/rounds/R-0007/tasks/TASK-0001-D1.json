@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0019",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fechar contrato corretivo de entrega",
+  "description": "Alias TASK-0001-D1, delivery recovery C3. Follow CTG-0001 section 10 and the exact prompt boundary. OD-R7-FJ0-001 closes RG-FJ0-EMPTY: fail-closed semantics are binding. Prompt SHA-256: 25da4be6072cdcd54b8ff6c5a01578885606030f5442f04079f9ef3ea6c03128.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-case"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["attempt-2", "delivery-recovery-c3", "alias-TASK-0001-D1"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-25da4be6072cdcd5",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0007/contracts/CTG-0001.md"]
+  ],
+  "created_at": "2026-09-15T23:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-25da4be6072cdcd5",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

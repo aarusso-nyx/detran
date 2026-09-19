@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0046",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar os seis comandos restantes de worklist",
+  "description": "Ciclo corretivo OWNER contra sensores TASK-0045 congelados; runtime manuscrito e política, sem blueprint/gerados; preservar TASK-0007 1/2.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-worklist", "MOD-shared-policy"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0051",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "worklist"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-0a0e6c322cd913b7",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:integration",
+      "--passWithNoTests=false"
+    ],
+    ["pnpm", "--filter", "@detran/shared", "test", "--passWithNoTests=false"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-18T03:21:54Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-0a0e6c322cd913b7",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente runtime manuscrito worklist e política exata contra sensores imutáveis."
+  },
+  "closure_reconciliation": {
+    "date": "2026-09-19",
+    "result": "PASS",
+    "basis": "Os seis comandos restantes de worklist passaram nos sensores congelados; worklist unit 78/78, integration 42/42 e app E2E final verdes."
+  }
+}

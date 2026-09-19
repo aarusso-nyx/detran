@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Encode case and policy contracts in tests",
+  "description": "Correctively encode every CTG-0001 guard, effect, DI, RLS and SQL invariant as executable case tests plus exhaustive policy assertions.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-case-tests",
+    "MOD-shared-policy-tests",
+    "MOD-shared-document-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": ["WF-RAIT-001", "OD-309"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001+PREP-CTG1-DEPS+PREP-CTG1-MODEL",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-b", "wp-c", "attempt-2", "corrective-cycle-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-12be7876c39ec630",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-case", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "test:integration"],
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-12be7876c39ec630",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

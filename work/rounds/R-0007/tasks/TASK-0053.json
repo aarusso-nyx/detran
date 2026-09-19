@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0053",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Congelar RED da ata de distribuição e verificação PAdES/TSA",
+  "description": "Inspector 2/2 concluiu o RED CTG-0002 sem alterar produção, DDL ou histórico: trust adapter 11/11 RED (API BATCH_DISTRIBUTION_MINUTES ausente), approve-batch 15/15 RED (manifest/snapshot/trust/replay/corrida) e banco 5 coletados, 3 RED/2 PASS (manifesto, RLS e imutabilidade ausentes; URL/role e 20 casos válidos). Iteração 2 substituiu snapshotHash mágico por SHA-256 da serialização canônica ordenada do snapshot server-owned; seed/ordem/índice adulterados preservam o digest original da manifestação. Prettier, diff --check e typecheck shared/worklist PASS. SHA-256: document-trust-batch ddf5c649c343007856c96f1162733428f4376a845e2f0eb9ea0a97d5a1d32bbc; rait-batch-minutes-trust dc8bc9ae55786a1367de11fb81bbcc6f70bff0817e248e809a7da80736629b99; rait-batch-minutes-manifest 3424513268fb8feffb59664c0d06798403a8c45d596d019112f312debfd2fbbd. Fakes JSON cobrem contrato e não provam criptografia de produção.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-shared-document-trust-tests",
+    "MOD-rait-worklist-tests",
+    "MOD-rait-worklist-db-tests"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0052",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "batch-trust"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-758a6559ac9f8914",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "test", "--passWithNoTests=false"],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:integration",
+      "--passWithNoTests=false"
+    ]
+  ],
+  "created_at": "2026-09-18T03:47:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-758a6559ac9f8914",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente três novos sensores de trust/manifesto/homologação; sem produção ou derivados."
+  }
+}

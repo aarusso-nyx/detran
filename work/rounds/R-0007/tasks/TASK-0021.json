@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0021",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar GREEN C4-OD V3 do caso RAIT",
+  "description": "Histórico 6/6 preservado. OWNER autorizou Engineer 7/7 estritamente para eliminar auditoria duplicada do protocolo no interceptor transacional, após Inspector 12/13 corrigir fixtures e congelar sensor audit +1. Sem alterar serviço, controller ou testes. Inspector 13/13 observará GREEN antes de TASK-0022; sem review intermediário repetido.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-case",
+    "MOD-shared-documents",
+    "MOD-shared-policy",
+    "MOD-app-wiring"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0020",
+  "db_isolation": "database",
+  "iteration_count": 7,
+  "max_iterations": 7,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3", "owner-model-demotion"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-897cb82d63d89e23",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "test",
+      "src/policy.spec.ts",
+      "--passWithNoTests=false"
+    ],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-17T13:26:37.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-897cb82d63d89e23",
+    "max_iterations": 7,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente runtime e fixtures enumerados no prompt V3, sem alterar sensores congelados ou gerados. Os comandos com ambiente e matriz completa de aceite estão no prompt ativo."
+  }
+}

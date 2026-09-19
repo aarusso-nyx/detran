@@ -220,6 +220,13 @@ flag ou edição de DDL/política que o propaga (`docs/framework/arch/parameter-
 57. Cédula 08 (OD-101…112, OD-201…207): **premissas aprovadas agora como vigentes**; o regimento,
     quando localizado, gera nova versão. O módulo `colegiado` nasce sem o rótulo "pendente
     regimento"; jeton (OD-012/207) permanece pendente de fonte.
+58. Decisão direta da campanha R-0007 (OD-R7-FJ0-001, 2026-09-15): **F-J-0 é fail-closed para
+    evidências TEAT**. `TEAT_EVIDENCE` exige ao menos um `evidence_link` válido vinculado ao AIT;
+    um único vínculo válido satisfaz esse piso mesmo quando `mandatory=false`. Além do piso, todos
+    os links com `mandatory=true` devem estar disponíveis e íntegros. Ausência total de vínculo,
+    inexistência de qualquer vínculo válido ou qualquer obrigatório ausente/inválido bloqueia
+    `remit` com `RAIT.REMIT_CHECKLIST_INCOMPLETE`; conjunto vazio nunca é interpretado como
+    completude.
 
 ## Pontos que a múltipla escolha não fechou — precisam de mais uma rodada
 

@@ -4,6 +4,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
+import ts from 'typescript';
 import { parseCatalogue } from './parser.mjs';
 const root = resolve(fileURLToPath(new URL('../..', import.meta.url)));
 const sourceOption = process.argv.includes('--source')
@@ -165,6 +166,201 @@ if (process.argv.includes('--check-usage')) {
     'dashboard',
   ];
   let usageErrors = 0;
+
+  function scriptKind(path) {
+    if (path.endsWith('.tsx')) return ts.ScriptKind.TSX;
+    if (path.endsWith('.jsx')) return ts.ScriptKind.JSX;
+    if (path.endsWith('.ts')) return ts.ScriptKind.TS;
+    return ts.ScriptKind.JS;
+  }
+
+  function propertyName(node) {
+    if (ts.isIdentifier(node) || ts.isStringLiteralLike(node)) {
+      return node.text;
+    }
+    return undefined;
+  }
+
+  function unwrapExpression(node) {
+    let current = node;
+    while (
+      (ts.isParenthesizedExpression(current) ||
+        ts.isAsExpression(current) ||
+        ts.isTypeAssertionExpression(current) ||
+        ts.isNonNullExpression(current) ||
+        ts.isSatisfiesExpression(current)) &&
+      current.expression
+    ) {
+      current = current.expression;
+    }
+    return current;
+  }
+
+  function expressionRoot(node) {
+    let current = node;
+    while (
+      current.parent &&
+      (ts.isParenthesizedExpression(current.parent) ||
+        ts.isAsExpression(current.parent) ||
+        ts.isTypeAssertionExpression(current.parent) ||
+        ts.isNonNullExpression(current.parent) ||
+        ts.isSatisfiesExpression(current.parent)) &&
+      current.parent.expression === current
+    ) {
+      current = current.parent;
+    }
+    return current;
+  }
+
+  function isTypePropertyAccess(node) {
+    const expression = unwrapExpression(node);
+    return (
+      ts.isPropertyAccessExpression(expression) &&
+      expression.name.text === 'type'
+    );
+  }
+
+  function isComparisonOperator(kind) {
+    return [
+      ts.SyntaxKind.EqualsEqualsToken,
+      ts.SyntaxKind.ExclamationEqualsToken,
+      ts.SyntaxKind.EqualsEqualsEqualsToken,
+      ts.SyntaxKind.ExclamationEqualsEqualsToken,
+      ts.SyntaxKind.LessThanToken,
+      ts.SyntaxKind.LessThanEqualsToken,
+      ts.SyntaxKind.GreaterThanToken,
+      ts.SyntaxKind.GreaterThanEqualsToken,
+    ].includes(kind);
+  }
+
+  function isExcludedContext(node) {
+    const parent = node.parent;
+    if (
+      (ts.isPropertyAssignment(parent) || ts.isPropertyDeclaration(parent)) &&
+      parent.initializer === node &&
+      ['type', 'messageKey'].includes(propertyName(parent.name))
+    ) {
+      return true;
+    }
+
+    const root = expressionRoot(node);
+    const comparison = root.parent;
+    if (
+      ts.isBinaryExpression(comparison) &&
+      isComparisonOperator(comparison.operatorToken.kind)
+    ) {
+      const other =
+        comparison.left === root ? comparison.right : comparison.left;
+      return isTypePropertyAccess(other);
+    }
+
+    return false;
+  }
+
+  function verifyUsage(path, text) {
+    const source = ts.createSourceFile(
+      path,
+      text,
+      ts.ScriptTarget.Latest,
+      true,
+      scriptKind(path),
+    );
+    const eventArgumentPositions = new Map();
+
+    function callableName(node) {
+      if (
+        (ts.isFunctionDeclaration(node) || ts.isMethodDeclaration(node)) &&
+        node.name
+      ) {
+        return propertyName(node.name);
+      }
+      return undefined;
+    }
+
+    function collectEventParameters(node) {
+      const name = callableName(node);
+      if (name && node.parameters) {
+        const positions = node.parameters
+          .map((parameter, index) =>
+            ts.isIdentifier(parameter.name) &&
+            ['type', 'eventType', 'topic'].includes(parameter.name.text)
+              ? index
+              : undefined,
+          )
+          .filter((index) => index !== undefined);
+        if (positions.length) {
+          const knownPositions = eventArgumentPositions.get(name) ?? new Set();
+          for (const position of positions) knownPositions.add(position);
+          eventArgumentPositions.set(name, knownPositions);
+        }
+      }
+      ts.forEachChild(node, collectEventParameters);
+    }
+
+    collectEventParameters(source);
+
+    function isEventArgument(node) {
+      if (!ts.isCallExpression(node.parent)) return false;
+      const call = node.parent;
+      const index = call.arguments.indexOf(node);
+      const expression = unwrapExpression(call.expression);
+      const name = ts.isIdentifier(expression)
+        ? expression.text
+        : ts.isPropertyAccessExpression(expression)
+          ? expression.name.text
+          : undefined;
+      return (
+        name !== undefined &&
+        index >= 0 &&
+        eventArgumentPositions.get(name)?.has(index) === true
+      );
+    }
+
+    function isEventCollectionPush(node) {
+      if (!ts.isCallExpression(node.parent)) return false;
+      const callTarget = unwrapExpression(node.parent.expression);
+      if (
+        !ts.isPropertyAccessExpression(callTarget) ||
+        callTarget.name.text !== 'push'
+      ) {
+        return false;
+      }
+      const collection = unwrapExpression(callTarget.expression);
+      return (
+        ts.isPropertyAccessExpression(collection) &&
+        ['events', 'audits'].includes(collection.name.text)
+      );
+    }
+
+    function visit(node) {
+      if (
+        ts.isStringLiteralLike(node) &&
+        !isExcludedContext(node) &&
+        !isEventArgument(node) &&
+        !isEventCollectionPush(node)
+      ) {
+        const literal = node.text;
+        const parts = literal.split('.');
+        if (
+          !known.has(literal) &&
+          parts.length >= 3 &&
+          prefixes.includes(parts[0])
+        ) {
+          usageErrors += 1;
+          const { line } = source.getLineAndCharacterOfPosition(
+            node.getStart(source),
+          );
+          console.error(
+            `${path}:${line + 1}: unknown parameter literal ${literal}`,
+          );
+        }
+      }
+      ts.forEachChild(node, visit);
+    }
+
+    visit(source);
+  }
+
   async function walk(dir) {
     for (const item of await readdir(dir, { withFileTypes: true })) {
       if (['tests', 'dist', 'node_modules'].includes(item.name)) continue;
@@ -172,35 +368,14 @@ if (process.argv.includes('--check-usage')) {
       if (item.isDirectory()) await walk(path);
       else if (/\.(?:ts|js|mjs|tsx|jsx)$/.test(item.name)) {
         const text = await readFile(path, 'utf8');
-        for (const match of text.matchAll(
-          /['"]([a-z]+\.[A-Za-z0-9_.-]+)['"]/g,
-        )) {
-          const literal = match[1];
-          const parts = literal.split('.');
-          if (known.has(literal)) continue;
-          if (parts.length >= 3 && prefixes.includes(parts[0])) {
-            usageErrors += 1;
-            console.error(`${path}: unknown parameter literal ${literal}`);
-          }
-        }
+        verifyUsage(path, text);
       }
     }
   }
   if ((await stat(target)).isDirectory()) await walk(target);
   else {
     const text = await readFile(target, 'utf8');
-    for (const match of text.matchAll(/['"]([a-z]+\.[A-Za-z0-9_.-]+)['"]/g)) {
-      const literal = match[1];
-      const parts = literal.split('.');
-      if (
-        !known.has(literal) &&
-        parts.length >= 3 &&
-        prefixes.includes(parts[0])
-      ) {
-        usageErrors += 1;
-        console.error(`${target}: unknown parameter literal ${literal}`);
-      }
-    }
+    verifyUsage(target, text);
   }
   if (usageErrors) process.exitCode = 1;
 }

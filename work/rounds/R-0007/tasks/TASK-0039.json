@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0039",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Separar perfis de seed RAIT fresh e legado",
+  "description": "OWNER autorizou ampliar somente runner/fixture/sensor após TASK-0038 STOP. Engineer Terra/High produziu seed.sh fresh padrão e legacy-upgrade explícito, e nova fixture 21; duas interações incluindo ajuste assessed_at=protocolled_at. Fresh 2x em scratch: 1 case/1 assessment none/0 bases; legacy-upgrade recusou 0/20 antes de escrita. Maestro executou legacy-upgrade no banco dedicado 20/20, exit 0. Review Fable5 do mesmo hash REVIEW inicial seguido de PASS suplementar zero high/três low. Prompt de registro normalizado pós-despacho, não byte stream. Sem alterar seed20/DDL19 nem commit/merge.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-case"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0038",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["attempt-2", "c4-od-v3", "owner-fresh-legacy-split"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-0c0890b7357ca90f",
+  "acceptance_commands": [["bash", "-n", "backend/database/seed.sh"]],
+  "created_at": "2026-09-17T14:51:59Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-0c0890b7357ca90f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente runner e fixture fresh; não alterar acervo legado",
+    "planned_files": [
+      "backend/database/seed.sh",
+      "backend/database/seed/21-fixtures-rait-fresh.sql"
+    ]
+  }
+}

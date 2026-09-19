@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-CASE-001 v1.1.0 sha256:f85c2f343d3739d77786d05e0f2f98d07e00de6ca63aa3aaa743b5b949714f62
+-- Generated from BP-INF-RAIT-CASE-001 v1.1.7 sha256:682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154
 
 -- Regenerable-only DDL for BP-INF-RAIT-CASE-001; request-path writes use role_app_backend.
 
@@ -17,7 +17,9 @@ create table if not exists inf.rait_case (
   protocolled_at timestamptz not null,
   admitted_at timestamptz,
   judge_body_received_at timestamptz,
+  judge_body_received_on date,
   cetran_received_at timestamptz,
+  cetran_received_on date,
   remitted_at timestamptz,
   decided_at timestamptz,
   communicated_at timestamptz,
@@ -30,6 +32,7 @@ create table if not exists inf.rait_case (
   pending_completion boolean default false not null,
   legal_priority varchar(30),
   unit_id uuid,
+  agency_jurisdiction_id uuid,
   version integer default 1 not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
@@ -44,17 +47,21 @@ create table if not exists inf.rait_case (
   constraint ck_inf_rait_case_cetran_is_final check (instance <> 'cetran' or state <> 'REMETIDO_2A_INSTANCIA'),
   constraint ck_inf_rait_case_cetran_receipt_scope check (cetran_received_at is null or instance = 'cetran'),
   constraint fk_inf_rait_case_ait foreign key (ait_id) references inf.ait_ait (id),
-  constraint fk_inf_rait_case_origin foreign key (origin_case_id) references inf.rait_case (id)
+  constraint fk_inf_rait_case_origin foreign key (origin_case_id) references inf.rait_case (id),
+  constraint fk_inf_rait_case_agency_jurisdiction foreign key (agency_jurisdiction_id) references ops.agency_jurisdiction (id)
 );
 create unique index if not exists ux_inf_rait_case_protocol on inf.rait_case (tenant_id, protocol_number);
 create index if not exists ix_inf_rait_case_state on inf.rait_case (tenant_id, instance, state);
 create index if not exists ix_inf_rait_case_movement on inf.rait_case (tenant_id, last_movement_at);
 create index if not exists ix_inf_rait_case_cetran_received on inf.rait_case (tenant_id, cetran_received_at);
+create index if not exists ix_inf_rait_case_agency_jurisdiction on inf.rait_case (tenant_id, agency_jurisdiction_id);
+create unique index if not exists ux_inf_rait_case_tenant_id on inf.rait_case (tenant_id, id);
 create index if not exists ix_rait_case_tenant_id on inf.rait_case (tenant_id);
 create index if not exists ix_rait_case_ait_id on inf.rait_case (ait_id);
 create index if not exists ix_rait_case_origin_case_id on inf.rait_case (origin_case_id);
 create index if not exists ix_rait_case_withdrawal_document_id on inf.rait_case (withdrawal_document_id);
 create index if not exists ix_rait_case_unit_id on inf.rait_case (unit_id);
+create index if not exists ix_rait_case_agency_jurisdiction_id on inf.rait_case (agency_jurisdiction_id);
 
 create table if not exists inf.rait_party (
   id uuid default gen_random_uuid() not null,
@@ -100,8 +107,70 @@ create table if not exists inf.rait_document (
   constraint fk_inf_rait_document_case foreign key (case_id) references inf.rait_case (id)
 );
 create index if not exists ix_inf_rait_document_case on inf.rait_document (tenant_id, case_id, kind);
+create unique index if not exists ux_inf_rait_document_case_id on inf.rait_document (tenant_id, case_id, id);
 create index if not exists ix_rait_document_tenant_id on inf.rait_document (tenant_id);
 create index if not exists ix_rait_document_case_id on inf.rait_document (case_id);
+
+create table if not exists inf.rait_priority_assessment (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid not null,
+  revision integer not null,
+  outcome varchar(20) not null,
+  assessed_at timestamptz not null,
+  assessed_by uuid not null,
+  qualification_on date not null,
+  timezone text not null,
+  policy_parameter_id uuid not null,
+  policy_version integer not null,
+  policy_snapshot jsonb not null,
+  reason text,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_priority_assessment primary key (id),
+  constraint ck_inf_rait_priority_assessment_revision check (revision > 0),
+  constraint ck_inf_rait_priority_assessment_outcome check (outcome in ('none','priority')),
+  constraint ck_inf_rait_priority_assessment_policy_version check (policy_version > 0),
+  constraint ck_inf_rait_priority_assessment_reason check (revision = 1 or (reason is not null and length(btrim(reason)) > 0)),
+  constraint ck_inf_rait_priority_assessment_timezone check (length(btrim(timezone)) > 0),
+  constraint fk_inf_rait_priority_assessment_case foreign key (tenant_id, case_id) references inf.rait_case (tenant_id, id)
+);
+create unique index if not exists ux_inf_rait_priority_assessment_revision on inf.rait_priority_assessment (tenant_id, case_id, revision);
+create unique index if not exists ux_inf_rait_priority_assessment_case_id on inf.rait_priority_assessment (tenant_id, case_id, id);
+create index if not exists ix_rait_priority_assessment_tenant_id on inf.rait_priority_assessment (tenant_id);
+create index if not exists ix_rait_priority_assessment_case_id on inf.rait_priority_assessment (case_id);
+create index if not exists ix_rait_priority_assessment_policy_parameter_id on inf.rait_priority_assessment (policy_parameter_id);
+
+create table if not exists inf.rait_priority_basis (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid not null,
+  assessment_id uuid not null,
+  basis_code varchar(30) not null,
+  verified_at timestamptz not null,
+  verified_by uuid not null,
+  source_kind varchar(30) not null,
+  source_ref text not null,
+  document_id uuid,
+  birth_date date,
+  evidence_hash varchar(128),
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_priority_basis primary key (id),
+  constraint ck_inf_rait_priority_basis_code check (basis_code in ('pcd','age_60_plus','age_80_plus')),
+  constraint ck_inf_rait_priority_basis_source check (source_kind in ('attached_document','presented_document','presented_cnh')),
+  constraint ck_inf_rait_priority_basis_ref check (length(btrim(source_ref)) > 0),
+  constraint ck_inf_rait_priority_basis_pcd check (basis_code <> 'pcd' or (source_kind = 'attached_document' and document_id is not null and evidence_hash is not null and length(btrim(evidence_hash)) > 0)),
+  constraint ck_inf_rait_priority_basis_age check (basis_code = 'pcd' or birth_date is not null),
+  constraint ck_inf_rait_priority_basis_attachment check (source_kind <> 'attached_document' or document_id is not null),
+  constraint fk_inf_rait_priority_basis_assessment foreign key (tenant_id, case_id, assessment_id) references inf.rait_priority_assessment (tenant_id, case_id, id),
+  constraint fk_inf_rait_priority_basis_document foreign key (tenant_id, case_id, document_id) references inf.rait_document (tenant_id, case_id, id)
+);
+create unique index if not exists ux_inf_rait_priority_basis_evidence on inf.rait_priority_basis (tenant_id, assessment_id, basis_code, source_kind, source_ref);
+create index if not exists ix_rait_priority_basis_tenant_id on inf.rait_priority_basis (tenant_id);
+create index if not exists ix_rait_priority_basis_case_id on inf.rait_priority_basis (case_id);
+create index if not exists ix_rait_priority_basis_assessment_id on inf.rait_priority_basis (assessment_id);
+create index if not exists ix_rait_priority_basis_document_id on inf.rait_priority_basis (document_id);
 
 create table if not exists inf.rait_pending_content (
   id uuid default gen_random_uuid() not null,
@@ -212,6 +281,7 @@ create table if not exists inf.rait_inquiry (
   due_on date not null,
   extension_count integer default 0 not null,
   answered_at timestamptz,
+  answered_on date,
   outcome varchar(20),
   created_at timestamptz default now() not null,
   updated_at timestamptz,
@@ -224,6 +294,67 @@ create table if not exists inf.rait_inquiry (
 create index if not exists ix_inf_rait_inquiry_open on inf.rait_inquiry (tenant_id, due_on) where answered_at is null;
 create index if not exists ix_rait_inquiry_tenant_id on inf.rait_inquiry (tenant_id);
 create index if not exists ix_rait_inquiry_case_id on inf.rait_inquiry (case_id);
+
+create table if not exists inf.rait_inquiry_document (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  inquiry_id uuid not null,
+  document_id uuid not null,
+  attached_at timestamptz default now() not null,
+  attached_by uuid not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_inquiry_document primary key (id),
+  constraint fk_inf_rait_inquiry_document_inquiry foreign key (inquiry_id) references inf.rait_inquiry (id),
+  constraint fk_inf_rait_inquiry_document_document foreign key (document_id) references inf.rait_document (id)
+);
+create unique index if not exists ux_inf_rait_inquiry_document_once on inf.rait_inquiry_document (tenant_id, inquiry_id, document_id);
+create index if not exists ix_rait_inquiry_document_tenant_id on inf.rait_inquiry_document (tenant_id);
+create index if not exists ix_rait_inquiry_document_inquiry_id on inf.rait_inquiry_document (inquiry_id);
+create index if not exists ix_rait_inquiry_document_document_id on inf.rait_inquiry_document (document_id);
+
+create table if not exists inf.rait_pending_document (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  pending_id uuid not null,
+  document_id uuid not null,
+  attached_at timestamptz default now() not null,
+  attached_by uuid not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_pending_document primary key (id),
+  constraint fk_inf_rait_pending_document_pending foreign key (pending_id) references inf.rait_pending_content (id),
+  constraint fk_inf_rait_pending_document_document foreign key (document_id) references inf.rait_document (id)
+);
+create unique index if not exists ux_inf_rait_pending_document_once on inf.rait_pending_document (tenant_id, pending_id, document_id);
+create index if not exists ix_rait_pending_document_tenant_id on inf.rait_pending_document (tenant_id);
+create index if not exists ix_rait_pending_document_pending_id on inf.rait_pending_document (pending_id);
+create index if not exists ix_rait_pending_document_document_id on inf.rait_pending_document (document_id);
+
+create table if not exists inf.rait_withdrawal_attestation (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  case_id uuid not null,
+  document_id uuid not null,
+  signer_party_id uuid not null,
+  verification_method varchar(30) not null,
+  evidence_ref text not null,
+  verified_at timestamptz not null,
+  recorded_by uuid not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_withdrawal_attestation primary key (id),
+  constraint ck_inf_rait_withdrawal_attestation_method check (verification_method in ('physical_verified','digital_verified')),
+  constraint ck_inf_rait_withdrawal_attestation_evidence_ref check (length(btrim(evidence_ref)) > 0),
+  constraint fk_inf_rait_withdrawal_attestation_case foreign key (case_id) references inf.rait_case (id),
+  constraint fk_inf_rait_withdrawal_attestation_document foreign key (document_id) references inf.rait_document (id),
+  constraint fk_inf_rait_withdrawal_attestation_signer foreign key (signer_party_id) references inf.rait_party (id)
+);
+create unique index if not exists ux_inf_rait_withdrawal_attestation_case on inf.rait_withdrawal_attestation (tenant_id, case_id);
+create index if not exists ix_rait_withdrawal_attestation_tenant_id on inf.rait_withdrawal_attestation (tenant_id);
+create index if not exists ix_rait_withdrawal_attestation_case_id on inf.rait_withdrawal_attestation (case_id);
+create index if not exists ix_rait_withdrawal_attestation_document_id on inf.rait_withdrawal_attestation (document_id);
+create index if not exists ix_rait_withdrawal_attestation_signer_party_id on inf.rait_withdrawal_attestation (signer_party_id);
 
 create table if not exists inf.rait_draft (
   id uuid default gen_random_uuid() not null,
@@ -245,7 +376,7 @@ create table if not exists inf.rait_draft (
   constraint ck_inf_rait_draft_version_positive check (version >= 1),
   constraint ck_inf_rait_draft_single_return check (return_count <= 1),
   constraint ck_inf_rait_draft_return_complete check (status <> 'devolvida' or (returned_at is not null and return_guidance is not null)),
-  constraint ck_inf_rait_draft_submitted_required check (status = 'rascunho' or submitted_at is not null),
+  constraint ck_inf_rait_draft_submitted_required check (status = 'rascunho' or (submitted_at is not null and document_id is not null and length(btrim(content_hash)) > 0)),
   constraint fk_inf_rait_draft_case foreign key (case_id) references inf.rait_case (id)
 );
 create unique index if not exists ux_inf_rait_draft_version on inf.rait_draft (tenant_id, case_id, version);
@@ -274,6 +405,8 @@ create table if not exists inf.rait_decision (
   constraint ck_inf_rait_decision_kind check (decision_kind in ('acolhida','indeferida','provido','negado','nao_conhecido')),
   constraint ck_inf_rait_decision_grounds_present check (length(btrim(grounds)) > 0),
   constraint ck_inf_rait_decision_signature_kind check (signature_kind is null or signature_kind = 'PAdES-TSA'),
+  constraint ck_inf_rait_decision_signature_pair check ((signature_kind is null) = (signature_ref is null)),
+  constraint ck_inf_rait_decision_circuit_one_signature check (circuit <> 1 or (signature_kind = 'PAdES-TSA' and signature_ref is not null)),
   constraint fk_inf_rait_decision_case foreign key (case_id) references inf.rait_case (id)
 );
 create unique index if not exists ux_inf_rait_decision_case on inf.rait_decision (tenant_id, case_id);
@@ -331,6 +464,10 @@ select auth.create_rls_policy('inf', 'rait_party');
 
 select auth.create_rls_policy('inf', 'rait_document');
 
+select auth.create_rls_policy('inf', 'rait_priority_assessment');
+
+select auth.create_rls_policy('inf', 'rait_priority_basis');
+
 select auth.create_rls_policy('inf', 'rait_pending_content');
 
 select auth.create_rls_policy('inf', 'rait_redirect');
@@ -340,6 +477,12 @@ select auth.create_rls_policy('inf', 'rait_admissibility');
 select auth.create_rls_policy('inf', 'rait_deadline');
 
 select auth.create_rls_policy('inf', 'rait_inquiry');
+
+select auth.create_rls_policy('inf', 'rait_inquiry_document');
+
+select auth.create_rls_policy('inf', 'rait_pending_document');
+
+select auth.create_rls_policy('inf', 'rait_withdrawal_attestation');
 
 select auth.create_rls_policy('inf', 'rait_draft');
 

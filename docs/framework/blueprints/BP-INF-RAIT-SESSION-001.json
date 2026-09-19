@@ -4,9 +4,10 @@
   "module": {
     "name": "RaitSession",
     "namespace": "inf",
-    "version": "1.1.0",
+    "version": "1.2.2",
     "ddlFile": "36-inf-rait-session.sql",
     "dependencies": {
+      "@detran/inf-deadlines": "workspace:*",
       "@detran/inf-rait-case": "workspace:*",
       "@detran/inf-rait-worklist": "workspace:*"
     },
@@ -26,10 +27,30 @@
       {
         "package": "@detran/inf-rait-worklist",
         "target": "../rait-worklist/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../deadlines/src/index.ts"
       }
     ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/rait-session-commands.controller",
+        "symbol": "RaitSessionCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/rait-session-command.service",
+        "symbol": "RaitSessionCommandService"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/rait-session-commands.controller",
+      "handwritten/rait-session-command.service"
+    ],
     "owners": ["detran-inf"],
-    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA. v1.1.0 acrescenta a modalidade da sessao, o reconhecimento de convocacao curta, o pedido de vista por item e a publicacao da ata (OD-102, OD-103, OD-106 vigentes por steering H.57)."
+    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA. v1.1.0 acrescenta a modalidade da sessao, o reconhecimento de convocacao curta, o pedido de vista por item e a publicacao da ata (OD-102, OD-103, OD-106 vigentes por steering H.57). v1.2.0 fecha o schema aditivo de composicao institucional, concorrencia otimista e ata confiavel multi-signatario conforme ADR-0027, UC-RAIT-020 e WF-RAIT-003, com dependencias explicitas em case, worklist e deadlines e somente leituras CRUD. v1.2.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, sem expor escrita CRUD nem sustentacao oral."
   },
   "database": {
     "entities": [
@@ -120,12 +141,25 @@
             "name": "short_notice_ack",
             "type": "boolean",
             "default": "false"
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1",
+            "additive": true,
+            "writable": false
           }
         ],
         "indexes": [
           {
             "name": "ix_inf_rait_session_body_state",
             "columns": ["tenant_id", "judging_body", "state"]
+          },
+          {
+            "name": "ux_inf_rait_session_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true,
+            "constraint": true
           }
         ],
         "checks": [
@@ -156,6 +190,11 @@
           {
             "name": "ck_inf_rait_session_short_notice_ack",
             "expression": "short_notice_ack_by is null or short_notice_ack"
+          },
+          {
+            "name": "ck_inf_rait_session_version_positive",
+            "expression": "version > 0",
+            "additive": true
           }
         ]
       },
@@ -249,6 +288,13 @@
             "name": "view_due_on",
             "type": "date",
             "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1",
+            "additive": true,
+            "writable": false
           }
         ],
         "indexes": [
@@ -261,6 +307,12 @@
             "name": "ux_inf_rait_agenda_item_position",
             "columns": ["tenant_id", "session_id", "position"],
             "unique": true
+          },
+          {
+            "name": "ux_inf_rait_agenda_item_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true,
+            "constraint": true
           }
         ],
         "checks": [
@@ -283,6 +335,11 @@
           {
             "name": "ck_inf_rait_agenda_item_view_complete",
             "expression": "(view_requested_by is null and view_due_on is null) or (view_requested_by is not null and view_due_on is not null)"
+          },
+          {
+            "name": "ck_inf_rait_agenda_item_version_positive",
+            "expression": "version > 0",
+            "additive": true
           }
         ],
         "foreignKeys": [
@@ -316,7 +373,7 @@
         "name": "RaitAttendance",
         "table": "rait_attendance",
         "primaryKey": ["id"],
-        "description": "Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3).",
+        "description": "Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3). v1.2.0 congela bloco, titularidade, mandato, ato, assento e vigencia institucionais usados para quorum e paridade reproduziveis em WF-RAIT-003 e WF-RAIT-004 secao 6.",
         "fields": [
           {
             "name": "id",
@@ -364,6 +421,69 @@
             "name": "absence_justified",
             "type": "boolean",
             "nullable": true
+          },
+          {
+            "name": "representation_block",
+            "type": "varchar(30)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "membership_kind",
+            "type": "varchar(20)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "mandate_starts_on_snapshot",
+            "type": "date",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "mandate_ends_on_snapshot",
+            "type": "date",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "institutional_seat_ref",
+            "type": "varchar(120)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "appointment_act_ref",
+            "type": "varchar(160)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "institutional_valid_from",
+            "type": "date",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "institutional_valid_to",
+            "type": "date",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "composition_snapshot_hash",
+            "type": "varchar(64)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
           }
         ],
         "indexes": [
@@ -371,6 +491,38 @@
             "name": "ux_inf_rait_attendance",
             "columns": ["tenant_id", "session_id", "member_id"],
             "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_attendance_representation_block",
+            "expression": "representation_block is null or representation_block in ('executivo_estadual','municipal_rodoviario','sociedade_civil')",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_attendance_membership_kind",
+            "expression": "membership_kind is null or membership_kind in ('titular','suplente')",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_attendance_composition_snapshot",
+            "expression": "representation_block is null or (membership_kind is not null and mandate_starts_on_snapshot is not null and institutional_seat_ref is not null and btrim(institutional_seat_ref) <> '' and appointment_act_ref is not null and btrim(appointment_act_ref) <> '' and institutional_valid_from is not null and composition_snapshot_hash is not null)",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_attendance_mandate_order",
+            "expression": "mandate_ends_on_snapshot is null or mandate_starts_on_snapshot is null or mandate_ends_on_snapshot >= mandate_starts_on_snapshot",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_attendance_institutional_validity_order",
+            "expression": "institutional_valid_to is null or institutional_valid_from is null or institutional_valid_to >= institutional_valid_from",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_attendance_composition_snapshot_hash",
+            "expression": "composition_snapshot_hash is null or composition_snapshot_hash ~ '^[0-9a-f]{64}$'",
+            "additive": true
           }
         ],
         "foreignKeys": [
@@ -390,12 +542,34 @@
               "columns": ["id"]
             }
           }
+        ],
+        "deferredForeignKeys": [
+          {
+            "name": "fk_inf_rait_attendance_session_tenant",
+            "columns": ["tenant_id", "session_id"],
+            "references": {
+              "table": "inf.rait_session",
+              "columns": ["tenant_id", "id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_attendance_member_tenant",
+            "columns": ["tenant_id", "member_id"],
+            "references": {
+              "table": "inf.rait_pool_member",
+              "columns": ["tenant_id", "id"]
+            },
+            "referencedUniqueIndex": {
+              "name": "ux_inf_rait_pool_member_tenant_id"
+            }
+          }
         ]
       },
       {
         "name": "RaitVote",
         "table": "rait_vote",
         "primaryKey": ["id"],
+        "immutable": true,
         "description": "Voto individual vinculado a membro e caso (AC-RAIT-006-5). casting_vote marca o desempate do presidente (AC-RAIT-006-6).",
         "fields": [
           {
@@ -534,7 +708,16 @@
         "name": "RaitMinutes",
         "table": "rait_minutes",
         "primaryKey": ["id"],
-        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING).",
+        "immutable": true,
+        "immutableColumns": [
+          "id",
+          "tenant_id",
+          "session_id",
+          "content",
+          "generated_at",
+          "document_hash"
+        ],
+        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING). v1.2.0 preserva campos single-signature apenas como legado legivel; novas atas usam snapshot, manifesto, signatarios e recibos normalizados de ADR-0027 e UC-RAIT-020. v1.2.2 protege o conteudo e a identidade originais contra UPDATE/DELETE/TRUNCATE, permitindo apenas o avanco controlado dos marcos de assinatura e publicacao pelo comando.",
         "fields": [
           {
             "name": "id",
@@ -587,6 +770,13 @@
             "name": "published_at",
             "type": "timestamptz",
             "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1",
+            "additive": true,
+            "writable": false
           }
         ],
         "indexes": [
@@ -594,6 +784,12 @@
             "name": "ux_inf_rait_minutes_session",
             "columns": ["tenant_id", "session_id"],
             "unique": true
+          },
+          {
+            "name": "ux_inf_rait_minutes_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true,
+            "constraint": true
           }
         ],
         "checks": [
@@ -608,6 +804,11 @@
           {
             "name": "ck_inf_rait_minutes_published_needs_signature",
             "expression": "published_at is null or signed_at is not null"
+          },
+          {
+            "name": "ck_inf_rait_minutes_version_positive",
+            "expression": "version > 0",
+            "additive": true
           }
         ],
         "foreignKeys": [
@@ -620,6 +821,486 @@
             }
           }
         ]
+      },
+      {
+        "name": "RaitSessionMinutesSnapshot",
+        "table": "rait_session_minutes_snapshot",
+        "primaryKey": ["id"],
+        "immutable": true,
+        "description": "Snapshot canonico session-minutes-v1, server-owned e imutavel dos registros vivos da sessao, incluindo pauta, presencas, composicao/paridade, quorum por item, relatoria, votos, resultado, vista, retiradas e signatarios requeridos (ADR-0027, UC-RAIT-020 e WF-RAIT-003).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "session_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "snapshot_version",
+            "type": "varchar(30)",
+            "default": "'session-minutes-v1'",
+            "writable": false
+          },
+          {
+            "name": "snapshot",
+            "type": "jsonb",
+            "writable": false
+          },
+          {
+            "name": "snapshot_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "origin",
+            "type": "varchar(40)",
+            "default": "'server_session_records'",
+            "writable": false
+          },
+          {
+            "name": "captured_at",
+            "type": "timestamptz",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_session_minutes_snapshot_session",
+            "columns": ["tenant_id", "session_id"],
+            "unique": true,
+            "constraint": true
+          },
+          {
+            "name": "ux_inf_rait_session_minutes_snapshot_hash",
+            "columns": ["tenant_id", "session_id", "snapshot_hash"],
+            "unique": true,
+            "constraint": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_session_minutes_snapshot_version",
+            "expression": "snapshot_version = 'session-minutes-v1'"
+          },
+          {
+            "name": "ck_inf_rait_session_minutes_snapshot_hash",
+            "expression": "snapshot_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_session_minutes_snapshot_origin",
+            "expression": "origin = 'server_session_records'"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_session_minutes_snapshot_session",
+            "columns": ["tenant_id", "session_id"],
+            "references": {
+              "table": "inf.rait_session",
+              "columns": ["tenant_id", "id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitSessionMinutesManifest",
+        "table": "rait_session_minutes_manifest",
+        "primaryKey": ["id"],
+        "immutable": true,
+        "description": "Manifesto imutavel da ata SESSION_MINUTES preparada pelo servico documental sobre o snapshot server-owned (ADR-0027, UC-RAIT-020 e WF-RAIT-003).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "session_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "minutes_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "content_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "snapshot_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "manifest_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "document_kind",
+            "type": "varchar(40)",
+            "default": "'SESSION_MINUTES'",
+            "writable": false
+          },
+          {
+            "name": "manifest_version",
+            "type": "varchar(40)",
+            "writable": false
+          },
+          {
+            "name": "prepared_at",
+            "type": "timestamptz",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_session_minutes_manifest_minutes",
+            "columns": ["tenant_id", "minutes_id"],
+            "unique": true,
+            "constraint": true
+          },
+          {
+            "name": "ux_inf_rait_session_minutes_manifest_document",
+            "columns": ["tenant_id", "document_id"],
+            "unique": true,
+            "constraint": true
+          },
+          {
+            "name": "ux_inf_rait_session_minutes_manifest_evidence",
+            "columns": [
+              "tenant_id",
+              "minutes_id",
+              "document_id",
+              "content_hash",
+              "snapshot_hash",
+              "manifest_hash"
+            ],
+            "unique": true,
+            "constraint": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_session_minutes_manifest_content_hash",
+            "expression": "content_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_session_minutes_manifest_snapshot_hash",
+            "expression": "snapshot_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_session_minutes_manifest_hash",
+            "expression": "manifest_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_session_minutes_manifest_kind",
+            "expression": "document_kind = 'SESSION_MINUTES'"
+          },
+          {
+            "name": "ck_inf_rait_session_minutes_manifest_version",
+            "expression": "btrim(manifest_version) <> ''"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_session_minutes_manifest_minutes",
+            "columns": ["tenant_id", "minutes_id"],
+            "references": {
+              "table": "inf.rait_minutes",
+              "columns": ["tenant_id", "id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_session_minutes_manifest_snapshot",
+            "columns": ["tenant_id", "session_id", "snapshot_hash"],
+            "references": {
+              "table": "inf.rait_session_minutes_snapshot",
+              "columns": ["tenant_id", "session_id", "snapshot_hash"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitMinutesRequiredSigner",
+        "table": "rait_minutes_required_signer",
+        "primaryKey": ["id"],
+        "immutable": true,
+        "description": "Conjunto server-owned e imutavel de signatarios obrigatorios da ata: presidente efetivo e relatores dos itens, exceto relator formalmente ausente e dispensado no snapshot (ADR-0027, UC-RAIT-020 e WF-RAIT-003).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "minutes_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "person_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "signer_role",
+            "type": "varchar(20)",
+            "writable": false
+          },
+          {
+            "name": "signer_basis",
+            "type": "varchar(40)",
+            "writable": false
+          },
+          {
+            "name": "agenda_item_id",
+            "type": "uuid",
+            "nullable": true,
+            "writable": false
+          },
+          {
+            "name": "derived_at",
+            "type": "timestamptz",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_minutes_required_signer_person",
+            "columns": ["tenant_id", "minutes_id", "person_id"],
+            "unique": true,
+            "constraint": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_minutes_required_signer_role",
+            "expression": "signer_role in ('presidente','relator')"
+          },
+          {
+            "name": "ck_inf_rait_minutes_required_signer_basis",
+            "expression": "signer_basis in ('effective_chair','item_rapporteur')"
+          },
+          {
+            "name": "ck_inf_rait_minutes_required_signer_item",
+            "expression": "(signer_role = 'presidente' and agenda_item_id is null) or (signer_role = 'relator' and agenda_item_id is not null)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_minutes_required_signer_minutes",
+            "columns": ["tenant_id", "minutes_id"],
+            "references": {
+              "table": "inf.rait_minutes",
+              "columns": ["tenant_id", "id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_minutes_required_signer_item",
+            "columns": ["tenant_id", "agenda_item_id"],
+            "references": {
+              "table": "inf.rait_agenda_item",
+              "columns": ["tenant_id", "id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitMinutesSignatureReceipt",
+        "table": "rait_minutes_signature_receipt",
+        "primaryKey": ["id"],
+        "immutable": true,
+        "description": "Recibo append-only e imutavel de verificacao SESSION_MINUTES por signatario requerido, vinculado aos mesmos documento, conteudo, snapshot e manifesto, com PAdES-B-LT, TSA e OCSP/CRL (ADR-0027 e UC-RAIT-020).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "minutes_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "signer_person_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "signature_ref",
+            "type": "text",
+            "writable": false
+          },
+          {
+            "name": "receipt_digest",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "content_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "snapshot_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "manifest_hash",
+            "type": "varchar(64)",
+            "writable": false
+          },
+          {
+            "name": "signature_level",
+            "type": "varchar(20)",
+            "default": "'PAdES-B-LT'",
+            "writable": false
+          },
+          {
+            "name": "tsa_status",
+            "type": "varchar(10)",
+            "writable": false
+          },
+          {
+            "name": "certificate_status",
+            "type": "varchar(10)",
+            "writable": false
+          },
+          {
+            "name": "revocation_method",
+            "type": "varchar(4)",
+            "writable": false
+          },
+          {
+            "name": "signed_at",
+            "type": "timestamptz",
+            "writable": false
+          },
+          {
+            "name": "validated_at",
+            "type": "timestamptz",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_minutes_signature_receipt_signer",
+            "columns": [
+              "tenant_id",
+              "minutes_id",
+              "document_id",
+              "signer_person_id"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ux_inf_rait_minutes_signature_receipt_digest",
+            "columns": ["tenant_id", "receipt_digest"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_digest",
+            "expression": "receipt_digest ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_content_hash",
+            "expression": "content_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_snapshot_hash",
+            "expression": "snapshot_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_manifest_hash",
+            "expression": "manifest_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_level",
+            "expression": "signature_level = 'PAdES-B-LT'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_tsa",
+            "expression": "tsa_status = 'GOOD'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_certificate",
+            "expression": "certificate_status = 'GOOD'"
+          },
+          {
+            "name": "ck_inf_rait_minutes_signature_receipt_revocation",
+            "expression": "revocation_method in ('OCSP','CRL')"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_minutes_signature_receipt_signer",
+            "columns": ["tenant_id", "minutes_id", "signer_person_id"],
+            "references": {
+              "table": "inf.rait_minutes_required_signer",
+              "columns": ["tenant_id", "minutes_id", "person_id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_minutes_signature_receipt_manifest",
+            "columns": [
+              "tenant_id",
+              "minutes_id",
+              "document_id",
+              "content_hash",
+              "snapshot_hash",
+              "manifest_hash"
+            ],
+            "references": {
+              "table": "inf.rait_session_minutes_manifest",
+              "columns": [
+                "tenant_id",
+                "minutes_id",
+                "document_id",
+                "content_hash",
+                "snapshot_hash",
+                "manifest_hash"
+              ]
+            }
+          }
+        ]
       }
     ]
   },
@@ -629,32 +1310,62 @@
       {
         "entity": "RaitSession",
         "path": "sessions",
-        "resource": "rait-session"
+        "resource": "rait-session",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitAgendaItem",
         "path": "agenda-items",
-        "resource": "rait-agenda-item"
+        "resource": "rait-agenda-item",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitAttendance",
         "path": "attendance",
-        "resource": "rait-attendance"
+        "resource": "rait-attendance",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitVote",
         "path": "votes",
-        "resource": "rait-vote"
+        "resource": "rait-vote",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitOralArgument",
         "path": "oral-arguments",
-        "resource": "rait-oral-argument"
+        "resource": "rait-oral-argument",
+        "operations": []
       },
       {
         "entity": "RaitMinutes",
         "path": "minutes",
-        "resource": "rait-minutes"
+        "resource": "rait-minutes",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "RaitSessionMinutesSnapshot",
+        "path": "session-minutes-snapshots",
+        "resource": "rait-session-minutes-snapshot",
+        "operations": []
+      },
+      {
+        "entity": "RaitSessionMinutesManifest",
+        "path": "session-minutes-manifests",
+        "resource": "rait-session-minutes-manifest",
+        "operations": []
+      },
+      {
+        "entity": "RaitMinutesRequiredSigner",
+        "path": "minutes-required-signers",
+        "resource": "rait-minutes-required-signer",
+        "operations": []
+      },
+      {
+        "entity": "RaitMinutesSignatureReceipt",
+        "path": "minutes-signature-receipts",
+        "resource": "rait-minutes-signature-receipt",
+        "operations": []
       }
     ]
   },

@@ -1,0 +1,56 @@
+# Prompt-review independente — CTG-0001 C4, ciclo 1
+
+Você é o reviewer da família Claude, papel Auditor (soft gate), sem autoridade para editar. Trabalhe
+somente em leitura na worktree `/Volumes/Thiamat II/stech/detran-worktrees/rait-backend`. Responda
+exclusivamente um objeto JSON válido, sem markdown, no schema abaixo. Esta é a primeira revisão C4:
+seja exaustivo e apresente todos os achados de uma vez.
+
+## Contexto e leitura fechada
+
+O Owner autorizou quarto ciclo, teto 4 e ampliação para serviços, sensores integration/e2e/DI,
+sensor RLS global AIT e ownership documental de TEAT_EVIDENCE. Modelos vinculantes: Inspector e
+Engineer Sol/high; Architect Astra/medium. Revisão TASK-0022-D1 anterior é FAIL; não confunda
+suítes específicas verdes com entrega integral.
+
+Leia `docs/meta/agents/orchestra/reviewer-prompt.template.md` e os itens 1–13 da rubrica;
+`AGENTS.md`, `CODESTYLE.md`, `docs/meta/agents/architect-blueprint.md`,
+`docs/meta/agents/inspector-tests.md`, `docs/meta/agents/engineer-backend.md`,
+`docs/meta/agents/transcriber-docs.md`; `work/rounds/R-0007/plan.md`,
+`contracts/CTG-0001.md` e `contracts/CTG-0001-C4.md`;
+`reports/TASK-0022-D1.md`, `reports/CTG-0001-C4-PLAN.md`, budget.json,
+compositions.json, tasks TASK-0023/24/25 e TASK-0002-D1/0003-D1/0004-D1,
+e seus seis prompts correspondentes. Consulte somente as fontes canônicas necessárias aos
+achados: WF-RAIT-001, UC-RAIT-017, DDL34, sensor AIT inf-rls.integration.spec.ts,
+error-catalog, events-sse-contract, deadline-engine, WF-RAIT-004 e os serviços handwritten.
+
+Julgue se cada finding material de TASK-0022-D1 tem binding Architect, sensor Inspector,
+implementação Engineer e gate verificável; se a sequência separa escritores, preserva
+max_iterations/histórico, usa allowlists exatas e nenhum gerado manual; se ownership KB é
+fundamentado sem inventar estado; se o sensor AIT prova 88 tabelas incluindo as três novas
+sem enfraquecer RLS; se integration chama services reais e e2e prova efeito/payload/rollback;
+se Clock/DATE, eventos do motor, escopo dinâmico, fila, mensagens/fallbacks e DI negativa
+por provider são demonstráveis; se os gates globais rodam no mesmo candidato; e se budget,
+hashes, PC, modelos e dependências estão coerentes. Uma fonte ambígua deve ser stop condition,
+não default de worker. A revisão é de prompts, não implementação.
+
+Veredito: PASS sem high; REVIEW para high corrigível dentro da autorização; FAIL para contradição
+com fonte/Owner/Constituição ou violação de fronteira. Responda apenas:
+
+{
+"mode": "prompt-review",
+"round": "R-0007",
+"attempt": 2,
+"cycle": "CTG-0001-C4-1",
+"verdict": "PASS",
+"findings": [
+{
+"severity": "high",
+"item": 1,
+"file": "work/rounds/R-0007/prompts/TASK-0023.md",
+"line": 1,
+"claim": "exemplo; omita se nenhum",
+"fix": "correção concreta"
+}
+],
+"notes": []
+}

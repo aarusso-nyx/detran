@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "backend/database/seed.sh",
+      "line": 60,
+      "claim": "Mantido do parecer anterior: o gate legacy-upgrade conta inf.rait_case sem definir app.role/app.tenant_id; sob FORCE RLS com DB_USER não-owner a contagem lê 0 e o perfil é recusado mesmo com baseline presente. Fail-closed (recusa antes de escrever), mas pode produzir recusa falsa dependente do usuário de conexão.",
+      "fix": "Definir contexto (set_config de app.role/app.tenant_id) na consulta do gate ou documentar no cabeçalho que DB_USER deve ser owner/bypass-RLS."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-seed-profiles.integration.spec.ts",
+      "line": 90,
+      "claim": "Mantido do parecer anterior: no timeout de 120s o SIGKILL atinge apenas o wrapper bash; o psql filho pode sobreviver como processo órfão segurando conexão no banco scratch (o drop with force mitiga).",
+      "fix": "Spawnar com detached:true e matar o process group (process.kill(-child.pid, 'SIGKILL')) no timeout."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/database/seed/21-fixtures-rait-fresh.sql",
+      "line": 7,
+      "claim": "Reformulado após leitura do DDL: o default de inf.rait_pool.active foi agora confirmado como `boolean default true not null` (backend/database/ddl/35-inf-rait-worklist.sql:32 — a tabela está no DDL 35, não no 34); o risco de falha ruidosa apontado antes não existe. Resta apenas sugestão de explicitude: o insert do pool fresh omite a coluna active da qual o gate de membership de inf.rait_record_initial_priority depende.",
+      "fix": "Opcionalmente tornar explícito active = true no insert de inf.rait_pool do fixture fresh; sem urgência, o default confirmado já garante o comportamento."
+    }
+  ],
+  "notes": [
+    "Revisão suplementar do MESMO candidato imutável da sessão f77ff1dc; os cinco SHA-256 foram conferidos por mim no início desta sessão e o mandante declara que permanecem idênticos. As três lacunas que motivaram o REVIEW anterior foram fechadas por leitura direta; o REVIEW anterior não é reclassificado retroativamente.",
+    "Lacuna (a) fechada — ADR-0024 lido na íntegra: a emenda de comprovação definitiva no protocolo fixa 'ausência de prioridade comprovada' como default da qualificação concluída (semanticamente none, sem prova negativa), qualificação pelo rait-secretary no ato do protocolo e veda prova nova ou invalidação pós-protocolo sob a política vigente. A fixture fresh coteja exatamente: qualificação por membro secretaria (b0000005) com proofs '[]' → outcome none, assessed_at = protocolled_at, e o guard \\if impede requalificação em reaplicação. A separação fresh/legacy também respeita a fronteira do ADR de não converter indiscriminadamente o acervo null (não apurado) em none: os 20 legados permanecem null intocados.",
+    "Observação não bloqueante do cotejo ADR-0024: a emenda vigente preserva o mecanismo de revisão excepcional do rait-coordinator como capacidade arquitetural futura (condicionada a portaria e nova política versionada), enquanto ddl/19 hoje rejeita qualquer revision <> 1 sob a política ADR-0024-2026-09-16 (postProtocolRevision forbidden). O schema preserva a coluna revision e o histórico imutável, então a capacidade não foi removida; habilitá-la exigirá nova política + migração de DDL, o que é coerente com a emenda. Registrado como nota, não como finding.",
+    "Lacuna (b) fechada — default de active confirmado: inf.rait_pool.active é boolean default true not null em backend/database/ddl/35-inf-rait-worklist.sql:32 (a instrução apontava ddl/34, mas a tabela vive no ddl/35; referência corrigida). O finding item 2 foi reformulado de risco-não-confirmado para sugestão de explicitude; itens 1 e 3 mantidos inalterados.",
+    "Lacuna (c) fechada — varredura dos specs RAIT remanescentes: nenhum spec fora de rait-seed-profiles referencia 21-fixtures-rait-fresh.sql ou executa fatia da seed fresh. rait-priority-upgrade.integration.spec.ts opera exclusivamente sobre parsing/reaplicação de DDL (19-*, 34, 20-rls) e baseline legada de 20 casos (linha 669 exige explicitamente a baseline e declara 'harness never runs seeds'); a variável 'fresh' na linha 1256 é snapshot estrutural de banco recém-aplicado com inf.rait_case vazio, não a seed fresh. O sensor antigo que alegava provar a seed fresh inteira executando só o primeiro INSERT está efetivamente ausente de todos os specs de integração RAIT, e os dois casos runtime permanecem preservados em rait-case-runtime.integration.spec.ts.",
+    "A execução adicional declarada de legacy-upgrade em detran_r7_ctg1_a2 (exit 0, nove arquivos na ordem fechada, commit) é consistente com a lista do perfil em seed.sh:32-43 e com o gate de baseline, mas foi tratada apenas como evidência declarada — não reexecutei banco nesta revisão.",
+    "Veredito PASS: nenhum finding high, nenhuma contradição estrutural, e os três lows remanescentes não são bloqueio material de despacho. Este parecer não declara CTG-0001 concluído, não afirma SQL aplicado em produção e não autoriza merge."
+  ]
+}

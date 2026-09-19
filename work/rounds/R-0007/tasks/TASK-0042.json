@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0042",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Preparar baseline histórico de upgrade RAIT sem execução DB",
+  "description": "Ciclo final OWNER: fixture histórica e harness fail-closed entregues; revisão independente dos deltas PASS e ensaio de upgrade dirigido 18/18 PASS no banco dedicado. O agregado backend:test:ci permanece bloqueado por isolamento/ordem de outras fixtures, fora da autoria desta tarefa.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-priority-upgrade-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0022",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": ["attempt-2", "c4-od-v3", "final-cycle"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-026f572f70267fd8",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "backend/database/tests/prepare-rait-priority-v1-baseline.mjs"
+    ]
+  ],
+  "created_at": "2026-09-17T20:40:04Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-026f572f70267fd8",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Versionar fixture pré-V3 real e preparar harness; sem mutação DB nesta autoria."
+  }
+}

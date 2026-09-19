@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "round", "verdict", "findings", "notes"],
+  "properties": {
+    "mode": { "type": "string", "const": "prompt-review" },
+    "round": { "type": "string", "const": "R-0007" },
+    "verdict": { "type": "string", "enum": ["PASS", "REVIEW", "FAIL"] },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["severity", "item", "file", "line", "claim", "fix"],
+        "properties": {
+          "severity": { "type": "string", "enum": ["high", "low"] },
+          "item": { "type": "integer", "minimum": 1, "maximum": 13 },
+          "file": { "type": "string", "minLength": 1 },
+          "line": { "type": "integer", "minimum": 1 },
+          "claim": { "type": "string", "minLength": 1 },
+          "fix": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  }
+}

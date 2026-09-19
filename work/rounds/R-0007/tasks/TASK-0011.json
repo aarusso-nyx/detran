@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0007",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implement infraction commands consumers timers and policy",
+  "description": "Implement handwritten infraction behavior and deadline sweep plus policy and integration wiring against immutable tests. Fontes/decisoes historicamente referidas: WF-INF-003; ADR-0016; OD-301…305. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-inf-infraction",
+    "MOD-inf-deadlines",
+    "MOD-shared-policy",
+    "MOD-root-scripts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 11,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-9865eadbd7011aab",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-infraction", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-infraction", "test:integration"],
+    ["pnpm", "--filter", "@detran/inf-deadlines", "test"],
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-9865eadbd7011aab",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

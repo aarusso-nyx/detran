@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0048",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar sessão e pauta produtivas",
+  "description": "Engineer 1/2 implementou a porta same-transaction do caso, os sete handlers manuscritos de sessão/pauta, política nominal estrita e supressão de auditoria HTTP duplicada. Typechecks case/session/shared/app PASS; sensor unit TASK-0047 18/18, policy 43/43 e auditoria 7/7 PASS. Checkpoint: a porta não pode ser reexportada pelo índice gerado sem violar o allowlist; o único RED da porta aguarda o hook/export oficial da TASK-0008. O sensor TASK-0049 tem regex que exige barra literal no código de desempate e permanece RED contra o código canônico. Nenhuma alteração em testes, DDL, blueprint, gerados, banco, seed ou record.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-worklist-session", "MOD-bp-rait-session"],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0063",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "session-agenda"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-9cc2680159d33416",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-19T08:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-9cc2680159d33416",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Runtime/porta/policy session-agenda; testes e gerados imutáveis."
+  },
+  "closure_reconciliation": {
+    "date": "2026-09-19",
+    "result": "PASS",
+    "basis": "A porta same-transaction e os sete comandos de sessao/pauta foram compostos pelos blueprints e passaram unit, integration e app E2E no runner oficial final."
+  }
+}

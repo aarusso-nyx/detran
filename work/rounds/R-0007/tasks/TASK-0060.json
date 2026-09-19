@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0060",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Congelar RED produtivo dos seis comandos worklist",
+  "description": "Inspector 2/2 congelou seis sensores novos do caminho produtivo, sem tocar produção ou sensores congelados. Resultado focal: 18 testes coletados, 3 PASS SQL em banco dedicado somente com rollback (schema/versionamento/RLS/imutabilidade e 20 casos preservados) e 15 RED funcionais: 6 comandos caem em RAIT.VALIDATION_FAILED porque o serviço produtivo despacha somente draw/reassign; o sensor unitário captura resolve/reject e aceita guarda posterior verdadeira do DB fake vazio, exigindo somente que o dispatcher não devolva RAIT.VALIDATION_FAILED; preparação/recuperação server-owned da manifestação e delegação de RaitDocumentTrustVerifier inexistem; auditoria transacional worklist ainda delega ao STYNX; HTTP não coleta o handler nominal create-schedule após a supressão do CRUD, em vez do único handler manuscrito. Prettier e diff --check PASS; typecheck worklist PASS. Typecheck app foi validado e permanece RED por defeito pré-existente de produção RaitDocumentTrustVerifier: falta implementar o membro abstrato verifyBatchMinutesEvidence. SHA-256: shared 772e4ac93de6cade61484e9ed592be2d4d9f538951773c85198d95363d06a475; wrapper c8ab8260a9b1fd23a17e429c103c041351307a5a9b28e04589a30e8c8d228ed7; unit 7163bde583523dc58c77418de479433474049146f5e4849c503765e98b8e260f; integration 4f5443cc0bd98cbaa7de78ececf7df6ad75f430cf2f61d6a4368660d038e24d0; audit e81824dd040e5a99e0fd08a5d738360aa385f1db51ad2f21b4b14ad85d570d0d; e2e 4a64983bb2c2bad37dde68adb3e10a8775c5d530cc2aadcfb0171535d5b836b1. RED é executável e não decorre de coleta, URL errada ou reset.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-contract-document-trust",
+    "MOD-bp-rait-worklist"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0059",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "production-red"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-b39500086a04d2af",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"]
+  ],
+  "created_at": "2026-09-19T02:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-b39500086a04d2af",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente sensores novos do caminho produtivo worklist."
+  }
+}

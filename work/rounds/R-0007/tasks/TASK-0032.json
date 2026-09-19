@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0032",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Sensores independentes da idempotência DDL05",
+  "description": "OWNER-authorized narrow DDL05 corrective cycle. Inspector Sol/High completed two exact tests/ paths in iteration 1/1; a model-capacity transport interruption was continued on the same agent and did not reset the attempt. Static sensor frozen SHA-256 8b11100a794e90facf39618145772df71aadcc54415370a210dbdcdb8b06f72a: four collected, three PASS and one genuine contract RED on baseline DDL05, zero skip/todo. Future DB sensor frozen SHA-256 4b3cb00df7a9e71352123d50795cd8500f822721a2d34b7bae1ebf24a56bebde: syntax and Prettier PASS, NOT executed or connected to DB. TASK-0028 sensor unchanged. Single writer, MOD-role-catalog-ddl lock released; estimate 50000/8000 tokens window19, not measured; no retry.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-role-catalog-ddl"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0031",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": [
+    "attempt-2",
+    "c4-od-v3",
+    "ddl05-corrective",
+    "completed-static-red-db-pending"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-515aee208e9baff8",
+  "acceptance_commands": [
+    ["node", "--test", "backend/database/tests/ddl05-role-catalog.test.mjs"],
+    [
+      "node",
+      "--check",
+      "backend/database/tests/ddl05-role-catalog.integration.test.mjs"
+    ]
+  ],
+  "created_at": "2026-09-16T22:33:29Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-515aee208e9baff8",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Sensores independentes da idempotência DDL05",
+    "planned_files": [
+      "backend/database/tests/ddl05-role-catalog.test.mjs",
+      "backend/database/tests/ddl05-role-catalog.integration.test.mjs"
+    ]
+  }
+}

@@ -62,8 +62,6 @@ export type DetranRuntimeProfile =
 
 const LOCAL_TENANT_ID =
   process.env.DETRAN_LOCAL_TENANT_ID ?? '00000000-0000-7000-8000-000000000001';
-const LOCAL_ACTOR_ID =
-  process.env.DETRAN_LOCAL_ACTOR_ID ?? '00000000-0000-4000-8000-000000000002';
 
 export function detranRuntimeProfile(): DetranRuntimeProfile {
   const raw =
@@ -314,7 +312,9 @@ export class DetranLocalTokenVerifier implements TokenVerifier {
       .map((role) => role.trim())
       .filter(Boolean);
     const principal: Principal = {
-      id: LOCAL_ACTOR_ID,
+      id:
+        process.env.DETRAN_LOCAL_ACTOR_ID ??
+        '00000000-0000-4000-8000-000000000002',
       username: 'detran-local',
       roles,
       permissions: permissionsForRoles(roles),

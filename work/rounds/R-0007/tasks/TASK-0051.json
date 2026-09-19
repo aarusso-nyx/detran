@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0051",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Reparar dois sensores worklist sem relaxar RED",
+  "description": "Ciclo corretivo OWNER CTG-0002: reparar transação abortada no teste SQL e dois tipos de evento não contratados; preservar TASK-0045 2/2.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-worklist-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0045",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 6,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "sensor-repair"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-aae96f3621ab8e1e",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-worklist",
+      "test:integration",
+      "--passWithNoTests=false"
+    ]
+  ],
+  "created_at": "2026-09-18T03:34:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-aae96f3621ab8e1e",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": { "summary": "Apenas dois arquivos de sensor; sem produto." }
+}

@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0031",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contrato delimitado de idempotência DDL05",
+  "description": "OWNER-authorized narrow DDL05 corrective cycle. Architect Astra/Medium completed semantic contract, sole output contracts/CTG-0001-C4-OD-V3-DDL05-IDEMPOTENCE.md SHA-256 3a2e22f9e5c0a2959ffe11247141bed088b3493dab70bc30cd91a90e78e7c496, Prettier PASS. Prompt-review candidate b3f47879cc36e9ecea4e937a05ad801950fd005676a1babceda4f2fa770804f0 PASS zero high/three low; contract records dispatch clarifications as post-freeze supplements, not original prompt. One iteration 1/1, original 25000/5000 estimate not measured. No product/SQL/DB write; TASK-0029 remains checkpoint 1/1.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-role-catalog-ddl"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0028",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": [
+    "attempt-2",
+    "c4-od-v3",
+    "ddl05-corrective",
+    "completed-after-prompt-review"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-271dae2a67a0be4f",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--ignore-path",
+      "/dev/null",
+      "--check",
+      "work/rounds/R-0007/contracts/CTG-0001-C4-OD-V3-DDL05-IDEMPOTENCE.md"
+    ]
+  ],
+  "created_at": "2026-09-16T22:33:29Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-astra",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-6-astra" },
+    "prompt_composition_id": "PC-271dae2a67a0be4f",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Contrato delimitado de idempotência DDL05",
+    "planned_files": [
+      "work/rounds/R-0007/contracts/CTG-0001-C4-OD-V3-DDL05-IDEMPOTENCE.md"
+    ]
+  }
+}

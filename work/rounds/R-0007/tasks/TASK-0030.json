@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0030",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Geração oficial dos derivados de parâmetros",
+  "description": "C4-OD V3 Architect historical 1/1 completed. Official three generated derivatives retain hashes: seed 678643bd4b05adfa2e378eaf42197bf414bd1112bcc850fa751b9fdf74fb0003, flags 90288b0907f7dee5c10e477668e6e52203c089386459693b0d348178d38f8a88, catalogue 6214d76b3a593fc52715b2ff1c04cf0a9bd4856c5eb0b7f1b0bcdec1375decd1. Second generation zero drift; parameters:test 26/26 PASS, verify:parameter-catalogue 87 entries/18 flags/zero errors; dedicated disposable DB TASK-0028 18/18 PASS. SQL2 historical independent REVIEW accepted for progression only under ADR-0026 OWNER waiver of legacy queue high, not converted to PASS. No production seed or DB application. DEVAI generic proof sequence 28. Estimate 40000/6000 not measured; no counter reset.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-parameter-generated"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0029",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3", "planned-not-dispatched"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-f69a151e4260c0b7",
+  "acceptance_commands": [
+    ["pnpm", "parameters:test"],
+    ["pnpm", "verify:parameter-catalogue"]
+  ],
+  "created_at": "2026-09-16T18:10:57Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-f69a151e4260c0b7",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Geração oficial dos derivados de parâmetros",
+    "planned_files": [
+      "backend/database/seed/05-parameters.sql",
+      "backend/app/src/generated/parameter-flags.ts",
+      "backend/domains/ops/parameter/src/generated/parameter-catalogue.ts"
+    ]
+  }
+}

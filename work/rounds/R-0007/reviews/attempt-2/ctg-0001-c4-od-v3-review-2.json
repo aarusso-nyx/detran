@@ -1,0 +1,14 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "LOW-1 FECHADO: work/rounds/R-0007/tasks/TASK-0002-D1.json linhas 11-16 agora declara exatamente quatro target_modules (MOD-rait-case-tests, MOD-shared-document-tests, MOD-shared-policy-tests, MOD-policy-routes-tests), sem MOD-rait-priority-upgrade-tests; planned_files permanece inalterado sem rait-priority-upgrade.integration.spec.ts; TASK-0020-V3.md linha 54 mantém o sensor de upgrade de TASK-0028 como leitura, não escrita, e a allowlist do prompt coincide path a path com planned_files; MOD-rait-priority-upgrade-tests fica com dono único TASK-0028 (índice linha 19).",
+    "LOW-2 FECHADO: C4-OD-V3-INDEX.md linha 24 lista os quatro módulos de TASK-0020 e linha 25 os quatro de TASK-0021 (incluindo MOD-shared-documents), idênticos aos arrays target_modules de TASK-0002-D1.json e TASK-0003-D1.json linhas 11-16; a linha 28 declara explicitamente os registros governados como fonte de verdade dos locks e preserva a trava global de escritor na worktree com banco serializado.",
+    "Escopo do delta confirmado documentalmente: ctg-0001-c4-od-v3-review-2.delta.json registra somente os dois arquivos com before/after e identifica o candidato anterior 7120152a…; o conteúdo after coincide byte a byte com os arquivos lidos no disco; a conferência de hashes SHA-256 e da imutabilidade dos demais 183 inputs é do adaptador e não foi executada por mim; nenhum comando, teste, geração ou banco foi executado.",
+    "As duas alterações são estritamente subtrativas/de alinhamento: nenhuma ampliação de allowlist, nenhum novo path de escrita, nenhuma mudança de produto, de decisão Owner ou de ordem de execução; o PASS documental F1-F8 de REVIEW-1 permanece mantido e não foi reaberto, conforme regra de ciclo (avaliar somente as correções; nenhum FAIL por contradição canônica encontrado em texto inalterado).",
+    "A observação não bloqueante de REVIEW-1 sobre a equivalência das formas pnpm test:integration versus DETRAN_TEST_TIER + vitest run permanece opcional e não foi convertida em finding, pois o texto correspondente não mudou neste delta.",
+    "Este PASS aprova apenas o pacote documental final congelado por ctg-0001-c4-od-v3-review-2.manifest.json e libera o despacho futuro conforme o índice; não declara SQL aplicado, implementação, RED/GREEN, delivery-review, commit, PR ou merge."
+  ]
+}

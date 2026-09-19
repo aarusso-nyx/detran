@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0021",
+  "round_id": "R-0007",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Corrigir execução transacional sem fail-open",
+  "description": "C4 historical execution state preserved (3/4). V3 active prompt SHA-256: d862ca558d5b34d2dceb4fbdefe96863b5dc158090e8b4c3c5690e796e7f8b86. V3 package preparation only; future execution still requires independent PASS and dispatch. Historical prompt composition remains in compositions.json.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-case",
+    "MOD-shared-documents",
+    "MOD-shared-policy",
+    "MOD-app-wiring"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0020",
+  "db_isolation": "database",
+  "iteration_count": 3,
+  "max_iterations": 4,
+  "priority": 3,
+  "tags": [
+    "attempt-2",
+    "delivery-recovery-c3",
+    "alias-TASK-0003-D1",
+    "c4-od-v3"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-ee1eb3fb981849cd",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/shared",
+      "test",
+      "src/policy.spec.ts",
+      "--passWithNoTests=false"
+    ],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/rait-case-runtime.integration.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-15T23:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-ee1eb3fb981849cd",
+    "max_iterations": 4,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "C4-OD V3 future bounded engineer task; active prompt work/rounds/R-0007/prompts/TASK-0021-V3.md",
+    "planned_files": [
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "backend/domains/inf/rait-case/src/handwritten/rait-inquiry-command.service.ts",
+      "backend/domains/inf/rait-case/src/handwritten/rait-case-commands.controller.ts",
+      "backend/domains/inf/rait-case/src/handwritten/rait-inquiry-commands.controller.ts",
+      "backend/domains/inf/rait-case/src/handwritten/rait-document-trust.verifier.ts",
+      "backend/domains/inf/rait-case/src/handwritten/rait-operation-clock.ts",
+      "backend/domains/shared/src/documents/document-trust.ts",
+      "backend/domains/shared/src/documents/document-trust.http-adapter.ts",
+      "backend/domains/shared/src/documents/index.ts",
+      "backend/domains/shared/src/policy.ts",
+      "backend/app/src/rait-transactional-audit.interceptor.ts",
+      "backend/app/src/detran-error.filter.ts",
+      "backend/app/src/detran-policy-error.guard.ts",
+      "backend/app/src/app.module.ts",
+      "backend/database/seed/20-fixtures-rait.sql"
+    ]
+  }
+}
