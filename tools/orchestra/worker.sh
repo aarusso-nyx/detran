@@ -6,7 +6,8 @@
 # maestro confere `git status`), e o relatório final vai para <relatorio.md>; o transcript fica ao lado.
 #
 # Uso: tools/orchestra/worker.sh <modelo> <esforco> <prompt.md> <relatorio.md> [<worktree>]
-#   codex exec -m <modelo> -c model_reasoning_effort=<esforco> -C <worktree> -s workspace-write \
+#   codex exec -m <modelo> -c model_reasoning_effort=<esforco> -c sandbox_workspace_write.network_access=true \
+#              -C <worktree> -s workspace-write \
 #              --skip-git-repo-check --json -o <relatorio> - < prompt  > <relatorio>.jsonl
 set -euo pipefail
 
@@ -21,7 +22,7 @@ mkdir -p "$(dirname "$out")"
 
 started="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 head_before="$(git -C "$cwd" rev-parse HEAD)"
-codex exec -m "$model" -c "model_reasoning_effort=\"$effort\"" -C "$cwd" -s workspace-write \
+codex exec -m "$model" -c "model_reasoning_effort=\"$effort\"" -c "sandbox_workspace_write.network_access=true" -C "$cwd" -s workspace-write \
   --skip-git-repo-check --json -o "$out" - < "$prompt" > "${out%.md}.jsonl"
 ended="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 head_after="$(git -C "$cwd" rev-parse HEAD)"
