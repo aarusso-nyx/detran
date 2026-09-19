@@ -1,4 +1,4 @@
-// Generated from BP-OPS-EVIDENCE-001 v1.0.0 sha256:a8692e7ee4171aea45d3aa6a8ca457251f3005b1dc05d1b03e2aa5ebc8f1923f
+// Generated from BP-OPS-EVIDENCE-001 v1.1.0 sha256:e739cf21c78ced39113911fbf0c9950d0c2091ab58cc4efedee4225786fe9eac
 export * from './controllers/evidence.controller.js';
 export * from './dto/create-evidence.dto.js';
 export * from './entities/evidence.entity.js';
@@ -35,6 +35,22 @@ export * from './entities/storage-intent.entity.js';
 export * from './repositories/storage-intent.repository.js';
 export * from './services/storage-intent.service.js';
 export * from './evidence.module.js';
+export * from './handwritten/evidence-runtime.js';
+export * from './handwritten/manifest.js';
+export * from './handwritten/events.js';
+export * from './handwritten/bodycam-projection.js';
+export * from './handwritten/local-evidence-storage.js';
+export * from './handwritten/initiate-upload.command.js';
+export * from './handwritten/complete-upload.command.js';
+export * from './handwritten/validate-evidence.command.js';
+export * from './handwritten/link-evidence.command.js';
+export * from './handwritten/add-custody-event.command.js';
+export * from './handwritten/generate-probative-package.command.js';
+export * from './handwritten/purge-unverified.command.js';
+export * from './handwritten/create-access-request.command.js';
+export * from './handwritten/decide-access-request.command.js';
+export * from './handwritten/deliver-access-request.command.js';
+export * from './handwritten/evidence-commands.service.js';
+export * from './handwritten/evidence-commands.provider.js';
 export * from './handwritten/evidence-custody.controller.js';
-export * from './handwritten/evidence-custody.provider.js';
-export * from './handwritten/evidence-custody.service.js';
+export * from './handwritten/evidence-access.controller.js';

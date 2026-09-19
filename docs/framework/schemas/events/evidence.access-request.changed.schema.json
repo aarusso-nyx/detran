@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/evidence.access-request.changed.schema.json",
+  "title": "evidence.access-request.changed",
+  "description": "Entrega de mídia de um pedido de acesso a evidência restrita (CTG-0003 §4.11/§8) — único evento da família de acesso com token.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "evidence.access-request.changed"
+    },
+    "domainEvent": {
+      "const": "CUSTODIA_EVENTO"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "evidence"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidenceId",
+        "accessRequestId",
+        "custodyEventId",
+        "eventType",
+        "requesterRole",
+        "eventAt"
+      ],
+      "properties": {
+        "evidenceId": {
+          "type": "string"
+        },
+        "accessRequestId": {
+          "type": "string"
+        },
+        "custodyEventId": {
+          "type": "string"
+        },
+        "eventType": {
+          "const": "access_delivered"
+        },
+        "requesterRole": {
+          "type": "string",
+          "enum": [
+            "magistrado",
+            "ministerio-publico",
+            "defensoria-publica",
+            "autoridade-policial",
+            "autoridade-administrativa"
+          ]
+        },
+        "eventAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

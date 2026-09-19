@@ -292,9 +292,13 @@ function moduleFile(bp, sha, module, entities) {
       ),
     )
     .join('\n');
+  // Handwritten controllers register before the generated CRUD ones so that
+  // literal command routes (e.g. `mobile-packages/sync-metadata`,
+  // `evidence/{id}` projections) win over generated `:id` catch-alls
+  // (R-0008 CTG-0003, Architect).
   const controllers = [
-    ...entities.map((entity) => `${entity.name}Controller`),
     ...handwrittenControllers.map(({ symbol }) => symbol),
+    ...entities.map((entity) => `${entity.name}Controller`),
   ];
   const providers = [
     ...entities.flatMap((entity) => [

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0010",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Estender o gate de contratos de comandos para BOAT sem afrouxar a validação TEAT",
+  "description": "Validar códigos BOAT contra o catálogo BOAT e varrer controladores est/crash, com testes de aceitação e regressão.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contracts-check"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0011",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-b3", "contracts"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-3d900bcf29ddfeee",
+  "acceptance_commands": [
+    ["pnpm", "contracts:test"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-3d900bcf29ddfeee",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

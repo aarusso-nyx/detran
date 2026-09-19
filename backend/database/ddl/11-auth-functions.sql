@@ -75,7 +75,7 @@ BEGIN
      AND table_info.table_name = column_info.table_name
     WHERE column_info.column_name = 'tenant_id'
       AND table_info.table_type = 'BASE TABLE'
-      AND column_info.table_schema IN ('auth', 'audit', 'storage', 'integration', 'inf', 'est', 'ch', 'ops')
+      AND column_info.table_schema IN ('auth', 'audit', 'storage', 'integration', 'inf', 'est', 'ch', 'ops', 'portal')
       AND NOT EXISTS (
         SELECT 1
         FROM pg_inherits inheritance

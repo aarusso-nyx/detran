@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0009",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Atualizar portal-build-pack.md (WP-P0…P3 executados, correções de comandos), ADR-0019 (Implementação: PR), portal-route-contract.md §11 conferido, OD-P14…P21 e backlog",
+  "description": "Transcrever o que foi entregue nos documentos de arquitetura e conhecimento; registrar as OD abertas pela rodada; nada de decisão nova.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs-portal"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0009",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p3", "docs"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-6ba6a8694f71b29a",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-6ba6a8694f71b29a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -36,15 +36,15 @@ import {
   StynxAuthModule as FullStynxAuthModule,
 } from '@stynx-nyx/auth';
 import { StynxSessionsModule } from '@stynx-nyx/sessions';
-import { Observable } from 'rxjs';
+import { defer, from, mergeMap, Observable } from 'rxjs';
 import { createSenatranAdapter } from '@detran/senatran-adapter';
 import { SefazHttpAdapter } from '@detran/sefaz-adapter';
 import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
-
 import {
   DETRAN_ACTION_METADATA_KEY,
   DETRAN_PUBLIC_METADATA_KEY,
   DETRAN_RESOURCE_METADATA_KEY,
+  DetranError,
   DetranPolicyGuard,
 } from '@detran/shared';
 import { BiometricsModule } from '@detran/ch-biometrics';
@@ -68,6 +68,11 @@ import { SchedulingModule } from '@detran/ch-scheduling';
 import { TelehealthModule } from '@detran/ch-telehealth';
 import { ToxicologyModule } from '@detran/ch-toxicology';
 import { ComplaintsModule } from '@detran/portal-complaints';
+import { IdentityModule } from '@detran/portal-identity';
+import { RequestsModule } from '@detran/portal-requests';
+import { InboxModule } from '@detran/portal-inbox';
+import { CitizenServiceModule } from '@detran/portal-citizen-service';
+import { ProjectionsModule } from '@detran/portal-projections';
 import { AitModule } from '@detran/inf-ait';
 import { AlcoholModule } from '@detran/inf-alcohol';
 import { MeasuresModule } from '@detran/inf-measures';
@@ -76,6 +81,7 @@ import { RaitCaseModule } from '@detran/inf-rait-case';
 import { RaitSessionModule } from '@detran/inf-rait-session';
 import { RaitWorklistModule } from '@detran/inf-rait-worklist';
 import { SpeedModule } from '@detran/inf-speed';
+import { CrashModule } from '@detran/est-crash';
 import { AgencyModule } from '@detran/ops-agency';
 import { EvidenceModule } from '@detran/ops-evidence';
 import { FieldModule } from '@detran/ops-field';
@@ -101,8 +107,32 @@ import {
   detranTokenVerifier,
   detranRuntimeProfile,
   detranFeatureFlagSet,
+  detranPortalHostnameDirectory,
   isLocalRuntimeProfile,
+  portalHostOf,
+  portalRequestHostStorage,
+  seedPortalPublicRequest,
+  type PortalPublicRequestLike,
 } from './detran-runtime.js';
+import { PortalDelegationTargetsModule } from './portal-delegation.providers.js';
+import { PortalNationalReadPortsModule } from './portal-national-read.providers.js';
+import { PortalStreamController } from './portal-stream.controller.js';
+import {
+  PORTAL_STREAM_POLLER,
+  PortalStreamService,
+} from './portal-stream.service.js';
+import { TeatSyncModule } from './teat-sync.providers.js';
+import { TeatEvidencePortsModule } from './teat-evidence.providers.js';
+import { TeatSnapshotPortsModule } from './teat-snapshots.providers.js';
+import { TeatMeasuresPortsModule } from './teat-measures.providers.js';
+import { TeatStreamController } from './teat-stream.controller.js';
+import {
+  createDefaultTeatStreamPoller,
+  TEAT_STREAM_POLLER,
+  TeatStreamService,
+} from './teat-stream.service.js';
+import { TeatIntegrationsController } from './teat-integrations.controller.js';
+import { TeatIntegrationsService } from './teat-integrations.service.js';
 import {
   DetranSessionReadinessBinder,
   DetranSessionStrongFactorGuard,
@@ -170,7 +200,37 @@ function patchTenantContextInterceptorOrdering(): void {
       actor?: { id?: string };
       user?: { id?: string };
       tenantId?: string;
+      portalPublic?: { tenantId: string; actorId: string };
     }>();
+    if (request.portalPublic) {
+      // Rotas `@Public()` de `/v1/portal/*` (R-0009 CTG-0001 §8/§9, M11): sem
+      // sessão nem membership, o tenant já foi resolvido pelo Host/X-Tenant-Id
+      // em `seedPortalPublicRequest` (guard de autenticação do app). O
+      // interceptor de tenancy do STYNX exige X-Tenant-Id + ator com
+      // membership ativa — inaplicável a uma leitura pública —, por isso o
+      // contexto é semeado aqui com o ator nominal (OD-P27) e o interceptor
+      // publicado não é chamado para essas rotas.
+      const { tenantId, actorId } = request.portalPublic;
+      return new Observable((subscriber) => {
+        let subscription: { unsubscribe(): void } | undefined;
+        this.requestContextMutator.runWithRequestContext(
+          {
+            requestId: generateRequestId(),
+            startedAt: new Date(),
+            tenantId,
+            actorId,
+          },
+          () => {
+            subscription = next.handle().subscribe({
+              next: (value) => subscriber.next(value),
+              error: (error) => subscriber.error(error),
+              complete: () => subscriber.complete(),
+            });
+          },
+        );
+        return () => subscription?.unsubscribe();
+      });
+    }
     return new Observable((subscriber) => {
       let subscription: { unsubscribe(): void } | undefined;
       const actorId =
@@ -200,6 +260,128 @@ export const detranPostgresReadiness = new DetranPostgresReadiness();
 export const detranSessionReadiness = new DetranSessionReadiness();
 export const detranClinicalTrustReadiness = new DetranClinicalTrustReadiness();
 
+/** BOAT victim health data requires a declared purpose and a dedicated audit. */
+@Injectable()
+export class BoatVictimPurposeInterceptor {
+  constructor(
+    private readonly requestContext: RequestContext,
+    private readonly requestContextMutator: RequestContextMutator,
+  ) {}
+
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    const request = context.switchToHttp().getRequest<{
+      method?: string;
+      originalUrl?: string;
+      params?: Record<string, string | undefined>;
+      query?: Record<string, string | undefined>;
+      user?: { id?: string; roles?: string[] };
+      principal?: { id?: string };
+      tenantId?: string;
+      headers?: Record<string, string | undefined>;
+    }>();
+    const path = (request.originalUrl ?? '').split('?', 1)[0];
+    if (
+      request.method !== 'GET' ||
+      !/^\/v1\/est\/crash\/victims(?:\/[^/]+)?$/.test(path)
+    )
+      return next.handle();
+    const purpose = request.query?.purpose?.trim();
+    if (!purpose)
+      throw new DetranError('BOAT.VICTIM_PURPOSE_REQUIRED', {
+        status: 400,
+        context: {},
+      });
+    const work = () =>
+      defer(() => {
+        const snapshot = this.requestContext.snapshot();
+        if (!snapshot.tenantId)
+          throw new DetranError('BOAT.TENANT_MISMATCH', {
+            status: 404,
+            context: {},
+          });
+        return from(
+          detranAuditSink.write({
+            occurredAt: new Date().toISOString(),
+            tenantId: snapshot.tenantId,
+            actorId: snapshot.actorId,
+            actorRole: request.user?.roles?.[0],
+            action: 'EST_CRASH_VICTIM_READ',
+            entity: 'est.crash_victim',
+            entityId: request.params?.id,
+            metadata: { purpose },
+          }),
+        ).pipe(mergeMap(() => next.handle()));
+      });
+    if (this.requestContext.hasActiveContext()) return work();
+    return new Observable((subscriber) => {
+      let subscription: { unsubscribe(): void } | undefined;
+      this.requestContextMutator.runWithRequestContext(
+        {
+          requestId: generateRequestId(),
+          startedAt: new Date(),
+          tenantId: request.tenantId ?? request.headers?.['x-tenant-id'],
+          actorId: request.principal?.id ?? request.user?.id,
+        },
+        () => {
+          subscription = work().subscribe({
+            next: (value) => subscriber.next(value),
+            error: (error) => subscriber.error(error),
+            complete: () => subscriber.complete(),
+          });
+        },
+      );
+      return () => subscription?.unsubscribe();
+    });
+  }
+}
+
+/**
+ * R-0009 CTG-0002 §2.8 (adenda A4(b), OD-P30): a única rota `@Public()` com
+ * autenticação OPORTUNISTA é `POST /v1/portal/manifestations` (H.51 "anônimo
+ * para manifestar, simples para acompanhar"). Quando o cabeçalho
+ * `Authorization` está presente, o guard interno tenta autenticar (principal e
+ * tenancy STYNX normais); qualquer falha → segue anônimo
+ * (`seedPortalPublicRequest`). Nunca 401/403 nessa rota.
+ */
+export function isPortalOptionalAuthPath(
+  path: string,
+  method: string | undefined,
+): boolean {
+  return (
+    (method ?? '').toUpperCase() === 'POST' &&
+    path.split('?', 1)[0] === '/v1/portal/manifestations'
+  );
+}
+
+type PortalPublicRequest = PortalPublicRequestLike & {
+  method?: string;
+  originalUrl?: string;
+};
+
+async function activatePublicPortalRoute(
+  request: PortalPublicRequest,
+  authenticate: () => boolean | Promise<boolean>,
+): Promise<boolean> {
+  const path = request.path ?? request.originalUrl ?? request.url ?? '';
+  const authorization = request.headers?.authorization;
+  const hasAuthorization =
+    typeof authorization === 'string' && authorization.trim().length > 0;
+  if (isPortalOptionalAuthPath(path, request.method) && hasAuthorization) {
+    try {
+      const authenticated = await portalRequestHostStorage.run(
+        portalHostOf(request.headers),
+        () => authenticate(),
+      );
+      if (authenticated) return true;
+    } catch {
+      // credencial inválida/expirada: a manifestação segue anônima (§2.8)
+    }
+  }
+  // R-0009 CTG-0001 §9: tenant das rotas públicas do Portal pelo Host.
+  seedPortalPublicRequest(request);
+  return true;
+}
+
 @Injectable()
 export class DetranLegacyAuthContextGuard implements CanActivate {
   constructor(
@@ -212,13 +394,19 @@ export class DetranLegacyAuthContextGuard implements CanActivate {
       DETRAN_PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    if (isPublic) return true;
-    const request = context
-      .switchToHttp()
-      .getRequest<{ path?: string; url?: string }>();
+    const request = context.switchToHttp().getRequest<PortalPublicRequest>();
+    if (isPublic) {
+      return activatePublicPortalRoute(request, () =>
+        this.inner.canActivate(context),
+      );
+    }
     const path = request.path ?? request.url ?? '';
     if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
-    return this.inner.canActivate(context);
+    // R-0009 CTG-0001 §9: `TenantResolverContext` não expõe o Host; o guard
+    // interno (e `DetranTenantResolver.resolve`) roda dentro deste escopo.
+    return portalRequestHostStorage.run(portalHostOf(request.headers), () =>
+      this.inner.canActivate(context),
+    );
   }
 }
 
@@ -235,97 +423,110 @@ export class DetranStynxAuthContextGuard implements CanActivate {
       DETRAN_PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    if (isPublic) return true;
     const request = context.switchToHttp().getRequest<
-      RequestLike & {
-        path?: string;
-        url?: string;
-        tenantId?: string;
-        actor?: { id?: string };
-      }
+      PortalPublicRequest &
+        RequestLike & {
+          path?: string;
+          url?: string;
+          tenantId?: string;
+          actor?: { id?: string };
+        }
     >();
+    if (isPublic) {
+      return activatePublicPortalRoute(request, () =>
+        this.inner.canActivate(context),
+      );
+    }
     const path = request.path ?? request.url ?? '';
     if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
-    if (!(await this.inner.canActivate(context))) return false;
-    const resource = this.reflector.getAllAndOverride<string | undefined>(
-      DETRAN_RESOURCE_METADATA_KEY,
-      [context.getHandler(), context.getClass()],
+    // R-0009 CTG-0001 §9: `TenantResolverContext` não expõe o Host; o guard
+    // interno (e `DetranTenantResolver.resolve`) roda dentro deste escopo.
+    return portalRequestHostStorage.run(
+      portalHostOf(request.headers ?? {}),
+      async () => {
+        if (!(await this.inner.canActivate(context))) return false;
+        const resource = this.reflector.getAllAndOverride<string | undefined>(
+          DETRAN_RESOURCE_METADATA_KEY,
+          [context.getHandler(), context.getClass()],
+        );
+        const action = this.reflector.getAllAndOverride<string | undefined>(
+          DETRAN_ACTION_METADATA_KEY,
+          [context.getHandler(), context.getClass()],
+        );
+        if (resource !== 'inf:rait-case' || action !== 'protocol') return true;
+        const principal = getPrincipalFromRequest(request);
+        const tenantId = request.tenantId;
+        if (
+          !principal ||
+          !tenantId ||
+          !principal.id ||
+          !principal.tenants.includes(tenantId) ||
+          (request.actor?.id !== undefined && request.actor.id !== principal.id)
+        )
+          return false;
+        try {
+          const roles = await this.database.withRequestContext(
+            { tenantId, actorId: principal.id },
+            async () =>
+              this.database.tx(
+                async (transaction) => {
+                  const result = await transaction.query<{
+                    role: string;
+                    tenant_id?: string;
+                  }>(
+                    `select distinct role
+                       from (
+                         select r.key as role
+                           from auth.memberships m
+                           join auth.users u on u.id = m.user_id
+                           join auth.membership_roles mr on mr.membership_id = m.id
+                           join auth.roles r on r.id = mr.role_id
+                          where m.tenant_id = $1
+                            and m.user_id = $2
+                            and m.is_active
+                            and u.is_active
+                            and r.tenant_id = m.tenant_id
+                            and r.key = 'rait-secretary'
+                         union
+                         select r.key as role
+                           from auth.memberships m
+                           join auth.users u on u.id = m.user_id
+                           join auth.group_memberships gm on gm.membership_id = m.id
+                           join auth.groups g on g.id = gm.group_id
+                           join auth.group_roles gr on gr.group_id = g.id
+                           join auth.roles r on r.id = gr.role_id
+                          where m.tenant_id = $1
+                            and m.user_id = $2
+                            and m.is_active
+                            and u.is_active
+                            and g.tenant_id = m.tenant_id
+                            and r.tenant_id = m.tenant_id
+                            and r.key = 'rait-secretary'
+                       ) resolved_roles`,
+                    [tenantId, principal.id],
+                  );
+                  const values = result.rows
+                    .filter(
+                      (row) =>
+                        row.tenant_id === undefined ||
+                        row.tenant_id === tenantId,
+                    )
+                    .map((row) => row.role);
+                  return values.length === 1 && values[0] === 'rait-secretary'
+                    ? values
+                    : [];
+                },
+                { role: 'app', readonly: true },
+              ),
+          );
+          if (roles.length !== 1 || roles[0] !== 'rait-secretary') return false;
+          principal.roles = roles;
+          return true;
+        } catch {
+          return false;
+        }
+      },
     );
-    const action = this.reflector.getAllAndOverride<string | undefined>(
-      DETRAN_ACTION_METADATA_KEY,
-      [context.getHandler(), context.getClass()],
-    );
-    if (resource !== 'inf:rait-case' || action !== 'protocol') return true;
-    const principal = getPrincipalFromRequest(request);
-    const tenantId = request.tenantId;
-    if (
-      !principal ||
-      !tenantId ||
-      !principal.id ||
-      !principal.tenants.includes(tenantId) ||
-      (request.actor?.id !== undefined && request.actor.id !== principal.id)
-    )
-      return false;
-    try {
-      const roles = await this.database.withRequestContext(
-        { tenantId, actorId: principal.id },
-        async () =>
-          this.database.tx(
-            async (transaction) => {
-              const result = await transaction.query<{
-                role: string;
-                tenant_id?: string;
-              }>(
-                `select distinct role
-                   from (
-                     select r.key as role
-                       from auth.memberships m
-                       join auth.users u on u.id = m.user_id
-                       join auth.membership_roles mr on mr.membership_id = m.id
-                       join auth.roles r on r.id = mr.role_id
-                      where m.tenant_id = $1
-                        and m.user_id = $2
-                        and m.is_active
-                        and u.is_active
-                        and r.tenant_id = m.tenant_id
-                        and r.key = 'rait-secretary'
-                     union
-                     select r.key as role
-                       from auth.memberships m
-                       join auth.users u on u.id = m.user_id
-                       join auth.group_memberships gm on gm.membership_id = m.id
-                       join auth.groups g on g.id = gm.group_id
-                       join auth.group_roles gr on gr.group_id = g.id
-                       join auth.roles r on r.id = gr.role_id
-                      where m.tenant_id = $1
-                        and m.user_id = $2
-                        and m.is_active
-                        and u.is_active
-                        and g.tenant_id = m.tenant_id
-                        and r.tenant_id = m.tenant_id
-                        and r.key = 'rait-secretary'
-                   ) resolved_roles`,
-                [tenantId, principal.id],
-              );
-              const values = result.rows
-                .filter(
-                  (row) =>
-                    row.tenant_id === undefined || row.tenant_id === tenantId,
-                )
-                .map((row) => row.role);
-              return values.length === 1 && values[0] === 'rait-secretary'
-                ? values
-                : [];
-            },
-            { role: 'app', readonly: true },
-          ),
-      );
-      if (roles.length !== 1 || roles[0] !== 'rait-secretary') return false;
-      principal.roles = roles;
-      return true;
-    } catch {
-      return false;
-    }
   }
 }
 
@@ -337,7 +538,7 @@ class DetranDatabaseBinder implements OnModuleInit {
     private readonly requestContextMutator: RequestContextMutator,
   ) {}
 
-  onModuleInit(): void {
+  async onModuleInit(): Promise<void> {
     detranAuditSink.bindDatabase(this.database);
     detranPostgresReadiness.bindDatabase(this.database);
     detranPipelineSqlExecutor.bindDatabase(this.database);
@@ -345,6 +546,10 @@ class DetranDatabaseBinder implements OnModuleInit {
       this.requestContext,
       this.requestContextMutator,
     );
+    // R-0009 CTG-0001 §9 (M11): diretório Host → tenant carregado no
+    // bootstrap, fora do caminho da requisição.
+    detranPortalHostnameDirectory.bindDatabase(this.database);
+    await detranPortalHostnameDirectory.reload();
   }
 }
 
@@ -441,13 +646,34 @@ export class AppModule {
         RestrictionsModule,
         RetentionModule,
         ComplaintsModule,
+        // Portal do cidadão (R-0009 CTG-0001, plan M1/M24): `identity` traz
+        // as rotas manuscritas deste grupo; os outros quatro são montados
+        // como módulos puramente gerados (sem rotas) até CTG-0002.
+        // CTG-0002 §3.2/§14 (TASK-0007): o mapa `PORTAL_DELEGATION_TARGETS`
+        // (global) é composto antes dos módulos que o consomem.
+        // CTG-0002 §8/§14 (TASK-0008): portas nacionais, leitor de parâmetros e
+        // poller das projeções (global) antes de `ProjectionsModule`.
+        PortalNationalReadPortsModule,
+        PortalDelegationTargetsModule,
+        IdentityModule,
+        RequestsModule,
+        InboxModule,
+        CitizenServiceModule,
+        ProjectionsModule,
         // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
         // handwritten AIT lifecycle commands (WP-T0).
+        // Portas do protocolo de sincronização (CTG-0002 §4.8) antes dos
+        // módulos que as consomem.
+        TeatSyncModule,
+        TeatEvidencePortsModule,
+        TeatSnapshotPortsModule,
+        TeatMeasuresPortsModule,
         NormativeModule,
         ParameterModule,
         AitModule,
         MeasuresModule,
         AlcoholModule,
+        CrashModule,
         RaitCaseModule,
         RaitWorklistModule,
         RaitSessionModule,
@@ -464,6 +690,10 @@ export class AppModule {
           : []),
       ],
       controllers: [
+        TeatStreamController,
+        // CTG-0002 §9 (TASK-0008): SSE do cidadão.
+        PortalStreamController,
+        TeatIntegrationsController,
         PecProcessParametersController,
         PecRenachProcessController,
         PecRenachTransmissionController,
@@ -476,7 +706,28 @@ export class AppModule {
       providers: [
         DetranDatabaseBinder,
         ...authProviders,
+        BoatVictimPurposeInterceptor,
+        {
+          provide: APP_INTERCEPTOR,
+          useExisting: BoatVictimPurposeInterceptor,
+        },
         DetranPolicyGuard,
+        TeatStreamService,
+        // CTG-0004 §16.3 (adenda, iteração 3): porta do poller do SSE — a
+        // fábrica é a única chamadora de `setInterval` em produção
+        // (`teat-stream.service.ts`); testes injetam outra implementação.
+        {
+          provide: TEAT_STREAM_POLLER,
+          useFactory: () => createDefaultTeatStreamPoller(),
+        },
+        // CTG-0002 §9 (M18, TASK-0008): SSE do Portal e a porta do seu poller —
+        // mesma fábrica do TEAT (única chamadora de `setInterval`).
+        PortalStreamService,
+        {
+          provide: PORTAL_STREAM_POLLER,
+          useFactory: () => createDefaultTeatStreamPoller(),
+        },
+        TeatIntegrationsService,
         PecProcessParametersService,
         PecRenachProcessService,
         PecRenachTransmissionService,

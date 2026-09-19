@@ -1,0 +1,39 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0003.md",
+      "line": 69,
+      "claim": "a adenda A-1 exige teste executavel da guarda de titularidade (`CIDADAO` so para o proprio CPF autenticado), mas nenhuma fonte da lista fechada define de onde vem a identidade autenticada nem o erro de recusa: a unica superficie de principal e `getPrincipalFromRequest` de `@stynx-nyx/backend` (`backend/domains/shared/src/policy.guard.ts:41-42`), cujo `Principal` tem apenas `id/username/email/roles/permissions/tenants/claims` e nenhum CPF; `CTG-0001.md:42` diz 'confere a identidade autenticada contra subject_cpf' sem nomear campo/claim, e o catalogo oferece dois codigos plausiveis e nao decididos (`boat-error-catalog.md:56` `BOAT.SUBJECT_NOT_INVOLVED` 404 e `:94` `BOAT.FORBIDDEN_ACTION` 403); o Inspector teria de inventar o campo ou recair na inspecao de texto que a propria linha 70 proibe",
+      "fix": "fechar A-1 em CTG-0001 nomeando o portador da identidade (claim/campo do `Principal`) e o codigo de recusa, ou declarar `source_pending`/OD e reduzir o teste A-1 desta tentativa a matriz de politica (`est:crash-subject-request:subject-request` permite `CIDADAO`, nega os demais), deixando a guarda de titularidade para a tarefa que tiver a fonte"
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0003.md",
+      "line": 79,
+      "claim": "o reenvio pede testes executaveis de checks/indices/sem-FK e de RLS entre tenants (linhas 64-66), mas nenhum criterio de aceitacao roda a camada que os executa: `backend/domains/est/crash/vitest.config.ts:5-8` so inclui `tests/integration/**/*.integration.spec.ts` sob `DETRAN_TEST_TIER=integration`, e `passWithNoTests: true` (linha 16) faz um arquivo fora do include passar em silencio; os criterios cobrem apenas `test:unit`, `@detran/shared test`, `apply.sh` e `seed.sh`, de modo que a matriz C-1-nn de banco pode voltar sem execucao — a mesma lacuna de verificacao da tentativa 0",
+      "fix": "acrescentar `DB_NAME=detran_r10 DB_PASSWORD=postgres pnpm --filter @detran/est-crash test:integration` aos criterios com resultado esperado explicito e dizer na tarefa que asserçoes de DDL/RLS/fixture ficam em `backend/domains/est/crash/tests/integration/**/*.integration.spec.ts`"
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0003.md",
+      "line": 37,
+      "claim": "C-1-02 exige provar que `70-est-crash.sql` vem exclusivamente de `pnpm blueprints:generate`; o cabecalho com SHA existe (`backend/database/ddl/70-est-crash.sql:1`) e torna o teste viavel, mas `tools/blueprints/generated-files.json:40`, que e o manifesto do conjunto gerado, ficou fora da lista fechada",
+      "fix": "incluir `tools/blueprints/generated-files.json` na lista fechada (somente leitura) para que a asserçao de 'exclusivamente gerado' tenha fonte"
+    }
+  ],
+  "notes": [
+    "seed.sh:12 itera `\"$DIR\"/seed/*.sql`, entao `backend/database/seed/70-fixtures-est-crash.sql` entra automaticamente e depois de 00/25; o Inspector cumpre a exigencia de dupla execucao sem tocar em `seed.sh`, e a fronteira de escrita continua fechada",
+    "a adenda A-1 e segura quanto a vocabulario: `CIDADAO` ja existe em `backend/domains/shared/src/roles.ts:91` e ja e usado em `backend/domains/shared/src/policy.ts:1598-1599` (`portal:appeal:create`/`read-own`); nao ha papel novo, e o grant e so de `subject-request`, sem leitura de vitima — coerente com `boat-route-contract.md:63` ('processing-operator, AUDITOR; Portal (titular)')",
+    "`CTG-0001.md` esta na lista fechada de TASK-0004 (`prompts/TASK-0004.md:20`), logo o Engineer le a adenda A-1 e nao negara `CIDADAO` por exaustividade da matriz; Inspector e Engineer partem do mesmo contrato",
+    "as fontes acrescentadas cobrem os criterios que faltavam: `19-est-lifecycle-vocabulary.sql:19-31` da os nove estados locais e as quatro situacoes nacionais para as fixtures, `70-est-crash.sql:41-44` da os checks de C-1-04/C-1-05/C-1-06 e `:211` o `kind` de C-1-07, e o blueprint traz os parametros de C-1-09/C-1-11 (`BP-EST-CRASH-001.json:146,237,611`), sem necessidade do catalogo de parametros",
+    "`crash_record.shift_id` e `device_id` sao anulaveis e sem FK (`70-est-crash.sql:30-31`), entao `00-fixtures-core.sql` e `25-fixtures-teat.sql` bastam para a fixture; nao ha lacuna por 26/27/28 fora da lista",
+    "achados novos sobre texto nao alterado nao foram levantados: os dois `high` incidem exatamente sobre o reenvio (linhas 57-71) e sobre os criterios que ele deveria ter acompanhado"
+  ]
+}

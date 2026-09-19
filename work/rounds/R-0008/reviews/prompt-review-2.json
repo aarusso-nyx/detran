@@ -1,0 +1,19 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0008",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0008/plan.md",
+      "line": 266,
+      "claim": "A nova TASK-0012 é outro Inspector no mesmo CTG-0004, já ocupado pela tríade TASK-0001 → TASK-0008 → TASK-0009; CTG-0004 passa a declarar Architect → Inspector → Engineer → Inspector → Engineer. Isso contradiz a exigência de uma tarefa por papel no mesmo coupled_task_group e a tríade do Art. 24.",
+      "fix": "Separar WP-T3 em um coupled_task_group próprio, com sua tarefa Architect de contrato, TASK-0012 como Inspector e TASK-0010 como Engineer; atualizar upstream_task_id e a definição dos CTGs."
+    }
+  ],
+  "notes": [
+    "A leitura fechada agora inclui WP-T2, WP-T3 e o mapa entregável nos prompts revisados.",
+    "Os target_modules dos Inspectors incluem MOD-shared-policy-tests e as dependências serializam os seus usos."
+  ]
+}

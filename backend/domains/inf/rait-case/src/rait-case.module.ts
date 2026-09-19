@@ -62,6 +62,8 @@ import { RaitOperationClock } from './handwritten/rait-operation-clock.js';
 
 @Module({
   controllers: [
+    RaitCaseCommandsController,
+    RaitInquiryCommandsController,
     RaitCaseController,
     RaitPartyController,
     RaitDocumentController,
@@ -79,8 +81,6 @@ import { RaitOperationClock } from './handwritten/rait-operation-clock.js';
     RaitDecisionController,
     RaitCommunicationController,
     RaitCaseEventController,
-    RaitCaseCommandsController,
-    RaitInquiryCommandsController,
   ],
   providers: [
     RaitCaseService,

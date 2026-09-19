@@ -1,4 +1,4 @@
-// Generated from BP-OPS-OFFLINE-SYNC-001 v1.0.0 sha256:21bcd6e203b7ff643de48a32fe2947a4e7ad1f7b62b66209c60e24c97da59ce9
+// Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
 export * from './controllers/ait-numbering-range.controller.js';
 export * from './dto/create-ait-numbering-range.dto.js';
 export * from './entities/ait-numbering-range.entity.js';
@@ -35,3 +35,17 @@ export * from './entities/sync-conflict.entity.js';
 export * from './repositories/sync-conflict.repository.js';
 export * from './services/sync-conflict.service.js';
 export * from './offline-sync.module.js';
+export * from './handwritten/batch-protocol.js';
+export * from './handwritten/canonical-hash.js';
+export * from './handwritten/concurrency-detector.js';
+export * from './handwritten/events.js';
+export * from './handwritten/numbering-sql.js';
+export * from './handwritten/submit-batch.command.js';
+export * from './handwritten/reserve-numbering.command.js';
+export * from './handwritten/settle-numbering.command.js';
+export * from './handwritten/reconcile-numbering.command.js';
+export * from './handwritten/resolve-conflict.command.js';
+export * from './handwritten/offline-sync.reads.js';
+export * from './handwritten/offline-sync.commands.js';
+export * from './handwritten/offline-sync.controller.js';
+export * from './handwritten/offline-sync.provider.js';

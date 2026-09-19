@@ -1,4 +1,4 @@
-// Generated from BP-OPS-SNAPSHOTS-001 v1.0.0 sha256:bebc10f45ae4f8887acc821ee7211894780dd9bd4b5a67d1edfbd371f54a21c4
+// Generated from BP-OPS-SNAPSHOTS-001 v1.1.0 sha256:be057438a0ae6bba679549fa27603002919b4035701f4ea81d9ed853b9c00734
 import {
   Body,
   Controller,
@@ -21,35 +21,5 @@ export class ExternalQueryController {
   }
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({
-    action: 'OPS_SNAPSHOTS_EXTERNAL_QUERY_CREATE',
-    entity: 'ops.snapshots_external_query',
-  })
-  create(@Body() dto: CreateExternalQueryDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({
-    action: 'OPS_SNAPSHOTS_EXTERNAL_QUERY_UPDATE',
-    entity: 'ops.snapshots_external_query',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateExternalQueryDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({
-    action: 'OPS_SNAPSHOTS_EXTERNAL_QUERY_DELETE',
-    entity: 'ops.snapshots_external_query',
-  })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }

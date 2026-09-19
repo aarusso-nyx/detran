@@ -1,0 +1,34 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0008",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0008/prompts/TASK-0001.md",
+      "line": 29,
+      "claim": "As listas fechadas de TASK-0001…TASK-0010 omitem o pacote de trabalho obrigatório `docs/framework/arch/teat-build-pack.md` (WP-T2/WP-T3 e mapa entregável). Isso contraria a regra comum de ler o build pack antes dos artefatos e deixa a fonte de escopo fora da leitura autorizada.",
+      "fix": "Adicionar a cada lista aplicável somente as seções WP-T2/WP-T3 e o mapa entregável → definições do `teat-build-pack.md`; manter o restante fechado."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0008/prompts/TASK-0006.md",
+      "line": 59,
+      "claim": "TASK-0006 e TASK-0008 podem ambos alterar `backend/domains/shared/src/policy.spec.ts`, mas seus locks/target_modules não incluem um módulo compartilhado de testes de política. Como ambos dependem apenas de TASK-0001, podem executar simultaneamente e violar a fronteira de escrita.",
+      "fix": "Serializar esses acréscimos sob um único lock `MOD-shared-policy-tests`, ou mover a matriz de política para uma tarefa dedicada posterior aos Inspectors."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0008/prompts/TASK-0010.md",
+      "line": 20,
+      "claim": "WP-T3 cria contratos, schemas, `check-commands.mjs` e geração de clientes diretamente em TASK-0010 (Engineer), após TASK-0009 (Engineer), sem tarefa Inspector entre o contrato do Architect e essa implementação verificável. A tríade Architect → Inspector → Engineer não está fechada para o gate de comandos e os artefatos WP-T3.",
+      "fix": "Inserir uma tarefa Inspector dependente dos contratos CTG e anterior a TASK-0010 para escrever/executar testes do checker, unicidade de operationId, rota ⇔ contrato, catálogo de erros e clientes; fazer TASK-0010 depender dela."
+    }
+  ],
+  "notes": [
+    "Os papéis declarados, a proibição de git para workers, os comandos de aceitação existentes e as matrizes positivas/negativas estão, em geral, coerentes com as fontes revisadas."
+  ]
+}

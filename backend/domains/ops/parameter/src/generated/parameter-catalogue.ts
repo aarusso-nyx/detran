@@ -1,6 +1,6 @@
-// Generated from parameter-catalogue.md sha256:744b46722d02f6d958c18864e1411f0dbf0e7cb544876354c0d5bada2e79690b
+// Generated from parameter-catalogue.md sha256:025f5a83ef53ac570b493095a8be1633daca44d0402b226e48448accaa1007ad
 export const PARAMETER_CATALOGUE_SOURCE_SHA256 =
-  '744b46722d02f6d958c18864e1411f0dbf0e7cb544876354c0d5bada2e79690b';
+  '025f5a83ef53ac570b493095a8be1633daca44d0402b226e48448accaa1007ad';
 export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.wip.limit',
@@ -576,7 +576,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T03',
     decision_tokens: ['OD-T03', 'DT-016'],
-    consumer: 'detecção de sessão concorrente',
+    consumer:
+      'ops/offline-sync/src/handwritten/concurrency-detector.ts (CONCURRENCY_WINDOW_KEY)',
     surface: 'teat',
     provenance: {
       line: 64,
@@ -591,7 +592,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T04',
     decision_tokens: ['OD-T04', 'DT-110'],
-    consumer: 'HOMOLOGATION_RENEWAL_DUE',
+    consumer:
+      'ops/field/src/handwritten/mobile-bootstrap.service.ts (HOMOLOGATION_BEHAVIOR_KEY), bloqueador HOMOLOGATION_RENEWAL_DUE',
     surface: 'teat',
     provenance: {
       line: 65,
@@ -621,7 +623,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'H.54',
     decision_tokens: ['OD-T07', 'H.54'],
-    consumer: 'faixas',
+    consumer:
+      'ops/offline-sync/src/handwritten/reserve-numbering.command.ts (RESERVATION_TTL_KEY)',
     surface: 'teat',
     provenance: {
       line: 67,
@@ -666,7 +669,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T09',
     decision_tokens: ['OD-T09', 'DT-015'],
-    consumer: 'rotas desligadas',
+    consumer:
+      'inf/measures/src/handwritten/record-removal.command.ts (MONITORED_CUSTODY_FLAG, porta MEASURE_FEATURE_FLAGS)',
     surface: 'teat',
     provenance: {
       line: 70,
@@ -681,7 +685,8 @@ export const PARAMETER_CATALOGUE = [
     legal_readonly: false,
     decision_ref: 'OD-T09',
     decision_tokens: ['OD-T09', 'DT-063'],
-    consumer: 'UC-TEAT-013',
+    consumer:
+      'backend/app/src/app.module.ts (montagem condicional do SpeedModule), UC-TEAT-013',
     surface: 'teat',
     provenance: {
       line: 71,
@@ -915,6 +920,38 @@ export const PARAMETER_CATALOGUE = [
     },
   },
   {
+    key: 'portal.attachment.max_size_mb',
+    value_type: 'int',
+    value_json: 10,
+    status: 'proposta',
+    source_pending: false,
+    legal_readonly: false,
+    decision_ref: 'OD-P66',
+    decision_tokens: ['OD-P66'],
+    consumer:
+      'upload de anexos (o app usa ATTACHMENT_MAX_BYTES/accept fixos até o parâmetro ser lido)',
+    surface: 'portal',
+    provenance: {
+      line: 92,
+    },
+  },
+  {
+    key: 'portal.attachment.accepted_types',
+    value_type: 'json',
+    value_json: '["application/pdf","image/jpeg","image/png"]',
+    status: 'proposta',
+    source_pending: false,
+    legal_readonly: false,
+    decision_ref: 'OD-P66',
+    decision_tokens: ['OD-P66'],
+    consumer:
+      'upload de anexos (o app usa ATTACHMENT_MAX_BYTES/accept fixos até o parâmetro ser lido)',
+    surface: 'portal',
+    provenance: {
+      line: 93,
+    },
+  },
+  {
     key: 'est.renaest.transmit_period',
     value_type: 'enum',
     value_json: 'monthly',
@@ -926,7 +963,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'T-BOAT-TRANSM',
     surface: 'est',
     provenance: {
-      line: 97,
+      line: 99,
     },
   },
   {
@@ -941,7 +978,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'adapter',
     surface: 'est',
     provenance: {
-      line: 98,
+      line: 100,
     },
   },
   {
@@ -956,7 +993,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'gate de fechamento',
     surface: 'est',
     provenance: {
-      line: 99,
+      line: 101,
     },
   },
   {
@@ -971,7 +1008,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'BOAT.RETENTION_UNDEFINED',
     surface: 'est',
     provenance: {
-      line: 100,
+      line: 102,
     },
   },
   {
@@ -986,7 +1023,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'idem',
     surface: 'est',
     provenance: {
-      line: 101,
+      line: 103,
     },
   },
   {
@@ -1002,7 +1039,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'transparência',
     surface: 'est',
     provenance: {
-      line: 102,
+      line: 104,
     },
   },
   {
@@ -1017,7 +1054,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'crash-start',
     surface: 'est',
     provenance: {
-      line: 103,
+      line: 105,
     },
   },
   {
@@ -1032,7 +1069,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'crash-conditions',
     surface: 'est',
     provenance: {
-      line: 104,
+      line: 106,
     },
   },
   {
@@ -1047,7 +1084,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'rotas reservadas',
     surface: 'est',
     provenance: {
-      line: 105,
+      line: 107,
     },
   },
   {
@@ -1062,7 +1099,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'cancel',
     surface: 'est',
     provenance: {
-      line: 106,
+      line: 108,
     },
   },
   {
@@ -1077,7 +1114,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'aviso na tela',
     surface: 'est',
     provenance: {
-      line: 107,
+      line: 109,
     },
   },
   {
@@ -1092,7 +1129,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'P-06, P-09, exportações',
     surface: 'dashboard',
     provenance: {
-      line: 113,
+      line: 115,
     },
   },
   {
@@ -1107,7 +1144,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'escalonamento',
     surface: 'dashboard',
     provenance: {
-      line: 114,
+      line: 116,
     },
   },
   {
@@ -1122,7 +1159,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'selo de frescor',
     surface: 'dashboard',
     provenance: {
-      line: 115,
+      line: 117,
     },
   },
   {
@@ -1137,7 +1174,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'source_freshness',
     surface: 'dashboard',
     provenance: {
-      line: 116,
+      line: 118,
     },
   },
   {
@@ -1152,7 +1189,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'LayerGate',
     surface: 'dashboard',
     provenance: {
-      line: 117,
+      line: 119,
     },
   },
   {
@@ -1167,7 +1204,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'DASH.EXPORT_VOLUME_APPROVAL_REQUIRED',
     surface: 'dashboard',
     provenance: {
-      line: 118,
+      line: 120,
     },
   },
   {
@@ -1182,7 +1219,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'calendário de deveres',
     surface: 'dashboard',
     provenance: {
-      line: 119,
+      line: 121,
     },
   },
   {
@@ -1197,7 +1234,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-206/207',
     surface: 'dashboard',
     provenance: {
-      line: 120,
+      line: 122,
     },
   },
   {
@@ -1212,7 +1249,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-209',
     surface: 'dashboard',
     provenance: {
-      line: 121,
+      line: 123,
     },
   },
   {
@@ -1227,7 +1264,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-309/314',
     surface: 'dashboard',
     provenance: {
-      line: 122,
+      line: 124,
     },
   },
   {
@@ -1242,7 +1279,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-401 (technical-admin)',
     surface: 'dashboard',
     provenance: {
-      line: 123,
+      line: 125,
     },
   },
   {
@@ -1257,7 +1294,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-402',
     surface: 'dashboard',
     provenance: {
-      line: 124,
+      line: 126,
     },
   },
   {
@@ -1272,7 +1309,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-403',
     surface: 'dashboard',
     provenance: {
-      line: 125,
+      line: 127,
     },
   },
   {
@@ -1287,7 +1324,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'IND-403',
     surface: 'dashboard',
     provenance: {
-      line: 126,
+      line: 128,
     },
   },
   {
@@ -1302,7 +1339,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'CRITICO_EXTINCAO',
     surface: 'dashboard',
     provenance: {
-      line: 127,
+      line: 129,
     },
   },
   {
@@ -1317,7 +1354,7 @@ export const PARAMETER_CATALOGUE = [
     consumer: 'D-14/D-16',
     surface: 'dashboard',
     provenance: {
-      line: 128,
+      line: 130,
     },
   },
 ] as const;

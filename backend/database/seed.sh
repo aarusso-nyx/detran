@@ -25,8 +25,14 @@ case "$rait_seed_profile" in
       10-fixtures-inf-ait.sql
       21-fixtures-rait-fresh.sql
       25-fixtures-teat.sql
+      26-fixtures-teat-field.sql
+      27-fixtures-teat-evidence.sql
+      28-fixtures-teat-measures-alcohol.sql
       30-fixtures-infraction.sql
       50-fixtures-collection.sql
+      70-fixtures-est-crash.sql
+      70-fixtures-portal.sql
+      71-fixtures-portal-events.sql
     )
     ;;
   legacy-upgrade)
@@ -36,10 +42,16 @@ case "$rait_seed_profile" in
       10-fixtures-inf-ait.sql
       20-fixtures-rait.sql
       25-fixtures-teat.sql
+      26-fixtures-teat-field.sql
+      27-fixtures-teat-evidence.sql
+      28-fixtures-teat-measures-alcohol.sql
       30-fixtures-infraction.sql
       40-fixtures-rait-org.sql
       50-fixtures-collection.sql
       60-fixtures-rait-integration.sql
+      70-fixtures-est-crash.sql
+      70-fixtures-portal.sql
+      71-fixtures-portal-events.sql
     )
     ;;
   *)

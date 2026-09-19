@@ -1,4 +1,4 @@
-// Generated from BP-OPS-OFFLINE-SYNC-001 v1.0.0 sha256:21bcd6e203b7ff643de48a32fe2947a4e7ad1f7b62b66209c60e24c97da59ce9
+// Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
 import {
   Body,
   Controller,
@@ -18,26 +18,5 @@ export class SyncReceiptController {
   constructor(private readonly service: SyncReceiptService) {}
   @Get() @Action('read') list() {
     return this.service.findAll();
-  }
-  @Get(':id') @Action('read') get(@Param('id') id: string) {
-    return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({ action: 'OPS_SYNC_RECEIPT_CREATE', entity: 'ops.sync_receipt' })
-  create(@Body() dto: CreateSyncReceiptDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({ action: 'OPS_SYNC_RECEIPT_UPDATE', entity: 'ops.sync_receipt' })
-  update(@Param('id') id: string, @Body() dto: Partial<CreateSyncReceiptDto>) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({ action: 'OPS_SYNC_RECEIPT_DELETE', entity: 'ops.sync_receipt' })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }

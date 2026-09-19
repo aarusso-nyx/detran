@@ -50,6 +50,7 @@ import { RaitWorklistCommandService } from './handwritten/rait-worklist-command.
 
 @Module({
   controllers: [
+    RaitWorklistCommandsController,
     RaitUnitController,
     RaitPoolController,
     RaitPoolMemberController,
@@ -65,7 +66,6 @@ import { RaitWorklistCommandService } from './handwritten/rait-worklist-command.
     RaitBenchController,
     RaitClockController,
     RaitClockAlertController,
-    RaitWorklistCommandsController,
   ],
   providers: [
     RaitUnitService,

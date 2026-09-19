@@ -211,8 +211,8 @@ async function inventory(): Promise<string[]> {
     .split('\n')
     .filter((line) => line.startsWith('- `backend/database/ddl/'));
   const files = lines.map((line) => line.match(/ddl\/([^`]+)`/)?.[1]);
-  if (files.length !== 49 || files.some((file) => !file))
-    throw new Error('The closed 49-DDL inventory is incomplete');
+  if (files.length !== 57 || files.some((file) => !file))
+    throw new Error('The closed 57-DDL inventory is incomplete');
   return files as string[];
 }
 
@@ -583,11 +583,11 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
     expect(source).toContain('--single-transaction');
     expect(source).toContain('pg_advisory_xact_lock(7007, 1)');
     const listed = await inventory();
-    expect(new Set(listed).size).toBe(49);
+    expect(new Set(listed).size).toBe(57);
     const directory = await isolatedCopy(true);
     try {
       const copied = await readdir(join(directory, 'ddl'));
-      expect(copied.length).toBe(52);
+      expect(copied.length).toBe(60);
       expect(
         copied.filter((name) => name === '20-rls-policies.sql'),
       ).toHaveLength(1);

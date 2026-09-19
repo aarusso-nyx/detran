@@ -20,7 +20,7 @@
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
   (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (27 fichas, mapa de tradução, i18n, textos jurídicos): nenhum upstream. CTG-0002 (PWA, formulários) e CTG-0003 (e2e das 11 jornadas no mock, lint de payload): `portal-backend` R-0009 (`orchestra/portal-backend`) — empilhe nele se ainda não mesclou**. No bootstrap, registre em `plan.md`
+  **merge de cada grupo acoplado**: **nenhum grupo preso: `portal-backend` R-0009 está em `main` (PC-0006, PRs #54/#56/#57). Delegações reais seguem com R-0007 (troca de `UnavailableDelegationTarget` em `backend/app/src/portal-delegation.providers.ts`), não com esta rodada. Handoffs de R-0009 para o WP-P6: OD-P15 (credenciais gov.br), OD-P16 (SNE real via `SnePort`), OD-P17 (`@stynx-nyx/privacy`), OD-P35 (CNH-e), OD-P40 (produtor de `inbox_item` + push). Allowlist de namespaces i18n no catálogo de parâmetros (OD-P46, método §4.17) precisa estar em `main` (R-0012) antes de qualquer `i18n/*.json` entrar em código — senão esta rodada a aplica (`portal.*` foi a origem de OD-P46)**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
@@ -43,7 +43,23 @@ Regras: (a) worktree e branch existentes → reutilize-os, nunca recrie; (b) `pl
 preenchido → você está **retomando**: continue do checkpoint, não replaneje; (c) branch
 `orchestra/portal-pwa` remoto sem worktree local → `git worktree add /Volumes/Thiamat II/stech/detran-worktrees/portal-pwa orchestra/portal-pwa`; (d) PR aberto
 de outra frente com lock comum ao seu grupo → registre em `plan.md` §Concorrência e trate como
-upstream (base empilhada ou espera). Só então rode o bootstrap:
+upstream (base empilhada ou espera).
+
+**Lições obrigatórias das rodadas fechadas** (R-0003…R-0008; detalhe em `waves.md` §Histórico):
+(1) crie `work/rounds/R-0014/AUTHORIZATION.md` no bootstrap, registrando que o Owner autorizou
+este prompt — sem ele `devai round close` responde `TASK_ROUND_INACTIVE`; (2) pacote de workspace
+novo exige `pnpm install` pelo maestro e commit do `pnpm-lock.yaml` antes do push (CI usa
+`--frozen-lockfile`); (3) toda edição de `docs/framework/arch/parameter-catalogue.md` é seguida de
+`pnpm parameters:generate`, e specs nunca contêm chaves de parâmetro como literal
+(`verify:parameter-catalogue`); (4) helper `.mjs` importado por spec TS precisa de `.d.mts` irmão;
+(5) pacote novo montado no `AppModule` precisa de alias em `backend/app/vitest.config.ts`;
+(6) workers não deixam `pnpm check` rodando em segundo plano — encerre processos perdidos pelo pid
+exato antes dos seus gates, nunca por padrão de nome; (7) `git add record/proofs` explícito em cada
+commit de evidência; (8) `audit observe` só no HEAD exato integrado; se outra rodada fechar antes,
+aceite a cadeia de `main`, observe o HEAD integrado e repita `round close` (o id de fechamento muda);
+(9) `seed.sh` faz parte do CI e a rodada dona das fixtures prova as duas execuções; (10) ciclos de
+revisão a partir do segundo restritos aos itens corrigidos; contradição entre contrato e código é
+resolvida pelo Architect por adenda numerada antes de redespachar. Só então rode o bootstrap:
 
 ```bash
 export NODE_AUTH_TOKEN="$(gh auth token)"

@@ -1,0 +1,717 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Requests — BP-PORTAL-REQUESTS-001",
+    "version": "1.0.2",
+    "description": "Ciclo comum de pedidos do cidadao (ADR-0019 Decision 2; [WF-PORTAL-001] secao Estados e secao Transicoes; plan R-0009 M7-M9): uma unica maquina de 13 estados fixos em codigo (OD-P13) para todo servico do catalogo, com protocolo imediato (T-PROTOCOLO, Lei 14.129/2021 art. 27 IV) antes de qualquer validacao de conteudo e delegacao ao comando do dominio dono (M8). O pedido nunca guarda a decisao. Inclui rascunho versionado, anexos, ciencia de consequencias, avaliacao e registro de idempotencia (M9). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica SOLICITACAO_CRIADA, SOLICITACAO_PROTOCOLADA, SOLICITACAO_DESISTIDA, SOLICITACAO_CONCLUIDA e AVALIACAO_REGISTRADA (M21).",
+    "x-blueprint": "BP-PORTAL-REQUESTS-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Request": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "IDENTIFICADO",
+              "SERVICO_SELECIONADO",
+              "ELEGIBILIDADE_VERIFICADA",
+              "INELEGIVEL",
+              "PEDIDO_EM_COMPOSICAO",
+              "AGUARDANDO_NIVEL_ASSINATURA",
+              "AGUARDANDO_PAGAMENTO",
+              "PROTOCOLADO",
+              "EM_ANDAMENTO_NO_ORGAO",
+              "RESULTADO_DISPONIVEL",
+              "AVALIACAO_OFERECIDA",
+              "CONCLUIDO",
+              "DESISTIDO"
+            ]
+          },
+          "service_key": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ait", "case", "vehicle", "exam", "crash", "none"]
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["portal"],
+            "default": "'portal'"
+          },
+          "delegation_domain": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "delegation_command": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "delegation_external_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "delegation_status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["pending", "delegated", "failed", "not_applicable"]
+          },
+          "delegation_error": {
+            "type": "string",
+            "nullable": true
+          },
+          "minimum_assurance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "simples", "avancada", "qualificada"]
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "withdrawn_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "state",
+          "service_key",
+          "subject_id",
+          "target_kind",
+          "delegation_status",
+          "minimum_assurance",
+          "created_at"
+        ],
+        "description": "Pedido do cidadao — maquina [WF-PORTAL-001] secao Estados (13 tokens no check de state; INELEGIVEL e resposta 422 PORTAL.INELIGIBLE sem linha persistida, M7). service_key e FK logica para portal.service_catalog.service_key (outro pacote, sem FK fisica). Delegacao (M8): delegation_domain, delegation_command (ex.: inf:rait-case:protocol), delegation_external_id, delegation_status e delegation_error; falha apos protocolo mantem o protocolo e grava delegation_status = failed (PORTAL.DELEGATION_FAILED). minimum_assurance copia o nivel exigido pela matriz no momento do pedido (M5). version para If-Match (M9); withdrawn_at em DESISTIDO."
+      },
+      "CreateRequestDto": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "IDENTIFICADO",
+              "SERVICO_SELECIONADO",
+              "ELEGIBILIDADE_VERIFICADA",
+              "INELEGIVEL",
+              "PEDIDO_EM_COMPOSICAO",
+              "AGUARDANDO_NIVEL_ASSINATURA",
+              "AGUARDANDO_PAGAMENTO",
+              "PROTOCOLADO",
+              "EM_ANDAMENTO_NO_ORGAO",
+              "RESULTADO_DISPONIVEL",
+              "AVALIACAO_OFERECIDA",
+              "CONCLUIDO",
+              "DESISTIDO"
+            ]
+          },
+          "service_key": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ait", "case", "vehicle", "exam", "crash", "none"]
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["portal"],
+            "default": "'portal'"
+          },
+          "delegation_domain": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "delegation_command": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "delegation_external_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "delegation_status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["pending", "delegated", "failed", "not_applicable"]
+          },
+          "delegation_error": {
+            "type": "string",
+            "nullable": true
+          },
+          "minimum_assurance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["none", "simples", "avancada", "qualificada"]
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "withdrawn_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "state",
+          "service_key",
+          "subject_id",
+          "target_kind",
+          "delegation_status",
+          "minimum_assurance"
+        ]
+      },
+      "RequestDraft": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "payload_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "personal"
+          },
+          "saved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "request_id",
+          "version",
+          "payload_json",
+          "saved_at",
+          "created_at"
+        ],
+        "description": "Rascunho versionado do pedido em PEDIDO_EM_COMPOSICAO ([WF-PORTAL-001] secao Transicoes, PUT requests/{id}/draft com If-Match; plan R-0009 M7 e M9): cada gravacao e uma nova versao (payload_json validado por docs/framework/schemas/portal-request-draft.schema.json por ato, WP-P3). Uma linha por (tenant, request, version)."
+      },
+      "CreateRequestDraftDto": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "payload_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "x-pii": "personal"
+          },
+          "saved_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["request_id", "version", "payload_json", "saved_at"]
+      },
+      "RequestAttachment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "upload_state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["intended", "completed", "rejected"],
+            "default": "'intended'"
+          },
+          "storage_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "request_id",
+          "filename",
+          "mime_type",
+          "size_bytes",
+          "sha256",
+          "created_at"
+        ],
+        "description": "Anexo do pedido com intencao de upload ([WF-PORTAL-001] secao Transicoes, composicao do pedido; portal-build-pack.md secao 2 WP-P1: hash e intencao de upload): upload_state intended -> completed | rejected; storage_ref preenchido na conclusao; sha256 declarado pelo cliente e conferido no armazenamento."
+      },
+      "CreateRequestAttachmentDto": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "filename": {
+            "type": "string"
+          },
+          "mime_type": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "size_bytes": {
+            "type": "integer"
+          },
+          "sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "upload_state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["intended", "completed", "rejected"],
+            "default": "'intended'"
+          },
+          "storage_ref": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "request_id",
+          "filename",
+          "mime_type",
+          "size_bytes",
+          "sha256"
+        ]
+      },
+      "Protocol": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["portal"],
+            "default": "'portal'"
+          },
+          "receipt_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "request_id",
+          "number",
+          "issued_at",
+          "receipt_hash",
+          "created_at"
+        ],
+        "description": "Protocolo imediato do pedido ([WF-PORTAL-001] secao Prazos, T-PROTOCOLO: imediato, sem excecao, Lei 14.129/2021 art. 27 IV; plan R-0009 M8): gravado na mesma transacao que leva o pedido a PROTOCOLADO, antes de qualquer validacao de conteudo e antes da delegacao. number = <tenant-slug-upper>-<AAAA>-<sequencial 7 digitos>, unico por tenant; um protocolo por pedido (request_id unico). receipt_hash = sha256 do JSON canonico do recibo. A sequencia portal.protocol_seq NAO e entidade deste blueprint: vive no DDL manuscrito 19-portal-platform.sql porque o gerador nao emite sequences."
+      },
+      "CreateProtocolDto": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "number": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["portal"],
+            "default": "'portal'"
+          },
+          "receipt_hash": {
+            "type": "string",
+            "maxLength": 64
+          }
+        },
+        "required": ["request_id", "number", "issued_at", "receipt_hash"]
+      },
+      "ConsequenceAck": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["desistencia", "renuncia_40", "indicacao", "sne"]
+          },
+          "text_version": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "request_id",
+          "kind",
+          "text_version",
+          "accepted_at",
+          "created_at"
+        ],
+        "description": "Ciencia das consequencias de um ato ([WF-PORTAL-001] secao Transicoes: desistencia, renuncia ao desconto de 40 % (H.53), indicacao de condutor e adesao ao SNE exigem ciencia explicita do texto versionado; portal-build-pack.md secao 2 WP-P1): guarda o kind, a versao do texto aceito e quando foi aceito; nunca o texto em si."
+      },
+      "CreateConsequenceAckDto": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["desistencia", "renuncia_40", "indicacao", "sne"]
+          },
+          "text_version": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["request_id", "kind", "text_version", "accepted_at"]
+      },
+      "Evaluation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["request", "manifestation"]
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scores_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "personal"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "subject_kind",
+          "subject_id",
+          "scores_json",
+          "submitted_at",
+          "created_at"
+        ],
+        "description": "Avaliacao de satisfacao ([WF-PORTAL-001] secao Estados AVALIACAO_OFERECIDA -> CONCLUIDO e [WF-PORTAL-004] secao Estados AVALIACAO_OFERECIDA -> AVALIADA; Lei 13.460/2017 art. 23; ADR-0019 Decision 4; plan R-0009 M9 POST evaluations idempotente): subject_kind | subject_id apontam o objeto avaliado (pedido ou manifestacao, sem FK por ser polimorfico — nao confundir com portal.subject). scores_json guarda as 5 notas; uma avaliacao por objeto (unico por tenant, subject_kind, subject_id). Publica AVALIACAO_REGISTRADA (M21)."
+      },
+      "CreateEvaluationDto": {
+        "type": "object",
+        "properties": {
+          "subject_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["request", "manifestation"]
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scores_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "personal"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "subject_kind",
+          "subject_id",
+          "scores_json",
+          "submitted_at"
+        ]
+      },
+      "IdempotencyRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key": {
+            "type": "string"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "route": {
+            "type": "string"
+          },
+          "body_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "response_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "key",
+          "route",
+          "body_sha256",
+          "response_json",
+          "status",
+          "created_at"
+        ],
+        "description": "Registro de Idempotency-Key deterministica <ato>:<alvo>:<fingerprint> (plan R-0009 M9; portal-route-contract.md secao 1): POST requests, submit, respostas de diligencia, manifestations, evaluations e sne/enrollment. Reuso com o mesmo body_sha256 devolve response_json com o mesmo status; corpo diferente -> 409 PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY. subject_id nulo para POST manifestations anonimo (H.51). Unico por (tenant, key)."
+      },
+      "CreateIdempotencyRecordDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "route": {
+            "type": "string"
+          },
+          "body_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "response_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "integer"
+          }
+        },
+        "required": ["key", "route", "body_sha256", "response_json", "status"]
+      }
+    }
+  }
+}

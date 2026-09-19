@@ -7,7 +7,7 @@ import { ProcessBlockCommandsController } from './process-block-commands.control
 import { ProcessBlockLifecycleService } from './process-block-lifecycle.service.js';
 
 @Module({
-  controllers: [ProcessBlockController, ProcessBlockCommandsController],
+  controllers: [ProcessBlockCommandsController, ProcessBlockController],
   providers: [
     ProcessBlockService,
     ProcessBlockRepository,

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0008",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes de evidência (intenção → upload → conclusão, bodycam por requisição, purga), snapshots (adapter stub) e pacote normativo (gerar/publicar/validar/retirar/conteúdo)",
+  "description": "Codificar os critérios do contrato CTG-0003 em testes unit/integration/e2e de ops-evidence, ops-snapshots e inf/normative, com a fixture 27-fixtures-teat-evidence.sql; vermelhos até TASK-0007.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ops-evidence-tests",
+    "MOD-ops-snapshots-tests",
+    "MOD-inf-normative-tests",
+    "MOD-seed-teat-evidence",
+    "MOD-shared-policy-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0005",
+  "db_isolation": "database",
+  "iteration_count": 3,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["wp-t2"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-2d65556553b6ec74",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["bash", "backend/database/seed.sh"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-2d65556553b6ec74",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

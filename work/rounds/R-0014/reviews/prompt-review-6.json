@@ -1,0 +1,48 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0014/prompts/TASK-0019.md",
+      "line": 101,
+      "claim": "O contrato exige aplicar RN-RAIT-005 e usar fixtures de `backend/database/seed/70-fixtures-portal.sql` (linha 173), mas ambos estão fora da lista fechada de leitura; o Architect não pode consultar as fontes necessárias sem violar o próprio prompt.",
+      "fix": "Adicionar RN-RAIT-005 e `backend/database/seed/70-fixtures-portal.sql` à leitura obrigatória, ou remover essas exigências do contrato."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0014/prompts/TASK-0009.md",
+      "line": 31,
+      "claim": "A leitura obrigatória aponta `reports/TASK-0008.md` sem o prefixo `work/rounds/R-0014/`; esse caminho não existe na worktree e é a especificação executável que o Engineer precisa ler.",
+      "fix": "Substituir por `work/rounds/R-0014/reports/TASK-0008.md`."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0014/prompts/TASK-0019.md",
+      "line": 82,
+      "claim": "O prompt ordena que o Architect defina SHA-256, canonicalização e ordenação de chaves para o fingerprint. A fonte canônica só fixa a forma `<ato>:<alvo>:<fingerprint do corpo>` e o efeito do reuso, sem definir esse algoritmo.",
+      "fix": "Registrar o algoritmo como `source_pending`/OD-P57 e bloquear sua implementação, ou fornecer decisão canônica do Owner/Architect que o fixe antes da tríade."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0014/prompts/TASK-0019.md",
+      "line": 168,
+      "claim": "A regra manda registrar `source_pending` no `docs/framework/arch/parameter-catalogue.md`, mas a fronteira de escrita permite somente `contracts/CTG-0003a.md` e proíbe `docs/**`.",
+      "fix": "Determinar que o Architect registre `source_pending` e a OD no contrato/relatório, deixando a alteração do catálogo para uma tarefa explicitamente autorizada."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0014/tasks/TASK-0008.json",
+      "line": 34,
+      "claim": "TASK-0008 usa Opus com esforço alto, embora `inspector-tests` seja nível pequeno/Sonnet e testes de contrato fechado tenham esforço baixo; a exceção de matriz grande é esforço médio.",
+      "fix": "Usar Sonnet/baixo, ou justificar e registrar no plano uma exceção proporcional à matriz antes do disparo."
+    }
+  ],
+  "notes": []
+}

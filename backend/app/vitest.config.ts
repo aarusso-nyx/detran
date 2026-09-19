@@ -78,6 +78,9 @@ export default defineConfig({
       '@detran/inf-ait': fileURLToPath(
         new URL('../domains/inf/ait/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-deadlines': fileURLToPath(
+        new URL('../domains/inf/deadlines/src/index.ts', import.meta.url),
+      ),
       '@detran/inf-normative': fileURLToPath(
         new URL('../domains/inf/normative/src/index.ts', import.meta.url),
       ),
@@ -86,9 +89,6 @@ export default defineConfig({
       ),
       '@detran/inf-alcohol': fileURLToPath(
         new URL('../domains/inf/alcohol/src/index.ts', import.meta.url),
-      ),
-      '@detran/inf-deadlines': fileURLToPath(
-        new URL('../domains/inf/deadlines/src/index.ts', import.meta.url),
       ),
       '@detran/inf-infraction': fileURLToPath(
         new URL('../domains/inf/infraction/src/index.ts', import.meta.url),
@@ -120,6 +120,9 @@ export default defineConfig({
       '@detran/inf-speed': fileURLToPath(
         new URL('../domains/inf/speed/src/index.ts', import.meta.url),
       ),
+      '@detran/est-crash': fileURLToPath(
+        new URL('../domains/est/crash/src/index.ts', import.meta.url),
+      ),
       '@detran/senatran-adapter': fileURLToPath(
         new URL(
           '../../packages/senatran-adapter/src/index.ts',
@@ -131,6 +134,24 @@ export default defineConfig({
       ),
       '@detran/portal-complaints': fileURLToPath(
         new URL('../domains/portal/complaints/src/index.ts', import.meta.url),
+      ),
+      '@detran/portal-identity': fileURLToPath(
+        new URL('../domains/portal/identity/src/index.ts', import.meta.url),
+      ),
+      '@detran/portal-requests': fileURLToPath(
+        new URL('../domains/portal/requests/src/index.ts', import.meta.url),
+      ),
+      '@detran/portal-inbox': fileURLToPath(
+        new URL('../domains/portal/inbox/src/index.ts', import.meta.url),
+      ),
+      '@detran/portal-citizen-service': fileURLToPath(
+        new URL(
+          '../domains/portal/citizen-service/src/index.ts',
+          import.meta.url,
+        ),
+      ),
+      '@detran/portal-projections': fileURLToPath(
+        new URL('../domains/portal/projections/src/index.ts', import.meta.url),
       ),
       '@detran/ops-agency': fileURLToPath(
         new URL('../domains/ops/agency/src/index.ts', import.meta.url),

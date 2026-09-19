@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
+// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -18,6 +18,10 @@ const WRITABLE_FIELDS = new Set<string>([
   'target_local_act_id',
   'origin_status',
   'addressed_to',
+  'idempotency_key',
+  'justification',
+  'requested_by',
+  'version',
   'status',
   'decision',
   'requested_at',

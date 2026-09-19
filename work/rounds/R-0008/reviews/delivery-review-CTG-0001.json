@@ -1,0 +1,66 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/ait/src/ait-lifecycle.service.ts",
+      "line": 754,
+      "claim": "concurrency-review declara ops.sync_conflict fora da fronteira e apenas fabrica conflictId; não verifica conflito aberto nem o atualiza para resolved, contrariando CTG-0001 §4.8 e C-0001-14/15.",
+      "fix": "integrar a operação transacional de consulta e resolução do conflito canônico, ou retirar esta entrega do CTG-0001 e registrá-la formalmente fora de escopo."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/inf/ait/src/handwritten/ait-cancel-requests.controller.ts",
+      "line": 128,
+      "claim": "review/decide validam If-Match contra summary.version, que é a versão do ait_cancel_request; o contrato determina que, quando ait_id existe, a versão e o ETag são os do AIT.",
+      "fix": "retornar e validar a versão atual de ait_ait, e devolver o ETag da transição do AIT."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "backend/domains/inf/ait/src/ait-lifecycle.service.ts",
+      "line": 970,
+      "claim": "decide ignora options.decisionBody para a guarda de divergência; portanto decision_body informado e diferente de addressed_to ainda pode decidir, em contradição direta com CTG-0001 §4.17.",
+      "fix": "antes da decisão, rejeitar decisionBody informado e divergente com 403 TEAT.AIT_CANCEL_ADDRESSEE_FORBIDDEN."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/ait/src/ait-lifecycle.service.ts",
+      "line": 964,
+      "claim": "decide só bloqueia approved/denied; aceita qualquer outro status de pedido e não exige o estado do AIT correspondente a draft ou post_final, embora CTG-0001 §4.17 limite o pedido a requested|under_review e fixe as transições de origem.",
+      "fix": "validar explicitamente status do pedido e o pré-estado do AIT, devolvendo TEAT.AIT_STATE_INVALID para todos os demais."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "backend/domains/inf/ait/src/ait-lifecycle.service.ts",
+      "line": 1298,
+      "claim": "o envelope recebe randomUUID(), mas CTG-0001 §2 determina envelope.id como o id devolvido por insert returning id; o contrato canônico também o declara ULID.",
+      "fix": "fazer SqlTeatEventOutbox inserir com returning id e propagar o id canônico ao envelope persistido, sem gerar UUID substituto no serviço."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/ait/src/ait-commands.controller.ts",
+      "line": 62,
+      "claim": "os comandos AIT não recebem nem processam Idempotency-Key; CTG-0001 §0 exige suporte em todo POST de comando, replay idêntico e 409 TEAT.IDEMPOTENCY_REPLAY para corpo divergente.",
+      "fix": "introduzir tratamento persistido de Idempotency-Key para cada comando, incluindo replay da resposta e teste de repetição e divergência."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/domains/inf/ait/src/ait-lifecycle.service.ts",
+      "line": 867,
+      "claim": "originStatus é aceito como string livre e depois usado como AitStatus na decisão; CTG-0001 §4.15 exige que pertença a inf.ait_state_ref.code.",
+      "fix": "validar originStatus contra o vocabulário canônico antes de criar o pedido e devolver erro canônico para token inválido."
+    }
+  ],
+  "notes": [
+    "Os testes de política cobrem os oito papéis TEAT declarados e incluem negações individuais; não há achado adicional no item 13."
+  ]
+}

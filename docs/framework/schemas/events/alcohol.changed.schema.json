@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/alcohol.changed.schema.json",
+  "title": "alcohol.changed",
+  "description": "Teste ou recusa de alcoolemia registrados (CTG-0004 §5/§9; sem z.strictObject nesta rodada, OD-T69).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "alcohol.changed"
+    },
+    "domainEvent": {
+      "type": "string",
+      "enum": ["ALCOOLEMIA_TESTE_REGISTRADO", "ALCOOLEMIA_RECUSA_REGISTRADA"]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "alcohol-procedure"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "ALCOOLEMIA_TESTE_REGISTRADO",
+          "required": [
+            "procedureId",
+            "testId",
+            "breathalyzerId",
+            "testedAt",
+            "resultMgL",
+            "maxErrorMgL",
+            "consideredMgL",
+            "outcome",
+            "toState"
+          ],
+          "properties": {
+            "procedureId": {
+              "type": "string"
+            },
+            "testId": {
+              "type": "string"
+            },
+            "breathalyzerId": {
+              "type": ["string", "null"]
+            },
+            "testedAt": {
+              "type": "string"
+            },
+            "resultMgL": {
+              "type": "number"
+            },
+            "maxErrorMgL": {
+              "type": "number"
+            },
+            "consideredMgL": {
+              "type": "number"
+            },
+            "outcome": {
+              "type": "string"
+            },
+            "toState": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "ALCOOLEMIA_RECUSA_REGISTRADA",
+          "required": [
+            "procedureId",
+            "refusalId",
+            "kind",
+            "refusedAt",
+            "toState"
+          ],
+          "properties": {
+            "procedureId": {
+              "type": "string"
+            },
+            "refusalId": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "enum": ["refusal", "technical_impossibility"]
+            },
+            "refusedAt": {
+              "type": "string"
+            },
+            "toState": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

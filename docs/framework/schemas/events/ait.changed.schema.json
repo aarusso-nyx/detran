@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/ait.changed.schema.json",
+  "title": "ait.changed",
+  "description": "Transições do agregado AIT publicadas em cada mudança de estado com token de domínio (CTG-0001 §6; CTG-0002 §4.6 — AIT_RECEBIDO também sai do applier de sincronização).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "ait.changed"
+    },
+    "domainEvent": {
+      "type": "string",
+      "enum": [
+        "AIT_FINALIZADO",
+        "AIT_RECEBIDO",
+        "AIT_ACEITO",
+        "AIT_INTEGRADO",
+        "AIT_REJEITADO",
+        "AIT_CANCELADO_POSFINAL"
+      ]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "ait"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "AIT_FINALIZADO",
+          "required": [
+            "aitId",
+            "aitNumber",
+            "series",
+            "fromState",
+            "toState",
+            "contentHash",
+            "finalizedAt"
+          ],
+          "properties": {
+            "aitId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "aitNumber": {
+              "type": "string"
+            },
+            "series": {
+              "type": "string"
+            },
+            "fromState": {
+              "const": "RASCUNHO_OFFLINE"
+            },
+            "toState": {
+              "const": "FINALIZADO_LOCAL"
+            },
+            "contentHash": {
+              "type": "string"
+            },
+            "finalizedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "AIT_RECEBIDO",
+          "required": [
+            "aitId",
+            "fromState",
+            "toState",
+            "receiptProtocol",
+            "receivedAt"
+          ],
+          "properties": {
+            "aitId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "fromState": {
+              "type": "string"
+            },
+            "toState": {
+              "const": "RECEBIDO"
+            },
+            "receiptProtocol": {
+              "type": "string"
+            },
+            "receivedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "AIT_ACEITO",
+          "required": ["aitId", "fromState", "toState", "acceptedAt"],
+          "properties": {
+            "aitId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "fromState": {
+              "type": "string"
+            },
+            "toState": {
+              "const": "ACEITO"
+            },
+            "acceptedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "AIT_INTEGRADO",
+          "required": [
+            "aitId",
+            "aitNumber",
+            "series",
+            "committedOn",
+            "contentHash",
+            "toState",
+            "integratedAt"
+          ],
+          "properties": {
+            "aitId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "aitNumber": {
+              "type": "string"
+            },
+            "series": {
+              "type": "string"
+            },
+            "trafficAgencyId": {
+              "type": ["string", "null"]
+            },
+            "framingId": {
+              "type": ["string", "null"]
+            },
+            "catalogId": {
+              "type": ["string", "null"]
+            },
+            "committedOn": {
+              "type": ["string", "null"],
+              "format": "date"
+            },
+            "issuedAt": {
+              "type": ["string", "null"]
+            },
+            "contentHash": {
+              "type": ["string", "null"]
+            },
+            "toState": {
+              "const": "INTEGRADO"
+            },
+            "integratedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "AIT_REJEITADO",
+          "required": ["aitId", "fromState", "toState", "rejectedAt"],
+          "properties": {
+            "aitId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "fromState": {
+              "type": "string"
+            },
+            "toState": {
+              "const": "REJEITADO"
+            },
+            "rejectedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "AIT_CANCELADO_POSFINAL",
+          "required": [
+            "aitId",
+            "cancelRequestId",
+            "originStatus",
+            "contentHash",
+            "decidedAt"
+          ],
+          "properties": {
+            "aitId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "cancelRequestId": {
+              "type": "string"
+            },
+            "originStatus": {
+              "type": "string"
+            },
+            "contentHash": {
+              "type": ["string", "null"]
+            },
+            "decidedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

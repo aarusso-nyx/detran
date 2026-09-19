@@ -3,7 +3,7 @@ id: ARCH-PARAMETER-CATALOGUE
 title: Catálogo de parâmetros e flags — chaves, defaults, status, fonte e decisão vinculada (seed de ops.parameter, ADR-0021)
 status: draft
 apps: [rait, teat, portal, boat, dashboard]
-updated: 2026-09-13
+updated: 2026-09-17
 ---
 
 # Catálogo de parâmetros e flags
@@ -59,36 +59,38 @@ registro em `open-decisions-rait.md`, nos §4 dos build packs ou em `open-issues
 
 ## TEAT (`teat.*`, `sync.*`)
 
-| Chave                                  | Tipo | Default                                             | Status   | pend.   | legal | Decisão                                             | Consumidor                     |
-| -------------------------------------- | ---- | --------------------------------------------------- | -------- | ------- | ----- | --------------------------------------------------- | ------------------------------ |
-| `sync.concurrency_window_minutes`      | int  | —                                                   | proposta | **sim** | não   | OD-T03, DT-016                                      | detecção de sessão concorrente |
-| `teat.homologation.expired_behavior`   | enum | `warn` (lavra com flag de risco; autoridade decide) | vigente  | não     | não   | OD-T04, DT-110                                      | `HOMOLOGATION_RENEWAL_DUE`     |
-| `teat.homologation.tolerance_days`     | int  | 0                                                   | vigente  | não     | não   | OD-T04, H.54                                        | idem                           |
-| `teat.numbering.reservation_ttl_hours` | int  | 72                                                  | vigente  | não     | não   | OD-T07, H.54                                        | faixas                         |
-| `teat.numbering.range_alert_pct`       | %    | 90                                                  | vigente  | não     | não   | OD-D04, IND-DASH-406, H.54                          | alerta de faixa                |
-| `teat.bodycam.retention_days`          | dias | —                                                   | proposta | **sim** | não   | OD-T08, DT-014, DT-049                              | chrome/metadados               |
-| `teat.monitored_custody`               | F    | false                                               | vigente  | não     | não   | OD-T09/DT-015                                       | rotas desligadas               |
-| `teat.speed_meters`                    | F    | false                                               | vigente  | não     | não   | OD-T09/DT-063                                       | UC-TEAT-013                    |
-| `teat.sivec_integration`               | F    | false                                               | vigente  | não     | não   | OD-T10, H.54                                        | adapter                        |
-| `teat.agent_legitimacy_declaration`    | F    | true                                                | vigente  | não     | não   | OD-T11, H.54                                        | `open-shift`                   |
-| `teat.no_approach_reason.mode`         | enum | `classified`                                        | vigente  | não     | não   | OD-T06, H.54                                        | UC-TEAT-002                    |
-| `teat.retention.ait_years`             | anos | 10                                                  | vigente  | não     | não   | DT-049, [REF-DETRANDF-INSTRUCAO-146-2023-TTD], H.45 | arquivo                        |
+| Chave                                  | Tipo | Default                                             | Status   | pend.   | legal | Decisão                                             | Consumidor                                                                                                                   |
+| -------------------------------------- | ---- | --------------------------------------------------- | -------- | ------- | ----- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `sync.concurrency_window_minutes`      | int  | —                                                   | proposta | **sim** | não   | OD-T03, DT-016                                      | `ops/offline-sync/src/handwritten/concurrency-detector.ts` (`CONCURRENCY_WINDOW_KEY`)                                        |
+| `teat.homologation.expired_behavior`   | enum | `warn` (lavra com flag de risco; autoridade decide) | vigente  | não     | não   | OD-T04, DT-110                                      | `ops/field/src/handwritten/mobile-bootstrap.service.ts` (`HOMOLOGATION_BEHAVIOR_KEY`), bloqueador `HOMOLOGATION_RENEWAL_DUE` |
+| `teat.homologation.tolerance_days`     | int  | 0                                                   | vigente  | não     | não   | OD-T04, H.54                                        | idem                                                                                                                         |
+| `teat.numbering.reservation_ttl_hours` | int  | 72                                                  | vigente  | não     | não   | OD-T07, H.54                                        | `ops/offline-sync/src/handwritten/reserve-numbering.command.ts` (`RESERVATION_TTL_KEY`)                                      |
+| `teat.numbering.range_alert_pct`       | %    | 90                                                  | vigente  | não     | não   | OD-D04, IND-DASH-406, H.54                          | alerta de faixa                                                                                                              |
+| `teat.bodycam.retention_days`          | dias | —                                                   | proposta | **sim** | não   | OD-T08, DT-014, DT-049                              | chrome/metadados                                                                                                             |
+| `teat.monitored_custody`               | F    | false                                               | vigente  | não     | não   | OD-T09/DT-015                                       | `inf/measures/src/handwritten/record-removal.command.ts` (`MONITORED_CUSTODY_FLAG`, porta `MEASURE_FEATURE_FLAGS`)           |
+| `teat.speed_meters`                    | F    | false                                               | vigente  | não     | não   | OD-T09/DT-063                                       | `backend/app/src/app.module.ts` (montagem condicional do `SpeedModule`), UC-TEAT-013                                         |
+| `teat.sivec_integration`               | F    | false                                               | vigente  | não     | não   | OD-T10, H.54                                        | adapter                                                                                                                      |
+| `teat.agent_legitimacy_declaration`    | F    | true                                                | vigente  | não     | não   | OD-T11, H.54                                        | `open-shift`                                                                                                                 |
+| `teat.no_approach_reason.mode`         | enum | `classified`                                        | vigente  | não     | não   | OD-T06, H.54                                        | UC-TEAT-002                                                                                                                  |
+| `teat.retention.ait_years`             | anos | 10                                                  | vigente  | não     | não   | DT-049, [REF-DETRANDF-INSTRUCAO-146-2023-TTD], H.45 | arquivo                                                                                                                      |
 
 ## PORTAL (`portal.*`, `privacy.*`)
 
-| Chave                           | Tipo | Default                                                                                                                           | Status   | pend.   | legal | Decisão                                                          | Consumidor           |
-| ------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ----- | ---------------------------------------------------------------- | -------------------- |
-| `portal.act_level_policy`       | json | defesa/recurso/indicação/procuração = `advanced` (gov.br ouro, e-Notariado, qualificada); consulta = `simple`; ouvidoria = `none` | vigente  | não     | não   | OD-P01, OD-P02, [REF-DETRANAM-PORTARIA-NORMATIVA-001-2025], H.50 | gates de serviço     |
-| `portal.govbr_seal_mapping`     | json | ouro **e prata** = advanced; bronze = insuficiente (decisão H.50, contra a PN 001/2025 — portaria pedida)                         | vigente  | não     | não   | OD-P02, H.50                                                     | idem                 |
-| `portal.cetran_appeal_level`    | enum | `advanced`                                                                                                                        | vigente  | não     | não   | OD-P01 residual, H.54                                            | recurso 2ª instância |
-| `portal.ombudsman_level`        | enum | `none` (anônimo) / `simple` para acompanhar                                                                                       | vigente  | não     | não   | OD-P06, DT-051, H.54                                             | ouvidoria            |
-| `portal.card_payment`           | F    | false                                                                                                                             | proposta | não     | não   | OD-P05/DT-031, DT-072                                            | pagamento            |
-| `portal.installments`           | F    | false                                                                                                                             | proposta | não     | não   | OD-P05/DT-031, DT-072                                            | idem                 |
-| `portal.waiver_40_term`         | F    | false                                                                                                                             | proposta | não     | não   | OD-P03/DT-026, OD-003                                            | termo de renúncia    |
-| `privacy.public_regime_days`    | dias | —                                                                                                                                 | proposta | **sim** | não   | OD-P08                                                           | resposta ao titular  |
-| `portal.read_cache_ttl_minutes` | int  | 15                                                                                                                                | vigente  | não     | não   | OD-P11, H.54                                                     | leituras nacionais   |
-| `portal.mobile_shell`           | F    | false                                                                                                                             | vigente  | não     | não   | OD-P12                                                           | `apps/portal/mobile` |
-| `portal.ombudsman_taxonomy`     | json | inclui "solicitação"                                                                                                              | vigente  | não     | não   | OD-P10, H.54                                                     | ouvidoria            |
+| Chave                              | Tipo | Default                                                                                                                           | Status   | pend.   | legal | Decisão                                                          | Consumidor                                                                                  |
+| ---------------------------------- | ---- | --------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- | ----- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `portal.act_level_policy`          | json | defesa/recurso/indicação/procuração = `advanced` (gov.br ouro, e-Notariado, qualificada); consulta = `simple`; ouvidoria = `none` | vigente  | não     | não   | OD-P01, OD-P02, [REF-DETRANAM-PORTARIA-NORMATIVA-001-2025], H.50 | gates de serviço                                                                            |
+| `portal.govbr_seal_mapping`        | json | ouro **e prata** = advanced; bronze = insuficiente (decisão H.50, contra a PN 001/2025 — portaria pedida)                         | vigente  | não     | não   | OD-P02, H.50                                                     | idem                                                                                        |
+| `portal.cetran_appeal_level`       | enum | `advanced`                                                                                                                        | vigente  | não     | não   | OD-P01 residual, H.54                                            | recurso 2ª instância                                                                        |
+| `portal.ombudsman_level`           | enum | `none` (anônimo) / `simple` para acompanhar                                                                                       | vigente  | não     | não   | OD-P06, DT-051, H.54                                             | ouvidoria                                                                                   |
+| `portal.card_payment`              | F    | false                                                                                                                             | proposta | não     | não   | OD-P05/DT-031, DT-072                                            | pagamento                                                                                   |
+| `portal.installments`              | F    | false                                                                                                                             | proposta | não     | não   | OD-P05/DT-031, DT-072                                            | idem                                                                                        |
+| `portal.waiver_40_term`            | F    | false                                                                                                                             | proposta | não     | não   | OD-P03/DT-026, OD-003                                            | termo de renúncia                                                                           |
+| `privacy.public_regime_days`       | dias | —                                                                                                                                 | proposta | **sim** | não   | OD-P08                                                           | resposta ao titular                                                                         |
+| `portal.read_cache_ttl_minutes`    | int  | 15                                                                                                                                | vigente  | não     | não   | OD-P11, H.54                                                     | leituras nacionais                                                                          |
+| `portal.mobile_shell`              | F    | false                                                                                                                             | vigente  | não     | não   | OD-P12                                                           | `apps/portal/mobile`                                                                        |
+| `portal.ombudsman_taxonomy`        | json | inclui "solicitação"                                                                                                              | vigente  | não     | não   | OD-P10, H.54                                                     | ouvidoria                                                                                   |
+| `portal.attachment.max_size_mb`    | int  | 10                                                                                                                                | proposta | não     | não   | OD-P66, spec §7, A6(e)                                           | upload de anexos (o app usa `ATTACHMENT_MAX_BYTES`/`accept` fixos até o parâmetro ser lido) |
+| `portal.attachment.accepted_types` | json | `["application/pdf","image/jpeg","image/png"]`                                                                                    | proposta | não     | não   | OD-P66, spec §7, A6(e)                                           | upload de anexos (o app usa `ATTACHMENT_MAX_BYTES`/`accept` fixos até o parâmetro ser lido) |
 
 ## BOAT (`est.*`)
 
@@ -126,6 +128,32 @@ registro em `open-decisions-rait.md`, nos §4 dos build packs ou em `open-issues
 | `dashboard.sre.adapter_error_pct`            | %    | 5                                            | vigente  | não     | não   | OD-D04, H.54  | IND-403                                |
 | `dashboard.critical_extinction.notify_legal` | F    | true                                         | vigente  | não     | não   | OD-D11, H.54  | `CRITICO_EXTINCAO`                     |
 | `dashboard.origin_resources_enabled`         | F    | true                                         | vigente  | não     | não   | OD-D13, H.54  | D-14/D-16                              |
+
+## Namespaces i18n (allowlist do verificador)
+
+Uma chave i18n não é um parâmetro: ela não entra nas cinco tabelas acima. Um namespace de
+i18n entra nesta tabela somente para que `verify:parameter-catalogue --check-usage`
+(`tools/parameters/verify.mjs`) deixe de tratar seus literais como candidato a parâmetro
+desconhecido — nunca por exclusão de diretório. Origem: `OD-P46`
+(`docs/framework/arch/portal-build-pack.md` §4) e método §4.17
+(`docs/meta/agents/orchestra/README.md`).
+
+| Namespace              | App               | Catálogo                         | Decisão |
+| ---------------------- | ----------------- | -------------------------------- | ------- |
+| `portal.shell`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.common`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.states`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.errors`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.situation`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.screens`       | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.forms`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.legal`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.requests`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.evaluations`   | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.notifications` | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.documents`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.services`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| `portal.a11y`          | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
 
 ## Regras do catálogo
 
@@ -221,6 +249,31 @@ adicional é preservado nos metadados gerados; cada token adicional que também 
 `H.<n>`, `OD-*` ou `DT-*` precisa resolver nessas fontes. Não se escolhe um token
 por semelhança nem se inventa uma referência ausente.
 
+### Namespaces i18n
+
+O parser reconhece exclusivamente a primeira tabela Markdown sob o heading
+`Namespaces i18n`, com exatamente as quatro colunas `Namespace | App | Catálogo |
+Decisão`, na mesma disciplina de gramática das cinco tabelas de parâmetros.
+
+`Namespace` é um literal `<prefixo>.<segmento>` em que `<prefixo>` é um dos
+prefixos literais permitidos de uma das cinco superfícies (§Superfície, chave e
+valores de linha) e `<segmento>` casa `[a-z][a-z0-9_]*`. A unicidade do
+`Namespace` é obrigatória na tabela. A célula `Decisão` segue a mesma regra de
+resolução da célula `Decisão` das tabelas de parâmetros: só `H.<n>`, `OD-*` ou
+`DT-*` são elegíveis e a decisão selecionada precisa existir em ao menos uma das
+mesmas fontes (`decision-closure-plan.md`, `steering.md`, `open-decisions-rait.md`,
+`open-issues.md`, cédulas do Owner).
+
+Fail-closed: um namespace que seja prefixo (`<ns>.`) de qualquer chave das cinco
+tabelas de parâmetros falha a execução; um namespace cujo `<prefixo>` seja
+estranho aos prefixos das superfícies falha; a tabela ausente, malformada ou com
+célula vazia falha.
+
+A allowlist de namespaces i18n não gera artefato e não entra no seed — mas, como o
+gerador coloca o SHA-256 desta fonte no cabeçalho dos artefatos gerados, toda
+edição deste arquivo, inclusive desta tabela, exige rodar `pnpm
+parameters:generate` para os artefatos deixarem de ficar `stale`.
+
 ### Saídas determinísticas
 
 O gerador lê esta fonte como bytes UTF-8, calcula seu SHA-256 e coloca a identidade
@@ -273,14 +326,27 @@ inferência. Ele também verifica que nenhuma linha `legal_readonly=true` seja
 tratada como editável pelo contrato de geração.
 
 Para detectar uso em código, o verificador examina literais de string estáticos em
-código, ignorando testes, `dist` e `node_modules`. Qualquer literal exatamente
-igual a uma chave do catálogo conta como uso, inclusive uma chave de um ponto como
+código. A varredura cobre **todo** diretório do repositório; só `tests`, `dist` e
+`node_modules` são ignorados — não há exclusão por diretório para nenhum outro
+caso, inclusive código gerado. Qualquer literal exatamente igual a uma chave do
+catálogo conta como uso, inclusive uma chave de um ponto como
 `teat.speed_meters`. Um literal que não esteja no catálogo é candidato desconhecido
 somente se tiver dois ou mais pontos e começar por um destes prefixos: `rait`,
 `collection`, `deadline`, `session`, `teat`, `sync`, `portal`, `privacy`, `est` ou
-`dashboard`. Literais desconhecidos de um ponto são ambíguos com entidades de
-auditoria, como `portal.complaint`, e não são candidatos. Não existe allowlist
-silenciosa: todo candidato desconhecido falha com arquivo, linha e literal.
+`dashboard` — **exceto** quando os dois primeiros segmentos do literal formam um
+namespace declarado em §Namespaces i18n (allowlist do verificador); nesse caso o
+literal não é candidato, porque é uma chave i18n, não um parâmetro. Literais
+desconhecidos de um ponto são ambíguos com entidades de auditoria, como
+`portal.complaint`, e não são candidatos. A allowlist de namespaces i18n é a
+única isenção da heurística: nunca por diretório. Assim, com a varredura cobrindo
+todo diretório, os rótulos `portal.requests.nextAction.<STATE>` e
+`portal.evaluations.publicIndicator` — transcritos como tipos `const` nos
+clientes de comando gerados (`BP-PORTAL-*.commands.ts`,
+`packages/api-clients/src/generated`) — deixam de ser candidatos porque seus dois
+primeiros segmentos formam, respectivamente, os namespaces `portal.requests` e
+`portal.evaluations` da allowlist. Não existe allowlist silenciosa: a única
+allowlist é a declarada em §Namespaces i18n e lida pelo verificador; todo outro
+candidato desconhecido falha com arquivo, linha e literal.
 
 A classificação é sintática, por AST TypeScript, para `.ts`, `.js`, `.mjs`,
 `.tsx` e `.jsx`, tanto em arquivo único quanto em árvore. Um literal usado como

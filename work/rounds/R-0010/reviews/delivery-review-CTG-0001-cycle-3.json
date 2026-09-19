@@ -1,0 +1,66 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "backend/app/tests/e2e/policy-routes.e2e.spec.ts",
+      "line": 77,
+      "claim": "A correção do achado 1 reintroduz o mesmo defeito por outra porta: `EST_CTG_0001_MOUNTED_KEYS` inclui `crash-link` nas quatro ações, e a correção do achado 3 pôs `crash-link` em `EST_RESOURCES` (policy.ts:440), mas `api.resources[].path='links'` tem `operations: []` no blueprint (BP-EST-CRASH-001.json:617), de modo que `CrashLinkController` é gerado sem nenhum handler (só `@Resource('est:crash-link')`, sem `@Action`). O sentido 2 de C-0004-47/48 acusa quatro chaves sem rota. Reproduzido nesta worktree: `DETRAN_TEST_TIER=e2e npx vitest run tests/e2e/policy-routes.e2e.spec.ts -t 'C-0004-47'` → 1 failed, missingRoutes = [est:crash-link:read, est:crash-link:create, est:crash-link:update, est:crash-link:delete]. A afirmação de validação independente de 4 PASS não corresponde ao estado atual da árvore.",
+      "fix": "Ou retirar as quatro chaves `est:crash-link:*` de `EST_CTG_0001_MOUNTED_KEYS` (a allowlist da adenda A-2 deve listar só ações efetivamente montadas, e `links` não monta nenhuma neste corte), transferindo-as para o gate de CTG-0002 junto com os comandos; ou declarar as `operations` de leitura de `links` no blueprint e regenerar (ADR-0007, nunca editar o gerado). Não mexer nas outras chaves nem relaxar a asserção. Reexecutar o arquivo inteiro (4 testes), não só o primeiro caso."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "backend/app/tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "line": 1,
+      "claim": "Mover os REDs de WP-B2 para um arquivo novo resolve a alocação de corte, mas não os tira da suíte: `backend/app/vitest.config.ts:10` inclui `tests/e2e/**/*.e2e.spec.ts`, então `pnpm --filter @detran/app test:e2e` (→ `backend:test:e2e` → `backend:test:ci`, ci.yml:189) coleta o arquivo novo pelo mesmo glob do antigo. Hoje ele está untracked; a separação depende inteiramente de o commit de CTG-0001 não o levar. `pnpm check` não cobre isso (não chama `backend:test:*`), então a repetição do check antes do commit não sinalizaria o problema.",
+      "fix": "Commitar CTG-0001 com pathspec explícito dos artefatos de TASK-0001…0004, nunca `git add -A`, e registrar no relatório/PR que `boat-crash-commands.e2e.spec.ts` entra com TASK-0006/CTG-0002. Opcionalmente confirmar com `git status --short` antes do commit que o arquivo segue untracked."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/database/ddl/70-est-crash.sql",
+      "line": 52,
+      "claim": "`ux_est_crash_record_natural_key` é índice único total sobre colunas todas `not null`, então a chave natural do §1.4 passou de critério de detecção de duplicidade a rejeição dura: dois sinistros distintos do mesmo órgão, no mesmo município e com o mesmo `occurred_at` (granularidade de minuto na captura) falham com 23505 cru, sem código do catálogo BOAT. A spec de integração prova a rejeição (21 PASS verificados aqui), mas nenhum caminho traduz o 23505 em erro contratado.",
+      "fix": "Em TASK-0007, mapear a violação de `ux_est_crash_record_natural_key` para um erro do catálogo BOAT no comando de criação/sincronização, e registrar na adenda se a chave natural é bloqueio ou apenas detecção — hoje o DDL decide por bloqueio sem que o contrato o diga."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "docs/framework/product/domains/est/boat/use-cases/INDEX.md",
+      "line": 24,
+      "claim": "As duas tabelas de status foram sincronizadas com os frontmatters (conferido caso a caso: 001/002/004/007/012 `approved`, 003/005/006/008/009/010/011 `reviewed`, 013 `draft`), mas a tabela de temas do Grupo O ainda descreve UC-BOAT-012 como \"(stub criado)\", enquanto a ficha está `approved` e o rodapé já foi corrigido para \"aprovado conforme a ficha vigente\". Resta uma terceira afirmação de status no mesmo arquivo divergindo da fonte.",
+      "fix": "Trocar \"(stub criado)\" por \"(UC dedicado, aprovado)\" na linha UC-1.245–1.246 e reexecutar `docs:kb:check` e `format:check`."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0010/reports/TASK-0004.md",
+      "line": 3,
+      "claim": "A linha `Arquivos criados/alterados` ainda lista `backend/domains/est/crash/src/handwritten/boat-commands.controller.ts`, arquivo agora deletado (`git status` acusa ` D`). O parágrafo de correção no fim explica a retirada, mas o cabeçalho do relatório continua declarando a entrega do controlador provisório, que é justamente o que a adenda A-3 diz não existir em CTG-0001.",
+      "fix": "Atualizar a lista de arquivos do relatório para o conjunto efetivamente entregue (sem `src/handwritten/`), mantendo o parágrafo que registra a remoção e a alocação de `start` a TASK-0006/0007."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "backend/domains/est/crash/src/controllers/crash-link.controller.ts",
+      "line": 2,
+      "claim": "Com `operations: []`, o gerador emite um controlador sem handlers mas com `Body`, `Delete`, `Get`, `Param`, `Patch`, `Post`, `Audit` e `CreateCrashLinkDto` importados e não usados. Passa no typecheck atual (sem `noUnusedLocals`), mas é ruído gerado que alimenta a confusão do achado 1: o arquivo parece montar rotas e não monta.",
+      "fix": "Ajustar o gerador de blueprints para omitir imports quando `operations` é vazio (ou não emitir o controlador), não editar o gerado à mão; tratar em CTG-0002 junto com a decisão sobre as rotas de `links`."
+    }
+  ],
+  "notes": [
+    "Ciclo restrito conforme §5 do método (ajuste R-0006): avaliadas apenas as correções dos seis `high` do ciclo 1 válido e o que essas mudanças introduziram. Não houve reabertura dos itens já julgados OK.",
+    "Achado 2 (REDs de rota inexistente em policy-routes.e2e.spec.ts) corrigido na substância: o arquivo não contém mais `transmit`, `renaest/correct` nem `scene-duties`; os quatro casos migraram para `boat-crash-commands.e2e.spec.ts` com as expectativas originais intactas (409 BOAT.TRANSMIT_NOT_CLOSED, 409 BOAT.RECTIFY_TERMINAL, 422 BOAT.RECTIFY_REASON_REQUIRED, 422 BOAT.DUTY_REGIME_MISMATCH) e ainda ganharam If-Match/ETag/SINISTRO_INICIADO. Nenhum `skip`, `todo` ou asserção relaxada.",
+    "Achado 3 (papéis de leitura) corrigido: `EST_GENERAL_READ_ROLES` vincula `field`→`field-agent`/`field-supervisor`, `processing`→`processing-operator`, `authority`→`traffic-authority` nos oito recursos gerais; `crash-victim` soma `AUDITOR`; espelho fica com `processing-operator`/`traffic-authority`/`integration-operator`/`AUDITOR`; `crash-subject-request` com `processing-operator`/`AUDITOR`. `create`/`update` seguem vazios com comentário explícito e `crash-record:create` é reposto por `EST_COMMAND_RULES` na ordem correta do spread (policy.ts:1647). `pnpm --filter @detran/shared test` reexecutado aqui: 186 PASS.",
+    "Achado 5 (`start` sem controle de versão) corrigido pela remoção: `src/handwritten/` não existe mais, `handwrittenControllers: []` no blueprint, `crash.module.ts` monta só os onze controladores gerados e nenhuma referência a `BoatCommandsController` sobrou em `app.module.ts`. A adenda A-3 declara o corte por escrito.",
+    "Achado 6 (modelo do espelho nacional) corrigido e verificado contra o banco: `rectification_kind` com check `complement|correction`, `ck_est_crash_renaest_submission_national_status` restrito aos quatro estados do espelho e `ux_est_crash_record_natural_key` presentes no blueprint (linhas 107/502/511/514) e no DDL gerado (52/228/233/234), com cabeçalho e SHA do blueprint preservados. `DETRAN_TEST_TIER=integration` em `@detran/est-crash` reexecutado aqui: 21 PASS, incluindo os três casos novos e a renomeação do teste de duplicidade de origem.",
+    "Achado 12 (matriz exaustiva) atendido: a lista `rules` de policy.spec.ts cobre as 62 chaves `est:*` da matriz (11 read, 11 create, 11 update, 11 delete, 17 comandos e `subject-request`), iterando sobre `DETRAN_ROLES` inteiro. Achado 8 (duplicatas) atendido: não resta nenhuma entrada `['est', …]` em `TEAT_RULES`.",
+    "O único `high` remanescente é de correção local e não muda plano nem contrato: a allowlist da adenda A-2 promete listar as ações \"efetivamente montadas\" e `crash-link` não monta nenhuma. Não há contradição de ADR, Constituição ou decisão do Owner, e nenhuma fronteira de escrita foi violada — por isso REVIEW e não FAIL.",
+    "Comandos executados nesta revisão, todos sem escrita na worktree: o caso C-0004-47 de `policy-routes.e2e.spec.ts` (1 FAIL, evidência do achado), `@detran/shared` completo (186 PASS) e `@detran/est-crash` integração (21 PASS). A suíte e2e completa do app não foi executada — com o arquivo de CTG-0002 presente na árvore ela ficaria vermelha por construção, conforme o achado `low` correspondente.",
+    "Pendências `low` do ciclo 1 não endereçadas nesta rodada de correção (interceptor BOAT no composition root, `purpose` como texto livre sem catálogo, gatilho de revalidação de `crash_severity_matches_victims`, `renaest-mapping.md` e CTG-0002.md no mesmo diff, `CrashVictimController.list()` sem filtro) seguem registradas e continuam alocadas a CTG-0002; não foram reavaliadas aqui."
+  ]
+}

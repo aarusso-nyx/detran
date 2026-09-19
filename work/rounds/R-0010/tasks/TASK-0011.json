@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0010",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codificar testes para o gate de contratos BOAT antes da extensão de produção",
+  "description": "Provar catálogos TEAT e BOAT por prefixo e correspondência bidirecional das rotas com regressão TEAT.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contracts-check-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 9,
+  "tags": ["wp-b3", "contracts"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-274708b740406def",
+  "acceptance_commands": [["pnpm", "contracts:test"]],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-274708b740406def",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

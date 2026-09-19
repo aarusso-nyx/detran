@@ -1,4 +1,4 @@
-// Generated from BP-OPS-EVIDENCE-001 v1.0.0 sha256:a8692e7ee4171aea45d3aa6a8ca457251f3005b1dc05d1b03e2aa5ebc8f1923f
+// Generated from BP-OPS-EVIDENCE-001 v1.1.0 sha256:e739cf21c78ced39113911fbf0c9950d0c2091ab58cc4efedee4225786fe9eac
 import { Module } from '@nestjs/common';
 import { EvidenceController } from './controllers/evidence.controller.js';
 import { EvidenceService } from './services/evidence.service.js';
@@ -22,10 +22,13 @@ import { StorageIntentController } from './controllers/storage-intent.controller
 import { StorageIntentService } from './services/storage-intent.service.js';
 import { StorageIntentRepository } from './repositories/storage-intent.repository.js';
 import { EvidenceCustodyController } from './handwritten/evidence-custody.controller.js';
-import { EVIDENCE_CUSTODY_PROVIDER } from './handwritten/evidence-custody.provider.js';
+import { EvidenceAccessController } from './handwritten/evidence-access.controller.js';
+import { EVIDENCE_COMMANDS_PROVIDER } from './handwritten/evidence-commands.provider.js';
 
 @Module({
   controllers: [
+    EvidenceCustodyController,
+    EvidenceAccessController,
     EvidenceController,
     EvidenceLinkController,
     CustodyEventController,
@@ -33,7 +36,6 @@ import { EVIDENCE_CUSTODY_PROVIDER } from './handwritten/evidence-custody.provid
     ProbativePackageItemController,
     EvidenceAccessRequestController,
     StorageIntentController,
-    EvidenceCustodyController,
   ],
   providers: [
     EvidenceService,
@@ -50,7 +52,7 @@ import { EVIDENCE_CUSTODY_PROVIDER } from './handwritten/evidence-custody.provid
     EvidenceAccessRequestRepository,
     StorageIntentService,
     StorageIntentRepository,
-    EVIDENCE_CUSTODY_PROVIDER,
+    EVIDENCE_COMMANDS_PROVIDER,
   ],
 })
 export class EvidenceModule {}

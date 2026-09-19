@@ -1,0 +1,2781 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bootstrap, turno, handoff, stream e integrações — comandos manuscritos (BP-OPS-BOOTSTRAP-001)",
+    "version": "1.0.0",
+    "description": "Bootstrap móvel, turno, handoff de sessão (MobileBootstrapController), o stream SSE (TeatStreamController) e a projeção de integrações (TeatIntegrationsController). Sem blueprint próprio: agrupado sob BP-OPS-FIELD-001 por decisão do maestro (CTG-0005 §2.1).",
+    "x-blueprint": "BP-OPS-FIELD-001",
+    "x-commands": true,
+    "x-source": "teat-route-contract.md §4.1, §4.6, §7"
+  },
+  "paths": {
+    "/v1/ops/mobile-bootstrap": {
+      "get": {
+        "tags": ["operational-device"],
+        "operationId": "teatMobileBootstrapRead",
+        "summary": "Snapshot de bootstrap móvel: contexto, catálogo, pacote, reservas e bloqueadores.",
+        "x-policy": "ops:operational-device:read",
+        "x-command": "backend/domains/ops/field/src/handwritten/mobile-bootstrap.service.ts",
+        "x-contract": "CTG-0002 §5.1",
+        "parameters": [
+          {
+            "name": "device_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "installation_id",
+            "in": "query",
+            "required": false,
+            "description": "Convertido para sha256: antes da consulta; o valor cru nunca é persistido nem devolvido.",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "app_version",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 64
+            }
+          },
+          {
+            "name": "protocol_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 64
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Snapshot de bootstrap.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "protocolVersion",
+                    "requestedProtocolVersion",
+                    "snapshot",
+                    "context",
+                    "catalog",
+                    "normativePackage",
+                    "numberingReservations",
+                    "readiness",
+                    "capabilities"
+                  ],
+                  "properties": {
+                    "protocolVersion": {
+                      "type": "string",
+                      "const": "teat-mobile-bootstrap.v1"
+                    },
+                    "requestedProtocolVersion": {
+                      "type": "string"
+                    },
+                    "snapshot": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": ["capturedAt", "authority"],
+                      "properties": {
+                        "capturedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "validUntil": {
+                          "type": ["string", "null"],
+                          "format": "date-time",
+                          "description": "source_pending (OD-T14)."
+                        },
+                        "maxAgeSeconds": {
+                          "type": ["integer", "null"],
+                          "description": "source_pending (OD-T14)."
+                        },
+                        "authority": {
+                          "type": "string",
+                          "const": "server-snapshot"
+                        }
+                      }
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "tenantId",
+                        "trafficAgencyId",
+                        "agent",
+                        "device",
+                        "session"
+                      ],
+                      "properties": {
+                        "tenantId": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "trafficAgencyId": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "agent": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": ["id", "status"],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "operationalUnitId": {
+                              "type": ["string", "null"],
+                              "format": "uuid"
+                            },
+                            "status": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "device": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "id",
+                            "status",
+                            "homologated",
+                            "tamperDetected",
+                            "appVersion"
+                          ],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "status": {
+                              "type": "string"
+                            },
+                            "homologated": {
+                              "type": "boolean"
+                            },
+                            "tamperDetected": {
+                              "type": "boolean"
+                            },
+                            "appVersion": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "activeShift": {
+                          "type": ["object", "null"],
+                          "additionalProperties": false,
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "operationalUnitId": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "teamId": {
+                              "type": ["string", "null"],
+                              "format": "uuid"
+                            },
+                            "patrolVehicleId": {
+                              "type": ["string", "null"],
+                              "format": "uuid"
+                            },
+                            "operationId": {
+                              "type": ["string", "null"],
+                              "format": "uuid"
+                            },
+                            "startedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "status": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "session": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": ["id", "startedAt", "exclusive"],
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "uuid"
+                            },
+                            "startedAt": {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            "exclusive": {
+                              "type": "boolean"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "catalog": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "operationalUnits",
+                        "teams",
+                        "patrolVehicles",
+                        "operations",
+                        "measurementInstruments"
+                      ],
+                      "properties": {
+                        "operationalUnits": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "teams": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "patrolVehicles": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "operations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "label": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "measurementInstruments": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "format": "uuid"
+                              },
+                              "instrumentType": {
+                                "type": "string"
+                              },
+                              "serialNumber": {
+                                "type": "string"
+                              },
+                              "brand": {
+                                "type": "string"
+                              },
+                              "model": {
+                                "type": "string"
+                              },
+                              "inmetroModelApproval": {
+                                "type": "string"
+                              },
+                              "verificationValidUntil": {
+                                "type": "string",
+                                "format": "date"
+                              },
+                              "verificationValid": {
+                                "type": "boolean"
+                              },
+                              "status": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "normativePackage": {
+                      "type": ["object", "null"],
+                      "additionalProperties": false,
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "catalogId": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "version": {
+                          "type": "string"
+                        },
+                        "manifestHash": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string"
+                        },
+                        "publishedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "validUntil": {
+                          "type": ["string", "null"],
+                          "format": "date"
+                        },
+                        "contentPath": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "numberingReservations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "rangeId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "startNumber": {
+                            "type": "integer"
+                          },
+                          "endNumber": {
+                            "type": "integer"
+                          },
+                          "validUntil": {
+                            "type": ["string", "null"],
+                            "format": "date-time"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "readiness": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "preShiftReady",
+                        "offlineReady",
+                        "blockers",
+                        "warnings"
+                      ],
+                      "properties": {
+                        "preShiftReady": {
+                          "type": "boolean"
+                        },
+                        "offlineReady": {
+                          "type": "boolean"
+                        },
+                        "blockers": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "SESSION_NOT_EXCLUSIVE",
+                              "DEVICE_NOT_AUTHORIZED",
+                              "DEVICE_TAMPER_DETECTED",
+                              "DEVICE_NOT_HOMOLOGATED",
+                              "APP_VERSION_NOT_ALLOWED",
+                              "NORMATIVE_PACKAGE_MISSING",
+                              "NORMATIVE_PACKAGE_EXPIRED",
+                              "NUMBERING_RESERVATION_REQUIRED",
+                              "AGENT_NOT_ACTIVE",
+                              "AGENT_NOT_IN_UNIT",
+                              "SHIFT_ALREADY_OPEN_ELSEWHERE"
+                            ]
+                          }
+                        },
+                        "warnings": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "NORMATIVE_PACKAGE_EXPIRED",
+                              "HOMOLOGATION_RENEWAL_DUE"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "capabilities": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "canOpenShift",
+                        "canOperateOffline",
+                        "canReserveNumbering"
+                      ],
+                      "properties": {
+                        "canOpenShift": {
+                          "type": "boolean"
+                        },
+                        "canOperateOffline": {
+                          "type": "boolean"
+                        },
+                        "canReserveNumbering": {
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Dispositivo/instalação/tenant não conferem.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.FORBIDDEN_ACTION",
+                        "TEAT.MOBILE_BOOTSTRAP_SCOPE_MISMATCH"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "426": {
+            "description": "protocol_version informado diverge da constante suportada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.PROTOCOL_VERSION_UNSUPPORTED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 426
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/mobile-bootstrap/shifts": {
+      "post": {
+        "tags": ["shift"],
+        "operationId": "teatShiftOpen",
+        "summary": "Abre o turno do agente no dispositivo.",
+        "x-policy": "ops:shift:create",
+        "x-audit": "OPS_SHIFT_OPEN",
+        "x-command": "backend/domains/ops/field/src/handwritten/open-shift.command.ts",
+        "x-contract": "CTG-0002 §5.4",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenMobileShiftDto"
+              },
+              "example": {
+                "device_id": "00000000-0000-7000-8000-0000e4000002",
+                "app_version": "2026.9.0",
+                "operational_unit_id": "00000000-0000-7000-8000-0000e2100001",
+                "started_at": "2026-09-14T08:00:00.000Z"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Turno aberto.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "agent_id", "device_id"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "open"
+                    },
+                    "agent_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "device_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "operational_unit_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "team_id": {
+                      "type": ["string", "null"],
+                      "format": "uuid"
+                    },
+                    "patrol_vehicle_id": {
+                      "type": ["string", "null"],
+                      "format": "uuid"
+                    },
+                    "operation_id": {
+                      "type": ["string", "null"],
+                      "format": "uuid"
+                    },
+                    "started_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "example": {
+                  "id": "00000000-0000-7000-8000-0000e3000001",
+                  "status": "open",
+                  "agent_id": "00000000-0000-4000-8000-0000b0000001",
+                  "device_id": "00000000-0000-7000-8000-0000e4000002",
+                  "operational_unit_id": "00000000-0000-7000-8000-0000e2100001",
+                  "started_at": "2026-09-14T08:00:00.000Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Bloqueador de postura de dispositivo ou de perfil funcional (CTG-0002 §5.3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.AGENT_CREDENTIAL_EXPIRED",
+                        "TEAT.AGENT_NOT_ACTIVE",
+                        "TEAT.AGENT_NOT_IN_UNIT",
+                        "TEAT.APP_VERSION_NOT_ALLOWED",
+                        "TEAT.DEVICE_NOT_AUTHORIZED",
+                        "TEAT.DEVICE_NOT_HOMOLOGATED",
+                        "TEAT.DEVICE_TAMPER_DETECTED",
+                        "TEAT.FORBIDDEN_ACTION"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Turno já aberto do agente, ou sessão não exclusiva.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.SESSION_NOT_EXCLUSIVE",
+                        "TEAT.SHIFT_ALREADY_OPEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Nenhum pacote normativo publicado do órgão, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.NORMATIVE_PACKAGE_MISSING"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "426": {
+            "description": "protocol_version informado diverge da constante suportada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.PROTOCOL_VERSION_UNSUPPORTED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 426
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/mobile-bootstrap/shifts/{id}/close": {
+      "post": {
+        "tags": ["shift"],
+        "operationId": "teatShiftClose",
+        "summary": "Fecha o turno e reconcilia as reservas de numeração.",
+        "x-policy": "ops:operational-device:close-shift",
+        "x-audit": "OPS_SHIFT_CLOSE",
+        "x-command": "backend/domains/ops/field/src/handwritten/close-shift.command.ts",
+        "x-contract": "CTG-0002 §5.5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseMobileShiftDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Turno fechado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "ended_at", "reservations"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "closed"
+                    },
+                    "ended_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "reservations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Turno fora de open.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.SHIFT_NOT_OPEN"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Itens received pendentes sem reason, ou claimed_numbers fora de faixa, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.NUMBERING_RECONCILE_MISMATCH",
+                        "TEAT.SHIFT_CLOSE_PENDING_QUEUE"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/mobile-bootstrap/sessions/handoff": {
+      "post": {
+        "tags": ["operational-device"],
+        "operationId": "teatSessionHandoff",
+        "summary": "Declara o incidente de troca de dispositivo em campo (D-01).",
+        "x-policy": "ops:operational-device:handoff-session",
+        "x-audit": "OPS_SESSION_HANDOFF",
+        "x-command": "backend/domains/ops/field/src/handwritten/handoff-session.command.ts",
+        "x-contract": "CTG-0002 §5.6",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandoffSessionCommandDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Handoff registrado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "handoff_id",
+                    "shift_id",
+                    "failed_device_id",
+                    "handed_off_at"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "handoff_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "shift_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "failed_device_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "new_device_id": {
+                      "type": ["string", "null"],
+                      "format": "uuid"
+                    },
+                    "cancelled_reservations": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid"
+                      }
+                    },
+                    "handed_off_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "new_device_id informado e inapto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "TEAT.DEVICE_NOT_AUTHORIZED",
+                        "TEAT.DEVICE_TAMPER_DETECTED",
+                        "TEAT.FORBIDDEN_ACTION"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Nenhum turno open do agente no failed_device_id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.SHIFT_NOT_OPEN"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "reason ausente, ou replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/stream": {
+      "get": {
+        "tags": ["stream"],
+        "operationId": "teatOpsStreamRead",
+        "summary": "Stream SSE de eventos de domínio filtrados por papel e tenant (M17). Limite de 1 conexão por aba e 5 por usuário responde 429 sem code de catálogo (OD-T42) e por isso não entra em responses.",
+        "x-policy": "ops:stream:read",
+        "x-command": "backend/app/src/teat-stream.controller.ts",
+        "x-contract": "CTG-0004 §7.1",
+        "parameters": [
+          {
+            "name": "topics",
+            "in": "query",
+            "required": false,
+            "description": "Lista separada por vírgula dos type de CTG-0004 §7.2; default: todos os permitidos ao papel.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Last-Event-ID",
+            "in": "header",
+            "required": false,
+            "description": "Reenvia, em ordem, as linhas do tenant posteriores a este id, com created_at >= now() - 24h.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Stream text/event-stream (heartbeat a cada 20s; payload por evento ≤ 8 KB).",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Last-Event-ID fora da janela de replay de 24h."
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave ops:stream:read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/integrations/outbox": {
+      "get": {
+        "tags": ["integration"],
+        "operationId": "teatIntegrationOutboxList",
+        "summary": "Lista a projeção de leitura da outbox de integrações nacionais.",
+        "x-policy": "ops:integration:read",
+        "x-command": "backend/app/src/teat-integrations.controller.ts",
+        "x-contract": "CTG-0004 §7.3",
+        "parameters": [
+          {
+            "name": "system",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["renainf", "renach", "renaest", "sne"]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["pending", "processing", "acked", "error"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Itens da outbox, ordem created_at desc, id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["items"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "topic": {
+                            "type": "string"
+                          },
+                          "aggregate_type": {
+                            "type": "string"
+                          },
+                          "aggregate_id": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "status": {
+                            "type": "string"
+                          },
+                          "attempts": {
+                            "type": "integer"
+                          },
+                          "last_error": {
+                            "type": ["string", "null"]
+                          },
+                          "available_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "dispatched_at": {
+                            "type": ["string", "null"],
+                            "format": "date-time"
+                          },
+                          "completed_at": {
+                            "type": ["string", "null"],
+                            "format": "date-time"
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    },
+                    "nextCursor": {
+                      "type": ["string", "null"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "system fora dos quatro sistemas aceitos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/integrations/outbox/{id}/retry": {
+      "post": {
+        "tags": ["integration"],
+        "operationId": "teatIntegrationItemRetry",
+        "summary": "Reenvia um item de integração falho.",
+        "x-policy": "ops:integration:retry",
+        "x-audit": "OPS_INTEGRATION_RETRY",
+        "x-command": "backend/app/src/teat-integrations.service.ts",
+        "x-contract": "CTG-0004 §7.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Item reenfileirado.",
+            "headers": {
+              "idempotency-replayed": {
+                "description": "\"true\" quando a resposta é o replay gravado pelo kernel.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["id", "status", "attempts"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "status": {
+                      "type": "string",
+                      "const": "pending"
+                    },
+                    "attempts": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Erro de forma do payload.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Item fora de status=error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTEGRATION_ITEM_NOT_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Replay de Idempotency-Key com corpo divergente (kernel, OD-T45).",
+            "x-kernel": "idempotency",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/integrations/health": {
+      "get": {
+        "tags": ["integration"],
+        "operationId": "teatIntegrationHealth",
+        "summary": "Configuração e fila do adapter de integrações nacionais (sem chamada de rede).",
+        "x-policy": "ops:integration:read",
+        "x-command": "backend/app/src/teat-integrations.service.ts",
+        "x-contract": "CTG-0004 §7.3",
+        "responses": {
+          "200": {
+            "description": "Configuração e contagem da fila.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["provider", "baseUrl", "systems", "queue"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "provider": {
+                      "type": "string"
+                    },
+                    "baseUrl": {
+                      "type": "string"
+                    },
+                    "systems": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": ["renainf", "renach", "renaest", "sne"]
+                      }
+                    },
+                    "queue": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "pending": {
+                          "type": "integer"
+                        },
+                        "processing": {
+                          "type": "integer"
+                        },
+                        "error": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem autenticação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Papel sem a chave de política exigida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Recurso de outro tenant ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OpenMobileShiftDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_id",
+          "app_version",
+          "operational_unit_id",
+          "started_at"
+        ],
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "installation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "app_version": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "protocol_version": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "operational_unit_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "team_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "patrol_vehicle_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "accuracy_m": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "CloseMobileShiftDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["device_id", "app_version", "ended_at"],
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "installation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "app_version": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "protocol_version": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "accuracy_m": {
+            "type": "number",
+            "minimum": 0
+          },
+          "reason": {
+            "type": "string"
+          },
+          "numbering_reconciliations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["reservation_id", "claimed_numbers"],
+              "properties": {
+                "reservation_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "claimed_numbers": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "HandoffSessionCommandDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["failed_device_id", "reason"],
+        "properties": {
+          "failed_device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "new_device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

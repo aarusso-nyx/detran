@@ -1,0 +1,2545 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Crash — BP-EST-CRASH-001",
+    "version": "1.0.0",
+    "description": "BOAT crash records and related entities from WF-BOAT-001 and WF-BOAT-003.",
+    "x-blueprint": "BP-EST-CRASH-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/est/crash/records": {
+      "get": {
+        "tags": ["crash-record"],
+        "operationId": "listCrashRecord",
+        "summary": "List CrashRecord (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashRecord"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-record"],
+        "operationId": "createCrashRecord",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashRecord"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-record"],
+        "operationId": "getCrashRecord",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-record"],
+        "operationId": "updateCrashRecord",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashRecordDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashRecord"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-record"],
+        "operationId": "removeCrashRecord",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/vehicles": {
+      "get": {
+        "tags": ["crash-vehicle"],
+        "operationId": "listCrashVehicle",
+        "summary": "List CrashVehicle (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashVehicle"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-vehicle"],
+        "operationId": "createCrashVehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashVehicleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashVehicle"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/vehicles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-vehicle"],
+        "operationId": "getCrashVehicle",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashVehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-vehicle"],
+        "operationId": "updateCrashVehicle",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashVehicleDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashVehicle"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-vehicle"],
+        "operationId": "removeCrashVehicle",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/people": {
+      "get": {
+        "tags": ["crash-person"],
+        "operationId": "listCrashPerson",
+        "summary": "List CrashPerson (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashPerson"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-person"],
+        "operationId": "createCrashPerson",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashPersonDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashPerson"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/people/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-person"],
+        "operationId": "getCrashPerson",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashPerson"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-person"],
+        "operationId": "updateCrashPerson",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashPersonDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashPerson"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-person"],
+        "operationId": "removeCrashPerson",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/victims": {
+      "get": {
+        "tags": ["crash-victim"],
+        "operationId": "listCrashVictim",
+        "summary": "List CrashVictim (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashVictim"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-victim"],
+        "operationId": "createCrashVictim",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashVictimDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashVictim"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/victims/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-victim"],
+        "operationId": "getCrashVictim",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashVictim"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-victim"],
+        "operationId": "updateCrashVictim",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashVictimDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashVictim"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-victim"],
+        "operationId": "removeCrashVictim",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/scene-duties": {
+      "get": {
+        "tags": ["crash-scene-duty"],
+        "operationId": "listCrashSceneDuty",
+        "summary": "List CrashSceneDuty (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashSceneDuty"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-scene-duty"],
+        "operationId": "createCrashSceneDuty",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashSceneDutyDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSceneDuty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/scene-duties/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-scene-duty"],
+        "operationId": "getCrashSceneDuty",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSceneDuty"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-scene-duty"],
+        "operationId": "updateCrashSceneDuty",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashSceneDutyDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSceneDuty"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-scene-duty"],
+        "operationId": "removeCrashSceneDuty",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/damages": {
+      "get": {
+        "tags": ["crash-damage"],
+        "operationId": "listCrashDamage",
+        "summary": "List CrashDamage (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashDamage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-damage"],
+        "operationId": "createCrashDamage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashDamageDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashDamage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/damages/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-damage"],
+        "operationId": "getCrashDamage",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashDamage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-damage"],
+        "operationId": "updateCrashDamage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashDamageDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashDamage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-damage"],
+        "operationId": "removeCrashDamage",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/witnesses": {
+      "get": {
+        "tags": ["crash-witness"],
+        "operationId": "listCrashWitness",
+        "summary": "List CrashWitness (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashWitness"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-witness"],
+        "operationId": "createCrashWitness",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashWitnessDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashWitness"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/witnesses/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-witness"],
+        "operationId": "getCrashWitness",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashWitness"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-witness"],
+        "operationId": "updateCrashWitness",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashWitnessDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashWitness"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-witness"],
+        "operationId": "removeCrashWitness",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/sketches": {
+      "get": {
+        "tags": ["crash-sketch"],
+        "operationId": "listCrashSketch",
+        "summary": "List CrashSketch (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashSketch"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-sketch"],
+        "operationId": "createCrashSketch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashSketchDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSketch"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/sketches/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-sketch"],
+        "operationId": "getCrashSketch",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSketch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-sketch"],
+        "operationId": "updateCrashSketch",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashSketchDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSketch"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-sketch"],
+        "operationId": "removeCrashSketch",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/renaest-submissions": {
+      "get": {
+        "tags": ["crash-renaest-submission"],
+        "operationId": "listCrashRenaestSubmission",
+        "summary": "List CrashRenaestSubmission (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashRenaestSubmission"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-renaest-submission"],
+        "operationId": "createCrashRenaestSubmission",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashRenaestSubmissionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashRenaestSubmission"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/renaest-submissions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-renaest-submission"],
+        "operationId": "getCrashRenaestSubmission",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashRenaestSubmission"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-renaest-submission"],
+        "operationId": "updateCrashRenaestSubmission",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashRenaestSubmissionDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashRenaestSubmission"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-renaest-submission"],
+        "operationId": "removeCrashRenaestSubmission",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/est/crash/subject-requests": {
+      "get": {
+        "tags": ["crash-subject-request"],
+        "operationId": "listCrashSubjectRequest",
+        "summary": "List CrashSubjectRequest (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CrashSubjectRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["crash-subject-request"],
+        "operationId": "createCrashSubjectRequest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCrashSubjectRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSubjectRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/subject-requests/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["crash-subject-request"],
+        "operationId": "getCrashSubjectRequest",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSubjectRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["crash-subject-request"],
+        "operationId": "updateCrashSubjectRequest",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCrashSubjectRequestDto"
+                  }
+                ],
+                "required": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrashSubjectRequest"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["crash-subject-request"],
+        "operationId": "removeCrashSubjectRequest",
+        "responses": {
+          "200": {
+            "description": "deleted"
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CrashRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_type": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "RASCUNHO",
+              "EM_ATENDIMENTO",
+              "REGISTRADO",
+              "PENDENTE_COMPLEMENTO",
+              "VALIDADO",
+              "FECHADO",
+              "INTEGRADO",
+              "ARQUIVADO",
+              "CANCELADO"
+            ],
+            "default": "'RASCUNHO'"
+          },
+          "national_status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["RECEBIDO", "EM_ANALISE", "CONSOLIDADO", "REJEITADO"],
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location_description": {
+            "type": "string"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "location_reference": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "uf": {
+            "type": "string",
+            "maxLength": 2
+          },
+          "road": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "km": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "road_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "weather_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "lighting_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "signage_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "dynamics_description": {
+            "type": "string",
+            "nullable": true
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "source_system": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "source_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "source_payload_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "crash_type",
+          "severity",
+          "occurred_at",
+          "recorded_at",
+          "location_description",
+          "municipality_code",
+          "uf",
+          "road_condition",
+          "weather_condition",
+          "lighting_condition",
+          "signage_condition",
+          "created_at"
+        ]
+      },
+      "CreateCrashRecordDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_type": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "RASCUNHO",
+              "EM_ATENDIMENTO",
+              "REGISTRADO",
+              "PENDENTE_COMPLEMENTO",
+              "VALIDADO",
+              "FECHADO",
+              "INTEGRADO",
+              "ARQUIVADO",
+              "CANCELADO"
+            ],
+            "default": "'RASCUNHO'"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "location_description": {
+            "type": "string"
+          },
+          "location_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "location_reference": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "uf": {
+            "type": "string",
+            "maxLength": 2
+          },
+          "road": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "km": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "direction": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "road_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "weather_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "lighting_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "signage_condition": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "dynamics_description": {
+            "type": "string",
+            "nullable": true
+          },
+          "shift_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "device_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "operation_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "source_system": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "source_local_id": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_idempotency_key": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "source_payload_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "crash_type",
+          "severity",
+          "occurred_at",
+          "recorded_at",
+          "location_description",
+          "municipality_code",
+          "uf",
+          "road_condition",
+          "weather_condition",
+          "lighting_condition",
+          "signage_condition"
+        ]
+      },
+      "CrashVehicle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "plate": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "sequence": {
+            "type": "integer"
+          },
+          "apparent_damage": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_record_id",
+          "role",
+          "sequence",
+          "created_at"
+        ]
+      },
+      "CreateCrashVehicleDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "vehicle_snapshot_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "plate": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "sequence": {
+            "type": "integer"
+          },
+          "apparent_damage": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "role", "sequence"]
+      },
+      "CrashPerson": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "document_source": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "crash_vehicle_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": ["condutor", "passageiro", "pedestre", "ciclista"]
+          },
+          "used_seatbelt_or_helmet": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "refused_data": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "crash_record_id", "role", "created_at"]
+      },
+      "CreateCrashPersonDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "document_number": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "document_source": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "crash_vehicle_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": ["condutor", "passageiro", "pedestre", "ciclista"]
+          },
+          "used_seatbelt_or_helmet": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "refused_data": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "role"]
+      },
+      "CrashVictim": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 60,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "death_at_scene": {
+            "type": "boolean",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "medical_care": {
+            "type": "boolean",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "hospital_destination": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "death_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "health_notes": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_record_id",
+          "crash_person_id",
+          "severity",
+          "created_at"
+        ]
+      },
+      "CreateCrashVictimDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 60,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "death_at_scene": {
+            "type": "boolean",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "medical_care": {
+            "type": "boolean",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "hospital_destination": {
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "death_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          },
+          "health_notes": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "sensitive-health",
+            "x-retention": "est.retention.health_fields_years"
+          }
+        },
+        "required": ["crash_record_id", "crash_person_id", "severity"]
+      },
+      "CrashSceneDuty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "regime": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["art176", "art177", "art178"]
+          },
+          "duty_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "crash_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "crash_vehicle_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "complied": {
+            "type": "boolean"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_record_id",
+          "regime",
+          "duty_code",
+          "complied",
+          "created_at"
+        ]
+      },
+      "CreateCrashSceneDutyDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "regime": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["art176", "art177", "art178"]
+          },
+          "duty_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "crash_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "crash_vehicle_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "complied": {
+            "type": "boolean"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "regime", "duty_code", "complied"]
+      },
+      "CrashDamage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asset_kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "description": {
+            "type": "string"
+          },
+          "responsible_identified": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "notify_road_owner": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_record_id",
+          "asset_kind",
+          "description",
+          "created_at"
+        ]
+      },
+      "CreateCrashDamageDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asset_kind": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "description": {
+            "type": "string"
+          },
+          "responsible_identified": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "notify_road_owner": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "asset_kind", "description"]
+      },
+      "CrashWitness": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "contact": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "refused": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "statement_summary": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "crash_record_id", "name", "created_at"]
+      },
+      "CreateCrashWitnessDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "contact": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "refused": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "statement_summary": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "name"]
+      },
+      "CrashSketch": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sketch_type": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["desenho", "anexo", "mapa"]
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "drawing_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_record_id",
+          "sketch_type",
+          "created_at"
+        ]
+      },
+      "CreateCrashSketchDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sketch_type": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["desenho", "anexo", "mapa"]
+          },
+          "evidence_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "drawing_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "sketch_type"]
+      },
+      "CrashLink": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ait", "measure"]
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target_number": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_record_id",
+          "kind",
+          "target_id",
+          "created_at"
+        ]
+      },
+      "CreateCrashLinkDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ait", "measure"]
+          },
+          "target_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "target_number": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "kind", "target_id"]
+      },
+      "CrashRenaestSubmission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "national_status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["RECEBIDO", "EM_ANALISE", "CONSOLIDADO", "REJEITADO"]
+          },
+          "layout_version": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "rectification_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["complement", "correction"],
+            "nullable": true
+          },
+          "rectification_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_record_id",
+          "national_status",
+          "created_at"
+        ]
+      },
+      "CreateCrashRenaestSubmissionDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "national_status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["RECEBIDO", "EM_ANALISE", "CONSOLIDADO", "REJEITADO"]
+          },
+          "layout_version": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "rectification_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["complement", "correction"],
+            "nullable": true
+          },
+          "rectification_reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["crash_record_id", "national_status"]
+      },
+      "CrashSubjectRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["acesso", "correcao", "eliminacao"]
+          },
+          "subject_cpf": {
+            "type": "string",
+            "maxLength": 20,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'REGISTRADO'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "kind",
+          "subject_cpf",
+          "purpose",
+          "created_at"
+        ]
+      },
+      "CreateCrashSubjectRequestDto": {
+        "type": "object",
+        "properties": {
+          "crash_record_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["acesso", "correcao", "eliminacao"]
+          },
+          "subject_cpf": {
+            "type": "string",
+            "maxLength": 20,
+            "x-pii": "high",
+            "x-retention": "est.retention.bat_years"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 60,
+            "default": "'REGISTRADO'"
+          }
+        },
+        "required": ["kind", "subject_cpf", "purpose"]
+      }
+    }
+  }
+}

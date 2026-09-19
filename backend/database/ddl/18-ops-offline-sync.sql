@@ -1,4 +1,4 @@
--- Generated from BP-OPS-OFFLINE-SYNC-001 v1.0.0 sha256:21bcd6e203b7ff643de48a32fe2947a4e7ad1f7b62b66209c60e24c97da59ce9
+-- Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0 sha256:c35fb9b7cf739cf06c18b8cc02b1ec4cd968c63916ffd149c79d29937faa2c67
 
 -- Regenerable-only DDL for BP-OPS-OFFLINE-SYNC-001; request-path writes use role_app_backend.
 
@@ -58,10 +58,10 @@ create table if not exists ops.numbering_consumption (
   reservation_id uuid not null,
   range_id uuid not null,
   number bigint not null,
-  local_entity_id uuid not null,
-  idempotency_key varchar(160) not null,
-  server_entity_id uuid not null,
-  finalized_at timestamptz not null,
+  local_entity_id uuid,
+  idempotency_key varchar(160),
+  server_entity_id uuid,
+  finalized_at timestamptz,
   reconciled_at timestamptz default now() not null,
   status varchar(40) default 'applied' not null,
   details_json jsonb,

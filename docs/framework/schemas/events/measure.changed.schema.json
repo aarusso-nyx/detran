@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/measure.changed.schema.json",
+  "title": "measure.changed",
+  "description": "Transições publicadas da medida administrativa: início, liberação, conclusão e emissão de termo (CTG-0004 §4/§9; §16.6/OD-T65 acrescenta MEDIDA_LIBERADA — sem z.strictObject nesta rodada, OD-T69).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "measure.changed"
+    },
+    "domainEvent": {
+      "type": "string",
+      "enum": [
+        "MEDIDA_INICIADA",
+        "MEDIDA_LIBERADA",
+        "MEDIDA_CONCLUIDA",
+        "TERMO_EMITIDO"
+      ]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "administrative-measure"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "MEDIDA_INICIADA",
+          "required": [
+            "measureId",
+            "measureTypeId",
+            "aitId",
+            "agentId",
+            "currentStatus",
+            "startedAt"
+          ],
+          "properties": {
+            "measureId": {
+              "type": "string"
+            },
+            "measureTypeId": {
+              "type": ["string", "null"]
+            },
+            "aitId": {
+              "type": ["string", "null"]
+            },
+            "agentId": {
+              "type": ["string", "null"]
+            },
+            "currentStatus": {
+              "type": "string"
+            },
+            "startedAt": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "MEDIDA_LIBERADA",
+          "required": ["measureId", "fromState", "toState", "releasedAt"],
+          "properties": {
+            "measureId": {
+              "type": "string"
+            },
+            "fromState": {
+              "type": "string"
+            },
+            "toState": {
+              "const": "LIBERADO_LOCAL"
+            },
+            "releasedAt": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "MEDIDA_CONCLUIDA",
+          "required": ["measureId", "fromState", "toState", "endedAt"],
+          "properties": {
+            "measureId": {
+              "type": "string"
+            },
+            "fromState": {
+              "type": "string"
+            },
+            "toState": {
+              "type": "string"
+            },
+            "endedAt": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "TERMO_EMITIDO",
+          "required": [
+            "measureId",
+            "termId",
+            "termType",
+            "termNumber",
+            "issuedAt",
+            "withdrawalDeadlineAt",
+            "ctbDeadlineAt",
+            "contentHash"
+          ],
+          "properties": {
+            "measureId": {
+              "type": "string"
+            },
+            "termId": {
+              "type": "string"
+            },
+            "termType": {
+              "type": "string"
+            },
+            "termNumber": {
+              "type": "string"
+            },
+            "issuedAt": {
+              "type": "string"
+            },
+            "withdrawalDeadlineAt": {
+              "type": ["string", "null"]
+            },
+            "ctbDeadlineAt": {
+              "type": ["string", "null"]
+            },
+            "contentHash": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

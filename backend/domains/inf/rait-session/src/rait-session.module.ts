@@ -35,6 +35,7 @@ import { RaitSessionCommandService } from './handwritten/rait-session-command.se
 
 @Module({
   controllers: [
+    RaitSessionCommandsController,
     RaitSessionController,
     RaitAgendaItemController,
     RaitAttendanceController,
@@ -45,7 +46,6 @@ import { RaitSessionCommandService } from './handwritten/rait-session-command.se
     RaitSessionMinutesManifestController,
     RaitMinutesRequiredSignerController,
     RaitMinutesSignatureReceiptController,
-    RaitSessionCommandsController,
   ],
   providers: [
     RaitSessionService,

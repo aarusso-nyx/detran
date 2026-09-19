@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0014",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever as fichas IU-PORTAL-T10…T18 (lote B, M11)",
+  "description": "Uma ficha por tela do inventário IU-PORTAL-001 no padrão de dez seções da origem, com estados obrigatórios e chaves i18n portal.screens.t<nn>.*; nada sem fonte.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-portal-screens-B"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p4"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-50819801dbd0c821",
+  "acceptance_commands": [
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-17T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-50819801dbd0c821",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

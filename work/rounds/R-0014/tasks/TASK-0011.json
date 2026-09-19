@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0014",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Integração nacional pelo mock: mapeamentos CNH-e/CRLV-e, SNE via SnePort, push, lint de payload, job backend-kernel com o mock antes do e2e",
+  "description": "Implementar o layout do contrato até os e2e de TASK-0010 passarem; nunca tocar em specs.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-national-read",
+    "MOD-app-portal-providers",
+    "MOD-ci-backend-kernel",
+    "MOD-senatran-mock-seeds",
+    "MOD-seed-portal"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 4,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-p6"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-daecb5aa5dfd0737",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "--filter", "@detran/app", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:integration"],
+    ["pnpm", "verify:senatran-boundary"],
+    ["pnpm", "verify:controller-decorators"],
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-19T03:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-daecb5aa5dfd0737",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "note": "AUTHORIZATION.md Amendment 2 / plan B3: worker executed by the Codex CLI via tools/orchestra/worker.sh"
+  },
+  "completed_at": "2026-09-19T21:30:00.000Z"
+}

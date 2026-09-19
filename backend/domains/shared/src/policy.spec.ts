@@ -16,45 +16,141 @@ import {
 import { withTenantContext } from './tenant-context.js';
 
 describe('DETRAN unified policy kit', () => {
-  it('permite protocol somente ao rait-secretary com a política canônica', () => {
-    expect(
-      isDetranActionAllowed(
-        { roles: ['rait-secretary'], permissions: [] },
-        'inf:rait-case',
-        'protocol',
+  it('dado cada regra CTG-0001 quando consultada por todos os papéis então concede somente os papéis canônicos permitidos', () => {
+    const rules: Array<[string, string[]]> = [
+      ['est:crash-record:create', ['field-agent']],
+      ...[
+        'crash-record',
+        'crash-vehicle',
+        'crash-person',
+        'crash-sketch',
+        'crash-scene-duty',
+        'crash-damage',
+        'crash-witness',
+        'crash-link',
+      ].map(
+        (resource) =>
+          [
+            `est:${resource}:read`,
+            [
+              'field-agent',
+              'field-supervisor',
+              'processing-operator',
+              'traffic-authority',
+            ],
+          ] as [string, string[]],
       ),
-    ).toBe(true);
-  });
-
-  it.each(DETRAN_ROLES.filter((role) => role !== 'rait-secretary'))(
-    'nega protocol ao papel isolado %s',
-    (role) => {
-      expect(
-        isDetranActionAllowed(
+      ['est:crash-subject-request:read', ['processing-operator', 'AUDITOR']],
+      ...[
+        'crash-record',
+        'crash-vehicle',
+        'crash-person',
+        'crash-victim',
+        'crash-sketch',
+        'crash-scene-duty',
+        'crash-damage',
+        'crash-witness',
+        'crash-link',
+        'crash-renaest-submission',
+        'crash-subject-request',
+      ].flatMap((resource) => [
+        [`est:${resource}:update`, []] as [string, string[]],
+        ...(resource === 'crash-record'
+          ? []
+          : [[`est:${resource}:create`, []] as [string, string[]]]),
+      ]),
+      ['est:crash-record:start', ['field-agent']],
+      ['est:crash-record:add-vehicle', ['field-agent']],
+      ['est:crash-record:add-person', ['field-agent']],
+      ['est:crash-record:add-victim', ['field-agent']],
+      ['est:crash-record:record-duty', ['field-agent']],
+      ['est:crash-record:add-damage', ['field-agent']],
+      ['est:crash-record:add-witness', ['field-agent']],
+      [
+        'est:crash-record:attach-sketch',
+        ['field-agent', 'processing-operator'],
+      ],
+      ['est:crash-record:link', ['field-agent', 'processing-operator']],
+      ['est:crash-record:record', ['field-agent']],
+      ['est:crash-record:complement', ['processing-operator']],
+      [
+        'est:crash-record:validate',
+        ['processing-operator', 'traffic-authority'],
+      ],
+      ['est:crash-record:close', ['field-supervisor', 'traffic-authority']],
+      ['est:crash-record:cancel', ['field-agent', 'traffic-authority']],
+      [
+        'est:crash-record:transmit',
+        ['processing-operator', 'traffic-authority'],
+      ],
+      [
+        'est:crash-record:rectify',
+        ['processing-operator', 'traffic-authority'],
+      ],
+      ['est:crash-record:archive', ['traffic-authority']],
+      [
+        'est:crash-victim:read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+        ],
+      ],
+      [
+        'est:crash-renaest-submission:read',
+        [
+          'processing-operator',
+          'traffic-authority',
+          'integration-operator',
+          'AUDITOR',
+        ],
+      ],
+      [
+        'est:crash-subject-request:subject-request',
+        ['processing-operator', 'AUDITOR', 'CIDADAO'],
+      ],
+      ...[
+        'crash-record',
+        'crash-vehicle',
+        'crash-person',
+        'crash-victim',
+        'crash-sketch',
+        'crash-scene-duty',
+        'crash-damage',
+        'crash-witness',
+        'crash-link',
+        'crash-renaest-submission',
+        'crash-subject-request',
+      ].map(
+        (resource) =>
+          [`est:${resource}:delete`, ['technical-admin']] as [string, string[]],
+      ),
+    ];
+    const globallyAllowed = new Set([
+      'ADMIN',
+      'GESTOR_DETRAN',
+      'SUPORTE',
+      'technical-admin',
+    ]);
+    const failures: string[] = [];
+    for (const [resource, permitted] of rules) {
+      const expected = new Set([...permitted, ...globallyAllowed]);
+      for (const role of DETRAN_ROLES) {
+        const actual = isDetranActionAllowed(
           { roles: [role], permissions: [] },
-          'inf:rait-case',
-          'protocol',
-        ),
-      ).toBe(false);
-    },
-  );
-
-  it.each([
-    ['admin wildcard', ['ADMIN'], ['*']],
-    ['resource wildcard', ['rait-analyst'], ['inf:rait-case:*']],
-    ['command permission spoof', ['rait-analyst'], ['inf:rait-case:protocol']],
-  ])(
-    'nega protocol por %s sem rait-secretary ativo',
-    (_name, roles, permissions) => {
-      expect(
-        isDetranActionAllowed(
-          { roles, permissions },
-          'inf:rait-case',
-          'protocol',
-        ),
-      ).toBe(false);
-    },
-  );
+          resource.split(/:(?=[^:]+$)/)[0],
+          resource.split(':').at(-1)!,
+        );
+        if (actual !== expected.has(role))
+          failures.push(
+            `${resource} para ${role}: esperado ${expected.has(role)}`,
+          );
+      }
+    }
+    expect(failures).toEqual([]);
+  });
 
   it('deduplicates only TEAT auditor into the PEC AUDITOR role', () => {
     expect(DETRAN_ROLES).toHaveLength(36);
@@ -143,11 +239,6 @@ describe('DETRAN unified policy kit', () => {
     expect(
       allowed(['integration-operator'], 'ops:application-version', 'read'),
     ).toBe(true);
-    // complete-upload and validate return with their routes in WP-T2
-    expect(
-      allowed(['processing-operator'], 'ops:evidence', 'complete-upload'),
-    ).toBe(false);
-    expect(allowed(['AUDITOR'], 'ops:evidence', 'validate')).toBe(false);
     expect(allowed(['agency-admin'], 'inf:speed-meter', 'create')).toBe(true);
     expect(allowed(['field-agent'], 'inf:speed-meter', 'create')).toBe(false);
     expect(allowed(['field-agent'], 'inf:speed-measurement', 'create')).toBe(
@@ -226,10 +317,12 @@ describe('DETRAN unified policy kit', () => {
         'accept',
       ),
     ).toBe(false);
+    // R-0009 CTG-0002 §10 (M19, ADR-0019): `portal:appeal:create` deu lugar a
+    // `portal:request:create` — única asserção pré-existente alterada por TASK-0006.
     expect(
       isDetranActionAllowed(
         { roles: ['CIDADAO'], permissions: [] },
-        'portal:appeal',
+        'portal:request',
         'create',
       ),
     ).toBe(true);
@@ -303,74 +396,6 @@ describe('DETRAN unified policy kit', () => {
       ),
     ).rejects.toThrow('active request context');
     expect(tx).not.toHaveBeenCalled();
-  });
-});
-
-describe('CTG-0002 worklist and session command policy matrix', () => {
-  const commandRules = [
-    ['rait-schedule', 'create', ['rait-coordinator']],
-    ['rait-schedule', 'publish', ['rait-coordinator']],
-    ['rait-batch', 'create', ['rait-secretary']],
-    ['rait-batch', 'approve', ['rait-chair']],
-    ['rait-batch-item', 'accept', ['rait-rapporteur']],
-    ['rait-batch-item', 'impediment', ['rait-rapporteur']],
-    [
-      'rait-assignment',
-      'reassign',
-      ['rait-coordinator', 'rait-manager', 'rait-chair'],
-    ],
-    ['rait-batch', 'draw', ['rait-secretary']],
-    ['rait-session', 'close-agenda', ['rait-chair']],
-    ['rait-session', 'open', ['rait-chair']],
-    ['rait-session', 'adjourn', ['rait-chair', 'rait-secretary']],
-    ['rait-session', 'convene-extraordinary', ['rait-chair']],
-    ['rait-agenda-item', 'read', ['rait-rapporteur']],
-    ['rait-agenda-item', 'view', ['rait-rapporteur']],
-    ['rait-agenda-item', 'withdraw', ['rait-chair']],
-    ['rait-vote', 'create', ['rait-chair', 'rait-rapporteur']],
-    ['rait-agenda-item', 'proclaim', ['rait-chair']],
-    ['rait-minutes', 'create', ['rait-secretary']],
-    ['rait-minutes', 'sign', ['rait-chair', 'rait-rapporteur']],
-    ['rait-minutes', 'publish', ['rait-secretary']],
-  ] as const;
-
-  it.each(commandRules)(
-    'dado o comando CTG-0002 %s:%s quando avaliado então permite somente os papéis canônicos',
-    (resource, action, allowedRoles) => {
-      for (const role of allowedRoles) {
-        expect(
-          isDetranActionAllowed(
-            { roles: [role], permissions: [] },
-            `inf:${resource}`,
-            action,
-          ),
-        ).toBe(true);
-      }
-
-      for (const role of DETRAN_ROLES.filter(
-        (candidate) => !(allowedRoles as readonly string[]).includes(candidate),
-      )) {
-        expect(
-          isDetranActionAllowed(
-            { roles: [role], permissions: [] },
-            `inf:${resource}`,
-            action,
-          ),
-        ).toBe(false);
-      }
-    },
-  );
-
-  it('dada uma tentativa de criar sustentação oral quando avaliada então nenhum papel canônico é autorizado', () => {
-    for (const role of DETRAN_ROLES) {
-      expect(
-        isDetranActionAllowed(
-          { roles: [role], permissions: [] },
-          'inf:rait-oral-argument',
-          'create',
-        ),
-      ).toBe(false);
-    }
   });
 });
 
@@ -980,8 +1005,7 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
   ] as const;
   /**
    * Achado (ver comentário do describe) — exceções nomeadas, OD-309:
-   * `RAIT_COMMAND_RULES` grava estas duas chaves de ação gerada, de rodada
-   * anterior. Único par (recurso, ação gerada) com uma exceção; todos os
+   * `RAIT_COMMAND_RULES` grava estas chaves de ação gerada. Todos os
    * outros recursos e ações negam para todo papel além de
    * `GLOBAL_ADMIN_ROLES`.
    */
@@ -994,11 +1018,6 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
     'rait-export': { create: ['AUDITOR'] },
   };
 
-  /**
-   * `create` em escala e lote é rota de comando CTG-0002, embora compartilhe
-   * o verbo da superfície gerada. A concessão estatutária estrita é avaliada
-   * antes do atalho administrativo; os outros verbos continuam sem matriz.
-   */
   const STRICT_COMMAND_GRANTS: Readonly<
     Record<string, Readonly<Record<string, readonly string[]>>>
   > = {
@@ -1086,8 +1105,1348 @@ describe('CTG-0002 — recursos sem matriz até R-0007 (M17)', () => {
   }
 });
 
-describe('CTG-0001 — matriz exaustiva dos comandos do caso RAIT', () => {
-  const COMMAND_RULES: ReadonlyArray<
+/**
+ * CTG-0001 (R-0008, TASK-0002) — AIT completo: `inf:ait:archive`,
+ * `inf:ait:review-concurrency`, `inf:ait-cancel-request:{create,review,decide}`
+ * (§5 do contrato) e `canDecideAitCancelRequest` (M3, §5). `canDecideAitCancelRequest`
+ * ainda não é exportado por `policy.ts` (TASK-0003, Engineer) — é acessado via
+ * `import * as policyModule` para que a ausência do nome falhe só dentro do
+ * teste que o usa (assertion "expected undefined"), nunca no carregamento do
+ * arquivo inteiro, preservando os testes já verdes acima.
+ */
+describe('CTG-0001 §5 — AIT completo: archive, review-concurrency, ait-cancel-request, canDecideAitCancelRequest (TASK-0002)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (plan.md §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        // technical-admin está em GLOBAL_ADMIN_ROLES: '*' o libera para toda
+        // chave, sem entrar na lista estática de papéis concedidos.
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  }
+
+  it('C-0001-05 — dado inf:ait:archive quando consultado então só traffic-authority; negado para os outros seis papéis TEAT; technical-admin passa por "*"', () => {
+    expectGrantedOnlyTo('inf:ait', 'archive', ['traffic-authority']);
+  });
+
+  it('C-0001-06 — dado inf:ait:review-concurrency quando consultado então permitido para traffic-authority e AUDITOR, negado para os demais', () => {
+    expectGrantedOnlyTo('inf:ait', 'review-concurrency', [
+      'traffic-authority',
+      'AUDITOR',
+    ]);
+  });
+
+  it('C-0001-07 — dado inf:ait-cancel-request:{create,review,decide} então os três pares existem com os papéis do contrato §5', () => {
+    expectGrantedOnlyTo('inf:ait-cancel-request', 'create', [
+      'field-agent',
+      'field-supervisor',
+      'traffic-authority',
+    ]);
+    expectGrantedOnlyTo('inf:ait-cancel-request', 'review', [
+      'traffic-authority',
+    ]);
+    expectGrantedOnlyTo('inf:ait-cancel-request', 'decide', [
+      'traffic-authority',
+    ]);
+  });
+
+  it('C-0001-07 — dado a superfície CRUD gerada então inf:ait-cancel-request:{read,create} e inf:ait-cancel-request-event:{read,create,update,delete} existem na matriz; inf:ait-cancel-request:{update,delete} não existem (OD-T60: AitCancelRequestController gerado só expõe list|get desde CTG-0001 §12)', () => {
+    for (const action of ['read', 'create']) {
+      expect(
+        `inf:ait-cancel-request:${action}` in DETRAN_POLICY_MATRIX,
+        `inf:ait-cancel-request:${action} deveria existir na matriz (superfície CRUD gerada, §5)`,
+      ).toBe(true);
+    }
+    for (const action of ['update', 'delete']) {
+      expect(
+        `inf:ait-cancel-request:${action}` in DETRAN_POLICY_MATRIX,
+        `inf:ait-cancel-request:${action} deveria ter sido removida (OD-T60: sem rota, CRUD gerado é list|get)`,
+      ).toBe(false);
+    }
+    for (const action of ['read', 'create', 'update', 'delete']) {
+      expect(
+        `inf:ait-cancel-request-event:${action}` in DETRAN_POLICY_MATRIX,
+        `inf:ait-cancel-request-event:${action} deveria existir na matriz (superfície CRUD gerada, §5)`,
+      ).toBe(true);
+    }
+  });
+
+  it('OD-T60 — dado qualquer papel canônico então nenhum recebe inf:ait-cancel-request:{update,delete} como chave explícita, nem por permissionsForRoles (negativo universal; technical-admin passa só por GLOBAL_ADMIN_ROLES/"*")', () => {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      for (const action of ['update', 'delete'] as const) {
+        if (role !== 'technical-admin') {
+          expect(
+            allowed([role], 'inf:ait-cancel-request', action),
+            `inf:ait-cancel-request:${action} não deveria ser concedido a ${role}`,
+          ).toBe(false);
+        }
+        expect(
+          permissionsForRoles([role]).includes(
+            `inf:ait-cancel-request:${action}`,
+          ),
+          `permissionsForRoles(${role}) nunca deveria conter a chave explícita inf:ait-cancel-request:${action}`,
+        ).toBe(false);
+      }
+    }
+  });
+
+  it('§5 — dado a superfície CRUD gerada então inf:normative-metrological-table e inf:signature-policy existem, restritos a INF_ADMIN_ROLES (agency-admin, technical-admin)', () => {
+    for (const resource of [
+      'normative-metrological-table',
+      'signature-policy',
+    ]) {
+      expect(allowed(['agency-admin'], `inf:${resource}`, 'read')).toBe(true);
+      expect(allowed(['agency-admin'], `inf:${resource}`, 'create')).toBe(true);
+      expect(allowed(['field-agent'], `inf:${resource}`, 'create')).toBe(false);
+    }
+  });
+
+  it('M18 — dado ops:offline-numbering-reservation:{reserve,cancel} (alias duplicado da origem) então as chaves foram removidas da matriz (route contract: rota única numbering-reservation)', () => {
+    expect(
+      'ops:offline-numbering-reservation:reserve' in DETRAN_POLICY_MATRIX,
+    ).toBe(false);
+    expect(
+      'ops:offline-numbering-reservation:cancel' in DETRAN_POLICY_MATRIX,
+    ).toBe(false);
+    // A rota única sobrevivente continua concedida (não é tocada por esta remoção).
+    expect(
+      allowed(['field-agent'], 'ops:numbering-reservation', 'reserve'),
+    ).toBe(true);
+  });
+
+  describe('canDecideAitCancelRequest (C-0001-08, M3/H.39/OD-T01)', () => {
+    it('dado traffic-authority sem claims.decision_body quando addressedTo="diretoria-fiscalizacao" então false', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['traffic-authority'],
+        permissions: [],
+        claims: {},
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'diretoria-fiscalizacao',
+        ),
+      ).toBe(false);
+    });
+
+    it('dado traffic-authority com claims.decision_body="diretoria-fiscalizacao" quando addressedTo="diretoria-fiscalizacao" então true', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['traffic-authority'],
+        permissions: [],
+        claims: { decision_body: 'diretoria-fiscalizacao' },
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'diretoria-fiscalizacao',
+        ),
+      ).toBe(true);
+    });
+
+    it('dado traffic-authority sem claim quando addressedTo="traffic-authority" então true (não exige o claim)', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['traffic-authority'],
+        permissions: [],
+        claims: {},
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'traffic-authority',
+        ),
+      ).toBe(true);
+    });
+
+    it('dado technical-admin sem o claim quando addressedTo="diretoria-fiscalizacao" então false (a competência é atributo, não papel; não passa por isDetranActionAllowed "*")', async () => {
+      const policyModule = (await import('./policy.js')) as unknown as {
+        canDecideAitCancelRequest?: (
+          principal: {
+            roles: string[];
+            permissions: string[];
+            claims?: Record<string, unknown>;
+          },
+          addressedTo: 'traffic-authority' | 'diretoria-fiscalizacao',
+        ) => boolean;
+      };
+      const principal = {
+        roles: ['technical-admin'],
+        permissions: ['*'],
+        claims: {},
+      };
+      expect(
+        policyModule.canDecideAitCancelRequest?.(
+          principal,
+          'diretoria-fiscalizacao',
+        ),
+      ).toBe(false);
+    });
+  });
+});
+
+/**
+ * CTG-0002 §8 (R-0008, TASK-0004) — campo, numeração e sincronização: as
+ * chaves novas de `TEAT_RULES` e de `OPS_SURFACE_RULES` que TASK-0005 escreve,
+ * e a ausência definitiva do alias `ops:offline-numbering-reservation:*` (M18).
+ *
+ * Toda linha abaixo é transcrição literal da §8 do contrato; nenhum papel é
+ * inferido. Os pares que ainda não existem falham hoje por comportamento
+ * ausente (Engineer, TASK-0005), nunca por erro de escrita.
+ */
+describe('R-0008 CTG-0002 §8 — política de campo, numeração e sincronização (TASK-0004)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (CTG-0001 §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        // technical-admin está em GLOBAL_ADMIN_ROLES: '*' o libera para toda
+        // chave, sem entrar na lista estática de papéis concedidos.
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  }
+
+  describe('§8 — chaves novas de TEAT_RULES (rotas manuscritas)', () => {
+    it('ops:operational-device:close-shift — field-agent e field-supervisor (origem teat-policy.ts)', () => {
+      expectGrantedOnlyTo('ops:operational-device', 'close-shift', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+
+    it('ops:operational-device:handoff-session — field-agent e field-supervisor (OD-T15: chave nova, por analogia com close-shift)', () => {
+      expectGrantedOnlyTo('ops:operational-device', 'handoff-session', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+
+    it('ops:operational-device:{block,unblock,wipe} — só technical-admin (route contract §4.2)', () => {
+      for (const action of ['block', 'unblock', 'wipe']) {
+        expectGrantedOnlyTo('ops:operational-device', action, [
+          'technical-admin',
+        ]);
+      }
+    });
+
+    it('ops:homologation:{renew,cancel-by-audit} — agency-admin e technical-admin (origem)', () => {
+      for (const action of ['renew', 'cancel-by-audit']) {
+        expectGrantedOnlyTo('ops:homologation', action, [
+          'agency-admin',
+          'technical-admin',
+        ]);
+      }
+    });
+  });
+
+  describe('§8 — chaves de comando já existentes, preservadas', () => {
+    it('ops:numbering-reservation:reserve — só field-agent (OD-T23: prevalece a fonte mais restrita)', () => {
+      expectGrantedOnlyTo('ops:numbering-reservation', 'reserve', [
+        'field-agent',
+      ]);
+    });
+
+    it('ops:numbering-reservation:cancel — field-agent e field-supervisor', () => {
+      expectGrantedOnlyTo('ops:numbering-reservation', 'cancel', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+
+    it('ops:sync-batch:submit — só field-agent', () => {
+      expectGrantedOnlyTo('ops:sync-batch', 'submit', ['field-agent']);
+    });
+
+    it('ops:sync-conflict:resolve — field-supervisor e processing-operator', () => {
+      expectGrantedOnlyTo('ops:sync-conflict', 'resolve', [
+        'field-supervisor',
+        'processing-operator',
+      ]);
+    });
+  });
+
+  describe('§8 — chaves novas de OPS_SURFACE_RULES (superfícies CRUD do route contract §4.3)', () => {
+    const surfaces: Array<[string, string, readonly string[]]> = [
+      ['numbering-range', 'read', ['agency-admin', 'technical-admin']],
+      ['numbering-range', 'create', ['agency-admin', 'technical-admin']],
+      ['numbering-range', 'update', ['agency-admin', 'technical-admin']],
+      [
+        'numbering-reservation',
+        'read',
+        ['field-agent', 'field-supervisor', 'processing-operator'],
+      ],
+      [
+        'numbering-consumption',
+        'read',
+        ['field-agent', 'field-supervisor', 'processing-operator'],
+      ],
+      [
+        'sync-batch',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'sync-receipt',
+        'read',
+        ['field-agent', 'field-supervisor', 'processing-operator'],
+      ],
+      [
+        'sync-queue-item',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'sync-conflict',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'session-handoff',
+        'read',
+        ['field-supervisor', 'processing-operator', 'traffic-authority'],
+      ],
+      [
+        'device-event',
+        'read',
+        ['field-supervisor', 'processing-operator', 'technical-admin'],
+      ],
+      [
+        'operation',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['operation', 'create', ['field-supervisor', 'agency-admin']],
+      [
+        'team-agent',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['team-agent', 'create', ['field-supervisor', 'agency-admin']],
+      [
+        'patrol-vehicle',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['patrol-vehicle', 'create', ['agency-admin']],
+      [
+        'measurement-instrument',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['measurement-instrument', 'create', ['agency-admin']],
+      [
+        'approach',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ],
+      ],
+      ['approach', 'create', ['field-agent']],
+    ];
+
+    for (const [resource, action, roles] of surfaces) {
+      it(`ops:${resource}:${action} — ${roles.join(', ')}`, () => {
+        expectGrantedOnlyTo(`ops:${resource}`, action, roles);
+      });
+    }
+
+    const agencySurfaces = [
+      'agency-unit',
+      'agency-jurisdiction',
+      'agency-competence',
+    ];
+
+    it('ops:{agency-unit,agency-jurisdiction,agency-competence}:read — os quatro papéis de campo mais agency-admin', () => {
+      for (const resource of agencySurfaces) {
+        expectGrantedOnlyTo(`ops:${resource}`, 'read', [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'agency-admin',
+        ]);
+      }
+    });
+
+    it('ops:{agency-unit,agency-jurisdiction,agency-competence}:create — só agency-admin', () => {
+      for (const resource of agencySurfaces) {
+        expectGrantedOnlyTo(`ops:${resource}`, 'create', ['agency-admin']);
+      }
+    });
+  });
+
+  describe('§8 — remoção do alias duplicado da origem (M18)', () => {
+    it('dado ops:offline-numbering-reservation:{reserve,cancel} então as duas chaves não existem na matriz (a rota única é numbering-reservation)', () => {
+      for (const action of ['reserve', 'cancel']) {
+        expect(
+          `ops:offline-numbering-reservation:${action}` in DETRAN_POLICY_MATRIX,
+          `ops:offline-numbering-reservation:${action} deveria ter sido removida em M18`,
+        ).toBe(false);
+      }
+    });
+
+    it('dado qualquer papel canônico então nenhum recebe ops:offline-numbering-reservation:reserve, nem por permissionsForRoles', () => {
+      for (const role of TEAT_CANONICAL_ROLES) {
+        expect(
+          permissionsForRoles([role]).includes(
+            'ops:offline-numbering-reservation:reserve',
+          ),
+        ).toBe(false);
+      }
+    });
+  });
+});
+
+/**
+ * CTG-0003 §7 (R-0008, TASK-0006) — evidência, custódia, bodycam, snapshots e
+ * catálogo/pacote normativo: as chaves novas de `TEAT_RULES` e de
+ * `OPS_SURFACE_RULES` que TASK-0007 escreve, e a remoção definitiva do par
+ * `snapshot-person`/`snapshot-vehicle` (os controladores gerados declaram
+ * `ops:person`/`ops:vehicle`, nunca `ops:snapshot-*`).
+ *
+ * Toda linha abaixo é transcrição literal da §7 do contrato; nenhum papel é
+ * inferido. Os pares que ainda não existem falham hoje por comportamento
+ * ausente (Engineer, TASK-0007), nunca por erro de escrita.
+ */
+describe('R-0008 CTG-0003 §7 — política de evidência, snapshots e normativo (TASK-0006)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (CTG-0001 §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        // technical-admin está em GLOBAL_ADMIN_ROLES: '*' o libera para toda
+        // chave, sem entrar na lista estática de papéis concedidos.
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  }
+
+  describe('§7 — chaves novas de TEAT_RULES (comandos de evidência e acesso a bodycam)', () => {
+    it('ops:evidence:complete-upload — field-agent e processing-operator (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence', 'complete-upload', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+
+    it('ops:evidence:validate — processing-operator, AUDITOR e technical-admin (origem "evidence:validate", auditor canonizado em AUDITOR)', () => {
+      expectGrantedOnlyTo('ops:evidence', 'validate', [
+        'processing-operator',
+        'AUDITOR',
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:evidence:purge-unverified — só technical-admin (chave nova)', () => {
+      expectGrantedOnlyTo('ops:evidence', 'purge-unverified', [
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:evidence-access-request:create — processing-operator e traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'create', [
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:update — processing-operator e traffic-authority (origem, sem rota nesta rodada — §4.11 nota final)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'update', [
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:approve — só traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'approve', [
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:deny — só traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'deny', [
+        'traffic-authority',
+      ]);
+    });
+
+    it('ops:evidence-access-request:deliver — processing-operator e traffic-authority (origem)', () => {
+      expectGrantedOnlyTo('ops:evidence-access-request', 'deliver', [
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+  });
+
+  describe('§7 — chaves de comando já existentes, preservadas (CTG-0001/CTG-0002)', () => {
+    it('ops:evidence:initiate-upload — field-agent e processing-operator', () => {
+      expectGrantedOnlyTo('ops:evidence', 'initiate-upload', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+
+    it('ops:evidence:link — field-agent e processing-operator', () => {
+      expectGrantedOnlyTo('ops:evidence', 'link', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+
+    it('ops:evidence:add-custody-event — field-agent, processing-operator, AUDITOR e technical-admin', () => {
+      expectGrantedOnlyTo('ops:evidence', 'add-custody-event', [
+        'field-agent',
+        'processing-operator',
+        'AUDITOR',
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:probative-package:generate — processing-operator, AUDITOR e technical-admin', () => {
+      expectGrantedOnlyTo('ops:probative-package', 'generate', [
+        'processing-operator',
+        'AUDITOR',
+        'technical-admin',
+      ]);
+    });
+
+    it('ops:external-query:create — field-agent, field-supervisor, processing-operator e traffic-authority (§5.1, mesma chave da superfície CRUD reaproveitada pelo comando)', () => {
+      expectGrantedOnlyTo('ops:external-query', 'create', [
+        'field-agent',
+        'field-supervisor',
+        'processing-operator',
+        'traffic-authority',
+      ]);
+    });
+
+    it('inf:normative-catalog:{publish,retire} — agency-admin e technical-admin', () => {
+      for (const action of ['publish', 'retire']) {
+        expectGrantedOnlyTo('inf:normative-catalog', action, [
+          'agency-admin',
+          'technical-admin',
+        ]);
+      }
+    });
+
+    it('inf:mobile-normative-package:{publish,retire} — agency-admin e technical-admin', () => {
+      for (const action of ['publish', 'retire']) {
+        expectGrantedOnlyTo('inf:mobile-normative-package', action, [
+          'agency-admin',
+          'technical-admin',
+        ]);
+      }
+    });
+
+    it('inf:mobile-normative-package:validate — field-agent, field-supervisor, agency-admin e technical-admin (§6.4 — field-agent lê conteúdo, não publica)', () => {
+      expectGrantedOnlyTo('inf:mobile-normative-package', 'validate', [
+        'field-agent',
+        'field-supervisor',
+        'agency-admin',
+        'technical-admin',
+      ]);
+    });
+  });
+
+  describe('§7 — chaves novas de OPS_SURFACE_RULES (superfícies CRUD do route contract §4.4/§4.5)', () => {
+    const surfaces: Array<[string, string, readonly string[]]> = [
+      [
+        'external-query',
+        'read',
+        [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+        ],
+      ],
+      ['evidence', 'create', ['field-agent', 'processing-operator']],
+      ['evidence', 'update', ['processing-operator', 'technical-admin']],
+      [
+        'evidence-link',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'custody-event',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'probative-package',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'probative-package-item',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'storage-intent',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      [
+        'evidence-access-request',
+        'read',
+        [
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+          'AUDITOR',
+          'technical-admin',
+        ],
+      ],
+      ['evidence-link', 'create', ['field-agent', 'processing-operator']],
+      [
+        'custody-event',
+        'create',
+        ['field-agent', 'processing-operator', 'AUDITOR', 'technical-admin'],
+      ],
+      [
+        'probative-package',
+        'create',
+        ['processing-operator', 'AUDITOR', 'technical-admin'],
+      ],
+      [
+        'probative-package-item',
+        'create',
+        ['processing-operator', 'technical-admin'],
+      ],
+      ['storage-intent', 'create', ['field-agent', 'processing-operator']],
+      [
+        'evidence-access-request',
+        'create',
+        ['processing-operator', 'traffic-authority'],
+      ],
+    ];
+
+    for (const [resource, action, roles] of surfaces) {
+      it(`ops:${resource}:${action} — ${roles.join(', ')}`, () => {
+        expectGrantedOnlyTo(`ops:${resource}`, action, roles);
+      });
+    }
+
+    const snapshotSurfaces = [
+      ['person', 'read'],
+      ['person', 'create'],
+      ['vehicle', 'read'],
+      ['vehicle', 'create'],
+      ['person-document', 'read'],
+      ['person-document', 'create'],
+      ['vehicle-snapshot', 'read'],
+      ['vehicle-snapshot', 'create'],
+    ] as const;
+
+    it('ops:{person,vehicle,person-document,vehicle-snapshot}:{read,create} — field-agent, field-supervisor, processing-operator, traffic-authority e technical-admin (§4.5, controladores gerados de BP-OPS-SNAPSHOTS-001)', () => {
+      for (const [resource, action] of snapshotSurfaces) {
+        expectGrantedOnlyTo(`ops:${resource}`, action, [
+          'field-agent',
+          'field-supervisor',
+          'processing-operator',
+          'traffic-authority',
+        ]);
+      }
+    });
+  });
+
+  describe('§7 — remoção do alias duplicado da origem (`ops:snapshot-person`/`ops:snapshot-vehicle`)', () => {
+    it('dado ops:snapshot-{person,vehicle}:{read,create} então as quatro chaves não existem na matriz (a rota gerada é ops:person/ops:vehicle, nunca ops:snapshot-*)', () => {
+      for (const resource of ['snapshot-person', 'snapshot-vehicle']) {
+        for (const action of ['read', 'create']) {
+          expect(
+            `ops:${resource}:${action}` in DETRAN_POLICY_MATRIX,
+            `ops:${resource}:${action} deveria ter sido removida em M18 (CTG-0003 §7)`,
+          ).toBe(false);
+        }
+      }
+    });
+
+    it('dado qualquer papel canônico então nenhum recebe ops:snapshot-person:read, nem por permissionsForRoles', () => {
+      for (const role of TEAT_CANONICAL_ROLES) {
+        expect(
+          permissionsForRoles([role]).includes('ops:snapshot-person:read'),
+        ).toBe(false);
+      }
+    });
+  });
+});
+
+/**
+ * CTG-0004 §2/§4/§5/§8 (R-0008, TASK-0008) — medidas administrativas,
+ * alcoolemia, velocidade, SSE e integrações (WP-T2). `inf:administrative-measure:*`
+ * e `inf:alcohol-procedure:*` já existem em `TEAT_RULES` (ported ahead of
+ * TASK-0009, verificado por leitura direta de `policy.ts` linhas 663–706): os
+ * testes abaixo passam hoje. `ops:stream:read` e `ops:integration:{read,retry}`
+ * são chaves NOVAS pedidas pelo contrato (§8) e ainda não existem — os dois
+ * últimos `describe` ficam vermelhos até TASK-0009, comportamento ausente,
+ * nunca ajuste de teste (regra 7 do prompt).
+ */
+describe('CTG-0004 §2/§4/§5/§8 — medidas, alcoolemia, velocidade, SSE, integrações (TASK-0008)', () => {
+  const allowed = (roles: string[], resource: string, action: string) =>
+    isDetranActionAllowed({ roles, permissions: [] }, resource, action);
+
+  /** Os oito papéis canônicos da família TEAT (plan.md §0, roles.ts). */
+  const TEAT_CANONICAL_ROLES = [
+    'field-agent',
+    'field-supervisor',
+    'processing-operator',
+    'traffic-authority',
+    'agency-admin',
+    'technical-admin',
+    'AUDITOR',
+    'integration-operator',
+  ] as const;
+
+  function expectGrantedOnlyTo(
+    resource: string,
+    action: string,
+    grantedRoles: readonly string[],
+  ): void {
+    for (const role of TEAT_CANONICAL_ROLES) {
+      if (role === 'technical-admin') {
+        expect(
+          allowed([role], resource, action),
+          `technical-admin deveria passar por GLOBAL_ADMIN_ROLES ('*') em ${resource}:${action}`,
+        ).toBe(true);
+        continue;
+      }
+      const expected = (grantedRoles as readonly string[]).includes(role);
+      expect(
+        allowed([role], resource, action),
+        `${resource}:${action} para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+    // rait-test-strategy.md §2: "negado para pelo menos um papel RAIT fora da lista".
+    expect(
+      allowed(['rait-analyst'], resource, action),
+      `${resource}:${action} nunca deveria conceder a um papel RAIT`,
+    ).toBe(false);
+  }
+
+  describe('§4 — inf:administrative-measure:* (C-0004: matriz de política das medidas)', () => {
+    it('start — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'start', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('register-retention — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'register-retention', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('register-removal — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'register-removal', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('inventory-vehicle — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'inventory-vehicle', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('apply-term — field-agent, processing-operator', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'apply-term', [
+        'field-agent',
+        'processing-operator',
+      ]);
+    });
+    it('release — field-supervisor, traffic-authority (403 TEAT.MEASURE_RELEASE_NOT_ALLOWED nos demais, §4.6)', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'release', [
+        'field-supervisor',
+        'traffic-authority',
+      ]);
+    });
+    it('conclude — só traffic-authority', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'conclude', [
+        'traffic-authority',
+      ]);
+    });
+    it('cancel — só traffic-authority (a rota sempre responde 409, §4.7)', () => {
+      expectGrantedOnlyTo('inf:administrative-measure', 'cancel', [
+        'traffic-authority',
+      ]);
+    });
+  });
+
+  describe('§5 — inf:alcohol-procedure:* (C-0004: matriz de política da alcoolemia)', () => {
+    it('start — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'start', ['field-agent']);
+    });
+    it('record-test — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'record-test', [
+        'field-agent',
+      ]);
+    });
+    it('record-refusal — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'record-refusal', [
+        'field-agent',
+      ]);
+    });
+    it('record-psychomotor-signs — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'record-psychomotor-signs', [
+        'field-agent',
+      ]);
+    });
+    it('forward — só field-agent', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'forward', ['field-agent']);
+    });
+    it('close — field-agent, field-supervisor', () => {
+      expectGrantedOnlyTo('inf:alcohol-procedure', 'close', [
+        'field-agent',
+        'field-supervisor',
+      ]);
+    });
+  });
+
+  describe('§6 — inf:speed-measurement:create (atrás de teat.speed_meters, INF_FIELD_LEGAL_ROLES)', () => {
+    it('create — field-agent, field-supervisor, processing-operator, traffic-authority, technical-admin (INF_FIELD_LEGAL_ROLES; agency-admin/AUDITOR/integration-operator negados)', () => {
+      // INF_FIELD_LEGAL_ROLES inclui technical-admin explicitamente (não só via
+      // GLOBAL_ADMIN_ROLES) — expectGrantedOnlyTo cobre os dois caminhos porque
+      // ambos concedem true.
+      for (const role of [
+        'field-agent',
+        'field-supervisor',
+        'processing-operator',
+        'traffic-authority',
+      ] as const) {
+        expect(allowed([role], 'inf:speed-measurement', 'create')).toBe(true);
+      }
+      for (const role of [
+        'agency-admin',
+        'AUDITOR',
+        'integration-operator',
+      ] as const) {
+        expect(allowed([role], 'inf:speed-measurement', 'create')).toBe(false);
+      }
+    });
+  });
+
+  /**
+   * §8 (M17/OD-T17) — `ops:stream:read`: chave NOVA, todos os oito papéis
+   * TEAT (o stream só entrega o que o papel já lê por outra chave — não é
+   * ampliação de acesso). Vermelho até TASK-0009 acrescentar a linha em
+   * `TEAT_RULES`.
+   */
+  describe('§8 (OD-T17) — ops:stream:read: todos os oito papéis TEAT, nenhum papel PEC/RAIT/DASHBOARD', () => {
+    it('dado cada um dos oito papéis TEAT quando ops:stream:read então permitido', () => {
+      for (const role of TEAT_CANONICAL_ROLES) {
+        expect(
+          allowed([role], 'ops:stream', 'read'),
+          `ops:stream:read deveria ser permitido para ${role} (OD-T17)`,
+        ).toBe(true);
+      }
+    });
+    it('dado um papel PEC (CANDIDATO) ou RAIT (rait-analyst) quando ops:stream:read então negado', () => {
+      expect(allowed(['CANDIDATO'], 'ops:stream', 'read')).toBe(false);
+      expect(allowed(['rait-analyst'], 'ops:stream', 'read')).toBe(false);
+    });
+  });
+
+  /**
+   * §8 (route contract §4.6) — `ops:integration:{read,retry}`: só
+   * integration-operator e technical-admin. Vermelho até TASK-0009.
+   */
+  describe('§8 — ops:integration:{read,retry}: só integration-operator e technical-admin', () => {
+    it('read — integration-operator, technical-admin; negado para os outros seis papéis TEAT', () => {
+      expectGrantedOnlyTo('ops:integration', 'read', ['integration-operator']);
+    });
+    it('retry — integration-operator, technical-admin; negado para os outros seis papéis TEAT', () => {
+      expectGrantedOnlyTo('ops:integration', 'retry', ['integration-operator']);
+    });
+  });
+});
+
+/**
+ * work/rounds/R-0009/contracts/CTG-0001.md §3/§8, §11 C-0001-52 (M19; plan.md M19) —
+ * `portal:identity:read`: única linha que TASK-0004 acrescenta a `policy.ts` neste grupo (o
+ * bloco `PORTAL_RULES` completo é CTG-0002/TASK-0007). Fica vermelho até TASK-0004 acrescentar
+ * `['portal:identity:read', ['CIDADAO']]`. Negativos exaustivos por todos os papéis canônicos de
+ * `DETRAN_ROLES`, exceto a exceção declarada de `GLOBAL_ADMIN_ROLES` (a guarda de identidade —
+ * `PortalCitizenGuard`, M4 — nega essas quatro depois, fora do escopo de `policy.spec.ts`).
+ *
+ * Nota de divergência (registrada no relatório de TASK-0003): o texto de §11 C-0001-52 fala em
+ * "32 papéis... negativos", mas a lista enumerada em §3 (`negativo pela política`) tem 31 nomes;
+ * 31 é o valor internamente consistente com `DETRAN_ROLES.length === 36` (36 − 1 CIDADAO − 4
+ * `GLOBAL_ADMIN_ROLES`), verificado abaixo programaticamente contra `roles.ts`.
+ *
+ * `portal:appeal:create`/`portal:appeal:read-own` (linhas existentes, ver teste acima em
+ * "grants RAIT command and surface rules only to RAIT staff roles") não são removidas nem
+ * alteradas aqui — permanecem até CTG-0002/TASK-0007 (M19).
+ */
+describe('CTG-0001 §3/§8 (M19, TASK-0003) — portal:identity:read: CIDADAO positivo, negativos exaustivos', () => {
+  const PORTAL_GLOBAL_ADMIN_ROLES = [
+    'ADMIN',
+    'GESTOR_DETRAN',
+    'SUPORTE',
+    'technical-admin',
+  ] as const;
+
+  it('C-0001-52 — dado portal:identity:read quando isDetranActionAllowed então CIDADAO permitido; ADMIN/GESTOR_DETRAN/SUPORTE/technical-admin permitidos por GLOBAL_ADMIN_ROLES (exceção declarada — a guarda de identidade nega depois, M4); os demais 31 papéis canônicos negados', () => {
+    for (const role of DETRAN_ROLES) {
+      const expected =
+        role === 'CIDADAO' ||
+        (PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role);
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'portal:identity',
+          'read',
+        ),
+        `portal:identity:read para o papel ${role} deveria ser ${expected}`,
+      ).toBe(expected);
+    }
+  });
+
+  it('dado os papéis canônicos fora de CIDADAO e GLOBAL_ADMIN_ROLES quando contados então são exatamente 31 (36 papéis − 1 CIDADAO − 4 GLOBAL_ADMIN_ROLES)', () => {
+    const negatives = DETRAN_ROLES.filter(
+      (role) =>
+        role !== 'CIDADAO' &&
+        !(PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role),
+    );
+    expect(DETRAN_ROLES).toHaveLength(36);
+    expect(negatives).toHaveLength(31);
+  });
+
+  it('dado portal:appeal:create e portal:appeal:read-own quando CTG-0002/TASK-0007 remove as linhas então AUSENTES da matriz e negadas a CIDADAO (M19, ADR-0019 — este `it` nasceu em TASK-0003 com prazo declarado até CTG-0002; C-0002-83)', () => {
+    expect('portal:appeal:create' in DETRAN_POLICY_MATRIX).toBe(false);
+    expect('portal:appeal:read-own' in DETRAN_POLICY_MATRIX).toBe(false);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['CIDADAO'], permissions: [] },
+        'portal:appeal',
+        'create',
+      ),
+    ).toBe(false);
+    expect(
+      isDetranActionAllowed(
+        { roles: ['CIDADAO'], permissions: [] },
+        'portal:appeal',
+        'read-own',
+      ),
+    ).toBe(false);
+  });
+});
+
+/**
+ * work/rounds/R-0009/contracts/CTG-0002.md §10 e §13 C-0002-83 (M19, TASK-0006) — bloco
+ * `PORTAL_RULES` completo (29 chaves, só `CIDADAO`). Fica vermelho até TASK-0007 colar o bloco
+ * em `policy.ts` e remover `portal:appeal:{create,read-own}` (ADR-0019: o caso é do RAIT).
+ * Grants (orchestra/README.md §4.8): positivo `CIDADAO`; negativos pela política = todos os
+ * demais papéis canônicos de `roles.ts`; exceção declarada = `GLOBAL_ADMIN_ROLES` (`ADMIN`,
+ * `GESTOR_DETRAN`, `SUPORTE`, `technical-admin`), que `isDetranActionAllowed` libera para toda
+ * chave e a `PortalCitizenGuard` (CTG-0001 §3, A3(a)) barra depois — fora do escopo deste spec.
+ * `portal:complaint:*` (PEC, `TEAT_RULES`, M2) permanece como está.
+ */
+describe('CTG-0002 §10 (M19, TASK-0006) — PORTAL_RULES: CIDADAO positivo, negativos exaustivos, portal:appeal ausente', () => {
+  const PORTAL_GLOBAL_ADMIN_ROLES = [
+    'ADMIN',
+    'GESTOR_DETRAN',
+    'SUPORTE',
+    'technical-admin',
+  ] as const;
+
+  /** Transcrição literal de CTG-0002 §10.1 (29 chaves). */
+  const PORTAL_RULE_KEYS = [
+    'portal:identity:read',
+    'portal:identity:elevate',
+    'portal:identity:represent',
+    'portal:identity:update',
+    'portal:ait:read',
+    'portal:request:create',
+    'portal:request:compose',
+    'portal:request:submit',
+    'portal:request:withdraw',
+    'portal:request:read',
+    'portal:request:respond',
+    'portal:request:evaluate',
+    'portal:inbox:read',
+    'portal:inbox:acknowledge',
+    'portal:sne-enrollment:read',
+    'portal:sne-enrollment:enroll',
+    'portal:sne-enrollment:cancel',
+    'portal:push-subscription:create',
+    'portal:document:read',
+    'portal:vehicle:read',
+    'portal:vehicle:issue',
+    'portal:crash:read',
+    'portal:exam:read',
+    'portal:manifestation:manifest',
+    'portal:manifestation:read',
+    'portal:manifestation:acknowledge',
+    'portal:evaluation:evaluate',
+    'portal:service-charter:read',
+    'portal:stream:read',
+  ] as const;
+
+  /** `portal:complaint:*` (M2) — estado de `TEAT_RULES` em `policy.ts`, inalterado por CTG-0002. */
+  const COMPLAINT_RULES: Array<[string, readonly string[]]> = [
+    [
+      'portal:complaint:create',
+      ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+    ],
+    [
+      'portal:complaint:read',
+      ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+    ],
+    ['portal:complaint:update', ['DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ];
+
+  it('C-0002-83 — dado PORTAL_RULES então as 29 chaves existem na matriz com exatamente [CIDADAO]', () => {
+    expect(PORTAL_RULE_KEYS).toHaveLength(29);
+    for (const key of PORTAL_RULE_KEYS) {
+      expect(
+        key in DETRAN_POLICY_MATRIX,
+        `${key} deveria existir em DETRAN_POLICY_MATRIX`,
+      ).toBe(true);
+      expect(
+        [
+          ...(DETRAN_POLICY_MATRIX[key as keyof typeof DETRAN_POLICY_MATRIX] ??
+            []),
+        ],
+        key,
+      ).toEqual(['CIDADAO']);
+    }
+  });
+
+  it('C-0002-83 — dado cada chave de PORTAL_RULES quando isDetranActionAllowed então CIDADAO permitido, os 31 papéis canônicos restantes negados e ADMIN/GESTOR_DETRAN/SUPORTE/technical-admin permitidos (GLOBAL_ADMIN_ROLES — exceção declarada, barrada pela PortalCitizenGuard)', () => {
+    const negatives = DETRAN_ROLES.filter(
+      (role) =>
+        role !== 'CIDADAO' &&
+        !(PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role),
+    );
+    expect(negatives).toHaveLength(31);
+    for (const key of PORTAL_RULE_KEYS) {
+      const [domain, resource, action] = key.split(':') as [
+        string,
+        string,
+        string,
+      ];
+      const resourceKey = `${domain}:${resource}`;
+      for (const role of DETRAN_ROLES) {
+        const expected =
+          role === 'CIDADAO' ||
+          (PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role);
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            resourceKey,
+            action,
+          ),
+          `${key} para o papel ${role} deveria ser ${expected}`,
+        ).toBe(expected);
+      }
+      expect(
+        isDetranActionAllowed(
+          { roles: [], permissions: [] },
+          resourceKey,
+          action,
+        ),
+        `${key} sem papel`,
+      ).toBe(false);
+    }
+  });
+
+  it("C-0002-83 — dado a matriz então as chaves 'portal:*' fora de 'portal:complaint:*' são exatamente as 29 de PORTAL_RULES (nenhuma sobra, nenhuma falta) e 'portal:appeal:*' está ausente", () => {
+    const portalKeys = Object.keys(DETRAN_POLICY_MATRIX)
+      .filter(
+        (key) =>
+          key.startsWith('portal:') && !key.startsWith('portal:complaint:'),
+      )
+      .sort();
+    expect(portalKeys).toEqual([...PORTAL_RULE_KEYS].sort());
+    expect(portalKeys.some((key) => key.startsWith('portal:appeal:'))).toBe(
+      false,
+    );
+    expect('portal:appeal:create' in DETRAN_POLICY_MATRIX).toBe(false);
+    expect('portal:appeal:read-own' in DETRAN_POLICY_MATRIX).toBe(false);
+    for (const role of DETRAN_ROLES) {
+      if ((PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role))
+        continue;
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'portal:appeal',
+          'create',
+        ),
+        role,
+      ).toBe(false);
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'portal:appeal',
+          'read-own',
+        ),
+        role,
+      ).toBe(false);
+    }
+  });
+
+  it("C-0002-83 — dado 'portal:complaint:*' (PEC, M2) então inalterado: os mesmos papéis de TEAT_RULES e CIDADAO negado", () => {
+    for (const [key, roles] of COMPLAINT_RULES) {
+      expect(
+        [
+          ...(DETRAN_POLICY_MATRIX[key as keyof typeof DETRAN_POLICY_MATRIX] ??
+            []),
+        ],
+        key,
+      ).toEqual([...roles]);
+      const [, resource, action] = key.split(':') as [string, string, string];
+      expect(
+        isDetranActionAllowed(
+          { roles: ['CIDADAO'], permissions: [] },
+          `portal:${resource}`,
+          action,
+        ),
+        key,
+      ).toBe(false);
+      expect(
+        isDetranActionAllowed(
+          { roles: ['CANDIDATO'], permissions: [] },
+          `portal:${resource}`,
+          action,
+        ),
+        key,
+      ).toBe(roles.includes('CANDIDATO'));
+    }
+  });
+});
+
+describe('R-0007 CTG-0002 worklist and session command policy matrix', () => {
+  const commandRules = [
+    ['rait-schedule', 'create', ['rait-coordinator']],
+    ['rait-schedule', 'publish', ['rait-coordinator']],
+    ['rait-batch', 'create', ['rait-secretary']],
+    ['rait-batch', 'approve', ['rait-chair']],
+    ['rait-batch-item', 'accept', ['rait-rapporteur']],
+    ['rait-batch-item', 'impediment', ['rait-rapporteur']],
+    [
+      'rait-assignment',
+      'reassign',
+      ['rait-coordinator', 'rait-manager', 'rait-chair'],
+    ],
+    ['rait-batch', 'draw', ['rait-secretary']],
+    ['rait-session', 'close-agenda', ['rait-chair']],
+    ['rait-session', 'open', ['rait-chair']],
+    ['rait-session', 'adjourn', ['rait-chair', 'rait-secretary']],
+    ['rait-session', 'convene-extraordinary', ['rait-chair']],
+    ['rait-agenda-item', 'read', ['rait-rapporteur']],
+    ['rait-agenda-item', 'view', ['rait-rapporteur']],
+    ['rait-agenda-item', 'withdraw', ['rait-chair']],
+    ['rait-vote', 'create', ['rait-chair', 'rait-rapporteur']],
+    ['rait-agenda-item', 'proclaim', ['rait-chair']],
+    ['rait-minutes', 'create', ['rait-secretary']],
+    ['rait-minutes', 'sign', ['rait-chair', 'rait-rapporteur']],
+    ['rait-minutes', 'publish', ['rait-secretary']],
+  ] as const;
+
+  it.each(commandRules)(
+    'dado o comando CTG-0002 %s:%s quando avaliado então permite somente os papéis canônicos',
+    (resource, action, allowedRoles) => {
+      for (const role of allowedRoles) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            `inf:${resource}`,
+            action,
+          ),
+        ).toBe(true);
+      }
+      for (const role of DETRAN_ROLES.filter(
+        (candidate) => !(allowedRoles as readonly string[]).includes(candidate),
+      )) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            `inf:${resource}`,
+            action,
+          ),
+        ).toBe(false);
+      }
+    },
+  );
+
+  it('dada uma tentativa de criar sustentação oral quando avaliada então nenhum papel canônico é autorizado', () => {
+    for (const role of DETRAN_ROLES) {
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'inf:rait-oral-argument',
+          'create',
+        ),
+      ).toBe(false);
+    }
+  });
+});
+
+describe('R-0007 CTG-0001 — matriz exaustiva dos comandos do caso RAIT', () => {
+  const commandRules: ReadonlyArray<
     readonly [string, string, readonly string[]]
   > = [
     ['inf:rait-case', 'admit', ['rait-analyst']],
@@ -1104,18 +2463,18 @@ describe('CTG-0001 — matriz exaustiva dos comandos do caso RAIT', () => {
     ['inf:rait-case', 'answer-inquiry', ['rait-analyst', 'rait-rapporteur']],
     ['inf:rait-case', 'extend-inquiry', ['rait-analyst', 'rait-rapporteur']],
   ];
-  const GLOBAL_ADMIN_ROLES = new Set([
+  const globalAdminRoles = new Set([
     'ADMIN',
     'GESTOR_DETRAN',
     'SUPORTE',
     'technical-admin',
   ]);
 
-  for (const [resource, action, positiveRoles] of COMMAND_RULES) {
+  for (const [resource, action, positiveRoles] of commandRules) {
     it(`dado o par ${resource}:${action} quando cada papel canônico é avaliado então concede só os papéis do contrato`, () => {
       for (const role of DETRAN_ROLES) {
         const expected =
-          GLOBAL_ADMIN_ROLES.has(role) || positiveRoles.includes(role);
+          globalAdminRoles.has(role) || positiveRoles.includes(role);
         expect(
           isDetranActionAllowed(
             { roles: [role], permissions: [] },
@@ -1129,12 +2488,6 @@ describe('CTG-0001 — matriz exaustiva dos comandos do caso RAIT', () => {
   }
 
   it('dado expire quando um papel humano tenta executar então a política permanece fechada', () => {
-    const globalAdminRoles = new Set([
-      'ADMIN',
-      'GESTOR_DETRAN',
-      'SUPORTE',
-      'technical-admin',
-    ]);
     for (const role of DETRAN_ROLES) {
       expect(
         isDetranActionAllowed(

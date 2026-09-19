@@ -1,4 +1,4 @@
-// Generated from BP-INF-AIT-001 v1.1.0 sha256:de3a429b81e860fb45d3abba728570d01cdfd3b886f55ff770273d4d6fff365f
+// Generated from BP-INF-AIT-001 v1.2.0 sha256:a92e771e8f034647144a60080673e25e807fdbc93a27c59a1da0fc32710fd2ea
 export * from './controllers/ait.controller.js';
 export * from './dto/create-ait.dto.js';
 export * from './entities/ait.entity.js';
@@ -48,3 +48,7 @@ export * from './ait.module.js';
 export * from './ait-lifecycle.service.js';
 export * from './ait-lifecycle.provider.js';
 export * from './ait-commands.controller.js';
+export * from './handwritten/index.js';
+export * from './handwritten/events.js';
+export * from './handwritten/ait-cancel-requests.controller.js';
+export * from './handwritten/ait-cancel-requests.provider.js';

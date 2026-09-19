@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0014",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Testes do par 1 (CTG-0003a): PortalClient de comandos, ErrorBoundary, SessionFacade, OfflineDocumentStore, onze compartilhados, 14 schemas + gates — critérios C-3a-nn do contrato",
+  "description": "Codificar 100 % dos critérios do contrato antes da implementação; typecheck limpo salvo módulos ausentes.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-web-tests-core"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003a",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0019",
+  "db_isolation": "database",
+  "iteration_count": 3,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["wp-p5"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-35029378c4baf86a",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/portal-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/portal-web", "test"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-17T18:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-35029378c4baf86a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

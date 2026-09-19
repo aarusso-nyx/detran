@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`.
-**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (modelo, refs, projeções, seed dos 42, gate `verify:domain-boundaries`): nenhum upstream — projeções escritas contra os contratos de eventos já publicados (`rait-events-sse-contract.md`, `teat-route-contract.md` §8, `boat-route-contract.md` §7, `portal-route-contract.md` §10) com fixtures. CTG-0002 (ciclo do alerta, deveres, frescor, exportação, SSE, contratos, e2e de escalonamento): `rait-backend` R-0007 e `teat-backend` R-0008 em `main`.
+**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (modelo, refs, projeções, seed dos 42, gate `verify:domain-boundaries`): nenhum upstream — projeções escritas contra os contratos de eventos já publicados (`rait-events-sse-contract.md`, `teat-route-contract.md` §8 e `docs/framework/schemas/events/` de R-0008, `boat-route-contract.md` §7, `portal-route-contract.md` §10) com fixtures. CTG-0002 (ciclo do alerta, deveres, frescor, exportação, SSE, contratos, e2e de escalonamento): `rait-backend` R-0007 (R-0008 já em `main`).
 **Janelas previstas:** 3.
 
 ## Metas
@@ -41,17 +41,21 @@
 
 ## Tarefas
 
-| Tarefa    | Papel        | Perfil              | Modelo/esforço | Lock                                                                                 | Depende de           | Entrega                                                                                                                                                           |
-| --------- | ------------ | ------------------- | -------------- | ------------------------------------------------------------------------------------ | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect    | architect-blueprint | Terra / alto   | `MOD-bp-dash-monitor`, `MOD-ddl-80`, `MOD-ddl-14`                                    | —                    | blueprint, refs, projeções (assinatura de cada `*.projection.ts`), timers; desenho de `verify:domain-boundaries`; critérios                                       |
-| TASK-0002 | Inspector    | inspector-tests     | Luna / médio   | `MOD-dashboard-tests`, `MOD-tools-boundaries-tests`                                  | TASK-0001            | testes: matriz [WF-DASH-001/002/003], "nenhuma rota altera domínio", camada (N3 403), supressão secundária, replay de projeção, RLS, seeds; caso negativo do gate |
-| TASK-0003 | Engineer     | engineer-backend    | Luna / médio   | `MOD-dashboard-module`, `MOD-app-module`, `MOD-tools-boundaries`, `MOD-package-json` | TASK-0002            | módulo gerado, seed dos 42 indicadores, `verify-domain-boundaries.ts` em `pnpm check`; testes verdes                                                              |
-| TASK-0004 | Inspector    | inspector-tests     | Terra / alto   | `MOD-dashboard-cycle-tests`                                                          | TASK-0001            | testes do detector/classificador/SLA/escalonamento (e2e), deveres, frescor, exportação (5 regras), relatórios                                                     |
-| TASK-0005 | Engineer     | engineer-backend    | Terra / médio  | `MOD-dashboard-handwritten`, `MOD-shared-policy`                                     | TASK-0003, TASK-0004 | serviços do ciclo, notificador, exportação, SSE, rotas §2–§5; testes verdes                                                                                       |
-| TASK-0006 | Engineer     | engineer-backend    | Luna / baixo   | `MOD-contracts-commands`, `MOD-schemas`, `MOD-contracts-feeds`                       | TASK-0005            | contrato de comandos, schema de eventos, quatro propostas de feed; `contracts:check`/`contracts:clients`                                                          |
-| TASK-0007 | Owner deleg. | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                                           | TASK-0006            | build pack (DDL 80, seed em D1), ADR-0020, route contract §7/§8, backlog                                                                                          |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                                                 | Depende de           | Entrega                                                                                                                                                           |
+| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------------------------------------ | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect            | architect-blueprint | Terra / alto   | `MOD-bp-dash-monitor`, `MOD-ddl-80`, `MOD-ddl-14`                                    | —                    | blueprint, refs, projeções (assinatura de cada `*.projection.ts`), timers; desenho de `verify:domain-boundaries`; critérios                                       |
+| TASK-0002 | Inspector            | inspector-tests     | Luna / médio   | `MOD-dashboard-tests`, `MOD-tools-boundaries-tests`                                  | TASK-0001            | testes: matriz [WF-DASH-001/002/003], "nenhuma rota altera domínio", camada (N3 403), supressão secundária, replay de projeção, RLS, seeds; caso negativo do gate |
+| TASK-0003 | Engineer             | engineer-backend    | Luna / médio   | `MOD-dashboard-module`, `MOD-app-module`, `MOD-tools-boundaries`, `MOD-package-json` | TASK-0002            | módulo gerado, seed dos 42 indicadores, `verify-domain-boundaries.ts` em `pnpm check`; testes verdes                                                              |
+| TASK-0004 | Inspector            | inspector-tests     | Terra / alto   | `MOD-dashboard-cycle-tests`                                                          | TASK-0001            | testes do detector/classificador/SLA/escalonamento (e2e), deveres, frescor, exportação (5 regras), relatórios                                                     |
+| TASK-0005 | Engineer             | engineer-backend    | Terra / médio  | `MOD-dashboard-handwritten`, `MOD-shared-policy`                                     | TASK-0003, TASK-0004 | serviços do ciclo, notificador, exportação, SSE, rotas §2–§5; testes verdes                                                                                       |
+| TASK-0006 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-contracts-commands`, `MOD-schemas`, `MOD-contracts-feeds`                       | TASK-0005            | contrato de comandos, schema de eventos (`docs/framework/schemas/events/`), quatro propostas de feed; gate completo no checkpoint do maestro                      |
+| TASK-0008 | Inspector            | inspector-tests     | Luna / médio   | `MOD-contracts-check-tests`                                                          | TASK-0006            | testes em `tools/contracts/tests` para o catálogo `dashboard` por prefixo (`dashboard-error-catalog.md`) e correspondência bidirecional rota ⇔ operação           |
+| TASK-0009 | Engineer             | engineer-backend    | Luna / médio   | `MOD-contracts-check`                                                                | TASK-0008            | `tools/contracts/check-commands.mjs` cobre raízes `dashboard/*` e o catálogo; satisfaz os testes do Inspector                                                     |
+| TASK-0007 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                                           | TASK-0009            | build pack (DDL 80, seed em D1), ADR-0020, route contract §7/§8, backlog                                                                                          |
 
-CTG-0001 = 0001…0003; CTG-0002 = 0004…0006. Um PR por CTG.
+CTG-0001 = 0001…0003; CTG-0002 = 0004…0006 + 0008/0009 (TASK-0006 → 0008 → 0009 → 0007). Um PR por CTG.
+
+**Checkpoint de dependências:** após TASK-0001 o maestro agrupa toda edição de blueprint e roda `pnpm blueprints:generate` uma vez; após TASK-0003 roda `pnpm install` (pacote `@detran/dashboard-monitor` novo), guarda o lockfile para o commit do grupo e libera TASK-0004; após TASK-0006 roda `pnpm contracts:clients` antes de TASK-0008; o Engineer de TASK-0005 inclui o pacote nos scripts `backend:test:*` da raiz e no alias do vitest do app. Banco da rodada: `detran_r11` em `env-detran-r11.sh`.
 
 ## Critérios de aceitação (comandos → resultado)
 
@@ -82,6 +86,21 @@ CTG-0001 = 0001…0003; CTG-0002 = 0004…0006. Um PR por CTG.
 - `verify:domain-boundaries` é gate novo em `pnpm check`: rodar sobre o repositório inteiro antes
   de ligar, e corrigir as violações existentes no mesmo PR (nunca lista de exceções silenciosa).
 - Lock `packages/ui` não é tocado; `apps/dashboard/web` é R-0016.
+
+## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
+
+- Transcrição de fichas, contratos, i18n e docs é ato de **Architect** (`transcriber-docs`); tarefas assim aparecem como "Architect (transcr.)".
+- Nenhum Engineer ou transcriber entrega o teste do próprio artefato: contratos → `contracts:test` pelo Inspector; fichas/i18n → teste tela ↔ ficha ↔ rota pelo Inspector.
+- Ciclos de review a partir do segundo restritos aos itens corrigidos; contradições contrato × código resolvidas pelo Architect por adenda numerada em `plan.md` antes de redespachar.
+- O CTG seguinte só começa a escrever depois do merge do anterior ou nasce em branch empilhado; nunca commits novos no branch de um PR aberto; integrar `main` por merge, nunca `--force`.
+- Listas de leitura dos workers fechadas e completas (DDL gerado, blueprint, `seed.sh`, fixtures, specs de referência como `backend/app/tests/e2e/policy-routes.e2e.spec.ts`); lacuna aqui foi `reference-gap` em R-0010.
+- M24: o Architect declara `module.handwritten*` com símbolos fixos no blueprint; Engineers nunca editam blueprints; `typecheck` vermelho entre as tarefas do CTG é esperado; toda edição de blueprint do CTG num único checkpoint de regeneração.
+- Política prova presença **e** ausência: testes positivos para os papéis listados e negativos para todos os papéis canônicos omitidos; nenhum grant por analogia.
+- e2e idempotente em banco persistente: `afterAll` limpa o que criou; `DB_NAME` explícito em `work/rounds/<R>/env-detran-rN.sh`.
+- Pacote novo montado no `AppModule` entra em `backend/app/vitest.config.ts` (alias) e `backend/app/package.json`; fixtures novas passam por `bash backend/database/seed.sh` duas vezes e pelo job `backend-kernel`.
+- Ao editar `parameter-catalogue.md`, rodar `pnpm parameters:generate`; specs sem literais de chave de parâmetro.
+- Handoffs de R-0009 a confirmar no bootstrap em `docs/meta/knowledge-base/backlog.md` §Handoffs e `portal-build-pack.md` §4: OD-P18 (balcão da ouvidoria: transições do órgão da manifestação) — se roteado a esta rodada, vira grupo próprio; OD-P28 (eventos `NOTIFICACAO_*`/`PAGAMENTO_CONFIRMADO` sem produtor em `main`): projeções nascem com fonte `DESCONECTADA` até o produtor existir.
+- Projeções consomem os schemas já publicados em `docs/framework/schemas/events/` (R-0008/R-0009) — reutilizar, nunca redefinir.
 
 ## Concorrência
 

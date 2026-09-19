@@ -1129,3 +1129,26 @@ insert into senatran.alteracao_permitida (payload) values
   ('{"mapeamentoAutomatico":false,"codigoTipoAlteracao":"CARROCERIA","codigoAlteracao":"CARROCERIA","descricaoAlteracao":"Alteração de carroceria","codigoSistema":4}'::jsonb),
   ('{"mapeamentoAutomatico":false,"codigoTipoAlteracao":"CATEGORIA","codigoAlteracao":"CATEGORIA","descricaoAlteracao":"Mudança de categoria","codigoSistema":5}'::jsonb);
 
+-- CTG-0004 §2 [DIVERGE-1]/A17: fixtures nacionais canônicas das personas
+-- Prata e Ouro. A rota CDT lê exclusivamente o payload destas entidades.
+insert into senatran.veiculo (
+  chassi, placa, codigo_renavam, id_proprietario, tipo_proprietario, payload
+) values (
+  '9BWZZZ377VT002222', 'PRT2A22', '22222222222', '22222222222', '1',
+  '{"chassi":"9BWZZZ377VT002222","placa":"PRT2A22","codigoRenavam":"22222222222","descricaoMarcaModelo":"FIAT/ARGO 1.0","situacao":"A"}'::jsonb
+);
+
+insert into senatran.condutor (
+  cpf, numero_registro, numero_formulario_renach, nome, data_nascimento,
+  nome_mae, payload
+) values
+  (
+    '22222222222', '22222222222', 'RN-PRATA-0001', 'PESSOA PRATA',
+    '1990-01-01', 'MAE PRATA',
+    '{"cpf":"22222222222","situacaoCnh":"A","dataValidadeCnh":"2030-12-31T00:00:00.000Z","categoriaAtual":"AD","quadroObservacoesCnh":""}'::jsonb
+  ),
+  (
+    '33333333333', '33333333333', 'RN-OURO-0001', 'PESSOA OURO',
+    '1990-01-01', 'MAE OURO',
+    '{"cpf":"33333333333","situacaoCnh":"B","dataValidadeCnh":"2030-12-31T00:00:00.000Z","categoriaAtual":"B","quadroObservacoesCnh":""}'::jsonb
+  );

@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/shift.changed.schema.json",
+  "title": "shift.changed",
+  "description": "Turno de campo aberto ou fechado (CTG-0002 §5.4/§5.5/§7).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "shift.changed"
+    },
+    "domainEvent": {
+      "type": "string",
+      "enum": ["TURNO_ABERTO", "TURNO_FECHADO"]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "shift"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "TURNO_ABERTO",
+          "required": [
+            "shiftId",
+            "agentId",
+            "deviceId",
+            "operationalUnitId",
+            "startedAt"
+          ],
+          "properties": {
+            "shiftId": {
+              "type": "string"
+            },
+            "agentId": {
+              "type": "string"
+            },
+            "deviceId": {
+              "type": "string"
+            },
+            "operationalUnitId": {
+              "type": ["string", "null"]
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "title": "TURNO_FECHADO",
+          "required": [
+            "shiftId",
+            "agentId",
+            "deviceId",
+            "endedAt",
+            "pendingCount",
+            "reservationsClosed",
+            "reservationsCancelled"
+          ],
+          "properties": {
+            "shiftId": {
+              "type": "string"
+            },
+            "agentId": {
+              "type": "string"
+            },
+            "deviceId": {
+              "type": "string"
+            },
+            "endedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "pendingCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "reservationsClosed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "reservationsCancelled": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0009",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar PORTAL_RULES em policy.ts e as rotas §3 (identidade) e §5 (pedidos: criação, rascunho, anexos, submit com protocolo imediato e delegação, desistência, leitura, diligências, avaliação) até os testes do escopo passarem",
+  "description": "Fazer passar os testes do Inspector (TASK-0006) das rotas de identidade e pedidos, sem alterá-los; delegações RAIT/infração/pagamento por UnavailableDelegationTarget (M8/M23).",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-requests-hw",
+    "MOD-portal-identity-hw",
+    "MOD-shared-policy",
+    "MOD-shared-decorators",
+    "MOD-shared-if-match",
+    "MOD-app-delegation-providers"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-p2"],
+  "branch": "orchestra/portal-backend",
+  "worktree_id": "WT-portal-backend",
+  "prompt_composition_id": "PC-147fc2c0256f358a",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "--filter", "@detran/portal-requests", "test:unit"],
+    ["pnpm", "--filter", "@detran/portal-requests", "test:integration"],
+    ["pnpm", "--filter", "@detran/portal-requests", "typecheck"],
+    ["pnpm", "--filter", "@detran/portal-identity", "typecheck"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "blueprints:check"]
+  ],
+  "created_at": "2026-09-16T18:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-147fc2c0256f358a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

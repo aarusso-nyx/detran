@@ -1,0 +1,58 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0009",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0009/plan.md",
+      "line": 293,
+      "claim": "TASK-0009 declara Engineer, mas sua entrega cria contratos e schema sob docs/, caminho reservado ao Architect pelo Art. 6; o prompt também o trata como transcrição.",
+      "fix": "separar a transcrição em tarefa Architect (transcrição) para docs/ e, se necessário, uma tarefa Engineer posterior somente para a geração em packages/."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0009/prompts/TASK-0004.md",
+      "line": 52,
+      "claim": "O Engineer é autorizado a alterar blueprints em docs/, isto é, a referência que orienta sua própria implementação; isso viola a separação do Art. 10.",
+      "fix": "mover as alterações de module.handwritten* e a regeneração derivada para um Architect antes de TASK-0003; TASK-0004 deve consumir o blueprint já fechado."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0009/prompts/TASK-0004.md",
+      "line": 55,
+      "claim": "O Engineer pode alterar policy.spec.ts, apesar de a mesma tarefa proibir testes na linha 60 e de testes pertencerem ao Inspector.",
+      "fix": "remover essa permissão; encaminhar qualquer ajuste necessário de policy.spec.ts ao Inspector em uma tarefa acoplada."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0009/prompts/TASK-0007.md",
+      "line": 49,
+      "claim": "TASK-0007 autoriza o Engineer a alterar os blueprints em docs/, contrariando a autoridade por caminho do Art. 6 e a tríade.",
+      "fix": "fazer o Architect atualizar os blocos module dos blueprints antes dos testes; limitar TASK-0007 ao código e à configuração de workspace sob autoridade Engineer."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0009/prompts/TASK-0008.md",
+      "line": 52,
+      "claim": "TASK-0008 repete a autorização de Engineer para editar blueprints em docs/, fora de seu papel constitucional.",
+      "fix": "transferir a alteração dos três blueprints para uma tarefa Architect anterior ao Inspector; manter TASK-0008 somente na implementação."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0009/prompts/TASK-0007.md",
+      "line": 81,
+      "claim": "O critério exige que os describes de §3/§5 fiquem verdes e que os demais permaneçam vermelhos, mas a seção afirma que todos os critérios precisam passar; o comando Vitest falha se o mesmo arquivo contém casos ainda vermelhos.",
+      "fix": "separar os e2e por fronteira TASK-0007/TASK-0008 ou executar somente um arquivo/padrão que contenha casos de §3/§5; o gate de TASK-0007 deve terminar verde."
+    }
+  ],
+  "notes": [
+    "Os comandos citados nos critérios principais existem em package.json; o problema bloqueante é a autoridade de escrita e o gate contraditório de TASK-0007."
+  ]
+}

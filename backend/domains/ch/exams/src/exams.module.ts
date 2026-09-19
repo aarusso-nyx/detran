@@ -14,10 +14,10 @@ import { ExamLifecycleService } from './exam-lifecycle.service.js';
 
 @Module({
   controllers: [
+    ExamCommandsController,
     PsychInstrumentController,
     MedicalExamController,
     PsychologicalExamController,
-    ExamCommandsController,
   ],
   providers: [
     PsychInstrumentService,

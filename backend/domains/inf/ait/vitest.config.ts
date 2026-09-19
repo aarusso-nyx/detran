@@ -16,6 +16,9 @@ export default defineConfig({
       '@detran/inf-normative': fileURLToPath(
         new URL('../normative/src/index.ts', import.meta.url),
       ),
+      '@detran/ops-core': fileURLToPath(
+        new URL('../../ops/core/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {

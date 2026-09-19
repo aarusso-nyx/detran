@@ -1,0 +1,99 @@
+{
+  "action": "Deliver R-0014 CTG-0002 (WP-P4): 27 Portal screen sheets IU-PORTAL-T01…T27 (KB baseline 549), i18n catalogue portal.pt-BR.json (+436 keys: translation map, legal texts with sources, 67 error codes, screen/form/service labels), adenda A4 (T-22 without serviceKey) and A5, sheet↔route↔i18n tests (211 cases; suite 472/472); plus window-2 preparation (BpPortal* re-exports, effort estimate, three-lot split, CTG-0003 triads)",
+  "round": "R-0014",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": [
+    "288ba41a4f4ea5fbadbbcc721d7ed1bc8277109b",
+    "46f03fc9a9351d78df6a605865c267c2b2128afa",
+    "4d6b0160af11a7567790f70d83264993c1b56c73",
+    "8cb4e88de81b596a0ee5c42d5a89b5626f28c484"
+  ],
+  "artifacts": [
+    {
+      "path": "docs/framework/product/transversal/portal/screens/IU-PORTAL-T01.md",
+      "sha256": "22e744b8dd26b7c39d68d9167e4b823b9538418105c2fe85603aee083c4a8841"
+    },
+    {
+      "path": "docs/framework/product/transversal/portal/screens/IU-PORTAL-T13.md",
+      "sha256": "aa07971e0682f52def7e27b0f062878b8daa23b04aa6b86bbd72cd871bc86a19"
+    },
+    {
+      "path": "docs/framework/product/transversal/portal/screens/IU-PORTAL-T27.md",
+      "sha256": "b2b6e07688571dc47edf58b49c4b7599b8ac9bd13896c12c80b0fd7295f0aa9c"
+    },
+    {
+      "path": "docs/meta/knowledge-base/import-manifest.json",
+      "sha256": "894d7c7b5e389d8c49499d5e6c362c2e98a50e09c0c94fced763488803fac659"
+    },
+    {
+      "path": "apps/portal/web/src/app/i18n/portal.pt-BR.json",
+      "sha256": "bd665481b60ec03d65ac1be80706ac080dd5d632a3764691c71cedf36d540a3b"
+    },
+    {
+      "path": "apps/portal/web/src/app/app.route-manifest.ts",
+      "sha256": "b4a8f477b1ae3c488ccd97c5386e88edc68fe82757647ca2ef2b1fb237cce46c"
+    },
+    {
+      "path": "apps/portal/web/src/app/screens/screen-sheets.spec.ts",
+      "sha256": "9b441a7ddabd1b0ef59701f77d94cfffc5d5ea38738ea41e27ae98248939b850"
+    },
+    {
+      "path": "apps/portal/web/src/app/screens/translation-map.spec.ts",
+      "sha256": "800fc07c39a71bbf5a6eebca449162c5333850df3348017c4bd7f8db633db8ee"
+    },
+    {
+      "path": "apps/portal/web/src/app/screens/legal-texts.spec.ts",
+      "sha256": "ede626f8802dd4f0b33a74c3c605186f06f1c3254ceac707447c00858b93719d"
+    },
+    {
+      "path": "packages/api-clients/src/index.ts",
+      "sha256": "3d6892bf262151749c829ff155ea65a8861032b3935c540299fd4674ee6a1c9e"
+    },
+    {
+      "path": "work/rounds/R-0014/plan.md",
+      "sha256": "e2c091663becd8c6d42604472d2126ebb3bb0e9d5d8f9d1f66f6c5923d786098"
+    },
+    {
+      "path": "work/rounds/R-0014/route-manifest.md",
+      "sha256": "918458f0d5572f1199c87bc356ee0b39ec635d1be4bb77dc14589c3202e6f79a"
+    },
+    {
+      "path": "work/rounds/R-0014/reviews/delivery-review-CTG-0002-2.json",
+      "sha256": "894a3f72e09df828c2470ceb5696040c58ce2b141f202f6bd37fcfc1fea9bfb0"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check (extended)",
+      "result": "pass",
+      "note": "EXIT 0 (pnpm-check-ctg2b.log); A5 changed two specs afterwards, re-run: typecheck 0, test 472/472, format OK"
+    },
+    {
+      "name": "node tools/docs/kb/check.mjs",
+      "result": "pass",
+      "note": "OK (549 artifacts, 446 canonical tokens)"
+    },
+    {
+      "name": "pnpm docs:kb:publish-check",
+      "result": "pass"
+    },
+    {
+      "name": "pnpm verify:parameter-catalogue",
+      "result": "pass",
+      "note": "OK (87 entries, 18 flags, 14 i18n namespaces)"
+    },
+    {
+      "name": "pnpm --filter @detran/portal-web typecheck|lint|test|build",
+      "result": "pass",
+      "note": "472/472"
+    },
+    {
+      "name": "delivery-review (gpt-5.6-terra)",
+      "result": "pass",
+      "note": "cycle 1 REVIEW (2 spec-rigor findings → A5) → cycle 2 PASS"
+    }
+  ],
+  "tasks": ["TASK-0005", "TASK-0013", "TASK-0014", "TASK-0006", "TASK-0007"],
+  "decisions": ["adendas A4, A5", "OD-P52…OD-P56 proposed"]
+}

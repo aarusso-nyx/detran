@@ -1,4 +1,4 @@
-// Generated from BP-INF-MEASURES-001 v1.1.0 sha256:0d61bf54d2c0383839c31d1ecb76100ecb64d1f60e1285f5d621451b36d3995c
+// Generated from BP-INF-MEASURES-001 v1.2.0 sha256:f6d05352d77e9c4f6fc86a4c3453ea23771ab90fc5f1cdb0482a10c0cb5dfb8b
 import { Module } from '@nestjs/common';
 import { MeasureTypeController } from './controllers/measure-type.controller.js';
 import { MeasureTypeService } from './services/measure-type.service.js';
@@ -27,9 +27,14 @@ import { YardRepository } from './repositories/yard.repository.js';
 import { MeasureStatusHistoryController } from './controllers/measure-status-history.controller.js';
 import { MeasureStatusHistoryService } from './services/measure-status-history.service.js';
 import { MeasureStatusHistoryRepository } from './repositories/measure-status-history.repository.js';
+import { MeasureCommandsController } from './measure-commands.controller.js';
+import { MeasureRetentionCommandsController } from './measure-commands.controller.js';
+import { MEASURE_LIFECYCLE_PROVIDER } from './handwritten/measure-lifecycle.provider.js';
 
 @Module({
   controllers: [
+    MeasureCommandsController,
+    MeasureRetentionCommandsController,
     MeasureTypeController,
     AdministrativeMeasureController,
     AdministrativeTermController,
@@ -59,6 +64,7 @@ import { MeasureStatusHistoryRepository } from './repositories/measure-status-hi
     YardRepository,
     MeasureStatusHistoryService,
     MeasureStatusHistoryRepository,
+    MEASURE_LIFECYCLE_PROVIDER,
   ],
 })
 export class MeasuresModule {}

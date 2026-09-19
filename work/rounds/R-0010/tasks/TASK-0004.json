@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implemente WP-B0/WP-B1 até os testes do Inspector passarem: regras est:* exatas, módulo montado, guardas e leituras com finalidade, gate de gravidade/vítimas e vocabulário est",
+  "description": "Implemente WP-B0/WP-B1 até os testes do Inspector passarem: regras est:* exatas, módulo montado, guardas e leituras com finalidade, gate de gravidade/vítimas e vocabulário est. Quando alterar campos handwritten no blueprint, regenere via scripts. Não edite spec, seed, DDL manual nem código gerado. Informe qualquer contrato contraditório ao Architect para adenda antes de implementar.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-est-crash",
+    "MOD-shared-policy",
+    "MOD-app-module",
+    "MOD-tools-vocabulary"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-b1"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-17b73b20f37cbeef",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "--filter", "@detran/est-crash", "test:unit"],
+    ["pnpm", "--filter", "@detran/est-crash", "test:integration"],
+    ["pnpm", "verify:lifecycle-vocabulary"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-17b73b20f37cbeef",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0003"
+}

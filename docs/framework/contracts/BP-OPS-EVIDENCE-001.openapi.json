@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Evidence — BP-OPS-EVIDENCE-001",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Evidence metadata, custody and formal access from TEAT evidence workflow and INV-EVIDENCE-001; binary storage remains a STYNX seam.",
     "x-blueprint": "BP-OPS-EVIDENCE-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
@@ -658,32 +658,6 @@
             }
           }
         }
-      },
-      "post": {
-        "tags": ["evidence-access-request"],
-        "operationId": "createEvidenceAccessRequest",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateEvidenceAccessRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EvidenceAccessRequest"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/v1/ops/evidence/evidence-access-requests/{id}": {
@@ -711,52 +685,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["evidence-access-request"],
-        "operationId": "updateEvidenceAccessRequest",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateEvidenceAccessRequestDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EvidenceAccessRequest"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["evidence-access-request"],
-        "operationId": "removeEvidenceAccessRequest",
-        "responses": {
-          "200": {
-            "description": "deleted"
           },
           "404": {
             "description": "not found"

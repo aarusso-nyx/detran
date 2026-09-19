@@ -44,5 +44,24 @@ pnpm check
 
 ## Entrega
 
+## Padrão de app (fixado por R-0014; R-0012 copia)
+
+1. `package.json` declara os scripts `build`, `test`, `lint` e `typecheck`.
+2. `build` é `ng build`; `test` é Vitest; `lint` é ESLint e `typecheck` verifica app e specs.
+3. `vitest.config.ts` usa jsdom, `src/test-setup.ts` e `angularJitApplicationTransform` (A7a).
+4. `src/test-setup.ts` inicializa TestBed uma vez e o restaura após cada spec.
+5. ESLint é flat, com `angular-eslint`, `typescript-eslint` e Prettier.
+6. `pnpm check` constrói `@detran/ui` antes do typecheck e inclui lint, test e build do app.
+7. `@detran/ui` expõe `exports["."]` para consumo por apps (M6).
+8. I18n usa placeholders `{x}`, nunca `{{x}}` (A7c), e namespaces declarados no catálogo.
+9. Specs zoneless aguardam o estado observável com `vi.waitFor`.
+10. Cada estado de tela é provado por `expectA11yStateInvariants` e `axe` no TestBed.
+11. Harnesses usam `HttpClient`/`HttpTestingController`, sem fetch falso para API do Portal.
+12. `ErrorBoundary` é o único classificador de erro/offline; features só apresentam sua saída (A12(a)).
+13. Comandos carregam `Idempotency-Key` determinística segundo M17.
+14. Rotas derivam de manifesto único, com guardas de sessão, nível, disponibilidade e vínculo.
+
+R-0014 fixa o padrão para os frontends seguintes: scripts `build|test|lint|typecheck`, Vitest com JIT transform, `test-setup.ts`, ESLint flat, `pnpm check` estendido, export da raiz de `@detran/ui`, i18n com `{x}`, zoneless com `vi.waitFor`, `expectA11yStateInvariants` e harness com `HttpClient`; R-0012 copia este padrão (plan.md M1, A7a, A12).
+
 PR por módulo de feature (`features/<modulo>`), com capturas das telas principais em ambos os
 temas, tabela rota → componente → comando → erro tratado, "Papel: Engineer" e evidência DEVAI.

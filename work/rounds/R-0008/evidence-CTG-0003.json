@@ -1,0 +1,80 @@
+{
+  "action": "Implement WP-T2 CTG-0003: evidence custody and bodycam access requests, external snapshots via the SENATRAN adapter ports, normative mobile package lifecycle with signed content; handwritten-first controller registration in the generator; policy §7; seed 27; tests",
+  "round": "R-0008",
+  "coupled_task_group": "CTG-0003",
+  "role": "engineer",
+  "commits": ["b7ad1cf", "aaf5255b0238dc504e25cf16a036d8bdf056f6d4"],
+  "artifacts": [
+    {
+      "path": "backend/domains/ops/evidence/src/handwritten/complete-upload.command.ts",
+      "sha256": "dbe8dc0ddae28da4e08c0c94fd8f97a737ca4161c86fe2fb640b610e48ffc4bc"
+    },
+    {
+      "path": "backend/domains/ops/evidence/src/handwritten/initiate-upload.command.ts",
+      "sha256": "fd65e9a487bcd85f1376dcda8cc705c2c042f178b29ea55f57193bc4a4bc2f95"
+    },
+    {
+      "path": "backend/domains/ops/evidence/src/handwritten/evidence-access.controller.ts",
+      "sha256": "b918c33773295d7e6c4bde49405d3bb2e23e9492b228ce4d7edcb6f59558d447"
+    },
+    {
+      "path": "backend/domains/ops/evidence/src/handwritten/evidence-custody.controller.ts",
+      "sha256": "fb3f2cc9e14e74495b05f5ea83cbb995ceade729785fa68a2719a6eccfd3e7a1"
+    },
+    {
+      "path": "backend/domains/ops/snapshots/src/handwritten/external-query.command.ts",
+      "sha256": "a3159a71d8a96a6aceb522b05fe7b640f06a7333dac431bf01f2581d989b9f49"
+    },
+    {
+      "path": "backend/domains/inf/normative/src/handwritten/generate-package.command.ts",
+      "sha256": "3f56db0b92f8400dfde63f1d88c8b0d2508895cfed5d0a8dcbd3f214cbe17ad2"
+    },
+    {
+      "path": "backend/domains/inf/normative/src/handwritten/package-content.query.ts",
+      "sha256": "604a1de52409f3b6e1d53fa645685cd83a210250ff58185a965af37c17a256a7"
+    },
+    {
+      "path": "backend/domains/inf/normative/src/normative-commands.controller.ts",
+      "sha256": "0c934f291b75ae58daa6fd52eae8d1c80ba8065d98a6fad09a87c60500870748"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.ts",
+      "sha256": "6f14c4a6b07937413fe1685cfbbf8a4ab2dab955e2c19e01738decbf72ab2e34"
+    },
+    {
+      "path": "backend/database/seed/27-fixtures-teat-evidence.sql",
+      "sha256": "ff875dd4233eaeaa2e9f54d6c02569fda60a81112c44c9be8938807484bc8609"
+    },
+    {
+      "path": "backend/app/src/teat-evidence.providers.ts",
+      "sha256": "3f0387fc756fc979526a4f4ffd37b9ece7e461497685c59ae79b132c06ac634d"
+    },
+    {
+      "path": "backend/app/src/teat-snapshots.providers.ts",
+      "sha256": "299b9932e2baa5cbb5b736bee8f8b2c794689b788bded43a3d3fb6b8e30fc126"
+    },
+    {
+      "path": "tools/blueprints/generate.mjs",
+      "sha256": "45d00d786c8b05f47fe91b7ad56031de553f3aa9bbd1734abd2510b13fc1e2ac"
+    },
+    {
+      "path": "backend/app/tests/e2e/teat-evidence-normative.e2e.spec.ts",
+      "sha256": "8d1de7836d7dbadca1664d4e7e25a57e9a596106b576cff987c4d64ca98fb79a"
+    },
+    {
+      "path": "work/rounds/R-0008/contracts/CTG-0003.md",
+      "sha256": "0a97b7c784f15c2bf89c6aea602680c83de3692c1e1d165f760ba340c650d86c"
+    },
+    {
+      "path": "work/rounds/R-0008/reviews/delivery-review-CTG-0003-3.json",
+      "sha256": "0252f50d07ba83abad44554722ef7463d8a54303d79658f8040b413d0d83d3b5"
+    }
+  ],
+  "gates": {
+    "pnpm check": "pass",
+    "pnpm backend:test:ci": "pass (49 vitest runs, 1231 tests, 0 failed)",
+    "delivery-review": "PASS on cycle 3 (GPT-5.6 Terra): cycle 1 REVIEW (4), cycle 2 REVIEW (gates record), cycle 3 PASS"
+  },
+  "tasks": ["TASK-0006", "TASK-0007"],
+  "notes": "Generator change (handwritten controllers before generated) and zod dependencies applied by the maestro as Architect; adendas §12–§14 of CTG-0003."
+}

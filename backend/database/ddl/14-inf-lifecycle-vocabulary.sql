@@ -168,7 +168,7 @@ ON CONFLICT (code) DO UPDATE SET ciencia_rule = EXCLUDED.ciencia_rule, legal_bas
 -- WF-INF-002 §9 — Catálogo unificado de timers
 CREATE TABLE IF NOT EXISTS inf.infraction_timer_ref (
   code varchar(20) PRIMARY KEY,
-  owner varchar(20) NOT NULL CHECK (owner IN ('infracao', 'caso', 'sessao', 'indicador', 'medida')),
+  owner varchar(20) NOT NULL CHECK (owner IN ('infracao', 'caso', 'sessao', 'indicador', 'medida', 'portal')),
   duration_value integer,
   duration_unit varchar(20) NOT NULL CHECK (duration_unit IN ('dias_corridos', 'dias_uteis', 'meses', 'anos', 'data_impressa', 'meta')),
   start_mark text NOT NULL,
@@ -205,7 +205,13 @@ INSERT INTO inf.infraction_timer_ref (code, owner, duration_value, duration_unit
   ('T-CONV', 'sessao', 5, 'dias_uteis', 'fechamento da pauta', 'sessão em PAUTA_FECHADA', 'guarda', NULL, NULL, 'proposta', 'WF-RAIT-003 (pendente regimento)'),
   ('T-ASS', 'caso', 5, 'dias_uteis', 'minuta enviada para assinatura', 'caso RAIT em PRONTO_P_DECISAO (1º circuito)', 'alerta', NULL, NULL, 'proposta', 'WF-RAIT-004 §2 (meta operacional)'),
   ('T-CLAIM', 'caso', 2, 'dias_uteis', 'homologação do lote de sorteio', 'lote LOTE_SORTEADO', 'regra', NULL, NULL, 'proposta', 'WF-RAIT-004 §5'),
-  ('SLA-30', 'indicador', 30, 'meta', 'protocolo (defesa) / entrada na JARI (dias úteis)', '1º e 2º circuitos', 'indicador', NULL, NULL, 'vigente', 'REF-DETRANAM-SERVICOS; WF-RAIT-002 §4.4')
+  ('SLA-30', 'indicador', 30, 'meta', 'protocolo (defesa) / entrada na JARI (dias úteis)', '1º e 2º circuitos', 'indicador', NULL, NULL, 'vigente', 'REF-DETRANAM-SERVICOS; WF-RAIT-002 §4.4'),
+  -- owner='portal' (R-0009 M14; WF-PORTAL-004 §Prazos, WF-PORTAL-001 §Prazos): T-PROTOCOLO é invariante (imediato), não timer;
+  -- T-SNE-CIENCIA já existe acima (owner='infracao') e é lido pelo Portal, nunca duplicado.
+  ('T-OUV-RESPOSTA','portal',30,'dias_corridos','recebimento da manifestação','MANIFESTACAO_REGISTRADA','marco',NULL,NULL,'vigente','Lei 13.460/2017 art. 16 caput; WF-PORTAL-004'),
+  ('T-OUV-INFO','portal',20,'dias_corridos','solicitação de informação ao agente','INFORMACAO_SOLICITADA_AO_AGENTE','marco',NULL,NULL,'vigente','Lei 13.460/2017 art. 16 §ú; WF-PORTAL-004'),
+  ('T-LGPD-ACESSO','portal',NULL,'dias_corridos','requerimento de acesso a dados pessoais (valor = privacy.public_regime_days, source_pending OD-P08)','lgpd_declaracao','marco',NULL,NULL,'proposta','Lei 13.709/2018 art. 19; WF-PORTAL-004'),
+  ('T-AVAL-CONVITE','portal',NULL,'dias_corridos','mesmo evento do resultado (imediato)','RESULTADO_DISPONIVEL','marco',NULL,NULL,'vigente','Lei 14.129/2021 art. 21 V; Lei 13.460/2017 art. 23; WF-PORTAL-001')
 ON CONFLICT (code) DO UPDATE SET owner = EXCLUDED.owner, duration_value = EXCLUDED.duration_value, duration_unit = EXCLUDED.duration_unit,
   start_mark = EXCLUDED.start_mark, armed_in = EXCLUDED.armed_in, expiry_kind = EXCLUDED.expiry_kind, expiry_target = EXCLUDED.expiry_target,
   alert_ladder = EXCLUDED.alert_ladder, status = EXCLUDED.status, legal_basis = EXCLUDED.legal_basis;

@@ -1,0 +1,2540 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Portal Projeções — comandos manuscritos (BP-PORTAL-PROJECTIONS-001)",
+    "version": "1.0.0",
+    "description": "Autuações, pontuação, documentos, veículos, sinistros e exames (leituras nacionais cacheadas e projeções ADR-0020), montados em PortalAitsController, PortalDocumentsController, PortalCrashesController e PortalExamsController.",
+    "x-blueprint": "BP-PORTAL-PROJECTIONS-001",
+    "x-commands": true,
+    "x-source": "portal-route-contract.md §4, §7; CTG-0002 §2.2, §2.5, §8"
+  },
+  "paths": {
+    "/v1/portal/aits": {
+      "get": {
+        "tags": ["ait"],
+        "operationId": "portalAitList",
+        "summary": "Lista autuações do sujeito (e representados) na projeção infraction_view.",
+        "x-policy": "portal:ait:read",
+        "x-command": "backend/domains/portal/projections/src/handwritten/aits.controller.ts",
+        "x-contract": "CTG-0002 §2.2",
+        "parameters": [
+          {
+            "name": "vehicle",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Placa (comparação literal com plate)."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "situation (fora do enum → 400 ENUM_INVALID)."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de autuações.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["items", "total", "page", "pageSize"],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "aitId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "aitNumber": {
+                            "type": "string"
+                          },
+                          "plate": {
+                            "type": "string"
+                          },
+                          "occurredAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "framingLabel": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": ["number", "null"]
+                          },
+                          "situation": {
+                            "type": "string",
+                            "enum": [
+                              "aguardando_defesa",
+                              "em_defesa",
+                              "penalidade_aplicada",
+                              "em_recurso",
+                              "encerrada",
+                              "cancelada",
+                              "arquivada"
+                            ]
+                          },
+                          "deadlines": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "additionalProperties": true
+                            }
+                          },
+                          "pointsStatus": {
+                            "type": "string",
+                            "enum": ["em_disputa", "definitivo", "none"]
+                          },
+                          "actions": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "additionalProperties": true
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "pageSize": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "items": [
+                    {
+                      "aitId": "00000000-0000-7000-8000-0000f0000002",
+                      "aitNumber": "FIX-0000001",
+                      "plate": "FIX2E01",
+                      "occurredAt": "2026-05-01T12:00:00-04:00",
+                      "framingLabel": "fixture",
+                      "amount": 195.23,
+                      "situation": "aguardando_defesa",
+                      "deadlines": [],
+                      "pointsStatus": "none",
+                      "actions": []
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "pageSize": 20
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "status fora do enum.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.ENUM_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/aits/{aitId}": {
+      "get": {
+        "tags": ["ait"],
+        "operationId": "portalAitGet",
+        "summary": "Lê o detalhe de uma autuação (vínculo obrigatório).",
+        "x-policy": "portal:ait:read",
+        "x-command": "backend/domains/portal/projections/src/handwritten/aits.controller.ts",
+        "x-contract": "CTG-0002 §2.2",
+        "parameters": [
+          {
+            "name": "aitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhe da autuação.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "example": {
+                  "aitId": "00000000-0000-7000-8000-0000f0000002",
+                  "aitNumber": "FIX-0000001",
+                  "plate": "FIX2E01",
+                  "occurredAt": "2026-05-01T12:00:00-04:00",
+                  "framingLabel": "fixture",
+                  "amount": 195.23,
+                  "situation": "aguardando_defesa",
+                  "deadlines": [],
+                  "pointsStatus": "none",
+                  "actions": [],
+                  "notices": [],
+                  "payment": {
+                    "tiers": [],
+                    "paid": false,
+                    "paidTier": null
+                  },
+                  "openRequestId": null,
+                  "evidenceAvailable": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "aitId não é uuid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='ait'; sem vínculo ou linha ausente na projeção.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/aits/{aitId}/points": {
+      "get": {
+        "tags": ["ait"],
+        "operationId": "portalAitPointsGet",
+        "summary": "Lê o status de pontuação de uma autuação (points nulo nesta rodada — OD-P34).",
+        "x-policy": "portal:ait:read",
+        "x-command": "backend/domains/portal/projections/src/handwritten/aits.controller.ts",
+        "x-contract": "CTG-0002 §2.2",
+        "parameters": [
+          {
+            "name": "aitId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "pointsStatus da projeção; points sempre null (OD-P34).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["aitId", "pointsStatus", "points"],
+                  "properties": {
+                    "aitId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "pointsStatus": {
+                      "type": "string",
+                      "enum": ["em_disputa", "definitivo", "none"]
+                    },
+                    "points": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "example": {
+                  "aitId": "00000000-0000-7000-8000-0000f0000002",
+                  "pointsStatus": "none",
+                  "points": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='ait'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/points-summary": {
+      "get": {
+        "tags": ["ait"],
+        "operationId": "portalPointsSummaryGet",
+        "summary": "Resumo de pontuação do sujeito (points_view).",
+        "x-policy": "portal:ait:read",
+        "x-command": "backend/domains/portal/projections/src/handwritten/aits.controller.ts",
+        "x-contract": "CTG-0002 §2.2",
+        "responses": {
+          "200": {
+            "description": "Zero pontos quando sem linha (nunca 404 — UC-PORTAL-010).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "definitivePoints",
+                    "disputedPoints",
+                    "byVehicle",
+                    "last12Months",
+                    "cachedAt"
+                  ],
+                  "properties": {
+                    "definitivePoints": {
+                      "type": "integer"
+                    },
+                    "disputedPoints": {
+                      "type": "integer"
+                    },
+                    "byVehicle": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "last12Months": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "cachedAt": {
+                      "type": ["string", "null"],
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "example": {
+                  "definitivePoints": 3,
+                  "disputedPoints": 4,
+                  "byVehicle": [],
+                  "last12Months": [],
+                  "cachedAt": "2026-09-14T12:00:00-04:00"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/documents/cnh": {
+      "get": {
+        "tags": ["document"],
+        "operationId": "portalDocumentCnhGet",
+        "summary": "Lê a CNH digital do sujeito (leitura nacional cacheada).",
+        "x-policy": "portal:document:read",
+        "x-audit": "PORTAL_DOCUMENT_READ",
+        "x-command": "backend/domains/portal/projections/src/handwritten/documents.controller.ts",
+        "x-contract": "CTG-0002 §2.5, §8",
+        "parameters": [
+          {
+            "name": "documentBytes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["true", "false"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Consulta informativa (RN-PORTAL-117), nunca o documento (category fixo).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "license",
+                    "qrVerification",
+                    "documentBytes",
+                    "category",
+                    "cachedAt"
+                  ],
+                  "properties": {
+                    "license": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "qrVerification": {
+                      "type": "null"
+                    },
+                    "documentBytes": {
+                      "type": "null"
+                    },
+                    "category": {
+                      "type": "string",
+                      "const": "C"
+                    },
+                    "cachedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "example": {
+                  "license": {
+                    "status": "valida"
+                  },
+                  "qrVerification": null,
+                  "documentBytes": null,
+                  "category": "C",
+                  "cachedAt": "2026-09-14T12:00:00-04:00"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'consulta_cnh'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "documentBytes=true → unavailableReason 'documento_assinado_pendente_r0014'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sem cache e CdtPort indisponível.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NATIONAL_READ_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 503
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/vehicles": {
+      "get": {
+        "tags": ["vehicle"],
+        "operationId": "portalVehicleList",
+        "summary": "Lista os veículos do sujeito (leitura nacional cacheada, sem máscara de RENAVAM).",
+        "x-policy": "portal:vehicle:read",
+        "x-audit": "PORTAL_VEHICLE_READ",
+        "x-command": "backend/domains/portal/projections/src/handwritten/documents.controller.ts",
+        "x-contract": "CTG-0002 §2.5, §8",
+        "responses": {
+          "200": {
+            "description": "1:1 do CdtPort.listCitizenVehicles (chaves OD-P36).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["items", "cachedAt"],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "cachedAt": {
+                      "type": ["string", "null"],
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "example": {
+                  "items": [],
+                  "cachedAt": "2026-09-14T12:00:00-04:00"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sem cache e CdtPort indisponível.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NATIONAL_READ_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 503
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/vehicles/{id}/clearance": {
+      "get": {
+        "tags": ["vehicle"],
+        "operationId": "portalVehicleClearanceGet",
+        "summary": "Lê débitos/restrições do veículo (porta sem operação nesta rodada — OD-P21).",
+        "x-policy": "portal:vehicle:read",
+        "x-audit": "PORTAL_VEHICLE_READ",
+        "x-command": "backend/domains/portal/projections/src/handwritten/documents.controller.ts",
+        "x-contract": "CTG-0002 §2.5, §8",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Forma do cache, quando houver linha (inserida por teste; sem produtor nesta rodada).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "items",
+                    "restrictions",
+                    "suspendedEnforceability",
+                    "canIssue",
+                    "cachedAt"
+                  ],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "restrictions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "suspendedEnforceability": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    },
+                    "canIssue": {
+                      "type": "boolean"
+                    },
+                    "cachedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "example": {
+                  "items": [],
+                  "restrictions": [],
+                  "suspendedEnforceability": [],
+                  "canIssue": true,
+                  "cachedAt": "2026-09-14T12:00:00-04:00"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='vehicle'; sem vínculo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Sem cache (nenhuma operação de ports.ts cobre débitos/restrições — OD-P21).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NATIONAL_READ_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 503
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/vehicles/{id}/crlv-e": {
+      "post": {
+        "tags": ["vehicle"],
+        "operationId": "portalVehicleCrlvIssue",
+        "summary": "Emite o CRLV-e (documento assinado pendente — ADR-0018).",
+        "x-policy": "portal:vehicle:issue",
+        "x-audit": "PORTAL_VEHICLE_ISSUE",
+        "x-command": "backend/domains/portal/projections/src/handwritten/documents.controller.ts",
+        "x-contract": "CTG-0002 §2.5, §8",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'emissao_crlv'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='vehicle'; sem vínculo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'documento_assinado_pendente_r0014'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/crashes": {
+      "get": {
+        "tags": ["crash"],
+        "operationId": "portalCrashList",
+        "summary": "Lista sinistros do sujeito (projeção BOAT; produtor real R-0010).",
+        "x-policy": "portal:crash:read",
+        "x-audit": "PORTAL_CRASH_READ",
+        "x-command": "backend/domains/portal/projections/src/handwritten/crashes.controller.ts",
+        "x-contract": "CTG-0002 §2.5",
+        "responses": {
+          "200": {
+            "description": "Sem produtor real nesta rodada: lista tipicamente vazia salvo linha de teste.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["items"],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "crashId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "stateLabel": {
+                            "type": "string"
+                          },
+                          "summary": {
+                            "type": "object",
+                            "additionalProperties": true
+                          },
+                          "thirdPartyFieldsSuppressed": {
+                            "type": "boolean"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "items": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'consulta_bat'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/crashes/{id}": {
+      "get": {
+        "tags": ["crash"],
+        "operationId": "portalCrashGet",
+        "summary": "Lê o detalhe de um sinistro (vínculo obrigatório).",
+        "x-policy": "portal:crash:read",
+        "x-audit": "PORTAL_CRASH_READ",
+        "x-command": "backend/domains/portal/projections/src/handwritten/crashes.controller.ts",
+        "x-contract": "CTG-0002 §2.5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhe (campo de terceiro suprimido, nunca a peça — RN-BOAT-126).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "crashId",
+                    "stateLabel",
+                    "summary",
+                    "thirdPartyFieldsSuppressed"
+                  ],
+                  "properties": {
+                    "crashId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "stateLabel": {
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "thirdPartyFieldsSuppressed": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "example": {
+                  "crashId": "00000000-0000-7000-8000-00007ff00003",
+                  "stateLabel": "fixture",
+                  "summary": {},
+                  "thirdPartyFieldsSuppressed": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'consulta_bat'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='crash'; sem vínculo ou linha ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/exams": {
+      "get": {
+        "tags": ["exam"],
+        "operationId": "portalExamList",
+        "summary": "Lista exames do sujeito (projeção PEC; rótulo legal, nunca CONDICIONADO).",
+        "x-policy": "portal:exam:read",
+        "x-audit": "PORTAL_EXAM_READ",
+        "x-command": "backend/domains/portal/projections/src/handwritten/exams.controller.ts",
+        "x-contract": "CTG-0002 §2.5",
+        "responses": {
+          "200": {
+            "description": "Sem produtor real nesta rodada: lista tipicamente vazia salvo linha de teste.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["items"],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "examId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "legalLabel": {
+                            "type": "string"
+                          },
+                          "validUntil": {
+                            "type": ["string", "null"],
+                            "format": "date"
+                          },
+                          "boardDueOn": {
+                            "type": ["string", "null"],
+                            "format": "date"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "items": []
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'consulta_exame'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/exams/{id}": {
+      "get": {
+        "tags": ["exam"],
+        "operationId": "portalExamGet",
+        "summary": "Lê o detalhe de um exame (vínculo obrigatório).",
+        "x-policy": "portal:exam:read",
+        "x-audit": "PORTAL_EXAM_READ",
+        "x-command": "backend/domains/portal/projections/src/handwritten/exams.controller.ts",
+        "x-contract": "CTG-0002 §2.5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhe do exame.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "examId",
+                    "legalLabel",
+                    "validUntil",
+                    "boardDueOn"
+                  ],
+                  "properties": {
+                    "examId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "legalLabel": {
+                      "type": "string"
+                    },
+                    "validUntil": {
+                      "type": ["string", "null"],
+                      "format": "date"
+                    },
+                    "boardDueOn": {
+                      "type": ["string", "null"],
+                      "format": "date"
+                    }
+                  }
+                },
+                "example": {
+                  "examId": "00000000-0000-7000-8000-00007ff00002",
+                  "legalLabel": "fixture",
+                  "validUntil": null,
+                  "boardDueOn": null
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível abaixo de 'consulta_exame'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='exam'; sem vínculo ou linha ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

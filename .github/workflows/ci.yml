@@ -194,8 +194,8 @@ jobs:
       - name: Verify blueprint regeneration has no drift
         run: pnpm blueprints:check
 
-      - name: Run backend unit, integration and e2e tiers
-        run: pnpm backend:test:ci
+      - name: Run backend unit and integration tiers
+        run: pnpm backend:test:unit && pnpm backend:test:integration
 
       - name: Verify SENATRAN boundary and generated contract drift
         run: |
@@ -211,7 +211,7 @@ jobs:
       # reusing this job's PostGIS service, but isolate the mock in its own
       # database and process. The required senatran-mock-tests job still owns
       # the mock's complete 245-test regression suite.
-      - name: Run adapter contract tier against the in-repo SENATRAN mock
+      - name: Run backend e2e and adapter contract tiers against the in-repo SENATRAN mock
         env:
           DB_NAME: senatran
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/senatran
@@ -231,6 +231,14 @@ jobs:
             fi
             sleep 1
           done
+          DB_NAME=detran \
+          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran \
+          DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran \
+          STYNX_OWNER_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran \
+          STYNX_APP_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/detran?options=-c%20role%3Drole_app_backend' \
+          STYNX_READER_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/detran?options=-c%20role%3Drole_app_backend' \
+          SENATRAN_PROVIDER=mock \
+          pnpm backend:test:e2e
           pnpm --filter @detran/senatran-adapter test:e2e
 
   # ---------------------------------------------------------------------------

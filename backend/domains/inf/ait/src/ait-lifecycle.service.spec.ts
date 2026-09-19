@@ -162,6 +162,86 @@ describe('AitLifecycleService', () => {
     );
   });
 
+  /**
+   * CTG-0001 §8 (R-0008, TASK-0002) — C-0001-09/10. O serviço ainda lança
+   * `BadRequestException` sem `code`/`status`/`context` e não incrementa
+   * `version` nas transições (TASK-0003 substitui por `DetranError` com os
+   * códigos do §4 do contrato e passa a gravar `version`); os dois testes
+   * abaixo ficam vermelhos até lá pelo motivo certo — comportamento ausente,
+   * não erro de escrita.
+   */
+  it('C-0001-09 — dado o AIT …f8000010 (RASCUNHO_OFFLINE, fixture 25-fixtures-teat.sql) quando finalize então FINALIZADO_LOCAL, content_hash não nulo e version +1', async () => {
+    const ait = {
+      id: '00000000-0000-7000-8000-0000f8000010',
+      current_status: 'RASCUNHO_OFFLINE',
+      ait_number: 'TEAT-010',
+      series: 'F',
+      version: 1,
+    };
+    const service = new AitLifecycleService(
+      {
+        ait: {
+          transaction: vi.fn(async (work) => work({})),
+          findOne: vi.fn(async () => ait),
+          update: vi.fn(async (_id, patch) => ({ ...ait, ...patch })),
+        } as never,
+        history: { create: vi.fn(async (dto) => dto) } as never,
+        vehicles: {} as never,
+        people: {} as never,
+        corrections: {} as never,
+        signatures: {} as never,
+        printEvents: {} as never,
+      },
+      { assertActive: vi.fn() },
+    );
+
+    const result = await service.finalize(ait.id, 'actor-1');
+    expect(result.current_status).toBe('FINALIZADO_LOCAL');
+    expect(result.content_hash).toBeTruthy();
+    expect(result.version).toBe(2);
+  });
+
+  it('C-0001-10 — dado o AIT …f8000130 (INTEGRADO) quando finalize então 409 TEAT.AIT_STATE_INVALID com context.allowed=["RASCUNHO_OFFLINE"] e context.command="finalize"', async () => {
+    const ait = {
+      id: '00000000-0000-7000-8000-0000f8000130',
+      current_status: 'INTEGRADO',
+      ait_number: 'TEAT-130',
+      series: 'F',
+      version: 1,
+    };
+    const service = new AitLifecycleService(
+      {
+        ait: {
+          transaction: vi.fn(async (work) => work({})),
+          findOne: vi.fn(async () => ait),
+          update: vi.fn(async (_id, patch) => ({ ...ait, ...patch })),
+        } as never,
+        history: { create: vi.fn(async (dto) => dto) } as never,
+        vehicles: {} as never,
+        people: {} as never,
+        corrections: {} as never,
+        signatures: {} as never,
+        printEvents: {} as never,
+      },
+      { assertActive: vi.fn() },
+    );
+
+    try {
+      await service.finalize(ait.id, 'actor-1');
+      expect.unreachable('finalize deveria lançar TEAT.AIT_STATE_INVALID');
+    } catch (error) {
+      const detranError = error as {
+        code?: string;
+        status?: number;
+        context?: { allowed?: string[]; command?: string };
+      };
+      expect(detranError.code).toBe('TEAT.AIT_STATE_INVALID');
+      expect(detranError.status).toBe(409);
+      expect(detranError.context?.allowed).toEqual(['RASCUNHO_OFFLINE']);
+      expect(detranError.context?.command).toBe('finalize');
+    }
+  });
+
   it('dado contrato CTG-0002 quando inspecionado então REJEITADO não é terminal e pedido de cancelamento tem estados fechados', () => {
     expect(lifecycleVocabularyDdl).toMatch(/\('REJEITADO',\s*100,\s*false,/u);
     const cancelRequest = aitBlueprint.database.entities.find(

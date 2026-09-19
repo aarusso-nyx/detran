@@ -1,0 +1,19 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0014/plan.md",
+      "line": 324,
+      "claim": "A própria entrega registra C-3a-99 (axe em cada estado dos 11 compartilhados) e C-3a-100 (ciclo de Tab) como parcialmente cobertos, embora o contrato os exija integralmente e determine a conclusão antes do delivery-review.",
+      "fix": "Completar os specs de axe por estado e de navegação Tab exigidos em C-3a-99/C-3a-100, executar o gate do app e atualizar a pendência como resolvida antes de novo delivery-review."
+    }
+  ],
+  "notes": [
+    "Os três testes todo restantes estão vinculados a OD-P54, OD-P59 e OD-P60; não constituem relaxamento de gate nesta entrega.",
+    "Não encontrei chamada nacional fora da exceção de upload por URL assinada documentada."
+  ]
+}

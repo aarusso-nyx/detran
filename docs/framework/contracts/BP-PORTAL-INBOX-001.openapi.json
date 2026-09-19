@@ -1,0 +1,449 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Inbox — BP-PORTAL-INBOX-001",
+    "version": "1.0.2",
+    "description": "Caixa do cidadao (ADR-0019 Decision 3; [WF-PORTAL-003] secao Estados e secao Prazos; plan R-0009 M15): itens da caixa como projecao de eventos mais fatos de ciencia (portal.acknowledgement_evidence), adesao ao SNE como macro-estado do vinculo (NAO_ADERIDO_SNE | ADERIDO_SNE) e assinaturas push. A leitura de um item SNE grava a evidencia e publica NOTIFICACAO_CIENCIA na outbox (topic portal), idempotente; a ciencia efetiva do aviso e do modulo inf/notification (ADR-0016). Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24). Publica INBOX_LIDO, NOTIFICACAO_CIENCIA, SNE_ADESAO_SOLICITADA e SNE_CANCELAMENTO_SOLICITADO (M21).",
+    "x-blueprint": "BP-PORTAL-INBOX-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "InboxItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["SNE", "PROCESSO", "OUVIDORIA", "SISTEMA"]
+          },
+          "action_required": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["sne", "portal"]
+          },
+          "source_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject_line": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "available_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "read_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "fictitious_acknowledgement_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "deadline_due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "deadline_owned_by": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["citizen", "agency"],
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "subject_id",
+          "kind",
+          "source",
+          "source_event_id",
+          "subject_line",
+          "summary",
+          "available_on",
+          "created_at"
+        ],
+        "description": "Item da caixa do cidadao ([WF-PORTAL-003] secao Estados: por notificacao GERADA -> DISPONIBILIZADA -> LIDA_EFETIVA | CIENCIA_FICTA; ADR-0019 Decision 3; plan R-0009 M15): kind acao_necessaria | informativo, source sne | portal, source_event_id unico por tenant (idempotencia da projecao). fictitious_acknowledgement_on so para source = sne (available_on + 30 dias, timer T-SNE-CIENCIA lido de inf.infraction_timer_ref, nunca duplicado). ait_id referencia inf sem FK; request_id referencia portal.request. Adenda A1(e) R-0009: kind = ADR-0019 §3 (SNE|PROCESSO|OUVIDORIA|SISTEMA); action_required deriva o kind cidadao (acao_necessaria|informativo) de portal-route-contract.md §6; deadline_owned_by ∈ citizen|agency (route contract §5 nextAction.by)."
+      },
+      "CreateInboxItemDto": {
+        "type": "object",
+        "properties": {
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["SNE", "PROCESSO", "OUVIDORIA", "SISTEMA"]
+          },
+          "action_required": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "source": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["sne", "portal"]
+          },
+          "source_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject_line": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "available_on": {
+            "type": "string",
+            "format": "date"
+          },
+          "read_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "fictitious_acknowledgement_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "deadline_due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "deadline_owned_by": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["citizen", "agency"],
+            "nullable": true
+          }
+        },
+        "required": [
+          "subject_id",
+          "kind",
+          "source",
+          "source_event_id",
+          "subject_line",
+          "summary",
+          "available_on"
+        ]
+      },
+      "AcknowledgementEvidence": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "inbox_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayed_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "inbox_item_id",
+          "displayed_sha256",
+          "acknowledged_at",
+          "created_at"
+        ],
+        "description": "Evidencia de ciencia do que o cidadao viu ([WF-PORTAL-003] secao Estados LIDA_EFETIVA / CIENCIA_COMPROVADA; ADR-0019 Decision 3; plan R-0009 M15): displayed_sha256 do conteudo exibido, acknowledged_at e signature_ref opcional. Uma evidencia por item (unico por tenant, inbox_item_id): a segunda leitura nao duplica evidencia nem evento NOTIFICACAO_CIENCIA."
+      },
+      "CreateAcknowledgementEvidenceDto": {
+        "type": "object",
+        "properties": {
+          "inbox_item_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayed_sha256": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "signature_ref": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["inbox_item_id", "displayed_sha256", "acknowledged_at"]
+      },
+      "SneEnrollment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["NAO_ADERIDO_SNE", "ADERIDO_SNE"]
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["push", "email", "sne"],
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "personal"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true,
+            "x-pii": "personal"
+          },
+          "consent_text_version": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "effects_ack": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_reason": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "subject_id", "state", "created_at"],
+        "description": "Adesao do cidadao ao SNE ([WF-PORTAL-003] secao Estados: macro-estado NAO_ADERIDO_SNE | ADERIDO_SNE; [UC-PORTAL-007]; plan R-0009 M8 e M15): uma linha por sujeito (unico por tenant, subject_id). effects_ack guarda a ciencia dos quatro efeitos da adesao (jsonb), consent_text_version a versao do termo aceito, since / cancelled_at / cancel_reason o historico do vinculo. O envio real ao SNE nacional via packages/senatran-adapter e OD-P16 (source_pending): nesta rodada so grava e publica SNE_ADESAO_SOLICITADA / SNE_CANCELAMENTO_SOLICITADO."
+      },
+      "CreateSneEnrollmentDto": {
+        "type": "object",
+        "properties": {
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["NAO_ADERIDO_SNE", "ADERIDO_SNE"]
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["push", "email", "sne"],
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "x-pii": "personal"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true,
+            "x-pii": "personal"
+          },
+          "consent_text_version": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "effects_ack": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "since": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancel_reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["subject_id", "state"]
+      },
+      "PushSubscription": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "keys_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "subject_id",
+          "endpoint",
+          "keys_json",
+          "created_at"
+        ],
+        "description": "Assinatura Web Push do cidadao ([WF-PORTAL-003] secao Estados PREFERENCIAS_CONFIGURADAS; plan R-0009 M15 e M19 portal:push-subscription:create): endpoint unico por tenant, keys_json com as chaves do navegador. Entrega usa @stynx-nyx/notifications (ADR-0019 Decision 3)."
+      },
+      "CreatePushSubscriptionDto": {
+        "type": "object",
+        "properties": {
+          "subject_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "endpoint": {
+            "type": "string"
+          },
+          "keys_json": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": ["subject_id", "endpoint", "keys_json"]
+      }
+    }
+  }
+}

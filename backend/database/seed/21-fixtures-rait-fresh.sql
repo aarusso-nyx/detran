@@ -13,18 +13,21 @@ values (
   1,
   'pull'
 )
-on conflict (id) do nothing;
+on conflict (tenant_id, instance) where unit_id is null do nothing;
 
 insert into inf.rait_pool_member (id, tenant_id, pool_id, person_id, member_role, status)
-values (
+select
   '00000000-0000-7000-8000-000051010001',
   '00000000-0000-7000-8000-00000000a001',
-  '00000000-0000-7000-8000-000051000001',
+  pool.id,
   '00000000-0000-4000-8000-0000b0000005',
   'secretaria',
   'ATIVO'
-)
-on conflict (id) do nothing;
+from inf.rait_pool pool
+where pool.tenant_id = '00000000-0000-7000-8000-00000000a001'
+  and pool.instance = 'defesa_previa'
+  and pool.unit_id is null
+on conflict (tenant_id, pool_id, person_id) do nothing;
 
 -- The psql variable records whether this execution inserted the case. The
 -- qualification therefore stays in this transaction but is never invoked for
@@ -43,7 +46,7 @@ with inserted_case as (
   protocolled_at,
   last_movement_at
 )
-values (
+select
   '00000000-0000-7000-8000-000051020001',
   '00000000-0000-7000-8000-00000000a001',
   '00000000-0000-7000-8000-0000f0000001',
@@ -54,7 +57,12 @@ values (
   'balcao',
   '2026-09-14T09:00:00-04:00',
   '2026-09-14T09:00:00-04:00'
-  )
+where not exists (
+  select 1
+  from inf.rait_case existing
+  where existing.tenant_id = '00000000-0000-7000-8000-00000000a001'
+    and existing.id <> '00000000-0000-7000-8000-000051020001'
+)
   on conflict (id) do nothing
   returning id
 )

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0008",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Registrar WP-T2/WP-T3 como executados no build pack, fechar o §9 do route contract, tirar o stub do schemas README, registrar as OD-T13…T18, as fixtures TEAT e o backlog",
+  "description": "Transcrição documental do que foi entregue; nunca decide; lacunas viram OD.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 11,
+  "tags": ["wp-t3", "docs"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-735c8a333a369000",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-735c8a333a369000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

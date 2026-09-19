@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0008",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/ops/offline-sync/src/handwritten/submit-batch.command.ts",
+      "line": 299,
+      "claim": "A adenda resolve formalmente a inversão, mas a implementação não cumpre sua consequência (c): num lote durável interrompido com itens ainda não materializados, `storedKeys` é subconjunto de `incomingKeys`; a comparação exige igualdade e retorna `TEAT.SYNC_BATCH_REPLAY_CONTEXT_MISMATCH`, sem materializar os itens faltantes.",
+      "fix": "No replay, distinguir chaves já materializadas das faltantes para o mesmo conjunto reenviado, devolver os recibos existentes sem reaplicá-los e continuar a materialização dos itens faltantes; cobrir interrupção após o passo 5 e antes de todos os itens."
+    }
+  ],
+  "notes": [
+    "A §14 formaliza corretamente a persistência do lote no passo 5 e a ordem executada nas linhas 214–255; o achado decorre da nova consequência explícita nas linhas 1725–1728, inexistente no ciclo anterior."
+  ]
+}

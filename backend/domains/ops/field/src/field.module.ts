@@ -1,4 +1,4 @@
-// Generated from BP-OPS-FIELD-001 v1.0.0 sha256:b5a54db524ac2a7fb0bb450442e2aef89132ee0ff1592f87be4837294e197177
+// Generated from BP-OPS-FIELD-001 v1.2.0 sha256:1d733dedb438b939c5b6cbebda82dc6accf415c792fb8da4e82bab6e90a36220
 import { Module } from '@nestjs/common';
 import { AgentProfileController } from './controllers/agent-profile.controller.js';
 import { AgentProfileService } from './services/agent-profile.service.js';
@@ -40,10 +40,18 @@ import { SessionHandoffController } from './controllers/session-handoff.controll
 import { SessionHandoffService } from './services/session-handoff.service.js';
 import { SessionHandoffRepository } from './repositories/session-handoff.repository.js';
 import { FieldOperationsController } from './handwritten/field-operations.controller.js';
+import { MobileBootstrapController } from './handwritten/mobile-bootstrap.controller.js';
+import { FieldCommandsController } from './handwritten/field-commands.controller.js';
 import { FIELD_OPERATIONS_PROVIDER } from './handwritten/field-operations.provider.js';
+import { MOBILE_BOOTSTRAP_PROVIDER } from './handwritten/mobile-bootstrap.provider.js';
+import { ParameterModule } from '@detran/ops-parameter';
 
 @Module({
+  imports: [ParameterModule],
   controllers: [
+    FieldOperationsController,
+    MobileBootstrapController,
+    FieldCommandsController,
     AgentProfileController,
     OperationalDeviceController,
     HomologationController,
@@ -57,7 +65,6 @@ import { FIELD_OPERATIONS_PROVIDER } from './handwritten/field-operations.provid
     ShiftController,
     ApproachController,
     SessionHandoffController,
-    FieldOperationsController,
   ],
   providers: [
     AgentProfileService,
@@ -87,6 +94,7 @@ import { FIELD_OPERATIONS_PROVIDER } from './handwritten/field-operations.provid
     SessionHandoffService,
     SessionHandoffRepository,
     FIELD_OPERATIONS_PROVIDER,
+    MOBILE_BOOTSTRAP_PROVIDER,
   ],
 })
 export class FieldModule {}

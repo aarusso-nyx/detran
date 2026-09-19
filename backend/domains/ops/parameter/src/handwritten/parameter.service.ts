@@ -382,11 +382,20 @@ export class OpsParameterService {
     agencyId: string | undefined,
     on: string,
   ): ParameterRow | undefined {
+    // R-0009 (plant-bug, pre-existing): `pg` returns `date` columns as `Date`
+    // objects, and `Date <= '2026-09-16'` is always false — every governed
+    // parameter read from a real database resolved to "not found". Compare
+    // calendar days as ISO strings instead (the SQL already filtered by
+    // `effective_from`/`effective_to`; this is the in-memory re-check).
+    const dayOf = (value: unknown): string =>
+      value instanceof Date
+        ? `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}`
+        : String(value).slice(0, 10);
     const effective = rows.filter(
       (row) =>
         (!row.key || row.key === key) &&
-        (!row.effective_from || row.effective_from <= on) &&
-        (!row.effective_to || row.effective_to >= on),
+        (!row.effective_from || dayOf(row.effective_from) <= on) &&
+        (!row.effective_to || dayOf(row.effective_to) >= on),
     );
     const rank = (row: ParameterRow): number => {
       if (row.scope === 'agency' && row.traffic_agency_id === agencyId)

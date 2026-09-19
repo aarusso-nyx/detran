@@ -3,7 +3,7 @@
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
 (prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`
 (Fable 5.1 no `delivery-review` do provisionamento).
-**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (reconciliação do corpus) e CTG-0002 (126 fichas, i18n, transições, diagramas): nenhum upstream. CTG-0003 (provisionamento offline: ADR, blueprint, rotas): `ops-agency` R-0005 (`orchestra/ops-agency`). CTG-0004 (apps mobile e web): `teat-backend` R-0008 (schemas e clientes) e `rait-web` R-0012 (lock `packages/ui`).
+**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (reconciliação do corpus), CTG-0002 (126 fichas, i18n, transições, diagramas) e CTG-0003 (provisionamento offline: ADR, blueprint, rotas — R-0005 em `main`): nenhum upstream. CTG-0004 (apps mobile e web): `rait-web` R-0012 (lock `packages/ui`); schemas, `@detran/api-clients` e contratos do TEAT já em `main` (R-0008).
 **Janelas previstas:** 5 (o maior da carteira; um PR por grupo).
 
 ## Metas
@@ -39,22 +39,24 @@
 
 ## Tarefas
 
-| Tarefa    | Papel        | Perfil              | Modelo/esforço | Lock                                                          | Depende de           | Entrega                                                                                                                                              |
-| --------- | ------------ | ------------------- | -------------- | ------------------------------------------------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Owner deleg. | transcriber-docs    | Luna / baixo   | `MOD-product-teat`, `MOD-kb-manifest`                         | —                    | reconciliação §5 (12 itens), PR próprio                                                                                                              |
-| TASK-0002 | Architect    | architect-blueprint | Terra / alto   | `MOD-teat-apps-arch`                                          | TASK-0001            | decisões dos apps (pastas §10, forma dos schemas, porta da impressora, pontos de extensão para o BOAT), lista fechada tela → ficha → rota, critérios |
-| TASK-0003 | Owner deleg. | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-mobile`                             | TASK-0002            | 70 fichas mobile; manifesto                                                                                                                          |
-| TASK-0004 | Owner deleg. | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-web`                                | TASK-0002            | 56 fichas web; diagramas de estrutura                                                                                                                |
-| TASK-0005 | Engineer     | engineer-frontend   | Luna / baixo   | `MOD-teat-i18n-transitions`                                   | TASK-0002            | `i18n/teat.pt-BR.json`, `transitions.ts` (576), teste "cada tela da matriz tem ficha e rota"                                                         |
-| TASK-0006 | Architect    | architect-blueprint | Terra / alto   | `MOD-adr`, `MOD-bp-ops-provisioning`, `MOD-ddl-19`            | TASK-0002            | ADR de provisionamento, blueprint, contrato das rotas, matriz de prova (pacote copiado/alterado/expirado/revogado)                                   |
-| TASK-0007 | Inspector    | inspector-tests     | Terra / alto   | `MOD-ops-provisioning-tests`                                  | TASK-0006            | testes da matriz de prova; "sem chave privada no servidor" (teste de configuração)                                                                   |
-| TASK-0008 | Engineer     | engineer-backend    | Terra / médio  | `MOD-ops-provisioning`, `MOD-shared-policy`, `MOD-app-module` | TASK-0007            | módulo, rotas, `ReadinessGate` (contrato consumido pelo mobile); testes verdes                                                                       |
-| TASK-0009 | Inspector    | inspector-tests     | Luna / médio   | `MOD-teat-mobile-tests`, `MOD-teat-web-tests`                 | TASK-0005            | testes de roteamento por papel (70 + 60), matriz de 576 transições, TestBed dos compartilhados, `FixturePrinter`                                     |
-| TASK-0010 | Engineer     | engineer-frontend   | Terra / médio  | `MOD-teat-mobile-app`, `MOD-packages-ui`                      | TASK-0008, TASK-0009 | `apps/teat/mobile` completo (8 módulos, 70 rotas, formulários, serviços); testes verdes                                                              |
-| TASK-0011 | Engineer     | engineer-frontend   | Terra / médio  | `MOD-teat-web-app`, `MOD-package-json`                        | TASK-0009            | `apps/teat/web` (12 módulos, 60 rotas); `pnpm check` estendido; testes verdes                                                                        |
-| TASK-0012 | Owner deleg. | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                    | TASK-0010, TASK-0011 | build pack (gates reais), `teat-frontends.md`, ADR, backlog                                                                                          |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                          | Depende de           | Entrega                                                                                                                                                                  |
+| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| TASK-0001 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat`, `MOD-kb-manifest`                         | —                    | reconciliação §5 (12 itens), PR próprio                                                                                                                                  |
+| TASK-0002 | Architect            | architect-blueprint | Terra / alto   | `MOD-teat-apps-arch`                                          | TASK-0001            | decisões dos apps (pastas §10, forma dos schemas, porta da impressora, pontos de extensão para o BOAT), lista fechada tela → ficha → rota, critérios                     |
+| TASK-0003 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-mobile`                             | TASK-0002            | 70 fichas mobile; manifesto                                                                                                                                              |
+| TASK-0004 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-web`                                | TASK-0002            | 56 fichas web; diagramas de estrutura                                                                                                                                    |
+| TASK-0005 | Engineer             | engineer-frontend   | Luna / baixo   | `MOD-teat-i18n-transitions`                                   | TASK-0002            | `i18n/teat.pt-BR.json`, `transitions.ts` (576)                                                                                                                           |
+| TASK-0006 | Architect            | architect-blueprint | Terra / alto   | `MOD-adr`, `MOD-bp-ops-provisioning`, `MOD-ddl-19`            | TASK-0002            | ADR de provisionamento, blueprint, contrato das rotas, matriz de prova (pacote copiado/alterado/expirado/revogado)                                                       |
+| TASK-0007 | Inspector            | inspector-tests     | Terra / alto   | `MOD-ops-provisioning-tests`                                  | TASK-0006            | testes da matriz de prova; "sem chave privada no servidor" (teste de configuração)                                                                                       |
+| TASK-0008 | Engineer             | engineer-backend    | Terra / médio  | `MOD-ops-provisioning`, `MOD-shared-policy`, `MOD-app-module` | TASK-0007            | módulo, rotas, `ReadinessGate` (contrato consumido pelo mobile); testes verdes                                                                                           |
+| TASK-0009 | Inspector            | inspector-tests     | Luna / médio   | `MOD-teat-mobile-tests`, `MOD-teat-web-tests`                 | TASK-0005            | testes de roteamento por papel (70 + 60), matriz de 576 transições, TestBed dos compartilhados, `FixturePrinter`; teste "cada tela da matriz tem ficha e rota" (126/126) |
+| TASK-0010 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-mobile-app`, `MOD-packages-ui`                      | TASK-0008, TASK-0009 | `apps/teat/mobile` completo (8 módulos, 70 rotas, formulários, serviços); testes verdes                                                                                  |
+| TASK-0011 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-web-app`, `MOD-package-json`                        | TASK-0009            | `apps/teat/web` (12 módulos, 60 rotas); `pnpm check` estendido; testes verdes                                                                                            |
+| TASK-0012 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                    | TASK-0010, TASK-0011 | build pack (gates reais), `teat-frontends.md`, ADR, backlog                                                                                                              |
 
 CTG-0001 = 0001; CTG-0002 = 0003…0005 (fichas/i18n); CTG-0003 = 0006…0008 (provisionamento);
+
+**Checkpoint de dependências:** após TASK-0006 o maestro agrupa a edição do blueprint de provisionamento e regenera uma vez; após TASK-0008 roda `pnpm install` (pacote `@detran/ops-provisioning`) e inclui alias/scripts; após TASK-0010/0011 criarem `apps/teat/mobile` e `apps/teat/web`, roda `pnpm install`, guarda o lockfile e estende `pnpm check` antes de o Inspector rodar TASK-0009 contra os apps. Banco da rodada: `detran_r13`.
 CTG-0004 = 0009…0011 (apps). Um PR por CTG.
 
 ## Critérios de aceitação (comandos → resultado)
@@ -86,6 +88,23 @@ CTG-0004 = 0009…0011 (apps). Um PR por CTG.
 - Provisionamento toca `backend/domains/ops` e `policy.ts`: na onda 6 a outra frente ativa é
   `portal-pwa`, sem lock comum.
 - Impressora real, KMS real e Keystore: fora desta frente (integração); portas com fixtures.
+
+## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
+
+- Transcrição de fichas, contratos, i18n e docs é ato de **Architect** (`transcriber-docs`); tarefas assim aparecem como "Architect (transcr.)".
+- Nenhum Engineer ou transcriber entrega o teste do próprio artefato: contratos → `contracts:test` pelo Inspector; fichas/i18n → teste tela ↔ ficha ↔ rota pelo Inspector.
+- Ciclos de review a partir do segundo restritos aos itens corrigidos; contradições contrato × código resolvidas pelo Architect por adenda numerada em `plan.md` antes de redespachar.
+- O CTG seguinte só começa a escrever depois do merge do anterior ou nasce em branch empilhado; nunca commits novos no branch de um PR aberto; integrar `main` por merge, nunca `--force`.
+- Listas de leitura dos workers fechadas e completas (DDL gerado, blueprint, `seed.sh`, fixtures, specs de referência como `backend/app/tests/e2e/policy-routes.e2e.spec.ts`); lacuna aqui foi `reference-gap` em R-0010.
+- M24: o Architect declara `module.handwritten*` com símbolos fixos no blueprint; Engineers nunca editam blueprints; `typecheck` vermelho entre as tarefas do CTG é esperado; toda edição de blueprint do CTG num único checkpoint de regeneração.
+- Política `ops:provisioning:*` prova presença **e** ausência: testes positivos para os papéis listados e negativos para todos os papéis canônicos omitidos; nenhum grant por analogia.
+- e2e idempotente em banco persistente: `afterAll` limpa o que criou; `DB_NAME` explícito em `work/rounds/<R>/env-detran-rN.sh`.
+- Pacote novo montado no `AppModule` entra em `backend/app/vitest.config.ts` (alias) e `backend/app/package.json`; fixtures novas passam por `bash backend/database/seed.sh` duas vezes e pelo job `backend-kernel`.
+- Padrão de app: o primeiro frontend (R-0012, `apps/rait/web`) fixa `package.json` (scripts `build|test|lint|typecheck`), configuração Angular 22/vitest/eslint e a extensão de `pnpm check`; os apps seguintes copiam a estrutura, sem variantes.
+- Pacote de workspace novo: o maestro roda `pnpm install`, guarda o `pnpm-lock.yaml` para o commit do grupo e só então libera o Inspector (CI é `--frozen-lockfile`).
+- Chaves i18n não são parâmetros (OD-P46): o namespace deste app entra na allowlist de i18n do `parameter-catalogue.md` lida por `tools/parameters/verify.mjs`; se R-0012 ainda não tiver mesclado essa regra, esta rodada a aplica (nunca exclusão por diretório).
+- Testes de roteamento cobrem papéis com e sem acesso (presença e ausência), não só o papel mínimo.
+- `teat.*` já é prefixo de parâmetros vigentes (`teat.speed_meters`, `teat.homologation.*`): a allowlist i18n é obrigatória antes de `i18n/teat.pt-BR.json` entrar em código.
 
 ## Concorrência
 

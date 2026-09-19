@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0008",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Escrever o contrato WP-T3: formato dos contratos de comando, tabela rota → operationId, assinatura do gate check-commands.mjs e do gerador de clientes, três schemas JSON e critérios",
+  "description": "Fechar, a partir de M19 e dos comandos implementados em CTG-0001…0004, o contrato CTG-0005 que o Inspector (TASK-0012) transcreve em testes e o Engineer (TASK-0010) em contratos, schemas e ferramentas. Nada de código.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-teat-contracts-design-wp-t3"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0009",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 13,
+  "tags": ["wp-t3"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-1a790895da83e7c8",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-1a790895da83e7c8",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

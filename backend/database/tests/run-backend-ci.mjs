@@ -4,6 +4,25 @@ import { spawn } from 'node:child_process';
 
 import { restoreFreshPriorityV3Database } from './prepare-rait-priority-v1-baseline.mjs';
 
+const databaseUrl = process.env.DETRAN_TEST_DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('BLOCKED: DETRAN_TEST_DATABASE_URL is required');
+}
+const database = new URL(databaseUrl);
+const databaseName = decodeURIComponent(database.pathname.replace(/^\//u, ''));
+if (!databaseName || !database.username || !database.hostname) {
+  throw new Error(
+    'BLOCKED: DETRAN_TEST_DATABASE_URL must identify database, user and host',
+  );
+}
+// Shell-based DDL/seed helpers use libpq variables. Derive them from the one
+// mandatory owner URL so every subprocess targets the same disposable DB.
+process.env.DB_NAME = databaseName;
+process.env.DB_HOST = database.hostname;
+process.env.DB_PORT = database.port || '5432';
+process.env.DB_USER = decodeURIComponent(database.username);
+process.env.DB_PASSWORD = decodeURIComponent(database.password);
+
 function run(script) {
   return new Promise((resolve, reject) => {
     const child = spawn('pnpm', [script], { stdio: 'inherit' });

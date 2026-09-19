@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0008",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Escrever os contratos por comando de WP-T2 (AIT, campo, sincronização, evidência, snapshots, normativo, medidas, alcoolemia, SSE) e os critérios para Inspector e Engineer",
+  "description": "Fechar, comando a comando, pré-estado, papel, pré-condições, pós-estado, erros, eventos e fixtures dos quatro grupos acoplados, a partir das decisões M1–M20 do plan.md, do teat-route-contract.md e das DTOs da origem; desenhar a aplicação transacional do lote e a matriz de política ⇔ rotas. Nada de código.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-teat-contracts-design"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t2", "wp-t3"],
+  "branch": "orchestra/teat-backend",
+  "worktree_id": "WT-teat-backend",
+  "prompt_composition_id": "PC-f1572858a6cc8103",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["node", "tools/docs/kb/check.mjs"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-f1572858a6cc8103",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

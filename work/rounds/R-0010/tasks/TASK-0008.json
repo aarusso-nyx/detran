@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0010",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcreva as rotas BOAT realmente montadas para commands",
+  "description": "Transcreva as rotas BOAT realmente montadas para commands.openapi.json e payload canônico crash-record da fila para JSON Schema, com exemplos das fixtures. Execute geração dos clientes. Não invente operações não montadas; divergência vira relatório/adenda do Architect. Preserve códigos 4xx do catálogo e x-blueprint/x-commands do gate.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contracts-commands", "MOD-schemas"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 9,
+  "tags": ["wp-b3"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-47f5d92a717cdda0",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-16T17:25:18.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-47f5d92a717cdda0",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0007"
+}

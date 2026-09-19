@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/numbering.reservation.changed.schema.json",
+  "title": "numbering.reservation.changed",
+  "description": "Reserva de numeração criada ou liquidada (cancel/block/close/reconcile) (CTG-0002 §5.10-§5.13/§7).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "correlationId",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Id da linha da outbox (integration.outbox.id, uuid — não ULID; CTG-0001 §11.1)."
+    },
+    "type": {
+      "const": "numbering.reservation.changed"
+    },
+    "domainEvent": {
+      "const": "NUMERACAO_RESERVADA"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["user", "system", "timer"]
+        },
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "correlationId": {
+      "type": "string"
+    },
+    "causationId": {
+      "type": "string"
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": {
+          "const": "numbering-reservation"
+        },
+        "id": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reservationId",
+        "rangeId",
+        "agentId",
+        "deviceId",
+        "shiftId",
+        "startNumber",
+        "endNumber",
+        "validUntil",
+        "status",
+        "action"
+      ],
+      "properties": {
+        "reservationId": {
+          "type": "string"
+        },
+        "rangeId": {
+          "type": "string"
+        },
+        "agentId": {
+          "type": ["string", "null"]
+        },
+        "deviceId": {
+          "type": ["string", "null"]
+        },
+        "shiftId": {
+          "type": ["string", "null"]
+        },
+        "startNumber": {
+          "type": ["integer", "null"]
+        },
+        "endNumber": {
+          "type": ["integer", "null"]
+        },
+        "validUntil": {
+          "type": ["string", "null"]
+        },
+        "status": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

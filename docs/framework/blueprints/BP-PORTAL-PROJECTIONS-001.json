@@ -1,0 +1,547 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-PORTAL-PROJECTIONS-001",
+  "module": {
+    "name": "Projections",
+    "namespace": "portal",
+    "version": "1.0.2",
+    "ddlFile": "65-portal-projections.sql",
+    "dependencies": {
+      "@detran/portal-identity": "workspace:*",
+      "@detran/ops-parameter": "workspace:*",
+      "zod": "^4.6.5",
+      "@detran/inf-deadlines": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/portal-identity",
+        "target": "../identity/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../../inf/deadlines/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-parameter",
+        "target": "../../ops/parameter/src/index.ts"
+      }
+    ],
+    "handwrittenExports": ["handwritten/index"],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/aits.controller",
+        "symbol": "PortalAitsController"
+      },
+      {
+        "target": "handwritten/documents.controller",
+        "symbol": "PortalDocumentsController"
+      },
+      {
+        "target": "handwritten/crashes.controller",
+        "symbol": "PortalCrashesController"
+      },
+      {
+        "target": "handwritten/exams.controller",
+        "symbol": "PortalExamsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/projectors.service",
+        "symbol": "PortalProjectors"
+      },
+      {
+        "target": "handwritten/national-reads.service",
+        "symbol": "PortalNationalReadsService"
+      }
+    ],
+    "moduleImports": [
+      {
+        "package": "@detran/portal-identity",
+        "symbol": "IdentityModule"
+      }
+    ],
+    "moduleExports": ["PortalProjectors"],
+    "owners": ["detran-portal"],
+    "description": "Projecoes do Portal (ADR-0020 Decision 1, 2 e 5; ADR-0019 Decision 5; plan R-0009 M16-M17): as cinco leituras cidadas do catalogo de projecoes (infraction_view, process_timeline, points_view, crash_view, exam_view) como entidades pequenas alimentadas por eventos da outbox (topics inf e rait) por projetores manuscritos idempotentes em event.id (portal.projection_applied_event) e replayaveis; mais o cache das leituras nacionais feitas so por packages/senatran-adapter (portal.national_read_cache, TTL = parametro portal.read_cache_ttl_minutes via @detran/ops-parameter, nunca literal). Nenhuma projecao escreve de volta; rotulos cidadaos, nunca tokens de inf (RN-PORTAL-112). Sem FK para outros pacotes: toda linha e reconstruivel por replay. Nenhuma rota CRUD gerada (M1); wiring manuscrito declarado por TASK-0005 (M24)."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "InfractionView",
+        "table": "infraction_view",
+        "primaryKey": ["id"],
+        "description": "Projecao 'minhas autuacoes' (ADR-0020 Decision 2: portal.infraction_view <- INFRACAO_ESTADO_ALTERADO, NOTIFICACAO_EXPEDIDA, NOTIFICACAO_CIENCIA, PAGAMENTO_CONFIRMADO; portal-route-contract.md secao 4; plan R-0009 M16): uma linha por AIT (ait_id unico por tenant), situacao em linguagem cidada (INFRACTION_SITUATION_MAP em infraction-view.projection.ts; token sem mapa falha com PORTAL.INTERNAL — OD-P20), points_status em_disputa | definitivo | none, prazos, acoes, avisos e pagamento em jsonb; last_event_id / last_event_version para idempotencia e replay.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "ait_id",
+            "type": "uuid"
+          },
+          {
+            "name": "subject_cpf_hash",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "ait_number",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "plate",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "occurred_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "framing_label",
+            "type": "text"
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)",
+            "nullable": true
+          },
+          {
+            "name": "situation",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "deadlines_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "points_status",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "actions_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "notices_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "payment_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "last_event_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_infraction_view_ait",
+            "columns": ["tenant_id", "ait_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_portal_infraction_view_subject",
+            "columns": ["tenant_id", "subject_cpf_hash", "situation"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_infraction_view_situation",
+            "expression": "situation in ('aguardando_defesa','em_defesa','penalidade_aplicada','em_recurso','encerrada','cancelada','arquivada')"
+          },
+          {
+            "name": "ck_portal_infraction_view_points_status",
+            "expression": "points_status in ('em_disputa','definitivo','none')"
+          }
+        ]
+      },
+      {
+        "name": "ProcessTimeline",
+        "table": "process_timeline",
+        "primaryKey": ["id"],
+        "description": "Projecao 'com voce' x 'com o orgao' do processo (ADR-0020 Decision 2: portal.process_timeline <- RAIT_CASO_*, RAIT_DECISAO_PUBLICADA, rait.inquiry.changed; RN-PORTAL-112; plan R-0009 M16): uma linha por caso (case_id unico por tenant; request_id nulo quando o caso nao nasceu de um pedido do portal), entries_json so com entradas visibility = citizen, deadlines_json e decision_json (nulo ate RAIT_DECISAO_PUBLICADA).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "request_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "entries_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "deadlines_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "decision_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_process_timeline_case",
+            "columns": ["tenant_id", "case_id"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "PointsView",
+        "table": "points_view",
+        "primaryKey": ["id"],
+        "description": "Projecao de pontuacao (ADR-0020 Decision 2: portal.points_view <- PENALIDADE_DEFINITIVA e leitura RENACH pelo adapter; RN-RAIT-131; plan R-0009 M16): uma linha por cidadao (subject_cpf_hash unico por tenant), pontos definitivos x em disputa, por veiculo e ultimos 12 meses em jsonb; last_event_id nulo quando so ha leitura nacional, cached_at nulo quando so ha eventos.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "subject_cpf_hash",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "definitive_points",
+            "type": "integer"
+          },
+          {
+            "name": "disputed_points",
+            "type": "integer"
+          },
+          {
+            "name": "by_vehicle_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "last_12_months_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "cached_at",
+            "type": "timestamptz",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_points_view_subject",
+            "columns": ["tenant_id", "subject_cpf_hash"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_points_view_points_non_negative",
+            "expression": "definitive_points >= 0 and disputed_points >= 0"
+          }
+        ]
+      },
+      {
+        "name": "CrashView",
+        "table": "crash_view",
+        "primaryKey": ["id"],
+        "description": "Projecao de sinistro (BOAT) para o cidadao envolvido (ADR-0020 Decision 1; portal-route-contract.md secao 7 GET crashes/{id}; plan R-0009 M16): uma linha por sinistro (crash_id unico por tenant), rotulo de estado cidadao e resumo em jsonb com campos de terceiros suprimidos (third_party_fields_suppressed). Nesta rodada so a tabela e o projetor esqueleto (applyEvent registra last_event_id); produtor real em R-0010 (OD-P19).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "crash_id",
+            "type": "uuid"
+          },
+          {
+            "name": "subject_cpf_hash",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "state_label",
+            "type": "text"
+          },
+          {
+            "name": "summary_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "third_party_fields_suppressed",
+            "type": "boolean"
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_crash_view_crash",
+            "columns": ["tenant_id", "crash_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_portal_crash_view_subject",
+            "columns": ["tenant_id", "subject_cpf_hash"]
+          }
+        ]
+      },
+      {
+        "name": "ExamView",
+        "table": "exam_view",
+        "primaryKey": ["id"],
+        "description": "Projecao de exame (PEC) para o cidadao (ADR-0020 Decision 1; portal-route-contract.md secao 7 GET exams/{id}; plan R-0009 M16): uma linha por exame (exam_id unico por tenant), rotulo legal, validade e prazo da junta. Nesta rodada so a tabela e o projetor esqueleto (applyEvent registra last_event_id); produtor real e do PEC (OD-P19).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "exam_id",
+            "type": "uuid"
+          },
+          {
+            "name": "subject_cpf_hash",
+            "type": "varchar(64)"
+          },
+          {
+            "name": "legal_label",
+            "type": "text"
+          },
+          {
+            "name": "valid_until",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "board_due_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_exam_view_exam",
+            "columns": ["tenant_id", "exam_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_portal_exam_view_subject",
+            "columns": ["tenant_id", "subject_cpf_hash"]
+          }
+        ]
+      },
+      {
+        "name": "ProjectionAppliedEvent",
+        "table": "projection_applied_event",
+        "primaryKey": ["id"],
+        "description": "Livro de eventos aplicados pelos projetores (ADR-0020 Decision 1: idempotencia em event.id; plan R-0009 M16): uma linha por (tenant, event_id, projection) porque um mesmo evento pode alimentar mais de uma projecao (ex.: INFRACAO_ESTADO_ALTERADO -> infraction_view e entitlement). last_error registra a falha do projetor (PORTAL.INTERNAL, token sem mapa — OD-P20) e fica nulo apos aplicacao bem-sucedida. Replay = reaplicar a janela da outbox em ordem created_at.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "projection",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "applied_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "last_error",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_projection_applied_event_event_projection",
+            "columns": ["tenant_id", "event_id", "projection"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "NationalReadCache",
+        "table": "national_read_cache",
+        "primaryKey": ["id"],
+        "description": "Cache das leituras nacionais do cidadao (ADR-0020 Decision 5; portal-route-contract.md secao 7 GET documents/cnh, GET vehicles, GET vehicles/{id}/clearance; steering H.54; plan R-0009 M17): so por packages/senatran-adapter (CdtPort, RenachPort, RenavamReadPort via token PORTAL_NATIONAL_READ_PORTS), nunca fetch proprio (ADR-0003). kind cnh | vehicles | clearance; target_id nulo para cnh e vehicles, veiculo para clearance — unico por (tenant, subject, kind, coalesce(target_id)). TTL = parametro portal.read_cache_ttl_minutes; resposta sempre com cachedAt; fonte indisponivel com cache -> 200 com cachedAt antigo, sem cache -> 503 PORTAL.NATIONAL_READ_UNAVAILABLE.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "subject_id",
+            "type": "uuid"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "target_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "payload_json",
+            "type": "jsonb",
+            "pii": "personal"
+          },
+          {
+            "name": "cached_at",
+            "type": "timestamptz"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_portal_national_read_cache_subject_kind_target",
+            "columns": [
+              "tenant_id",
+              "subject_id",
+              "kind",
+              "coalesce(target_id, '00000000-0000-0000-0000-000000000000'::uuid)"
+            ],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_portal_national_read_cache_kind",
+            "expression": "kind in ('cnh','vehicles','clearance')"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/portal/projections/",
+    "resources": [
+      {
+        "entity": "InfractionView",
+        "path": "infraction-views",
+        "resource": "infraction-view",
+        "operations": []
+      },
+      {
+        "entity": "ProcessTimeline",
+        "path": "process-timelines",
+        "resource": "process-timeline",
+        "operations": []
+      },
+      {
+        "entity": "PointsView",
+        "path": "points-views",
+        "resource": "points-view",
+        "operations": []
+      },
+      {
+        "entity": "CrashView",
+        "path": "crash-views",
+        "resource": "crash-view",
+        "operations": []
+      },
+      {
+        "entity": "ExamView",
+        "path": "exam-views",
+        "resource": "exam-view",
+        "operations": []
+      },
+      {
+        "entity": "ProjectionAppliedEvent",
+        "path": "applied-events",
+        "resource": "projection-applied-event",
+        "operations": []
+      },
+      {
+        "entity": "NationalReadCache",
+        "path": "national-read-cache",
+        "resource": "national-read-cache",
+        "operations": []
+      }
+    ]
+  },
+  "auth": {
+    "source": "PORTAL_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}

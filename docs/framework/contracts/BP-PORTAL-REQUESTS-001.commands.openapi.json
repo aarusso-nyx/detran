@@ -1,0 +1,4087 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Portal Pedidos — comandos manuscritos (BP-PORTAL-REQUESTS-001)",
+    "version": "1.0.0",
+    "description": "Ciclo comum de pedidos (criação, rascunho, anexos, protocolo/delegação, desistência, leituras, diligência, avaliação), montado em PortalRequestsController.",
+    "x-blueprint": "BP-PORTAL-REQUESTS-001",
+    "x-commands": true,
+    "x-source": "portal-route-contract.md §5, §5.1; CTG-0002 §2.3, §3, §4"
+  },
+  "paths": {
+    "/v1/portal/requests": {
+      "post": {
+        "tags": ["request"],
+        "operationId": "portalRequestCreate",
+        "summary": "Abre um pedido (verifica catálogo, alvo da delegação e vínculo).",
+        "x-policy": "portal:request:create",
+        "x-audit": "PORTAL_REQUEST_CREATE",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestCreateDto"
+              },
+              "example": {
+                "serviceKey": "consulta_multas",
+                "targetKind": "none",
+                "channel": "portal"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pedido criado em PEDIDO_EM_COMPOSICAO.",
+            "headers": {
+              "ETag": {
+                "description": "\"<version>\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "requestId",
+                    "state",
+                    "prefilled",
+                    "requirements",
+                    "minimumAssurance",
+                    "version"
+                  ],
+                  "properties": {
+                    "requestId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "PEDIDO_EM_COMPOSICAO"
+                    },
+                    "prefilled": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "requirements": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "minimumAssurance": {
+                      "type": "string",
+                      "enum": ["none", "simples", "avancada", "qualificada"]
+                    },
+                    "version": {
+                      "type": "integer",
+                      "const": 1
+                    }
+                  }
+                },
+                "example": {
+                  "requestId": "00000000-0000-7000-8000-000070400005",
+                  "state": "PEDIDO_EM_COMPOSICAO",
+                  "prefilled": {},
+                  "requirements": ["Conta gov.br"],
+                  "minimumAssurance": "avancada",
+                  "version": 1
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo fora da forma, Idempotency-Key ausente, ou targetId ausente/presente incoerente com targetKind.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='service' (catálogo) ou kind=targetKind (vínculo).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Corpo divergente para a mesma chave, ou já existe rascunho aberto do mesmo ato/alvo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY",
+                        "PORTAL.REQUEST_DRAFT_EXISTS"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Serviço indisponível/com rota própria, ou alvo sem vínculo comprovável.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ENTITLEMENT_REQUIRED",
+                        "PORTAL.INELIGIBLE",
+                        "PORTAL.SERVICE_UNAVAILABLE"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["request"],
+        "operationId": "portalRequestList",
+        "summary": "Lista os pedidos do sujeito da sessão.",
+        "x-policy": "portal:request:read",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Um dos 13 tokens de WF-PORTAL-001."
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "serviceKey (literal)."
+          },
+          {
+            "name": "period",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "'YYYY-MM-DD,YYYY-MM-DD' no fuso do tenant."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de pedidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["items", "total", "page", "pageSize"],
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "requestId": {
+                            "type": "string",
+                            "format": "uuid"
+                          },
+                          "protocol": {
+                            "type": ["string", "null"]
+                          },
+                          "serviceKey": {
+                            "type": ["string", "null"]
+                          },
+                          "targetLabel": {
+                            "type": ["string", "null"]
+                          },
+                          "situation": {
+                            "type": "string"
+                          },
+                          "nextAction": {
+                            "type": "object",
+                            "properties": {
+                              "by": {
+                                "type": "string",
+                                "enum": ["citizen", "agency", "none"]
+                              },
+                              "label": {
+                                "type": "string"
+                              },
+                              "dueOn": {
+                                "type": ["string", "null"],
+                                "format": "date"
+                              }
+                            }
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        }
+                      }
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "pageSize": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "items": [
+                    {
+                      "requestId": "00000000-0000-7000-8000-000070400009",
+                      "protocol": "AM-FIXTURES-2026-0000002",
+                      "serviceKey": "adesao_sne",
+                      "targetLabel": null,
+                      "situation": "EM_ANDAMENTO_NO_ORGAO",
+                      "nextAction": {
+                        "by": "agency",
+                        "label": "portal.requests.nextAction.EM_ANDAMENTO_NO_ORGAO",
+                        "dueOn": null
+                      },
+                      "updatedAt": "2026-09-14T12:00:00-04:00"
+                    }
+                  ],
+                  "total": 1,
+                  "page": 1,
+                  "pageSize": 20
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "state fora do enum, ou period malformado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ENUM_INVALID",
+                        "PORTAL.VALIDATION_FAILED"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/draft": {
+      "put": {
+        "tags": ["request"],
+        "operationId": "portalRequestDraftUpdate",
+        "summary": "Grava (nova versão de) o rascunho do ato em PEDIDO_EM_COMPOSICAO.",
+        "x-policy": "portal:request:compose",
+        "x-audit": "PORTAL_REQUEST_COMPOSE",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "\"<portal.request.version>\"; ausente → 428; divergente → 412.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDraftUpdateDto"
+              },
+              "example": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rascunho gravado.",
+            "headers": {
+              "ETag": {
+                "description": "\"<version>\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["requestId", "version", "savedAt"],
+                  "properties": {
+                    "requestId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "version": {
+                      "type": "integer"
+                    },
+                    "savedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "example": {
+                  "requestId": "00000000-0000-7000-8000-000070400005",
+                  "version": 2,
+                  "savedAt": "2026-09-14T12:00:00-04:00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo fora da forma do ato.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'; de outro sujeito ou inexistente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pedido fora de PEDIDO_EM_COMPOSICAO.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.REQUEST_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "If-Match divergente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VERSION_CONFLICT"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 412
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.IF_MATCH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 428
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/attachments": {
+      "post": {
+        "tags": ["request"],
+        "operationId": "portalRequestAttachmentCreate",
+        "summary": "Inicia o upload assinado de um anexo do rascunho.",
+        "x-policy": "portal:request:compose",
+        "x-audit": "PORTAL_REQUEST_ATTACHMENT_CREATE",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAttachmentCreateDto"
+              },
+              "example": {
+                "filename": "documento.pdf",
+                "mimeType": "application/pdf",
+                "sizeBytes": 102400,
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Corpo fora da forma.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pedido fora de PEDIDO_EM_COMPOSICAO.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.REQUEST_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'documento_assinado_pendente_r0014'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/attachments/{attachmentId}/complete": {
+      "post": {
+        "tags": ["request"],
+        "operationId": "portalRequestAttachmentComplete",
+        "summary": "Confirma a conclusão do upload de um anexo.",
+        "x-policy": "portal:request:compose",
+        "x-audit": "PORTAL_REQUEST_ATTACHMENT_COMPLETE",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "attachmentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "attachmentId não é uuid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'documento_assinado_pendente_r0014'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/submit": {
+      "post": {
+        "tags": ["request"],
+        "operationId": "portalRequestSubmit",
+        "summary": "Protocola imediatamente e delega o pedido ao domínio dono (M8).",
+        "x-policy": "portal:request:submit",
+        "x-audit": "PORTAL_REQUEST_SUBMIT",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3, §3.1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSubmitDto"
+              },
+              "example": {
+                "signature": {
+                  "method": "govbr",
+                  "signatureRef": "fixture-signature-ref"
+                },
+                "consequenceAck": {
+                  "textVersion": "1",
+                  "acceptedAt": "2026-09-14T12:00:00-04:00"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Protocolado e delegado (ou RESULTADO_DISPONIVEL/AVALIACAO_OFERECIDA para alvos de leitura).",
+            "headers": {
+              "ETag": {
+                "description": "\"<version>\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "requestId",
+                    "state",
+                    "protocol",
+                    "delegation",
+                    "version"
+                  ],
+                  "properties": {
+                    "requestId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": ["EM_ANDAMENTO_NO_ORGAO", "AVALIACAO_OFERECIDA"]
+                    },
+                    "protocol": {
+                      "type": "object",
+                      "properties": {
+                        "number": {
+                          "type": "string"
+                        },
+                        "issuedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "channel": {
+                          "type": "string",
+                          "const": "portal"
+                        },
+                        "receiptHash": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "delegation": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["delegated", "not_applicable"]
+                        },
+                        "externalId": {
+                          "type": ["string", "null"]
+                        }
+                      }
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "requestId": "00000000-0000-7000-8000-00007040000c",
+                  "state": "EM_ANDAMENTO_NO_ORGAO",
+                  "protocol": {
+                    "number": "AM-FIXTURES-2026-0000005",
+                    "issuedAt": "2026-09-05T12:00:00-04:00",
+                    "channel": "portal",
+                    "receiptHash": "0000000000000000000000000000000000000000000000000000000000000000"
+                  },
+                  "delegation": {
+                    "status": "delegated",
+                    "externalId": "00000000-0000-7000-8000-000070e00001"
+                  },
+                  "version": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo fora da forma, ou Idempotency-Key ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Nível insuficiente (estado persistido).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_INSUFFICIENT",
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pedido fora de PEDIDO_EM_COMPOSICAO/AGUARDANDO_NIVEL_ASSINATURA, ou corpo divergente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY",
+                        "PORTAL.REQUEST_STATE_INVALID"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ato com consequência sem consequenceAck (ex.: adesao_sne).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.REQUEST_CONSEQUENCE_ACK_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Domínio dono recusou; protocolo mantido (M8).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.DELEGATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 502
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/withdraw": {
+      "post": {
+        "tags": ["request"],
+        "operationId": "portalRequestWithdraw",
+        "summary": "Desiste do pedido antes do protocolo, ou em pendência interna.",
+        "x-policy": "portal:request:withdraw",
+        "x-audit": "PORTAL_REQUEST_WITHDRAW",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "\"<portal.request.version>\"; ausente → 428; divergente → 412.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestWithdrawDto"
+              },
+              "example": {
+                "confirm": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pedido desistido.",
+            "headers": {
+              "ETag": {
+                "description": "\"<version>\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["requestId", "state", "withdrawnAt", "version"],
+                  "properties": {
+                    "requestId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "DESISTIDO"
+                    },
+                    "withdrawnAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "example": {
+                  "requestId": "00000000-0000-7000-8000-00007040000c",
+                  "state": "DESISTIDO",
+                  "withdrawnAt": "2026-09-10T12:00:00-04:00",
+                  "version": 2
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo fora da forma.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pedido fora de PEDIDO_EM_COMPOSICAO/AGUARDANDO_NIVEL_ASSINATURA/AGUARDANDO_PAGAMENTO.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.REQUEST_STATE_INVALID"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "If-Match divergente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VERSION_CONFLICT"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 412
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.IF_MATCH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 428
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}": {
+      "get": {
+        "tags": ["request"],
+        "operationId": "portalRequestGet",
+        "summary": "Lê o detalhe do pedido (timeline, prazos, ações disponíveis).",
+        "x-policy": "portal:request:read",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhe do pedido.",
+            "headers": {
+              "ETag": {
+                "description": "\"<request.version>\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "example": {
+                  "request": {
+                    "requestId": "00000000-0000-7000-8000-000070400009",
+                    "state": "EM_ANDAMENTO_NO_ORGAO",
+                    "serviceKey": "adesao_sne",
+                    "targetKind": "none",
+                    "targetId": null,
+                    "channel": "portal",
+                    "minimumAssurance": "avancada",
+                    "delegation": {
+                      "status": "delegated",
+                      "domain": "portal",
+                      "command": "portal:sne-enrollment:enroll",
+                      "externalId": "00000000-0000-7000-8000-000070e00001",
+                      "error": null
+                    },
+                    "protocol": {
+                      "number": "AM-FIXTURES-2026-0000002",
+                      "issuedAt": "2026-09-02T12:00:00-04:00",
+                      "channel": "portal",
+                      "receiptHash": "0000000000000000000000000000000000000000000000000000000000000000"
+                    },
+                    "draft": null,
+                    "withdrawnAt": null,
+                    "createdAt": "2026-09-02T12:00:00-04:00",
+                    "updatedAt": "2026-09-02T12:00:00-04:00",
+                    "version": 1
+                  },
+                  "timeline": [],
+                  "deadlines": [],
+                  "documents": [],
+                  "diligences": [],
+                  "decision": null,
+                  "actions": {
+                    "canRespondDiligence": false,
+                    "canWithdraw": false,
+                    "withdrawalBlockedReason": "estado_nao_admite",
+                    "canAppeal": false,
+                    "nextInstanceServiceKey": null
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/receipt": {
+      "get": {
+        "tags": ["request"],
+        "operationId": "portalRequestReceiptGet",
+        "summary": "Recibo do protocolo em PDF assinado (pendente, ADR-0018).",
+        "x-policy": "portal:request:read",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request' ou kind='protocol'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'documento_assinado_pendente_r0014'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/decision": {
+      "get": {
+        "tags": ["request"],
+        "operationId": "portalRequestDecisionGet",
+        "summary": "Lê a decisão publicada para o pedido (projeção process_timeline).",
+        "x-policy": "portal:request:read",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Decisão 1:1 da projeção.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "outcome": {
+                      "type": "string"
+                    },
+                    "summary": {
+                      "type": "null"
+                    },
+                    "publishedOn": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "documentUrl": {
+                      "type": "null"
+                    },
+                    "nextStep": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "refundDue": {
+                      "type": "boolean"
+                    },
+                    "finalInstance": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "example": {
+                  "outcome": "deferido",
+                  "summary": null,
+                  "publishedOn": "2026-09-10",
+                  "documentUrl": null,
+                  "nextStep": {
+                    "kind": "none",
+                    "serviceKey": null,
+                    "dueOn": null
+                  },
+                  "refundDue": false,
+                  "finalInstance": true
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='decision'; ausente ou decision_json null.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/diligences/{did}/responses": {
+      "post": {
+        "tags": ["request"],
+        "operationId": "portalRequestDiligenceRespond",
+        "summary": "Responde a uma diligência do caso RAIT (delegação R-0007).",
+        "x-policy": "portal:request:respond",
+        "x-audit": "PORTAL_REQUEST_RESPOND",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "did",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestDiligenceRespondDto"
+              },
+              "example": {
+                "text": "Resposta (fixture)",
+                "attachmentIds": []
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Corpo fora da forma, ou Idempotency-Key ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pedido fora de EM_ANDAMENTO_NO_ORGAO, ou corpo divergente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY",
+                        "PORTAL.REQUEST_STATE_INVALID"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "unavailableReason 'delegacao_indisponivel_r0007' (inf:rait-case:answer-inquiry).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.SERVICE_UNAVAILABLE"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 422
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/portal/requests/{id}/evaluation": {
+      "post": {
+        "tags": ["request"],
+        "operationId": "portalRequestEvaluate",
+        "summary": "Avalia o atendimento do pedido concluído.",
+        "x-policy": "portal:request:evaluate",
+        "x-audit": "PORTAL_REQUEST_EVALUATE",
+        "x-command": "backend/domains/portal/requests/src/handwritten/requests.controller.ts",
+        "x-contract": "CTG-0002 §2.3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestEvaluateDto"
+              },
+              "example": {
+                "scores": {
+                  "satisfaction": 5,
+                  "quality": 5,
+                  "deadline": 5,
+                  "clarity": 5,
+                  "channel": 5
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Avaliação registrada; pedido concluído.",
+            "headers": {
+              "ETag": {
+                "description": "\"<version>\".",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "evaluationId",
+                    "requestId",
+                    "state",
+                    "submittedAt"
+                  ],
+                  "properties": {
+                    "evaluationId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "state": {
+                      "type": "string",
+                      "const": "CONCLUIDO"
+                    },
+                    "submittedAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                },
+                "example": {
+                  "evaluationId": "00000000-0000-7000-8000-000071100001",
+                  "requestId": "00000000-0000-7000-8000-00007040000b",
+                  "state": "CONCLUIDO",
+                  "submittedAt": "2026-09-14T12:00:00-04:00"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo fora da forma, ou Idempotency-Key ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.VALIDATION_FAILED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 400
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Sem sessão (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.AUTH_REQUIRED"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 401
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Identidade sem claims válidas ou sem papel CIDADAO (guarda, CTG-0001 §3).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.ASSURANCE_NOT_VERIFIED",
+                        "PORTAL.IDENTITY_NOT_CITIZEN"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 403
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "kind='request'.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.NOT_FOUND"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 404
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Pedido fora de AVALIACAO_OFERECIDA, avaliação já existente, ou corpo divergente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "PORTAL.EVALUATION_ALREADY_SUBMITTED",
+                        "PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY",
+                        "PORTAL.REQUEST_STATE_INVALID"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 409
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro não catalogado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code", "status", "message"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["PORTAL.INTERNAL"]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "const": 500
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "messageKey": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RequestCreateDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["serviceKey", "targetKind", "channel"],
+        "properties": {
+          "serviceKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "targetKind": {
+            "type": "string",
+            "enum": ["ait", "case", "vehicle", "exam", "crash", "none"]
+          },
+          "targetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "channel": {
+            "type": "string",
+            "const": "portal"
+          }
+        }
+      },
+      "RequestDraftUpdateDto": {
+        "description": "Corpo do ato por serviceKey (portal-route-contract.md §5.1; ver docs/framework/schemas/portal-request-draft.schema.json).",
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["facts", "grounds", "attachmentIds", "requestType"],
+            "properties": {
+              "facts": {
+                "type": "string"
+              },
+              "grounds": {
+                "type": "string"
+              },
+              "attachmentIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "requestType": {
+                "type": "string",
+                "enum": ["cancelamento", "outro"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["grounds", "attachmentIds"],
+            "properties": {
+              "grounds": {
+                "type": "string"
+              },
+              "attachmentIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["attachmentIds"],
+            "properties": {
+              "additionalText": {
+                "type": "string"
+              },
+              "attachmentIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["driver", "signatures", "consequenceAck"],
+            "properties": {
+              "driver": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["cpf", "cnhNumber", "cnhUf", "category", "name"],
+                "properties": {
+                  "cpf": {
+                    "type": "string",
+                    "pattern": "^\\d{11}$"
+                  },
+                  "cnhNumber": {
+                    "type": "string"
+                  },
+                  "cnhUf": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 2
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "signatures": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["owner", "driver"],
+                "properties": {
+                  "owner": {
+                    "type": "string",
+                    "enum": ["govbr", "upload"]
+                  },
+                  "driver": {
+                    "type": "string",
+                    "enum": ["govbr", "upload", "pending"]
+                  }
+                }
+              },
+              "consequenceAck": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["textVersion", "acceptedAt"],
+                "properties": {
+                  "textVersion": {
+                    "type": "string"
+                  },
+                  "acceptedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["tier", "method"],
+            "properties": {
+              "tier": {
+                "type": "string",
+                "enum": [
+                  "desconto_80",
+                  "desconto_60_reconhecimento",
+                  "desconto_40_fora_sne",
+                  "integral_juros"
+                ]
+              },
+              "method": {
+                "type": "string",
+                "enum": ["pix", "debito", "boleto", "cartao"]
+              },
+              "installments": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "waiverAck": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "textVersion": {
+                    "type": "string"
+                  },
+                  "acceptedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["consent"],
+            "properties": {
+              "email": {
+                "type": "string",
+                "format": "email"
+              },
+              "phone": {
+                "type": "string",
+                "pattern": "^\\d{10,11}$"
+              },
+              "consent": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["textVersion", "effectsAck"],
+                "properties": {
+                  "textVersion": {
+                    "type": "string"
+                  },
+                  "effectsAck": {
+                    "type": "array",
+                    "minItems": 4,
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "ciencia_ficta",
+                        "canal_exclusivo",
+                        "desconto_60",
+                        "cancelamento"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "reason": {
+                "type": "string",
+                "maxLength": 2000
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["examId", "reason", "attachmentIds"],
+            "properties": {
+              "examId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "attachmentIds": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["scope"],
+            "properties": {
+              "scope": {
+                "type": "string",
+                "enum": [
+                  "confirmacao",
+                  "declaracao_completa",
+                  "correcao",
+                  "eliminacao"
+                ]
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {}
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {}
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {}
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {}
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {}
+          }
+        ]
+      },
+      "RequestAttachmentCreateDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["filename", "mimeType", "sizeBytes", "sha256"],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mimeType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      },
+      "RequestSubmitDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["signature"],
+        "properties": {
+          "signature": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["method", "signatureRef"],
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": ["govbr", "upload"]
+              },
+              "signatureRef": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "consequenceAck": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["textVersion", "acceptedAt"],
+            "properties": {
+              "textVersion": {
+                "type": "string",
+                "minLength": 1
+              },
+              "acceptedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "RequestWithdrawDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["confirm"],
+        "properties": {
+          "confirm": {
+            "type": "boolean",
+            "const": true
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        }
+      },
+      "RequestDiligenceRespondDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "attachmentIds"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attachmentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "RequestEvaluateDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scores"],
+        "properties": {
+          "scores": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "satisfaction",
+              "quality",
+              "deadline",
+              "clarity",
+              "channel"
+            ],
+            "properties": {
+              "satisfaction": {
+                "type": "integer"
+              },
+              "quality": {
+                "type": "integer"
+              },
+              "deadline": {
+                "type": "integer"
+              },
+              "clarity": {
+                "type": "integer"
+              },
+              "channel": {
+                "type": "integer"
+              }
+            }
+          },
+          "comment": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        }
+      }
+    }
+  }
+}

@@ -13,8 +13,10 @@ SSE, política e integrações em `src/handwritten/` dos módulos gerados e em `
 
 ## Pode tocar
 
-- `backend/domains/inf/<modulo>/src/handwritten/**` (novo) e o campo `handwrittenExports` do
-  blueprint correspondente (pede ao Architect se o blueprint precisa de entidade nova).
+- `backend/domains/<dominio>/<modulo>/src/handwritten/**` (novo). O blueprint **não**: os campos
+  `handwrittenExports`/`handwrittenControllers`/`handwrittenProviders`/`moduleImports` são declarados
+  pelo Architect com símbolos de nome fixo (método §4.13, M24 de R-0009); o Engineer cria os arquivos
+  com esses nomes e pede ao Architect qualquer entidade ou símbolo novo.
 - `backend/domains/shared/src/policy.ts` (**só** acrescentando regras `RAIT_*`), `roles.ts`
   nunca sem decisão do Owner registrada.
 - `backend/app/src/**` (wiring de módulos, SSE, jobs).

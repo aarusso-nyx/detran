@@ -1,0 +1,24 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "apps/portal/web/ngsw-config.json",
+      "line": 34,
+      "claim": "`maxAge: \"1d\"` inventa um prazo e contradiz M14 do plano, que fixa `maxAge = validade retornada`; OD-P51 ainda é só proposta, não decisão canônica.",
+      "fix": "não introduzir teto fixo sem decisão: implementar a validade canônica ou registrar e aprovar uma OD/valor de catálogo antes de configurar o service worker."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "apps/portal/web/src/app/core/service-catalog.facade.ts",
+      "line": 21,
+      "claim": "O token interno `servico_nao_catalogado` não consta no catálogo canônico de motivos nem foi registrado como `source_pending` ou OD; a UI passa a produzi-lo para serviço ausente.",
+      "fix": "remover a fabricação do motivo e propagar o caso para tratamento canônico, ou registrar a decisão/fonte antes de materializar o token."
+    }
+  ],
+  "notes": []
+}

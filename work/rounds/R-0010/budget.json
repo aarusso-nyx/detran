@@ -1,0 +1,261 @@
+{
+  "round": "R-0010",
+  "window": 3,
+  "window_input_budget": 800000,
+  "checkpoint_threshold": 640000,
+  "estimated_input_total": 320000,
+  "estimated_output_total": 39000,
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0010-W1",
+      "input_tokens": 150000,
+      "output_tokens": 30000,
+      "status": "completed",
+      "note": "Bootstrap; baseline pnpm check and doctor PASS; nine task JSONs and worker prompts composed; prompt-review dispatched.",
+      "window": 1
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1",
+      "input_tokens": 70000,
+      "output_tokens": 4000,
+      "status": "invalid-output",
+      "note": "bridge rejected reviewer output as invalid JSON; no verdict accepted; hint identified missing BOAT command-gate support",
+      "window": 1
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2",
+      "input_tokens": 75000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "note": "valid cross-family review; structural Art. 24 triad violation; stopped under maestro prompt §5",
+      "verdict": "FAIL",
+      "window": 1
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3",
+      "input_tokens": 80000,
+      "output_tokens": 4000,
+      "status": "invalid-output",
+      "note": "bridge rejected invalid JSON; partial diagnostic revealed unintended write access to WF and DDL in TASK-0004",
+      "window": 1
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-4",
+      "input_tokens": 80000,
+      "output_tokens": 2000,
+      "status": "invalid-output",
+      "note": "Claude returned semantic PASS with one low finding but fenced JSON; bridge rejected output and no verdict was accepted",
+      "window": 1
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5",
+      "input_tokens": 80000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "one high: TASK-0011 omitted CTG-0002 from closed reading list; 13 prior highs closed",
+      "verdict": "REVIEW",
+      "window": 1
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-6",
+      "input_tokens": 80000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "restricted review of TASK-0011 reading and C-2 citation correction",
+      "verdict": "PASS",
+      "window": 1
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "input_tokens": 20000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "UC-BOAT-013, index and KB baseline; independent KB, publish and format gates passed",
+      "window": 1
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "input_tokens": 80000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "Blueprint, est lifecycle DDL, generated outputs and CTG-0001 contract; worker gates PASS, maestro repeat pending at checkpoint",
+      "window": 1
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "window": 2,
+      "input_tokens": 70000,
+      "output_tokens": 10000,
+      "status": "in_progress",
+      "note": "Inspector CTG-0001 tests and fixtures"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "window": 2,
+      "input_tokens": 50000,
+      "output_tokens": 8000,
+      "status": "completed",
+      "note": "Renaest mapping and CTG-0002 architecture contract"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7",
+      "window": 2,
+      "input_tokens": 45000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "two highs: identity source unavailable; integration tier missing; one low generated manifest",
+      "verdict": "REVIEW"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8",
+      "window": 2,
+      "input_tokens": 35000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "restricted correction review of TASK-0003 retry and CTG-0001 A-1",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003-attempt-1",
+      "window": 2,
+      "input_tokens": 70000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "Inspector retry: complete fixtures and C-1 integration coverage"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003-escalated",
+      "window": 2,
+      "input_tokens": 90000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "Terra Inspector escalation for behavioral DB/RLS/fixture/transition tests"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "window": 2,
+      "input_tokens": 100000,
+      "output_tokens": 12000,
+      "status": "completed",
+      "note": "Engineer WP-B0/B1 implementation to turn Inspector REDs green"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004-attempt-1",
+      "window": 2,
+      "input_tokens": 30000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "note": "correct speculative CRUD grants and fake command effects"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004-escalated",
+      "window": 2,
+      "input_tokens": 80000,
+      "output_tokens": 10000,
+      "status": "completed",
+      "note": "Terra Engineer escalation for est lifecycle vocabulary verification"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "CTG-0001-pre-review",
+      "window": 2,
+      "input_tokens": 20000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "independent shared/unit/integration/app typecheck, lifecycle, decorators, app unit and pnpm check PASS; HTTP WP-B2 REDs assigned to TASK-0007"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "CTG-0001-victim-read",
+      "window": 2,
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "note": "Moved purpose guard to both runtime profiles; request context fallback; corrected e2e audit details query; targeted C-1-13 and full pnpm check PASS"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-attempt-1",
+      "window": 2,
+      "input_tokens": 180000,
+      "output_tokens": 8000,
+      "status": "invalid-output",
+      "note": "1 MB complete diff prompt; bridge rejected malformed JSON. Diagnostic identified GET victims collection missing purpose/audit guard; no accepted verdict"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-2",
+      "window": 3,
+      "input_tokens": 85000,
+      "output_tokens": 5000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "Six high findings in first valid delivery review"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-3",
+      "window": 3,
+      "input_tokens": 55000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "verdict": "REVIEW",
+      "note": "Restricted correction review; one high for crash-link allowlist"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006-escalated",
+      "window": 3,
+      "input_tokens": 110000,
+      "output_tokens": 15000,
+      "status": "completed",
+      "note": "Real HTTP REDs for CTG-0002; adapter unit and sync/SSE coverage; mock e2e issue remaining"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "CTG-0001-cycle-3-fix",
+      "window": 3,
+      "input_tokens": 25000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "note": "Four policy-route E2E PASS; pnpm check PASS; formatting PASS"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-4",
+      "window": 3,
+      "input_tokens": 25000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Final restricted verification of one high and two documentary lows",
+      "verdict": "PASS"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "CTG-0001-exact-candidate",
+      "window": 3,
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "status": "completed",
+      "note": "289916b isolated checkout: frozen install, build, DB reset/seed and backend:test:ci all PASS; DEVAI evidence sequence 1 chain valid"
+    }
+  ]
+}
