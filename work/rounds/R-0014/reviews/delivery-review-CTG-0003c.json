@@ -1,0 +1,113 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/documentos/documentos.facade.ts",
+      "line": 80,
+      "claim": "`presentRead` reclassifica `status 0` como `portal.states.offline` FORA do `ErrorBoundary`, contra §3.1 (\"Erros só pelo `ErrorBoundary`\"), duplicado em 8 lugares (`documentos`, `notificacoes`, `sinistros`, `exames`, `atendimento`, `catalogo`, `core/pages/inicio.facade.ts:45` e inline em `core/pages/home.page.ts:198`). O motivo declarado em A11(b) é que os specs do par 3 simulam offline SÓ com `status 0`, sem `vi.spyOn(navigator,'onLine')` — ao contrário dos pares 1/2 (`request-detail.page.spec.ts:255`, `decisao.page.spec.ts:332`, …) e do próprio `portal.client.pair3.spec.ts:465`, que o fazem. A produção foi escrita para um spec mais fraco do que §7.1/C-3c-16 (\"status 0 **e** navigator.onLine false\"): `documentos.facade.spec.ts:87` (C-3c-27), `:108` (C-3c-28) e `:252` (C-3c-35) nunca declaram o browser desconectado. Consequência: o MESMO 0 (CORS, DNS, TLS, abort) com a rede ativa vira \"Você está sem conexão\" nos oito módulos do par 3 e `portal.states.error` nos pares 1/2 — duas respostas para a mesma condição dentro de um app, contra a tabela transversal §7.2, e `error-boundary.spec.ts:242` continua a provar o contrário.",
+      "fix": "Remover as oito cópias de `presentRead` (usar `presentError` direto) e acrescentar `vi.spyOn(window.navigator,'onLine','get').mockReturnValue(false)` nos casos offline dos specs do par 3 (`documentos.facade.spec.ts` C-3c-27/28/35 e os casos `dado offline` de `cnh`, `crlv`, `vehicles`, `crash-list`, `crash-detail`, `exam-list`, `service-charter`, `home`, `inicio`, `conta`), como já fazem `inbox.page.spec.ts:164` e os pares 1/2. Manter OD-P102 apenas para a unificação futura; não deixar a duplicação entrar no PR."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/documentos/documentos.facade.spec.ts",
+      "line": 210,
+      "claim": "C-3c-33, C-3c-45 e C-3c-58 foram implementados só no nível da facade e perderam a metade de DOM que o critério fixa. C-3c-33 exige \"`crlvStatus 'unavailable'`, **data-reason no banner**, **AlternativeChannelNote presente** e nenhum card\" — o spec (`documentos.facade.spec.ts:210`) prova só `crlvStatus`/`crlv()`; C-3c-45 exige \"`portal.screens.t21.state.indisponivel` **+ AlternativeChannelNote**\" — `atendimento.facade.spec.ts:117` prova só que `messageKey` não casa `/recusad/`; C-3c-58 exige \"`portal.screens.t27.state.indisponivel` **+ AlternativeChannelNote** e nenhuma navegação\" — `assinatura.facade.spec.ts:94` prova só `phase`/`started()`. E C-3c-112 exige `<portal-alternative-channel-note>` **em todos os estados** das telas de ato: `grep -c alternative-channel-note` = 0 em `sne.page.spec.ts`, `cnh.page.spec.ts`, `crlv.page.spec.ts`, `manifestation-new.page.spec.ts`, `manifestation-detail.page.spec.ts`, `own-data.page.spec.ts`, `elevation.page.spec.ts` e `junta-medica.page.spec.ts`; a única prova é `a11y/all-routes.a11y.spec.ts:137`, no estado inicial (carregando). A garantia de [RN-PORTAL-105] (o canal presencial nunca fecha) não está provada em nenhum estado de indisponibilidade.",
+      "fix": "Acrescentar às páginas T-17, T-21 e T-27 os casos de estado `unavailable` que asseguram `root.querySelector('portal-alternative-channel-note')`, o texto de `portal.screens.t<nn>.state.indisponivel` e o `data-reason` do banner; estender C-3c-112 a um estado de erro/indisponibilidade por tela de ato, além do inicial."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "apps/portal/web/src/app/features/privacidade/privacidade.facade.spec.ts",
+      "line": 57,
+      "claim": "A matriz de autorização por escopo LGPD é testada com um grant positivo e uma única negativa: `canRequest('correcao') === false` e `canRequest('declaracao_completa') === true`. Os dois escopos canônicos omitidos — `eliminacao` e, sobretudo, `confirmacao` — não têm teste, e `confirmacao` percorre um ramo DIFERENTE do código (`privacidade.facade.ts:72-75`: `scope === BASE_SCOPE` consulta `canPerform('lgpd_declaracao')`, sem sufixo), que fica inteiramente sem cobertura positiva ou negativa. `LGPD_SCOPES` (`components/lgpd-request-form.component.ts`) oferece os quatro ao cidadão e `own-data.page.ts:requestScope` aceita qualquer um, de modo que o fail-closed prometido em §3.7 só está provado para metade da matriz — exatamente a ampliação por analogia que a regra §4.8 de `orchestra/README.md` proíbe.",
+      "fix": "Estender C-3c-52 para os quatro escopos: com `actRequirements` contendo só `lgpd_declaracao:declaracao_completa`, assertar `true` para `declaracao_completa` e `false` para `confirmacao`, `correcao` e `eliminacao`; e um segundo caso com `{ act: 'lgpd_declaracao', allowed: true }` provando que só `confirmacao` passa a `true`."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "apps/portal/web/src/app/features/sinistros/pages/crash-detail.page.ts",
+      "line": 125,
+      "claim": "O contrato §6 T-19 fixa `<dl data-summary>` \"só com os valores … de `summary` (**chaves cruas em `data-key`, SEM rótulo** — forma livre OD-P91; nada de texto inventado)\", e T-18 proíbe \"vocabulário interno (RENAEST, pending_complement, RECEBIDO) em texto\". A implementação renderiza a chave crua como o texto visível do `<dt>` (`<dt [attr.data-raw-key]=\"entry.key\">{{ entry.key }}</dt>`) sempre que a chave não é `gravidade`/`dinamica` (`LABELLED_SUMMARY_KEYS`, linha 33): qualquer campo novo de `summary` do BOAT (`pending_complement`, `renaest_id`, …) vira rótulo de tela para o cidadão. O ramo nunca é exercitado porque `CRASH_DETAIL_FIXTURE` (`src/testing/http-fixtures-pair3.ts:204`) só tem `dinamica` e `gravidade` — as duas chaves com rótulo —, de modo que nem o spec nem C-3c-113 o pegam.",
+      "fix": "Manter a chave crua apenas em `data-key` (como o contrato fixa): omitir o par `<dt>/<dd>` sem rótulo conhecido, ou dar-lhe um rótulo genérico do catálogo; e acrescentar ao `crash-detail.page.spec.ts` um caso com `summary` contendo uma chave fora de `gravidade|dinamica`, provando que ela não aparece como texto."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "apps/portal/web/src/app/core/pages/home.page.ts",
+      "line": 45,
+      "claim": "§3.10 manda a home linkar `functionalRoute(serviceKey)` para `available`/`partially_available`. A home não usa a regra do §3.9 (`functionalRouteFor`, `features/catalogo/catalogo.facade.ts:57`): reimplementa um `directRouteFor` mais estreito, que só aceita entrada do manifesto SEM parâmetro e descarta o recuo à lista de origem (`/autos`). Resultado: serviços disponíveis cuja única rota do manifesto carrega `:aitId` — `pagamento` (`partially_available` na fixture `http-fixtures-pair3.ts:404`), `indicacao_condutor` e `defesa_previa` — perdem o link funcional na home e caem em `/carta-servicos/<key>` (linhas 232-243), enquanto a T-25 os manda a `/autos`: duas respostas para a mesma pergunta no mesmo app. A A11(f) ratificou apenas o `null` do catálogo para parâmetros ≠ `:aitId`; esta divergência da home não está registrada em nenhum relatório nem adenda.",
+      "fix": "Extrair a regra do §3.9 para um helper compartilhado (ou mover `functionalRouteFor` para `core/`) e usá-la na home; se a intenção for mesmo a regra estreita, registrá-la como adenda e corrigir §3.10 no CTG-0005."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "apps/portal/web/src/app/features/atendimento/atendimento.facade.ts",
+      "line": 192,
+      "claim": "`evaluate()` passa sempre `entitlement: { kind: 'request', id: body.subjectId }`, mesmo quando `body.subjectKind === 'manifestation'` — o caso do convite inline de T-22 ([DIVERGE-18], §3.6). O §2.5 registra que o 404 de `POST /v1/portal/evaluations` é `NOT_FOUND{kind:'manifestation'}`; com o valor fixo, o banner leva o cidadão a `/vinculo/por-que-nao-vejo?recurso=request&id=<manifestationId>`, um par recurso/id que não existe. O `kind` é inventado pelo cliente em vez de vir de `body.subjectKind`, e §2.6 sequer lista `createEvaluation` entre as chamadas com `entitlement`.",
+      "fix": "Usar `entitlement: { kind: body.subjectKind, id: body.subjectId }` (ou omitir o `entitlement` neste comando, como §2.6 sugere) e cobrir o 404 de avaliação de manifestação em `atendimento.facade.spec.ts`."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "apps/portal/web/src/app/features/assinatura/assinatura.facade.ts",
+      "line": 103,
+      "claim": "§3.8 define `required` como \"`requirementFor(actKey)?.level` quando é nível; **senão o `access` da entrada do manifesto ('avancada'|'simples')**; senão 'avancada'\". A implementação salta o degrau do meio e vai direto ao teto (`ASSURANCE_CEILING`). O comentário cita C-3c-56 e [RN-PORTAL-101] c (uma rota `simples` nunca é motivo de elevação), e de fato o critério exige `required 'avancada'` para `/inicio` (rota `simples`): é o §3.8 que está internamente inconsistente, não a entrega.",
+      "fix": "Corrigir o texto de §3.8 no CTG-0005 (retirar o degrau `access`), registrando a resolução como adenda desta rodada."
+    },
+    {
+      "severity": "low",
+      "item": 8,
+      "file": "apps/portal/web/src/app/shared/clearance-status.component.ts",
+      "line": 75,
+      "claim": "O `<h3>` da seção de débitos usa `portal.services.pagamento` = \"Pagamento de multas\" sobre uma lista que inclui `tributo` (IPVA), `encargo` (licenciamento) e `dpvat`: o título nomeia como multa o que não é. Registrado em A11(e) como chave pendente (`portal.documents.clearance.debts`, a acrescentar em TASK-0012), mas o texto errado entra em produção neste PR.",
+      "fix": "Até a chave existir, usar um rótulo neutro já no catálogo (p. ex. `portal.documents.clearance.blocking` não serve; considerar `portal.screens.t17.title`) ou antecipar a chave na adenda de i18n do CTG-0003c."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "apps/portal/web/src/app/core/realtime.service.spec.ts",
+      "line": 245,
+      "claim": "C-3c-78 exige que `core/realtime.service.ts` \"não contenha outro número além de 60_000 para intervalo\" e §4.1 declara `POLLING_INTERVAL_MS` o \"único valor numérico deste serviço\". O spec filtra os literais por `>= 1000`, o que deixa passar `POLLING_INTERVAL_SECONDS = 60` (`realtime.service.ts:57`), o segundo valor de intervalo introduzido pela entrega.",
+      "fix": "Ou aceitar explicitamente os dois valores no contrato (60_000 ms e 60 s derivado), ou derivar os segundos de `POLLING_INTERVAL_MS / 1000` e manter o filtro do spec sem exceções."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "apps/portal/web/src/app/features/privacidade/privacidade.facade.spec.ts",
+      "line": 35,
+      "claim": "`facade: TestBed.inject(PrivacidadeFacade) as any` foi escrito quando a produção ainda não existia (§9) e permaneceu depois da entrega: o `typecheck` (C-3c-115) deixa de provar a superfície pública desta facade neste arquivo.",
+      "fix": "Trocar o `as any` pelo tipo real agora que `privacidade.facade.ts` existe."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "apps/portal/web/src/app/features/notificacoes/static-analysis.pair3.spec.ts",
+      "line": 74,
+      "claim": "O `catch { continue }` por arquivo (e o `catch { return }` equivalente em `realtime.service.spec.ts:240`) era a acomodação de §9 para arquivos ainda inexistentes; com a produção entregue, ele passa a ser uma porta de saída silenciosa — apagar um arquivo de produção faz a análise estática passar em verde.",
+      "fix": "Substituir o `catch` por uma falha explícita (`expect(files.length).toBeGreaterThan(0)` + leitura sem `try`) agora que todos os arquivos do §1 existem."
+    },
+    {
+      "severity": "low",
+      "item": 11,
+      "file": "apps/portal/web/src/app/features/notificacoes/pages/inbox.page.ts",
+      "line": 21,
+      "claim": "§6 T-12 fixa `<select name=\"read\">` com as opções `'true'|'false'`; a entrega oferece só \"todas\" e \"não lidas\" por falta de rótulo (`portal.screens.t12.cmd.*` não tem a opção \"só lidas\"). Igualmente, os rótulos dos escopos LGPD reaproveitam `portal.screens.t24.cmd.*` e `portal.common.action.remove` (\"Remover\") para `eliminacao`. Ambos estão registrados em A11(e) como extensão de OD-P89 para TASK-0012 — atende ao item 11, mas a tela entra incompleta.",
+      "fix": "Nenhuma ação nesta entrega; garantir que TASK-0012 acrescente as quatro chaves de A11(e) e que o CTG-0005 feche a opção `read=true` de T-12."
+    }
+  ],
+  "notes": [
+    "Gates verificados de forma independente nesta worktree: `pnpm --filter @detran/portal-web test` → `Test Files 118 passed (118)` / `Tests 1309 passed | 14 todo (1323)`, exit 0. Os 14 `todo` citam OD (OD-P54, OD-P65, OD-P87, OD-P88, OD-P15, OD-P92, OD-P91, OD-P59, OD-P60, OD-P76); nenhum `it.skip` em todo o app.",
+    "Item 5 (i18n): varri o catálogo contra todas as chaves fixas e compostas do par (9 estados de manifestação, 5 tipos, 4 efeitos SNE, 4 kinds de quitação, 4 status de CNH, 3 disponibilidades, 4 níveis de assinatura, 3 canais, 7 estados de push, 13 `nextAction`, 13 `situation.request`, caminhos de elevação) — nenhuma chave ausente. `i18n-keys.spec.ts` cobre os literais, mas os prefixos compostos usam template literal (crase) e escapam do seu regex: a conferência acima foi manual.",
+    "Item 5 (vocabulário): todos os 22 códigos de erro novos do par existem em `docs/framework/arch/portal-error-catalog.md`; `CONCLUIDO`/`RESULTADO_DISPONIVEL`/`AVALIACAO_OFERECIDA` de `EVALUABLE_STATES` são estados canônicos (13 chaves `portal.situation.request.*`), e §6 T-26 autoriza explicitamente a leitura informativa do estado.",
+    "Item 9 (fronteira nacional): nenhum `fetch(`, `XMLHttpRequest` ou URL absoluta no código novo; `PORTAL_STREAM_URL` = `PORTAL_API_PREFIX + '/stream'`; nenhuma menção a SENATRAN fora de `packages/senatran-adapter`. `PushService` só assina no gesto (`subscribe()` chamado apenas pelo clique de `preferences.page.ts`).",
+    "Fronteira de escrita respeitada: os 101 arquivos staged fora de `work/` estão todos sob `apps/portal/web/**`; o Engineer não tocou specs, `src/testing/**`, `a11y/**`, `i18n/**`, `app.route-manifest.ts`, `ngsw-config.json`, `package.json` nem `packages/**`; o Inspector só `*.spec.ts` e `src/testing/**`. `app.routes.ts` mudou só no mapa `CORE_PAGES`.",
+    "Item 7 (iteração 3 do Inspector): confirmei que as sete correções são de mecânica (stub de `ServiceCatalogFacade`, um `it` por cenário, prefixo antes do placeholder, `vi.waitFor`, `sessionStorage.clear()`, `advanceTimersByTimeAsync`, `no-unused-vars`). A única troca de asserção (`sne.page.spec.ts:224`, 403 → `portal-assurance-explainer`) é correta: o núcleo de C-3c-21 (`nextStep 'elevation'` e `nextStepRoute '/assinatura/elevacao?retomar=%2Fsne'`) continua provado em `notificacoes.facade.spec.ts:183-186`.",
+    "Item 7 (matriz `axe`): as 22 páginas do par usam `expectA11yStateInvariants` (2 a 9 chamadas por spec, praticamente uma por `it`) e `all-routes.a11y.spec.ts` itera as 38 rotas provando que nenhuma rende `PlaceholderPageComponent` — C-3c-110/111 cobertos apesar de C-3c-110 não citar o id literalmente.",
+    "§3.8 prevê o banner `portal.errors.assurance_qualified_never_required` para `required === 'qualificada'` e a implementação o traz (`elevation.page.ts`), mas nenhum critério C-3c o exercita — lacuna do contrato, não da entrega; vale um critério no CTG-0005."
+  ]
+}
