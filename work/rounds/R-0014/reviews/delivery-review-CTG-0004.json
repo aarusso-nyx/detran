@@ -1,0 +1,40 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "backend/domains/portal/inbox/src/handwritten/sne-enrollment.service.ts",
+      "line": 228,
+      "claim": "O contrato exige adapter → banco → outbox para toda adesão SNE (CTG-0004 §4), mas `SnePort` é opcional e a chamada nacional só ocorre dentro de `if (this.sne)`; sem provider a entrega persiste/publica sem chamar o adapter.",
+      "fix": "Tornar `PORTAL_SNE_PORT` obrigatório e chamar `enrollCitizen` incondicionalmente antes de consultar/gravar o estado local."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/app/tests/e2e/portal-national-mock.e2e.spec.ts",
+      "line": 74,
+      "claim": "Os critérios C-4-56, C-4-57, C-4-59 e C-4-61 não são provados: C-4-56 testa apenas o conflito de uma adesão já existente; C-4-57 faz somente GET 200; C-4-59 cobre apenas divergência de push; C-4-61 aceita qualquer UUID sintaticamente válido. Isso não verifica a ordenação/gravação-outbox, PROVIDER 503 sem gravação, replay positivo de SNE e push, nem o UUIDv5 canônico exigido pelo contrato.",
+      "fix": "Adicionar asserções observáveis para ordem adapter/banco/outbox, falha PROVIDER sem persistência, replay positivo e divergente de SNE e push, e igualdade com o UUIDv5 canônico `a1204f2f-07f6-551a-9e82-0e28038d3049`."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/app/tests/e2e/portal-payload-lint.e2e.spec.ts",
+      "line": 123,
+      "claim": "C-4-66 e C-4-67 declaram validar SSE, mas inserem um evento e consultam `GET /requests/{id}`; não abrem stream, não consomem evento e não comparam sujeito autorizado versus não autorizado. Portanto a entrega deixa sem prova os dois critérios SSE do CTG-0004.",
+      "fix": "Abrir o endpoint SSE para Prata e outra persona, publicar evento relevante, afirmar entrega exclusiva ao sujeito e inspecionar o payload SSE contra todos os campos proibidos."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/app/tests/e2e/portal-payload-lint.e2e.spec.ts",
+      "line": 256,
+      "claim": "C-4-70 exige typecheck de app, repositório e portal-web, porém o teste apenas faz uma requisição HTTP e verifica `subjectId`; não executa nem comprova nenhum dos comandos de aceitação.",
+      "fix": "Remover essa falsa cobertura do spec e registrar os três comandos reais no relatório/gate, com saída exit 0 verificável."
+    }
+  ],
+  "notes": []
+}

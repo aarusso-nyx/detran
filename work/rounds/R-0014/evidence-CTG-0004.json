@@ -1,0 +1,119 @@
+{
+  "action": "Deliver R-0014 CTG-0004 (WP-P6 — integration and homologation): contract CTG-0004.md (74 criteria), 11 citizen journeys e2e on the API with the in-process SENATRAN mock (M18), CNH-e/vehicle/clearance normalisation (OD-P35/P36/P91 closed), SNE enrollment through SnePort (adapter → db → outbox), push idempotency (M9), payload lint against internal vocabulary, CI backend-kernel with the mock before backend:test:e2e; executed with Codex workers and reviewer (Owner Amendment 2)",
+  "round": "R-0014",
+  "coupled_task_group": "CTG-0004",
+  "role": "engineer",
+  "commits": [
+    "c8e7958b922e3ae672c8bc1fbad3c04572550ef8",
+    "e68ddc775f050cb9911bfa1302041b2182852889",
+    "49a121a0a3be42aeb580b9155d909b54675a647b",
+    "6822f9301f54b82decf989f58b8f9a330a8f5362",
+    "94933e17b41fef4aaff83e1b95089a196d1b4fc5",
+    "1eb988cb0cdafb1896c3b3b58e1f5c47e22729cd",
+    "f5e4d259d5b01d279af5ce72a76acc5af40e1f87",
+    "e5374b6948d61bd2daece411d96461c3476d1636"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0014/contracts/CTG-0004.md",
+      "sha256": "106d6a093939f1ec39e430dc1d3ed938b24359ccbecf2298e07743ebac070f98"
+    },
+    {
+      "path": "backend/domains/portal/projections/src/handwritten/documents.controller.ts",
+      "sha256": "f26f11cdd29f81c690522cea3ae7c6370006c9447f15be315b0f2d170632be11"
+    },
+    {
+      "path": "backend/domains/portal/inbox/src/handwritten/sne-enrollment.service.ts",
+      "sha256": "cf2c2d41ed9a1d6b40862c92527aa4d56b9b0c3f65520e99b7fb118f13bab6e8"
+    },
+    {
+      "path": "backend/domains/portal/inbox/src/handwritten/inbox.controller.ts",
+      "sha256": "daf5757f5fe6676acabc1608efa326463d7cb3c3283aab5edb2798e201c7b4c7"
+    },
+    {
+      "path": "backend/app/src/portal-national-read.providers.ts",
+      "sha256": "8d0ba0fa50b30fe0d72e19f178ecdd1cd240767689ce438c2f05d314ced7e663"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "f8f53ece4d0dfcb283f27f2cca344ad7db6c87b26bcd1bee79be17e1ca2c5064"
+    },
+    {
+      "path": "senatran-mock/database/seed/20-read.sql",
+      "sha256": "919d1d20bb3e87f3ded39b6f6751f162e8a03f7fa5d225797574f9a30b3e716a"
+    },
+    {
+      "path": "backend/database/seed/70-fixtures-portal.sql",
+      "sha256": "3cdd9ca3160927c31031c99a4cd10d005cf4bd8ff92d31f2e7055400d7b0f873"
+    },
+    {
+      "path": "backend/app/tests/e2e/portal-journeys.e2e.spec.ts",
+      "sha256": "716512fc3777e92c1aa79d03b5e9039617df590b34df25df042853634222e528"
+    },
+    {
+      "path": "backend/app/tests/e2e/portal-national-mock.e2e.spec.ts",
+      "sha256": "ce707bc07360a3f731df569a2c008f37349a8e3304332d51295ac71c53aa93ec"
+    },
+    {
+      "path": "backend/app/tests/e2e/portal-national-unavailable.e2e.spec.ts",
+      "sha256": "a53acbf463874f67503c08425e81a717b1c67fbe0a0b02223171c995b9dad536"
+    },
+    {
+      "path": "backend/app/tests/e2e/portal-payload-lint.e2e.spec.ts",
+      "sha256": "7e49038c7330d51a4793ee4042f1f6a929b0374aa52001fcc557d84d5c54c042"
+    },
+    {
+      "path": "tools/orchestra/worker.sh",
+      "sha256": "73fca1c673bcde10e55b23f70852783af508e12b443381501f05f4a6ad350be4"
+    },
+    {
+      "path": "work/rounds/R-0014/plan.md",
+      "sha256": "b50c3d9390095fdd3fd7f76c06e3f601780e3352b9cad8e16b3bce994e110641"
+    },
+    {
+      "path": "work/rounds/R-0014/reviews/delivery-review-CTG-0004-3.json",
+      "sha256": "55793ddcfe7a83f6da4529165351c028da8411b1492a69bf3936c9173f60677d"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm backend:test:ci",
+      "result": "pass",
+      "note": "EXIT 0 on fresh detran_r14 + senatran mock (backend-ci-ctg4-2.log)"
+    },
+    {
+      "name": "pnpm --filter @detran/app test:e2e",
+      "result": "pass",
+      "note": "Test Files 17 passed; Tests 240 passed | 2 todo (242)"
+    },
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "EXIT 0 (pnpm-check-ctg4-3.log)"
+    },
+    {
+      "name": "pnpm typecheck | @detran/app | @detran/portal-web",
+      "result": "pass",
+      "note": "0 errors each (C-4-70, maestro gate)"
+    },
+    {
+      "name": "pnpm verify:senatran-boundary | verify:decorators",
+      "result": "pass"
+    },
+    {
+      "name": "delivery-review (codex/gpt-5.6-terra)",
+      "result": "pass",
+      "note": "FAIL (4 high) → FAIL (1 contested, A24) → PASS (cycle 3)"
+    }
+  ],
+  "tasks": [
+    "TASK-0022 (it. 1, 2)",
+    "TASK-0010 (it. 1…11)",
+    "TASK-0011 (attempts 1…3, it. 4, 5)",
+    "TASK-0017 (it. 5)"
+  ],
+  "decisions": [
+    "adendas A13…A24, M18",
+    "DIVERGE-1…3, OD-P103…OD-P108 proposed; OD-P35/P36/P91 closed"
+  ]
+}

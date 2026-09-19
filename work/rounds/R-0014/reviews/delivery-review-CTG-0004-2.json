@@ -1,0 +1,16 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0014",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/app/tests/e2e/portal-national-mock.e2e.spec.ts",
+      "line": 81,
+      "claim": "A correção de C-4-56/C-4-59 reafirma `canal_exclusivo` e `desconto_60` como `effectsAck`; A5 do plano fixa canonicamente `ciencia_ficta`, `substituicao`, `responsabilidade`, `cancelamento`. A entrega contradiz decisão do Owner.",
+      "fix": "Substituir os efeitos no contrato executável (`SNE_EFFECTS`) e em todos os specs por `ciencia_ficta`, `substituicao`, `responsabilidade`, `cancelamento`; manter a validação exata dos quatro valores."
+    }
+  ],
+  "notes": []
+}

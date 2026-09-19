@@ -561,6 +561,112 @@ node dist/apps/api/src/main.js`). Sem mock disponível o spec de jornada **falha
   OD-P88 segue `source_pending`. (g) Iteração 1 deixou §3 `source_pending` por ler só `85-cdt.sql`
   — lição: o prompt do Architect deve apontar a fonte de dados **do serviço** (`cdt.service.ts`),
   não só o seed homônimo. Total 74 critérios C-4-01…74.
+- **A15 (2026-09-19, TASK-0010 it. 2 — lint de payload × `GET identity/me`).** O contrato do
+  CTG-0004 §6 proíbe CPF em qualquer resposta, mas o contrato de rotas (`portal-route-contract.md`
+  §3 `GET me`: "titular vê sem máscara") e o OpenAPI de R-0009 devolvem `cpf` do próprio titular em
+  `GET /v1/portal/identity/me`. O canônico prevalece: **exceção fechada** do lint — o CPF da
+  persona autenticada pode aparecer **só** em `GET /identity/me`, campo `cpf`; em qualquer outra
+  rota, ou o CPF de outra persona, segue proibido. `thirdPartyFieldsSuppressed` (flag canônica de
+  `GET crashes/{id}`) não é "dado de terceiro" — o lint de C-4-32 verifica ausência de **valores**
+  de terceiros, não do nome do campo. Asserções por conjunto de status (`expect([200, 503]).toContain`)
+  são vedadas nos specs do CTG (cada critério afirma o status e o corpo que o contrato fixa).
+- **A16 (2026-09-19, TASK-0010 it. 3 — JRN-010 × M15).** O contrato §1 JRN-010 lista
+  `POST /requests` pagamento → `PUT draft` → `POST submit`, mas em R-0009 (CTG-0002 §2, tabela M15)
+  a **criação** do pedido de `pagamento` já devolve 422 `SERVICE_UNAVAILABLE`
+  `delegacao_indisponivel_r0007`: não existe pedido para rascunhar/submeter, e um pedido semeado em
+  `PEDIDO_EM_COMPOSICAO` é estado inalcançável (o `submit` cai em 502 `DELEGATION_FAILED`, que é
+  o caminho de falha da delegação, não a parada M15). Decisão: C-4-44/45 **re-escopados como
+  negativos** — após o 422 de criação, `PUT /requests/{id}/draft` e `POST /requests/{id}/submit`
+  sobre o id inexistente respondem 404 `NOT_FOUND{kind:'request'}`; a fixture de pagamento em
+  composição sai do seed. C-4-41 (avaliação em estado permitido) usa a manifestação
+  `AVALIACAO_OFERECIDA` do padrão de `portal-routes.e2e.spec.ts` — seed do Inspector, não de
+  TASK-0011. `worker.sh` passa a liberar rede no sandbox (`sandbox_workspace_write.network_access=true`)
+  para o Engineer alcançar o mock em `:3001`.
+- **A17 (2026-09-19, TASK-0011 bloqueio — C-4-60 × C-4-71).** O spec de C-4-71 lia a mesma rota
+  e a mesma fixture Prata (`situacaoCnh:'A'` → `valida`) e exigia `null`: contradição interna do
+  spec, não do contrato. Decisão (maestro, papel Architect): [DIVERGE-1] ganha uma segunda linha
+  `senatran.condutor` para a persona **Ouro** `33333333333` com `situacaoCnh:'B'` (sem veículo);
+  C-4-71 usa `setCitizen(ouro)`. Também vedados os escapes `if (r.status === 200)` em C-4-72/73
+  (asserção incondicional). Contrato `CTG-0004.md` §2/§8 emendado pelo maestro com a marca A17.
+- **A18 (2026-09-19, TASK-0010 it. 5 — isolamento de C-4-54).** O caso C-4-54 cria e fecha um
+  `AppModule` isolado (mock em URL inválida) no mesmo arquivo dos demais; o `close()` derruba o
+  singleton `detranPersistentPipelineStore` (rate limit distribuído, `distributedStrict: true`) e
+  todo `POST` seguinte do arquivo responde 503 "Distributed rate limit backend unavailable" — os
+  vermelhos C-4-56/58/59/64 eram isolamento de spec, não produção (prova do maestro: com
+  `-t 'C-4-56|58|59|64'` passam 3/4). Decisão: C-4-54 vai para arquivo próprio
+  (`portal-national-unavailable.e2e.spec.ts`, único app). O 4.º (C-4-59) é produção:
+  `POST /sne/enrollment` com chave reutilizada e corpo divergente devolve 422 do pipeline STYNX em
+  vez de 409 `PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY` (catálogo §2; contrato §4) — Engineer.
+- **A19 (2026-09-19, TASK-0011 tentativa 2 — três bloqueios).** (a) Fronteira: TASK-0011 pode
+  editar `senatran-mock/database/seed/20-read.sql` (as fixtures de CNH/veículo de [DIVERGE-1]/A17
+  vivem em `senatran.condutor`/`senatran.veiculo`, não em `85-cdt.sql`; o prompt listava só
+  80/85/88 — erro do maestro). (b) `POST /push-subscriptions` segue o padrão **M9** de R-0009
+  (como `POST /sne/enrollment`): `@NoIdempotent()` + `PortalIdempotencyService` no controller
+  manuscrito do inbox, com `Idempotency-Replayed: true` no replay e 409
+  `PORTAL.IDEMPOTENT_KEY_REUSE_DIFFERENT_BODY { key }` no corpo divergente — o kernel STYNX
+  (`@Action ⇒ @Idempotent()`) devolve 422 sem código `PORTAL.*`, contra o catálogo §2. (c)
+  `verify:senatran-boundary` proíbe o nome `SENATRAN_MOCK_BASE_URL` em `backend/**` (inclusive
+  specs): os specs do CTG **não** nomeiam a variável — o ambiente vem do shell/CI (M18) — e C-4-54
+  (mock indisponível) passa a injetar, **só nesse arquivo**, uma fatia de `PORTAL_NATIONAL_READ_PORTS`
+  cujas leituras lançam `SenatranAdapterError(…, 'PROVIDER', 503, …)` (classe pública do adapter):
+  a única "porta falsa" admitida, porque prova a reação do Portal à indisponibilidade do provedor
+  na fronteira do adapter (ADR-0003), sem tocar rede. `pnpm verify:controller-decorators` não
+  existe — o comando é `pnpm verify:decorators` (erro do prompt; corrigido).
+- **A20 (2026-09-19, TASK-0011 tentativa 3 — regressão esperada em C-0002-77).** O spec de R-0009
+  `portal-routes.e2e.spec.ts` C-0002-77 afirmava o **repasse bruto** de `license` da porta falsa
+  (`{ category:'B', status:'fixture' }`), que OD-P35 deixava em aberto. O CTG-0004 §3 fecha a
+  normalização (C-4-60/71…73), logo a asserção antiga é substituída, **não relaxada**: com a mesma
+  porta falsa o corpo passa a ser `license: { status: null, validUntil: null, categories: ['B'],
+restrictions: [] }` (`status:'fixture'` não é código de `ref_situacao_cnh` → `null`; `category`
+  não é `categoriaAtual` → `[]`? — o mapeador lê `categoriaAtual`; a porta falsa não o fornece, logo
+  `categories: []`; o Inspector afirma o que o mapeador §3 produz para essa entrada, sem mudar a
+  porta falsa). O mesmo vale para o bloco de veículos do **mesmo** caso (l. 625–628): a porta falsa
+  devolve `items: [{ plate:'FIX2EE1', renavam:'00000000001' }]` sem `chassi` → o mapeador §3 não
+  projeta o item (`vehicleId` exige chassi) → `items: []`, `cachedAt` string, e `renavam` nunca
+  aparece no corpo. Únicas alterações admitidas no spec de R-0009; os demais casos C-0002-* intocados.
+- **A21 (2026-09-19, TASK-0011 tentativa 3 — `ci.yml` enfraquecido).** A mudança do job
+  `backend-kernel` (contrato §7) trocou `pnpm backend:test:ci` por `pnpm --filter @detran/app
+test:unit|test:integration` (perde os tiers unit/integration de ~45 pacotes de domínio — gate
+  enfraquecido, item 7) e removeu o bloco `env` do passo do mock (`PORT: '3001'` — o mock passa a
+  ouvir em 3000 e a espera por `/health` em 3001 falha; `DATABASE_URL`/`DB_NAME` do processo do
+  mock). Decisão: o passo 1 volta a rodar **`pnpm backend:test:unit && pnpm backend:test:integration`**;
+  o passo do mock mantém `env: { DB_NAME: senatran, DATABASE_URL: …/senatran, PORT: '3001',
+SENATRAN_MOCK_BASE_URL: http://127.0.0.1:3001 }` para `db:reset`, `build`, `node main.js` e o tier
+  do adapter, e roda `pnpm backend:test:e2e` com **prefixo de comando** que restaura o banco do
+  backend (`DATABASE_URL`/`DETRAN_TEST_DATABASE_URL`/`STYNX_*`/`DB_NAME` do job — `detran`) e
+  `SENATRAN_PROVIDER=mock`. Iteração restrita do Engineer (`TASK-0011-iteration-4`).
+- **A22 (2026-09-19, `backend:test:ci` após TASK-0011 — contagem do seed).** O contrato §3
+  exige o entitlement `vehicle` da persona Prata com o UUIDv5 do chassi da fixture
+  (`a1204f2f-07f6-551a-9e82-0e28038d3049`); TASK-0011 o acrescentou a `70-fixtures-portal.sql`
+  (13.ª linha de `portal.entitlement`). O spec de R-0009 `portal-seed.integration.spec.ts`
+  C-0001-33 conta 12 → passa a **13** (Inspector, iteração restrita; só essa contagem; a invariante
+  continua a mesma). Demais tiers de `pnpm backend:test:ci` verdes.
+- **A23 (2026-09-19, delivery-review-CTG-0004 ciclo 1 — FAIL, 4 high).** (a) `PortalSneEnrollmentService`:
+  `PORTAL_SNE_PORT` deixa de ser `@Optional()` — a adesão chama `enrollCitizen` **sempre** antes de
+  consultar/gravar o estado local e publicar (contrato §4, adapter → banco → outbox); onde os testes
+  unitários de R-0009 constroem o serviço sem porta, o Inspector injeta um stub que devolve
+  `{ enrolled: true }` (nunca relaxa o critério). (b) Specs de C-4-56/57/59/61 com asserções
+  observáveis: ordem adapter → banco → outbox (stub/observação do mock: adesão gravada só após o
+  201 do mock; `PROVIDER` 503 sem linha em `portal.sne_enrollment` nem evento no outbox), replay
+  positivo (`Idempotency-Replayed: true`, mesmo corpo) e divergente (409) para SNE **e** push,
+  `vehicleId` igual ao UUIDv5 canônico `a1204f2f-07f6-551a-9e82-0e28038d3049`. (c) C-4-66/67
+  provados **no stream**: abrir `GET /stream` para Prata e para Ouro (padrão de
+  `portal-stream.e2e.spec.ts` C-0002-82), publicar o evento no outbox, afirmar entrega só ao sujeito
+  e varrer o `data` SSE contra a lista §6. (d) C-4-70 sai do spec (falsa cobertura); os três
+  `typecheck` são gate do maestro, registrados na evidência. Execução: o Inspector pôs C-4-66/67
+  **no spec de stream de R-0009** (`portal-stream.e2e.spec.ts`, só acréscimos: persona Ouro no
+  helper e um `it` novo) para reaproveitar o harness HTTP bruto do SSE — aceito como aditivo; e
+  injetou o stub de `PORTAL_SNE_PORT` em `inbox.service.spec.ts` (13/13).
+- **A24 (2026-09-19, delivery-review-CTG-0004 ciclo 2 — FAIL contestado).** O achado único lê A5
+  como decisão sobre o enum do fio `effectsAck`. A5 (CTG-0002) fixou os **nomes das chaves i18n dos
+  textos legais** `portal.legal.efeitos_sne.v1.<efeito>` conforme [RN-PORTAL-123]
+  (`ciencia_ficta|substituicao|responsabilidade|cancelamento`); o **enum do fio** é o do contrato
+  de rotas §5.1 `adesao_sne` — `ciencia_ficta|canal_exclusivo|desconto_60|cancelamento` (UC-PORTAL-007
+  AC-2), implementado em R-0009 (`sne-enrollment.service.ts` `SNE_EFFECTS`, seed 71) e consumido pelo
+  app (`portal-read.models.ts` l. 357, `sne-consent.component.ts`; divergência já registrada como
+  **OD-P61**). O canônico (contrato de rotas + OpenAPI) prevalece sobre a paráfrase; mudar o enum
+  aqui quebraria OpenAPI, app e seed sem decisão do Owner. Nenhuma alteração; ciclo 3 restrito
+  com as fontes. Se o reviewer mantiver o FAIL, aplica-se §6 (desempate pela outra família: Opus).
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,
