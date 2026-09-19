@@ -48,6 +48,7 @@ import {
 } from './inbox.service.js';
 import {
   PortalSneEnrollmentService,
+  PORTAL_SNE_PORT,
   SNE_EFFECTS,
   SNE_ENROLLMENT_BODY,
   SNE_ENROLLMENT_TRANSITIONS,
@@ -170,6 +171,9 @@ function harness(options: { sneRows?: Row[] } = {}) {
   const sne = constructInjectable(PortalSneEnrollmentService, {
     ...providers,
     PortalInboxService: inbox,
+    [PORTAL_SNE_PORT.description!]: {
+      enrollCitizen: async () => ({ enrolled: true }),
+    },
   }) as unknown as {
     enroll: (
       tx: unknown,

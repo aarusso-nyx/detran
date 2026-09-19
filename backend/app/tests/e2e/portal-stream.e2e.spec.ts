@@ -45,6 +45,7 @@ let port: number;
 const openRequests: http.ClientRequest[] = [];
 const createdOutboxIds: string[] = [];
 const prata = { cpf: CPF.prata, level: 'avancada' as const };
+const ouro = { cpf: CPF.ouro, level: 'avancada' as const };
 const CASE_ID = '00000000-0000-7000-8000-007000700207';
 const LINKED_REQUEST_ID = '00000000-0000-7000-8000-0000704000e8';
 const OTHER_HASH = cpfHash(CPF.ouro);
@@ -176,8 +177,10 @@ function openStream(
   };
 }
 
-function citizenHeaders(): Record<string, string> {
-  setCitizen(prata);
+function citizenHeaders(
+  citizen: typeof prata | typeof ouro = prata,
+): Record<string, string> {
+  setCitizen(citizen);
   return {
     authorization: 'Bearer local',
     'x-tenant-id': TENANT_ID,
@@ -253,6 +256,7 @@ beforeAll(async () => {
   port = typeof address === 'object' && address ? address.port : 0;
 
   subjectId = await subjectIdOf(app, prata);
+  await subjectIdOf(app, ouro);
   await asOwner(client);
   await client.query(
     `insert into portal.infraction_view (id, tenant_id, ait_id, subject_cpf_hash, ait_number, plate, occurred_at, framing_label, amount, situation, deadlines_json, points_status, actions_json, notices_json, payment_json, last_event_id, last_event_version)
@@ -458,6 +462,67 @@ describe('CTG-0002 §9 — GET /v1/portal/stream (C-0002-82)', () => {
       );
     }
     stream.close();
+  });
+
+  it('C-4-66/67 — dado streams de Prata e Ouro quando evento do sujeito Prata chega ao outbox então só Prata o recebe e data não expõe tokens internos ou contato', async () => {
+    const prataStream = openStream('/v1/portal/stream', citizenHeaders(prata));
+    await prataStream.opened;
+    const ouroStream = openStream('/v1/portal/stream', citizenHeaders(ouro));
+    await ouroStream.opened;
+    expect(prataStream.status()).toBe(200);
+    expect(ouroStream.status()).toBe(200);
+
+    const id = await insertOutboxRow(
+      REQUEST_CHANGED,
+      'SOLICITACAO_PROTOCOLADA',
+      { kind: 'portal.request', id: LINKED_REQUEST_ID, version: 6 },
+      {
+        requestId: LINKED_REQUEST_ID,
+        serviceKey: 'defesa_previa',
+        fromState: 'PEDIDO_EM_COMPOSICAO',
+        toState: 'PROTOCOLADO',
+        subjectId,
+        subjectCpfHash: cpfHash(CPF.prata),
+        email: 'prata@fixture.invalid',
+        phone: '41999999999',
+        tenantId: TENANT_ID,
+      },
+    );
+    await poller.firePolling();
+    await prataStream.waitFor(() =>
+      prataStream.events.some((event) => event.id === id),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    expect(ouroStream.events.map((event) => event.id)).not.toContain(id);
+
+    const data = prataStream.events.find((event) => event.id === id)?.data;
+    expect(data).toBeDefined();
+    for (const token of [
+      'MANIFESTATION_TRANSITIONS',
+      'REQUEST_TRANSITIONS',
+      'infraction_state_ref',
+      'CdtPort',
+      'SnePort',
+      'RenachPort',
+      'Senatran',
+      'RENAEST',
+      'RENAINF',
+      'pending_complement',
+      'delegation_domain',
+      'delegation_command',
+      'subjectCpfHash',
+      'tenantId',
+      CPF.prata,
+      cpfHash(CPF.prata),
+      'prata@fixture.invalid',
+      '41999999999',
+      'payload_json',
+      'integration.outbox',
+      'aggregate_type',
+    ])
+      expect(data, token).not.toContain(token);
+    prataStream.close();
+    ouroStream.close();
   });
 
   it('C-0002-82 — dado ?topics=payment.confirmed então só esse tipo chega; tipo desconhecido em topics é ignorado', async () => {
