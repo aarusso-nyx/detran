@@ -216,13 +216,14 @@ retomar: state.url } })`; ordem `simples < avancada < qualificada`; nunca exige 
 | TASK-0015 | Inspector            | inspector-tests     | Sonnet / médio (matriz grande, ladder) | `MOD-portal-web-tests-appeal`                                                                                           | TASK-0020                                 | CTG-0003b | testes **par 2 — trilha de apelação**: `autos`, `defesa`, `indicacao`, `pagamento`, `processos` (T-01…T-08, T-10, T-11, T-13, T-14, T-23; `PaymentComparison`, `ProcessTimeline`), `axe` nas rotas do par                                                                                                                                                                                                                                                                           |
 | TASK-0016 | Engineer             | engineer-frontend   | Opus / médio                           | `MOD-portal-web-features-appeal`, `MOD-portal-web-shared-3b`, `MOD-portal-web-data-3b`                                  | TASK-0015                                 | CTG-0003b | implementação do par 2                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | TASK-0021 | Architect            | architect-blueprint | Opus / alto                            | `MOD-r14-contracts-3c`                                                                                                  | TASK-0016 (merge PR 3b)                   | CTG-0003c | **contrato do par 3** (`contracts/CTG-0003c.md`): notificações/SNE (WF-PORTAL-003, quatro efeitos), documentos (CNH-e/CRLV-e, quitação, offline), sinistros/exames (projeções BOAT/PEC, OD-P19), atendimento (WF-PORTAL-004, dois relógios), privacidade (OD-P17), elevação (UC-019 `resume`), SSE/polling, push; critérios                                                                                                                                                         |
+| TASK-0022 | Architect            | architect-blueprint | **Codex Terra / alto** (B3)            | `MOD-r14-contracts-4`                                                                                                   | TASK-0018 (merge PR 3c)                   | CTG-0004  | **contrato do WP-P6** (`contracts/CTG-0004.md`): 11 jornadas → passos de API, mock nacional em processo (M18), mapeamentos CNH-e/CRLV-e (OD-P35/P36/P91), SNE pelo adapter (OD-P16), push (OD-P88), lint de payload, CI; critérios C-4-nn; blueprints só com regeneração                                                                                                                                                                                                            |
 | TASK-0017 | Inspector            | inspector-tests     | Sonnet / médio (matriz grande, ladder) | `MOD-portal-web-tests-greenfield`                                                                                       | TASK-0021                                 | CTG-0003c | testes **par 3 — greenfield + PWA**: `notificacoes` (T-12, T-09, preferências; `NotificationList`, `SneConsent`), `documentos` (T-16, T-17; `DigitalDocumentCard`, `ClearanceStatus`, offline), `sinistros`, `exames`, `atendimento` (T-21, T-22, T-26; `ManifestationForm`, `EvaluationForm`), `privacidade` (T-24; `OwnDataPanel`), `assinatura` (T-27), `/inicio`, `/conta`, SSE + polling, push (`SwPush`), `axe` em todas as 38 rotas                                          |
 | TASK-0018 | Engineer             | engineer-frontend   | Opus / médio                           | `MOD-portal-web-features-greenfield`, `MOD-portal-web-shared-3c`, `MOD-portal-web-data-3c`, `MOD-portal-web-core-pages` | TASK-0017                                 | CTG-0003c | implementação do par 3 (M14 offline/push)                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| TASK-0010 | Inspector            | inspector-tests     | Opus / alto                            | `MOD-portal-e2e`, `MOD-senatran-mock`                                                                                   | TASK-0009 (merge PR 3)                    | CTG-0004  | e2e das 11 jornadas no mock; lint de payload; push; adesão SNE (mock); handoffs OD-P15/16/17/35/40 — prompt na janela 3                                                                                                                                                                                                                                                                                                                                                             |
-| TASK-0011 | Engineer             | engineer-backend    | Opus / médio                           | `MOD-portal-national-read`, `MOD-app-portal-providers`                                                                  | TASK-0010                                 | CTG-0004  | `CdtPort`/`SnePort`/CNH-e/`inbox_item`/push no backend até os e2e passarem (limites em `senatran-mock`, commit separado) — prompt na janela 3                                                                                                                                                                                                                                                                                                                                       |
-| TASK-0012 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo                         | `MOD-docs`                                                                                                              | TASK-0011                                 | CTG-0005  | build pack §WP-P4…P6, `portal-frontends.md` §9/§10, método §4.17/§10 e `engineer-frontend.md` (padrão de app), backlog (homologação SNE real) — prompt na janela 4                                                                                                                                                                                                                                                                                                                  |
+| TASK-0010 | Inspector            | inspector-tests     | **Codex Terra / médio** (B3)           | `MOD-portal-e2e`, `MOD-senatran-mock`                                                                                   | TASK-0009 (merge PR 3)                    | CTG-0004  | e2e das 11 jornadas no mock; lint de payload; push; adesão SNE (mock); handoffs OD-P15/16/17/35/40 — prompt na janela 3                                                                                                                                                                                                                                                                                                                                                             |
+| TASK-0011 | Engineer             | engineer-backend    | **Codex Terra / médio** (B3)           | `MOD-portal-national-read`, `MOD-app-portal-providers`                                                                  | TASK-0010                                 | CTG-0004  | `CdtPort`/`SnePort`/CNH-e/`inbox_item`/push no backend até os e2e passarem (limites em `senatran-mock`, commit separado) — prompt na janela 3                                                                                                                                                                                                                                                                                                                                       |
+| TASK-0012 | Architect (transcr.) | transcriber-docs    | **Codex Luna / baixo** (B3)            | `MOD-docs`                                                                                                              | TASK-0011                                 | CTG-0005  | build pack §WP-P4…P6, `portal-frontends.md` §9/§10, método §4.17/§10 e `engineer-frontend.md` (padrão de app), backlog (homologação SNE real) — prompt na janela 4                                                                                                                                                                                                                                                                                                                  |
 
-CTG-0001 = 0001…0004 (**mesclado, PR #60**); CTG-0002 = 0005/0013/0014 → 0006 → 0007; CTG-0003 = três tríades acopladas **CTG-0003a** (0019 → 0008 → 0009), **CTG-0003b** (0020 → 0015 → 0016), **CTG-0003c** (0021 → 0017 → 0018), **um PR por par** (Owner, 2026-09-17: diffs menores para o reviewer; cada par começa depois do merge do anterior ou em branch empilhado); CTG-0004 = 0010/0011; CTG-0005 = 0012. Um PR por CTG (M16). Prompts prontos: TASK-0001…0007 (0005 redividido em 0005/0013/0014 em 2026-09-17); os de CTG-0003a…c e CTG-0004/0005 são escritos nas janelas 2–4 e passam por prompt-review antes do disparo.
+CTG-0001 = 0001…0004 (**mesclado, PR #60**); CTG-0002 = 0005/0013/0014 → 0006 → 0007; CTG-0003 = três tríades acopladas **CTG-0003a** (0019 → 0008 → 0009), **CTG-0003b** (0020 → 0015 → 0016), **CTG-0003c** (0021 → 0017 → 0018), **um PR por par** (Owner, 2026-09-17: diffs menores para o reviewer; cada par começa depois do merge do anterior ou em branch empilhado); CTG-0004 = **0022 → 0010 → 0011** (A13(c)); CTG-0005 = 0012 + fechamento. Um PR por CTG (M16). Prompts prontos: TASK-0001…0007 (0005 redividido em 0005/0013/0014 em 2026-09-17); os de CTG-0003a…c e CTG-0004/0005 são escritos nas janelas 2–4 e passam por prompt-review antes do disparo.
 
 **Checkpoint de dependências (maestro, executado em 2026-09-17 antes de disparar TASK-0002):** `apps/portal/web/package.json` (M1/M2) criado e `pnpm install` rodado (lockfile vai no commit do CTG-0001); runner provisionado e provado (`vitest.config.ts`, `src/test-setup.ts`, `tsconfig.json` base — um spec JIT com `@detran/ui` passa); `packages/ui/package.json` ganhou `exports["."]` (M6) pelo maestro (Engineer), tirando `packages/ui` da fronteira de TASK-0004; só então o Inspector é liberado; `pnpm contracts:clients` já cobre `BP-PORTAL-*` (R-0009). Banco da
 rodada (CTG-0004): `detran_r14` (`env-detran-r14.sh`, criado na janela 3).
@@ -315,6 +316,11 @@ Verificado em 2026-09-17 (`git log --oneline -30 origin/main`, `gh pr list --sta
 - **B1 — Lighthouse CI**: o gate do build pack (`Lighthouse PWA e a11y ≥ 90 em CI`) exige Chrome
   headless e não roda no runner sem serviço/binário externo; substituído por `axe-core` em TestBed
   por rota (M3) — TASK-0012 corrige o build pack. Não bloqueia a rodada.
+
+- **B3 (2026-09-19, Owner):** janela da família Claude perto do esgotamento após o PR #64. Decisão:
+  CTG-0004 e CTG-0005 executam com o **Codex como executor dos workers e como reviewer**; a sessão
+  Claude fica **só maestro**. Desvio do método §2 (workers da outra família), registrado em
+  `AUTHORIZATION.md` Amendment 2; encerra o desvio B2 (reviewer volta ao Codex). Mecânica em A13.
 
 ## Triagem
 
@@ -515,6 +521,29 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
   fronteiras disjuntas; ciclo 2 restrito do reviewer → **PASS** (12/12). Nota residual para o
   CTG-0005 (com (j)): a heurística de C-3c-78 em `realtime.service.spec.ts` deve manter só a
   exclusão por linha de `MS_PER_SECOND` e voltar a `>= 1000`.
+- **A13 (2026-09-19, execução por Codex — B3).** (a) Workers pela CLI do Codex via
+  `tools/orchestra/worker.sh <modelo> <esforço> <prompt.md> <reports/TASK-nnnn.md> [worktree]`
+  (sandbox `workspace-write`, `--json` → transcript `reports/TASK-nnnn.jsonl`, registro
+  `reports/TASK-nnnn.worker.json` com hashes e HEAD antes/depois — sai com erro se o worker
+  executou `git`); provado por `tools/orchestra/worker.test.sh` (em `verify:orchestra-bridge`).
+  Escada Codex (model-ladder): Sol = `gpt-5.6-sol` (grande), Terra = `gpt-5.6-terra` (médio),
+  Luna = `gpt-5.6-luna` (pequeno); esforço por `model_reasoning_effort`. (b) Reviewer pela ponte
+  `tools/orchestra/bridge.sh codex gpt-5.6-terra <prompt> <saida.json>` (prompt-review e
+  delivery-review; grande — Sol — se a entrega mudar DDL/política/contrato). (c) Tríade do
+  CTG-0004 com Architect explícito (lição do prompt-review-1): **TASK-0022** (contrato
+  `contracts/CTG-0004.md`) → TASK-0010 (Inspector) → TASK-0011 (Engineer-backend); CTG-0005 =
+  TASK-0012 (transcriber) + fechamento pelo maestro. (d) Iterações restritas seguem o mesmo
+  executor: o maestro escreve `prompts/TASK-nnnn-iteration-k.md` e roda o worker de novo (Codex
+  não retoma contexto; o prompt de iteração deve ser autossuficiente e apontar o relatório
+  anterior). (e) O maestro continua o único a rodar `git`, gates, evidência e PR; conferir
+  `git status` antes e depois de cada worker; workers nunca tocam `work/rounds/**`.
+  (f) **M18 — mock nacional nos e2e de jornada:** as jornadas que leem CDT/SNE rodam contra o
+  `senatran-mock` em processo (`SENATRAN_PROVIDER=mock`, `SENATRAN_MOCK_BASE_URL`), nunca contra
+  portas falsas; o job `backend-kernel` do CI sobe o mock **antes** de `pnpm backend:test:e2e`
+  (hoje só o sobe para o tier e2e do adapter) — mudança de `ci.yml` na fronteira de TASK-0011;
+  localmente o maestro sobe o mock com o mesmo trecho do job (`senatran-mock db:reset && build &&
+node dist/apps/api/src/main.js`). Sem mock disponível o spec de jornada **falha** (nunca
+  `skip`).
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,
@@ -546,26 +575,49 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
 
 ## Retomada
 
-**Checkpoint 6 (2026-09-19, janela 4 — CTG-0003c em PR; WP-P5 fechado).**
+**Checkpoint 7 (2026-09-19, janela 4 → retomada com Codex — B3/A13).**
 
-- CTG-0001 (#60), CTG-0002 (#61), CTG-0003a (#62), CTG-0003b (#63, `d2412558`,
-  `EV-03c67d03ad731326`): mesclados.
-- **CTG-0003c: PR #64 aberto** (commits `6476339b`, `b2bf4020`, `f21d60d3`, `38a0e47b`, `be466ac0`;
-  evidência generic sequence 5); `delivery-review-CTG-0003c` REVIEW (6 high + 6 low → A12) → `-2`
-  **PASS** (Claude/Opus, desvio B2). Suíte 118 arquivos / 1314 verdes / 14 todo; `pnpm check` EXIT 0.
-  **Próximo:** CI verde → `gh pr merge 64 --merge` → `git merge --no-edit origin/main` → `audit
-observe` no SHA do merge → commit da observação.
-- Pendentes: CTG-0004 (TASK-0010 Inspector e2e das 11 jornadas com `pnpm backend:test:e2e` +
-  `detran_r14` + senatran-mock; TASK-0011 Engineer-backend — prompts a escrever e passar por
-  prompt-review; premissas: jornadas de delegação só até `delegacao_indisponivel_r0007`, OD-P15
-  `source_pending`), CTG-0005 (TASK-0012 docs + A12(j) + OD-P47…P102; `closure.json`; `devai round
-close`; apagar o branch remoto; relatório final §10).
-- Reviewer: voltar ao Codex (`gpt-5.6-terra`) quando o limite resetar (2026-09-19 05:10).
-- Lições desta janela: ler o veredito **inteiro**; nunca ratificar uma regra transversal (erro/
-  offline) fora do módulo dono (`ErrorBoundary`) porque os specs foram escritos mais fracos — corrigir
-  os specs (A12(a)); iterações paralelas Inspector × Engineer com fronteiras disjuntas funcionam
-  (A12), com o Engineer classificando os vermelhos residuais e o maestro encaminhando ao Inspector.
-- Git: `orchestra/portal-pwa` publicado = `origin/main` `4c3be453` + observação; working tree limpa.
+- CTG-0001…0003c mesclados (PRs #60…#64; WP-P4 e WP-P5 fechados); último `audit observe`
+  `EV-e8514b9464f0b049` (`4c3be453`); branch `orchestra/portal-pwa` = `origin/main` + observação +
+  este checkpoint.
+- **Preparado para a retomada:** `AUTHORIZATION.md` Amendment 2; `tools/orchestra/worker.sh`
+  (+ teste em `verify:orchestra-bridge`); prompts `TASK-0022.md`, `TASK-0010.md`, `TASK-0011.md`,
+  `TASK-0012.md`, `TASK-0017-iteration-5.md`; `tasks/TASK-0022|0010|0011|0012.json` (executor
+  `codex-cli`); `compositions.json`; `reviews/prompt-review-12.md`; banco `detran_r14` criado e
+  semeado (`env-detran-r14.sh`); mock provado (`/health` ok) e parado.
+- **Roteiro de retomada (maestro, na ordem):**
+  1. `tools/orchestra/bridge.sh codex gpt-5.6-terra work/rounds/R-0014/reviews/prompt-review-12.md work/rounds/R-0014/reviews/prompt-review-12.json`
+     → ciclos restritos até PASS (recalcular `compositions.json` e `prompt_composition_id` dos
+     JSONs se um prompt mudar).
+  2. Ambiente: `source work/rounds/R-0014/env-detran-r14.sh`; subir o mock:
+     `DB_NAME=senatran DATABASE_URL=postgresql://postgres:postgres@localhost:5432/senatran PORT=3001 pnpm --dir senatran-mock db:reset && pnpm --dir senatran-mock build && node senatran-mock/dist/apps/api/src/main.js > /tmp/senatran-mock-r14.log 2>&1 &`
+     e esperar `curl -fsS http://127.0.0.1:3001/health`.
+  3. `tools/orchestra/worker.sh gpt-5.6-terra high work/rounds/R-0014/prompts/TASK-0022.md work/rounds/R-0014/reports/TASK-0022.md`
+     → ler o relatório inteiro; ratificar/registrar em adenda A14; se tocou blueprints, conferir
+     `pnpm blueprints:check && pnpm contracts:check && pnpm typecheck`; delivery-review parcial
+     não é exigido (contrato) — segue para o Inspector.
+  4. `tools/orchestra/worker.sh gpt-5.6-terra medium work/rounds/R-0014/prompts/TASK-0010.md work/rounds/R-0014/reports/TASK-0010.md`
+     (com o mock vivo e o env carregado no shell que chama o worker) → conferir `git status`
+     (só `backend/app/tests/e2e/**`), baseline e vermelhos esperados.
+  5. `tools/orchestra/worker.sh gpt-5.6-terra medium work/rounds/R-0014/prompts/TASK-0011.md work/rounds/R-0014/reports/TASK-0011.md`
+     → gates: `pnpm --filter @detran/app test:e2e` verde com o mock; `pnpm backend:test:ci`;
+     `pnpm check`; `pnpm --filter @detran/portal-web typecheck|test`.
+  6. `tools/orchestra/worker.sh gpt-5.6-luna low work/rounds/R-0014/prompts/TASK-0017-iteration-5.md work/rounds/R-0014/reports/TASK-0017-iteration-5.md`
+     (pode rodar em paralelo ao passo 3; fronteira disjunta).
+  7. Iterações: escrever `prompts/TASK-nnnn-iteration-k.md` autossuficiente (A13(d)) e repetir o
+     worker; `delivery-review-CTG-0004` pela ponte Codex (Sol se houver blueprint/contrato mudado)
+     → commits (contrato+blueprints / testes+impl / seeds do mock / round) → evidência (generic
+     sequence 6) → `git merge --no-edit origin/main` → push → PR 4 → CI → merge → `audit observe`.
+  8. CTG-0005: `worker.sh gpt-5.6-luna low prompts/TASK-0012.md reports/TASK-0012.md` (após o
+     merge do PR 4, para citar o HEAD real) → `delivery-review-CTG-0005` → commit → evidência
+     (sequence 7) → PR 5 → merge → `audit observe` no HEAD final → `closure.json` → `devai round
+close` → apagar o branch remoto → relatório final (§10) a partir de `closure.md`.
+- Custos até aqui (janela 4): ≈ 4,9 M únicos de entrada acumulados na rodada; Codex a partir daqui
+  (B3), contabilizado em `budget.json` pelas notas de cada `*.worker.json`/`*.bridge.json`.
+- Lições novas: A12 (regra transversal só no módulo dono; iterações paralelas com fronteiras
+  disjuntas); prompts para Codex são autossuficientes — sem retomada de contexto, o prompt de
+  iteração aponta o relatório anterior.
+- Git: `orchestra/portal-pwa` publicado; working tree limpa após o commit deste checkpoint.
 
 ---
 

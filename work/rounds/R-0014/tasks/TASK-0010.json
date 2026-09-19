@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0014",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "e2e das 11 jornadas com senatran-mock, leituras nacionais, SNE, push e lint de payload — critérios C-4-nn",
+  "description": "Codificar 100 % dos critérios antes da implementação; typecheck limpo; vermelhos só por comportamento ausente.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-portal-e2e"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0022",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-p6"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-2ac0aba300c625e3",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-19T03:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-2ac0aba300c625e3",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "note": "AUTHORIZATION.md Amendment 2 / plan B3: worker executed by the Codex CLI via tools/orchestra/worker.sh"
+  }
+}

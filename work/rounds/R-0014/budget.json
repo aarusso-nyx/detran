@@ -3,9 +3,9 @@
   "window": 4,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 4866000,
-  "estimated_output_total": 1051000,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada).",
+  "estimated_input_total": 4926000,
+  "estimated_output_total": 1071000,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 4. Janela 1 encerrada com ≈963k únicos de entrada (acima do orçamento de 700k; excedente consumido para fechar o CTG-0001 como ponto natural de parada). Janela 4 encerrada com ≈4,93 M únicos acumulados; a partir de 2026-09-19 os workers e o reviewer rodam no Codex (B3), com custo registrado por *.worker.json/*.bridge.json.",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -690,6 +690,14 @@
       "status": "completed",
       "verdict": "PASS",
       "note": "ciclo restrito; 12/12 fechados"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "PLAN-R-0014-W4-CODEX",
+      "input_tokens": 60000,
+      "output_tokens": 20000,
+      "status": "completed",
+      "note": "fecho do CTG-0003c (A11/A12, PR #64, observe) e preparação da retomada com Codex (B3/A13): worker.sh + teste, Amendment 2, prompts TASK-0022/0010/0011/0012/0017-it5, task JSONs codex-cli, prompt-review-12, detran_r14 + mock provados"
     }
   ],
   "forecast": {

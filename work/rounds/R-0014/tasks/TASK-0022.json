@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0022",
+  "round_id": "R-0014",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Contrato do CTG-0004 (WP-P6): 11 jornadas → passos de API, mock nacional (M18), CNH-e/CRLV-e (OD-P35/P36/P91), SNE pelo adapter (OD-P16), push, lint de payload, CI; critérios C-4-nn",
+  "description": "Fixar a referência do WP-P6; blueprints só com regeneração (Art. 10).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r14-contracts-4"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0018",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-p6"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-25b79b63a48c823d",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "typecheck"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-19T03:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-25b79b63a48c823d",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "note": "AUTHORIZATION.md Amendment 2 / plan B3: worker executed by the Codex CLI via tools/orchestra/worker.sh"
+  }
+}
