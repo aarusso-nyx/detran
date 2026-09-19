@@ -25,7 +25,7 @@
     "verify:senatran-contracts": "pnpm --filter @detran/senatran-adapter contracts:check",
     "verify:pec-parity": "tsx tools/verify-pec-parity.ts",
     "verify:pec-superset": "tsx tools/verify-pec-superset.ts",
-    "verify:orchestra-bridge": "bash tools/orchestra/bridge.test.sh",
+    "verify:orchestra-bridge": "bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh",
     "backend:db:apply": "bash backend/database/apply.sh",
     "backend:db:reset": "bash backend/database/apply.sh --full",
     "backend:rls-smoke": "tsx tools/check-rls-smoke.ts",
