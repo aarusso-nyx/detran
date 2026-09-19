@@ -1,0 +1,48 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0014",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0014/prompts/TASK-0005.md",
+      "line": 131,
+      "claim": "Instrui tratar T-13/T-23 como bloqueadas por DT-026 e exibir função indisponível, mas a decisão canônica já responde DT-026 com termo digital no PORTAL e flag de ativação; reabre/contradiz a decisão do Owner.",
+      "fix": "Remover DT-026 da regra de bloqueio; transcrever T-13/T-23 conforme OD-P03/H.53: texto existe e a faixa permanece desligada por flag. Manter somente pendências efetivamente abertas como OD."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0014/tasks/TASK-0001.json",
+      "line": 11,
+      "claim": "target_modules declara somente MOD-parameter-catalogue-doc e MOD-portal-build-pack-doc, mas o prompt também autoriza escrita em portal-frontends.md e decision-closure-plan.md.",
+      "fix": "Adicionar módulos de lock explícitos para portal-frontends.md e decision-closure-plan.md, ou retirar essas escritas de TASK-0001 e atribuí-las a tarefas com locks próprios."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0014/prompts/TASK-0002.md",
+      "line": 62,
+      "claim": "A fronteira autoriza o helper em src/a11y/, enquanto a tarefa exige criá-lo em src/app/a11y/; este caminho não está autorizado e TASK-0004 protege ainda o caminho divergente.",
+      "fix": "Unificar todos os trechos em apps/portal/web/src/app/a11y/axe.spec-helper.ts e autorizá-lo/protegê-lo explicitamente."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0014/prompts/TASK-0002.md",
+      "line": 170,
+      "claim": "O critério prevê falha por módulos de app ausentes, mas o comando não chega aos specs: vitest.config.ts é atribuído a TASK-0004 e não pode ser criado por TASK-0002.",
+      "fix": "Substituir este critério por verificação dos arquivos/specs produzidos até TASK-0004 criar o runner, ou provisionar o runner em checkpoint explícito do maestro antes de liberar TASK-0002."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0014/prompts/TASK-0006.md",
+      "line": 115,
+      "claim": "Exige textos para notificações e documentos a partir de RN-PORTAL-124, RN-PORTAL-115 e RN-PORTAL-117, mas nenhum desses documentos consta da lista fechada de leitura.",
+      "fix": "Adicionar RN-PORTAL-115, RN-PORTAL-117 e RN-PORTAL-124 à leitura obrigatória, com as seções necessárias, ou limitar a tarefa a chaves cujos textos estejam integralmente fornecidos."
+    }
+  ],
+  "notes": []
+}

@@ -27,17 +27,19 @@
 
 ## Tarefas
 
-| Tarefa    | Papel        | Perfil              | Modelo/esforço | Lock                                               | Depende de | Entrega                                                                                                                                               |
-| --------- | ------------ | ------------------- | -------------- | -------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect    | architect-blueprint | Terra / alto   | `MOD-dashboard-web-arch`                           | —          | decisões (pastas §9, biblioteca de gráficos permitida pelo `detran-ui-guide.md`, forma dos schemas), lista tela → ficha → rota, critérios             |
-| TASK-0002 | Owner deleg. | transcriber-docs    | Luna / baixo   | `MOD-product-dashboard-screens`, `MOD-kb-manifest` | TASK-0001  | 18 fichas (D-01…D-18); manifesto                                                                                                                      |
-| TASK-0003 | Engineer     | engineer-frontend   | Luna / baixo   | `MOD-dashboard-i18n`                               | TASK-0001  | `dashboard.pt-BR.json`; teste tela ↔ ficha ↔ rota                                                                                                     |
-| TASK-0004 | Inspector    | inspector-tests     | Luna / médio   | `MOD-dashboard-web-tests`                          | TASK-0003  | testes: roteamento por papel × camada (N3 sempre bloqueado), 9 schemas, `freshnessInterceptor`, célula suprimida visível, a11y (severidade por forma) |
-| TASK-0005 | Engineer     | engineer-frontend   | Terra / médio  | `MOD-dashboard-web-app`, `MOD-package-json`        | TASK-0004  | app completo (18 telas, guardas, SSE, gráficos); `pnpm check` estendido; README; testes verdes                                                        |
-| TASK-0006 | Engineer     | engineer-frontend   | Luna / médio   | `MOD-dashboard-web-forms`                          | TASK-0005  | 9 schemas com gates; testes verdes                                                                                                                    |
-| TASK-0007 | Owner deleg. | transcriber-docs    | Luna / baixo   | `MOD-docs`                                         | TASK-0006  | build pack, `dashboard-frontends.md`, backlog                                                                                                         |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                               | Depende de | Entrega                                                                                                                                                                                  |
+| --------- | -------------------- | ------------------- | -------------- | -------------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect            | architect-blueprint | Terra / alto   | `MOD-dashboard-web-arch`                           | —          | decisões (pastas §9, biblioteca de gráficos permitida pelo `detran-ui-guide.md`, forma dos schemas), lista tela → ficha → rota, critérios                                                |
+| TASK-0002 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-dashboard-screens`, `MOD-kb-manifest` | TASK-0001  | 18 fichas (D-01…D-18); manifesto                                                                                                                                                         |
+| TASK-0003 | Engineer             | engineer-frontend   | Luna / baixo   | `MOD-dashboard-i18n`                               | TASK-0001  | `dashboard.pt-BR.json` (nomes dos 42 indicadores copiados do seed de R-0011)                                                                                                             |
+| TASK-0004 | Inspector            | inspector-tests     | Luna / médio   | `MOD-dashboard-web-tests`                          | TASK-0003  | testes: roteamento por papel × camada (N3 sempre bloqueado), 9 schemas, `freshnessInterceptor`, célula suprimida visível, a11y (severidade por forma); teste tela ↔ ficha ↔ rota (18/18) |
+| TASK-0005 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-dashboard-web-app`, `MOD-package-json`        | TASK-0004  | app completo (18 telas, guardas, SSE, gráficos); `pnpm check` estendido; README; testes verdes                                                                                           |
+| TASK-0006 | Engineer             | engineer-frontend   | Luna / médio   | `MOD-dashboard-web-forms`                          | TASK-0005  | 9 schemas com gates; testes verdes                                                                                                                                                       |
+| TASK-0007 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                         | TASK-0006  | build pack, `dashboard-frontends.md`, backlog                                                                                                                                            |
 
 CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
+
+**Checkpoint de dependências:** após TASK-0005 criar `apps/dashboard/web/package.json`, o maestro roda `pnpm install`, guarda o lockfile, estende `pnpm check` e libera TASK-0004/0006.
 
 ## Critérios de aceitação (comandos → resultado)
 
@@ -64,6 +66,19 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
   `packages/ui` sem ADR curta.
 - Nomes dos 42 indicadores vêm do seed (R-0011), nunca redigitados.
 - P-09: publicar com supressão secundária; se o teste de supressão de R-0011 não existir em `main`, bloquear a tela (não o app).
+
+## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
+
+- Transcrição de fichas, contratos, i18n e docs é ato de **Architect** (`transcriber-docs`); tarefas assim aparecem como "Architect (transcr.)".
+- Nenhum Engineer ou transcriber entrega o teste do próprio artefato: contratos → `contracts:test` pelo Inspector; fichas/i18n → teste tela ↔ ficha ↔ rota pelo Inspector.
+- Ciclos de review a partir do segundo restritos aos itens corrigidos; contradições contrato × código resolvidas pelo Architect por adenda numerada em `plan.md` antes de redespachar.
+- O CTG seguinte só começa a escrever depois do merge do anterior ou nasce em branch empilhado; nunca commits novos no branch de um PR aberto; integrar `main` por merge, nunca `--force`.
+- Listas de leitura dos workers fechadas e completas (DDL gerado, blueprint, `seed.sh`, fixtures, specs de referência como `backend/app/tests/e2e/policy-routes.e2e.spec.ts`); lacuna aqui foi `reference-gap` em R-0010.
+- Padrão de app: o primeiro frontend (R-0012, `apps/rait/web`) fixa `package.json` (scripts `build|test|lint|typecheck`), configuração Angular 22/vitest/eslint e a extensão de `pnpm check`; os apps seguintes copiam a estrutura, sem variantes.
+- Pacote de workspace novo: o maestro roda `pnpm install`, guarda o `pnpm-lock.yaml` para o commit do grupo e só então libera o Inspector (CI é `--frozen-lockfile`).
+- Chaves i18n não são parâmetros (OD-P46): o namespace deste app entra na allowlist de i18n do `parameter-catalogue.md` lida por `tools/parameters/verify.mjs`; se R-0012 ainda não tiver mesclado essa regra, esta rodada a aplica (nunca exclusão por diretório).
+- Testes de roteamento cobrem papéis com e sem acesso (presença e ausência), não só o papel mínimo.
+- `dashboard.*` já é prefixo de parâmetros vigentes (`dashboard.cell_threshold`): allowlist i18n obrigatória antes de `dashboard.pt-BR.json` entrar em código.
 
 ## Concorrência
 

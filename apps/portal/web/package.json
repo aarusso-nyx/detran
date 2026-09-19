@@ -1,0 +1,49 @@
+{
+  "name": "@detran/portal-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Portal do cidadão (PWA) — apps/portal/web sobre @detran/ui e STYNX 1.3.1 (Angular 22). Primeiro app do monorepo: fixa o padrão de scaffold que os demais apps copiam (R-0014, plan.md M1–M6).",
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "build": "ng build",
+    "test": "vitest run --config vitest.config.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.spec.json --noEmit"
+  },
+  "dependencies": {
+    "@angular/common": "22.1.6",
+    "@angular/core": "22.1.6",
+    "@angular/forms": "22.1.6",
+    "@angular/platform-browser": "22.1.6",
+    "@angular/router": "22.1.6",
+    "@angular/service-worker": "22.1.6",
+    "@detran/api-clients": "workspace:*",
+    "@detran/ui": "workspace:*",
+    "@stynx-nyx/angular": "1.3.1",
+    "@stynx-nyx/angular-auth": "1.3.1",
+    "@stynx-nyx/angular-i18n": "1.3.1",
+    "@stynx-nyx/angular-tenancy": "1.3.1",
+    "@stynx-nyx/angular-ui": "1.3.1",
+    "rxjs": "^7.8.2",
+    "tslib": "^2.8.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@angular/build": "22.1.6",
+    "@angular/cli": "22.1.6",
+    "@angular/compiler": "22.1.6",
+    "@angular/compiler-cli": "22.1.6",
+    "@types/node": "^24.10.1",
+    "angular-eslint": "22.5.0",
+    "axe-core": "4.13.0",
+    "eslint": "^10.9.0",
+    "eslint-config-prettier": "^10.1.8",
+    "jsdom": "^29.0.2",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "^4.1.7"
+  }
+}

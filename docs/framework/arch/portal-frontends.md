@@ -3,7 +3,7 @@ id: ARCH-PORTAL-FRONTENDS
 title: apps/portal/web — especificação completa do portal do cidadão (módulos, telas, rotas, componentes, jornadas, ações)
 status: draft
 apps: [portal]
-updated: 2026-09-13
+updated: 2026-09-17
 ---
 
 # Portal do cidadão — `apps/portal/web`
@@ -25,17 +25,17 @@ vale o artefato de produto.
 
 ## 1. Stack, princípios e fronteiras
 
-| Item           | Decisão                                                                                                                                                                                                                                                                                |
-| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework      | Angular 22 (ADR-0015), standalone, `OnPush`, signals; PWA (service worker, manifesto, instalável); **modo offline só para CNH-e e CRLV-e** ([UC-PORTAL-011] AC-4, [JRN-PORTAL-006]) via cache cifrado do documento                                                                     |
-| Kit            | `@detran/ui` (feedback pt-BR, tema, primitivos STYNX) — o shell é próprio (`CitizenShell`: cabeçalho com marca do órgão, navegação de 5 destinos, rodapé com Carta de Serviços, canal presencial e acessibilidade); nenhum componente do RAIT ou do TEAT é reutilizado ([RN-RAIT-134]) |
-| Identidade     | Cognito federado ao **gov.br OIDC** (ADR-0019); papel `CIDADAO`; representação por procuração como atributo da sessão, não papel; nível de assinatura como claim assinada (`assurance_level`: `simples` \| `avancada` \| `qualificada`), nunca aceito do cliente                       |
-| Marca e tenant | tenant resolvido pelo `Host` no servidor (`platform.public_hostname`); `GET /v1/portal/brand` público; `runtime-config.js` só com `tenantId`, `oidcAuthority`, `clientId`                                                                                                              |
-| API            | somente `/v1/portal/*` (`portal-route-contract.md`), mesma origem; **nenhuma** chamada a sistemas nacionais, ao RAIT ou ao TEAT a partir do browser; o Portal lê **projeções** (ADR-0020) e emite **comandos delegados** (ADR-0019)                                                    |
-| Estado         | signals + facades por feature; sem NgRx; rascunhos de pedido persistidos no servidor (`portal/requests` em `PEDIDO_EM_COMPOSICAO`), não em `localStorage`                                                                                                                              |
-| Idioma         | pt-BR, linguagem cidadã; catálogo `i18n/portal.pt-BR.json` com o **mapa de tradução** dos estados internos (RAIT/PEC/BOAT → situação cidadã) como única fonte                                                                                                                          |
-| Acessibilidade | WCAG 2.1 AA + eMAG (DT-028) em todas as 27 telas; guia e boleto acessíveis mediante solicitação ([RN-PORTAL-114]); skip link, `aria-live` em estados, sem remoção de foco                                                                                                              |
-| Fronteiras     | o Portal nunca decide mérito, nunca calcula prazo legal, nunca registra veículo/CNH/sinistro: exibe, compõe e protocola; prazos chegam calculados e rotulados ("seu prazo" × "prazo do órgão")                                                                                         |
+| Item           | Decisão                                                                                                                                                                                                                                                                                                                                           |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework      | Angular 22 (ADR-0015), standalone, `OnPush`, signals; PWA (service worker, manifesto, instalável); **modo offline só para CNH-e e CRLV-e** ([UC-PORTAL-011] AC-4, [JRN-PORTAL-006]) via cache cifrado do documento                                                                                                                                |
+| Kit            | `@detran/ui` (feedback pt-BR, tema, primitivos STYNX) — o shell é próprio (`CitizenShell`: cabeçalho com marca do órgão, navegação de 5 destinos, rodapé com Carta de Serviços, canal presencial e acessibilidade); nenhum componente do RAIT ou do TEAT é reutilizado ([RN-RAIT-134])                                                            |
+| Identidade     | Cognito federado ao **gov.br OIDC** (ADR-0019); papel `CIDADAO`; representação por procuração como atributo da sessão, não papel; nível de assinatura como claim assinada (`assurance_level`: `simples` \| `avancada` \| `qualificada`), nunca aceito do cliente                                                                                  |
+| Marca e tenant | tenant resolvido pelo `Host` no servidor (`platform.public_hostname`); `GET /v1/portal/brand` público; `runtime-config.js` só com `tenantId`, `oidcAuthority`, `clientId`                                                                                                                                                                         |
+| API            | somente `/v1/portal/*` (`portal-route-contract.md`), mesma origem; **nenhuma** chamada a sistemas nacionais, ao RAIT ou ao TEAT a partir do browser; o Portal lê **projeções** (ADR-0020) e emite **comandos delegados** (ADR-0019)                                                                                                               |
+| Estado         | signals + facades por feature; sem NgRx; rascunhos de pedido persistidos no servidor (`portal/requests` em `PEDIDO_EM_COMPOSICAO`), não em `localStorage`                                                                                                                                                                                         |
+| Idioma         | pt-BR, linguagem cidadã; catálogo `apps/portal/web/src/app/i18n/portal.pt-BR.json` com o **mapa de tradução** dos estados internos (RAIT/PEC/BOAT → situação cidadã) como única fonte; só os namespaces `portal.<namespace>` declarados na allowlist do `parameter-catalogue.md` §Namespaces i18n são reconhecidos pelo verificador de parâmetros |
+| Acessibilidade | WCAG 2.1 AA + eMAG (DT-028) em todas as 27 telas; guia e boleto acessíveis mediante solicitação ([RN-PORTAL-114]); skip link, `aria-live` em estados, sem remoção de foco                                                                                                                                                                         |
+| Fronteiras     | o Portal nunca decide mérito, nunca calcula prazo legal, nunca registra veículo/CNH/sinistro: exibe, compõe e protocola; prazos chegam calculados e rotulados ("seu prazo" × "prazo do órgão")                                                                                                                                                    |
 
 ## 2. Invariantes de interface (valem para toda tela)
 
@@ -220,26 +220,45 @@ sempre com próximo passo e canal alternativo.
 ## 9. Estrutura de pastas
 
 ```text
-apps/portal/web/src/app/
-  core/       citizen-shell, brand.service, session.facade, resume.service, error-boundary, offline-document.store, guards/ (auth, assurance, entitlement, service-availability)
-  features/   catalogo/ autos/ defesa/ indicacao/ pagamento/ processos/ notificacoes/ documentos/ sinistros/ exames/ atendimento/ privacidade/ assinatura/
-  shared/     (§5.2)
-  data/       api/portal.client.ts (gerado), models/
-  i18n/       portal.pt-BR.json (inclui o mapa de tradução de estados)
+apps/portal/web/src/
+  app/core/        shell, sessão, marca, guardas, `ErrorBoundary`, offline e runtime
+  app/shared/      componentes reutilizáveis, wizard, diálogos, recibo e canal alternativo
+  app/forms/       14 schemas zod, `form-gate.ts` e anexos
+  app/data/        `portal.client.ts`, modelos de leitura/comando e idempotência
+  app/features/*/  módulos lazy: catálogo, autos, defesa, indicação, pagamento, processos,
+                    notificações, documentos, sinistros, exames, atendimento, privacidade e assinatura
+  app/i18n/        catálogo plano `portal.pt-BR.json` e fallback
+  app/a11y/        helper `axe` e invariantes de acessibilidade
+  app/screens/     páginas por tela e seus componentes de rota
+  testing/**       stubs, fixtures e harness HTTP/router dos specs
 ```
+
+Caminho completo: `apps/portal/web/src/app/i18n/portal.pt-BR.json`; só os namespaces
+declarados na allowlist do `parameter-catalogue.md` §Namespaces i18n (allowlist do
+verificador) são reconhecidos por `verify:parameter-catalogue --check-usage`.
 
 ## 10. Dependências de backend (pré-requisitos de release)
 
-| Dependência                                                                                            | Situação                                                                 |
-| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
-| Domínio `portal` (identity, requests, inbox, citizen-service) — ADR-0019                               | pendente (WP-P1/P2)                                                      |
-| Projeções `portal.*` — ADR-0020                                                                        | pendente (WP-P2)                                                         |
-| Comandos delegados no `inf` (`rait-case:protocol`, `infraction:indicate-driver`, `collection:issue`)   | pendentes (RAIT WP-B, ADR-0016/0015)                                     |
-| gov.br federado no Cognito + claim de nível assinada                                                   | pendente; hoje só pool Cognito e `custom:teat_assurance_level` na origem |
-| Adapter: `SnePort`, `CdtPort` (multas, veículos, CNH, cotação, reconhecimento), RENACH/RENAVAM leitura | existem (mock-first)                                                     |
-| Projeções BOAT (BAT) e PEC (exames)                                                                    | pendentes nos respectivos domínios                                       |
-| Carta de Serviços como dados (`portal.service_catalog`, 11 campos)                                     | modelo de origem existe; migrar para blueprint                           |
-| Portaria estadual de níveis (DT-050), instrumento da renúncia (DT-026), cartão (DT-031)                | decisões abertas — telas ligadas por flag                                |
+| Dependência                                                                                            | Situação ao fim de R-0014                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Domínio `portal` (identity, requests, inbox, citizen-service) — ADR-0019                               | entregue em R-0009 (PC-0006) (`work/rounds/R-0009/plan.md` §Retomada; `portal-build-pack.md` §2, WP-P1)                                                                      |
+| Projeções `portal.*` — ADR-0020                                                                        | entregues em R-0009 (PC-0006) (`work/rounds/R-0009/plan.md` §Retomada; `portal-build-pack.md` §2, WP-P2)                                                                     |
+| Comandos delegados no `inf` (`rait-case:protocol`, `infraction:indicate-driver`, `collection:issue`)   | pendentes de R-0007; as rotas devolvem `delegacao_indisponivel_r0007` (`work/rounds/R-0014/plan.md` M15; `portal-build-pack.md` §2, WP-P2)                                   |
+| gov.br federado no Cognito + claim de nível assinada                                                   | pendente; somente IdP simulado nos perfis `test`/`local` (`portal-build-pack.md` §4, OD-P15)                                                                                 |
+| Adapter: `SnePort`, `CdtPort` (multas, veículos, CNH, cotação, reconhecimento), RENACH/RENAVAM leitura | usados pelo Portal contra o `senatran-mock`; homologação real permanece pendente (`work/rounds/R-0014/contracts/CTG-0004.md` §2–§4; `portal-build-pack.md` §4, OD-P16)       |
+| Projeções BOAT (BAT) e PEC (exames)                                                                    | pendentes; hoje há somente as fixtures `crash_view` e `exam_view` (`portal-build-pack.md` §4, OD-P19)                                                                        |
+| Carta de Serviços como dados (`portal.service_catalog`, 11 campos)                                     | dados em `portal.service_catalog` como fixture; carga institucional permanece pendente (`portal-build-pack.md` §4, OD-P26)                                                   |
+| Push                                                                                                   | inscrição entregue no padrão M9 de R-0009 (`work/rounds/R-0014/contracts/CTG-0004.md` §5, A19(b)); chave VAPID e envio pendentes (`portal-build-pack.md` §4, OD-P88)         |
+| Portaria estadual de níveis (DT-050), instrumento da renúncia (DT-026), cartão (DT-031)                | DT-026 e DT-031 respondidas e mantidas por flags; OD-P01 tem a PN DETRAN-AM 001/2025, restando CETRAN-AM (`portal-build-pack.md` §4, OD-P01/OD-P03/OD-P05)                   |
+| Tratamento de `status 0`                                                                               | `status 0 → offline` vive só no `ErrorBoundary`; OD-P102 segue como unificação futura, sem duplicação a absorver (`work/rounds/R-0014/plan.md` A12(a); `backlog.md` OD-P102) |
 
 Enquanto uma dependência não existe, o serviço aparece no catálogo como `unavailable` com motivo
 e canal alternativo (constraint do catálogo), nunca como 404.
+
+Estado ao fim de R-0014: domínio `portal` e projeções foram entregues em R-0009 (PC-0006), e
+WP-P4…P6 concluíram o Portal contra o `senatran-mock`. As delegações reais permanecem em R-0007
+com `delegacao_indisponivel_r0007`; OD-P15 (gov.br real), OD-P16 (homologação real do adapter),
+OD-P17 (privacy), OD-P19 (BOAT/PEC) e OD-P88 (VAPID) seguem pendentes. CTG-0004 cobre CNH-e,
+veículos e quitação contra o mock; `SnePort` e `CdtPort` são usados nesse caminho, e a inscrição push foi entregue (`work/rounds/R-0014/contracts/CTG-0004.md` §5; envio e VAPID `source_pending`, OD-P88). Pela A12(a), a regra `status 0 → offline` fica exclusivamente no
+`ErrorBoundary`; OD-P102 permanece como unificação futura, sem regra duplicada a absorver
+(`docs/meta/knowledge-base/backlog.md`, OD-P102).

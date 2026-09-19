@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "check": "pnpm format:check && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm typecheck && pnpm --filter @detran/ui test && pnpm --filter @detran/ui build && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset",
+    "check": "pnpm format:check && pnpm verify:orchestra-bridge && pnpm docs:kb:check && pnpm docs:kb:publish-check && pnpm blueprints:check && pnpm contracts:check && pnpm parameters:test && pnpm contracts:test && pnpm verify:parameter-catalogue && pnpm --filter @detran/ui build && pnpm typecheck && pnpm --filter @detran/ui test && pnpm verify:decorators && pnpm verify:rls-ddl && pnpm verify:role-catalog && pnpm verify:lifecycle-vocabulary && pnpm verify:senatran-boundary && pnpm verify:senatran-contracts && pnpm verify:pec-parity && pnpm verify:pec-superset && pnpm --filter @detran/portal-web lint && pnpm --filter @detran/portal-web test && pnpm --filter @detran/portal-web build",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "typecheck": "pnpm -r --if-present run typecheck",
@@ -25,7 +25,7 @@
     "verify:senatran-contracts": "pnpm --filter @detran/senatran-adapter contracts:check",
     "verify:pec-parity": "tsx tools/verify-pec-parity.ts",
     "verify:pec-superset": "tsx tools/verify-pec-superset.ts",
-    "verify:orchestra-bridge": "bash tools/orchestra/bridge.test.sh",
+    "verify:orchestra-bridge": "bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh",
     "backend:db:apply": "bash backend/database/apply.sh",
     "backend:db:reset": "bash backend/database/apply.sh --full",
     "backend:rls-smoke": "tsx tools/check-rls-smoke.ts",

@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0014",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0014/prompts/TASK-0017-iteration-5.md",
+      "line": 8,
+      "claim": "A iteração restrita não é autossuficiente conforme A13(d): omite AGENTS.md, CODESTYLE.md e o manual Inspector, e não aponta o relatório anterior. As regras comuns exigem essas leituras antes de editar; A13(d) exige referência ao relatório anterior.",
+      "fix": "Adicionar à leitura fechada AGENTS.md, CODESTYLE.md §Tests, docs/meta/agents/inspector-tests.md e work/rounds/R-0014/reports/TASK-0017-iteration-4.md, declarando que a iteração julga somente a nota anterior."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0014/tasks/TASK-0010.json",
+      "line": 11,
+      "claim": "target_modules declara MOD-senatran-mock, mas o prompt veda qualquer escrita em senatran-mock e limita a tarefa a backend/app/tests/e2e/**. O lock não corresponde à fronteira real declarada.",
+      "fix": "Remover MOD-senatran-mock de target_modules de TASK-0010."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0014/tasks/TASK-0011.json",
+      "line": 11,
+      "claim": "Os target_modules não cobrem as superfícies que o prompt autoriza escrever: job backend-kernel de .github/workflows/ci.yml e seeds de senatran-mock. Isso impede que os locks representem a fronteira efetiva da tarefa.",
+      "fix": "Declarar módulos de lock específicos para CI backend-kernel e seeds do senatran-mock em TASK-0011, ou retirar essas superfícies de §Pode tocar e encaminhá-las a tarefas com locks próprios."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0014/tasks/TASK-0022.json",
+      "line": 11,
+      "claim": "TASK-0022 declara somente MOD-r14-contracts-4, mas o prompt autoriza alterar os blueprints BP-PORTAL-PROJECTIONS-001 e BP-PORTAL-INBOX-001 e regenerar seus artefatos. A fronteira de escrita adicional não está lockada.",
+      "fix": "Incluir os módulos dos dois blueprints e dos artefatos regenerados em target_modules, ou limitar TASK-0022 ao contrato e abrir uma tarefa Architect separada e lockada para a eventual mudança de blueprint."
+    }
+  ],
+  "notes": []
+}

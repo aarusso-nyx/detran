@@ -23,7 +23,22 @@ export const CONTROLLER_ROOTS = [
   'backend/domains/ops/offline-sync/src/handwritten',
   'backend/domains/ops/evidence/src/handwritten',
   'backend/domains/ops/snapshots/src/handwritten',
+  // R-0009 (WP-P3, CTG-0002 §14 / plan.md A4(e)): the five Portal packages
+  // mount hand-written citizen routes only (`operations: []`, M1).
+  'backend/domains/portal/identity/src/handwritten',
+  'backend/domains/portal/requests/src/handwritten',
+  'backend/domains/portal/inbox/src/handwritten',
+  'backend/domains/portal/citizen-service/src/handwritten',
+  'backend/domains/portal/projections/src/handwritten',
   'backend/app/src',
+];
+
+// Error catalogues whose codes a command contract may enumerate (rule 3):
+// TEAT (R-0008) and PORTAL (R-0009). `catalogPath` (singular) remains the
+// test seam; when it is the default, every catalogue below is read.
+export const ERROR_CATALOG_PATHS = [
+  'docs/framework/arch/teat-error-catalog.md',
+  'docs/framework/arch/portal-error-catalog.md',
 ];
 
 // Único e nomeado (CTG-0005 §2.6, §3.2): `SpeedModule` só monta atrás da
@@ -120,7 +135,15 @@ export function scanControllers(controllerRoots) {
     const isAppSrc =
       toPosix(absoluteRoot) === toPosix(path.resolve(root, 'backend/app/src'));
     for (const file of findFilesBelow(absoluteRoot)) {
-      if (isAppSrc && !path.basename(file).startsWith('teat-')) continue;
+      // App-level composition controllers: TEAT (R-0008) and Portal (R-0009,
+      // `portal-stream.controller.ts`); everything else under backend/app/src
+      // (PEC webhooks, runtime) is documented elsewhere.
+      if (
+        isAppSrc &&
+        !path.basename(file).startsWith('teat-') &&
+        !path.basename(file).startsWith('portal-')
+      )
+        continue;
       if (flagGated.has(toPosix(file))) continue;
       const source = ts.createSourceFile(
         file,
@@ -187,11 +210,22 @@ export function scanControllers(controllerRoots) {
   return { routes, problems };
 }
 
-/** Todo `TEAT.*` citado em `catalogPath` (crases ou prosa), como um Set. */
+/** Todo `TEAT.*`/`PORTAL.*` citado em `catalogPath` (crases ou prosa), como um Set. */
 export function parseErrorCatalog(catalogPath) {
   const text = fs.readFileSync(catalogPath, 'utf8');
   const codes = new Set();
-  for (const match of text.matchAll(/TEAT\.[A-Z0-9_]+/gu)) codes.add(match[0]);
+  for (const match of text.matchAll(/(?:TEAT|PORTAL)\.[A-Z0-9_]+/gu))
+    codes.add(match[0]);
+  return codes;
+}
+
+/** União dos catálogos existentes entre `paths`. */
+export function parseErrorCatalogs(paths) {
+  const codes = new Set();
+  for (const candidate of paths) {
+    if (!fs.existsSync(candidate)) continue;
+    for (const code of parseErrorCatalog(candidate)) codes.add(code);
+  }
   return codes;
 }
 
@@ -356,7 +390,7 @@ export function collectOperations(
 export function checkCommands({
   contractsDir = path.resolve(root, 'docs/framework/contracts'),
   controllerRoots = CONTROLLER_ROOTS,
-  catalogPath = path.resolve(root, 'docs/framework/arch/teat-error-catalog.md'),
+  catalogPath = undefined,
   blueprintsDir = path.resolve(root, 'docs/framework/blueprints'),
 } = {}) {
   const problems = [];
@@ -369,9 +403,13 @@ export function checkCommands({
   problems.push(...shapeProblems);
 
   // 3: códigos de erro fora do catálogo.
-  const catalog = fs.existsSync(catalogPath)
-    ? parseErrorCatalog(catalogPath)
-    : new Set();
+  const catalog = catalogPath
+    ? fs.existsSync(catalogPath)
+      ? parseErrorCatalog(catalogPath)
+      : new Set()
+    : parseErrorCatalogs(
+        ERROR_CATALOG_PATHS.map((entry) => path.resolve(root, entry)),
+      );
   const seenUnknown = new Set();
   for (const entry of operations) {
     for (const found of errorSchemaEnumsIn(entry.document)) {
@@ -394,7 +432,7 @@ export function checkCommands({
         problems.push({
           kind: 'unknown-error-code',
           file: entry.file,
-          detail: `${found.label}: código ${code} não está em teat-error-catalog.md`,
+          detail: `${found.label}: código ${code} não está no catálogo de erros (teat/portal)`,
         });
       }
     }

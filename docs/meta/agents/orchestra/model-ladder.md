@@ -11,7 +11,7 @@
 | **Médio**   | GPT-5.6 **Terra**  | **Opus 5**              | architect-blueprint, guardas de estado, engineer-frontend, reviewer padrão         |
 | **Pequeno** | GPT-5.6 **Luna**   | **Sonnet 5**            | transcriber-docs, inspector-tests, engineer-backend em tarefas de contrato fechado |
 
-Identificadores na CLI: Claude aceita os apelidos `fable`, `opus`, `sonnet` em `--model`; Codex
+Identificadores na CLI: Codex usa `gpt-5.6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna`; Claude aceita os apelidos `fable`, `opus`, `sonnet` em `--model`; Codex
 usa o id do modelo em `-m` (confirmar o id exato de Sol/Terra/Luna com `codex --help` ou
 `~/.codex/config.toml` antes da primeira ponte; registrar em `waves.md` §Histórico).
 

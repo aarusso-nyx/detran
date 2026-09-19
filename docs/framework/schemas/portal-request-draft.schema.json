@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/portal-request-draft.schema.json",
+  "title": "Portal Request Draft",
+  "description": "Corpo do rascunho de `PUT /v1/portal/requests/{id}/draft`, um `oneOf` por `serviceKey` (portal-route-contract.md §5.1; transcrito de DRAFT_SCHEMAS em requests/src/handwritten/drafts.ts, CTG-0002.md §3.4). Os serviços `manifestar` e `avaliar` não têm rascunho (sem ciclo de pedido) e não entram aqui. `junta_medica` está fora do catálogo desta rodada (M12, OD-P19) mas mantém corpo próprio no contrato de rotas.",
+  "oneOf": [
+    {
+      "title": "defesa_previa",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["facts", "grounds", "attachmentIds", "requestType"],
+      "properties": {
+        "facts": { "type": "string" },
+        "grounds": { "type": "string" },
+        "attachmentIds": {
+          "type": "array",
+          "items": { "type": "string", "format": "uuid" }
+        },
+        "requestType": { "type": "string", "enum": ["cancelamento", "outro"] }
+      }
+    },
+    {
+      "title": "recurso_jari",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["grounds", "attachmentIds"],
+      "properties": {
+        "grounds": { "type": "string" },
+        "attachmentIds": {
+          "type": "array",
+          "items": { "type": "string", "format": "uuid" }
+        }
+      }
+    },
+    {
+      "title": "recurso_cetran",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attachmentIds"],
+      "properties": {
+        "additionalText": { "type": "string" },
+        "attachmentIds": {
+          "type": "array",
+          "items": { "type": "string", "format": "uuid" }
+        }
+      }
+    },
+    {
+      "title": "indicacao_condutor",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["driver", "signatures", "consequenceAck"],
+      "properties": {
+        "driver": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cpf", "cnhNumber", "cnhUf", "category", "name"],
+          "properties": {
+            "cpf": { "type": "string", "pattern": "^\\d{11}$" },
+            "cnhNumber": { "type": "string" },
+            "cnhUf": { "type": "string", "minLength": 2, "maxLength": 2 },
+            "category": { "type": "string" },
+            "name": { "type": "string" }
+          }
+        },
+        "signatures": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["owner", "driver"],
+          "properties": {
+            "owner": { "type": "string", "enum": ["govbr", "upload"] },
+            "driver": {
+              "type": "string",
+              "enum": ["govbr", "upload", "pending"]
+            }
+          }
+        },
+        "consequenceAck": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["textVersion", "acceptedAt"],
+          "properties": {
+            "textVersion": { "type": "string" },
+            "acceptedAt": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    },
+    {
+      "title": "pagamento",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tier", "method"],
+      "properties": {
+        "tier": {
+          "type": "string",
+          "enum": [
+            "desconto_80",
+            "desconto_60_reconhecimento",
+            "desconto_40_fora_sne",
+            "integral_juros"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": ["pix", "debito", "boleto", "cartao"]
+        },
+        "installments": { "type": "integer", "minimum": 1 },
+        "waiverAck": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "textVersion": { "type": "string" },
+            "acceptedAt": { "type": "string", "format": "date-time" }
+          }
+        }
+      }
+    },
+    {
+      "title": "adesao_sne",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consent"],
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string", "pattern": "^\\d{10,11}$" },
+        "consent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["textVersion", "effectsAck"],
+          "properties": {
+            "textVersion": { "type": "string" },
+            "effectsAck": {
+              "type": "array",
+              "minItems": 4,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ciencia_ficta",
+                  "canal_exclusivo",
+                  "desconto_60",
+                  "cancelamento"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "cancelamento_sne",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reason": { "type": "string", "maxLength": 2000 }
+      }
+    },
+    {
+      "title": "junta_medica",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["examId", "reason", "attachmentIds"],
+      "properties": {
+        "examId": { "type": "string", "format": "uuid" },
+        "reason": { "type": "string" },
+        "attachmentIds": {
+          "type": "array",
+          "items": { "type": "string", "format": "uuid" }
+        }
+      }
+    },
+    {
+      "title": "lgpd_declaracao",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope"],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "confirmacao",
+            "declaracao_completa",
+            "correcao",
+            "eliminacao"
+          ]
+        },
+        "fields": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    {
+      "title": "consulta_multas",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    {
+      "title": "consulta_cnh",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    {
+      "title": "consulta_bat",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    {
+      "title": "consulta_exame",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    {
+      "title": "emissao_crlv",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    }
+  ]
+}

@@ -317,10 +317,12 @@ describe('DETRAN unified policy kit', () => {
         'accept',
       ),
     ).toBe(false);
+    // R-0009 CTG-0002 §10 (M19, ADR-0019): `portal:appeal:create` deu lugar a
+    // `portal:request:create` — única asserção pré-existente alterada por TASK-0006.
     expect(
       isDetranActionAllowed(
         { roles: ['CIDADAO'], permissions: [] },
-        'portal:appeal',
+        'portal:request',
         'create',
       ),
     ).toBe(true);
@@ -2164,20 +2166,206 @@ describe('CTG-0001 §3/§8 (M19, TASK-0003) — portal:identity:read: CIDADAO po
     expect(negatives).toHaveLength(31);
   });
 
-  it('dado portal:appeal:create e portal:appeal:read-own (linhas existentes) quando isDetranActionAllowed(CIDADAO) então continuam permitidas — só removidas em CTG-0002/TASK-0007 (M19)', () => {
+  it('dado portal:appeal:create e portal:appeal:read-own quando CTG-0002/TASK-0007 remove as linhas então AUSENTES da matriz e negadas a CIDADAO (M19, ADR-0019 — este `it` nasceu em TASK-0003 com prazo declarado até CTG-0002; C-0002-83)', () => {
+    expect('portal:appeal:create' in DETRAN_POLICY_MATRIX).toBe(false);
+    expect('portal:appeal:read-own' in DETRAN_POLICY_MATRIX).toBe(false);
     expect(
       isDetranActionAllowed(
         { roles: ['CIDADAO'], permissions: [] },
         'portal:appeal',
         'create',
       ),
-    ).toBe(true);
+    ).toBe(false);
     expect(
       isDetranActionAllowed(
         { roles: ['CIDADAO'], permissions: [] },
         'portal:appeal',
         'read-own',
       ),
-    ).toBe(true);
+    ).toBe(false);
+  });
+});
+
+/**
+ * work/rounds/R-0009/contracts/CTG-0002.md §10 e §13 C-0002-83 (M19, TASK-0006) — bloco
+ * `PORTAL_RULES` completo (29 chaves, só `CIDADAO`). Fica vermelho até TASK-0007 colar o bloco
+ * em `policy.ts` e remover `portal:appeal:{create,read-own}` (ADR-0019: o caso é do RAIT).
+ * Grants (orchestra/README.md §4.8): positivo `CIDADAO`; negativos pela política = todos os
+ * demais papéis canônicos de `roles.ts`; exceção declarada = `GLOBAL_ADMIN_ROLES` (`ADMIN`,
+ * `GESTOR_DETRAN`, `SUPORTE`, `technical-admin`), que `isDetranActionAllowed` libera para toda
+ * chave e a `PortalCitizenGuard` (CTG-0001 §3, A3(a)) barra depois — fora do escopo deste spec.
+ * `portal:complaint:*` (PEC, `TEAT_RULES`, M2) permanece como está.
+ */
+describe('CTG-0002 §10 (M19, TASK-0006) — PORTAL_RULES: CIDADAO positivo, negativos exaustivos, portal:appeal ausente', () => {
+  const PORTAL_GLOBAL_ADMIN_ROLES = [
+    'ADMIN',
+    'GESTOR_DETRAN',
+    'SUPORTE',
+    'technical-admin',
+  ] as const;
+
+  /** Transcrição literal de CTG-0002 §10.1 (29 chaves). */
+  const PORTAL_RULE_KEYS = [
+    'portal:identity:read',
+    'portal:identity:elevate',
+    'portal:identity:represent',
+    'portal:identity:update',
+    'portal:ait:read',
+    'portal:request:create',
+    'portal:request:compose',
+    'portal:request:submit',
+    'portal:request:withdraw',
+    'portal:request:read',
+    'portal:request:respond',
+    'portal:request:evaluate',
+    'portal:inbox:read',
+    'portal:inbox:acknowledge',
+    'portal:sne-enrollment:read',
+    'portal:sne-enrollment:enroll',
+    'portal:sne-enrollment:cancel',
+    'portal:push-subscription:create',
+    'portal:document:read',
+    'portal:vehicle:read',
+    'portal:vehicle:issue',
+    'portal:crash:read',
+    'portal:exam:read',
+    'portal:manifestation:manifest',
+    'portal:manifestation:read',
+    'portal:manifestation:acknowledge',
+    'portal:evaluation:evaluate',
+    'portal:service-charter:read',
+    'portal:stream:read',
+  ] as const;
+
+  /** `portal:complaint:*` (M2) — estado de `TEAT_RULES` em `policy.ts`, inalterado por CTG-0002. */
+  const COMPLAINT_RULES: Array<[string, readonly string[]]> = [
+    [
+      'portal:complaint:create',
+      ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+    ],
+    [
+      'portal:complaint:read',
+      ['CANDIDATO', 'DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE'],
+    ],
+    ['portal:complaint:update', ['DPO', 'AUDITOR', 'GESTOR_DETRAN', 'SUPORTE']],
+  ];
+
+  it('C-0002-83 — dado PORTAL_RULES então as 29 chaves existem na matriz com exatamente [CIDADAO]', () => {
+    expect(PORTAL_RULE_KEYS).toHaveLength(29);
+    for (const key of PORTAL_RULE_KEYS) {
+      expect(
+        key in DETRAN_POLICY_MATRIX,
+        `${key} deveria existir em DETRAN_POLICY_MATRIX`,
+      ).toBe(true);
+      expect(
+        [
+          ...(DETRAN_POLICY_MATRIX[key as keyof typeof DETRAN_POLICY_MATRIX] ??
+            []),
+        ],
+        key,
+      ).toEqual(['CIDADAO']);
+    }
+  });
+
+  it('C-0002-83 — dado cada chave de PORTAL_RULES quando isDetranActionAllowed então CIDADAO permitido, os 31 papéis canônicos restantes negados e ADMIN/GESTOR_DETRAN/SUPORTE/technical-admin permitidos (GLOBAL_ADMIN_ROLES — exceção declarada, barrada pela PortalCitizenGuard)', () => {
+    const negatives = DETRAN_ROLES.filter(
+      (role) =>
+        role !== 'CIDADAO' &&
+        !(PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role),
+    );
+    expect(negatives).toHaveLength(31);
+    for (const key of PORTAL_RULE_KEYS) {
+      const [domain, resource, action] = key.split(':') as [
+        string,
+        string,
+        string,
+      ];
+      const resourceKey = `${domain}:${resource}`;
+      for (const role of DETRAN_ROLES) {
+        const expected =
+          role === 'CIDADAO' ||
+          (PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role);
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            resourceKey,
+            action,
+          ),
+          `${key} para o papel ${role} deveria ser ${expected}`,
+        ).toBe(expected);
+      }
+      expect(
+        isDetranActionAllowed(
+          { roles: [], permissions: [] },
+          resourceKey,
+          action,
+        ),
+        `${key} sem papel`,
+      ).toBe(false);
+    }
+  });
+
+  it("C-0002-83 — dado a matriz então as chaves 'portal:*' fora de 'portal:complaint:*' são exatamente as 29 de PORTAL_RULES (nenhuma sobra, nenhuma falta) e 'portal:appeal:*' está ausente", () => {
+    const portalKeys = Object.keys(DETRAN_POLICY_MATRIX)
+      .filter(
+        (key) =>
+          key.startsWith('portal:') && !key.startsWith('portal:complaint:'),
+      )
+      .sort();
+    expect(portalKeys).toEqual([...PORTAL_RULE_KEYS].sort());
+    expect(portalKeys.some((key) => key.startsWith('portal:appeal:'))).toBe(
+      false,
+    );
+    expect('portal:appeal:create' in DETRAN_POLICY_MATRIX).toBe(false);
+    expect('portal:appeal:read-own' in DETRAN_POLICY_MATRIX).toBe(false);
+    for (const role of DETRAN_ROLES) {
+      if ((PORTAL_GLOBAL_ADMIN_ROLES as readonly string[]).includes(role))
+        continue;
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'portal:appeal',
+          'create',
+        ),
+        role,
+      ).toBe(false);
+      expect(
+        isDetranActionAllowed(
+          { roles: [role], permissions: [] },
+          'portal:appeal',
+          'read-own',
+        ),
+        role,
+      ).toBe(false);
+    }
+  });
+
+  it("C-0002-83 — dado 'portal:complaint:*' (PEC, M2) então inalterado: os mesmos papéis de TEAT_RULES e CIDADAO negado", () => {
+    for (const [key, roles] of COMPLAINT_RULES) {
+      expect(
+        [
+          ...(DETRAN_POLICY_MATRIX[key as keyof typeof DETRAN_POLICY_MATRIX] ??
+            []),
+        ],
+        key,
+      ).toEqual([...roles]);
+      const [, resource, action] = key.split(':') as [string, string, string];
+      expect(
+        isDetranActionAllowed(
+          { roles: ['CIDADAO'], permissions: [] },
+          `portal:${resource}`,
+          action,
+        ),
+        key,
+      ).toBe(false);
+      expect(
+        isDetranActionAllowed(
+          { roles: ['CANDIDATO'], permissions: [] },
+          `portal:${resource}`,
+          action,
+        ),
+        key,
+      ).toBe(roles.includes('CANDIDATO'));
+    }
   });
 });

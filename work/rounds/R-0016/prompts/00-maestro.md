@@ -20,7 +20,7 @@
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
   (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (18 fichas, i18n — nomes dos 42 indicadores transcritos de [APP-DASHBOARD] §Catálogo, iguais ao seed): nenhum upstream. CTG-0002 (console, formulários): `dashboard-backend` R-0011 (`orchestra/dashboard-backend`) — empilhe nele se ainda não mesclou**. No bootstrap, registre em `plan.md`
+  **merge de cada grupo acoplado**: **CTG-0001 (18 fichas, i18n — nomes dos 42 indicadores copiados do seed de R-0011): nenhum upstream. CTG-0002 (console, formulários): `dashboard-backend` R-0011 (`orchestra/dashboard-backend`) — empilhe nele se ainda não mesclou. Allowlist de namespaces i18n no catálogo de parâmetros (OD-P46, método §4.17) precisa estar em `main` (R-0012) antes de qualquer `i18n/*.json` entrar em código — senão esta rodada a aplica (`dashboard.*` já é prefixo de parâmetros vigentes)**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou

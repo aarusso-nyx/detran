@@ -1,0 +1,110 @@
+{
+  "action": "Deliver R-0014 CTG-0003a (WP-P5, pair 1): contract CTG-0003a.md (101 criteria), PortalClient commands (If-Match, Idempotency-Key M17), ErrorBoundary (67 codes), SessionFacade, OfflineDocumentStore, eleven shared components of spec §5.2, 14 zod form schemas with FormGate; Angular JIT transform in the vitest runner (A7); i18n OD-P58 keys and STYNX placeholders; 29 specs (711 passed | 3 todo)",
+  "round": "R-0014",
+  "coupled_task_group": "CTG-0003a",
+  "role": "engineer",
+  "commits": [
+    "b8158a2cda463f97caf3b6706d9bacb1a9ae2fe2",
+    "0d789f8d7ddb70d8496c0f5d2625ab3b987487d9",
+    "8d2bc34639408ad0551bbc897004ddad2307c06d",
+    "25b270b1c2d0cd5aef4d06753cb724a1852e0ea7"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0014/contracts/CTG-0003a.md",
+      "sha256": "f10fdf0922f23b055246ab77db4ddde7a7327ad52aefb2b4ab5c51c038fdf7c4"
+    },
+    {
+      "path": "apps/portal/web/vitest.config.ts",
+      "sha256": "fb0625217b889f2f47acc13b666783998c3d6b9c964f1d8577673595e4a6c8f9"
+    },
+    {
+      "path": "apps/portal/web/src/app/data/portal.client.ts",
+      "sha256": "9e139988d9657e0fc7d8087b552ce1f50d27ad21d20398ec7196cf0f1137a163"
+    },
+    {
+      "path": "apps/portal/web/src/app/data/idempotency-key.ts",
+      "sha256": "a6854de541954e5d4d02c58c2511a3a9b2e00b27046db18e2edde9471fea12c4"
+    },
+    {
+      "path": "apps/portal/web/src/app/core/error-boundary.ts",
+      "sha256": "5f4bde9252046409946ca79d8c0eaaee1dd9c44845e36500f0f5d422a6c3d2f1"
+    },
+    {
+      "path": "apps/portal/web/src/app/core/session.facade.ts",
+      "sha256": "31d0997c1b019a0c35034e7cdcfb1d58ebb1dbaaae64b2f769ccbaad3dcc1148"
+    },
+    {
+      "path": "apps/portal/web/src/app/core/offline-document.store.ts",
+      "sha256": "edc306d1e4e162cc0a5b7ecf7d47376c1ea4497f6ca2924aad40d2c67ee7681e"
+    },
+    {
+      "path": "apps/portal/web/src/app/shared/service-wizard.component.ts",
+      "sha256": "0feb8cb1253b6d98fa576ee387b837ef72c4d64c4dcface3c04fff26b8ad7912"
+    },
+    {
+      "path": "apps/portal/web/src/app/shared/attachment-uploader.component.ts",
+      "sha256": "5b3060f1bc4311f104c6aa753e6c3a600b0a4fd3d6190c934adee722d663d244"
+    },
+    {
+      "path": "apps/portal/web/src/app/shared/consequence-dialog.component.ts",
+      "sha256": "66d6d4e9326ad0fa27efd53f364723150e8ec1e00fda60810e914d3a2e0c8978"
+    },
+    {
+      "path": "apps/portal/web/src/app/forms/form-gate.ts",
+      "sha256": "b4fbccfbb199e37651c5d98321199e21fef47c17fc34783a7be65c4b047229f5"
+    },
+    {
+      "path": "apps/portal/web/src/app/forms/defesa-previa.schema.ts",
+      "sha256": "fb7af469fa9533e4bf0738b048a6206ec5cfed5bbccf61234d5ad09fe7c89899"
+    },
+    {
+      "path": "apps/portal/web/src/app/i18n/portal.pt-BR.json",
+      "sha256": "4eeb7f76f62928422671c68ad4504e41bec85bc9ef963ce8e31d80fd5005d503"
+    },
+    {
+      "path": "apps/portal/web/src/app/data/portal.client.spec.ts",
+      "sha256": "889fa15a5eb6f09e8f560abf70a45237ba4feeb3da96e789996a649d1e9167db"
+    },
+    {
+      "path": "apps/portal/web/src/app/shared/service-wizard.component.spec.ts",
+      "sha256": "0dc6587b5ceaa71e737d0d0b6ca0b313123a55d7ce59cd2a97da6d99fbb2cf5b"
+    },
+    {
+      "path": "work/rounds/R-0014/plan.md",
+      "sha256": "a4b1c7c0f8e39356af66b2384b7346afe40e2d3e3878c3177f3005c32081260d"
+    },
+    {
+      "path": "work/rounds/R-0014/reviews/delivery-review-CTG-0003a-2.json",
+      "sha256": "6b43ff80102b5ac5ebdc3dc5cae6d58b6a831f98961f90e6b16d2eeaa78800d9"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check (extended)",
+      "result": "pass",
+      "note": "EXIT 0 (Engineer, foreground, after iteration 3)"
+    },
+    {
+      "name": "pnpm --filter @detran/portal-web typecheck|lint|test|build",
+      "result": "pass",
+      "note": "Test Files 50 passed; Tests 711 passed | 3 todo (714); 0 unhandled errors"
+    },
+    {
+      "name": "pnpm verify:parameter-catalogue",
+      "result": "pass",
+      "note": "OK (87 entries, 18 flags, 14 i18n namespaces)"
+    },
+    {
+      "name": "pnpm format:check",
+      "result": "pass"
+    },
+    {
+      "name": "delivery-review (gpt-5.6-terra)",
+      "result": "pass",
+      "note": "cycle 1 REVIEW (complete C-3a-99/100) → cycle 2 PASS"
+    }
+  ],
+  "tasks": ["TASK-0019", "TASK-0008", "TASK-0009", "TASK-0006 (it. 4, 5)"],
+  "decisions": ["M17", "adendas A6, A7", "OD-P57…OD-P68 proposed"]
+}

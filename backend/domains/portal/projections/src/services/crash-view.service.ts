@@ -1,4 +1,4 @@
-// Generated from BP-PORTAL-PROJECTIONS-001 v1.0.0 sha256:0be808a8cab613c80b9fc898d70fcdf1323a979c488210bf692b3c489326b380
+// Generated from BP-PORTAL-PROJECTIONS-001 v1.0.2 sha256:5deaf3bb32dddcda371d363d5b4d7c5b8f3e0ec17cea92357ccf01a121943012
 import { Injectable } from '@nestjs/common';
 import { CrashViewRepository } from '../repositories/crash-view.repository.js';
 import type { CrashView } from '../entities/crash-view.entity.js';

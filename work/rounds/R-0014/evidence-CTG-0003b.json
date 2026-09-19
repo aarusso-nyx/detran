@@ -1,0 +1,106 @@
+{
+  "action": "Deliver R-0014 CTG-0003b (WP-P5, pair 2 — appeal trail): contract CTG-0003b.md (107 criteria), 7 PortalClient reads, five facades, PaymentComparison, ProcessTimeline, 13 real screens (T-14, T-01…T-05, T-13, T-23, T-06…T-08, T-10, T-11), i18n keys of pairs 2/3 (OD-P68/P70/P89), 23 specs with axe per state (972 passed | 7 todo); prompts of pair 3 reviewed",
+  "round": "R-0014",
+  "coupled_task_group": "CTG-0003b",
+  "role": "engineer",
+  "commits": [
+    "95061dae0dbb95925434574bc4895a4471c58a65",
+    "5ab27090a8b1563f53f95e9f99d8248c57050d92",
+    "5ab0fba34b78eb63838c55e3bccaebc80b4937ea",
+    "eb3d656f5a66eb224cf80f688399aa3ce7b2432e",
+    "240f13662c27b212b2a683e618f104d42bba103d",
+    "b7346c0d228df1036bdef5ab8697fc2735e42605",
+    "6166434b1068480b0ee1c830ff6f2da7c24f9950"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0014/contracts/CTG-0003b.md",
+      "sha256": "b429a58f28dfcc7da75c75754ab1a360883c8ce827d270d70209053dfd392cf7"
+    },
+    {
+      "path": "apps/portal/web/src/app/data/portal.client.ts",
+      "sha256": "9e29976c7655b9d6989de9d9f3c7500a13541c645596ff7d98a63d15b90f58d2"
+    },
+    {
+      "path": "apps/portal/web/src/app/data/portal-read.models.ts",
+      "sha256": "43378da136f66761e0dac0bc85d243489f6eef28bc34b9e118a3f44958843b96"
+    },
+    {
+      "path": "apps/portal/web/src/app/features/processos/processos.facade.ts",
+      "sha256": "cd8d0eef122550261abe2112b0eeac6b4f08e3e7c210b987acb09d93d21f8cef"
+    },
+    {
+      "path": "apps/portal/web/src/app/features/autos/autos.facade.ts",
+      "sha256": "38a6b51231556a92533f69003d6da8300d8da68bdd7da9c952734d3a764417e2"
+    },
+    {
+      "path": "apps/portal/web/src/app/shared/payment-comparison.component.ts",
+      "sha256": "ad9192b146fd015111a8783e1519703cc991e95e25cc1849ca152d541ceedfc1"
+    },
+    {
+      "path": "apps/portal/web/src/app/shared/process-timeline.component.ts",
+      "sha256": "04a1cfb0fd53018bc52bcd93ba90156b323c86c954617f1d1590915d720a90d6"
+    },
+    {
+      "path": "apps/portal/web/src/app/features/pagamento/pages/pagamento.page.ts",
+      "sha256": "19529ca898fae213476b9d6819ec6f18381ae3f484c78b00733c7bb99d316cfd"
+    },
+    {
+      "path": "apps/portal/web/src/app/features/processos/pages/request-detail.page.ts",
+      "sha256": "bc39d6c7803a12213bcf4286feb7291fc86687a26d454b85e099e79a1e1dd161"
+    },
+    {
+      "path": "apps/portal/web/src/app/i18n/portal.pt-BR.json",
+      "sha256": "c8d8a7fe02649eeac6f6de32141cb393bdf75aa0e0cde43ea2a76ca5a621bd3a"
+    },
+    {
+      "path": "apps/portal/web/src/testing/a11y-state.spec-helper.ts",
+      "sha256": "d26202327c6fd5b954553748005ca331b2ad4a51b80367103480e92963bd4e10"
+    },
+    {
+      "path": "apps/portal/web/src/app/features/autos/page-routes.spec.ts",
+      "sha256": "9d3921a097b5e4c12dcdb0587b7e3145dc6c88536e4ba24a98c4cc3dd34eade8"
+    },
+    {
+      "path": "work/rounds/R-0014/plan.md",
+      "sha256": "61ecd651b7e735a2e9619ed73eebac96e6efdaab2ab6334509f35992f338e47a"
+    },
+    {
+      "path": "work/rounds/R-0014/reviews/delivery-review-CTG-0003b-4.json",
+      "sha256": "1b3d173c30640ddeec45acd4d21b617ee229636323ab9ce5b23e8b3cb0899817"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check (extended)",
+      "result": "pass",
+      "note": "EXIT 0 (pnpm-check-ctg3b.log, before A10); app gates re-run after A10 iterations"
+    },
+    {
+      "name": "pnpm --filter @detran/portal-web typecheck|lint|test|build",
+      "result": "pass",
+      "note": "Test Files 74 passed; Tests 972 passed | 7 todo (979); build 503.9 kB < 600 kB"
+    },
+    {
+      "name": "pnpm verify:parameter-catalogue",
+      "result": "pass"
+    },
+    {
+      "name": "pnpm format:check",
+      "result": "pass"
+    },
+    {
+      "name": "delivery-review (claude/opus, Owner deviation B2)",
+      "result": "pass",
+      "note": "REVIEW → REVIEW → REVIEW → PASS (cycle 4)"
+    }
+  ],
+  "tasks": [
+    "TASK-0020",
+    "TASK-0015",
+    "TASK-0016",
+    "TASK-0006 (it. 6, 7)",
+    "TASK-0021 (contract of pair 3, not in this delivery)"
+  ],
+  "decisions": ["adendas A8, A9, A10", "OD-P69…OD-P86, OD-P101 proposed"]
+}

@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Concorrência:** abre com `origin/main` ≥ 80d705a; merge por grupo acoplado — CTG-0001 (17 fichas, i18n, transições): nenhum upstream. CTG-0002 (biblioteca mobile, módulo `sinistros` web, formulários): `boat-backend` R-0010 e `teat-frontends` R-0013 (shell de campo e `apps/teat/web`) em `main`.
+**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (17 fichas, i18n, transições): nenhum upstream. CTG-0002 (biblioteca mobile, módulo `sinistros` web, formulários): `boat-backend` R-0010 (CTG-0001 já em `main`, PR #55; CTG-0002 em curso) e `teat-frontends` R-0013 (shell de campo e `apps/teat/web`) em `main`.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -27,17 +27,19 @@
 
 ## Tarefas
 
-| Tarefa    | Papel        | Perfil              | Modelo/esforço | Lock                                                    | Depende de | Entrega                                                                                                                                         |
-| --------- | ------------ | ------------------- | -------------- | ------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect    | architect-blueprint | Opus / alto    | `MOD-boat-mobile-arch`                                  | —          | decisões (forma de biblioteca carregada pelo shell, portas nativas, editor de croqui), lista tela → ficha → rota, critérios                     |
-| TASK-0002 | Owner deleg. | transcriber-docs    | Sonnet / baixo | `MOD-product-boat-screens`, `MOD-kb-manifest`           | TASK-0001  | 17 fichas; manifesto                                                                                                                            |
-| TASK-0003 | Engineer     | engineer-frontend   | Sonnet / baixo | `MOD-boat-i18n-transitions`                             | TASK-0001  | `i18n/boat.pt-BR.json`, `transitions.ts` (149 + S-12), teste tela ↔ ficha ↔ rota                                                                |
-| TASK-0004 | Inspector    | inspector-tests     | Sonnet / médio | `MOD-boat-mobile-tests`, `MOD-teat-web-sinistros-tests` | TASK-0003  | testes: roteamento e transições, `victimAccessGuard` (perfil + finalidade), 14 schemas, TestBed dos compartilhados, portas nativas com fixtures |
-| TASK-0005 | Engineer     | engineer-frontend   | Opus / médio   | `MOD-boat-mobile-lib`, `MOD-package-json`               | TASK-0004  | biblioteca `@detran/boat-mobile` (12 telas, componentes, guardas, croqui, portas); `pnpm check` estendido; testes verdes                        |
-| TASK-0006 | Engineer     | engineer-frontend   | Sonnet / médio | `MOD-teat-web-sinistros`, `MOD-boat-mobile-forms`       | TASK-0005  | módulo `sinistros` (5 telas) em `apps/teat/web`; 14 schemas com gates; testes verdes                                                            |
-| TASK-0007 | Owner deleg. | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                              | TASK-0006  | build pack, `boat-frontends.md`, backlog                                                                                                        |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                    | Depende de | Entrega                                                                                                                                                                            |
+| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect            | architect-blueprint | Opus / alto    | `MOD-boat-mobile-arch`                                  | —          | decisões (forma de biblioteca carregada pelo shell, portas nativas, editor de croqui), lista tela → ficha → rota, critérios                                                        |
+| TASK-0002 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-boat-screens`, `MOD-kb-manifest`           | TASK-0001  | 17 fichas; manifesto                                                                                                                                                               |
+| TASK-0003 | Engineer             | engineer-frontend   | Sonnet / baixo | `MOD-boat-i18n-transitions`                             | TASK-0001  | `i18n/boat.pt-BR.json`, `transitions.ts` (149 + S-12)                                                                                                                              |
+| TASK-0004 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-boat-mobile-tests`, `MOD-teat-web-sinistros-tests` | TASK-0003  | testes: roteamento e transições, `victimAccessGuard` (perfil + finalidade), 14 schemas, TestBed dos compartilhados, portas nativas com fixtures; teste tela ↔ ficha ↔ rota (17/17) |
+| TASK-0005 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-boat-mobile-lib`, `MOD-package-json`               | TASK-0004  | biblioteca `@detran/boat-mobile` (12 telas, componentes, guardas, croqui, portas); `pnpm check` estendido; testes verdes                                                           |
+| TASK-0006 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-teat-web-sinistros`, `MOD-boat-mobile-forms`       | TASK-0005  | módulo `sinistros` (5 telas) em `apps/teat/web`; 14 schemas com gates; testes verdes                                                                                               |
+| TASK-0007 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                              | TASK-0006  | build pack, `boat-frontends.md`, backlog                                                                                                                                           |
 
 CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
+
+**Checkpoint de dependências:** após TASK-0005 criar `apps/boat/mobile/package.json`, o maestro roda `pnpm install`, guarda o lockfile, estende `pnpm check` e libera TASK-0004/0006 contra a biblioteca.
 
 ## Critérios de aceitação (comandos → resultado)
 
@@ -64,6 +66,18 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
 - Vítimas: tela liberada para produção por H.44, mas retenção e finalidade vêm do backend (R-0010);
   nada de acesso sem `purpose`.
 - Nativos (câmera, GPS, assinatura, atestação): portas com fixtures; hardware real fora da rodada.
+
+## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
+
+- Transcrição de fichas, contratos, i18n e docs é ato de **Architect** (`transcriber-docs`); tarefas assim aparecem como "Architect (transcr.)".
+- Nenhum Engineer ou transcriber entrega o teste do próprio artefato: contratos → `contracts:test` pelo Inspector; fichas/i18n → teste tela ↔ ficha ↔ rota pelo Inspector.
+- Ciclos de review a partir do segundo restritos aos itens corrigidos; contradições contrato × código resolvidas pelo Architect por adenda numerada em `plan.md` antes de redespachar.
+- O CTG seguinte só começa a escrever depois do merge do anterior ou nasce em branch empilhado; nunca commits novos no branch de um PR aberto; integrar `main` por merge, nunca `--force`.
+- Listas de leitura dos workers fechadas e completas (DDL gerado, blueprint, `seed.sh`, fixtures, specs de referência como `backend/app/tests/e2e/policy-routes.e2e.spec.ts`); lacuna aqui foi `reference-gap` em R-0010.
+- Padrão de app: o primeiro frontend (R-0012, `apps/rait/web`) fixa `package.json` (scripts `build|test|lint|typecheck`), configuração Angular 22/vitest/eslint e a extensão de `pnpm check`; os apps seguintes copiam a estrutura, sem variantes.
+- Pacote de workspace novo: o maestro roda `pnpm install`, guarda o `pnpm-lock.yaml` para o commit do grupo e só então libera o Inspector (CI é `--frozen-lockfile`).
+- Chaves i18n não são parâmetros (OD-P46): o namespace deste app entra na allowlist de i18n do `parameter-catalogue.md` lida por `tools/parameters/verify.mjs`; se R-0012 ainda não tiver mesclado essa regra, esta rodada a aplica (nunca exclusão por diretório).
+- Testes de roteamento cobrem papéis com e sem acesso (presença e ausência), não só o papel mínimo.
 
 ## Concorrência
 
