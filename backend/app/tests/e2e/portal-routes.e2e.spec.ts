@@ -594,7 +594,13 @@ describe('CTG-0002 §2.5/§8 — documentos, veículos, sinistros, exames (C-000
     const cnh = await api().get('/v1/portal/documents/cnh').set(headers());
     expect(cnh.status, JSON.stringify(cnh.body)).toBe(200);
     expect(cnh.body).toMatchObject({
-      license: { category: 'B', status: 'fixture' },
+      // A20: forma normalizada (CTG-0004 §3) substitui o repasse bruto de R-0009.
+      license: {
+        status: null,
+        validUntil: null,
+        categories: [],
+        restrictions: [],
+      },
       qrVerification: null,
       documentBytes: null,
       category: 'C',
@@ -618,10 +624,12 @@ describe('CTG-0002 §2.5/§8 — documentos, veículos, sinistros, exames (C-000
 
     const vehicles = await api().get('/v1/portal/vehicles').set(headers());
     expect(vehicles.status, JSON.stringify(vehicles.body)).toBe(200);
+    // A20: item sem chassi não é projetado (CTG-0004 §3).
     expect(vehicles.body).toMatchObject({
-      items: [{ plate: 'FIX2EE1', renavam: '00000000001' }],
+      items: [],
     });
     expect(typeof vehicles.body.cachedAt).toBe('string');
+    expect(JSON.stringify(vehicles.body)).not.toContain('renavam');
 
     const notEntitled = await api()
       .get(`/v1/portal/vehicles/${randomUUID()}/clearance`)

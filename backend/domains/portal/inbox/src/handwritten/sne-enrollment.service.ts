@@ -1,10 +1,11 @@
-// Adesão e cancelamento do SNE (work/rounds/R-0009/contracts/CTG-0002.md §2.4,
-// §6.2 e §11; CTG-0001 §6.3; plan R-0009 M8, M15, M21, adenda A1(a)).
+// Adesão e cancelamento do SNE (CTG-0002 §2.4, §6.2 e §11; CTG-0001 §6.3;
+// A23(a): PORTAL_SNE_PORT obrigatório e a adesão nacional antecede toda
+// persistência local e publicação na outbox).
 // `SNE_ENROLLMENT_TRANSITIONS` espelha as três linhas de [WF-PORTAL-003]
 // para `portal.sne_enrollment.state`; `enroll`/`cancel` são chamados pela
 // rota §2.4 e pelo alvo de delegação `adesao_sne`/`cancelamento_sne` do app
-// (§3.2). O envio real ao SNE nacional (`SnePort` via adapter) é OD-P16 —
-// nada sai do backend nesta rodada.
+// (§3.2). A adesão chama o `SnePort` via adapter antes dos efeitos locais;
+// o cancelamento permanece local (DIVERGE-2/OD-P106).
 //
 // `sne_enrollment` não tem `version` (D8): `aggregate.version` do evento é o
 // número da transição da linha (adesão nova = 1, cancelamento = 2, re-adesão
@@ -35,6 +36,15 @@ import {
   portalInboxEvents,
   type PortalInboxEventContext,
 } from './events.js';
+
+export const PORTAL_SNE_PORT = Symbol('PORTAL_SNE_PORT');
+
+export interface PortalSnePort {
+  enrollCitizen(input: {
+    cpf: string;
+    channel?: string;
+  }): Promise<{ enrolled: boolean }>;
+}
 
 // ---------------------------------------------------------------------------
 // vocabulário (§2.4, CTG-0001 §6.3)
@@ -216,6 +226,7 @@ export class PortalSneEnrollmentService {
 
   constructor(
     private readonly identity: PortalIdentityService,
+    @Inject(PORTAL_SNE_PORT) private readonly sne: PortalSnePort,
     @Optional() clock?: PortalClock,
     @Optional() private readonly requestContext?: RequestContext,
     @Optional() @Inject(TEAT_EVENT_OUTBOX) outbox?: TeatEventOutbox,
@@ -261,7 +272,42 @@ export class PortalSneEnrollmentService {
         context: { missing: ['email', 'phone'] },
       });
     }
-    // 4. estado
+    // 4. integração nacional antes de qualquer escrita local (§4).
+    try {
+      const national = await this.sne.enrollCitizen({
+        cpf: identity.cpf,
+        channel: input.channel,
+      });
+      if (!national.enrolled) {
+        throw new PortalError('PORTAL.SNE_UPSTREAM_UNAVAILABLE', {
+          status: 503,
+          context: { retryAfter: null },
+        });
+      }
+    } catch (error) {
+      if (error instanceof PortalError) throw error;
+      const category =
+        typeof error === 'object' && error !== null && 'category' in error
+          ? (error as { category?: unknown }).category
+          : undefined;
+      if (category === 'VALIDATION') {
+        throw new PortalError('PORTAL.VALIDATION_FAILED', {
+          status: 400,
+          context: { fields: [] },
+        });
+      }
+      if (category === 'BUSINESS') {
+        throw new PortalError('PORTAL.SNE_ALREADY_ENROLLED', {
+          status: 409,
+          context: {},
+        });
+      }
+      throw new PortalError('PORTAL.SNE_UPSTREAM_UNAVAILABLE', {
+        status: 503,
+        context: { retryAfter: null },
+      });
+    }
+    // 5. estado
     const existing = (
       await tx.query<EnrollmentRow>(ENROLLMENT_FOR_UPDATE_SQL, [
         subject.subjectId,
@@ -273,7 +319,7 @@ export class PortalSneEnrollmentService {
         context: {},
       });
     }
-    // 5. upsert
+    // 6. upsert
     const now = this.clock.now();
     const channel = input.channel ?? null;
     const effectsAck = JSON.stringify(
@@ -308,7 +354,7 @@ export class PortalSneEnrollmentService {
       }
       enrollmentId = inserted.id;
     }
-    // 6. evento
+    // 7. evento
     await this.outbox.append(
       tx as never,
       portalInboxEvents.sneAdesaoSolicitada(

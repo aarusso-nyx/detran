@@ -244,7 +244,7 @@ describe('RealtimeService — análise estática (§4.1; [DIVERGE-1])', () => {
     const numericLiterals =
       nonUnitLines.join('\n').match(/\b\d[\d_]*\b/g) ?? [];
     const intervalLiterals = numericLiterals.filter(
-      (literal) => Number(literal.replace(/_/g, '')) > 1000,
+      (literal) => Number(literal.replace(/_/g, '')) >= 1000,
     );
     expect(new Set(intervalLiterals)).toEqual(new Set(['60_000']));
   });

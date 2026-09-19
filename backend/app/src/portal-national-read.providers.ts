@@ -21,6 +21,7 @@ import {
   type PortalParameterReader,
   type PortalProjectionPoller,
 } from '@detran/portal-projections';
+import { PORTAL_SNE_PORT, type PortalSnePort } from '@detran/portal-inbox';
 import { createSenatranAdapter } from '@detran/senatran-adapter';
 
 import { createDefaultTeatStreamPoller } from './teat-stream.service.js';
@@ -35,6 +36,11 @@ export const PORTAL_NATIONAL_READ_PORTS_PROVIDER = {
       wsdenatranRead: ports.wsdenatranRead,
     };
   },
+};
+
+export const PORTAL_SNE_PORT_PROVIDER = {
+  provide: PORTAL_SNE_PORT,
+  useFactory: (): PortalSnePort => createSenatranAdapter().ports.sne,
 };
 
 export const PORTAL_PARAMETER_READER_PROVIDER = {
@@ -53,11 +59,13 @@ export const PORTAL_PROJECTION_POLLER_PROVIDER = {
   imports: [ParameterModule],
   providers: [
     PORTAL_NATIONAL_READ_PORTS_PROVIDER,
+    PORTAL_SNE_PORT_PROVIDER,
     PORTAL_PARAMETER_READER_PROVIDER,
     PORTAL_PROJECTION_POLLER_PROVIDER,
   ],
   exports: [
     PORTAL_NATIONAL_READ_PORTS,
+    PORTAL_SNE_PORT,
     PORTAL_PARAMETER_READER,
     PORTAL_PROJECTION_POLLER,
   ],

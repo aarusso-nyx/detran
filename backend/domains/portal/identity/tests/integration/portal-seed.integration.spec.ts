@@ -68,7 +68,7 @@ describe('70-fixtures-portal.sql — contagens e invariantes (CTG-0001 §10.9, M
     expect(counts).toEqual({
       subject: 5,
       representation: 1,
-      entitlement: 12,
+      entitlement: 13, // A22 (R-0014 CTG-0004 §3): entitlement vehicle da Prata (UUIDv5 do chassi)
       act_level_policy: 21,
       request: 13,
       request_draft: 1,

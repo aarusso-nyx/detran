@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0014",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Documentação de fechamento: build pack §WP-P4…P6 + OD-P47…P10n, portal-frontends §9/§10, parameter-catalogue portal.attachment.*, método §4.17/§4.18/§10, waves/model-ladder, engineer-frontend.md, backlog, fichas, contrato 3c A12(j), closure.md",
+  "description": "Transcrever decisões já tomadas; nada novo.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0005",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0011",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-p6", "closure"],
+  "branch": "orchestra/portal-pwa",
+  "worktree_id": "WT-portal-pwa",
+  "prompt_composition_id": "PC-50551f8ccd9d9ae4",
+  "acceptance_commands": [
+    ["node", "tools/docs/kb/check.mjs"],
+    ["pnpm", "docs:kb:publish-check"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-19T03:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-50551f8ccd9d9ae4",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"],
+    "note": "AUTHORIZATION.md Amendment 2 / plan B3: worker executed by the Codex CLI via tools/orchestra/worker.sh"
+  }
+}

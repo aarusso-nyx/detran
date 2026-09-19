@@ -38,3 +38,15 @@ While the Codex CLI is at its usage limit (reset announced for 2026-09-19 05:10)
 authorised running the reviewer through the `claude` bridge with Opus 5 (a same-family review —
 deviation from `orchestra/README.md` §2 / Art. 18, 23), temporary and recorded in `plan.md`
 §Bloqueios B2; the Codex reviewer resumes as soon as the limit resets.
+
+## Amendment 2 (Owner, 2026-09-19)
+
+With the Claude usage window close to exhaustion after PR #64 (WP-P5 closed), the Owner decided
+that the remaining coupled groups of this round (CTG-0004 and CTG-0005) run with the **Codex CLI
+as both worker executor and reviewer**, the Claude session staying **maestro only** (planning,
+prompts, gates, git, evidence, PR). This deviates from `orchestra/README.md` §2 ("workers never
+of the other family", Owner decision 2026-09-14) and ends the Amendment 1 deviation (the reviewer
+returns to Codex, as §2 requires). Workers run through `tools/orchestra/worker.sh` (Codex
+`workspace-write` sandbox, no `git`, report + transcript + hash record per task); the reviewer
+through `tools/orchestra/bridge.sh codex`. Recorded in `plan.md` §Bloqueios B3 and adenda A13;
+temporary to this round.
