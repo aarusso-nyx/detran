@@ -1,4 +1,4 @@
--- Generated from parameter-catalogue.md sha256:55cbc2ca6a7b746b8032c03593b21c42b41d638085c487ed3bcc246f748b21e3
+-- Generated from parameter-catalogue.md sha256:f669a42133007d0f6b88209b3e20d0fad72f432ee25a4869d579132b0c157a2a
 -- Applied by backend/database/seed.sh after apply.sh: the tenant context below satisfies auth.enforce_tenant_id().
 select set_config('app.role', 'owner', false);
 select set_config('app.tenant_id', '00000000-0000-7000-8000-00000000a001', false);
@@ -65,6 +65,8 @@ VALUES
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'portal', 'portal.read_cache_ttl_minutes', '15', 'int', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'portal', 'portal.mobile_shell', 'false', 'F', 'vigente', false, false, 'OD-P12', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'portal', 'portal.ombudsman_taxonomy', '"inclui \"solicitação\""', 'json', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
+('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'portal', 'portal.attachment.max_size_mb', '10', 'int', 'proposta', false, false, 'OD-P66', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
+('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'portal', 'portal.attachment.accepted_types', '"[\"application/pdf\",\"image/jpeg\",\"image/png\"]"', 'json', 'proposta', false, false, 'OD-P66', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'est', 'est.renaest.transmit_period', '"monthly"', 'enum', 'vigente', false, false, 'OD-B04', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'est', 'est.renaest.layout_version', '"mock"', 'str', 'proposta', true, false, 'OD-B08', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'est', 'est.severity.derivation', '"worst_victim"', 'enum', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),

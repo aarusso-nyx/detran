@@ -70,14 +70,14 @@ acessível sem sessão (`access: anonimo`), presente mesmo para usuário anônim
 
 ## Estados obrigatórios
 
-| Estado            | Texto cidadão (chave i18n)  | Ação seguinte     |
-| ----------------- | --------------------------- | ----------------- |
-| carregando        | `portal.states.loading`     | —                 |
-| vazio             | n/a — conteúdo estático     | —                 |
-| sem elegibilidade | n/a — acesso anônimo        | —                 |
-| erro recuperável  | `portal.states.retry`       | tentar novamente  |
-| sem permissão     | n/a — acesso anônimo        | —                 |
-| indisponível      | `portal.states.unavailable` | voltar mais tarde |
+| Estado            | Texto cidadão (chave i18n)                           | Ação seguinte     |
+| ----------------- | ---------------------------------------------------- | ----------------- |
+| carregando        | `portal.states.loading`                              | —                 |
+| vazio             | n/a — conteúdo estático                              | —                 |
+| sem elegibilidade | n/a — acesso anônimo                                 | —                 |
+| erro recuperável  | `portal.states.error` + `portal.common.action.retry` | tentar novamente  |
+| sem permissão     | n/a — acesso anônimo                                 | —                 |
+| indisponível      | `portal.states.service_unavailable`                  | voltar mais tarde |
 
 ## Chaves i18n
 

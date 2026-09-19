@@ -89,14 +89,14 @@ pode recorrer (AC-4).
 
 ## Estados obrigatórios
 
-| Estado            | Texto cidadão (chave i18n)        | Ação seguinte                                          |
-| ----------------- | --------------------------------- | ------------------------------------------------------ |
-| carregando        | `portal.states.loading`           | —                                                      |
-| vazio             | `portal.screens.t10.empty`        | volta a `/processos/:requestId`                        |
-| sem elegibilidade | tratado pelo guarda (redireciona) | `/vinculo/por-que-nao-vejo`                            |
-| erro recuperável  | `portal.states.retry`             | tentar novamente                                       |
-| sem permissão     | tratado pelo guarda (redireciona) | `/vinculo/por-que-nao-vejo`                            |
-| indisponível      | `portal.states.unavailable`       | tentar mais tarde; canal alternativo ([RN-PORTAL-105]) |
+| Estado            | Texto cidadão (chave i18n)                           | Ação seguinte                                          |
+| ----------------- | ---------------------------------------------------- | ------------------------------------------------------ |
+| carregando        | `portal.states.loading`                              | —                                                      |
+| vazio             | `portal.screens.t10.empty`                           | volta a `/processos/:requestId`                        |
+| sem elegibilidade | tratado pelo guarda (redireciona)                    | `/vinculo/por-que-nao-vejo`                            |
+| erro recuperável  | `portal.states.error` + `portal.common.action.retry` | tentar novamente                                       |
+| sem permissão     | tratado pelo guarda (redireciona)                    | `/vinculo/por-que-nao-vejo`                            |
+| indisponível      | `portal.states.service_unavailable`                  | tentar mais tarde; canal alternativo ([RN-PORTAL-105]) |
 
 ## Chaves i18n
 

@@ -80,14 +80,14 @@ técnico (alt. 2a).
 
 ## Estados obrigatórios
 
-| Estado            | Texto cidadão (chave i18n)    | Ação seguinte                                        |
-| ----------------- | ----------------------------- | ---------------------------------------------------- |
-| carregando        | `portal.states.loading`       | —                                                    |
-| vazio             | `portal.screens.t14.empty`    | ir à ouvidoria se achar que há divergência (alt. 2b) |
-| sem elegibilidade | n/a — consulta do próprio CPF | —                                                    |
-| erro recuperável  | `portal.states.retry`         | tentar novamente                                     |
-| sem permissão     | n/a — consulta do próprio CPF | —                                                    |
-| indisponível      | `portal.states.unavailable`   | canal alternativo ([RN-PORTAL-105])                  |
+| Estado            | Texto cidadão (chave i18n)                           | Ação seguinte                                        |
+| ----------------- | ---------------------------------------------------- | ---------------------------------------------------- |
+| carregando        | `portal.states.loading`                              | —                                                    |
+| vazio             | `portal.screens.t14.empty`                           | ir à ouvidoria se achar que há divergência (alt. 2b) |
+| sem elegibilidade | n/a — consulta do próprio CPF                        | —                                                    |
+| erro recuperável  | `portal.states.error` + `portal.common.action.retry` | tentar novamente                                     |
+| sem permissão     | n/a — consulta do próprio CPF                        | —                                                    |
+| indisponível      | `portal.states.service_unavailable`                  | canal alternativo ([RN-PORTAL-105])                  |
 
 ## Chaves i18n
 

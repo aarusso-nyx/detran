@@ -91,7 +91,7 @@ tela mostra que o processo seguiu para julgamento no estado em que se encontra (
 | sem elegibilidade | tratado pelo guarda (redireciona)    | `/vinculo/por-que-nao-vejo`     |
 | erro recuperável  | `portal.screens.t11.state.encerrada` | ver status atual do processo    |
 | sem permissão     | tratado pelo guarda (redireciona)    | `/vinculo/por-que-nao-vejo`     |
-| indisponível      | `portal.states.unavailable`          | tentar mais tarde               |
+| indisponível      | `portal.states.service_unavailable`  | tentar mais tarde               |
 
 ## Chaves i18n
 

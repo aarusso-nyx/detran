@@ -86,7 +86,7 @@ saúde de terceiro não aparece na lista (AC-2).
 | sem elegibilidade | `portal.screens.t18.state.sem_vinculo`   | canal formal (ouvidoria/LGPD) ([UC-PORTAL-013] alt. 2b) |
 | erro recuperável  | `portal.screens.t18.state.em_elaboracao` | aguardar; o registro ainda está em atendimento          |
 | sem permissão     | `portal.screens.t18.state.sem_vinculo`   | canal formal (ouvidoria/LGPD)                           |
-| indisponível      | `portal.states.unavailable`              | tentar mais tarde                                       |
+| indisponível      | `portal.states.service_unavailable`      | tentar mais tarde                                       |
 
 ## Chaves i18n
 

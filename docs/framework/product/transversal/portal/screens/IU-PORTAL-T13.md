@@ -92,14 +92,14 @@ nunca simula um resultado.
 
 ## Estados obrigatórios
 
-| Estado            | Texto cidadão (chave i18n)                    | Ação seguinte                                       |
-| ----------------- | --------------------------------------------- | --------------------------------------------------- |
-| carregando        | `portal.states.loading`                       | —                                                   |
-| vazio             | n/a — rota exige AIT existente                | —                                                   |
-| sem elegibilidade | `portal.states.ineligible`                    | ir a "por que não vejo isto"                        |
-| erro recuperável  | `portal.screens.t13.state.faixa_indisponivel` | escolher outra faixa disponível                     |
-| sem permissão     | tratado pelo guarda (redireciona)             | `/vinculo/por-que-nao-vejo`                         |
-| indisponível      | `portal.states.unavailable`                   | tentar mais tarde; prazo não muda ([RN-PORTAL-125]) |
+| Estado            | Texto cidadão (chave i18n)                       | Ação seguinte                                       |
+| ----------------- | ------------------------------------------------ | --------------------------------------------------- |
+| carregando        | `portal.states.loading`                          | —                                                   |
+| vazio             | n/a — rota exige AIT existente                   | —                                                   |
+| sem elegibilidade | `portal.states.ineligible`                       | ir a "por que não vejo isto"                        |
+| erro recuperável  | `portal.screens.t13.state.faixa_40_indisponivel` | escolher outra faixa disponível                     |
+| sem permissão     | tratado pelo guarda (redireciona)                | `/vinculo/por-que-nao-vejo`                         |
+| indisponível      | `portal.states.service_unavailable`              | tentar mais tarde; prazo não muda ([RN-PORTAL-125]) |
 
 ## Chaves i18n
 
