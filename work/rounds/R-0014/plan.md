@@ -448,6 +448,73 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
   filtro: não ligar `[value]` quando a query não tem filtro (até OD-P84). (j) C-3b-103: um caso de `axe` por estado da tabela §7 em cada uma das 13 telas (inclusive `loading` e `offline`; `partial` em T-13/T-23), `h1` único, `aria-label` = `portal.a11y.status_region` na região de status e foco no banner `severity: 'error'` — cobertura integral, sem redução. (k) C-3b-84: `expectOne` do `submit` obrigatório (sem `.catch(() => null)`/`if`); as três asserções negativas de M15/OD-P74 no corpo do `it`. (l) C-3b-104: `expectOne` obrigatório da leitura de `/v1/portal/aits/{id}` (sem `if (!req) return`), comentário obsoleto removido. (i) **OD-P101** (renumerada: OD-P87 é a origem do `If-Match` de `PUT preferences`, contrato do par 3) — origem do
   `locale` para `Intl` (expor em `BrandService.state()`/`AvailableBrand` no par 3 ou usar o do
   runtime de i18n, como hoje).
+- **A11 (2026-09-18, fecho do par 3 — relatórios TASK-0017 it. 2 e TASK-0018).** Estado após o
+  Engineer: `typecheck` 0 erros, `build` OK (inicial 542 kB), `verify:parameter-catalogue` e
+  `format:check` OK; `test` 1220/1309 (75 vermelhos, todos por defeito de spec; os 979 do baseline
+  seguem verdes); `lint` 8 erros `no-unused-vars` em specs. Ratificações (Engineer → maestro):
+  (a) `load()` das facades do par 3 resolve quando o resultado já está nos signals — superconjunto
+  compatível de §3.1 "ao despachar" (C-3c-27/28/35 dependem do `OfflineDocumentStore` assíncrono
+  após o `await`); páginas seguem com `void facade.load()`. (b) Resposta HTTP `status 0` é
+  apresentada como `portal.states.offline` pelas facades do par 3 e pela home (`presentRead`), pois
+  o `ErrorBoundary` só o faz com `navigator.onLine === false` e C-3c-113 veda `navigator` nas
+  features — ratificado para o par 3; **OD-P102**: absorver a regra "status 0 → offline" no
+  `ErrorBoundary` (par 1) no CTG-0005, retirando a duplicação. (c) T-27: `AssuranceExplainer`
+  (rádios → `start`) e os três botões `data-method` (exigidos por `elevation.page.spec`) coexistem —
+  o explicador porta a explicação do nível, os botões a ação; mantido. (d) Junta médica: o pedido
+  começa por ação explícita (`data-cmd="submit"` ou "Continuar" do wizard), sem `start()`
+  automático. (e) **OD-P89 estendida** (chaves i18n pedidas pelo par 3, a acrescentar em
+  TASK-0012): `portal.documents.clearance.debts` (título da seção de débitos; hoje reaproveita
+  `portal.services.pagamento`), opção "só lidas" do filtro de T-12 (hoje só "todas"/"não lidas"),
+  rótulos dos escopos LGPD `confirmacao|declaracao_completa|correcao|eliminacao` (hoje
+  `portal.screens.t24.cmd.*` + `portal.common.action.remove`) e rótulo de status da CNH.
+  (f) `functionalRoute` do catálogo devolve `null` para atos com parâmetro ≠ `:aitId` (contrato só
+  fixa `/autos`); `elevationId`/`resumeToken` do retorno gov.br em T-27 provisórios (OD-P15);
+  `SessionFacade.load()` após `completeElevation` (C-3c-60) mantido, redundante com a implementação
+  real. (g) **TASK-0017 it. 3 (restrita; além de `max_iterations`, como TASK-0015 it. 3…5):**
+  1. sete specs de página sem stub de `ServiceCatalogFacade` (contrato §9) → 52 timeouts
+     (`cnh`, `crlv`, `crash-list`, `crash-detail`, `exam-list`, `manifestation-new`, `evaluation`);
+  2. dupla `TestBed.configureTestingModule` no mesmo `it` (lição A9(f)) ×12; 3. asserção contra o
+     literal `portal.documents.consulta.consultedAt` com `{consultedAt}` cru (comparar por prefixo,
+     como o par 2) ×2; 4. corridas em zoneless (asserção logo após `waitFor(data-screen)`) → `vi.waitFor`
+     sobre o conteúdo asserido (`vehicles`, `service-charter`, `manifestation-detail`, `sne` ×4,
+     `crash-detail`, `exam-list`); 5. `documentos.facade.spec` C-3c-28 — limpar `sessionStorage`/
+     `OfflineDocumentStore` em `afterEach`; 6. `realtime.service.spec` C-3c-72 — `setTimeout(0)` sob
+     fake timers → `vi.advanceTimersByTimeAsync(0)`; 7. os 8 `no-unused-vars`. Nenhuma redução de
+     cobertura; código de produção intocado.
+- **A12 (2026-09-19, delivery-review-CTG-0003c ciclo 1 — REVIEW, 6 high + 6 low; veredito lido
+  na íntegra).** (a) **A11(b) revogada**: `status 0` → `offline` **só** pelo `ErrorBoundary`
+  (§3.1, §7.1/C-3c-16 "status 0 **e** `navigator.onLine === false`"); as oito cópias de
+  `presentRead` (seis facades, `InicioFacade`, `home.page.ts`) saem — `presentError` direto — e os
+  specs de offline do par 3 passam a simular a desconexão com
+  `vi.spyOn(window.navigator, 'onLine', 'get').mockReturnValue(false)`, como os pares 1/2 e
+  `inbox.page.spec.ts`. OD-P102 fica só como unificação futura (não há mais duplicação a absorver).
+  (b) C-3c-33/45/58: a metade DOM do critério (banner com `data-reason`, `portal.screens.t<nn>.state.indisponivel`,
+  `<portal-alternative-channel-note>`) passa a ser provada nas **páginas** T-17, T-21 e T-27; C-3c-112
+  estendido a **um estado de erro/indisponibilidade por tela de ato** além do inicial
+  ([RN-PORTAL-105]: o canal presencial nunca fecha). (c) C-3c-52 exaustivo nos **quatro** escopos
+  LGPD (`confirmacao` exercita o ramo `BASE_SCOPE` → `canPerform('lgpd_declaracao')` sem sufixo):
+  positivo `declaracao_completa` + três negativos; segundo caso com `lgpd_declaracao` sem sufixo →
+  só `confirmacao` `true`. (d) T-19 `<dl data-summary>`: chave crua **só** em `data-key`; entradas
+  sem rótulo na ficha (`LABELLED_SUMMARY_KEYS`) rendem apenas o valor (`<dd>`), nunca a chave como
+  texto; spec com `summary` contendo chave fora de `gravidade|dinamica` provando a ausência do texto
+  (+ `axe`). (e) §3.9 vale para a home (§3.10): `functionalRouteFor` extraído para
+  `core/functional-route.ts` (helper puro; `CatalogoFacade` e `HomePage` o consomem);
+  `directRouteFor` sai; caso na home: `pagamento` `partially_available` → link `/autos`.
+  (f) `evaluate()`: `entitlement.kind` = `body.subjectKind` (nunca fixo `request`); caso do 404
+  `NOT_FOUND{kind:'manifestation'}` na facade de atendimento. (g) `POLLING_INTERVAL_SECONDS` derivado
+  de `POLLING_INTERVAL_MS / 1000` (C-3c-78: um único literal de intervalo). (h) `as any` de
+  `privacidade.facade.spec.ts` → tipo real; `catch { continue }`/`catch { return }` das análises
+  estáticas do par 3 → falha explícita (produção existe). (i) **OD-P89 estendida e aplicada**: chave
+  `portal.documents.clearance.debts` = "Débitos a pagar" (texto da ficha T-17 §Estados, "há débito
+  a pagar"; [UC-PORTAL-012] AC-1) acrescentada pelo maestro ao catálogo; `ClearanceStatus` a usa no
+  `<h3>` da seção de débitos (não mais `portal.services.pagamento`). (j) Registros para o CTG-0005
+  (TASK-0012): §3.8 do contrato retira o degrau `access` do manifesto em `required` (a entrega e
+  C-3c-56/[RN-PORTAL-101] c estão certos; o texto do contrato não); critério novo para o banner
+  `portal.errors.assurance_qualified_never_required`; opção `read=true` de T-12 e rótulos LGPD
+  (A11(e)). Execução: TASK-0017 it. 4 (Inspector) e TASK-0018 it. 2 (Engineer) em paralelo,
+  fronteiras disjuntas; ciclo 2 restrito do reviewer → **PASS** (12/12). Nota residual para o
+  CTG-0005 (com (j)): a heurística de C-3c-78 em `realtime.service.spec.ts` deve manter só a
+  exclusão por linha de `MS_PER_SECOND` e voltar a `>= 1000`.
 - **OD propostas por TASK-0004 (numeração do Architect; transcrição ao build pack §4 em
   TASK-0012):** OD-P47 origem do logotipo do órgão (`GET brand` sem `logoUrl`); OD-P48 regra de
   seleção da representação ativa a partir de `me.representations[]` (hoje `null`; tela `/conta`,
@@ -479,24 +546,24 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
 
 ## Retomada
 
-**Checkpoint 4 (2026-09-17, janela 3 — CTG-0003a em PR).**
+**Checkpoint 5 (2026-09-18, janela 4 — CTG-0003b em PR; par 3 em curso).**
 
-- CTG-0001: mesclado (PR #60). CTG-0002: mesclado (PR #61, `2888c9b`, `EV-976c235d27abf061`).
-- **CTG-0003a: PR #62 aberto** (commits `0d789f8` runner JIT + i18n, `8d2bc34` par 1, `25b270b`
-  artefatos, `3508462` evidência generic sequence 3, head `6050fd53…`); `delivery-review-CTG-0003a-2`
-  PASS; `pnpm check` EXIT 0 (711/714). **Próximo passo:** CI verde → `gh pr merge 62 --merge` →
-  `git fetch` + `git merge --no-edit origin/main` → `audit observe` no SHA do merge → commit.
-- Concluídas: TASK-0001…0009, 0013, 0014, 0019 (iterações: 0002 ×3, 0004 ×3, 0006 ×5, 0007 ×3,
-  0008 ×3, 0009 ×3).
-- Pendentes: CTG-0003b (TASK-0020 → 0015 → 0016; prompts a escrever, derivando dos de 0019/0008/0009
-  com escopo da trilha de apelação; os Inspectors incluem `typecheck` e cobertura integral de axe/Tab
-  desde o primeiro ciclo), CTG-0003c (0021 → 0017 → 0018), CTG-0004 (0010/0011), CTG-0005 (0012).
-- Lições desta janela para o método: (1) runner de app precisa da transformação JIT do Angular
-  (A7a) — fixado no padrão; (2) placeholders i18n na sintaxe do motor (`{x}`); (3) o reviewer não
-  aceita cobertura "parcial" declarada — completar antes do ciclo; (4) inspetor de matriz grande em
-  Sonnet/médio rendeu bem (3 iterações, 780 k brutos acumulados) — registrar em `waves.md` §Histórico (TASK-0012) o ajuste da heurística da escada, citando TASK-0008.
-- Último veredito do reviewer: `delivery-review-CTG-0003a-2` = PASS.
-- Git: `orchestra/portal-pwa` publicado, working tree limpa.
+- CTG-0001 (#60), CTG-0002 (#61), CTG-0003a (#62, `ddca527`, `EV-87c4bc8c41a7ee99`): mesclados.
+- **CTG-0003b: PR #63 aberto** (commits `eb3d656f`, `240f1366`, `b7346c0d`, `6166434b`, `343c92c4`;
+  evidência generic sequence 4, head `14aefcb3…`); `delivery-review-CTG-0003b-4` PASS (Claude/Opus,
+  desvio B2). **Próximo:** CI verde → `gh pr merge 63 --merge` → merge de `origin/main` → `audit
+observe` → commit.
+- **CTG-0003c em curso sobre a mesma worktree, sem commits até o merge do PR 3b** (regra §4.18 —
+  "nunca commits novos no branch de um PR aberto"): contrato `contracts/CTG-0003c.md` pronto
+  (TASK-0021, 115 critérios, OD-P87…P100), chaves i18n OD-P89 já no catálogo (commitadas no PR 3b),
+  TASK-0017 (Inspector) disparada com baseline 74 arquivos / 972 testes; depois TASK-0018 (Engineer),
+  delivery-review, PR 3c.
+- Pendentes: CTG-0004 (0010/0011), CTG-0005 (0012).
+- Lições desta janela: o maestro deve ler o veredito **inteiro** (o ciclo 2 do par 2 cobrou três
+  `high` omitidos por leitura truncada); reviewer Claude devolve o JSON entre cercas e, às vezes,
+  ecoa o veredito anterior — extrair o último bloco com `mode`/`verdict`.
+- Git: `orchestra/portal-pwa` publicado; working tree com `contracts/CTG-0003c.md` e
+  `tasks/TASK-0021.json` (par 3) não commitados.
 
 ## Leitura
 

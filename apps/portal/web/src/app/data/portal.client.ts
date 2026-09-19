@@ -11,6 +11,9 @@
 // (números por `String()`), nenhuma envia `Idempotency-Key` nem `If-Match`; `getRequest` observa a
 // resposta para devolver o `ETag` (`If-Match` do `withdraw`, §2.2). Corpos tipados `{ [key]: unknown }`
 // no OpenAPI ([DIVERGE-1]) são entregues por asserção de tipo, sem transformação de dados.
+// Leituras e comandos do par 3 (contrato CTG-0003c §2): mesmas regras; `If-Match` só em
+// `PUT preferences` (valor do chamador — `null` omite e o servidor responde 428, OD-P87);
+// `cancelSne` sem corpo envia `{}`; `downloadCnhDocument` reutiliza `decodeBlobError`.
 import {
   HttpClient,
   HttpErrorResponse,
@@ -38,11 +41,44 @@ import type {
   AitListPage,
   AitListQuery,
   AitPoints,
+  CnhRead,
+  CrashDetail,
+  CrashListPage,
+  CrashSummary,
+  CrlvIssued,
   Decision,
+  EvaluationCreateBody,
+  EvaluationCreated,
+  ExamDetail,
+  ExamListPage,
+  ExamSummary,
+  InboxListPage,
+  InboxListQuery,
+  InboxReadResult,
+  ManifestationAcknowledged,
+  ManifestationCreateBody,
+  ManifestationCreated,
+  ManifestationDetail,
+  ManifestationListPage,
+  ManifestationListQuery,
+  ManifestationSummary,
   PointsSummary,
+  PreferencesUpdateBody,
+  PreferencesUpdated,
+  PushSubscriptionCreateBody,
+  PushSubscriptionCreated,
   RequestDetail,
   RequestListPage,
   RequestListQuery,
+  ServiceCharterDeadline,
+  SneCancelled,
+  SneEnrolled,
+  SneEnrollment,
+  SneEnrollmentCancelBody,
+  SneEnrollmentCreateBody,
+  Vehicle,
+  VehicleClearance,
+  VehicleListPage,
 } from './portal-read.models';
 
 type IdentityPaths = BpPortalIdentity001Commands.paths;
@@ -474,6 +510,254 @@ export class PortalClient {
   getDecision(requestId: string): Promise<Decision> {
     return this.get<Decision>(
       `/requests/${encodeURIComponent(requestId)}/decision`,
+    );
+  }
+
+  // —— par 3 (contrato CTG-0003c §2.4) ——
+
+  /** GET /v1/portal/services/{serviceKey} — 404 NOT_FOUND{kind:'service'} = fora do catálogo. */
+  getService(serviceKey: string): Promise<ServiceCatalogItem> {
+    return this.get<ServiceCatalogItem>(
+      `/services/${encodeURIComponent(serviceKey)}`,
+    );
+  }
+
+  /** GET /v1/portal/inbox?kind&read&page&pageSize — `undefined` omitido; `read` como 'true'|'false'. */
+  listInbox(query: InboxListQuery = {}): Promise<InboxListPage> {
+    return firstValueFrom(
+      this.http.get<InboxListPage>(this.url('/inbox'), {
+        params: queryParams(query),
+      }),
+    );
+  }
+
+  /** POST /v1/portal/inbox/{id}/read — `inbox_read:<id>:<fp({})>`; registra ciência (SNE). */
+  async markInboxRead(
+    inboxItemId: string,
+  ): Promise<CommandResult<InboxReadResult>> {
+    const body = {};
+    const key = await idempotencyKey('inbox_read', inboxItemId, body);
+    return this.command<InboxReadResult>((headers) =>
+      this.http.post<InboxReadResult>(
+        this.url(`/inbox/${encodeURIComponent(inboxItemId)}/read`),
+        body,
+        { headers, observe: 'response' },
+      ),
+    )(key, null);
+  }
+
+  /** GET /v1/portal/sne/enrollment — `enrolled=false` com nulos quando sem linha (nunca 404). */
+  getSneEnrollment(): Promise<SneEnrollment> {
+    return this.get<SneEnrollment>('/sne/enrollment');
+  }
+
+  /** POST /v1/portal/sne/enrollment — `adesao_sne:none:<fp>`; 403 ASSURANCE_INSUFFICIENT abaixo de 'avancada'. */
+  async enrollSne(
+    body: SneEnrollmentCreateBody,
+  ): Promise<CommandResult<SneEnrolled>> {
+    const key = await idempotencyKey('adesao_sne', NO_TARGET, body);
+    return this.command<SneEnrolled>((headers) =>
+      this.http.post<SneEnrolled>(this.url('/sne/enrollment'), body, {
+        headers,
+        observe: 'response',
+      }),
+    )(key, null);
+  }
+
+  /** DELETE /v1/portal/sne/enrollment — corpo opcional { reason? } (`{}` quando ausente); `cancelamento_sne:none:<fp>`. */
+  async cancelSne(
+    body: SneEnrollmentCancelBody = {},
+  ): Promise<CommandResult<SneCancelled>> {
+    const key = await idempotencyKey('cancelamento_sne', NO_TARGET, body);
+    return this.command<SneCancelled>((headers) =>
+      this.http.delete<SneCancelled>(this.url('/sne/enrollment'), {
+        headers,
+        body,
+        observe: 'response',
+      }),
+    )(key, null);
+  }
+
+  /** POST /v1/portal/push-subscriptions — `push_subscription:none:<fp>`; 201 upsert por endpoint. */
+  async createPushSubscription(
+    body: PushSubscriptionCreateBody,
+  ): Promise<CommandResult<PushSubscriptionCreated>> {
+    const key = await idempotencyKey('push_subscription', NO_TARGET, body);
+    return this.command<PushSubscriptionCreated>((headers) =>
+      this.http.post<PushSubscriptionCreated>(
+        this.url('/push-subscriptions'),
+        body,
+        { headers, observe: 'response' },
+      ),
+    )(key, null);
+  }
+
+  /** PUT /v1/portal/identity/preferences — If-Match (null omite → 428) + `update_preferences:none:<fp>`; 2xx source_pending. */
+  async updatePreferences(
+    body: PreferencesUpdateBody,
+    ifMatch: string | null,
+  ): Promise<CommandResult<PreferencesUpdated>> {
+    const key = await idempotencyKey('update_preferences', NO_TARGET, body);
+    return this.command<PreferencesUpdated>((headers) =>
+      this.http.put<PreferencesUpdated>(
+        this.url('/identity/preferences'),
+        body,
+        { headers, observe: 'response' },
+      ),
+    )(key, ifMatch);
+  }
+
+  /** GET /v1/portal/documents/cnh — consulta informativa (categoria C; RN-PORTAL-117). */
+  getCnh(): Promise<CnhRead> {
+    return this.get<CnhRead>('/documents/cnh');
+  }
+
+  /**
+   * GET /v1/portal/documents/cnh?documentBytes=true — `responseType: 'blob'`; erro JSON
+   * decodificado como `downloadReceipt`. Nesta rodada responde 422 SERVICE_UNAVAILABLE
+   * { unavailableReason: 'documento_assinado_pendente_r0014' } ([DIVERGE-9]).
+   */
+  async downloadCnhDocument(): Promise<Blob> {
+    try {
+      return await firstValueFrom(
+        this.http.get(this.url('/documents/cnh'), {
+          params: queryParams({ documentBytes: 'true' }),
+          responseType: 'blob',
+        }),
+      );
+    } catch (error: unknown) {
+      throw await decodeBlobError(error);
+    }
+  }
+
+  /** GET /v1/portal/vehicles — itens livres (OD-P36) entregues como Vehicle[] por asserção. */
+  listVehicles(): Promise<
+    VehicleListPage & { readonly items: readonly Vehicle[] }
+  > {
+    return this.get<VehicleListPage & { readonly items: readonly Vehicle[] }>(
+      '/vehicles',
+    );
+  }
+
+  /** GET /v1/portal/vehicles/{id}/clearance — 404 NOT_FOUND{kind:'vehicle'}; 503 sem cache (OD-P21). */
+  getVehicleClearance(vehicleId: string): Promise<VehicleClearance> {
+    return this.get<VehicleClearance>(
+      `/vehicles/${encodeURIComponent(vehicleId)}/clearance`,
+    );
+  }
+
+  /** POST /v1/portal/vehicles/{id}/crlv-e — `emissao_crlv:<vehicleId>:<fp({})>`; sem 2xx no OpenAPI ([DIVERGE-10]). */
+  async issueCrlv(vehicleId: string): Promise<CommandResult<CrlvIssued>> {
+    const body = {};
+    const key = await idempotencyKey('emissao_crlv', vehicleId, body);
+    return this.command<CrlvIssued>((headers) =>
+      this.http.post<CrlvIssued>(
+        this.url(`/vehicles/${encodeURIComponent(vehicleId)}/crlv-e`),
+        body,
+        { headers, observe: 'response' },
+      ),
+    )(key, null);
+  }
+
+  /** GET /v1/portal/crashes — sem parâmetros de busca no OpenAPI ([DIVERGE-14]). */
+  listCrashes(): Promise<
+    CrashListPage & { readonly items: readonly CrashSummary[] }
+  > {
+    return this.get<
+      CrashListPage & { readonly items: readonly CrashSummary[] }
+    >('/crashes');
+  }
+
+  /** GET /v1/portal/crashes/{id} — 404 NOT_FOUND{kind:'crash'}. */
+  getCrash(crashId: string): Promise<CrashDetail> {
+    return this.get<CrashDetail>(`/crashes/${encodeURIComponent(crashId)}`);
+  }
+
+  /** GET /v1/portal/exams. */
+  listExams(): Promise<
+    ExamListPage & { readonly items: readonly ExamSummary[] }
+  > {
+    return this.get<ExamListPage & { readonly items: readonly ExamSummary[] }>(
+      '/exams',
+    );
+  }
+
+  /** GET /v1/portal/exams/{id} — 404 NOT_FOUND{kind:'exam'}. */
+  getExam(examId: string): Promise<ExamDetail> {
+    return this.get<ExamDetail>(`/exams/${encodeURIComponent(examId)}`);
+  }
+
+  /** GET /v1/portal/manifestations?page&pageSize — anônimas não são listáveis. */
+  listManifestations(
+    query: ManifestationListQuery = {},
+  ): Promise<
+    ManifestationListPage & { readonly items: readonly ManifestationSummary[] }
+  > {
+    return firstValueFrom(
+      this.http.get<
+        ManifestationListPage & {
+          readonly items: readonly ManifestationSummary[];
+        }
+      >(this.url('/manifestations'), { params: queryParams(query) }),
+    );
+  }
+
+  /** GET /v1/portal/manifestations/{id} — 404 NOT_FOUND{kind:'manifestation'}; corpo livre no OpenAPI (OD-P91). */
+  getManifestation(manifestationId: string): Promise<ManifestationDetail> {
+    return this.get<ManifestationDetail>(
+      `/manifestations/${encodeURIComponent(manifestationId)}`,
+    );
+  }
+
+  /** POST /v1/portal/manifestations — `manifestar:none:<fp>`; sem 401 no OpenAPI (anônimo admitido, H.51). */
+  async createManifestation(
+    body: ManifestationCreateBody,
+  ): Promise<CommandResult<ManifestationCreated>> {
+    const key = await idempotencyKey('manifestar', NO_TARGET, body);
+    return this.command<ManifestationCreated>((headers) =>
+      this.http.post<ManifestationCreated>(this.url('/manifestations'), body, {
+        headers,
+        observe: 'response',
+      }),
+    )(key, null);
+  }
+
+  /** POST /v1/portal/manifestations/{id}/acknowledge — `acknowledge:<id>:<fp({})>`; ETag "<version>". */
+  async acknowledgeManifestation(
+    manifestationId: string,
+  ): Promise<CommandResult<ManifestationAcknowledged>> {
+    const body = {};
+    const key = await idempotencyKey('acknowledge', manifestationId, body);
+    return this.command<ManifestationAcknowledged>((headers) =>
+      this.http.post<ManifestationAcknowledged>(
+        this.url(
+          `/manifestations/${encodeURIComponent(manifestationId)}/acknowledge`,
+        ),
+        body,
+        { headers, observe: 'response' },
+      ),
+    )(key, null);
+  }
+
+  /** POST /v1/portal/evaluations — `avaliar:<subjectId>:<fp>` ([DIVERGE-18]: uma rota para request e manifestation). */
+  async createEvaluation(
+    body: EvaluationCreateBody,
+  ): Promise<CommandResult<EvaluationCreated>> {
+    const key = await idempotencyKey('avaliar', body.subjectId, body);
+    return this.command<EvaluationCreated>((headers) =>
+      this.http.post<EvaluationCreated>(this.url('/evaluations'), body, {
+        headers,
+        observe: 'response',
+      }),
+    )(key, null);
+  }
+
+  /** GET /v1/portal/service-charter/{serviceKey}/deadline — 404 NOT_FOUND{kind:'service'}. */
+  getServiceCharterDeadline(
+    serviceKey: string,
+  ): Promise<ServiceCharterDeadline> {
+    return this.get<ServiceCharterDeadline>(
+      `/service-charter/${encodeURIComponent(serviceKey)}/deadline`,
     );
   }
 
