@@ -546,24 +546,28 @@ Exemplo'`, demais campos opcionais) e esperar `state()` com `{ status: 'availabl
 
 ## Retomada
 
-**Checkpoint 5 (2026-09-18, janela 4 — CTG-0003b em PR; par 3 em curso).**
+**Checkpoint 6 (2026-09-19, janela 4 — CTG-0003c em PR; WP-P5 fechado).**
 
-- CTG-0001 (#60), CTG-0002 (#61), CTG-0003a (#62, `ddca527`, `EV-87c4bc8c41a7ee99`): mesclados.
-- **CTG-0003b: PR #63 aberto** (commits `eb3d656f`, `240f1366`, `b7346c0d`, `6166434b`, `343c92c4`;
-  evidência generic sequence 4, head `14aefcb3…`); `delivery-review-CTG-0003b-4` PASS (Claude/Opus,
-  desvio B2). **Próximo:** CI verde → `gh pr merge 63 --merge` → merge de `origin/main` → `audit
-observe` → commit.
-- **CTG-0003c em curso sobre a mesma worktree, sem commits até o merge do PR 3b** (regra §4.18 —
-  "nunca commits novos no branch de um PR aberto"): contrato `contracts/CTG-0003c.md` pronto
-  (TASK-0021, 115 critérios, OD-P87…P100), chaves i18n OD-P89 já no catálogo (commitadas no PR 3b),
-  TASK-0017 (Inspector) disparada com baseline 74 arquivos / 972 testes; depois TASK-0018 (Engineer),
-  delivery-review, PR 3c.
-- Pendentes: CTG-0004 (0010/0011), CTG-0005 (0012).
-- Lições desta janela: o maestro deve ler o veredito **inteiro** (o ciclo 2 do par 2 cobrou três
-  `high` omitidos por leitura truncada); reviewer Claude devolve o JSON entre cercas e, às vezes,
-  ecoa o veredito anterior — extrair o último bloco com `mode`/`verdict`.
-- Git: `orchestra/portal-pwa` publicado; working tree com `contracts/CTG-0003c.md` e
-  `tasks/TASK-0021.json` (par 3) não commitados.
+- CTG-0001 (#60), CTG-0002 (#61), CTG-0003a (#62), CTG-0003b (#63, `d2412558`,
+  `EV-03c67d03ad731326`): mesclados.
+- **CTG-0003c: PR #64 aberto** (commits `6476339b`, `b2bf4020`, `f21d60d3`, `38a0e47b`, `be466ac0`;
+  evidência generic sequence 5); `delivery-review-CTG-0003c` REVIEW (6 high + 6 low → A12) → `-2`
+  **PASS** (Claude/Opus, desvio B2). Suíte 118 arquivos / 1314 verdes / 14 todo; `pnpm check` EXIT 0.
+  **Próximo:** CI verde → `gh pr merge 64 --merge` → `git merge --no-edit origin/main` → `audit
+observe` no SHA do merge → commit da observação.
+- Pendentes: CTG-0004 (TASK-0010 Inspector e2e das 11 jornadas com `pnpm backend:test:e2e` +
+  `detran_r14` + senatran-mock; TASK-0011 Engineer-backend — prompts a escrever e passar por
+  prompt-review; premissas: jornadas de delegação só até `delegacao_indisponivel_r0007`, OD-P15
+  `source_pending`), CTG-0005 (TASK-0012 docs + A12(j) + OD-P47…P102; `closure.json`; `devai round
+close`; apagar o branch remoto; relatório final §10).
+- Reviewer: voltar ao Codex (`gpt-5.6-terra`) quando o limite resetar (2026-09-19 05:10).
+- Lições desta janela: ler o veredito **inteiro**; nunca ratificar uma regra transversal (erro/
+  offline) fora do módulo dono (`ErrorBoundary`) porque os specs foram escritos mais fracos — corrigir
+  os specs (A12(a)); iterações paralelas Inspector × Engineer com fronteiras disjuntas funcionam
+  (A12), com o Engineer classificando os vermelhos residuais e o maestro encaminhando ao Inspector.
+- Git: `orchestra/portal-pwa` publicado = `origin/main` `4c3be453` + observação; working tree limpa.
+
+---
 
 ## Leitura
 
