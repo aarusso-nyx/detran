@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-SESSION-001 v1.1.0 sha256:24f07dd684f9142de9db5e84913c3e2899499e68aebd1d6ac33dc0a03c5eca01
+// Generated from BP-INF-RAIT-SESSION-001 v1.2.2 sha256:0a9063935f0017c3da8110a51763354850095992f1a56199395ef7eda620a45b
 import { Module } from '@nestjs/common';
 import { RaitSessionController } from './controllers/rait-session.controller.js';
 import { RaitSessionService } from './services/rait-session.service.js';
@@ -18,15 +18,34 @@ import { RaitOralArgumentRepository } from './repositories/rait-oral-argument.re
 import { RaitMinutesController } from './controllers/rait-minutes.controller.js';
 import { RaitMinutesService } from './services/rait-minutes.service.js';
 import { RaitMinutesRepository } from './repositories/rait-minutes.repository.js';
+import { RaitSessionMinutesSnapshotController } from './controllers/rait-session-minutes-snapshot.controller.js';
+import { RaitSessionMinutesSnapshotService } from './services/rait-session-minutes-snapshot.service.js';
+import { RaitSessionMinutesSnapshotRepository } from './repositories/rait-session-minutes-snapshot.repository.js';
+import { RaitSessionMinutesManifestController } from './controllers/rait-session-minutes-manifest.controller.js';
+import { RaitSessionMinutesManifestService } from './services/rait-session-minutes-manifest.service.js';
+import { RaitSessionMinutesManifestRepository } from './repositories/rait-session-minutes-manifest.repository.js';
+import { RaitMinutesRequiredSignerController } from './controllers/rait-minutes-required-signer.controller.js';
+import { RaitMinutesRequiredSignerService } from './services/rait-minutes-required-signer.service.js';
+import { RaitMinutesRequiredSignerRepository } from './repositories/rait-minutes-required-signer.repository.js';
+import { RaitMinutesSignatureReceiptController } from './controllers/rait-minutes-signature-receipt.controller.js';
+import { RaitMinutesSignatureReceiptService } from './services/rait-minutes-signature-receipt.service.js';
+import { RaitMinutesSignatureReceiptRepository } from './repositories/rait-minutes-signature-receipt.repository.js';
+import { RaitSessionCommandsController } from './handwritten/rait-session-commands.controller.js';
+import { RaitSessionCommandService } from './handwritten/rait-session-command.service.js';
 
 @Module({
   controllers: [
+    RaitSessionCommandsController,
     RaitSessionController,
     RaitAgendaItemController,
     RaitAttendanceController,
     RaitVoteController,
     RaitOralArgumentController,
     RaitMinutesController,
+    RaitSessionMinutesSnapshotController,
+    RaitSessionMinutesManifestController,
+    RaitMinutesRequiredSignerController,
+    RaitMinutesSignatureReceiptController,
   ],
   providers: [
     RaitSessionService,
@@ -41,6 +60,15 @@ import { RaitMinutesRepository } from './repositories/rait-minutes.repository.js
     RaitOralArgumentRepository,
     RaitMinutesService,
     RaitMinutesRepository,
+    RaitSessionMinutesSnapshotService,
+    RaitSessionMinutesSnapshotRepository,
+    RaitSessionMinutesManifestService,
+    RaitSessionMinutesManifestRepository,
+    RaitMinutesRequiredSignerService,
+    RaitMinutesRequiredSignerRepository,
+    RaitMinutesSignatureReceiptService,
+    RaitMinutesSignatureReceiptRepository,
+    RaitSessionCommandService,
   ],
 })
 export class RaitSessionModule {}

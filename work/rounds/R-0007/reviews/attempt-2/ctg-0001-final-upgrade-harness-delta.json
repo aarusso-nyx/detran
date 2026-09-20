@@ -1,0 +1,33 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "backend/database/tests/prepare-rait-priority-v1-baseline.mjs",
+      "line": 320,
+      "claim": "In reconcileParameter, the catch block awaits client.query('ROLLBACK') before rethrowing; if ROLLBACK itself throws (e.g. connection already dropped), the rollback error replaces the original blocked error, losing the root cause. Non-destructive: the transaction is aborted either way and the mandatory-restore path in prepareLegacyPriorityV1Baseline still fires.",
+      "fix": "Wrap the ROLLBACK in try/catch and rethrow the original error (or an AggregateError combining both) so the root-cause diagnostic is never masked."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/database/tests/prepare-rait-priority-v1-baseline.mjs",
+      "line": 163,
+      "claim": "run() SIGKILLs any child after a fixed 120s; during restoreFreshPriorityV3Database this can abort a legitimately slow apply.sh --full or seed.sh mid-run, leaving the disposable detran_r7_ctg1_a2 partially restored. The failure is still surfaced (blocked error, or AggregateError on the mandatory-restore path), so it fails loud, not silent, and only the authorized disposable DB is affected.",
+      "fix": "Parameterize or raise the timeout for the restoration phase (e.g. pass a per-call timeout to run(), with a larger budget for apply.sh/seed.sh) so the mandatory restore cannot be killed by the harness watchdog."
+    }
+  ],
+  "notes": [
+    "Delta scope confirmed: harness-delta manifest (ctg-0001-final-upgrade-harness-delta.manifest.json) pins prepare-rait-priority-v1-baseline.mjs at cf408da4f766d7433c28c5a7f2a7e8fc6e7c7ad5c1f5c3d48fa6580fb1dbaaa5; both prior-PASS manifests (SQL candidate ba3f2aeb…, import-delta 87350426…) pin the old b85c5ecf…, matching the claimed before/after SHAs. It is the only reviewed-source hash that changed.",
+    "Sensor and SQL hashes unchanged from prior PASS: 19-rait-priority-pre.sql = 17b53eba… in all three manifests; rait-priority-upgrade.integration.spec.ts = 99032f91… identical between the import-delta PASS manifest and the new harness-delta manifest; the SQL candidate manifest (upgrade/verify/enforce SQL, fixtures, SHA256SUMS) is referenced unmodified (de107a2c…) by both delta manifests.",
+    "Frozen readset (ctg-0001-final-upgrade-harness-delta.readset.md) inspected; all seven listed inputs exist and were read.",
+    "Semantic JSONB comparison verified: canonicalJson recursively sorts object keys and preserves array order on both sides before JSON.stringify equality (lines 123-138), applied to both the pre-update fixture check and the post-update RETURNING check (lines 296-317); this soundly fixes the reported key-order rollback without weakening the exact-value gates (rowCount, version, policy content still enforced).",
+    "Restore authorization is checked before any reset: authorizedUrls() at line 378 requires DETRAN_PRIORITY_UPGRADE_BASELINE_AUTHORIZED, …_BASELINE_RESET_AUTHORIZED and …_RESTORE_AUTHORIZED before createDedicatedDatabase runs; reset marker (onResetStarted, line 272) is set after the owner/concurrent-session guards but before DROP/CREATE, so every post-marker failure enters the mandatory-restore catch (lines 398-409) with AggregateError preserving both errors when restore also fails.",
+    "No unauthorized or wrong-target destructive path found: the database name detran_r7_ctg1_a2 is a hard-coded constant used for DROP/CREATE, psql -d, and DB_NAME; requiredUrl() rejects target URLs whose pathname differs and forces the admin URL to the postgres maintenance DB; DROP is refused unless the target is postgres-owned with zero client backends (a post-check connection race would make DROP DATABASE itself fail safe).",
+    "Consistent with the run report: preparation failure occurred at reconcileParameter (after reset, before any upgrade SQL), and the script claims no upgrade PASS; the drop/create-then-restore behavior on the disposable DB matches the declared authorization envelope.",
+    "Limitation: shell execution and DB access were prohibited, so file SHA-256 digests were not independently recomputed; hash confirmation relies on the frozen manifests plus content inspection of the on-disk script, which contains exactly the described semantic-JSONB delta (canonicalJson/sameJson) and matches the manifest-pinned reviewed source set."
+  ]
+}

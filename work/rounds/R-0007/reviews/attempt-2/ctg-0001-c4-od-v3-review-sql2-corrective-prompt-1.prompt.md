@@ -1,0 +1,7 @@
+# SQL2 high — proposed independent prompt-review
+
+Independent read-only Auditor Fable 5, only after OWNER authorizes an additional nominal prompt-review and SQL3 exact-byte review. Review the frozen finite read-set `work/rounds/R-0007/reports/CTG-0001-C4-OD-V3-SQL2-CORRECTIVE-PROMPT-READSET.md`. SQL2 is REVIEW, not PASS; no DB, fixture, schema or worker correction has occurred. No shell, edits, execution or invented runtime claim.
+
+Check: ADR-0024's `NULL`/unknown legacy exclusion is exactly represented by the new sensor WHERE assertion and Engineer one-predicate filter, while the existing CASE 2/1/0 rank and tie-breaks stay. Verify real captured query, genuine RED then GREEN, roles/manuals/one-file allowlists/locks, no reset of TASK0034/35 or TASK0028/29/30, queued TASK0036/37 0/1, acyclic gates and no R0010 shared changes. Check the planned fixture low repair explicitly asserts superuser/BYPASSRLS plus total-row visibility before trusting digests, without broadening the one-row UPDATE or applying it pre-SQL3. SQL3 must review actual corrected bytes plus SQL1/SQL2 histories; no prompt-review substitutes for SQL3 or DB PASS. Confirm no reviewer retry or new cap is silently implied and the budget projection is an estimate, not reservation.
+
+Return only native structured JSON Schema output `mode="prompt-review"`, `round="R-0007"`, verdict PASS/REVIEW/FAIL, `findings`, `notes`; each finding high/low, item 1–13, existing relative file/line, concrete claim and actionable fix. PASS has zero high. No wrapper, unsupported runtime assertion or DB PASS claim.

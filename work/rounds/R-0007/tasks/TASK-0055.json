@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0055",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar fronteira documental específica da ata RAIT",
+  "description": "Engineer 1/1 concluiu a operação tipada verifyBatchMinutesEvidence, separada de DECISAO_DEFESA. O adapter envia e confere tenant, lote, ref opaca, documento, hashes, presidente, PAdES-B-LT, TSA GOOD e OCSP/CRL GOOD; snapshot divergente retorna RAIT.BATCH_SEED_TAMPERED, signatário/certificado RAIT.SIGNATURE_CERT_MISMATCH e demais divergências RAIT.SIGNATURE_FAILED. Sensor congelado 11/11 PASS, regressão document-trust 19/19 PASS e typecheck/Prettier/diff --check PASS. SHA-256 dos três sensores TASK-0053 preservados: document-trust-batch ddf5c649c343007856c96f1162733428f4376a845e2f0eb9ea0a97d5a1d32bbc; rait-batch-minutes-trust dc8bc9ae55786a1367de11fb81bbcc6f70bff0817e248e809a7da80736629b99; rait-batch-minutes-manifest 3424513268fb8feffb59664c0d06798403a8c45d596d019112f312debfd2fbbd. Fakes unitários não provam serviço criptográfico de produção; nenhum comando de lote, rota ou CTG-0002 é declarado GREEN.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-document-trust"],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0054",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "batch-trust"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-8906757c8e268c71",
+  "acceptance_commands": [["pnpm", "--filter", "@detran/shared", "typecheck"]],
+  "created_at": "2026-09-18T05:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-8906757c8e268c71",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Operação tipada e adapter da ata; nenhum outro comando ou tabela."
+  }
+}

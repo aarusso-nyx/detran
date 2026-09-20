@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Encode worklist session and policy contracts in tests",
+  "description": "Write allocation and collegiate sensors plus exhaustive positive and negative policy assertions before implementation. Fontes/decisoes historicamente referidas: WF-RAIT-003; WF-RAIT-004. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-worklist-tests",
+    "MOD-rait-session-tests",
+    "MOD-shared-policy-tests"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0005",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-d44de5acc6cce06b",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "test:integration"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "test:integration"],
+    ["pnpm", "--filter", "@detran/shared", "test"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-d44de5acc6cce06b",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "closure_reconciliation": {
+    "date": "2026-09-19",
+    "result": "PASS",
+    "basis": "Os sensores originais e corretivos foram preservados e o runner oficial final executou as suites unitarias e integradas de worklist/session/shared com sucesso; os FAILs intermediarios permanecem nos registros TASK-0065, TASK-0067, TASK-0069, TASK-0071, TASK-0073 e TASK-0075."
+  }
+}

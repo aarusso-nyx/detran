@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-SESSION-001 v1.1.0 sha256:24f07dd684f9142de9db5e84913c3e2899499e68aebd1d6ac33dc0a03c5eca01
+// Generated from BP-INF-RAIT-SESSION-001 v1.2.2 sha256:0a9063935f0017c3da8110a51763354850095992f1a56199395ef7eda620a45b
 import {
   Body,
   Controller,
@@ -21,35 +21,5 @@ export class RaitAgendaItemController {
   }
   @Get(':id') @Action('read') get(@Param('id') id: string) {
     return this.service.findOne(id);
-  }
-  @Post()
-  @Action('create')
-  @Audit({
-    action: 'INF_RAIT_AGENDA_ITEM_CREATE',
-    entity: 'inf.rait_agenda_item',
-  })
-  create(@Body() dto: CreateRaitAgendaItemDto) {
-    return this.service.create(dto);
-  }
-  @Patch(':id')
-  @Action('update')
-  @Audit({
-    action: 'INF_RAIT_AGENDA_ITEM_UPDATE',
-    entity: 'inf.rait_agenda_item',
-  })
-  update(
-    @Param('id') id: string,
-    @Body() dto: Partial<CreateRaitAgendaItemDto>,
-  ) {
-    return this.service.update(id, dto);
-  }
-  @Delete(':id')
-  @Action('delete')
-  @Audit({
-    action: 'INF_RAIT_AGENDA_ITEM_DELETE',
-    entity: 'inf.rait_agenda_item',
-  })
-  remove(@Param('id') id: string) {
-    return this.service.remove(id);
   }
 }

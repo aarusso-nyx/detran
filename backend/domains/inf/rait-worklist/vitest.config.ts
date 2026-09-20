@@ -16,6 +16,9 @@ export default defineConfig({
       '@detran/inf-rait-case': fileURLToPath(
         new URL('../rait-case/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-deadlines': fileURLToPath(
+        new URL('../deadlines/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {

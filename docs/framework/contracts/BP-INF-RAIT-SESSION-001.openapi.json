@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RaitSession — BP-INF-RAIT-SESSION-001",
-    "version": "1.1.0",
-    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA. v1.1.0 acrescenta a modalidade da sessao, o reconhecimento de convocacao curta, o pedido de vista por item e a publicacao da ata (OD-102, OD-103, OD-106 vigentes por steering H.57).",
+    "version": "1.2.2",
+    "description": "Rito de sessao colegiada JARI/CETRAN (WF-RAIT-003): pauta, convocacao, quorum, relatoria, votacao, desempate e ata assinada em PAdES+TSA. v1.1.0 acrescenta a modalidade da sessao, o reconhecimento de convocacao curta, o pedido de vista por item e a publicacao da ata (OD-102, OD-103, OD-106 vigentes por steering H.57). v1.2.0 fecha o schema aditivo de composicao institucional, concorrencia otimista e ata confiavel multi-signatario conforme ADR-0027, UC-RAIT-020 e WF-RAIT-003, com dependencias explicitas em case, worklist e deadlines e somente leituras CRUD. v1.2.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, sem expor escrita CRUD nem sustentacao oral.",
     "x-blueprint": "BP-INF-RAIT-SESSION-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
   },
@@ -23,32 +23,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitSession"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-session"],
-        "operationId": "createRaitSession",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitSessionDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitSession"
                 }
               }
             }
@@ -86,52 +60,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-session"],
-        "operationId": "updateRaitSession",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitSessionDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitSession"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-session"],
-        "operationId": "removeRaitSession",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/agenda-items": {
@@ -149,32 +77,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitAgendaItem"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-agenda-item"],
-        "operationId": "createRaitAgendaItem",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitAgendaItemDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitAgendaItem"
                 }
               }
             }
@@ -212,52 +114,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-agenda-item"],
-        "operationId": "updateRaitAgendaItem",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitAgendaItemDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitAgendaItem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-agenda-item"],
-        "operationId": "removeRaitAgendaItem",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/attendance": {
@@ -275,32 +131,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitAttendance"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-attendance"],
-        "operationId": "createRaitAttendance",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitAttendanceDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitAttendance"
                 }
               }
             }
@@ -338,52 +168,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-attendance"],
-        "operationId": "updateRaitAttendance",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitAttendanceDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitAttendance"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-attendance"],
-        "operationId": "removeRaitAttendance",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/votes": {
@@ -401,32 +185,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitVote"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-vote"],
-        "operationId": "createRaitVote",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitVoteDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitVote"
                 }
               }
             }
@@ -464,178 +222,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-vote"],
-        "operationId": "updateRaitVote",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitVoteDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitVote"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-vote"],
-        "operationId": "removeRaitVote",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      }
-    },
-    "/v1/inf/rait/oral-arguments": {
-      "get": {
-        "tags": ["rait-oral-argument"],
-        "operationId": "listRaitOralArgument",
-        "summary": "List RaitOralArgument (most recent first, capped at 500)",
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RaitOralArgument"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-oral-argument"],
-        "operationId": "createRaitOralArgument",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitOralArgumentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitOralArgument"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/inf/rait/oral-arguments/{id}": {
-      "parameters": [
-        {
-          "name": "id",
-          "in": "path",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      ],
-      "get": {
-        "tags": ["rait-oral-argument"],
-        "operationId": "getRaitOralArgument",
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitOralArgument"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["rait-oral-argument"],
-        "operationId": "updateRaitOralArgument",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitOralArgumentDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitOralArgument"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-oral-argument"],
-        "operationId": "removeRaitOralArgument",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/minutes": {
@@ -653,32 +239,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitMinutes"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-minutes"],
-        "operationId": "createRaitMinutes",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitMinutesDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitMinutes"
                 }
               }
             }
@@ -711,52 +271,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["rait-minutes"],
-        "operationId": "updateRaitMinutes",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitMinutesDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitMinutes"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-minutes"],
-        "operationId": "removeRaitMinutes",
-        "responses": {
-          "200": {
-            "description": "deleted"
           },
           "404": {
             "description": "not found"
@@ -863,6 +377,10 @@
           "short_notice_ack": {
             "type": "boolean",
             "default": "false"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
           },
           "created_at": {
             "type": "string",
@@ -1058,6 +576,10 @@
             "format": "date",
             "nullable": true
           },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1208,6 +730,57 @@
             "type": "boolean",
             "nullable": true
           },
+          "representation_block": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "executivo_estadual",
+              "municipal_rodoviario",
+              "sociedade_civil"
+            ],
+            "nullable": true
+          },
+          "membership_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["titular", "suplente"],
+            "nullable": true
+          },
+          "mandate_starts_on_snapshot": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "mandate_ends_on_snapshot": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "institutional_seat_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "appointment_act_ref": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "institutional_valid_from": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "institutional_valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "composition_snapshot_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1219,7 +792,7 @@
           }
         },
         "required": ["tenant_id", "session_id", "member_id", "created_at"],
-        "description": "Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3)."
+        "description": "Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3). v1.2.0 congela bloco, titularidade, mandato, ato, assento e vigencia institucionais usados para quorum e paridade reproduziveis em WF-RAIT-003 e WF-RAIT-004 secao 6."
       },
       "CreateRaitAttendanceDto": {
         "type": "object",
@@ -1501,6 +1074,10 @@
             "format": "date-time",
             "nullable": true
           },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1512,7 +1089,7 @@
           }
         },
         "required": ["tenant_id", "session_id", "content", "created_at"],
-        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING)."
+        "description": "Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING). v1.2.0 preserva campos single-signature apenas como legado legivel; novas atas usam snapshot, manifesto, signatarios e recibos normalizados de ADR-0027 e UC-RAIT-020. v1.2.2 protege o conteudo e a identidade originais contra UPDATE/DELETE/TRUNCATE, permitindo apenas o avanco controlado dos marcos de assinatura e publicacao pelo comando."
       },
       "CreateRaitMinutesDto": {
         "type": "object",
@@ -1561,6 +1138,311 @@
           }
         },
         "required": ["session_id", "content"]
+      },
+      "RaitSessionMinutesSnapshot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "snapshot_version": {
+            "type": "string",
+            "maxLength": 30,
+            "default": "'session-minutes-v1'"
+          },
+          "snapshot": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'server_session_records'"
+          },
+          "captured_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "session_id",
+          "snapshot",
+          "snapshot_hash",
+          "captured_at",
+          "created_at"
+        ],
+        "description": "Snapshot canonico session-minutes-v1, server-owned e imutavel dos registros vivos da sessao, incluindo pauta, presencas, composicao/paridade, quorum por item, relatoria, votos, resultado, vista, retiradas e signatarios requeridos (ADR-0027, UC-RAIT-020 e WF-RAIT-003)."
+      },
+      "CreateRaitSessionMinutesSnapshotDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RaitSessionMinutesManifest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minutes_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "document_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'SESSION_MINUTES'"
+          },
+          "manifest_version": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "prepared_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "session_id",
+          "minutes_id",
+          "document_id",
+          "content_hash",
+          "snapshot_hash",
+          "manifest_hash",
+          "manifest_version",
+          "prepared_at",
+          "created_at"
+        ],
+        "description": "Manifesto imutavel da ata SESSION_MINUTES preparada pelo servico documental sobre o snapshot server-owned (ADR-0027, UC-RAIT-020 e WF-RAIT-003)."
+      },
+      "CreateRaitSessionMinutesManifestDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RaitMinutesRequiredSigner": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minutes_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signer_role": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["presidente", "relator"]
+          },
+          "signer_basis": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": ["effective_chair", "item_rapporteur"]
+          },
+          "agenda_item_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "derived_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "minutes_id",
+          "person_id",
+          "signer_role",
+          "signer_basis",
+          "derived_at",
+          "created_at"
+        ],
+        "description": "Conjunto server-owned e imutavel de signatarios obrigatorios da ata: presidente efetivo e relatores dos itens, exceto relator formalmente ausente e dispensado no snapshot (ADR-0027, UC-RAIT-020 e WF-RAIT-003)."
+      },
+      "CreateRaitMinutesRequiredSignerDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RaitMinutesSignatureReceipt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minutes_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signer_person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "signature_ref": {
+            "type": "string"
+          },
+          "receipt_digest": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "signature_level": {
+            "type": "string",
+            "maxLength": 20,
+            "default": "'PAdES-B-LT'"
+          },
+          "tsa_status": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "certificate_status": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "revocation_method": {
+            "type": "string",
+            "maxLength": 4,
+            "enum": ["OCSP", "CRL"]
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "minutes_id",
+          "document_id",
+          "signer_person_id",
+          "signature_ref",
+          "receipt_digest",
+          "content_hash",
+          "snapshot_hash",
+          "manifest_hash",
+          "tsa_status",
+          "certificate_status",
+          "revocation_method",
+          "signed_at",
+          "validated_at",
+          "created_at"
+        ],
+        "description": "Recibo append-only e imutavel de verificacao SESSION_MINUTES por signatario requerido, vinculado aos mesmos documento, conteudo, snapshot e manifesto, com PAdES-B-LT, TSA e OCSP/CRL (ADR-0027 e UC-RAIT-020)."
+      },
+      "CreateRaitMinutesSignatureReceiptDto": {
+        "type": "object",
+        "properties": {}
       }
     }
   }

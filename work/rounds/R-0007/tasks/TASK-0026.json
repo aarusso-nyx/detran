@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0026",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Sensores RED do parâmetro legal",
+  "description": "C4-OD V3 Inspector completed expected RED. Prompt SHA-256: 138fb8477f36e78b6f4df48cc0ef57bade90b09db6fe45c7c3ef97ca27b78bd4. Iteration 1/1; sensor ae5fc14de2fb8afb3b0157e25ddcc3164729ddefb68da81d5b0eb90103f50916; 26 collected, 19 pass, 7 contractual fail, zero skipped. Evidence generic R-0007 sequence 1. Budget estimates not measured.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-parameter-sensors"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0023",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3", "dispatched"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-138fb8477f36e78b",
+  "acceptance_commands": [["pnpm", "parameters:test"]],
+  "created_at": "2026-09-16T18:10:57Z",
+  "spawned_at": "2026-09-16T19:42:49Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-138fb8477f36e78b",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Sensores RED do parâmetro legal",
+    "planned_files": ["tools/parameters/tests/generator.test.mjs"]
+  }
+}

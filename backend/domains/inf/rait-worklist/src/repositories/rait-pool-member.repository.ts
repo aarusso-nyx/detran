@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';
@@ -23,6 +23,12 @@ const WRITABLE_FIELDS = new Set<string>([
   'unjustified_absence_count',
   'is_substitute',
   'jurisdiction',
+  'agency_jurisdiction_id',
+  'representation_block',
+  'institutional_seat_ref',
+  'appointment_act_ref',
+  'institutional_valid_from',
+  'institutional_valid_to',
 ]);
 
 /** SQL-only repository. Tenant identity is injected by the kernel trigger. */

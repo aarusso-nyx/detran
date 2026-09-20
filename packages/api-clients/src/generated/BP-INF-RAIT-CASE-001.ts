@@ -10,7 +10,7 @@ export interface paths {
     /** List RaitCase (most recent first, capped at 500) */
     get: operations['listRaitCase'];
     put?: never;
-    post: operations['createRaitCase'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -469,8 +469,12 @@ export interface components {
       admitted_at?: string | null;
       /** Format: date-time */
       judge_body_received_at?: string | null;
+      /** Format: date */
+      judge_body_received_on?: string | null;
       /** Format: date-time */
       cetran_received_at?: string | null;
+      /** Format: date */
+      cetran_received_on?: string | null;
       /** Format: date-time */
       remitted_at?: string | null;
       /** Format: date-time */
@@ -502,6 +506,8 @@ export interface components {
       legal_priority?: string | null;
       /** Format: uuid */
       unit_id?: string | null;
+      /** Format: uuid */
+      agency_jurisdiction_id?: string | null;
       /** @default 1 */
       version: number;
       /** Format: date-time */
@@ -541,13 +547,15 @@ export interface components {
         | 'ENCERRADO_DESISTENCIA';
       intake_channel: string;
       /** Format: date-time */
-      protocolled_at: string;
-      /** Format: date-time */
       admitted_at?: string | null;
       /** Format: date-time */
       judge_body_received_at?: string | null;
+      /** Format: date */
+      judge_body_received_on?: string | null;
       /** Format: date-time */
       cetran_received_at?: string | null;
+      /** Format: date */
+      cetran_received_on?: string | null;
       /** Format: date-time */
       remitted_at?: string | null;
       /** Format: date-time */
@@ -576,9 +584,10 @@ export interface components {
       last_movement_at: string;
       /** @default false */
       pending_completion: boolean;
-      legal_priority?: string | null;
       /** Format: uuid */
       unit_id?: string | null;
+      /** Format: uuid */
+      agency_jurisdiction_id?: string | null;
       /** @default 1 */
       version: number;
     };
@@ -693,6 +702,112 @@ export interface components {
       attached_at: string;
       /** Format: uuid */
       attached_by?: string | null;
+    };
+    /** @description ADR-0024 e CTG-0001-C4-OD V3: qualificacao no protocolo, politica e instante preservados; revision posterior reservada e vedada na politica atual. */
+    RaitPriorityAssessment: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      case_id: string;
+      revision: number;
+      /** @enum {string} */
+      outcome: 'none' | 'priority';
+      /** Format: date-time */
+      assessed_at: string;
+      /** Format: uuid */
+      assessed_by: string;
+      /** Format: date */
+      qualification_on: string;
+      timezone: string;
+      /** Format: uuid */
+      policy_parameter_id: string;
+      policy_version: number;
+      policy_snapshot: {
+        [key: string]: unknown;
+      };
+      reason?: string | null;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitPriorityAssessmentDto: {
+      /** Format: uuid */
+      case_id: string;
+      revision: number;
+      /** @enum {string} */
+      outcome: 'none' | 'priority';
+      /** Format: date-time */
+      assessed_at: string;
+      /** Format: uuid */
+      assessed_by: string;
+      /** Format: date */
+      qualification_on: string;
+      timezone: string;
+      /** Format: uuid */
+      policy_parameter_id: string;
+      policy_version: number;
+      policy_snapshot: {
+        [key: string]: unknown;
+      };
+      reason?: string | null;
+    };
+    /** @description ADR-0024 e CTG-0001-C4-OD V3: todas as provas do ato, anexo PCD obrigatorio; documento/CNH apresentado para idade sem upload obrigatorio. */
+    RaitPriorityBasis: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      case_id: string;
+      /** Format: uuid */
+      assessment_id: string;
+      /** @enum {string} */
+      basis_code: 'pcd' | 'age_60_plus' | 'age_80_plus';
+      /** Format: date-time */
+      verified_at: string;
+      /** Format: uuid */
+      verified_by: string;
+      /** @enum {string} */
+      source_kind: 'attached_document' | 'presented_document' | 'presented_cnh';
+      source_ref: string;
+      /** Format: uuid */
+      document_id?: string | null;
+      /** Format: date */
+      birth_date?: string | null;
+      evidence_hash?: string | null;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitPriorityBasisDto: {
+      /** Format: uuid */
+      case_id: string;
+      /** Format: uuid */
+      assessment_id: string;
+      /** @enum {string} */
+      basis_code: 'pcd' | 'age_60_plus' | 'age_80_plus';
+      /** Format: date-time */
+      verified_at: string;
+      /** Format: uuid */
+      verified_by: string;
+      /** @enum {string} */
+      source_kind: 'attached_document' | 'presented_document' | 'presented_cnh';
+      source_ref: string;
+      /** Format: uuid */
+      document_id?: string | null;
+      /** Format: date */
+      birth_date?: string | null;
+      evidence_hash?: string | null;
     };
     /** @description Pendencia de conteudo minimo aberta no protocolo — UC-RAIT-028 fluxos 1-3. Registra os itens ausentes (RN-RAIT-002), o prazo interno ao requerente e o desfecho; pendencia nao e recusa de protocolo (AC-RAIT-028-1) e nao consome o prazo do requerente (AC-RAIT-028-2). Exigencia de uma so vez: no maximo uma pendencia aberta por caso (RN-PORTAL-107). */
     RaitPendingContent: {
@@ -951,6 +1066,8 @@ export interface components {
       extension_count: number;
       /** Format: date-time */
       answered_at?: string | null;
+      /** Format: date */
+      answered_on?: string | null;
       /** @enum {string|null} */
       outcome?: 'respondida' | 'expirada' | null;
       /** Format: date-time */
@@ -977,8 +1094,128 @@ export interface components {
       extension_count: number;
       /** Format: date-time */
       answered_at?: string | null;
+      /** Format: date */
+      answered_on?: string | null;
       /** @enum {string|null} */
       outcome?: 'respondida' | 'expirada' | null;
+    };
+    /** @description Relacao interna entre resposta de diligencia e documento existente; sem CRUD HTTP. */
+    RaitInquiryDocument: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      inquiry_id: string;
+      /** Format: uuid */
+      document_id: string;
+      /**
+       * Format: date-time
+       * @default now()
+       */
+      attached_at: string;
+      /** Format: uuid */
+      attached_by: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitInquiryDocumentDto: {
+      /** Format: uuid */
+      inquiry_id: string;
+      /** Format: uuid */
+      document_id: string;
+      /**
+       * Format: date-time
+       * @default now()
+       */
+      attached_at: string;
+      /** Format: uuid */
+      attached_by: string;
+    };
+    /** @description Relacao interna entre resolucao de pendencia e documento existente; sem CRUD HTTP. */
+    RaitPendingDocument: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      pending_id: string;
+      /** Format: uuid */
+      document_id: string;
+      /**
+       * Format: date-time
+       * @default now()
+       */
+      attached_at: string;
+      /** Format: uuid */
+      attached_by: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitPendingDocumentDto: {
+      /** Format: uuid */
+      pending_id: string;
+      /** Format: uuid */
+      document_id: string;
+      /**
+       * Format: date-time
+       * @default now()
+       */
+      attached_at: string;
+      /** Format: uuid */
+      attached_by: string;
+    };
+    /** @description Atestado interno verificavel do termo de desistência fisico ou digital; sem CRUD HTTP. */
+    RaitWithdrawalAttestation: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      case_id: string;
+      /** Format: uuid */
+      document_id: string;
+      /** Format: uuid */
+      signer_party_id: string;
+      /** @enum {string} */
+      verification_method: 'physical_verified' | 'digital_verified';
+      evidence_ref: string;
+      /** Format: date-time */
+      verified_at: string;
+      /** Format: uuid */
+      recorded_by: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitWithdrawalAttestationDto: {
+      /** Format: uuid */
+      case_id: string;
+      /** Format: uuid */
+      document_id: string;
+      /** Format: uuid */
+      signer_party_id: string;
+      /** @enum {string} */
+      verification_method: 'physical_verified' | 'digital_verified';
+      evidence_ref: string;
+      /** Format: date-time */
+      verified_at: string;
+      /** Format: uuid */
+      recorded_by: string;
     };
     /** @description Minuta de decisao versionada — WF-RAIT-004 secao 4 passos 3, 5 e 6. Uma linha por versao da minuta do caso, com autor, documento na fachada de documentos (ADR-0018, sem FK), hash de conteudo e status; a autoridade signataria pode devolver a minuta com orientacao uma unica vez, sem sair de PRONTO_P_DECISAO (secao 4 passo 5). */
     RaitDraft: {
@@ -1221,30 +1458,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['RaitCase'][];
-        };
-      };
-    };
-  };
-  createRaitCase: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitCaseDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitCase'];
         };
       };
     };

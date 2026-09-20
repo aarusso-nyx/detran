@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
 export interface RaitBatch {
   id: string;
   tenant_id: string;
@@ -14,6 +14,11 @@ export interface RaitBatch {
   minutes_document_id?: string | null;
   homologated_at?: string | null;
   homologated_by?: string | null;
+  version: number;
+  approval_signature_ref?: string | null;
+  approval_receipt_hash?: string | null;
+  approval_verified_at?: string | null;
+  approval_signer_person_id?: string | null;
   created_at: string;
   updated_at?: string | null;
 }

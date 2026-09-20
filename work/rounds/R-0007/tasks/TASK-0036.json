@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0036",
+  "round_id": "R-0007",
+  "status": "cancelled",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Sensor de elegibilidade automática do claim-next",
+  "description": "SQL2 one-high corrective proposal, never dispatched. Cancelled by OWNER waiver recorded in ADR-0026; SQL2 REVIEW and ADR-0024 mismatch remain historical and visible. Iteration count remains zero; no worker or review budget was consumed for this task.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-case-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0035",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": [
+    "attempt-2",
+    "c4-od-v3",
+    "sql2-corrective",
+    "owner-waived-not-dispatched"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-e363388e1abb61a2",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:unit",
+      "--passWithNoTests=false",
+      "tests/unit/rait-case-command-contract.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-17T01:05:59Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-e363388e1abb61a2",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Sensor de elegibilidade automática do claim-next",
+    "planned_files": [
+      "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts"
+    ]
+  }
+}

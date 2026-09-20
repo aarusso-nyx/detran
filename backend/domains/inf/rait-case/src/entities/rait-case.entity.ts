@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-CASE-001 v1.1.0 sha256:f85c2f343d3739d77786d05e0f2f98d07e00de6ca63aa3aaa743b5b949714f62
+// Generated from BP-INF-RAIT-CASE-001 v1.1.7 sha256:682b384b42c731e2e1120383e4c3bca4fabaa1afe2ac1360ca258758b6814154
 export interface RaitCase {
   id: string;
   tenant_id: string;
@@ -12,7 +12,9 @@ export interface RaitCase {
   protocolled_at: string;
   admitted_at?: string | null;
   judge_body_received_at?: string | null;
+  judge_body_received_on?: string | null;
   cetran_received_at?: string | null;
+  cetran_received_on?: string | null;
   remitted_at?: string | null;
   decided_at?: string | null;
   communicated_at?: string | null;
@@ -25,6 +27,7 @@ export interface RaitCase {
   pending_completion: boolean;
   legal_priority?: string | null;
   unit_id?: string | null;
+  agency_jurisdiction_id?: string | null;
   version: number;
   created_at: string;
   updated_at?: string | null;

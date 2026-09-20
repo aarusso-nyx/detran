@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "line": 424,
+      "claim": "The CASE normalization maps only the exact literal default 'public.gen_random_uuid()' in the columns facet; the same fresh-vs-upgrade qualification difference surfacing inside pg_get_constraintdef, pg_get_indexdef, pg_get_functiondef, or a compound default expression is not normalized and would still fail the catalog comparison. This preserves sensitivity (no false PASS) but leaves a known-benign divergence class able to re-break the final equivalence test.",
+      "fix": "If a future run fails on the same public.-qualification of gen_random_uuid inside a non-default definition, extend the normalization as another exact, documented rewrite at the point of comparison rather than widening this CASE preemptively."
+    },
+    {
+      "severity": "low",
+      "item": 7,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "line": 424,
+      "claim": "The rewrite equates 'public.gen_random_uuid()' with the unqualified builtin by name only; it does not verify that public.gen_random_uuid actually resolves to pgcrypto's UUID function, so a hypothetical shadowing function named gen_random_uuid in the public schema would compare equal. Risk is negligible here because both catalogs come from the same closed, hash-pinned 49-DDL inventory plus the TASK-0029 candidate, and the functions facet would expose any such function if created in the audited schemas.",
+      "fix": "Optionally assert once (outside the compared catalog) that to_regprocedure('public.gen_random_uuid()') is either NULL or the pgcrypto extension member, documenting the equivalence assumption; no change required for this delta."
+    }
+  ],
+  "notes": [
+    "Delta scope confirmed via frozen manifests: ctg-0001-final-upgrade-harness-delta.manifest.json pins rait-priority-upgrade.integration.spec.ts at 99032f918574d260c328dfbec5d3ea35eb26c8e1ce45feb44237e371eac30ace and ctg-0001-final-upgrade-catalog-delta.manifest.json pins it at 03dd1a3113ab99618dd3987e2edf8b0a8d74a3f5dba1379faa4afa3d5cc36c38; it is the only reviewed-source hash that changed.",
+    "No SQL/harness change: 19-rait-priority-pre.sql (17b53eba…), prepare-rait-priority-v1-baseline.mjs (cf408da4…), and the C4-OD V2 solution schema (0f3e28c1…) carry identical SHA-256 values in both the prior-PASS harness-delta manifest and the new catalog-delta manifest.",
+    "Frozen readset (ctg-0001-final-upgrade-catalog-delta readset) inspected: the spec, baseline harness, pre SQL, and the prior harness-delta json+manifest all exist on disk and were read.",
+    "The normalization is a symmetric exact-string CASE in structuralCatalog's columns facet only (spec lines 423-426): WHEN 'public.gen_random_uuid()' THEN 'gen_random_uuid()', ELSE pg_get_expr unchanged. Both fresh and upgrade catalogs are produced by the same function, so the mapping cannot mask an asymmetric difference; any other default, type, nullability, identity, constraint, index, policy, trigger, function, ACL, RLS, or ownership divergence still fails toEqual at line 1288.",
+    "All other assertions are preserved: the pg_dump-based snapshot equality checks for fault rollback, grant-window, deferred-commit, and idempotent reapply (lines 770, 820, 844, 951, 1020) compare before/after states of the same database and never pass through structuralCatalog, so the normalization cannot weaken them; inventory/ordering, legacy-row freeze, qualification, spoof, and requalification assertions are textually intact.",
+    "The intended fresh-vs-upgrade comparison remains meaningful: the equivalence encoded (pgcrypto public.gen_random_uuid() on the upgrade path vs the PostgreSQL 13+ pg_catalog builtin printed unqualified on the fresh path) matches the reported sole failure on RAIT case/document ID defaults, and both produce identical v4-UUID semantics.",
+    "No DB action taken and no runtime PASS claimed; this review is static inspection only. Limitation: shell execution was prohibited, so SHA-256 digests were not independently recomputed and no git diff between the two spec revisions was run; the single-change claim rests on the manifest pins plus full content inspection of the on-disk spec, whose only comparison-affecting normalization is the described CASE rewrite."
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0057",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Exigir capability documental específica da ata",
+  "description": "Engineer 1/1 implementou health autenticado e fail-closed específico de BATCH_DISTRIBUTION_MINUTES antes do recibo: exige batchDistributionMinutes, padesLt, tsa e OCSP/CRL, sem exigir withdrawalEvidence nem alterar a capability de retirada. SHA-256 do sensor TASK-0056 confirmado: 118f51ed75d738d3215c825e916fb62225a66777781ec9cd20093a70f99d9b17. Capability 9/9, regressão documental 19/19 e typecheck PASS; Prettier e diff --check dos arquivos allowlisted PASS. Checkpoint: o sensor batch congelado 10/11 RED porque seu mock retorna apenas o recibo também ao novo /health, sem capabilities; editá-lo é proibido nesta TASK. Nenhuma alegação de cripto de produção, approve-batch ou CTG-0002 GREEN.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-document-trust"],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0056",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "batch-trust"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-f2c45fd95d400a32",
+  "acceptance_commands": [["pnpm", "--filter", "@detran/shared", "typecheck"]],
+  "created_at": "2026-09-18T05:30:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-f2c45fd95d400a32",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Health/capability específica antes de verificar ata; sensores intactos."
+  },
+  "closure_reconciliation": {
+    "date": "2026-09-19",
+    "result": "PASS",
+    "basis": "TASK-0058 corrigiu o mock do health sem relaxar producao; a regressao documental e o runner oficial final passaram. O ambiente externo continua fail-closed quando nao configurado."
+  }
+}

@@ -4,7 +4,7 @@ title: Secretaria remete o recurso admitido à JARI com o dossiê de ofício e r
 status: draft
 apps: [rait]
 sources: [REF-CTB-280-290, REF-CONTRAN-900, REF-CONTRAN-918]
-updated: 2026-09-12
+updated: 2026-09-15
 ---
 
 ## Ator e objetivo
@@ -17,7 +17,7 @@ Secretaria do órgão autuador remete à JARI o recurso tempestivo admitido, no 
 
 ## Fluxo principal
 
-1. Sistema monta o dossiê de remessa: AIT, evidências do TEAT, NA/NP com marcos de ciência, decisão da defesa prévia e sua minuta, petição e anexos do recorrente, registro de admissibilidade — sem exigir nada do cidadão (CTB art. 285 §4º).
+1. Sistema monta o dossiê de remessa: AIT, evidências do TEAT, NA/NP com marcos de ciência, decisão da defesa prévia e sua minuta, petição e anexos do recorrente, registro de admissibilidade — sem exigir nada do cidadão (CTB art. 285 §4º). Por OD-R7-FJ0-001, TEAT_EVIDENCE exige ao menos um vínculo válido ao AIT; um único vínculo válido satisfaz o piso mesmo com `mandatory=false`. Além disso, todos os vínculos `mandatory=true` devem estar disponíveis e íntegros; ausência total nunca significa completude.
 2. Secretaria confere e assina a remessa; caso segue na fila F-J-0 até o recebimento.
 3. Secretaria da JARI registra o recebimento (`data_recebimento_jari`); caso passa a `DISTRIBUIDO` sem relator, na fila F-J-1; evento `RAIT_RECURSO_RECEBIDO_JULGADOR` arma `T-JUL-24M` e `T-PAR-3A` na infração ([WF-INF-003] #18).
 4. Caso entra no próximo lote de sorteio ([UC-RAIT-014]).
@@ -26,6 +26,7 @@ Secretaria do órgão autuador remete à JARI o recurso tempestivo admitido, no 
 
 - **2a.** `T-REM10` vence sem remessa: alerta ao gestor e indicador `dias_ate_remessa` ([RN-RAIT-107]); não há sanção legal, mas o atraso empurra o início do relógio de prescrição.
 - **1a.** Documento do órgão ausente (ex.: evidência não sincronizada do TEAT): abre tarefa ao órgão autuador, nunca ao recorrente ([RN-RAIT-003]).
+- **1b.** Nenhuma evidência TEAT vinculada, nenhum vínculo válido, ou vínculo obrigatório ausente/inválido: F-J-0 permanece incompleto e `remit` retorna `RAIT.REMIT_CHECKLIST_INCOMPLETE` (OD-R7-FJ0-001).
 - **3a.** Recurso recebido de órgão de outra UF (CTB art. 287): a tempestividade usa a data do protocolo de origem ([RN-RAIT-106]); remessa segue igual.
 
 ## Pós-condições
@@ -51,6 +52,12 @@ Caso em `DISTRIBUIDO` na JARI com data de recebimento registrada; dossiê comple
 - **Dado** um caso com `T-REM10` vencido
 - **Quando** o gestor abre o radar
 - **Então** o caso aparece com o atraso de remessa destacado, separado do risco de prescrição
+
+**AC-RAIT-017-4 — ausência de evidência nunca passa silenciosamente**
+
+- **Dado** um AIT sem vínculo de evidência TEAT, sem qualquer vínculo válido, ou com vínculo obrigatório indisponível/inválido
+- **Quando** a secretaria tenta remeter
+- **Então** F-J-0 permanece incompleto e o sistema retorna `RAIT.REMIT_CHECKLIST_INCOMPLETE`
 
 ## Regras aplicáveis
 

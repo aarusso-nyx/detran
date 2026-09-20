@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "RaitWorklist — BP-INF-RAIT-WORKLIST-001",
-    "version": "1.1.0",
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao.",
+    "version": "1.4.1",
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao. v1.1.1 acrescenta a autoridade signataria e sua jurisdicao institucional canonicamente identificada. v1.2.0 persiste snapshot, manifestacao e recibo verificavel da ata de distribuicao de WF-RAIT-004 secao 5. v1.3.0 fecha o schema aditivo e a superficie de leitura da worklist para os comandos de escala e lote de CTG-0002 secoes 4, 9 e 10. v1.4.0 acrescenta a identidade institucional CETRAN verificavel exigida por RN-RAIT-142 e WF-RAIT-004 secoes 5 e 6, sem promover a projecao legada de paridade a prova. v1.4.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, preservando a superficie CRUD somente de leitura.",
     "x-blueprint": "BP-INF-RAIT-WORKLIST-001",
     "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
   },
@@ -23,32 +23,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitUnit"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-unit"],
-        "operationId": "createRaitUnit",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitUnitDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitUnit"
                 }
               }
             }
@@ -86,52 +60,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-unit"],
-        "operationId": "updateRaitUnit",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitUnitDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitUnit"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-unit"],
-        "operationId": "removeRaitUnit",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/pools": {
@@ -149,32 +77,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitPool"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-pool"],
-        "operationId": "createRaitPool",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitPoolDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitPool"
                 }
               }
             }
@@ -212,52 +114,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-pool"],
-        "operationId": "updateRaitPool",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitPoolDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitPool"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-pool"],
-        "operationId": "removeRaitPool",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/pool-members": {
@@ -275,32 +131,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitPoolMember"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-pool-member"],
-        "operationId": "createRaitPoolMember",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitPoolMemberDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitPoolMember"
                 }
               }
             }
@@ -338,52 +168,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-pool-member"],
-        "operationId": "updateRaitPoolMember",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitPoolMemberDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitPoolMember"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-pool-member"],
-        "operationId": "removeRaitPoolMember",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/schedules": {
@@ -401,32 +185,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitSchedule"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-schedule"],
-        "operationId": "createRaitSchedule",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitScheduleDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitSchedule"
                 }
               }
             }
@@ -464,52 +222,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-schedule"],
-        "operationId": "updateRaitSchedule",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitScheduleDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitSchedule"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-schedule"],
-        "operationId": "removeRaitSchedule",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/schedule-slots": {
@@ -527,32 +239,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitScheduleSlot"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-schedule-slot"],
-        "operationId": "createRaitScheduleSlot",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitScheduleSlotDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitScheduleSlot"
                 }
               }
             }
@@ -590,52 +276,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-schedule-slot"],
-        "operationId": "updateRaitScheduleSlot",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitScheduleSlotDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitScheduleSlot"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-schedule-slot"],
-        "operationId": "removeRaitScheduleSlot",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/batches": {
@@ -653,32 +293,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitBatch"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-batch"],
-        "operationId": "createRaitBatch",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitBatchDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitBatch"
                 }
               }
             }
@@ -716,52 +330,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-batch"],
-        "operationId": "updateRaitBatch",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitBatchDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitBatch"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-batch"],
-        "operationId": "removeRaitBatch",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/batch-items": {
@@ -779,32 +347,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitBatchItem"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-batch-item"],
-        "operationId": "createRaitBatchItem",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitBatchItemDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitBatchItem"
                 }
               }
             }
@@ -842,52 +384,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-batch-item"],
-        "operationId": "updateRaitBatchItem",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitBatchItemDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitBatchItem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-batch-item"],
-        "operationId": "removeRaitBatchItem",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/assignments": {
@@ -905,32 +401,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitAssignment"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-assignment"],
-        "operationId": "createRaitAssignment",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitAssignmentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitAssignment"
                 }
               }
             }
@@ -968,52 +438,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-assignment"],
-        "operationId": "updateRaitAssignment",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitAssignmentDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitAssignment"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-assignment"],
-        "operationId": "removeRaitAssignment",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/impediments": {
@@ -1031,32 +455,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitImpediment"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-impediment"],
-        "operationId": "createRaitImpediment",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitImpedimentDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitImpediment"
                 }
               }
             }
@@ -1094,52 +492,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-impediment"],
-        "operationId": "updateRaitImpediment",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitImpedimentDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitImpediment"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-impediment"],
-        "operationId": "removeRaitImpediment",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/substitute-duties": {
@@ -1157,32 +509,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitSubstituteDuty"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-substitute-duty"],
-        "operationId": "createRaitSubstituteDuty",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitSubstituteDutyDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitSubstituteDuty"
                 }
               }
             }
@@ -1220,52 +546,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-substitute-duty"],
-        "operationId": "updateRaitSubstituteDuty",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitSubstituteDutyDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitSubstituteDuty"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-substitute-duty"],
-        "operationId": "removeRaitSubstituteDuty",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/benches": {
@@ -1283,32 +563,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitBench"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-bench"],
-        "operationId": "createRaitBench",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitBenchDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitBench"
                 }
               }
             }
@@ -1346,52 +600,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-bench"],
-        "operationId": "updateRaitBench",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitBenchDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitBench"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-bench"],
-        "operationId": "removeRaitBench",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/clocks": {
@@ -1409,32 +617,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitClock"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-clock"],
-        "operationId": "createRaitClock",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitClockDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitClock"
                 }
               }
             }
@@ -1472,52 +654,6 @@
             "description": "not found"
           }
         }
-      },
-      "patch": {
-        "tags": ["rait-clock"],
-        "operationId": "updateRaitClock",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitClockDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitClock"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-clock"],
-        "operationId": "removeRaitClock",
-        "responses": {
-          "200": {
-            "description": "deleted"
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
       }
     },
     "/v1/inf/rait/clock-alerts": {
@@ -1535,32 +671,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RaitClockAlert"
                   }
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": ["rait-clock-alert"],
-        "operationId": "createRaitClockAlert",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRaitClockAlertDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitClockAlert"
                 }
               }
             }
@@ -1593,52 +703,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "patch": {
-        "tags": ["rait-clock-alert"],
-        "operationId": "updateRaitClockAlert",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateRaitClockAlertDto"
-                  }
-                ],
-                "required": []
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ok",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RaitClockAlert"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["rait-clock-alert"],
-        "operationId": "removeRaitClockAlert",
-        "responses": {
-          "200": {
-            "description": "deleted"
           },
           "404": {
             "description": "not found"
@@ -1850,7 +914,8 @@
               "relator",
               "presidente",
               "coordenador",
-              "secretaria"
+              "secretaria",
+              "autoridade"
             ]
           },
           "status": {
@@ -1892,6 +957,46 @@
             "maxLength": 80,
             "nullable": true
           },
+          "agency_jurisdiction_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "representation_block": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "executivo_estadual",
+              "municipal_rodoviario",
+              "sociedade_civil"
+            ],
+            "nullable": true
+          },
+          "institutional_seat_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "appointment_act_ref": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "institutional_valid_from": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "institutional_valid_to": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "institutional_identity_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -1909,7 +1014,7 @@
           "member_role",
           "created_at"
         ],
-        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48)."
+        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48). v1.4.0 registra bloco de representacao, assento, ato e vigencia institucionais verificaveis para a composicao CETRAN de WF-RAIT-004 secoes 5 e 6."
       },
       "CreateRaitPoolMemberDto": {
         "type": "object",
@@ -1930,7 +1035,8 @@
               "relator",
               "presidente",
               "coordenador",
-              "secretaria"
+              "secretaria",
+              "autoridade"
             ]
           },
           "status": {
@@ -1970,6 +1076,41 @@
           "jurisdiction": {
             "type": "string",
             "maxLength": 80,
+            "nullable": true
+          },
+          "agency_jurisdiction_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "representation_block": {
+            "type": "string",
+            "maxLength": 30,
+            "enum": [
+              "executivo_estadual",
+              "municipal_rodoviario",
+              "sociedade_civil"
+            ],
+            "nullable": true
+          },
+          "institutional_seat_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "appointment_act_ref": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "institutional_valid_from": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "institutional_valid_to": {
+            "type": "string",
+            "format": "date",
             "nullable": true
           }
         },
@@ -2038,6 +1179,10 @@
             "type": "string",
             "format": "uuid",
             "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
           },
           "created_at": {
             "type": "string",
@@ -2267,6 +1412,30 @@
             "format": "uuid",
             "nullable": true
           },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "approval_signature_ref": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "approval_receipt_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "approval_verified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "approval_signer_person_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "created_at": {
             "type": "string",
             "format": "date-time"
@@ -2345,6 +1514,145 @@
           }
         },
         "required": ["pool_id", "week_start"]
+      },
+      "RaitBatchDrawSnapshot": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "snapshot_version": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "snapshot": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 30,
+            "default": "'server_draw'"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "batch_id",
+          "snapshot_version",
+          "snapshot",
+          "snapshot_hash",
+          "created_at"
+        ],
+        "description": "Snapshot canônico e imutável do sorteio por lote, produzido pelo servidor antes da ata (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca)."
+      },
+      "CreateRaitBatchDrawSnapshotDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "RaitBatchMinutesManifest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "batch_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "snapshot_hash": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "snapshot_version": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "document_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'BATCH_DISTRIBUTION_MINUTES'"
+          },
+          "expected_signer_person_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "manifest_hash": {
+            "type": "string",
+            "maxLength": 64,
+            "nullable": true
+          },
+          "manifest_version": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "prepared_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "batch_id",
+          "document_id",
+          "content_hash",
+          "snapshot_hash",
+          "snapshot_version",
+          "expected_signer_person_id",
+          "created_at"
+        ],
+        "description": "Manifestacao imutavel da ata de distribuicao PAdES+TSA, vinculada ao snapshot do sorteio e ao presidente (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca)."
+      },
+      "CreateRaitBatchMinutesManifestDto": {
+        "type": "object",
+        "properties": {}
       },
       "RaitBatchItem": {
         "type": "object",

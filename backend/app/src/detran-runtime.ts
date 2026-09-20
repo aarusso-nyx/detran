@@ -68,8 +68,6 @@ export type DetranRuntimeProfile =
 
 const LOCAL_TENANT_ID =
   process.env.DETRAN_LOCAL_TENANT_ID ?? '00000000-0000-7000-8000-000000000001';
-const LOCAL_ACTOR_ID =
-  process.env.DETRAN_LOCAL_ACTOR_ID ?? '00000000-0000-4000-8000-000000000002';
 
 export function detranRuntimeProfile(): DetranRuntimeProfile {
   const raw =
@@ -320,7 +318,9 @@ export class DetranLocalTokenVerifier implements TokenVerifier {
       .map((role) => role.trim())
       .filter(Boolean);
     const principal: Principal = {
-      id: LOCAL_ACTOR_ID,
+      id:
+        process.env.DETRAN_LOCAL_ACTOR_ID ??
+        '00000000-0000-4000-8000-000000000002',
       username: 'detran-local',
       roles,
       permissions: permissionsForRoles(roles),
@@ -833,35 +833,62 @@ export class DetranPersistentPipelineStore
 }
 
 /**
- * Lets the PostgreSQL unique reservation be the cross-instance lock. Cache
- * operations deliberately do nothing; durable storage is authoritative.
+ * Coordinates concurrent requests in this process while PostgreSQL remains
+ * the durable, cross-instance authority. The STYNX interceptor waits when a
+ * local owner already holds the key, then replays the completed durable row.
  */
 export class DetranDurableIdempotencyBackend implements IdempotencyBackend {
-  async get(
-    _context: IdempotencyDecisionContext,
-  ): Promise<IdempotencyStoredEntry | null> {
+  private static readonly MAX_ENTRIES = 10_000;
+  private readonly locks = new Map<string, string>();
+  private readonly entries = new Map<string, IdempotencyStoredEntry>();
+
+  private cached(context: IdempotencyDecisionContext) {
+    const entry = this.entries.get(context.compositeKey);
+    if (entry && entry.expiresAt > Date.now()) return entry;
+    this.entries.delete(context.compositeKey);
     return null;
   }
 
+  async get(
+    context: IdempotencyDecisionContext,
+  ): Promise<IdempotencyStoredEntry | null> {
+    return this.cached(context);
+  }
+
   async set(
-    _context: IdempotencyDecisionContext,
-    _entry: IdempotencyStoredEntry,
-  ): Promise<void> {}
+    context: IdempotencyDecisionContext,
+    entry: IdempotencyStoredEntry,
+  ): Promise<void> {
+    if (
+      !this.entries.has(context.compositeKey) &&
+      this.entries.size >= DetranDurableIdempotencyBackend.MAX_ENTRIES
+    ) {
+      const oldest = this.entries.keys().next().value;
+      if (oldest) this.entries.delete(oldest);
+    }
+    this.entries.set(context.compositeKey, entry);
+  }
 
   async acquireLock(
-    _context: IdempotencyDecisionContext,
-    _token: string,
+    context: IdempotencyDecisionContext,
+    token: string,
   ): Promise<boolean> {
+    if (this.cached(context)) return false;
+    if (this.locks.has(context.compositeKey)) return false;
+    this.locks.set(context.compositeKey, token);
     return true;
   }
 
   async releaseLock(
-    _context: IdempotencyDecisionContext,
-    _token: string,
-  ): Promise<void> {}
+    context: IdempotencyDecisionContext,
+    token: string,
+  ): Promise<void> {
+    if (this.locks.get(context.compositeKey) === token)
+      this.locks.delete(context.compositeKey);
+  }
 
-  async isLocked(_context: IdempotencyDecisionContext): Promise<boolean> {
-    return false;
+  async isLocked(context: IdempotencyDecisionContext): Promise<boolean> {
+    return this.locks.has(context.compositeKey);
   }
 }
 

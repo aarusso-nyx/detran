@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
+// Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
 import { Module } from '@nestjs/common';
 import { RaitUnitController } from './controllers/rait-unit.controller.js';
 import { RaitUnitService } from './services/rait-unit.service.js';
@@ -18,6 +18,12 @@ import { RaitScheduleSlotRepository } from './repositories/rait-schedule-slot.re
 import { RaitBatchController } from './controllers/rait-batch.controller.js';
 import { RaitBatchService } from './services/rait-batch.service.js';
 import { RaitBatchRepository } from './repositories/rait-batch.repository.js';
+import { RaitBatchDrawSnapshotController } from './controllers/rait-batch-draw-snapshot.controller.js';
+import { RaitBatchDrawSnapshotService } from './services/rait-batch-draw-snapshot.service.js';
+import { RaitBatchDrawSnapshotRepository } from './repositories/rait-batch-draw-snapshot.repository.js';
+import { RaitBatchMinutesManifestController } from './controllers/rait-batch-minutes-manifest.controller.js';
+import { RaitBatchMinutesManifestService } from './services/rait-batch-minutes-manifest.service.js';
+import { RaitBatchMinutesManifestRepository } from './repositories/rait-batch-minutes-manifest.repository.js';
 import { RaitBatchItemController } from './controllers/rait-batch-item.controller.js';
 import { RaitBatchItemService } from './services/rait-batch-item.service.js';
 import { RaitBatchItemRepository } from './repositories/rait-batch-item.repository.js';
@@ -39,15 +45,20 @@ import { RaitClockRepository } from './repositories/rait-clock.repository.js';
 import { RaitClockAlertController } from './controllers/rait-clock-alert.controller.js';
 import { RaitClockAlertService } from './services/rait-clock-alert.service.js';
 import { RaitClockAlertRepository } from './repositories/rait-clock-alert.repository.js';
+import { RaitWorklistCommandsController } from './handwritten/rait-worklist-commands.controller.js';
+import { RaitWorklistCommandService } from './handwritten/rait-worklist-command.service.js';
 
 @Module({
   controllers: [
+    RaitWorklistCommandsController,
     RaitUnitController,
     RaitPoolController,
     RaitPoolMemberController,
     RaitScheduleController,
     RaitScheduleSlotController,
     RaitBatchController,
+    RaitBatchDrawSnapshotController,
+    RaitBatchMinutesManifestController,
     RaitBatchItemController,
     RaitAssignmentController,
     RaitImpedimentController,
@@ -69,6 +80,10 @@ import { RaitClockAlertRepository } from './repositories/rait-clock-alert.reposi
     RaitScheduleSlotRepository,
     RaitBatchService,
     RaitBatchRepository,
+    RaitBatchDrawSnapshotService,
+    RaitBatchDrawSnapshotRepository,
+    RaitBatchMinutesManifestService,
+    RaitBatchMinutesManifestRepository,
     RaitBatchItemService,
     RaitBatchItemRepository,
     RaitAssignmentService,
@@ -83,6 +98,7 @@ import { RaitClockAlertRepository } from './repositories/rait-clock-alert.reposi
     RaitClockRepository,
     RaitClockAlertService,
     RaitClockAlertRepository,
+    RaitWorklistCommandService,
   ],
 })
 export class RaitWorklistModule {}

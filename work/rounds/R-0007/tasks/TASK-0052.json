@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0052",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Definir vínculo e confiança da ata de distribuição RAIT",
+  "description": "Ciclo corretivo OWNER CTG-0002: especificar manifestação persistente de lote e verificação PAdES/TSA própria antes de approve-batch, sem aceitar signedMinutesRef opaco. Preserva TASK-0046 1/2 em checkpoint.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-contract-document-trust"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0044",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "batch-trust"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-3d5b593b76cadee6",
+  "acceptance_commands": [
+    [
+      "test",
+      "-s",
+      "work/rounds/R-0007/reports/CTG-0002-BATCH-TRUST-CONTRACT.md"
+    ],
+    ["pnpm", "contracts:check"]
+  ],
+  "created_at": "2026-09-18T03:42:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-3d5b593b76cadee6",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente contrato documental da ata e fronteira de confiança; sem código/DDL/teste."
+  }
+}

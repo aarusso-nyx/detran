@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0001",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Define case command and shared error contracts",
+  "description": "Specify the shared error envelope, case command guards, command OpenAPI/checker/client format and the later case blueprint hook without changing runtime or blueprints.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-case"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["WF-RAIT-001", "ADR-0015", "OD-309"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-7b0301f97b00e2b6",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0007/contracts/CTG-0001.md"],
+    ["pnpm", "contracts:check"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-7b0301f97b00e2b6",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

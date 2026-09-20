@@ -1,0 +1,158 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0007",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 381,
+      "claim": "O servico tem um modo de compatibilidade ligado por const compatibility = !this.deadlines. Quando a fabrica de prazos nao esta injetada, todas as guardas de dominio, todos os efeitos, o armamento de prazo e a cardinalidade de eventos sao puladas, e o comando ainda responde 200. Isso e falha aberta em producao e contradiz o contrato, que exige guarda vinculante em toda rota.",
+      "fix": "Tornar RaitDeadlineEngineFactory dependencia obrigatoria do construtor, remover a variavel compatibility e todos os ramos que dependem dela, e deixar a ausencia do provider falhar na inicializacao do Nest."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 335,
+      "claim": "O construtor le um quarto argumento nao declarado pelo objeto arguments e, quando a fabrica de prazos e omitida, reescreve design:paramtypes da propria classe com Reflect.defineMetadata. Isso e canal de injecao exclusivo de teste dentro do codigo de producao e pode truncar permanentemente os parametros que o Nest resolve para o servico no processo em que for acionado.",
+      "fix": "Declarar DocumentTrustVerifier como dependencia explicita do construtor, remover a leitura de arguments e remover a chamada a Reflect.defineMetadata; os testes passam a injetar pelo construtor declarado."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-inquiry-commands.controller.ts",
+      "line": 8,
+      "claim": "O controlador declara Resource inf:rait-inquiry com Action answer-inquiry e extend-inquiry, produzindo as chaves inf:rait-inquiry:answer-inquiry e inf:rait-inquiry:extend-inquiry. A matriz de politica so tem inf:rait-case:answer-inquiry e inf:rait-case:extend-inquiry, e rait-inquiry so recebe read, create, update e delete. Os dois comandos contratados ficam negados para rait-analyst e rait-rapporteur.",
+      "fix": "Declarar Resource inf:rait-case nos handlers answer e extend, mantendo Resource inf:rait-inquiry apenas em expire, e cobrir o par rota-regra em teste de rota."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 436,
+      "claim": "A unica escrita no caso atualiza state, version, updated_at e last_movement_at. Nenhum marco contratado e gravado: admitted_at em admit, remitted_at em remit, decided_at em decide, non_admission_reason e archived em non-admission de intempestivo, suspensive_effect em admit, judge_body_received_at ou cetran_received_at em receive e a limpeza de pending_completion em resolve-pending. Todas essas colunas existem no DDL 34.",
+      "fix": "Escrever cada marco na mesma transacao do comando, derivando a coluna pela rota, e cobrir cada marco por sensor que leia a linha persistida."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 799,
+      "claim": "O checklist F-J-0 devolve os tokens DEFESA_ORIGEM, PECAS_REQUERENTE e TRIAGEM, que nao pertencem ao conjunto fechado do contrato, e nunca produz AIT, NA_ACK, NP_ACK, DEFENSE_DECISION, DEFENSE_DRAFT, PETITION nem ADMISSIBILITY. Alem disso nao verifica ciencia em inf.notice_acknowledgement, decisao assinada e minuta do caso de origem, e nao filtra rait_document por origin igual a requerente.",
+      "fix": "Alinhar literalmente os dez tokens do contrato e acrescentar as consultas faltantes de AIT, ciencia das notificacoes, decisao e minuta de origem e peticao do requerente."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 1022,
+      "claim": "A guarda de WIP compara wip_limit com active.length, mas active.length e sempre zero porque qualquer atribuicao ativa ja falhou antes com ASSIGNMENT_ALREADY_ACTIVE. Logo o limite nunca e aplicado a carga real e, quando o membro nao tem escala publicada, a expressao cai em zero menor ou igual a zero e devolve ASSIGNMENT_WIP_LIMIT indevidamente.",
+      "fix": "Contar as atribuicoes ativas do membro de forma independente da guarda de atribuicao concorrente e tratar ausencia de escala com o codigo proprio, nao com o de limite de WIP."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 1029,
+      "claim": "A selecao do proximo caso filtra apenas por tenant, estado e instancia do pool, sem vinculo com o pool, a unidade ou a circunscricao. Um caso pertencente a outro pool ou outra unidade da mesma instancia pode ser reivindicado, e RAIT.FORBIDDEN_CASE_SCOPE nunca e emitido apesar de o contrato exigir revalidacao de escopo.",
+      "fix": "Restringir a fila ao pool alvo pelo vinculo canonico de unidade e instancia e emitir FORBIDDEN_CASE_SCOPE quando o candidato estiver fora do escopo do ator."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-inquiry-command.service.ts",
+      "line": 223,
+      "claim": "O comando extend suprime explicitamente o evento rait.case.changed, embora incremente a versao do caso na mesma transacao. O contrato exige que extend emita rait.inquiry.changed e rait.case.changed.",
+      "fix": "Emitir os dois eventos em extend e ajustar o sensor de cardinalidade para exigir exatamente dois."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-inquiry-command.service.ts",
+      "line": 205,
+      "claim": "O comando answer aceita documentIds e answeredOn, mas nenhum documento e vinculado e answered_at recebe clock_timestamp em vez da data civil informada. A resposta da diligencia nao e registrada como o contrato determina.",
+      "fix": "Persistir os documentos da resposta e usar a data civil recebida no campo apropriado, mantendo instantes em UTC e datas civis em formato de dia."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 707,
+      "claim": "A guarda de minuta aceita status submetida ou devolvida para ready, decide e return-draft. O contrato exige minuta submetida em ready e em decide, de modo que uma minuta ja devolvida hoje fecha a instrucao e pode ser assinada.",
+      "fix": "Exigir status submetida em ready e decide e manter devolvida apenas onde o contrato admite."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-case-command-contract.integration.spec.ts",
+      "line": 50,
+      "claim": "Este arquivo esta na pasta de integracao mas substitui o banco por um objeto com tx e query simulados, e o unico teste ligado ao PostgreSQL apenas inspeciona constraints, RLS e fixtures do DDL. Nenhum comando executa seu SQL contra o banco, logo a evidencia de integracao dedicada 28 de 28 nao demonstra o runtime transacional nem a semantica das consultas.",
+      "fix": "Mover o arquivo para a camada unitaria e criar integracao real que execute cada comando contra o banco dedicado com role_app_backend, verificando linhas, outbox, auditoria e idempotencia."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 692,
+      "claim": "A precedencia de erros de decide diverge da ordem fixada pelo contrato: DRAFT_INCOMPLETE e avaliado antes de DECISION_GROUNDS_REQUIRED e de DECISION_ALREADY_SIGNED, e DRAFT_AUTHOR_CANNOT_SIGN e avaliado antes de DECISION_ALREADY_SIGNED. Um mesmo cenario devolve codigo diferente do contratado.",
+      "fix": "Reordenar as guardas de decide exatamente na sequencia do contrato e cobrir a precedencia com sensores que combinem duas violacoes simultaneas."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 1110,
+      "claim": "O comando admit emite rait.case.admitted incondicionalmente, mesmo quando a instancia nao e jari nem cetran e portanto nao ha efeito suspensivo. O contrato condiciona esse evento a aplicabilidade e exige a instauracao do efeito, que nao e persistida.",
+      "fix": "Condicionar o segundo evento a tempestividade e instancia jari ou cetran e gravar suspensive_effect na mesma transacao."
+    },
+    {
+      "severity": "high",
+      "item": 14,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 526,
+      "claim": "Quando nao ha RequestContext ativo, o servico aceita tenant, ator e papeis vindos do objeto de entrada e abre a transacao por database.tx, sem withTenantContext. Isso cria um canal alternativo de identidade e uma escrita fora do contexto RLS, contra a regra de que tenant e ator vem exclusivamente do contexto da requisicao.",
+      "fix": "Remover o campo context das interfaces de entrada e exigir sempre RequestContext ativo e withTenantContext, falhando quando o contexto estiver ausente."
+    },
+    {
+      "severity": "high",
+      "item": 15,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 85,
+      "claim": "A allowlist de remit admite documentIds e legalBasis, mas o corpo contratado de remit e vazio; campos nao definidos deveriam ser rejeitados. De forma simetrica, withdraw aceita withdrawalDocumentId e resolve-pending aceita documentIds, e nenhum desses identificadores e validado ou persistido, de modo que o termo assinado e a juntada exigidos pelo contrato nao existem.",
+      "fix": "Reduzir a allowlist de remit ao corpo vazio e persistir e validar os documentos de withdraw e resolve-pending, incluindo pertencimento ao caso."
+    },
+    {
+      "severity": "low",
+      "item": 16,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 997,
+      "claim": "Ha SQL moldado para inspecao de fonte e nao para o banco: um comentario inerte com pool_id igual a placeholder dois, uma comparacao invertida com o placeholder a esquerda do identificador e, na fabrica de prazos, um fragmento de select montado por concatenacao de literal. Nenhuma dessas formas tem efeito funcional.",
+      "fix": "Escrever o SQL de forma direta e mover qualquer verificacao de forma para asserts de comportamento, nao de texto."
+    },
+    {
+      "severity": "low",
+      "item": 17,
+      "file": "docs/framework/blueprints/BP-INF-RAIT-CASE-001.json",
+      "line": 7,
+      "claim": "O blueprint esta em 1.1.4, mas a descricao normativa so documenta ate 1.1.2, e handwrittenProviders tem uma quinta entrada para DocumentTrustHttpAdapter que nao consta da secao 8 do contrato CTG-0001. O texto contratual e os hooks aplicados deixaram de coincidir.",
+      "fix": "Emendar a secao 8 do contrato para incluir o provider do adaptador e atualizar a descricao do blueprint ate a versao vigente."
+    },
+    {
+      "severity": "low",
+      "item": 18,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 159,
+      "claim": "Todo DetranError do servico carrega a mesma mensagem generica e RAIT.ENUM_INVALID nunca e produzido, apesar de o contrato distinguir token fora do check do DDL de especie incompativel com a instancia. A mensagem legivel tambem nao acompanha o codigo.",
+      "fix": "Derivar mensagem por codigo a partir do catalogo de erros e emitir ENUM_INVALID para token fora do conjunto do DDL antes da avaliacao de instancia."
+    }
+  ],
+  "notes": [
+    "Nenhum teste de ponta a ponta do aplicativo exerce as rotas de comando do caso; os quatro arquivos de e2e cobrem inf-ait, modulos ops, idempotencia PEC e perfis de runtime. O resultado 12 de 12 demonstra apenas que o Nest inicializa com os providers manuscritos.",
+    "O verificador de parametros passou a classificar por travessia de AST com exclusao sintatica de propriedades type e messageKey e de comparacoes com .type, sem allowlist de valor e preservando o desconhecido como falha. A rubrica 12 esta atendida.",
+    "O envelope RAIT do PolicyGuard ficou corretamente restrito a recursos com prefixo inf:rait-, preservando ForbiddenException nos demais dominios e a falha de autenticacao quando falta principal.",
+    "O script backend:test:integration passou a incluir rait-case, o que fecha parte do achado historico sobre enumeracao de tiers; worklist e session continuam pendentes para os CTG seguintes.",
+    "Os codigos de erro usados pelo runtime existem todos no catalogo rait-error-catalog.md; nao houve invencao de codigo."
+  ]
+}

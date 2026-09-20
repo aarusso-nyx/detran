@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0061",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Versionar blueprint worklist e suprimir CRUD conflitante",
+  "description": "Architect 1/1 versionou BP-INF-RAIT-WORKLIST-001 para 1.3.0 (SHA-256 9264a0056f92ff00f64b82860c20ef7a51e930a4e4cfe0b5a8847457d736c432): dependência e alias explícitos de @detran/inf-deadlines; versionamento otimista aditivo de rait_schedule com rait_batch.version preservado; manifestação server-owned completada com manifest_hash, manifest_version e prepared_at; checks e índice aditivos/idempotentes; operations list/get nos 13 recursos governados e [] em snapshot/manifest, sem hooks. Duas gerações oficiais produziram 1.136 hashes idênticos e mudaram somente 80 saídas geradas worklist; OpenAPI SHA-256 57393bcbecadfd592c5cabbab675702cbaecbd4b2eb83f68bbe9d7bee4be5a63 e DDL35 SHA-256 9d40598aecf29f1ba29940bb46a56ee1a16013098b9152ae658cfee960c4925d. DDL35 aplicado duas vezes com transação no DB dedicado detran_r7_ctg1_a2, sem reset/seed; sensor SQL TASK-0060 PASS 3/3 e 20 casos preservados. blueprints:check, contracts:check, verify:rls-ddl (189 tabelas), typecheck worklist, diff-check e hashes TASK-0060 PASS.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-bp-rait-worklist", "MOD-generated-tree"],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0060",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "worklist-blueprint"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-1c5c1d4297f8c754",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "typecheck"]
+  ],
+  "created_at": "2026-09-19T03:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-1c5c1d4297f8c754",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Blueprint/schema/operations worklist; runtime e hooks permanecem fora."
+  }
+}

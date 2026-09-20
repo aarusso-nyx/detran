@@ -1,16 +1,7 @@
-// CTG-0001 §1 (M1) — `DetranError`, the shared domain error for TEAT/RAIT
-// commands. Mirrors `backend/domains/inf/infraction/src/handwritten/errors.ts`
-// (`RaitError`, R-0006): same `StynxError` (`@stynx-nyx/core` 1.3.1) shape,
-// same pt-BR fallback-message convention. `messageKey` is derived by regex —
-// never a literal table per code (CTG-0001 §1 regra de derivação).
 import { StynxError } from '@stynx-nyx/core';
 
-/**
- * `<prefixo minúsculo>.errors.<código sem prefixo, minúsculo>` —
- * `TEAT.AIT_STATE_INVALID` -> `teat.errors.ait_state_invalid`;
- * `RAIT.CASE_STATE_INVALID` -> `rait.errors.case_state_invalid`. Works for any
- * all-caps dotted prefix, not just TEAT/RAIT: `code.replace(/^[A-Z]+\./, '')`.
- */
+export type DetranErrorContext = Record<string, unknown>;
+
 function messageKeyOf(code: string): string {
   const prefixMatch = /^([A-Z]+)\./u.exec(code);
   const prefix = prefixMatch ? prefixMatch[1]!.toLowerCase() : '';
@@ -20,25 +11,37 @@ function messageKeyOf(code: string): string {
 
 export interface DetranErrorOptions {
   status: number;
-  /** Only ids, canonical tokens and numbers (CTG-0001 §1 regra 4). */
-  context?: Record<string, unknown>;
-  /** pt-BR fallback message; defaults to the code itself. */
+  context?: DetranErrorContext;
   message?: string;
+  messageKey?: string;
+  requestId?: string;
   cause?: unknown;
 }
 
+/** Stable shared error envelope for TEAT, RAIT, BOAT and Portal commands. */
 export class DetranError extends StynxError {
-  declare readonly context: Record<string, unknown>;
+  readonly code: string;
+  readonly status: number;
+  readonly messageKey: string;
+  declare readonly context: DetranErrorContext;
+  readonly requestId?: string;
 
   constructor(code: string, options: DetranErrorOptions) {
+    const context = options.context ?? {};
+    const messageKey = options.messageKey ?? messageKeyOf(code);
     super(options.message ?? code, {
       code,
       status: options.status,
-      context: options.context ?? {},
-      messageKey: messageKeyOf(code),
+      context,
+      messageKey,
       cause: options.cause,
     });
     this.name = 'DetranError';
+    this.code = code;
+    this.status = options.status;
+    this.messageKey = messageKey;
+    this.context = context;
+    this.requestId = options.requestId;
   }
 }
 

@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0022",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Compor blueprint e verificar candidato integral C4-OD V3",
+  "description": "Continuação final 4/4 concluída: backend:test:ci GREEN (E2E RAIT 110/110, INF-AIT 1/1 e upgrade final 18/18), pnpm check, doctor e chain PASS; revisão independente pós-GREEN válida PASS, zero high, candidato 2bbb7b82171b97c72803a8eadc934850b6c4966ca76263a0ce05833fcb29435c. CTG-0001 apta à integração governada; não implica conclusão das CTG-0002–0004, PR ou merge.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-bp-rait-case", "MOD-generated-tree"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0021",
+  "db_isolation": "database",
+  "iteration_count": 4,
+  "max_iterations": 4,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3", "owner-model-demotion"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-b99022805f2bb74d",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "check"],
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "devai:doctor"]
+  ],
+  "created_at": "2026-09-17T13:26:37.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-b99022805f2bb74d",
+    "max_iterations": 4,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Blueprint e saídas oficiais estritamente enumeradas no prompt V3 e manifesto de gerados; sem correção manual de produto, SQL ou testes."
+  }
+}

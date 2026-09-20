@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0056",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-backend",
+  "title": "Congelar sensor da capacidade documental da ata",
+  "description": "Inspector 1/1 congelou sensor executável da capability por espécie. O teste focado coleta 9 cenários, todos RED contra TASK-0055: seis capacidades ausentes/falsas/parciais, HTTP não-2xx e indisponibilidade ainda consultam /verify em vez de /health; a capacidade válida seguida do recibo também falha pela mesma omissão. Exige batchDistributionMinutes, PAdES-B-LT, TSA e OCSP/CRL e não exige withdrawalEvidence. Typecheck, Prettier e diff --check PASS. SHA-256: document-trust-batch-capability 118f51ed75d738d3215c825e916fb62225a66777781ec9cd20093a70f99d9b17. Os fakes verificam protocolo fail-closed, não criptografia real do serviço.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-document-trust"],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0055",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "batch-trust"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-c6c9d6721ade828b",
+  "acceptance_commands": [["pnpm", "--filter", "@detran/shared", "typecheck"]],
+  "created_at": "2026-09-18T05:15:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-c6c9d6721ade828b",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Novo sensor de capacidade; produção e sensores anteriores intocados."
+  }
+}

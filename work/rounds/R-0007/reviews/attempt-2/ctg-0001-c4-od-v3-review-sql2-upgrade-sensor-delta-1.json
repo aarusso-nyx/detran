@@ -1,0 +1,48 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "line": 254,
+      "claim": "normalizedDump applies the \\restrict/\\unrestrict and '-- Dumped from database|by pg_dump' header filters to every line before COPY-block detection, so a COPY data row whose first column text began with one of those literal prefixes would be silently dropped from both sides of the comparison, slightly weakening the 'every row retained' guarantee. No current fixture table can produce such a row (leading columns are UUID/serial keys and COPY escapes backslashes to \\\\, which the anchored regex does not match), so this cannot mask a real difference today.",
+      "fix": "Move the two header filters inside the block-aware loop so they only apply outside COPY row ranges (i.e., skip filtering between a 'COPY ... FROM stdin;' line and its '\\.' terminator)."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "line": 448,
+      "claim": "structuralCatalog canonicalizes ACL entry order only for relations (canonicalAcl at lines 475-487); schema nspacl (line 396) and function proacl (line 448) are compared as raw text. This is fail-safe (textual ACL reordering would cause a spurious FAIL, never a false PASS), but the asymmetry is undocumented and invites a future loosening 'fix' outside review.",
+      "fix": "Apply canonicalAcl to the schemas and functions ACL fields as well, or add a comment stating that raw comparison there is intentionally stricter than the relation-ACL normalization."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "line": 290,
+      "claim": "Neither the snapshot() globals query (lines 290-318) nor structuralCatalog captures pg_database.datacl, so the writer ACL entry 'GRANT TEMPORARY ON DATABASE ... TO role_rait_priority_writer' created by backend/database/ddl/19-rait-priority-enforce.sql line 15 sits outside both the rollback-equality and the fresh-vs-upgrade equivalence surfaces. Risk is bounded because the grant runs inside apply.sh's single transaction (rollback is transactional) and both apply paths execute identical SQL, but it is an app/writer ACL entry the sensor does not observe.",
+      "fix": "Add a 'database_acl' key to the globals snapshot selecting datacl::text (canonicalized) from pg_database WHERE datname = current_database(), and include it in the --full roles/structure comparison."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0007/reports/TASK-0028-V3-DB.md",
+      "line": 10,
+      "claim": "The report is dated 'Preflight de 2026-09-17' while the frozen fixture timestamp (assessedAt 2026-09-16T12:00:00Z, qualification_on 2026-09-16) and the round's working date are 2026-09-16; a one-day discrepancy in a governed evidence record is an auditability blemish (likely timezone or typo), though it does not affect any hash or assertion.",
+      "fix": "Correct the preflight heading to the actual local date (or annotate it as UTC) so the evidence chain dates are internally consistent."
+    }
+  ],
+  "notes": [
+    "Independent read-only Auditor Fable 5 review of the frozen readset work/rounds/R-0007/reports/CTG-0001-C4-OD-V3-UPGRADE-SENSOR-DELTA-READSET.md and native manifest ctg-0001-c4-od-v3-review-sql-2.manifest.json; no shell, no DB connection, no file edits, no Git commands.",
+    "normalizedDump (spec lines 251-267) verified: it sorts only the rows between each 'COPY ... FROM stdin;' line and its '\\.' terminator, pushes every collected row back (multiset preserved, content compared byte-for-byte after sorting), keeps the COPY directive and the '\\.' terminator in place, and drops only the pg_dump version comment headers and the pg_dump 17 \\restrict/\\unrestrict token lines, both nonsemantic and randomized/environmental. The rollback and reapply scenarios still compare full schema dump, full data dump, globals and role digests via snapshot(); no narrowing was introduced there.",
+    "structuralCatalog (spec lines 390-518) verified: it still compares, for the priority surface {inf.rait_case, inf.rait_document, inf.rait_priority_assessment, inf.rait_priority_basis}, the inf schema entry (name/owner/acl), relations with owner/ACL/RLS/force-RLS/options, all columns with type/not-null/default/identity/generated (sorted by name, excluding only physical attnum order), all constraints via pg_get_constraintdef, all indexes ON those tables via pg_get_indexdef, all pg_policies rows, all triggers except internal 'RI_ConstraintTrigger_' names (whose FK semantics remain covered by the constraint definitions), and all functions matching ^rait_priority_ plus rait_record_initial_priority with definition/owner/ACL/config. Grep of 19-rait-priority-enforce.sql confirms every priority-owned function (rait_priority_immutable, _case_guard, _mark_insert, _document_guard, _consistency, rait_record_initial_priority) and every trigger name (rait_priority_*) falls inside those filters, so the exclusions are exactly nonsemantic ordering, RI trigger names and unrelated RAIT objects as claimed. canonicalAcl sorts ACL entries but compares each grant string integrally.",
+    "No assertion family was removed: the frozen spec still contains the 5 per-file fault-injection rollback tests plus grant-window, deferred-COMMIT-failure and concurrent advisory-lock scenarios (rollback); legacyRows full-projection sorted-row hashing over all nine schemas plus snapshot equality across double apply (data preservation); the four qualification scenarios with policy, revision-1, basis and document assertions (positive protocol); unknown-legacy-string, pg_temp spoof and requalification-denial tests with SQLSTATE 42501 (negative protocol/authorization); assertAppIdentity, read-true/write-false grant checks and protocolled_at/id immutability rejections (authorization/immutability). Test count reconciles exactly: 1 static + 17 DB = 18, matching the reported 18 collected.",
+    "The reported 18/18 PASS is assessed as a valid dedicated rehearsal claim only: TASK-0028-V3-DB.md records the full command with the four explicit context variables against the disposable database detran_r7_ctg1_a2, exit 0, over the final hashes (sensor 50f25dc5..., 19-pre af442ccd..., 19-enforce e4eaa186..., apply.sh 19c078cb...). The report itself states the final database is a fresh disposable installation, not production, and that the package typecheck remains blocked by future Clock imports and is not claimed PASS. Rehearsal outcomes are accepted strictly as coordinator-reported governed records, not independently re-executed.",
+    "Boundary preserved: the historical SQL2 REVIEW verdict remains OWNER-ACCEPTED-WITH-WAIVER under ADR-0026, restricted to the legacy queue high; this delta review evaluates only the sensor normalization change and does not and cannot convert that REVIEW into an independent PASS.",
+    "Limitations: SHA-256 values were cross-checked against recorded manifests, not recomputed (read-only tooling, no shell). The sensor preimage b43efc2f... matches the SQL2 manifest pin for the spec (manifest line 602), and the current worktree spec is taken as the 50f25dc5... final bytes per the readset; the preimage bytes are not present in the worktree, so the 'only normalization changed' delta claim rests on the recorded hash chain plus the presence of all required assertion families in the final bytes."
+  ]
+}

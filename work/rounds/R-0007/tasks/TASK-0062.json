@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0062",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar seis comandos worklist produtivos",
+  "description": "Engineer 2/2 implementou os seis dispatches worklist, locks/versionamento/idempotência, vínculo dinâmico, outbox/auditoria atômicos, manifestação server-owned e verificação de ata fail-closed; a fachada RAIT delega prepare/get/verify e o interceptor exclui handlers worklist da auditoria STYNX. Gates: shared trust 21/21; wrapper case 1/1; worklist unit 78/78; worklist integration com URLs owner/app/test explícitas no banco dedicado detran_r7_ctg1_a2 42/42; audit app 9/9; typecheck shared/case/worklist/app, decorators 824, Prettier e diff-check PASS. E2E focal continua RED 1/1 exclusivamente por zero handlers compostos em create-schedule: controller manuscrito não é exportado/registrado pelo módulo gerado, wiring reservado a TASK-0008. Hashes TASK-0058 e TASK-0060 preservados, inclusive audit e81824dd040e5a99e0fd08a5d738360aa385f1db51ad2f21b4b14ad85d570d0d.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-contract-document-trust",
+    "MOD-bp-rait-worklist"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0061",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "production-green"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-9493dc5455bc2082",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "verify:decorators"]
+  ],
+  "created_at": "2026-09-19T04:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-9493dc5455bc2082",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Produção worklist e trust; sensores e gerados imutáveis."
+  }
+}

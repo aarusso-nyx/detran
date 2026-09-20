@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0024",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Corrigir notação documental TEAT_EVIDENCE",
+  "description": "C4 historical execution state preserved. Active V3 prompt SHA-256 db2ace507844ea3c77586ff04d04bbd4348428b88bd69cf0ddf2b133b0c4fa18; Architect Sol/Medium routing. Scoped 1/1 continuation changed only backticks around TEAT_EVIDENCE in UC-RAIT-017 (preimage SHA 24636cb38f9de7f1ad0e0902e3390cd3952334f1e1348e68b997fcaf88bcb8ec; postimage SHA a00dcb4cc318eb5ba22d0bd5d6e41e506c6021b458ead0f1299143a3fc196f2a). Owner-authorized separate documentary correction replaced absolute workstation paths in manual README (SHA e45d7619f500981a1e17a653515f048e33143efb8d27bad53207bbabdeda7c3b) without changing checker or validation semantics. docs:kb:check PASS 521 artifacts/446 canonical tokens, Prettier PASS, manual OpenAPI validation 1 path/1 operation and contracts:check PASS. Completed in same 1/1, no counter reset, commit or merge; TASK-0025 now eligible.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-kb"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0030",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-db2ace507844ea3c",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    [
+      "pnpm",
+      "exec",
+      "prettier",
+      "--check",
+      "docs/framework/product/domains/inf/rait/use-cases/UC-RAIT-017.md"
+    ]
+  ],
+  "created_at": "2026-09-16T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-db2ace507844ea3c",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "C4-OD V3 future bounded architect task; active prompt work/rounds/R-0007/prompts/TASK-0024-V3.md",
+    "planned_files": [
+      "docs/framework/product/domains/inf/rait/use-cases/UC-RAIT-017.md"
+    ]
+  }
+}

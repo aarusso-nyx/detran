@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   DetranLocalTokenVerifier,
+  DetranDurableIdempotencyBackend,
   DetranPersistedAuditSink,
   DetranPipelineSqlExecutor,
   DetranPolicyEvaluator,
@@ -19,6 +20,9 @@ import {
 const keys = [
   'DATABASE_URL',
   'DETRAN_AUTH_MODE',
+  'DETRAN_LOCAL_ACTOR_ID',
+  'DETRAN_LOCAL_ROLES',
+  'DETRAN_LOCAL_TENANT_ID',
   'DETRAN_RUNTIME_PROFILE',
   'NODE_ENV',
   'STYNX_APP_DATABASE_URL',
@@ -64,6 +68,24 @@ describe('DETRAN runtime hooks', () => {
     await expect(
       new DetranLocalTokenVerifier().verifyAuthorizationHeader(undefined),
     ).rejects.toThrow('not allowed in production');
+  });
+
+  it('reads the local actor for each test-profile verification', async () => {
+    process.env.DETRAN_RUNTIME_PROFILE = 'test';
+    process.env.DETRAN_LOCAL_ACTOR_ID = '00000000-0000-4000-8000-0000b0000001';
+    const verifier = new DetranLocalTokenVerifier();
+    await expect(
+      verifier.verifyAuthorizationHeader('Bearer local'),
+    ).resolves.toMatchObject({
+      principal: { id: '00000000-0000-4000-8000-0000b0000001' },
+    });
+
+    process.env.DETRAN_LOCAL_ACTOR_ID = '00000000-0000-4000-8000-0000b0000005';
+    await expect(
+      verifier.verifyAuthorizationHeader('Bearer local'),
+    ).resolves.toMatchObject({
+      principal: { id: '00000000-0000-4000-8000-0000b0000005' },
+    });
   });
 
   it('fails non-local verifier construction without Cognito', () => {
@@ -138,6 +160,37 @@ describe('DETRAN runtime hooks', () => {
         store: expect.anything(),
       },
     });
+  });
+
+  it('serializes concurrent idempotency owners in this process', async () => {
+    const backend = new DetranDurableIdempotencyBackend();
+    const context = { compositeKey: 'same-request' } as never;
+
+    await expect(backend.acquireLock(context, 'owner-1')).resolves.toBe(true);
+    await expect(backend.acquireLock(context, 'owner-2')).resolves.toBe(false);
+    await expect(backend.isLocked(context)).resolves.toBe(true);
+
+    await backend.releaseLock(context, 'owner-2');
+    await expect(backend.isLocked(context)).resolves.toBe(true);
+
+    await backend.releaseLock(context, 'owner-1');
+    await expect(backend.isLocked(context)).resolves.toBe(false);
+    await expect(backend.acquireLock(context, 'owner-2')).resolves.toBe(true);
+
+    await backend.set(context, {
+      requestFingerprint: 'fingerprint',
+      statusCode: 200,
+      body: { ok: true },
+      headers: {},
+      expiresAt: Date.now() + 60_000,
+      status: 'completed',
+    });
+    await backend.releaseLock(context, 'owner-2');
+    await expect(backend.get(context)).resolves.toMatchObject({
+      body: { ok: true },
+      status: 'completed',
+    });
+    await expect(backend.acquireLock(context, 'owner-3')).resolves.toBe(false);
   });
 
   it('executes pipeline persistence through the request-bound app role only', async () => {

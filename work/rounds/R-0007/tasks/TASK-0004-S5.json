@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004-S5",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Register concrete document trust DI in RAIT case module",
+  "description": "Add the concrete adapter to handwrittenProviders, bump patch, regenerate and prove app e2e plus full CTG gates.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-bp-rait-case", "MOD-generated-tree"],
+  "target_substrates": ["F2"],
+  "target_invariants": ["ADR-0007", "WF-RAIT-001"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "corrective-architect-provider-wiring",
+  "upstream_task_id": "TASK-0004-S4",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-b", "wp-c", "attempt-2", "plant-bug"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-15T21:15:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

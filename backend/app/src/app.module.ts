@@ -11,6 +11,8 @@ import { APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import {
   AuditInterceptor,
   AuthContextGuard as LegacyAuthContextGuard,
+  getPrincipalFromRequest,
+  type RequestLike,
   StynxAuditModule,
   StynxAuthModule as LegacyStynxAuthModule,
   StynxAuthorizationModule,
@@ -39,7 +41,9 @@ import { createSenatranAdapter } from '@detran/senatran-adapter';
 import { SefazHttpAdapter } from '@detran/sefaz-adapter';
 import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 import {
+  DETRAN_ACTION_METADATA_KEY,
   DETRAN_PUBLIC_METADATA_KEY,
+  DETRAN_RESOURCE_METADATA_KEY,
   DetranError,
   DetranPolicyGuard,
 } from '@detran/shared';
@@ -158,6 +162,9 @@ import { PecUserAdminController } from './pec-user-admin.controller.js';
 import { PecUserAdminService } from './pec-user-admin.service.js';
 import { PecCognitoAdminController } from './pec-cognito-admin.controller.js';
 import { PecCognitoAdminService } from './pec-cognito-admin.service.js';
+import { DetranErrorFilterModule } from './detran-error.filter.js';
+import { DetranPolicyErrorGuard } from './detran-policy-error.guard.js';
+import { RaitTransactionalAuditInterceptor } from './rait-transactional-audit.interceptor.js';
 
 patchTenantContextInterceptorOrdering();
 
@@ -408,14 +415,23 @@ export class DetranStynxAuthContextGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly inner: StynxAuthGuard,
+    private readonly database: Database,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean | undefined>(
       DETRAN_PUBLIC_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
-    const request = context.switchToHttp().getRequest<PortalPublicRequest>();
+    const request = context.switchToHttp().getRequest<
+      PortalPublicRequest &
+        RequestLike & {
+          path?: string;
+          url?: string;
+          tenantId?: string;
+          actor?: { id?: string };
+        }
+    >();
     if (isPublic) {
       return activatePublicPortalRoute(request, () =>
         this.inner.canActivate(context),
@@ -425,8 +441,91 @@ export class DetranStynxAuthContextGuard implements CanActivate {
     if (/^\/(healthz|readyz|metrics|info)(\?|$)/.test(path)) return true;
     // R-0009 CTG-0001 §9: `TenantResolverContext` não expõe o Host; o guard
     // interno (e `DetranTenantResolver.resolve`) roda dentro deste escopo.
-    return portalRequestHostStorage.run(portalHostOf(request.headers), () =>
-      this.inner.canActivate(context),
+    return portalRequestHostStorage.run(
+      portalHostOf(request.headers ?? {}),
+      async () => {
+        if (!(await this.inner.canActivate(context))) return false;
+        const resource = this.reflector.getAllAndOverride<string | undefined>(
+          DETRAN_RESOURCE_METADATA_KEY,
+          [context.getHandler(), context.getClass()],
+        );
+        const action = this.reflector.getAllAndOverride<string | undefined>(
+          DETRAN_ACTION_METADATA_KEY,
+          [context.getHandler(), context.getClass()],
+        );
+        if (resource !== 'inf:rait-case' || action !== 'protocol') return true;
+        const principal = getPrincipalFromRequest(request);
+        const tenantId = request.tenantId;
+        if (
+          !principal ||
+          !tenantId ||
+          !principal.id ||
+          !principal.tenants.includes(tenantId) ||
+          (request.actor?.id !== undefined && request.actor.id !== principal.id)
+        )
+          return false;
+        try {
+          const roles = await this.database.withRequestContext(
+            { tenantId, actorId: principal.id },
+            async () =>
+              this.database.tx(
+                async (transaction) => {
+                  const result = await transaction.query<{
+                    role: string;
+                    tenant_id?: string;
+                  }>(
+                    `select distinct role
+                       from (
+                         select r.key as role
+                           from auth.memberships m
+                           join auth.users u on u.id = m.user_id
+                           join auth.membership_roles mr on mr.membership_id = m.id
+                           join auth.roles r on r.id = mr.role_id
+                          where m.tenant_id = $1
+                            and m.user_id = $2
+                            and m.is_active
+                            and u.is_active
+                            and r.tenant_id = m.tenant_id
+                            and r.key = 'rait-secretary'
+                         union
+                         select r.key as role
+                           from auth.memberships m
+                           join auth.users u on u.id = m.user_id
+                           join auth.group_memberships gm on gm.membership_id = m.id
+                           join auth.groups g on g.id = gm.group_id
+                           join auth.group_roles gr on gr.group_id = g.id
+                           join auth.roles r on r.id = gr.role_id
+                          where m.tenant_id = $1
+                            and m.user_id = $2
+                            and m.is_active
+                            and u.is_active
+                            and g.tenant_id = m.tenant_id
+                            and r.tenant_id = m.tenant_id
+                            and r.key = 'rait-secretary'
+                       ) resolved_roles`,
+                    [tenantId, principal.id],
+                  );
+                  const values = result.rows
+                    .filter(
+                      (row) =>
+                        row.tenant_id === undefined ||
+                        row.tenant_id === tenantId,
+                    )
+                    .map((row) => row.role);
+                  return values.length === 1 && values[0] === 'rait-secretary'
+                    ? values
+                    : [];
+                },
+                { role: 'app', readonly: true },
+              ),
+          );
+          if (roles.length !== 1 || roles[0] !== 'rait-secretary') return false;
+          principal.roles = roles;
+          return true;
+        } catch {
+          return false;
+        }
+      },
     );
   }
 }
@@ -583,6 +682,7 @@ export class AppModule {
         SnapshotsModule,
         EvidenceModule,
         OfflineSyncModule,
+        DetranErrorFilterModule,
         // Speed meters stay behind the `teat.speed_meters` flag (steering H.54:
         // the agency does not operate meters today).
         ...(detranFeatureFlagSet().flags['teat.speed_meters']?.default === true
@@ -677,8 +777,13 @@ export class AppModule {
         },
         { provide: DetranPersistedAuditSink, useValue: detranAuditSink },
         { provide: DetranPostgresReadiness, useValue: detranPostgresReadiness },
-        { provide: APP_GUARD, useExisting: DetranPolicyGuard },
-        { provide: APP_INTERCEPTOR, useExisting: AuditInterceptor },
+        DetranPolicyErrorGuard,
+        { provide: APP_GUARD, useExisting: DetranPolicyErrorGuard },
+        RaitTransactionalAuditInterceptor,
+        {
+          provide: APP_INTERCEPTOR,
+          useExisting: RaitTransactionalAuditInterceptor,
+        },
       ],
     };
   }

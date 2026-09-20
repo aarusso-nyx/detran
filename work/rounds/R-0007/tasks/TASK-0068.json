@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0068",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-tooling",
+  "title": "Congelar DDL36 histórico coerente com seed v1.1.0",
+  "description": "Separar construção do baseline histórico da aplicação posterior do DDL36 atual, preservando imutabilidade final.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-backend-ci", "MOD-upgrade-fixtures", "MOD-rait-seed"],
+  "target_substrates": ["F3", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0067",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": [
+    "attempt-2",
+    "owner-corrective-16-commands",
+    "historical-session-fixture"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-a81f6a3ad0a8f038",
+  "acceptance_commands": [["pnpm", "backend:test:prepare-legacy"]],
+  "created_at": "2026-09-19T18:30:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-a81f6a3ad0a8f038",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Fixture/harness histórico e composição idempotente do seed atual; produto e imutabilidade final preservados."
+  },
+  "execution_evidence": {
+    "role": "Engineer",
+    "iteration": "1/1",
+    "result": "PASS",
+    "historical_ddl36_sha256": "cf012a4f87fd22d56415c90f34b593839c4291d5a2f8eb0960dd9aceabd567d5",
+    "seed_reconciliation": "published_at is inserted atomically; no post-insert update crosses immutable trigger",
+    "acceptance": "backend:test:prepare-legacy exit 0; 20 cases and priority schema verified after current upgrade"
+  }
+}

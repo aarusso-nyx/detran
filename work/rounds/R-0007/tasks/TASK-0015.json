@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0015",
+  "round_id": "R-0007",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implement organisation collection integration SSE policy and app wiring",
+  "description": "Implement remaining handwritten behavior, policy, SSE and complete application/workspace wiring against immutable tests. Fontes/decisoes historicamente referidas: WF-RAIT-004; ADR-0017; OD-309. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-rait-org",
+    "MOD-collection",
+    "MOD-rait-integration",
+    "MOD-rait-stream",
+    "MOD-shared-policy",
+    "MOD-app-wiring",
+    "MOD-root-scripts"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0014",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 15,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-45bd00d5f504ea9c",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-org", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-collection", "test:unit"],
+    ["pnpm", "--filter", "@detran/inf-rait-integration", "test:unit"],
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "build"],
+    ["pnpm", "verify:senatran-boundary"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-45bd00d5f504ea9c",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

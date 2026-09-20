@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0007/prompts/TASK-0020-V3.md",
+      "line": 58,
+      "claim": "O sensor RED de seed20 em instalação fresh é exigido 'na allowlist de integração' sem arquivo nominal nem comando de aceite correspondente: a matriz de 'Aceitação futura' (linhas 62–66) não inclui comando filtrado que colete esse sensor, permitindo colocá-lo em spec allowlistado (ex.: rait-case-deltas-db.integration.spec.ts) fora de qualquer comando de aceite, com RED não verificável pelo critério declarado.",
+      "fix": "Nomear no prompt o arquivo exato do sensor fresh-seed e acrescentar à matriz de aceitação o comando vitest filtrado com --passWithNoTests=false que o coleta, exigindo contagem positiva e classificação RED contratual em transação revertida."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0007/contracts/CTG-0001-C4-OD.md",
+      "line": 66,
+      "claim": "O contrato vigente ainda declara 'Não existe iteração 5 nem reinício de contagem por novo ID', e a continuação 5/5 apoia-se apenas no bloco OWNER do topo do plan.md e no par tarefa/prompt; não há delta datado no contrato registrando a exceção, o que deixa uma contradição textual ativa entre fontes de autoridade.",
+      "fix": "Registrar no contrato (ou referenciar explicitamente no prompt V3) o delta OWNER-corrective-cycle-2026-09-17 que autoriza exatamente uma continuação 5/5 sem reset, citando a precedência do topo do plan.md sobre a frase histórica da seção 'Autoridade e histórico preservado'."
+    }
+  ],
+  "notes": [
+    "Hashes SHA-256 dos seis insumos congelados conferidos byte a byte no worktree; nenhuma divergência.",
+    "Item 1: a preparação isolada em detran_r7_ctg1_a2 modela legado pré-enforcement de forma tecnicamente coerente — desabilitar somente o constraint trigger diferido rait_priority_case_complete durante a carga impede o enfileiramento dos eventos diferidos e o reabilitar antes do COMMIT (tgenabled='O') preserva o enforcement para escritas futuras; nenhum DDL/seed do repositório foi enfraquecido (DDL19 lido com função protegida, guardas e imutabilidade intactos) e o prompt declara expressamente que a carga legada não prova fresh seed20, exigindo RED separado — o problema fresh não é mascarado.",
+    "Item 2: o prompt exige RED verificável da seed fresh em transação revertida, mantém Inspector (RED) antes de Engineer (TASK-0021 restrito a seed/20-fixtures-rait.sql) e separa BLOCKED de infraestrutura de RED real (linha 68); ressalva apenas o low de aceitação não nominal.",
+    "Item 3: tarefa iteration_count=4/max_iterations=5, PC-09a7c2ed casado com a composição ativa e o hash do prompt, modelo Terra/High conforme reconciliação ADR-0026, reservas 10k/2k + 60k/8k registradas no orçamento como planned, TASK-0021 permanece queued/inelegível até RED integral — sem liberação por inferência e sem reset do histórico 4/4.",
+    "Item 4: sem conflito material com ADR-0024 (legado NULL = não apurado, excluído do claim-next; nenhuma prova histórica fabricada), com o contrato C4-OD (reconciliação de fixture no banco dedicado é prevista após SQL2, coberto pelo waiver OWNER de ADR-0026, intocado) ou com a fronteira de escrita (mutação restrita ao banco descartável; repositório inalterado segundo o Maestro).",
+    "Auditoria somente leitura: nenhum banco conectado, teste executado, arquivo editado ou Git mutante; os fatos do Maestro (carga em transação única, contagens 20/1, 2/2 PASS) foram tratados como declarações a reverificar pelo Inspector conforme o próprio prompt exige, não como provas do Auditor.",
+    "Este parecer não constitui aprovação de SQL2 (permanece REVIEW com waiver OWNER) nem declaração de entrega completa; PASS refere-se exclusivamente ao delta da continuação TASK-0020 5/5."
+  ]
+}

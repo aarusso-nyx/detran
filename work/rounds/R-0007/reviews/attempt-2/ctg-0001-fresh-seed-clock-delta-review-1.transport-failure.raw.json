@@ -1,0 +1,79 @@
+{
+  "is_error": true,
+  "duration_api_ms": 52001,
+  "num_turns": 9,
+  "stop_reason": "tool_use",
+  "session_id": "f77ff1dc-0b02-4018-930a-3bde72aa9818",
+  "total_cost_usd": 2.143372,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 80214,
+    "cache_read_input_tokens": 345106,
+    "output_tokens": 3832,
+    "output_tokens_details": {
+      "thinking_tokens": 1602
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 80214,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 519,
+        "cache_read_input_tokens": 60369,
+        "cache_creation_input_tokens": 37054,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 37054
+        },
+        "type": "message",
+        "model": null
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 2121,
+      "outputTokens": 21,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.002226,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty"
+    },
+    "claude-fable-5": {
+      "inputTokens": 16,
+      "outputTokens": 3832,
+      "cacheReadInputTokens": 345106,
+      "cacheCreationInputTokens": 80214,
+      "webSearchRequests": 0,
+      "costUSD": 2.141146,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "canonicalModel": "claude-fable-5",
+      "provider": "firstParty"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "max_turns",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subtype": "error_max_turns",
+  "errors": [
+    "Reached maximum number of turns (8)"
+  ],
+  "type": "result",
+  "duration_ms": 54218,
+  "uuid": "466e9cb7-6dd0-4eef-ab27-45c617bd2be1"
+}

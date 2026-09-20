@@ -1,0 +1,79 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+      "line": 105,
+      "claim": "Persisting acknowledged low: reassign is in the If-Match-required list but never calls requireExpectedVersion (reassign at line 1130 confronts no version, and inf.rait_assignment has no version column so its response ETag is the fallback token), and draw is still absent from the If-Match-required set although it mutates an existing LOTE_ABERTO batch. Concurrency remains bounded by FOR UPDATE locks, the active-assignment guard and the LOTE_ABERTO state guard, so this stays envelope discipline, not a lost-write hole, unchanged from the prior accepted review.",
+      "fix": "Confront the parent aggregate's numeric version under lock in reassign and add draw to the If-Match-required set, emitting the parent's post-transaction numeric version in both responses, in a bounded slice with sensors."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+      "line": 974,
+      "claim": "Persisting acknowledged low: draw still performs no requirePoolBinding revalidation of the acting secretary's active membership in the batch's pool (unlike create-schedule, publish-schedule, create-batch and approve-batch), so authorization for draw rests on exact-role policy plus tenant RLS alone; same class as the session presidency commands (open/close-agenda/adjourn/convene-extraordinary) that rely on policy without a DB chair-binding check.",
+      "fix": "Call requirePoolBinding(tx, context, batch.pool_id) in draw before seed generation and add a chair attendance-binding check to the presidency commands, mirroring proclaim, with negative sensors."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts",
+      "line": 1144,
+      "claim": "Persisting acknowledged low: publish arms T-R2 through the deadline engine in the same transaction for JARI proclaimed items and the catalog/DDL support it (T-R2 in ck_inf_rait_deadline_timer), but the frozen real-DB structural sensor still publishes a session with zero agenda items, so the per-item publishSessionDecision loop and the T-R2 arm remain verified by code reading only, not by executed evidence. The T-VOTO half is fully proven in sensor test 1.",
+      "fix": "Extend the frozen real-DB structural sensor with a proclaimed JARI agenda item so publish provably transitions the case and inserts the T-R2 row in inf.rait_deadline in the same transaction."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+      "line": 1091,
+      "claim": "Persisting acknowledged low: draw forwards the client's opaque Idempotency-Key to the trust provider in prepareBatchMinutesManifest, and createMinutes does the same for prepareSessionMinutesManifest (rait-session-command.service.ts:938), while the technical closure contract requires the provider key to be server-derived from kind, tenant, aggregate and snapshotHash. The manifest itself remains server-owned, exactly validated and unique per batch/minutes, so this stays a bounded contract deviation, not a trust bypass.",
+      "fix": "Derive the provider idempotency key server-side (e.g. sha256 of documentKind:tenantId:aggregateId:snapshotHash) at the call sites or in the adapter, keeping the client key only for the HTTP command's own idempotency record."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+      "line": 1301,
+      "claim": "Persisting acknowledged lows on event/audit fidelity: audit.write still records hardcoded role literals ('rait-coordinator' for every worklist command; 'rait-secretary' at rait-session-command.service.ts:1433 for every session command) regardless of the actor's actual role, recordMutation still supports a single outbox event so declare-batch-item-impediment omits the contracted rait.assignment.changed (line 968) and reassign emits one event instead of one per confirmed change, and vote still lacks a read_at guard (rait-session-command.service.ts:672). Exactly one success audit row and outbox event per command remain atomic in the same transaction.",
+      "fix": "Record the actor's effective canonical role in the audit row, allow recordMutation to emit the full contracted event set per command, and add the read_at guard to vote, all covered by sensors asserting exact outbox topics."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "backend/domains/inf/rait-session/src/handwritten/rait-session-command.service.ts",
+      "line": 1367,
+      "claim": "Persisting acknowledged low: T-CONV business days are still computed inline with generate_series over current_date plus inf.rait_holiday instead of the contracted @detran/inf-deadlines engine, and guard decisions use current_date/clock_timestamp (open at line 339, publish at line 1132, worklist today() at line 1268 of rait-worklist-command.service.ts) rather than a single captured per-command Clock snapshot. Values remain server-owned and transaction-scoped, so this stays a bounded deviation from the closure contract's Clock rules, not a client-trust hole.",
+      "fix": "Route business-day computations through the deadline engine factory with an explicitly captured per-command Clock, passing the same snapshot to guards, timestamps and events."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "backend/domains/inf/rait-session/src/handwritten/rait-session-commands.controller.ts",
+      "line": 197,
+      "claim": "Persisting acknowledged low: the sign and publish routes remain exposed as POST /v1/inf/rait/minutes/:id/commands/sign and /commands/publish (line 212) while CTG-0002 §5 and the nominal matrix contract POST /minutes/{id}/sign and /minutes/{id}/publish. Each command still exists exactly once with no CRUD collision or bypass (8 worklist plus 12 session handlers, oral-arguments fully suppressed), so this remains a bounded nominal-path drift.",
+      "fix": "Align the routes and the nominal matrix in one governed change (move the handlers or amend the matrix by Architect addendum) and update the frozen sensors in the same bounded slice."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "backend/domains/inf/rait-worklist/src/handwritten/rait-worklist-command.service.ts",
+      "line": 967,
+      "claim": "New minor representational quirk of the sanctioned fix, not a defect: declare-batch-item-impediment returns the rait_batch_item row with the parent batch's post-transaction version spliced into data.version while the outbox aggregate remains inf.rait_batch_item, so the response body's version field belongs to a different aggregate than the row it decorates. The ETag itself is the correct numeric parent version the prior review's fix explicitly authorized, the parent bump is fail-closed with a checked RETURNING, and the real-DB sensor proves the W/2→W/3 round-trip and persisted version 3.",
+      "fix": "When convenient, return the parent batch row (or a documented composite envelope) as data instead of overlaying the parent version on the child row, keeping the same numeric ETag semantics."
+    }
+  ],
+  "notes": [
+    "Residual high 1 (session open ETag) is CLOSED on the current bytes: open now selects version in its FOR UPDATE query (rait-session-command.service.ts:299/304), requireEtag (line 1394) confronts the numeric W/\"<version>\" token, the UPDATE increments version with RETURNING * (line 375), and recordMutation (line 1439) emits the post-transaction numeric ETag. The real-DB sensor rait-ctg2-final-structural.e2e.spec.ts (test at line 211) proves convene-extraordinary W/\"1\"→W/\"2\" followed by open accepting W/\"2\" and returning W/\"3\", with the attendance/mandate/quorum snapshot asserted against the real DDL.",
+    "Residual high 2 (impediment parent ETag) is CLOSED on the current bytes: declareBatchItemImpediment increments the parent batch with 'update inf.rait_batch set version = version + 1 ... and version = $3 returning version' and fails closed with RAIT.VERSION_CONFLICT if the guarded bump returns no row (rait-worklist-command.service.ts:953-962), then passes the numeric parent version to recordMutation so the success ETag is W/\"<parent version>\" instead of the child fallback token (lines 963-971). The sensor (test at line 169) proves If-Match W/\"2\" in, ETag W/\"3\" out, and persisted batch version 3.",
+    "No regression of the previously closed highs: the minutes immutability trigger remains column-scoped to id/tenant_id/session_id/content/generated_at/document_hash (ddl/36-inf-rait-session.sql:435) with votes, snapshots, manifests, required signers and receipts fully immutable, and sensor test 4 executes the positive sign→publish lifecycle (W/\"1\"→W/\"2\"→W/\"3\") while a content UPDATE still fails with 42501; accept-batch-item still calls RaitCaseTransitionPort.acceptBatchItem in the same transaction and arms T-VOTO into inf.rait_deadline via the deadline engine (rait-worklist-command.service.ts:851-867), proven by sensor test 1 (state EM_INSTRUCAO plus the T-VOTO row); publish still transitions JULGADO_SESSAO items through the port and arms T-R2 in the same transaction (rait-session-command.service.ts:1136-1153); draw still originates seed (randomBytes 32), seeded member order, per-item member/claim_due_on via T-CLAIM computeDue, active assignments, the SHA-256 draw snapshot and the batch minutes manifest inside the command transaction (rait-worklist-command.service.ts:1027-1117), proven by sensor test 1's persisted counts.",
+    "Wider surface intact: exactly 20 nominal POST handlers remain, once each (8 in rait-worklist-commands.controller.ts, 12 in rait-session-commands.controller.ts), with no oral-argument route; DDL 35/36 remain additive with guarded constraints, tenant-first composite FKs and the required unique indexes preceding the composite FKs (ux_inf_rait_pool_member_tenant_id at 36:412 before the attendance FK at 36:414-419; the manifest uniqueness at 35:295-298); RLS policies, tenant triggers and role_app_backend grants are unchanged; run-backend-ci.mjs remains the honest fail-closed sequence (unit → prepare → integration → prepare → e2e → destructive upgrade) with mandatory fresh restoration on failure; the deadline check constraint includes T-VOTO/T-R2 (ddl/34:262) and the timer catalog defines T-CLAIM/T-VOTO; both packages export the command services the sensor imports.",
+    "Evidence chain: TASK-0080 preserved the REVIEW verdict with the two residual highs; TASK-0081's frozen record attests the bounded microcorrection with the structural sensor 4/4, pnpm backend:test:ci exit 0 including app E2E 127/127 and upgrade 18/18, and pnpm check exit 0 over the corrected bytes. The code read in this audit is consistent with every one of those claims; the sensor's expected values (W/\"2\", W/\"3\", version 3, EM_INSTRUCAO, T-VOTO) match the shipped implementations exactly. This audit was read-only; no file was modified.",
+    "Verdict rationale: PASS — both residual highs from the prior valid review are closed with executed real-DB proof, none of the previously closed highs regressed, and no structural security, integrity, authorization or evidence gap was found in the current bytes. The recorded low findings are the persisting acknowledged non-structural debt under the OWNER good-enough direction plus one representational quirk of the sanctioned ETag fix; none is promoted and none blocks closure."
+  ]
+}

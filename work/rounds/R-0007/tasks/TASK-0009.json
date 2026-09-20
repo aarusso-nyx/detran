@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0007",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Define infraction command consumer and timer contracts",
+  "description": "Specify the infraction command matrix, event consumers, deadline sweep and later blueprint hooks without changing runtime. Fontes/decisoes historicamente referidas: WF-INF-003; WF-INF-002 §9.2; ADR-0016; OD-301…305. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-infraction"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 9,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-9e55a46c4ac6960a",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0007/contracts/CTG-0003.md"],
+    ["pnpm", "verify:lifecycle-vocabulary"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-9e55a46c4ac6960a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

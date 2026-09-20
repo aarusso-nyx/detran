@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0007",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Define organisation collection integration and SSE contracts",
+  "description": "Specify the remaining command, SSE, authorization and later blueprint-hook contracts without changing runtime. Fontes/decisoes historicamente referidas: WF-RAIT-004; ADR-0017; OD-309. Estas referencias nao sao IDs INV e permanecem vinculantes no prompt; o campo target_invariants fica vazio conforme schema DEVAI.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-org-collection-integration"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0012",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 13,
+  "tags": ["wp-b", "wp-c", "attempt-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-b6a8ec680b88bae2",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0007/contracts/CTG-0004.md"],
+    ["pnpm", "contracts:check"]
+  ],
+  "created_at": "2026-09-15T16:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-sol"
+    },
+    "prompt_composition_id": "PC-b6a8ec680b88bae2",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

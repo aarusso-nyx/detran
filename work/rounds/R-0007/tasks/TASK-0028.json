@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0028",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Sensores RED de upgrade transacional",
+  "description": "C4-OD V3 Inspector 1/1 completed after OWNER SQL2 high waiver and dedicated DB rehearsal 18 collected/18 PASS, exit 0. Final sensor SHA 50f25dc5a8bfe26c84a3adaf654d0ca444552942f02b0bdb8e4af94f9cfa05aa. Independent Fable5 sensor-delta review candidate 77b0409e69d61062c19a470af1fa7efc4fba577401001b14bace98f9f368c6aa valid PASS zero high/four nonblocking low. Historical sensor SHA b43efc2f4a616c9bea23a5863ff500a89ba80daa870c3e3593534c6ee92e1335 and previous FAILs preserved in TASK-0028-V3-DB report. Package typecheck remains blocked by future Clock imports, not claimed PASS. DEVAI generic proof sequence 28. No counter reset.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-priority-upgrade-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0027",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3", "dispatched"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-3ec9ffe2119f5ae9",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/rait-priority-upgrade.integration.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-16T18:10:57Z",
+  "spawned_at": "2026-09-16T19:53:07Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-3ec9ffe2119f5ae9",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Sensores RED de upgrade transacional",
+    "planned_files": [
+      "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts"
+    ]
+  }
+}

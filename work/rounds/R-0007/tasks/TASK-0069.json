@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0069",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Observar novamente o candidato final CTG-0002",
+  "description": "Executar runner oficial completo e gates amplos após correções de upgrade e seed.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-generated-tree",
+    "MOD-backend-ci"
+  ],
+  "target_substrates": ["F2", "F3", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0068",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "final-observation-2"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-abd45837e06a5324",
+  "acceptance_commands": [
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "devai:doctor"]
+  ],
+  "created_at": "2026-09-19T18:45:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-abd45837e06a5324",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Observação somente; nenhuma correção ou regeneração."
+  },
+  "execution_evidence": {
+    "role": "Inspector",
+    "iteration": "1/1",
+    "verdict": "FAIL",
+    "passed_before_failure": "Unit tiers and upgraded legacy preparation passed; app integration 11/11 passed.",
+    "finding": "inf-rls integration retained the pre-CTG-0002 exact cardinality 90 while six new tenant tables make the closed inventory 96.",
+    "classification": "Stale exact sensor; all observed new tables remain covered by RLS, FORCE, tenant policy and trigger."
+  }
+}

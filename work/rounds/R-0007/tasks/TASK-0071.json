@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0071",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Observar candidato final CTG-0002 após reconciliação RLS",
+  "description": "Executar runner oficial e gates amplos sem corrigir o candidato.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-generated-tree",
+    "MOD-backend-ci"
+  ],
+  "target_substrates": ["F2", "F3", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0070",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "final-observation-3"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-86b5e8d7d5786c3d",
+  "acceptance_commands": [
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-19T19:10:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-86b5e8d7d5786c3d",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Observação somente; nenhuma correção ou regeneração."
+  },
+  "execution_evidence": {
+    "role": "Inspector",
+    "iteration": "1/1",
+    "verdict": "FAIL",
+    "passed_before_failure": "All integration suites passed; app E2E reached 120 PASS.",
+    "finding": "Two worklist E2E preconditions counted all tenant cases and observed 32 after case-command E2E created 12 isolated cases, instead of counting the closed 20 legacy fixture IDs.",
+    "classification": "Order-coupled sensor precondition; product assertions were not reached in those two suites."
+  }
+}
