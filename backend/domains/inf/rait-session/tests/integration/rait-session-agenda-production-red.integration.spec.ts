@@ -2,8 +2,14 @@ import pg from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 const { Client } = pg;
-const DATABASE_URL =
-  'postgresql://aarusso@localhost/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend';
+
+function requiredUrl(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} is required for CTG-0002 session`);
+  return value;
+}
+
+const DATABASE_URL = requiredUrl('STYNX_APP_DATABASE_URL');
 const EXPECTED_DATABASE = 'detran_r7_ctg1_a2';
 const TENANT = '00000000-0000-7000-8000-00000000a001';
 const OTHER_TENANT = '00000000-0000-7000-8000-00000000a099';

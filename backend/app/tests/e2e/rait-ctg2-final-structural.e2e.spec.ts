@@ -5,8 +5,14 @@ import { RaitSessionCommandService } from '@detran/inf-rait-session';
 import { RaitWorklistCommandService } from '@detran/inf-rait-worklist';
 
 const { Client } = pg;
-const DATABASE_URL =
-  'postgresql://aarusso@localhost/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend';
+
+function requiredUrl(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} is required for CTG-0002 e2e`);
+  return value;
+}
+
+const DATABASE_URL = requiredUrl('STYNX_APP_DATABASE_URL');
 const TENANT = '00000000-0000-7000-8000-00000000a001';
 const BATCH = '00000000-0000-7000-8000-000028000001';
 const CASE = '00000000-0000-7000-8000-000010000018';

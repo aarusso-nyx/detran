@@ -15,9 +15,15 @@ import {
 import { AppModule } from '../../src/app.module.js';
 
 const { Client } = pg;
-const OWNER_DATABASE_URL = 'postgresql://aarusso@localhost/detran_r7_ctg1_a2';
-const APP_DATABASE_URL =
-  'postgresql://aarusso@localhost/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend';
+
+function requiredUrl(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} is required for CTG-0002 e2e`);
+  return value;
+}
+
+const OWNER_DATABASE_URL = requiredUrl('STYNX_OWNER_DATABASE_URL');
+const APP_DATABASE_URL = requiredUrl('STYNX_APP_DATABASE_URL');
 const EXPECTED_DATABASE = 'detran_r7_ctg1_a2';
 const TENANT = '00000000-0000-7000-8000-00000000a001';
 const SESSION = '00000000-0000-7000-8000-000030000003';
