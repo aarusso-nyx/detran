@@ -787,18 +787,21 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
       await inject(
         directory,
         '20-rls-policies.sql',
-        'SELECT pg_sleep(3); SELECT 1 / 0;',
+        "SELECT set_config('application_name', 'rait-priority-grant-window-open', false); SELECT pg_sleep(10); SELECT 1 / 0;",
       );
       const pending = run('bash', [join(directory, 'apply.sh')], {
         cwd: directory,
         env: { ...ownerEnv, PGAPPNAME: 'rait-priority-grant-window-sensor' },
       });
       let inWindow = false;
-      for (let probe = 0; probe < 50; probe += 1) {
+      // The full DDL prefix reaches DDL20 much later on a cold CI runner than
+      // locally. Observe a marker set at the exact injection point instead of
+      // guessing from the current query text during a five-second window.
+      for (let probe = 0; probe < 900; probe += 1) {
         const activity = await owner.query(
           `SELECT count(*)::integer AS count FROM pg_stat_activity
-           WHERE application_name = 'rait-priority-grant-window-sensor'
-             AND state = 'active' AND query LIKE '%pg_sleep(3)%'`,
+           WHERE application_name = 'rait-priority-grant-window-open'
+             AND state = 'active'`,
         );
         inWindow = activity.rows[0].count > 0;
         if (inWindow) break;
