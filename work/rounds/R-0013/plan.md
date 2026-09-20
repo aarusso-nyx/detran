@@ -270,8 +270,12 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
 - acceptance de TASK-0001 concluída após duas tentativas Luna e uma escalada Terra; delivery
   review ciclo 1=`REVIEW`, portanto TASK-0001 voltou a `queued` e o conteúdo não foi commitado;
 - concluído: TASK-0001, acceptance e delivery review extraordinário ciclo 3=`PASS`;
-- em curso: gate completo, commit e evidência CTG-0001; TASK-0002 permanece bloqueada até concluir
-  esse checkpoint;
+- concluídos: gate completo, commit de conteúdo `68228cdeb0b418e7188ec47e70ae566ff885b212`,
+  evidência `generic sequence 1`, verificação da cadeia e commit de evidência
+  `bc3509c0e2f20c44e1b0fed97c658d2b21229dd2`; head da cadeia
+  `458f088f1baf5a9471435a0cbf1d00d4931bf262ae6044a172e6fc2cecbc76af`;
+- checkpoint de orçamento: 755.000/800.000 tokens de entrada estimados (94,375%); TASK-0002 não
+  foi iniciado e permanece para a próxima janela;
 - a retomada explícita do Owner supera o checkpoint anterior apenas para fechar CTG-0001; não
   iniciar TASK-0002 nesta janela;
 - estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até
