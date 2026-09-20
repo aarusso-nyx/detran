@@ -1,4 +1,8 @@
-import { DetranError, SqlTeatEventOutbox } from '@detran/shared';
+import {
+  DetranError,
+  SqlTeatEventOutbox,
+  type TeatEventEnvelope,
+} from '@detran/shared';
 import type { Transaction } from '@stynx-nyx/data';
 
 type SqlQueryable = {
@@ -147,10 +151,11 @@ export class CrashSyncApplier implements SyncEntityApplier {
           where id = $1`,
         [item.receiptId, JSON.stringify({ warnings })],
       );
-    await this.outbox.append(tx, {
+    const event: TeatEventEnvelope & { schemaVersion: number } = {
       id: '',
       type: 'crash.changed',
       domainEvent: 'SINISTRO_RECEBIDO_SINCRONIZACAO',
+      schemaVersion: 1,
       version: 1,
       occurredAt: item.createdLocallyAt,
       tenantId: item.tenantId,
@@ -158,7 +163,8 @@ export class CrashSyncApplier implements SyncEntityApplier {
       correlationId: item.id,
       aggregate: { kind: 'crash-record', id, version: 1 },
       data: { state: 'RASCUNHO', localEntityId: item.localEntityId },
-    });
+    };
+    await this.outbox.append(tx, event);
     return { serverEntityId: id };
   }
 

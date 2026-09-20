@@ -8,7 +8,11 @@ import type {
   RenaestPort,
 } from '@detran/senatran-adapter';
 import { SenatranAdapterError } from '@detran/senatran-adapter';
-import { SqlTeatEventOutbox, withTenantContext } from '@detran/shared';
+import {
+  SqlTeatEventOutbox,
+  type TeatEventEnvelope,
+  withTenantContext,
+} from '@detran/shared';
 
 /**
  * Tenant-scoped executor for the durable BOAT RENAEST outbox.
@@ -403,10 +407,11 @@ export class BoatRenaestTransmissionService {
     emitSse = false,
   ): Promise<void> {
     const context = this.requestContext.snapshot();
-    const envelope = {
+    const envelope: TeatEventEnvelope & { schemaVersion: number } = {
       id: '',
       type: emitSse ? 'crash.renaest.changed' : domainEvent,
       domainEvent,
+      schemaVersion: 1,
       version,
       occurredAt: new Date().toISOString(),
       tenantId: context.tenantId ?? '',

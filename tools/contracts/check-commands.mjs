@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// Gate for the nine hand-written `*.commands.openapi.json` command contracts
+// Gate for the hand-written `*.commands.openapi.json` command contracts
 // (WP-T3, CTG-0005 §3). Checks each contract file for shape (§3.3 rule 1),
 // resolves `x-blueprint` against `docs/framework/blueprints/` (rule 2), and
 // cross-checks the routes it documents against the handwritten controllers
 // that are actually mounted (rules 5/6), the error codes it enumerates
-// against `teat-error-catalog.md` (rule 3), and `operationId` uniqueness
+// against their prefix-specific error catalogues (rule 3), and `operationId` uniqueness
 // (rule 4). Molde: `tools/parameters/verify.mjs` (CLI shape) and
 // `tools/verify-controller-decorators.ts` (AST scan technique).
 import fs from 'node:fs';
@@ -30,16 +30,28 @@ export const CONTROLLER_ROOTS = [
   'backend/domains/portal/inbox/src/handwritten',
   'backend/domains/portal/citizen-service/src/handwritten',
   'backend/domains/portal/projections/src/handwritten',
+  // R-0010 (WP-B2/B3): the BOAT command controller is hand-written under the
+  // module source root. `findFilesBelow` deliberately skips generated and
+  // legacy controller directories below this root.
+  'backend/domains/est/crash/src',
   'backend/app/src',
 ];
 
 // Error catalogues whose codes a command contract may enumerate (rule 3):
-// TEAT (R-0008) and PORTAL (R-0009). `catalogPath` (singular) remains the
-// test seam; when it is the default, every catalogue below is read.
+// TEAT (R-0008), PORTAL (R-0009), and BOAT (R-0010). `catalogPath`
+// (singular) remains the test seam; when it is the default, every catalogue
+// below is read independently by prefix.
 export const ERROR_CATALOG_PATHS = [
   'docs/framework/arch/teat-error-catalog.md',
   'docs/framework/arch/portal-error-catalog.md',
+  'docs/framework/arch/boat-error-catalog.md',
 ];
+
+const ERROR_CATALOG_PREFIXES = new Map([
+  ['teat-error-catalog.md', 'TEAT'],
+  ['portal-error-catalog.md', 'PORTAL'],
+  ['boat-error-catalog.md', 'BOAT'],
+]);
 
 // Único e nomeado (CTG-0005 §2.6, §3.2): `SpeedModule` só monta atrás da
 // flag `teat.speed_meters` (default false, seed 05); a rota não está
@@ -210,16 +222,23 @@ export function scanControllers(controllerRoots) {
   return { routes, problems };
 }
 
-/** Todo `TEAT.*`/`PORTAL.*` citado em `catalogPath` (crases ou prosa), como um Set. */
-export function parseErrorCatalog(catalogPath) {
+/**
+ * Todo código catalogado em `catalogPath` (crases ou prosa), como um Set.
+ *
+ * The optional prefix keeps the public single-file test seam intact while
+ * allowing the real gate to load each authoritative catalogue independently.
+ */
+export function parseErrorCatalog(catalogPath, prefix = undefined) {
   const text = fs.readFileSync(catalogPath, 'utf8');
   const codes = new Set();
-  for (const match of text.matchAll(/(?:TEAT|PORTAL)\.[A-Z0-9_]+/gu))
-    codes.add(match[0]);
+  const expression = prefix
+    ? new RegExp(`${prefix}\\.[A-Z0-9_]+`, 'gu')
+    : /(?:TEAT|PORTAL|BOAT)\.[A-Z0-9_]+/gu;
+  for (const match of text.matchAll(expression)) codes.add(match[0]);
   return codes;
 }
 
-/** União dos catálogos existentes entre `paths`. */
+/** União dos catálogos existentes entre `paths` (public compatibility seam). */
 export function parseErrorCatalogs(paths) {
   const codes = new Set();
   for (const candidate of paths) {
@@ -227,6 +246,30 @@ export function parseErrorCatalogs(paths) {
     for (const code of parseErrorCatalog(candidate)) codes.add(code);
   }
   return codes;
+}
+
+function parseErrorCatalogsByPrefix(paths) {
+  const catalogs = new Map([
+    ['TEAT', new Set()],
+    ['PORTAL', new Set()],
+    ['BOAT', new Set()],
+  ]);
+  for (const candidate of paths) {
+    if (!fs.existsSync(candidate)) continue;
+    const prefix = ERROR_CATALOG_PREFIXES.get(path.basename(candidate));
+    if (!prefix) continue;
+    catalogs.set(prefix, parseErrorCatalog(candidate, prefix));
+  }
+  return catalogs;
+}
+
+function parseSingleCatalogByPrefix(catalogPath) {
+  return new Map(
+    ['TEAT', 'PORTAL', 'BOAT'].map((prefix) => [
+      prefix,
+      parseErrorCatalog(catalogPath, prefix),
+    ]),
+  );
 }
 
 function errorSchemaEnumsIn(document) {
@@ -384,7 +427,7 @@ export function collectOperations(
 }
 
 /**
- * Confere os nove `*.commands.openapi.json` contra os controladores
+ * Confere os `*.commands.openapi.json` contra os controladores
  * manuscritos montados e o catálogo de erros (CTG-0005 §3).
  */
 export function checkCommands({
@@ -403,11 +446,15 @@ export function checkCommands({
   problems.push(...shapeProblems);
 
   // 3: códigos de erro fora do catálogo.
-  const catalog = catalogPath
+  const catalogs = catalogPath
     ? fs.existsSync(catalogPath)
-      ? parseErrorCatalog(catalogPath)
-      : new Set()
-    : parseErrorCatalogs(
+      ? parseSingleCatalogByPrefix(catalogPath)
+      : new Map([
+          ['TEAT', new Set()],
+          ['PORTAL', new Set()],
+          ['BOAT', new Set()],
+        ])
+    : parseErrorCatalogsByPrefix(
         ERROR_CATALOG_PATHS.map((entry) => path.resolve(root, entry)),
       );
   const seenUnknown = new Set();
@@ -425,14 +472,15 @@ export function checkCommands({
         continue;
       }
       for (const code of found.enum) {
-        if (catalog.has(code)) continue;
+        const prefix = typeof code === 'string' ? code.split('.', 1)[0] : '';
+        if (catalogs.get(prefix)?.has(code)) continue;
         const key = `${entry.file}:${found.label}:${code}`;
         if (seenUnknown.has(key)) continue;
         seenUnknown.add(key);
         problems.push({
           kind: 'unknown-error-code',
           file: entry.file,
-          detail: `${found.label}: código ${code} não está no catálogo de erros (teat/portal)`,
+          detail: `${found.label}: código ${code} não está no catálogo de erros do prefixo ${prefix || '<ausente>'}`,
         });
       }
     }

@@ -18,27 +18,27 @@ de campo); ADR-0003/0008 (adapter), ADR-0018 (BAT em PDF/A), ADR-0020 (projeçõ
 
 ## 1. Estado de partida (verificado em 2026-09-13)
 
-| Item                  | Situação                                                                                                              |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `backend/domains/est` | só README (Fase 5 W5.1); nenhum DDL, blueprint ou módulo                                                              |
-| Política              | 7 regras `est:crash-record:*` já em `policy.ts`, divergentes da origem                                                |
-| Adapter               | `RenaestPort` completo (7 operações) sobre o mock; mapeamento campo a campo pendente (Manuais RENAEST, DT-061)        |
-| Origem                | blueprint com 5 entidades (com `evaded`, PII `forever`), 7 comandos, 32 rotas, 11 telas mobile (todas shell), 4 web   |
-| Corpus                | WF-001 `approved`; UC-001/002/004/007/012 `approved`, demais `reviewed`; 36 regras `draft`; nove residuais DT-017…061 |
-| Bloqueios de produção | S-06 (vítimas) e W-05 (titular) **não vão a produção** antes de DT-047 (hipótese legal) e DT-049 (retenção)           |
+| Item                  | Situação                                                                                                                                        |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `backend/domains/est` | BP-EST-CRASH-001, DDL `70-est-crash.sql`, módulo `@detran/est-crash` e testes entregues em R-0010; B4/B5 fora desta rodada                      |
+| Política              | regras `est:crash-record:*` reconciliadas ao corpus; UC-BOAT-013 e índice de use cases transcritos em R-0010                                    |
+| Adapter               | `RenaestPort` completo (7 operações) sobre o mock; mapeamento campo a campo provisório, com campos a confirmar por DT-061/OD-B08                |
+| Origem                | blueprint com 5 entidades (com `evaded`, PII `forever`), 7 comandos, 32 rotas, 11 telas mobile (todas shell), 4 web                             |
+| Corpus                | WF-001 `approved`; UC-001/002/004/007/012 `approved`, demais `reviewed`; 36 regras `draft`; nove residuais DT-017…061                           |
+| Bloqueios de produção | S-06/W-05 têm hipótese e retenção registradas conforme H.44/H.45; produção real, homologação RENAEST e campos nacionais continuam sem evidência |
 
 ## 2. Pacotes de trabalho
 
-### WP-B0 — Reconciliação e política (Engineer; Owner para o índice)
+### WP-B0 — Reconciliação e política (Engineer; Owner para o índice) — executado na parte comprovada
 
 Alinhar `policy.ts` ao corpus (`attach-sketch` + `processing-operator`; `validate` =
 `processing-operator`, `traffic-authority`; novas ações `record-duty`, `add-damage`,
 `add-witness`, `link`, `record`, `complement`, `cancel`, `transmit`, `rectify`, `archive`,
 `subject-request`; leitura de `crash-victim` com finalidade); atualizar `use-cases/INDEX.md`
 (status reais, UC-012 não é stub); criar `UC-BOAT-013` (dever de resposta ao titular, W-05).
-Gate: `policy.spec.ts`, `docs:kb:check`.
+Entrega comprovada: `est:*` reconciliado, UC-BOAT-013 e índice transcritos; os gates de política e KB passaram nos respectivos relatórios de R-0010. A validação do procedimento de resposta ao titular continua `source_pending`.
 
-### WP-B1 — Modelo de dados (Architect-blueprint)
+### WP-B1 — Modelo de dados (Architect-blueprint) — executado
 
 | Blueprint `BP-EST-CRASH-001` (namespace `est`)                                                                                                                      | Entidades                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -56,9 +56,9 @@ Gate: `policy.spec.ts`, `docs:kb:check`.
 
 Timer `T-BOAT-TRANSM` (mensal, proposta) no motor de prazos com `owner='sinistro'`. Fixtures: um
 registro por estado local, um por situação nacional, um com vítima e um sem, um com retificação.
-Gate: `blueprints:check`, `verify:rls-ddl`, seeds em banco limpo; DDL `40-est-crash.sql` em `apply.sh`.
+Gate comprovado: `blueprints:check`, `verify:rls-ddl`, vocabulário, contratos derivados e seeds em banco limpo passaram. O DDL canônico desta rodada é `70-est-crash.sql`, aplicado por `apply.sh`.
 
-### WP-B2 — Comandos, sincronização e RENAEST (Engineer-backend; Architect no mapeamento)
+### WP-B2 — Comandos, sincronização e RENAEST (Engineer-backend; Architect no mapeamento) — executado na parte comprovada
 
 Ler `boat-route-contract.md`, `boat-error-catalog.md`, `teat-route-contract.md` §4.3–4.4.
 Produzir: comandos §3 em `src/handwritten/`; aplicador do item `crash-record` na sincronização
@@ -67,15 +67,19 @@ com `purpose` e auditoria; `transmit`/`rectify` via outbox + `RenaestPort` com m
 campo documentado em `docs/framework/contracts/renaest-mapping.md` (marcando os campos que
 dependem dos Manuais RENAEST, DT-061); espelho da situação nacional; job `T-BOAT-TRANSM`; relatório
 preliminar/BAT em PDF/A (ADR-0018); projeções `portal.crash_view`, `dashboard.crashes` (com limiar
-de célula), `integration.renaest_mirror`; SSE. Gate: matriz de transições de `WF-BOAT-001` e
+de célula), `integration.renaest_mirror`; SSE. R-0010 comprovou comandos, sincronização, mock,
+projeções e envelope canônico; o job ainda depende de autoridade administrativa para descoberta de
+tenants, e PDF/A e homologação real permanecem sem entrega comprovada. Gate: matriz de transições de `WF-BOAT-001` e
 `WF-BOAT-003`, testes de gravidade × vítimas, duplicidade por chave natural, terminal sem
 correção, `verify:senatran-boundary`, adapter e2e no mock.
 
-### WP-B3 — Payloads e contrato (Transcriber-docs)
+### WP-B3 — Payloads e contrato (Transcriber-docs) — executado
 
 `docs/framework/contracts/BP-EST-CRASH-001.commands.openapi.json` (comandos §3 com DTOs da origem
 preservados e os novos), schema JSON do payload canônico `crash-record` da fila, exemplos com
-fixtures; `renaest-mapping.md` como tabela campo a campo. Gate: `contracts:check`, clientes gerados.
+fixtures; `renaest-mapping.md` como tabela campo a campo. Entrega comprovada: 13 operações montadas,
+schema canônico, códigos BOAT do applier, clientes regenerados; `contracts:check` passou com 152
+operações e 61 clientes. O layout nacional permanece `source_pending` por DT-061/OD-B08.
 
 ### WP-B4 — Telas, formulários e i18n (Transcriber-docs → Engineer-frontend)
 

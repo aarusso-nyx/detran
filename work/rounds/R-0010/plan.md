@@ -1,6 +1,6 @@
 # R-0010 — frente `boat-backend` (WP-B0…B3 do BOAT: política, modelo `est/crash`, comandos, sincronização, RENAEST e contratos)
 
-**Status:** prompts aprovados por `reviews/prompt-review-6.json` (`PASS`); correção de TASK-0003 aprovada por `prompt-review-8.json` (`PASS`). TASK-0001…0006 concluídas; CTG-0001 aprovado pelo reviewer (`delivery-review-CTG-0001-cycle-4.json`), commitado em `289916b`, com evidência DEVAI sequência 1 e integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e` (todos os checks verdes). `audit observe` do SHA integrado concluiu como `EV-8b74b129c7661f24`; o artefato e a cadeia anterior estão preservados em snapshot externo, pois `origin/main` avançou a cadeia com R-0009. TASK-0007 em curso; TASK-0018 e TASK-0021 concluídas. Gates `pnpm backend:test:ci` e `pnpm check` PASS após integração R-0009, mas CTG-0002 permanece aberto até projeções, documentos e job. Checkpoint atual da janela 4 em §Retomada. HEAD local após fast-forward `1175f4f33015e6c0f389bb3e2ada2ef1ae5304c8`, mesmo SHA de `origin/main` (PR #54 Portal integrado); branch remota R-0010 ainda em `433eb0d0344136d98e116ba07367c39fd01a9030`; autorização do Owner em
+**Status:** CTG-0001 integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e`. Em CTG-0002, TASK-0007…0015, TASK-0018/0019 e TASK-0021/0022 estão concluídas; contratos passaram 40/40 testes e `contracts:check` com 152 operações e 61 clientes. TASK-0020 permanece `in_progress` pela ausência de porta administrativa autorizada para descobrir tenants. TASK-0016/0017 permanecem bloqueadas pelas fontes `source_pending` de PDF/A, assinatura e TSA. CTG-0002 ainda não pode receber revisão final, evidência ou merge. Checkpoint detalhado em §Auditoria de continuidade. Autorização do Owner em
 `AUTHORIZATION.md`. Reviewer: Opus via `tools/orchestra/bridge.sh claude`.
 **Concorrência:** R-0005, R-0008 e R-0009 estão em `main`. Fila de sincronização em `backend/domains/ops/offline-sync` (contrato em `work/rounds/R-0008/contracts/CTG-0002.md`; schema `docs/framework/schemas/teat-offline-sync-batch.schema.json`); evidência em `backend/domains/ops/evidence`; `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`) e `policy-routes.e2e.spec.ts` prontos (estender com `est:*`). Na inspeção de 2026-09-19, a worktree R-0007 `rait-backend` só mantém alterações nos três caminhos de composição `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`; os caminhos de documentos/ADR/catálogo normativo não aparecem modificados. A R-0007 confirmou documentalmente que `MOD-shared-documents`, `MOD-adr-0018`, `MOD-inf-normative-document-catalogue` e `MOD-rait-test-strategy` foram liberados no fechamento local de CTG-0001/CTG-0002. Os Engineers de projeções/job/documentos serializam `app.module.ts`.
 **Janelas previstas:** 3.
@@ -55,6 +55,22 @@ TASK-0020 permanece `in_progress`, pois a descoberta administrativa de tenants
 não tem porta autorizada: o DDL 75 nega EXECUTE a `role_app_backend` e o provider
 permanece fail-closed, sem owner-role. TASK-0016/0017 continuam paradas pelas
 fontes `source_pending` de PDF/A/assinatura registradas por TASK-0015.
+
+**Continuidade desbloqueada concluída em 2026-09-19:** TASK-0007 passou a
+emitir `schemaVersion: 1` separado da versão do agregado; banco descartável
+passou integração 21/21 e E2E BOAT 21/21. TASK-0008/0022 transcreveram 13
+operações, payload canônico e enums de erro; a Adenda A-5 e
+`prompt-review-26-contract-a5.json` (`PASS`) fecharam os sensores do gate.
+TASK-0011 terminou com os REDs exclusivos e TASK-0010 os tornou verdes:
+`contracts:test` 40/40 e `contracts:check` PASS, 152 operações/61 clientes.
+TASK-0009 atualizou build pack, closure plan e backlog sem promover job,
+PDF/A ou homologação real.
+
+**Gate agregado após a continuidade:** `pnpm check` PASS. Entre as provas
+incluídas: blueprints gerados em sincronia, 152 operações/61 clientes de
+contrato, fronteiras de domínio, 40/40 testes de contratos, typecheck dos 56
+projetos aplicáveis, 973 handlers, RLS em 225 tabelas, fronteira SENATRAN,
+118 arquivos/1.314 testes do Portal e build de produção do Portal.
 
 ## Metas
 

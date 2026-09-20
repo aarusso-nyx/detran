@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { tmpdir } from 'node:os';
 import { promisify } from 'node:util';
 import test from 'node:test';
-import { checkCommands } from '../check-commands.mjs';
+import { checkCommands, collectOperations } from '../check-commands.mjs';
 
 const exec = promisify(execFile);
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
@@ -93,6 +93,73 @@ async function scenario({
 
 async function cleanup(s) {
   await rm(s.dir, { recursive: true, force: true });
+}
+
+// Contrato mínimo da rota real BOAT usada pela matriz C-2-16/C-2-17. A rota,
+// operationId e código pertencem ao BP-EST-CRASH-001 transcrito por TASK-0008;
+// a forma inline mantém cada caso isolado do resolver de $ref do gate.
+function boatContract({
+  route = true,
+  code = 'BOAT.CRASH_STATE_INVALID',
+} = {}) {
+  return `${JSON.stringify(
+    {
+      openapi: '3.1.0',
+      info: {
+        title: 'BOAT est/crash — fixture do Inspector',
+        version: '1.0.0',
+        'x-blueprint': 'BP-DEMO-001',
+        'x-commands': true,
+      },
+      paths: route
+        ? {
+            '/v1/est/crash/records/{id}/start': {
+              post: {
+                operationId: 'boatCrashRecordStart',
+                responses: {
+                  200: { description: 'ok' },
+                  400: {
+                    description: 'erro',
+                    content: {
+                      'application/json': {
+                        schema: {
+                          type: 'object',
+                          properties: {
+                            code: { type: 'string', enum: [code] },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          }
+        : {},
+      components: { schemas: {} },
+    },
+    null,
+    2,
+  )}\n`;
+}
+
+function boatController({ route = true } = {}) {
+  return route
+    ? `import { Controller, Post } from '@nestjs/common';
+
+@Controller('v1/est/crash')
+export class BoatCrashCommandsController {
+  @Post('records/:id/start')
+  start(): { ok: boolean } {
+    return { ok: true };
+  }
+}
+`
+    : `import { Controller } from '@nestjs/common';
+
+@Controller('v1/est/crash')
+export class BoatCrashCommandsController {}
+`;
 }
 
 // (a) contrato válido + controlador com as mesmas rotas → ok: true, operations = n
@@ -714,9 +781,242 @@ test('C-5-15 — dado um decorador de rota com argumento não literal quando che
 });
 
 // R-0009 (plan.md §Triagem): 92 operações do TEAT (R-0008) + 47 do Portal
-// (BP-PORTAL-*.commands.openapi.json, CTG-0002 §2 + stream §9) = 139.
-test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=139', async () => {
+// (BP-PORTAL-*.commands.openapi.json, CTG-0002 §2 + stream §9) + 13 do BOAT
+// (BP-EST-CRASH-001.commands.openapi.json) = 152.
+test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=152', async () => {
   const result = checkCommands();
   assert.equal(result.ok, true, JSON.stringify(result.problems, null, 2));
-  assert.equal(result.operations, 139);
+  assert.equal(result.operations, 152);
+});
+
+// ---------------------------------------------------------------------------
+// TASK-0011 — Inspector REDs para CTG-0002 C-2-01, C-2-16 e C-2-17.
+// Os casos abaixo usam a CLI em um root efêmero para que os dois catálogos
+// sejam resolvidos por seus nomes canônicos, sem unir seus códigos.
+// ---------------------------------------------------------------------------
+
+async function catalogMatrixScenario({
+  code,
+  boatCatalog = '',
+  teatCatalog = '',
+}) {
+  const fakeRoot = await mkdtemp(join(tmpdir(), 'detran-check-commands-c2-'));
+  const contractsDir = join(fakeRoot, 'contracts');
+  const controllersDir = join(fakeRoot, 'controllers');
+  const blueprintsDir = join(fakeRoot, 'blueprints');
+  await mkdir(contractsDir, { recursive: true });
+  await mkdir(controllersDir, { recursive: true });
+  await mkdir(blueprintsDir, { recursive: true });
+  await mkdir(join(fakeRoot, 'docs/framework/arch'), { recursive: true });
+  await writeFile(
+    join(contractsDir, 'BP-DEMO-001.commands.openapi.json'),
+    boatContract({ code }),
+    'utf8',
+  );
+  await writeFile(
+    join(controllersDir, 'boat-commands.controller.ts'),
+    boatController(),
+    'utf8',
+  );
+  await writeFile(
+    join(blueprintsDir, 'BP-DEMO-001.json'),
+    await readFixture('blueprints/BP-DEMO-001.json'),
+    'utf8',
+  );
+  await writeFile(
+    join(fakeRoot, 'docs/framework/arch/boat-error-catalog.md'),
+    boatCatalog,
+    'utf8',
+  );
+  await writeFile(
+    join(fakeRoot, 'docs/framework/arch/teat-error-catalog.md'),
+    teatCatalog,
+    'utf8',
+  );
+  return { fakeRoot, contractsDir, controllersDir, blueprintsDir };
+}
+
+test('C-2-16 — dado código BOAT presente somente no catálogo BOAT quando rodar o gate então passa; código BOAT ausente do catálogo BOAT falha', async () => {
+  const cases = [
+    {
+      label: 'BOAT no catálogo BOAT',
+      code: 'BOAT.CRASH_STATE_INVALID',
+      boatCatalog: '`BOAT.CRASH_STATE_INVALID`',
+      expectedStatus: 0,
+    },
+    {
+      label: 'BOAT ausente do catálogo BOAT',
+      code: 'BOAT.CRASH_STATE_INVALID',
+      teatCatalog: '`BOAT.CRASH_STATE_INVALID`',
+      expectedStatus: 1,
+    },
+    {
+      label: 'TEAT no catálogo TEAT',
+      code: 'TEAT.AUTH_REQUIRED',
+      teatCatalog: '`TEAT.AUTH_REQUIRED`',
+      expectedStatus: 0,
+    },
+    {
+      label: 'TEAT ausente do catálogo TEAT',
+      code: 'TEAT.AUTH_REQUIRED',
+      boatCatalog: '`TEAT.AUTH_REQUIRED`',
+      expectedStatus: 1,
+    },
+    {
+      label: 'prefixo não catalogado',
+      code: 'MYSTERY.AUTH_REQUIRED',
+      boatCatalog: '`MYSTERY.AUTH_REQUIRED`',
+      teatCatalog: '`MYSTERY.AUTH_REQUIRED`',
+      expectedStatus: 1,
+    },
+  ];
+  for (const current of cases) {
+    const s = await catalogMatrixScenario(current);
+    try {
+      const result = await runInCwd(s.fakeRoot, [
+        '--contracts-dir',
+        s.contractsDir,
+        '--controllers',
+        s.controllersDir,
+        '--blueprints',
+        s.blueprintsDir,
+      ]);
+      assert.equal(result.status, current.expectedStatus, current.label);
+      if (current.expectedStatus === 1)
+        assert.match(result.stderr, /unknown-error-code/);
+    } finally {
+      await rm(s.fakeRoot, { recursive: true, force: true });
+    }
+  }
+});
+
+test('C-2-16 — dado resposta 4xx BOAT e recibo com error_code BOAT quando checkCommands então ambos consultam o catálogo BOAT', async () => {
+  const baseline = JSON.parse(boatContract());
+  const response =
+    baseline.paths['/v1/est/crash/records/{id}/start'].post.responses['400'];
+  response.content['application/json'].schema.properties.code.enum = [
+    'BOAT.CRASH_STATE_INVALID',
+  ];
+  baseline.paths['/v1/est/crash/records/{id}/start'].post.responses['200'] = {
+    description: 'ok',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            receipts: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  error_code: {
+                    type: 'string',
+                    enum: ['BOAT.SYNC_INVALID_CRASH_RECORD'],
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  const s = await scenario({
+    contracts: {
+      'boat.commands.openapi.json': `${JSON.stringify(baseline, null, 2)}\n`,
+    },
+    controllers: { 'boat-commands.controller.ts': boatController() },
+    catalog: '`BOAT.CRASH_STATE_INVALID`\n`BOAT.SYNC_INVALID_CRASH_RECORD`\n',
+  });
+  try {
+    const result = await checkCommands({
+      contractsDir: s.contractsDir,
+      controllerRoots: s.controllerRoots,
+      catalogPath: s.catalogPath,
+      blueprintsDir: s.blueprintsDir,
+    });
+    assert.equal(result.ok, true, JSON.stringify(result.problems));
+    assert.deepEqual(result.problems, []);
+  } finally {
+    await cleanup(s);
+  }
+});
+
+test('C-2-17 — dado rota BOAT no contrato e controlador correspondente quando checkCommands então passa; sem controlador então há missing-route', async () => {
+  const present = await scenario({
+    contracts: { 'boat.commands.openapi.json': boatContract() },
+    controllers: { 'boat-commands.controller.ts': boatController() },
+    catalog: '`BOAT.CRASH_STATE_INVALID`',
+  });
+  try {
+    const result = await checkCommands({
+      contractsDir: present.contractsDir,
+      controllerRoots: present.controllerRoots,
+      catalogPath: present.catalogPath,
+      blueprintsDir: present.blueprintsDir,
+    });
+    assert.equal(result.ok, true, JSON.stringify(result.problems));
+  } finally {
+    await cleanup(present);
+  }
+
+  const absent = await scenario({
+    contracts: { 'boat.commands.openapi.json': boatContract() },
+    controllers: {
+      'boat-commands-empty.controller.ts': boatController({ route: false }),
+    },
+    catalog: '`BOAT.CRASH_STATE_INVALID`',
+  });
+  try {
+    const result = await checkCommands({
+      contractsDir: absent.contractsDir,
+      controllerRoots: absent.controllerRoots,
+      catalogPath: absent.catalogPath,
+      blueprintsDir: absent.blueprintsDir,
+    });
+    assert.equal(result.ok, false);
+    assert.ok(
+      result.problems.some((problem) => problem.kind === 'missing-route'),
+    );
+  } finally {
+    await cleanup(absent);
+  }
+});
+
+test('C-2-17 — dado controlador BOAT sem operação correspondente quando checkCommands então há missing-operation', async () => {
+  const s = await scenario({
+    contracts: { 'empty-paths-contract.commands.openapi.json': null },
+    controllers: { 'boat-commands.controller.ts': boatController() },
+    catalog: '`BOAT.CRASH_STATE_INVALID`',
+  });
+  try {
+    const result = await checkCommands({
+      contractsDir: s.contractsDir,
+      controllerRoots: s.controllerRoots,
+      catalogPath: s.catalogPath,
+      blueprintsDir: s.blueprintsDir,
+    });
+    assert.equal(result.ok, false);
+    assert.ok(
+      result.problems.some((problem) => problem.kind === 'missing-operation'),
+    );
+  } finally {
+    await cleanup(s);
+  }
+});
+
+test('C-2-16 — dado o conjunto de contratos reais quando coletar operações então as 92 operações TEAT permanecem presentes', async () => {
+  const { operations, problems } = collectOperations(
+    join(root, 'docs/framework/contracts'),
+    join(root, 'docs/framework/blueprints'),
+  );
+  assert.deepEqual(problems, []);
+  const teatOperations = operations.filter((entry) =>
+    /\/BP-(?:INF|OPS)-/.test(entry.file),
+  );
+  assert.equal(teatOperations.length, 92);
+  assert.equal(
+    new Set(teatOperations.map((entry) => entry.operationId)).size,
+    92,
+  );
 });

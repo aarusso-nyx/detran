@@ -1,0 +1,2572 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BOAT est/crash — comandos manuscritos (BP-EST-CRASH-001)",
+    "version": "1.0.0",
+    "description": "Superfície de comandos realmente montada por BoatCrashCommandsController; rotas adicionais do build pack permanecem fora até serem montadas.",
+    "x-blueprint": "BP-EST-CRASH-001",
+    "x-commands": true,
+    "x-source": "boat-route-contract.md §3; CTG-0002"
+  },
+  "paths": {
+    "/v1/est/crash/records/{id}/start": {
+      "post": {
+        "operationId": "boatCrashRecordStart",
+        "x-policy": "est:crash-record:start",
+        "x-audit": "EST_CRASH_START",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/record": {
+      "post": {
+        "operationId": "boatCrashRecordRecord",
+        "x-policy": "est:crash-record:record",
+        "x-audit": "EST_CRASH_RECORD",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Json"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/complement": {
+      "post": {
+        "operationId": "boatCrashRecordComplement",
+        "x-policy": "est:crash-record:complement",
+        "x-audit": "EST_CRASH_COMPLEMENT",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/validate": {
+      "post": {
+        "operationId": "boatCrashRecordValidate",
+        "x-policy": "est:crash-record:validate",
+        "x-audit": "EST_CRASH_VALIDATE",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/close": {
+      "post": {
+        "operationId": "boatCrashRecordClose",
+        "x-policy": "est:crash-record:close",
+        "x-audit": "EST_CRASH_CLOSE",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/cancel": {
+      "post": {
+        "operationId": "boatCrashRecordCancel",
+        "x-policy": "est:crash-record:cancel",
+        "x-audit": "EST_CRASH_CANCEL",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/archive": {
+      "post": {
+        "operationId": "boatCrashRecordArchive",
+        "x-policy": "est:crash-record:archive",
+        "x-audit": "EST_CRASH_ARCHIVE",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/transmit": {
+      "post": {
+        "operationId": "boatCrashRecordTransmit",
+        "x-policy": "est:crash-record:transmit",
+        "x-audit": "EST_CRASH_TRANSMIT",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.TRANSMIT_NOT_CLOSED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/renaest/{kind}": {
+      "post": {
+        "operationId": "boatCrashRecordRectify",
+        "x-policy": "est:crash-record:rectify",
+        "x-audit": "EST_CRASH_RECTIFY",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/Kind"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Json"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "BOAT.CRASH_STATE_INVALID",
+                        "BOAT.RECTIFY_TERMINAL"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Erro 422 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.RECTIFY_REASON_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/renaest": {
+      "get": {
+        "operationId": "boatCrashRecordRenaestRead",
+        "x-policy": "est:crash-record:read",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/scene-duties": {
+      "post": {
+        "operationId": "boatCrashRecordDuty",
+        "x-policy": "est:crash-record:record-duty",
+        "x-audit": "EST_CRASH_DUTY_RECORD",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Json"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Erro 422 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.DUTY_REGIME_MISMATCH"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/{kind}": {
+      "post": {
+        "operationId": "boatCrashRecordSatelliteAdd",
+        "x-policy": "est:crash-record:add-vehicle",
+        "x-audit": "EST_CRASH_SATELLITE_ADD",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          },
+          {
+            "$ref": "#/components/parameters/Kind"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/Json"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/Success"
+          },
+          "400": {
+            "description": "Erro 400 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.ENUM_INVALID", "BOAT.VALIDATION_FAILED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro 404 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_NOT_FOUND"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Erro 409 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.CRASH_STATE_INVALID"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Erro 412 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.VERSION_CONFLICT"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Erro 428 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.IF_MATCH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/est/crash/records/{id}/report": {
+      "get": {
+        "operationId": "boatCrashRecordReport",
+        "x-policy": "est:crash-record:read",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Relatório preliminar.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Erro 401 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.AUTH_REQUIRED"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Erro 403 do dominio BOAT.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["code"],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["BOAT.FORBIDDEN_ACTION"]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "Kind": {
+        "name": "kind",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "IfMatch": {
+        "name": "if-match",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "requestBodies": {
+      "Json": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "Success": {
+        "description": "Comando aplicado.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      },
+      "Validation": {
+        "description": "Payload inválido.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["code", "status", "message"],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                },
+                "status": {
+                  "type": "integer",
+                  "const": 400
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Auth": {
+        "description": "Autenticação ausente.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["code", "status", "message"],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": ["TEAT.AUTH_REQUIRED"]
+                },
+                "status": {
+                  "type": "integer",
+                  "const": 401
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Ação não autorizada.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["code", "status", "message"],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": ["TEAT.FORBIDDEN_ACTION"]
+                },
+                "status": {
+                  "type": "integer",
+                  "const": 403
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Versão divergente.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["code", "status", "message"],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": ["TEAT.VERSION_CONFLICT"]
+                },
+                "status": {
+                  "type": "integer",
+                  "const": 412
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Precondition": {
+        "description": "If-Match obrigatório.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["code", "status", "message"],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "enum": ["TEAT.IF_MATCH_REQUIRED"]
+                },
+                "status": {
+                  "type": "integer",
+                  "const": 428
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error400": {
+        "type": "object",
+        "required": ["code", "status", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+          },
+          "status": {
+            "type": "integer",
+            "const": 400
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Error401": {
+        "type": "object",
+        "required": ["code", "status", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": ["TEAT.AUTH_REQUIRED"]
+          },
+          "status": {
+            "type": "integer",
+            "const": 401
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Error403": {
+        "type": "object",
+        "required": ["code", "status", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": ["TEAT.FORBIDDEN_ACTION"]
+          },
+          "status": {
+            "type": "integer",
+            "const": 403
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Error412": {
+        "type": "object",
+        "required": ["code", "status", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": ["TEAT.VERSION_CONFLICT"]
+          },
+          "status": {
+            "type": "integer",
+            "const": 412
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Error428": {
+        "type": "object",
+        "required": ["code", "status", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": ["TEAT.IF_MATCH_REQUIRED"]
+          },
+          "status": {
+            "type": "integer",
+            "const": 428
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

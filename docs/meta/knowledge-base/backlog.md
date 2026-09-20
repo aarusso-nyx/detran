@@ -444,8 +444,14 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       (`portal-build-pack.md` §4)
 - [x] **Pacote BOAT (2026-09-13)**: `boat-frontends.md`, `boat-route-contract.md`, `boat-error-catalog.md`,
       `boat-build-pack.md` (WP-B0…B5; 13 questões OD-B01…B13)
-- [ ] **BOAT — reconciliar `policy.ts` (`est:crash-record:*`) com o corpus e criar UC-BOAT-013** (dever de
-      resposta ao titular, tela W-05); atualizar `use-cases/INDEX.md` (added 2026-09-13)
+- [x] **BOAT — reconciliar `policy.ts` (`est:crash-record:*`) com o corpus e criar UC-BOAT-013** (dever de
+      resposta ao titular, tela W-05); atualizar `use-cases/INDEX.md` (R-0010 TASK-0001/0004; prazo e procedimento permanecem `source_pending`)
+- [x] **BOAT R-0010 — WP-B0…B3 na parte comprovada**: BP-EST-CRASH-001, DDL `70-est-crash.sql`,
+      comandos, sincronização, mapeamento RENAEST provisório, projeções e contratos foram entregues;
+      `T-BOAT-TRANSM` aguarda autoridade administrativa para descoberta de tenants, PDF/A permanece
+      pendente e não houve produção/homologação RENAEST real.
+- [ ] **BOAT — DT-061/OD-B08**: obter os Manuais RENAEST e campos mínimos do BAT; até a carta institucional,
+      `layout_version` e campos nacionais permanecem `source_pending` (R-0010 confirmou apenas o contrato do mock).
 - [x] **Pacote DASHBOARD (2026-09-13)**: `dashboard-frontends.md`, `dashboard-route-contract.md`,
       `dashboard-error-catalog.md`, `dashboard-build-pack.md` (WP-D0…D5; 13 questões OD-D01…D13)
 - [x] **DASHBOARD — papéis `dash-operator`/`dash-duty-owner`, política para alertas/deveres/exportação**

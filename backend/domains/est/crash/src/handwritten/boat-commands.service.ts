@@ -4,6 +4,7 @@ import { Database, type Transaction } from '@stynx-nyx/data';
 import {
   DetranError,
   SqlTeatEventOutbox,
+  type TeatEventEnvelope,
   type TeatEventOutbox,
 } from '@detran/shared';
 
@@ -352,10 +353,14 @@ export class BoatCrashCommandsService {
     data: Record<string, unknown>,
   ): Promise<void> {
     const context = this.requestContext.snapshot();
-    await this.outbox.append(tx, {
+    const envelope: TeatEventEnvelope & { schemaVersion: number } = {
       id: '',
       type: 'crash.changed',
       domainEvent,
+      // Envelope schema and aggregate version evolve independently.  BOAT
+      // projectors reject an absent schema version instead of inferring it
+      // from the aggregate.
+      schemaVersion: 1,
       version: record.version + 1,
       occurredAt: new Date().toISOString(),
       tenantId: context.tenantId ?? '',
@@ -367,25 +372,11 @@ export class BoatCrashCommandsService {
         version: record.version + 1,
       },
       data,
-    });
+    };
+    await this.outbox.append(tx, envelope);
     // The canonical event is the SSE envelope above. Keep the domain event
     // itself addressable in the outbox as well: operational consumers and the
     // BOAT route contract use this token as their durable audit topic.
-    await this.outbox.append(tx, {
-      id: '',
-      type: domainEvent,
-      domainEvent,
-      version: record.version + 1,
-      occurredAt: new Date().toISOString(),
-      tenantId: context.tenantId ?? '',
-      actor: { kind: 'user', id: context.actorId ?? '' },
-      correlationId: record.id,
-      aggregate: {
-        kind: 'crash-record',
-        id: record.id,
-        version: record.version + 1,
-      },
-      data,
-    });
+    await this.outbox.append(tx, { ...envelope, type: domainEvent });
   }
 }
