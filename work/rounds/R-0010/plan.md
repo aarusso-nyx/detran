@@ -1,6 +1,6 @@
 # R-0010 — frente `boat-backend` (WP-B0…B3 do BOAT: política, modelo `est/crash`, comandos, sincronização, RENAEST e contratos)
 
-**Status:** CTG-0001 integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e`. Em CTG-0002, TASK-0007…0015, TASK-0018…0022 estão concluídas; contratos passaram 40/40 testes e `contracts:check` com 152 operações e 61 clientes. Em 2026-09-19, o Owner autorizou `role_app_backend` a executar somente a função estreita `jobs.discover_active_boat_renaest_tenants()`; TASK-0020 concluiu a porta SQL e o wiring na segunda iteração. TASK-0016/0017 permanecem bloqueadas pelas fontes `source_pending` de PDF/A, assinatura e TSA. CTG-0002 ainda não pode receber revisão final, evidência ou merge. Checkpoint detalhado em §Auditoria de continuidade. Autorização do Owner em
+**Status:** CTG-0001 integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e`. Em CTG-0002, TASK-0007…0015, TASK-0018…0022 estão concluídas; contratos passaram 40/40 testes e `contracts:check` com 152 operações e 61 clientes. Em 2026-09-19, o Owner autorizou `role_app_backend` a executar somente a função estreita `jobs.discover_active_boat_renaest_tenants()`; TASK-0020 concluiu a porta SQL e o wiring na segunda iteração. O Owner também decidiu que o relatório preliminar pode satisfazer C-2-13 sem alegar ser BAT oficial; os campos do BAT permanecem `source_pending`, mas deixaram de bloquear C-2-13. TASK-0016/0017 permanecem bloqueadas pela escolha da política inicial do relatório e pelas fontes técnicas de PDF/A/veraPDF. CTG-0002 ainda não pode receber revisão final, evidência ou merge. Checkpoint detalhado em §Auditoria de continuidade. Autorização do Owner em
 `AUTHORIZATION.md`. Reviewer: Opus via `tools/orchestra/bridge.sh claude`.
 **Concorrência:** R-0005, R-0008 e R-0009 estão em `main`. Fila de sincronização em `backend/domains/ops/offline-sync` (contrato em `work/rounds/R-0008/contracts/CTG-0002.md`; schema `docs/framework/schemas/teat-offline-sync-batch.schema.json`); evidência em `backend/domains/ops/evidence`; `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`) e `policy-routes.e2e.spec.ts` prontos (estender com `est:*`). Na inspeção de 2026-09-19, a worktree R-0007 `rait-backend` só mantém alterações nos três caminhos de composição `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`; os caminhos de documentos/ADR/catálogo normativo não aparecem modificados. A R-0007 confirmou documentalmente que `MOD-shared-documents`, `MOD-adr-0018`, `MOD-inf-normative-document-catalogue` e `MOD-rait-test-strategy` foram liberados no fechamento local de CTG-0001/CTG-0002. Os Engineers de projeções/job/documentos serializam `app.module.ts`.
 **Janelas previstas:** 3.
@@ -60,8 +60,10 @@ typecheck e `pnpm check` passaram. O gate de integração revelou e corrigiu um
 sensor Portal que omitia o seed BOAT da janela canônica; o tier de integração
 completo passou. O E2E global ainda apresenta falhas ambientais e de isolamento
 anteriores em TEAT/Portal, fora da alteração do job. TASK-0016/0017 continuam
-paradas pelas fontes `source_pending` de PDF/A/assinatura registradas por
-TASK-0015.
+paradas pelas fontes técnicas de PDF/A/veraPDF e pela política inicial do
+relatório registradas por TASK-0015. A decisão Owner de 2026-09-19 retirou os
+campos normativos do BAT dessa lista de bloqueios: o BAT permanece
+`source_pending` sob DT-061/OD-B08 e não é inferido do relatório.
 
 **Continuidade desbloqueada concluída em 2026-09-19:** TASK-0007 passou a
 emitir `schemaVersion: 1` separado da versão do agregado; banco descartável

@@ -87,6 +87,10 @@ application composition.
    remain `source_pending` and block emission until an Owner decision records them. The preliminary
    report in UC-1.251 is distinct from the official BAT: BAT's minimum fields remain
    `source_pending` under DT-061/OD-B08 and cannot be inferred from this template.
+   On 2026-09-19 the Owner decided that this preliminary report may satisfy C-2-13 without claiming
+   to be the official BAT. BAT fields therefore remain pending in DT-061/OD-B08 but do not block
+   C-2-13. Signature and informational-content policy for the preliminary report remain separately
+   pending until the Owner chooses them.
 3. The facade flow is `render(templateKey, data)` then `sign(documentId, signer)` when the resolved
    policy permits a resolved signer, then `seal(documentId)`. Rendering resolves the active
    tenant-scoped template and policy, invokes the mounted substrate once in `backend/app`, and

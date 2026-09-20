@@ -11,6 +11,11 @@ campos mínimos, conteúdo legal, signatário, nível PAdES, TSA e nível gov.br
 `source_pending` sob DT-061/OD-B08. Nenhum desses valores pode ser copiado para o relatório
 preliminar.
 
+Em 2026-09-19, o Owner decidiu que este relatório preliminar pode satisfazer C-2-13 sem alegar ser
+o BAT oficial. Assim, as pendências normativas do BAT não bloqueiam C-2-13; continuam isoladas em
+DT-061/OD-B08. Esta decisão não escolhe por si só a política de assinatura nem o conteúdo
+informativo do relatório preliminar.
+
 | Item                       | Decisão implementável                                                                                                                                                             |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `DocumentKind`             | acrescentar `RELATORIO_PRELIMINAR_SINISTRO` ao fim de `DOCUMENT_KINDS`                                                                                                            |
@@ -89,6 +94,10 @@ o conversor aprovado e a imagem veraPDF resolvida por digest; também ajusta o t
 `real` para renderização, conversão e validação. A aplicação BOAT chama somente a fachada.
 
 `source_pending` que impede C-2-13: (a) fonte, dependência e reprodução do conversor PDF/A-2b;
-(b) bytes positivos de produção; (c) digest veraPDF com registry, data e método de resolução;
-(d) signatário, PAdES, TSA e conteúdo legal do relatório preliminar; (e) campos mínimos do BAT
-oficial, sob DT-061/OD-B08.
+(b) bytes positivos de produção; (c) digest veraPDF com registry, data e método de resolução; e
+(d) política de assinatura e conteúdo informativo do relatório preliminar. Os campos mínimos e
+demais requisitos do BAT oficial continuam `source_pending` sob DT-061/OD-B08, mas, por decisão
+expressa do Owner, não impedem C-2-13 e não podem ser inferidos deste relatório.
+
+As opções e os defaults propostos, ainda sujeitos à decisão do Owner, estão em
+`reports/pdfa-signature-options-2026-09-19.md`.
