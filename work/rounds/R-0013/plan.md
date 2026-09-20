@@ -245,6 +245,13 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
   porque a legenda de expiração em WF-TEAT-002 ainda marca o mecanismo de devolução como fonte
   pendente, reabrindo OD-T07. Limite de dois ciclos atingido; exige nova autorização antes de
   correção/review adicional.
+- `2026-09-20`: Owner autorizou excepcionalmente remover somente a marca residual de fonte
+  pendente em WF-TEAT-002 e realizar um terceiro delivery review; nenhum outro escopo foi aberto.
+- `TASK-0001/delivery-correction-2-extraordinary` — F-003 corrigido: expiração devolve o
+  subintervalo não utilizado como `disponivel` na reconciliação sob OD-T07; somente o risco técnico
+  de constraints permanece. Format/KB 549/446, publish 201 e diff-check verdes.
+- `delivery-review-CTG-0001/cycle-3-extraordinary` — **PASS**, sem achados. Owner autorizou a
+  exceção; F-003 foi confirmado fechado e nenhuma regressão direta foi encontrada.
 
 ## Retomada
 
@@ -262,9 +269,9 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
 - concluídos: Adenda A3, gates estruturais e `prompt-review-4=PASS` excepcional Codex/Sol/high;
 - acceptance de TASK-0001 concluída após duas tentativas Luna e uma escalada Terra; delivery
   review ciclo 1=`REVIEW`, portanto TASK-0001 voltou a `queued` e o conteúdo não foi commitado;
-- pendente: F-003 residual e eventual revisão extraordinária; TASK-0001 voltou a `queued` e
-  TASK-0002 permanece bloqueada;
-- último veredito: delivery review ciclo 2=`REVIEW`; nenhum conteúdo de CTG-0001 commitado;
+- concluído: TASK-0001, acceptance e delivery review extraordinário ciclo 3=`PASS`;
+- em curso: gate completo, commit e evidência CTG-0001; TASK-0002 permanece bloqueada até concluir
+  esse checkpoint;
 - a retomada explícita do Owner supera o checkpoint anterior apenas para fechar CTG-0001; não
   iniciar TASK-0002 nesta janela;
 - estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até

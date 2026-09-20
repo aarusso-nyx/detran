@@ -22,7 +22,7 @@ o AIT registrando o motivo da ausência de abordagem.
 ## Pré-condições
 
 Mesmas de [UC-TEAT-001]. Enquadramento selecionável deve admitir constatação sem abordagem
-(`Framing.allows_no_approach = true`).
+(`Framing.allows_no_approach` com classificação Caso 1/2/3).
 
 ## Fluxo principal
 
@@ -92,5 +92,5 @@ exigido; sem registro de assinatura/recusa do condutor (não aplicável).
 ## Regras aplicáveis
 
 - [RN-TEAT-004] (imutabilidade pós-finalização)
-- (fonte pendente) catálogo fechado de valores de `no_approach_reason` — não localizado nas
-  fontes lidas; hoje é campo de texto livre orientado por regra, não enum fechado.
+- A classificação de `no_approach_reason` é derivada como Caso 1/2/3 conforme [RN-TEAT-108];
+  justificativa textual só é solicitada para o Caso 3.
