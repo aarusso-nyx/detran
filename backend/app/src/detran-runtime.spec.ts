@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   DetranLocalTokenVerifier,
+  DetranDurableIdempotencyBackend,
   DetranPersistedAuditSink,
   DetranPipelineSqlExecutor,
   DetranPolicyEvaluator,
@@ -159,6 +160,37 @@ describe('DETRAN runtime hooks', () => {
         store: expect.anything(),
       },
     });
+  });
+
+  it('serializes concurrent idempotency owners in this process', async () => {
+    const backend = new DetranDurableIdempotencyBackend();
+    const context = { compositeKey: 'same-request' } as never;
+
+    await expect(backend.acquireLock(context, 'owner-1')).resolves.toBe(true);
+    await expect(backend.acquireLock(context, 'owner-2')).resolves.toBe(false);
+    await expect(backend.isLocked(context)).resolves.toBe(true);
+
+    await backend.releaseLock(context, 'owner-2');
+    await expect(backend.isLocked(context)).resolves.toBe(true);
+
+    await backend.releaseLock(context, 'owner-1');
+    await expect(backend.isLocked(context)).resolves.toBe(false);
+    await expect(backend.acquireLock(context, 'owner-2')).resolves.toBe(true);
+
+    await backend.set(context, {
+      requestFingerprint: 'fingerprint',
+      statusCode: 200,
+      body: { ok: true },
+      headers: {},
+      expiresAt: Date.now() + 60_000,
+      status: 'completed',
+    });
+    await backend.releaseLock(context, 'owner-2');
+    await expect(backend.get(context)).resolves.toMatchObject({
+      body: { ok: true },
+      status: 'completed',
+    });
+    await expect(backend.acquireLock(context, 'owner-3')).resolves.toBe(false);
   });
 
   it('executes pipeline persistence through the request-bound app role only', async () => {

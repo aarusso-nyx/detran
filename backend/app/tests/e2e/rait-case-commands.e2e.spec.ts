@@ -615,7 +615,10 @@ describe('CTG-0001 §10.9 — auditoria transacional e replay HTTP', () => {
           ? [await invoke(), await invoke()]
           : await Promise.all([invoke(), invoke()]);
 
-      expect(responses.map((response) => response.status)).toEqual([200, 200]);
+      expect(
+        responses.map((response) => response.status),
+        JSON.stringify(responses.map((response) => response.body)),
+      ).toEqual([200, 200]);
       expect(responses[1]?.body).toEqual(responses[0]?.body);
       const afterEffects = await persistentEffectCounts();
       expect(afterEffects.outbox - beforeEffects.outbox).toBe(1);
