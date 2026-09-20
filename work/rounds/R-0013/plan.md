@@ -221,6 +221,22 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
 - `prompt-review-4` após Adenda A3: **PASS**, sem achados. ADR-0028, DDL 21, 18/18 hashes/PCs e
   preservação dos sete reparos A2 foram confirmados; TASK-0001 está liberada pela cadeia serial.
 
+## Triagem
+
+- `TASK-0001/attempt-1` — `reference-gap`: worker encerrou antes de completar a tabela 1–12;
+  allowlist preservada, KB checks verdes, `format:check` inconclusivo. Uma tentativa corretiva foi
+  liberada para concluir todos os itens, revisar coerência interna das alterações e rodar os três
+  gates completos.
+- `TASK-0001/attempt-2` — `reference-gap` persistente: gates e allowlist verdes, mas o diagrama de
+  WF-TEAT-002 conserva `atinge end_number`/`fonte pendente`, em conflito com OD-T07
+  `next_number > end_number`. Escalada para Terra/médio antes de liberar TASK-0002.
+- `TASK-0001/escalation-1` — resolvido: Terra/médio alinhou o diagrama a OD-T07, auditou os 12
+  itens e passou format/KB/publish/diff. Entrega segue para review de CTG-0001.
+- `delivery-review-CTG-0001/cycle-1` — `REVIEW`: corrigir unicidade/vínculos de passos em
+  UC-TEAT-008, referência 5b→4b em UC-TEAT-009, pendências contraditórias OD-T07 em WF-TEAT-002,
+  explicitar ambos os campos impressos OD-T05 em WF-TEAT-004 e reconhecer `PsychomotorSign` nos
+  dois blueprints em WF-TEAT-005. Diff e gates foram aceitos.
+
 ## Retomada
 
 Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
@@ -235,8 +251,11 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
 - último veredito: `FAIL`; nenhum worker autorizado;
 - concluídos: Adenda A2, gates estruturais e `prompt-review-3=FAIL` excepcional Codex/Sol/high;
 - concluídos: Adenda A3, gates estruturais e `prompt-review-4=PASS` excepcional Codex/Sol/high;
-- em curso: nenhum worker no instante deste checkpoint; TASK-0001 é a única tarefa pronta;
-- próximo passo: marcar TASK-0001 `in_progress`, despachar Luna/low e aplicar os gates do CTG-0001;
+- acceptance de TASK-0001 concluída após duas tentativas Luna e uma escalada Terra; delivery
+  review ciclo 1=`REVIEW`, portanto TASK-0001 voltou a `queued` e o conteúdo não foi commitado;
+- pendente: correção dos cinco findings e delivery review ciclo 2; TASK-0002 permanece bloqueada;
+- condição de parada: orçamento estimado 695k/800k (86,875%) excede o checkpoint de 80%; não
+  iniciar correção nem TASK-0002 nesta janela;
 - estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até
   `a0f62cb67383ba31354f4c72e24bec91a3f22138` integrado por rebase antes da A2.
 
