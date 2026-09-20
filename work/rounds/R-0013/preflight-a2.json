@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "1.0.0",
+  "round_id": "R-0013",
+  "captured_at": "2026-09-20T01:07:57-03:00",
+  "owner": "maestro",
+  "target": {
+    "worktree": "/Volumes/Thiamat II/stech/detran-worktrees/teat-frontends",
+    "branch": "orchestra/teat-frontends",
+    "origin_main": "a0f62cb67383ba31354f4c72e24bec91a3f22138",
+    "status_porcelain": "",
+    "published": false
+  },
+  "read_only_source": {
+    "worktree": "/Volumes/Thiamat II/stech/teat",
+    "remote": "https://github.com/aarusso-nyx/detran-teat.git",
+    "head": "8880f4294c24ff7bd4bf5e0afecfc44faa86ffab",
+    "status_porcelain": "",
+    "files": {
+      "docs/framework/product/ux-parity/mobile-matrix.json": "a3175e63c270cff8757953b8a9d7ffe82c69e618b5cec25abf33a0d247d71013",
+      "docs/framework/product/ux-parity/web-matrix.json": "f458234ed2359884e470bf47df645fc5cc48959f694dd32e15a1238102158dca",
+      "docs/framework/product/ux-parity/journeys.json": "99d5b655f857e7f9e004075e988b7daeada587b0a0a015ae7262b856c27f2d68",
+      "docs/framework/product/workflows/offline-operational-provisioning.md": "a35546abb2161df3396f49f2be40fdda99c536e45512cbd9e334ebdc5a52ade1",
+      "law/invariants/INV-OFFLINE-001.json": "b55a91e0e3de7ada33ec0907579ba7ea285091c53ed85147fc3dd9793f719222",
+      "docs/framework/product/blueprints/BP-ALCOHOL-PROCEDURE-001.json": "3880cdc7e5611e4f4cb83999410e1f44326fadffda300f75fbc387b9d6202d66"
+    }
+  },
+  "worker_git_policy": {
+    "git_commands_allowed": [],
+    "source_identity": "workers consume this preflight and independently verify declared file sha256 values without invoking Git",
+    "write_scope": "workers report touched paths; the maestro alone runs git diff --name-only and rejects paths outside each allowlist"
+  },
+  "refresh_policy": "The maestro must regenerate and commit this artifact if target origin/main, source HEAD, source status, remote or any declared source hash changes before dispatch."
+}

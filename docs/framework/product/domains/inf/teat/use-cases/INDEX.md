@@ -72,20 +72,21 @@ diretamente nas regras [RN-TEAT-*] e nos UCs completos abaixo.
 
 ## UC completos (núcleo)
 
-| id                              | título                                                                           | status |
-| ------------------------------- | -------------------------------------------------------------------------------- | ------ |
-| [UC-TEAT-001](./UC-TEAT-001.md) | Agente lavra AIT com abordagem ao condutor                                       | draft  |
-| [UC-TEAT-002](./UC-TEAT-002.md) | Agente lavra AIT sem abordagem (constatação indireta)                            | draft  |
-| [UC-TEAT-003](./UC-TEAT-003.md) | Agente anexa evidência com cadeia de custódia                                    | draft  |
-| [UC-TEAT-004](./UC-TEAT-004.md) | Agente coleta assinatura, recusa ou impossibilidade                              | draft  |
-| [UC-TEAT-005](./UC-TEAT-005.md) | Dispositivo sincroniza lote de atos offline                                      | draft  |
-| [UC-TEAT-006](./UC-TEAT-006.md) | Operador saneia AIT com inconsistência tratável                                  | draft  |
-| [UC-TEAT-007](./UC-TEAT-007.md) | Agente conduz procedimento de etilômetro (teste, recusa, sinais, encaminhamento) | draft  |
-| [UC-TEAT-008](./UC-TEAT-008.md) | Agente aplica medida administrativa de retenção e recolhimento de documento      | draft  |
-| [UC-TEAT-009](./UC-TEAT-009.md) | Agente aciona remoção do veículo e avalia guarda monitorada                      | draft  |
-| [UC-TEAT-010](./UC-TEAT-010.md) | Agente captura e vincula gravação de bodycam como evidência do ato legal         | draft  |
-| [UC-TEAT-011](./UC-TEAT-011.md) | Diretoria de Fiscalização decide cancelamento de AIT pós-finalização             | draft  |
-| [UC-TEAT-012](./UC-TEAT-012.md) | Sistema impede sessão concorrente do mesmo agente em dispositivos diferentes     | draft  |
+| id                              | título                                                                           | status   |
+| ------------------------------- | -------------------------------------------------------------------------------- | -------- |
+| [UC-TEAT-001](./UC-TEAT-001.md) | Agente lavra AIT com abordagem ao condutor                                       | approved |
+| [UC-TEAT-002](./UC-TEAT-002.md) | Agente lavra AIT sem abordagem (constatação indireta)                            | approved |
+| [UC-TEAT-003](./UC-TEAT-003.md) | Agente anexa evidência com cadeia de custódia                                    | approved |
+| [UC-TEAT-004](./UC-TEAT-004.md) | Agente coleta assinatura, recusa ou impossibilidade                              | approved |
+| [UC-TEAT-005](./UC-TEAT-005.md) | Dispositivo sincroniza lote de atos offline                                      | approved |
+| [UC-TEAT-006](./UC-TEAT-006.md) | Operador saneia AIT com inconsistência tratável                                  | reviewed |
+| [UC-TEAT-007](./UC-TEAT-007.md) | Agente conduz procedimento de etilômetro (teste, recusa, sinais, encaminhamento) | reviewed |
+| [UC-TEAT-008](./UC-TEAT-008.md) | Agente aplica medida administrativa de retenção e recolhimento de documento      | reviewed |
+| [UC-TEAT-009](./UC-TEAT-009.md) | Agente aciona remoção do veículo e avalia guarda monitorada                      | reviewed |
+| [UC-TEAT-010](./UC-TEAT-010.md) | Agente captura e vincula gravação de bodycam como evidência do ato legal         | reviewed |
+| [UC-TEAT-011](./UC-TEAT-011.md) | Diretoria de Fiscalização decide cancelamento de AIT pós-finalização             | reviewed |
+| [UC-TEAT-012](./UC-TEAT-012.md) | Sistema impede sessão concorrente do mesmo agente em dispositivos diferentes     | approved |
+| [UC-TEAT-013](./UC-TEAT-013.md) | Agente opera medidor acoplado homologado                                         | approved |
 
 UC-TEAT-007..012 foram acrescentados na rodada BPO de 2026-08-24, a partir dos achados da rodada de
 pesquisa CRAWLER ([REF-SENATRAN-997], [REF-CONTRAN-1025-2026], [REF-CONTRAN-432],

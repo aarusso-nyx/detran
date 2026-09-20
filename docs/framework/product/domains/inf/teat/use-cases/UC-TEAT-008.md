@@ -28,15 +28,15 @@ local, liberação com prazo, ou conversão em remoção).
    recolhimento de CNH/PPD/CRV/CLA, transbordo, teste de alcoolemia (ver [UC-TEAT-007]),
    recolhimento de animais, exames de aptidão (fora do escopo de campo — ver [APP-PEC]).
 2. Se retenção: agente verifica se a irregularidade é sanável no local (CTB art. 270 §1º).
-   3a. **Sanável no local** → agente libera o veículo imediatamente (`LIBERADO_LOCAL`,
+   2a. **Sanável no local** → agente libera o veículo imediatamente (`LIBERADO_LOCAL`,
    [WF-TEAT-004]).
-   3b. **Não sanável, mas condições de segurança OK** → agente recolhe o Certificado de Licenciamento
+   2b. **Não sanável, mas condições de segurança OK** → agente recolhe o Certificado de Licenciamento
    Anual (CLA), emite recibo, assinala prazo ≤30 dias para regularização (`LIBERADO_COM_PRAZO`,
    CTB art. 270 §2º).
 3. Se recolhimento de documento de habilitação/registro: agente verifica se o documento é físico
    ou digital.
-   5a. **Físico**: agente recolhe o documento, mediante recibo, mantém custódia local.
-   5b. **Digital** (CNH-e, CRLV-e): agente **não apreende nada fisicamente** — executa registro
+   3a. **Físico**: agente recolhe o documento, mediante recibo, mantém custódia local.
+   3b. **Digital** (CNH-e, CRLV-e): agente **não apreende nada fisicamente** — executa registro
    eletrônico via integração RENACH/RENAVAM, conforme CTB art. 269 §5º.
 4. Sistema grava o `AdministrativeTerm` com tipo, fundamento legal, recibo (quando aplicável) e
    prazo de regularização, quando houver.
@@ -45,9 +45,9 @@ local, liberação com prazo, ou conversão em remoção).
 
 ## Fluxos alternativos / exceções
 
-- **2a. Condutor habilitado não se apresenta no local** → medida converte-se diretamente em
+- **2c. Condutor habilitado não se apresenta no local** → medida converte-se diretamente em
   remoção (CTB art. 270 §4º) — segue [UC-TEAT-009].
-- **3b-1. Prazo de regularização expira sem resposta** → conversão automática em remoção (CTB
+- **2b-1. Prazo de regularização expira sem resposta** → conversão automática em remoção (CTB
   art. 270 §7º) + registro de restrição administrativa no RENAVAM (art. 270 §6º) — evento de
   retaguarda, fora do ato de campo em si, mas TEAT deve registrar o marco inicial do prazo.
 - **"Boa ordem administrativa"**: hipótese de remoção discricionária motivada, distinta das

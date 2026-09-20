@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0013",
+  "status": "queued",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Implementar provisionamento offline até as provas verdes",
+  "description": "Implementar provisionamento offline até as provas verdes conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ops-provisioning",
+    "MOD-shared-policy",
+    "MOD-app-module",
+    "MOD-app-vitest",
+    "MOD-app-package"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t4", "wp-t5", "wp-t6"],
+  "branch": "orchestra/teat-frontends",
+  "worktree_id": "WT-teat-frontends",
+  "prompt_composition_id": "PC-8107563e0f70cb67",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/ops-provisioning", "test:unit"],
+    ["pnpm", "--filter", "@detran/ops-provisioning", "test:integration"],
+    ["pnpm", "--filter", "@detran/ops-provisioning", "test:e2e"],
+    ["pnpm", "--filter", "@detran/shared", "test"],
+    ["pnpm", "verify:decorators"],
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-20T03:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-8107563e0f70cb67",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

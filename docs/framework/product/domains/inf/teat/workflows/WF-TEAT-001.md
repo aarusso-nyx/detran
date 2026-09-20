@@ -161,9 +161,8 @@ de 2026-08-24 foram **adotados** na máquina da infração (Owner, 2026-09-12 �
   Fiscalização.
 - ~~(fonte pendente) requisitos legais específicos do talão eletrônico~~ — **RESOLVIDO**: ver
   [REF-SENATRAN-997].
-- (novo) Modelagem de `SUSPEITO_CONCORRENCIA`: o texto normativo não define prazo de apuração nem
-  o destino exato quando a apuração não conclui em tempo hábil — proposta operacional a calibrar
-  pelo Owner (ver `_intake/bpo-notes.md` §2).
+- Modelagem de `SUSPEITO_CONCORRENCIA`: registros ficam bloqueados até apuração; prazo e destino
+  quando não concluída permanecem `source_pending` (OD-T03), sem expiração automática.
 - (novo) `Diretoria de Fiscalização` não tem papel de RBAC hoje em [APP-TEAT] (9 papéis
   existentes); mapeamento provisório para `traffic-authority` em nível hierárquico superior —
   decisão de escopo do Owner, ver `_intake/bpo-notes.md` §Atores.

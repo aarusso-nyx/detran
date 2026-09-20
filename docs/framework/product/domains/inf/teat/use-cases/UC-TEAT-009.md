@@ -11,10 +11,10 @@ updated: 2026-08-28
 
 Agente de trânsito aciona a remoção do veículo (CTB art. 271) e emite o Termo de Recolhimento do
 Veículo com conteúdo mínimo normatizado. Este UC também documenta a alternativa de **guarda
-monitorada** ([REF-CONTRAN-1025-2026]) — passos 4, 5a, 5a-1 e os critérios de aceitação
+monitorada** ([REF-CONTRAN-1025-2026]) — passos 4, 4a, 5a-1 e os critérios de aceitação
 AC-TEAT-009-5/6/7 abaixo —, mas **essa parte está fora do escopo do MVP** (decisão do Owner,
 2026-08-28, `_meta/open-issues.md` DT-015): mantida como registro de desenho, não como escopo de
-construção atual. No MVP, o passo 4 é pulado e toda remoção segue para `EM_DEPOSITO` (passo 5b).
+construção atual. No MVP, o passo 4 é pulado e toda remoção segue para `EM_DEPOSITO` (passo 4b).
 
 ## Pré-condições
 
@@ -38,13 +38,13 @@ construção atual. No MVP, o passo 4 é pulado e toda remoção segue para `EM_
    indícios de adulteração, condutor habilitado, ausência de ocorrência criminal/restrição
    judicial, alienação fiduciária regular, licenciamento recente, ausência de descumprimento
    anterior, ausência de circunstâncias que comprometam a fiscalização).
-   5a. **[FORA DO MVP — DT-015] Elegível e autorizado** (decisão do órgão — "prerrogativa", não
+   4a. **[FORA DO MVP — DT-015] Elegível e autorizado** (decisão do órgão — "prerrogativa", não
    direito automático do condutor): veículo permanece com o proprietário sob monitoramento
    eletrônico homologado (`GUARDA_MONITORADA`, [WF-TEAT-004]).
-   5b. **No MVP, único caminho**: veículo é levado a depósito (`EM_DEPOSITO`).
+   4b. **No MVP, único caminho**: veículo é levado a depósito (`EM_DEPOSITO`).
 5. Se proprietário/condutor presente no ato: é considerado notificado, mesmo que se recuse a
    assinar o termo ([REF-CONTRAN-1025-2026] art. 14 §2º — mesmo padrão de [RN-TEAT-005]).
-   7a. Se ausente: sistema registra a pendência de notificação em até 10 dias (postal, edital, ou SNE
+   5a. Se ausente: sistema registra a pendência de notificação em até 10 dias (postal, edital, ou SNE
    — marco de exclusividade SNE a partir de 01/01/2027, art. 15 §3º).
 
 ## Fluxos alternativos / exceções

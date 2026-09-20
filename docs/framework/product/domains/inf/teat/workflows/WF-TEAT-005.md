@@ -58,10 +58,10 @@ stateDiagram-v2
 
 O teste só sustenta o AIT como prova se o aparelho, no momento do uso, tiver: (a) modelo aprovado
 pelo INMETRO; (b) verificação metrológica inicial/eventual/em serviço/anual em dia — CTB art. 276
-§único; [REF-CONTRAN-432] art. 4º, I-II; [REF-INMETRO-369-2021] art. 1º §1º. **Proposta de
-produto**: o TEAT deveria recusar (ou ao menos alertar de forma bloqueante) o registro de um
-teste de etilômetro vinculado a um aparelho sem certificado de verificação metrológica vigente —
-hoje não modelado em nenhum blueprint TEAT lido. Ver `_intake/bpo-notes.md` §2.
+§único; [REF-CONTRAN-432] art. 4º, I-II; [REF-INMETRO-369-2021] art. 1º §1º. Requisito adotado:
+o TEAT bloqueia o registro de teste de etilômetro vinculado a aparelho sem certificado de
+verificação metrológica vigente e oferece os demais meios de prova ([UC-TEAT-007],
+[RN-TEAT-135]).
 
 ## Recusa × impossibilidade técnica — distinção com efeito jurídico diferente
 
@@ -121,11 +121,11 @@ não discricionárias) segue [WF-TEAT-004] sub-máquina A.
 
 ## Decisões de modelagem pendentes
 
-- (novo) Bloqueio de registro de teste com aparelho sem certificado metrológico vigente — proposta
-  de produto, não confirmada como requisito de bloqueio técnico obrigatório nas fontes lidas
-  (a norma exige o aparelho aprovado/verificado; não descreve explicitamente o comportamento do
-  software de fiscalização diante de um aparelho vencido). Ver `_intake/bpo-notes.md` §2.
-- (fonte pendente) entidade formal de "termo específico" de sinais psicomotores (Res. 432 art. 5º
-  §2º, Anexo II) no runtime oficial — corpus de protótipo já cita `AlcoholTest`/`AlcoholRefusal`
-  (RN-ALC-004/010), mas o termo de sinais como artefato distinto não está confirmado como entidade
-  própria nos blueprints lidos pelo CRAWLER original.
+- Bloqueio de registro de teste com aparelho sem certificado metrológico vigente — requisito
+  adotado: a ausência de certificação válida bloqueia o teste, conforme [UC-TEAT-007] e
+  [RN-TEAT-135].
+- O blueprint adotado de destino e o blueprint imutável de origem são consistentes: ambos
+  representam testemunhas em `witnesses_json` e possuem a entidade `PsychomotorSign` para os sinais psicomotores.
+  O corpus CRAWLER também cita `AlcoholTest`/`AlcoholRefusal` (RN-ALC-004/010). A lacuna
+  documental `source_pending` limita-se à forma e ao conteúdo do `alcohol-signs-term`, sem negar a
+  entidade.

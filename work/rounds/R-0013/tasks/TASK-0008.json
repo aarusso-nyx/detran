@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0013",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever provas RED do provisionamento offline",
+  "description": "Escrever provas RED do provisionamento offline conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-ops-provisioning-tests",
+    "MOD-shared-policy-tests",
+    "MOD-contract-tests",
+    "MOD-db-r13"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t4", "wp-t5", "wp-t6"],
+  "branch": "orchestra/teat-frontends",
+  "worktree_id": "WT-teat-frontends",
+  "prompt_composition_id": "PC-3c25f8fa7d521d73",
+  "acceptance_commands": [
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && test \"$DB_NAME\" = detran_r13 && test \"$DATABASE_URL\" = postgresql://postgres:postgres@localhost:5432/detran_r13 && test \"$DETRAN_TEST_DATABASE_URL\" = postgresql://postgres:postgres@localhost:5432/detran_r13"
+    ],
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && DB_NAME=detran_r13 pnpm backend:db:reset"
+    ],
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && bash backend/database/seed.sh"
+    ],
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && bash backend/database/seed.sh"
+    ],
+    ["pnpm", "contracts:test"],
+    ["pnpm", "--filter", "@detran/ops-provisioning", "typecheck"],
+    ["pnpm", "--filter", "@detran/ops-provisioning", "test:unit"],
+    ["pnpm", "--filter", "@detran/ops-provisioning", "test:integration"],
+    ["pnpm", "--filter", "@detran/ops-provisioning", "test:e2e"],
+    ["pnpm", "--filter", "@detran/shared", "test"]
+  ],
+  "created_at": "2026-09-20T03:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-3c25f8fa7d521d73",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

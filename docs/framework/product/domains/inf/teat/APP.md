@@ -246,7 +246,7 @@ leilão — ainda não implementada, ver `_intake/bpo-notes.md` §1.
 
 ## Residual aberto após a rodada de endurecimento (2026-08-26)
 
-**As 49 regras legais deste app seguem em `draft`, deliberadamente.** Diferente do RAIT, cujos 15
+**As 50 regras legais deste app seguem em `draft`, deliberadamente.** Diferente do RAIT, cujos 15
 itens de validação jurídica o Owner respondeu em steering (2026-08-24), a lista equivalente do TEAT
 (`_intake/legal-assessment.md`) **não foi respondida**. Os casos de uso `approved` carregam
 comportamento acordado e testável; a regra legal sob eles pode ainda ser refinada por parecer
