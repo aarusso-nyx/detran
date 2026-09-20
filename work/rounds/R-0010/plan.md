@@ -1,9 +1,15 @@
 # R-0010 — frente `boat-backend` (WP-B0…B3 do BOAT: política, modelo `est/crash`, comandos, sincronização, RENAEST e contratos)
 
-**Status:** CTG-0001 integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e`. Em CTG-0002, TASK-0007…0015, TASK-0018…0022 estão concluídas; contratos passaram 40/40 testes e `contracts:check` com 152 operações e 61 clientes. Em 2026-09-19, o Owner autorizou `role_app_backend` a executar somente a função estreita `jobs.discover_active_boat_renaest_tenants()`; TASK-0020 concluiu a porta SQL e o wiring na segunda iteração. O Owner decidiu que o relatório preliminar pode satisfazer C-2-13 sem alegar ser BAT oficial e, em 2026-09-20, aprovou o Default D1 completo. WeasyPrint 70.0 e o digest veraPDF foram resolvidos e uma prova preliminar PDF/A-2b passou; TASK-0016/0017 estão desbloqueadas para execução sequencial. CTG-0002 ainda não pode receber revisão final, evidência ou merge antes dos gates. Checkpoint detalhado em §Auditoria de continuidade. Autorização do Owner em
-`AUTHORIZATION.md`. Reviewer: by temporary Owner exception on 2026-09-20, an
-isolated Codex Auditor via `tools/orchestra/bridge.sh codex` during this session;
-the normal Opus reviewer resumes when the Owner reports Claude available.
+**Status:** **fechada em 2026-09-20 como PC-0008**. CTG-0001 foi integrado pelo
+PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e`; CTG-0002 foi integrado
+pelo PR #71 em `1c24657b784c519cd243a7e6925a33b460c760de`, observado no SHA
+exato por `EV-76217ff26560e410`. As 22 tarefas estão concluídas. O reviewer
+final foi Codex GPT-5.6 Sol sob exceção temporária expressamente autorizada pelo
+Owner; o ciclo 3 restrito retornou PASS sem achados. Projeção opção 1, execução
+mensal e Default D1 foram aprovados. O relatório preliminar PDF/A-2b satisfaz
+C-2-13 sem alegar ser BAT oficial; BAT, campos normativos e homologação RENAEST
+real permanecem `source_pending` sob DT-061/OD-B08. Autorização em
+`AUTHORIZATION.md`.
 **Concorrência:** R-0005, R-0008 e R-0009 estão em `main`. Fila de sincronização em `backend/domains/ops/offline-sync` (contrato em `work/rounds/R-0008/contracts/CTG-0002.md`; schema `docs/framework/schemas/teat-offline-sync-batch.schema.json`); evidência em `backend/domains/ops/evidence`; `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`) e `policy-routes.e2e.spec.ts` prontos (estender com `est:*`). Na inspeção de 2026-09-19, a worktree R-0007 `rait-backend` só mantém alterações nos três caminhos de composição `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`; os caminhos de documentos/ADR/catálogo normativo não aparecem modificados. A R-0007 confirmou documentalmente que `MOD-shared-documents`, `MOD-adr-0018`, `MOD-inf-normative-document-catalogue` e `MOD-rait-test-strategy` foram liberados no fechamento local de CTG-0001/CTG-0002. Os Engineers de projeções/job/documentos serializam `app.module.ts`.
 **Janelas previstas:** 3.
 
@@ -815,3 +821,19 @@ e este plano. Definições adicionais ficam nas listas fechadas dos workers.
   corrigida apenas no ambiente por wrapper temporário, sem mudança no produto.
 - Cadeia DEVAI anterior à nova evidência: válida, head
   `458f088f1baf5a9471435a0cbf1d00d4931bf262ae6044a172e6fc2cecbc76af`.
+
+### Checkpoint final — PC-0008 (2026-09-20)
+
+- CTG-0001: PR #55, merge `4f0345532433fb37670447fe22f32bc95ffc0f9e`,
+  CI `35150065364` verde e delivery-review ciclo 4 PASS.
+- CTG-0002: PR #71, merge `1c24657b784c519cd243a7e6925a33b460c760de`,
+  CI `35526082301` com seis jobs verdes e delivery-review documental ciclo 3
+  PASS sob a exceção temporária de reviewer Codex autorizada pelo Owner.
+- O merge final de implementação foi observado no SHA exato por
+  `EV-76217ff26560e410`; a cadeia ficou válida em
+  `09daaf1afa3428335db2abbea6a457d11ea3dc06ce7868035de327ee3ef09172`.
+- `devai round close` aceitou `closure.json` e emitiu `PC-0008`. As 22 tarefas
+  estão concluídas; nada resta a retomar nesta rodada.
+- Limites preservados: o relatório preliminar PDF/A-2b não é apresentado como
+  BAT oficial. Manuais RENAEST, campos nacionais e homologação real continuam
+  `source_pending` em DT-061/OD-B08.
