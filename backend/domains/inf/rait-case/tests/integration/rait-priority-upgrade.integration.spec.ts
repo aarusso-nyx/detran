@@ -24,10 +24,6 @@ const repo = resolve(
   '../../../../../..',
 );
 const databaseDir = join(repo, 'backend/database');
-const inventoryPath = join(
-  repo,
-  'work/rounds/R-0007/reports/CTG-0001-C4-OD-V3-DDL-INVENTORY.md',
-);
 const manual = [
   '19-rait-priority-pre.sql',
   '19-rait-priority-enforce.sql',
@@ -207,13 +203,23 @@ async function run(
 }
 
 async function inventory(): Promise<string[]> {
-  const lines = (await readFile(inventoryPath, 'utf8'))
-    .split('\n')
-    .filter((line) => line.startsWith('- `backend/database/ddl/'));
-  const files = lines.map((line) => line.match(/ddl\/([^`]+)`/)?.[1]);
-  if (files.length !== 57 || files.some((file) => !file))
+  const source = await readFile(join(databaseDir, 'apply.sh'), 'utf8');
+  const encoded = source.match(
+    /const ordinary = (\[[\s\S]*?\]);\nconst manual =/u,
+  )?.[1];
+  if (!encoded) throw new Error('The apply runner has no closed DDL inventory');
+  const files = JSON.parse(encoded) as unknown;
+  if (
+    !Array.isArray(files) ||
+    files.length !== 57 ||
+    files.some(
+      (file) =>
+        typeof file !== 'string' || !/^[0-9][0-9A-Za-z-]*\.sql$/u.test(file),
+    ) ||
+    new Set(files).size !== files.length
+  )
     throw new Error('The closed 57-DDL inventory is incomplete');
-  return files as string[];
+  return files;
 }
 
 async function isolatedCopy(syntheticManual = false): Promise<string> {
