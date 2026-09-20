@@ -236,6 +236,15 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
   UC-TEAT-008, referência 5b→4b em UC-TEAT-009, pendências contraditórias OD-T07 em WF-TEAT-002,
   explicitar ambos os campos impressos OD-T05 em WF-TEAT-004 e reconhecer `PsychomotorSign` nos
   dois blueprints em WF-TEAT-005. Diff e gates foram aceitos.
+- `2026-09-20`: Owner retomou explicitamente após o checkpoint de orçamento e autorizou as cinco
+  correções do delivery review ciclo 1 mais nova submissão; nenhum escopo adicional foi aberto.
+- `TASK-0001/delivery-correction-1` — cinco findings corrigidos por Terra/médio; uma correção
+  mecânica restaurou o token histórico `RISCO` e removeu linha duplicada. Format/KB 549/446,
+  publish 201 e diff-check verdes; enviado ao delivery review ciclo 2.
+- `delivery-review-CTG-0001/cycle-2` — `REVIEW`: F-001/F-002/F-004/F-005 aceitos; F-003 persiste
+  porque a legenda de expiração em WF-TEAT-002 ainda marca o mecanismo de devolução como fonte
+  pendente, reabrindo OD-T07. Limite de dois ciclos atingido; exige nova autorização antes de
+  correção/review adicional.
 
 ## Retomada
 
@@ -253,9 +262,11 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
 - concluídos: Adenda A3, gates estruturais e `prompt-review-4=PASS` excepcional Codex/Sol/high;
 - acceptance de TASK-0001 concluída após duas tentativas Luna e uma escalada Terra; delivery
   review ciclo 1=`REVIEW`, portanto TASK-0001 voltou a `queued` e o conteúdo não foi commitado;
-- pendente: correção dos cinco findings e delivery review ciclo 2; TASK-0002 permanece bloqueada;
-- condição de parada: orçamento estimado 695k/800k (86,875%) excede o checkpoint de 80%; não
-  iniciar correção nem TASK-0002 nesta janela;
+- pendente: F-003 residual e eventual revisão extraordinária; TASK-0001 voltou a `queued` e
+  TASK-0002 permanece bloqueada;
+- último veredito: delivery review ciclo 2=`REVIEW`; nenhum conteúdo de CTG-0001 commitado;
+- a retomada explícita do Owner supera o checkpoint anterior apenas para fechar CTG-0001; não
+  iniciar TASK-0002 nesta janela;
 - estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até
   `a0f62cb67383ba31354f4c72e24bec91a3f22138` integrado por rebase antes da A2.
 
