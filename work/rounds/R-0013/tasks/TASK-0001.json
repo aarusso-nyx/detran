@@ -5,10 +5,10 @@
   "status": "queued",
   "discipline": "architect",
   "discipline_specialization": "transcriber-docs",
-  "title": "Reconciliar o corpus TEAT antes das fichas",
-  "description": "Reconciliar o corpus TEAT antes das fichas conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "title": "Reconciliar as doze inconsistências do corpus TEAT",
+  "description": "Reconciliar as doze inconsistências do corpus TEAT conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-product-teat", "MOD-kb-manifest"],
+  "target_modules": ["MOD-product-teat-corpus"],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0001",
@@ -21,13 +21,13 @@
   "tags": ["wp-t4", "wp-t5", "wp-t6"],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
-  "prompt_composition_id": "PC-9c0e5feb15c535a5",
+  "prompt_composition_id": "PC-1153aca06bfcafb7",
   "acceptance_commands": [
     ["pnpm", "format:check"],
     ["pnpm", "docs:kb:check"],
     ["pnpm", "docs:kb:publish-check"]
   ],
-  "created_at": "2026-09-20T02:00:00.000Z",
+  "created_at": "2026-09-20T03:00:00.000Z",
   "executor": {
     "kind": "agent",
     "runtime": "codex-cli",
@@ -37,7 +37,7 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-luna"
     },
-    "prompt_composition_id": "PC-9c0e5feb15c535a5",
+    "prompt_composition_id": "PC-1153aca06bfcafb7",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

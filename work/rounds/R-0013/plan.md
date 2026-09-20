@@ -1,8 +1,11 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** em execução desde 2026-09-20 pelo maestro Codex. Reviewer: Opus via
-`tools/orchestra/bridge.sh claude` (Fable no `delivery-review` do provisionamento).
-**Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (reconciliação do corpus), CTG-0002 (126 fichas, i18n, transições, diagramas), CTG-0003 (provisionamento offline — R-0005 em `main`) e CTG-0004 (apps — schemas, `@detran/api-clients` e contratos do TEAT em `main` desde R-0008; padrão de scaffold em `apps/portal/web` desde R-0014). O lock em `packages/ui` com R-0012 `rait-web` só vale se as duas estiverem ativas ao mesmo tempo: R-0012 não abriu, logo esta rodada vai primeiro e R-0012 espera. Allowlist i18n já existe (`parameter-catalogue.md` §Namespaces i18n): esta rodada só acrescenta as linhas `teat.*`.
+**Status:** em replanejamento estrutural desde 2026-09-20 após `prompt-review-1=FAIL`; nenhum
+worker foi liberado. Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
+**Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
+(matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
+CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar todos os joins no
+`upstream_task_id` singular. R-0012 não abriu; não há lock concorrente em `packages/ui`.
 **Janelas previstas:** 5 (o maior da carteira; um PR por grupo).
 
 ## Metas
@@ -38,35 +41,50 @@
 
 ## Tarefas
 
-| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                          | Depende de           | Entrega                                                                                                                                                                  |
-| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| TASK-0001 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat`, `MOD-kb-manifest`                         | —                    | reconciliação §5 (12 itens), PR próprio                                                                                                                                  |
-| TASK-0002 | Architect            | architect-blueprint | Terra / alto   | `MOD-teat-apps-arch`, `MOD-parameter-catalogue-doc`           | TASK-0001            | decisões dos apps, lista fechada tela → ficha → rota, critérios e allowlist documental `teat.*` antes de qualquer catálogo i18n                                          |
-| TASK-0003 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-mobile`                             | TASK-0002            | 70 fichas mobile; manifesto                                                                                                                                              |
-| TASK-0004 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-web`                                | TASK-0002            | 56 fichas web; diagramas de estrutura                                                                                                                                    |
-| TASK-0005 | Engineer             | engineer-frontend   | Luna / baixo   | `MOD-teat-i18n-transitions`, `MOD-parameter-generated`        | TASK-0002            | schemas, `i18n/teat.pt-BR.json`, `transitions.ts` (576) e regeneração após a allowlist já declarada pelo Architect                                                       |
-| TASK-0006 | Architect            | architect-blueprint | Terra / alto   | `MOD-adr`, `MOD-bp-ops-provisioning`, `MOD-ddl-19`            | TASK-0002            | ADR de provisionamento, blueprint, contrato das rotas, matriz de prova (pacote copiado/alterado/expirado/revogado)                                                       |
-| TASK-0007 | Inspector            | inspector-tests     | Terra / alto   | `MOD-ops-provisioning-tests`                                  | TASK-0006            | testes da matriz de prova; "sem chave privada no servidor" (teste de configuração)                                                                                       |
-| TASK-0008 | Engineer             | engineer-backend    | Terra / médio  | `MOD-ops-provisioning`, `MOD-shared-policy`, `MOD-app-module` | TASK-0007            | módulo, rotas, `ReadinessGate` (contrato consumido pelo mobile); testes verdes                                                                                           |
-| TASK-0009 | Inspector            | inspector-tests     | Terra / alto   | `MOD-teat-mobile-tests`, `MOD-teat-web-tests`                 | TASK-0003…0005       | testes de roteamento por papel (70 + 60), matriz de 576 transições, TestBed dos compartilhados, `FixturePrinter`; teste "cada tela da matriz tem ficha e rota" (126/126) |
-| TASK-0010 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-mobile-app`, `MOD-packages-ui`                      | TASK-0008, TASK-0009 | `apps/teat/mobile` completo (8 módulos, 70 rotas, formulários, serviços); testes verdes                                                                                  |
-| TASK-0011 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-web-app`, `MOD-package-json`                        | TASK-0009            | `apps/teat/web` (12 módulos, 60 rotas); `pnpm check` estendido; testes verdes                                                                                            |
-| TASK-0012 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                    | TASK-0010, TASK-0011 | build pack (gates reais), `teat-frontends.md`, ADR, backlog                                                                                                              |
+O grafo é deliberadamente serial nos pontos de junção porque o schema DEVAI possui apenas
+`upstream_task_id` singular. Isso elimina dependências implícitas. Scaffold significa somente
+package/config/shell vazio compilável: nenhum comportamento, rota de produto ou teste.
 
-CTG-0001 = 0001; CTG-0002 = 0003…0005 (fichas/i18n); CTG-0003 = 0006…0008 (provisionamento);
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | CTG       | Depende de | Entrega                                                                                      |
+| --------- | -------------------- | ------------------- | -------------- | --------- | ---------- | -------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0001  | —          | reconciliar os 12 itens do corpus em caminhos fechados                                       |
+| TASK-0002 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0002  | 0001       | portar matrizes oficiais imutáveis com proveniência e hashes                                 |
+| TASK-0003 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0002  | 0002       | 70 fichas mobile, matriz 67 + deltas D-01/D-04/D-05                                          |
+| TASK-0004 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0002  | 0003       | 56 fichas web e diagramas; atualizar uma vez o manifesto KB para 675/446                     |
+| TASK-0005 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0002  | 0004       | catálogo i18n canônico e allowlist `teat.*` sob autoridade OD-P46/R-0014                     |
+| TASK-0006 | Engineer             | engineer-backend    | Luna/baixo     | CTG-0002  | 0005       | regenerar exatamente os três artefatos de parâmetros e provar 89/25/allowlist                |
+| TASK-0007 | Architect            | architect-blueprint | Terra/alto     | CTG-0003  | 0006       | ADR-0025, BP-OPS-PROVISIONING-001, DDL 21, contratos e matriz completa P0–P6/INV-OFFLINE-001 |
+| TASK-0008 | Inspector            | inspector-tests     | Terra/alto     | CTG-0003  | 0007       | testes RED de contrato, policy, RLS, DB, segurança e idempotência no banco `detran_r13`      |
+| TASK-0009 | Engineer             | engineer-backend    | Terra/médio    | CTG-0003  | 0008       | provisioning handwritten/wiring/policy até todos os testes verdes                            |
+| TASK-0010 | Architect            | architect-blueprint | Terra/alto     | CTG-0004a | 0009       | contrato mobile: 70 rotas, papéis, 576 transições, forms, readiness e caminhos exatos        |
+| TASK-0011 | Engineer             | engineer-frontend   | Luna/baixo     | CTG-0004a | 0010       | scaffold mobile não comportamental, compilável e com harness vazio                           |
+| TASK-0012 | Inspector            | inspector-tests     | Terra/alto     | CTG-0004a | 0011       | RED mobile: 70 rotas, 576/576, forms, roles cartesianos, a11y, printer e 70 fichas           |
+| TASK-0013 | Engineer             | engineer-frontend   | Terra/médio    | CTG-0004a | 0012       | implementação mobile em caminhos de produção exatos; testes intocáveis                       |
+| TASK-0014 | Architect            | architect-blueprint | Terra/alto     | CTG-0004b | 0013       | contrato web: 60 rotas, 56 fichas, papéis cartesianos, módulos, SSE e caminhos exatos        |
+| TASK-0015 | Engineer             | engineer-frontend   | Luna/baixo     | CTG-0004b | 0014       | scaffold web não comportamental, compilável e com harness vazio                              |
+| TASK-0016 | Inspector            | inspector-tests     | Terra/alto     | CTG-0004b | 0015       | RED web: 60 rotas, 56/56 fichas, papéis cartesianos, a11y e componentes compartilhados       |
+| TASK-0017 | Engineer             | engineer-frontend   | Terra/médio    | CTG-0004b | 0016       | implementação web em caminhos de produção exatos; testes intocáveis                          |
+| TASK-0018 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0005  | 0017       | fechamento documental somente após merges/gates reais                                        |
 
-**Checkpoint de dependências:** após TASK-0006 o maestro agrupa a edição do blueprint de provisionamento e regenera uma vez; após TASK-0008 roda `pnpm install` (pacote `@detran/ops-provisioning`) e inclui alias/scripts; após TASK-0010/0011 criarem `apps/teat/mobile` e `apps/teat/web` a partir do scaffold de `apps/portal/web`, roda `pnpm install`, guarda o lockfile e estende `pnpm check` com as triplas `lint|test|build` de cada app antes de o Inspector rodar TASK-0009 contra os apps. Banco da rodada: `detran_r13`.
-CTG-0004 = 0009…0011 (apps). Um PR por CTG.
+CTG-0001, CTG-0002, CTG-0003, CTG-0004a, CTG-0004b e CTG-0005 são seis fronteiras de PR. O
+scaffold de CTG-0004a/b é substrato não comportamental autorizado pelo Architect do mesmo CTG;
+depois do scaffold, o Inspector escreve RED e os testes ficam congelados antes do Engineer de
+feature. O maestro roda `pnpm install`, guarda `pnpm-lock.yaml` e estende `pnpm check` logo após
+TASK-0009, TASK-0011 e TASK-0015. Banco da rodada: `work/rounds/R-0013/env-detran-r13.sh`.
 
 ## Critérios de aceitação (comandos → resultado)
 
-- `node tools/docs/kb/check.mjs` → baseline + 126 (+1) / 446, atualizado no mesmo commit; `pnpm docs:kb:publish-check` → OK.
-- `pnpm blueprints:check`, `pnpm contracts:check`, `pnpm verify:rls-ddl`, `pnpm verify:decorators` → OK.
-- `pnpm --filter @detran/ops-provisioning test:unit|test:integration|test:e2e` → verdes, incluindo os
-  quatro rejeitos da matriz de prova; `pnpm --filter @detran/shared test` → `policy.spec.ts` cobre `ops:provisioning:*`.
-- `pnpm --filter @detran/teat-mobile typecheck|test|build|lint` e `pnpm --filter @detran/teat-web typecheck|test|build|lint` → verdes.
-- teste tela ↔ ficha ↔ rota: 126/126; matriz de transições: 576/576.
-- `pnpm check`, `pnpm backend:test:ci` → verdes.
+- após TASK-0004: `pnpm docs:kb:check` → exatamente 675 artefatos/446 tokens; publish-check OK;
+- após TASK-0006: `pnpm parameters:test` → 25/25; `pnpm verify:parameter-catalogue` → 89
+  parâmetros e namespaces `teat.*` declarados; somente os três gerados documentados mudam;
+- provisionamento: comandos separados `test:unit`, `test:integration`, `test:e2e`; `contracts:test`,
+  shared policy, RLS, decorators, reset + dois seeds idempotentes em `detran_r13`; toda a matriz
+  P0–P6, não apenas quatro rejeitos;
+- mobile: comandos separados `lint`, `typecheck`, `test`, `build`; 70/70 rotas/fichas, 576/576
+  transições e produto cartesiano de papéis permitidos/omitidos;
+- web: comandos separados `lint`, `typecheck`, `test`, `build`; 60/60 rotas, 56/56 fichas e
+  produto cartesiano de papéis;
+- ao fim de cada CTG: `pnpm check`; CTG-0003 também `pnpm backend:test:ci`; zero skip/todo novo.
 
 ## Mapa entregável → definições
 
@@ -87,6 +105,23 @@ CTG-0004 = 0009…0011 (apps). Um PR por CTG.
 - Provisionamento toca `backend/domains/ops` e `policy.ts`: na onda 6 a outra frente ativa é
   `portal-pwa`, sem lock comum.
 - Impressora real, KMS real e Keystore: fora desta frente (integração); portas com fixtures.
+
+## Adenda estrutural A1 — resposta ao `prompt-review-1=FAIL`
+
+Autorizada pelo Owner em 2026-09-20. Esta adenda substitui integralmente a decomposição e os
+prompts anteriores; não é um ciclo incremental de `REVIEW`.
+
+1. I18n canônico e allowlist são Architect/transcriber sob OD-P46; regeneração é Engineer mecânico.
+2. Matrizes oficiais são portadas antes das fichas, fixadas ao HEAD/hashes da origem somente leitura.
+3. Todos os joins foram serializados em 18 tarefas; plano, task JSON e CTGs têm a mesma cadeia.
+4. Provisioning é uma tríade A→I→E com ADR-0025, DDL 21 e contratos/caminhos resolvidos.
+5. Cada app é A→scaffold E não comportamental→Inspector RED→Engineer feature; testes/configuração
+   têm donos disjuntos e exclusões explícitas.
+6. Contratos de app obrigam H.39/H.54/H.55, roles/policy e produto cartesiano de autorização.
+7. Comandos `lint`, `typecheck`, `test`, `build`, tiers de backend e seeds são invocações separadas.
+8. KB pós-fichas é 675/446; UC-TEAT-013 já existe e não conta como artefato novo.
+9. As quatro rotas web operacionais, além das 56 telas da matriz, são fixadas pelo Architect como
+   `/acesso-negado`, `/conta`, `/erro` e wildcard `**`; não geram fichas de produto.
 
 ## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
 
@@ -112,7 +147,7 @@ Bootstrap em `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, criado diretamente de
 `origin/main` e validado após `fetch --prune`. O mínimo `80d705a` está contido na base. R-0005
 (offline), R-0008/PR #52 (schemas, clientes e contratos TEAT) e R-0014/PRs #60…#67 (scaffold do
 Portal) já estão em `main`; o refresh desta rodada é o PR #68. R-0012 ainda não abriu, portanto
-não há lock ativo em `packages/ui`. CTG-0001…CTG-0004 estão liberados para desenvolvimento e
+não há lock ativo em `packages/ui`. CTG-0001…CTG-0005 estão liberados para desenvolvimento e
 merge contra `main`; nenhum usa base empilhada. Antes de cada PR, o maestro volta a buscar
 `origin/main` e integra avanço sem reescrever branch publicada.
 
@@ -131,6 +166,10 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
   CTGs, fronteiras de escrita, fontes canônicas, dependências/barreiras, ordem scaffold→Inspector
   RED→Engineer, comandos de aceitação, testes de contrato/policy, banco explícito e caminhos
   resolvidos de ADR/DDL.
+- `prompt-review-2` após Adenda A1: **FAIL**, reduzido a 7 achados high. A estrutura 18/18,
+  cadeia/CTGs, matrizes, hashes e modelos foi aceita; persistem lacunas executáveis de fontes do
+  corpus, preflight Git, checkpoint de instalação, geração/export de clientes, path de barrel,
+  dono de `test-setup` e reset/seeds no task JSON. A rodada continua `escalated`; nenhum worker.
 
 ## Retomada
 
@@ -139,14 +178,14 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
 - concluído: worktree/branch em `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`; autorização;
   `pnpm install --frozen-lockfile`; baseline `pnpm check`; `devai doctor`; leitura mandatória;
   concorrência; plano; 12 task JSON; 12 prompts e `compositions.json`;
-- concluído: `prompt-review-1` por Codex/Sol/high, veredito `FAIL` (16 high, 2 low), registrado em
-  `reviews/prompt-review-1.json`;
-- pendente: todos os workers `TASK-0001…0012`, todos os delivery reviews, gates de entrega,
+- concluídos: `prompt-review-1=FAIL` (16 high, 2 low) e `prompt-review-2=FAIL` (7 high), ambos
+  Codex/Sol/high e registrados em `reviews/`;
+- pendente: todos os workers `TASK-0001…0018`, todos os delivery reviews, gates de entrega,
   evidência, PRs, merges, observação e fechamento;
 - último veredito: `FAIL`; nenhum worker autorizado;
-- próximo passo: Architect/humano decide autorizar a reescrita estrutural do plano e prompts para
-  corrigir integralmente os 16 achados high; depois recalcular todas as composições e submeter um
-  novo `prompt-review`. Não tratar este `FAIL` como ciclo `REVIEW` incremental;
+- próximo passo exige nova decisão do Architect/Owner para uma Adenda A2 que corrija os sete
+  achados de `prompt-review-2.json`; pelo §5, este maestro não inicia um terceiro redesenho nesta
+  tentativa nem converte `FAIL` em `REVIEW`;
 - estado Git: branch ainda não publicada, sem PR; integrar qualquer avanço de `origin/main` por
   rebase antes da retomada e repetir os gates se a base mudar substantivamente.
 

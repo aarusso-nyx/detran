@@ -1,19 +1,19 @@
 {
   "schemaVersion": "2.0.0",
-  "id": "TASK-0012",
+  "id": "TASK-0016",
   "round_id": "R-0013",
   "status": "queued",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
-  "title": "Escrever provas RED do app mobile TEAT",
-  "description": "Escrever provas RED do app mobile TEAT conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "title": "Escrever provas RED do app web TEAT",
+  "description": "Escrever provas RED do app web TEAT conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-teat-mobile-tests"],
+  "target_modules": ["MOD-teat-web-tests"],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0004a",
+  "coupled_task_group": "CTG-0004b",
   "coupled_pipeline_position": "inspector",
-  "upstream_task_id": "TASK-0011",
+  "upstream_task_id": "TASK-0015",
   "db_isolation": "database",
   "iteration_count": 0,
   "max_iterations": 2,
@@ -21,10 +21,10 @@
   "tags": ["wp-t4", "wp-t5", "wp-t6"],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
-  "prompt_composition_id": "PC-d57b194cc3afe110",
+  "prompt_composition_id": "PC-01b378b252abf182",
   "acceptance_commands": [
-    ["pnpm", "--filter", "@detran/teat-mobile", "typecheck"],
-    ["pnpm", "--filter", "@detran/teat-mobile", "test"]
+    ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/teat-web", "test"]
   ],
   "created_at": "2026-09-20T03:00:00.000Z",
   "executor": {
@@ -36,7 +36,7 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-terra"
     },
-    "prompt_composition_id": "PC-d57b194cc3afe110",
+    "prompt_composition_id": "PC-01b378b252abf182",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

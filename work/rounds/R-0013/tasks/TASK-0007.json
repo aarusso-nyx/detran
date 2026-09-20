@@ -3,16 +3,21 @@
   "id": "TASK-0007",
   "round_id": "R-0013",
   "status": "queued",
-  "discipline": "inspector",
-  "discipline_specialization": "inspector-tests",
-  "title": "Codificar as provas do provisionamento offline",
-  "description": "Codificar as provas do provisionamento offline conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Modelar provisionamento operacional offline P0 a P6",
+  "description": "Modelar provisionamento operacional offline P0 a P6 conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-ops-provisioning-tests"],
+  "target_modules": [
+    "MOD-adr-0025",
+    "MOD-bp-ops-provisioning",
+    "MOD-ddl-21",
+    "MOD-provisioning-contract"
+  ],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0003",
-  "coupled_pipeline_position": "inspector",
+  "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0006",
   "db_isolation": "database",
   "iteration_count": 0,
@@ -21,12 +26,15 @@
   "tags": ["wp-t4", "wp-t5", "wp-t6"],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
-  "prompt_composition_id": "PC-a43cceaf2b2a762d",
+  "prompt_composition_id": "PC-9d2bdd0aa1d18c03",
   "acceptance_commands": [
-    ["pnpm", "typecheck"],
-    ["pnpm", "verify:role-catalog"]
+    ["pnpm", "blueprints:generate"],
+    ["pnpm", "contracts:openapi"],
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "verify:rls-ddl"]
   ],
-  "created_at": "2026-09-20T02:00:00.000Z",
+  "created_at": "2026-09-20T03:00:00.000Z",
   "executor": {
     "kind": "agent",
     "runtime": "codex-cli",
@@ -36,7 +44,7 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-terra"
     },
-    "prompt_composition_id": "PC-a43cceaf2b2a762d",
+    "prompt_composition_id": "PC-9d2bdd0aa1d18c03",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

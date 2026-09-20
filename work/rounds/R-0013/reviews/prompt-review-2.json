@@ -1,0 +1,76 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0013",
+  "verdict": "FAIL",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0013/prompts/TASK-0001.md",
+      "line": 19,
+      "claim": "The closed corpus list still omits WF-TEAT-001, UC-TEAT-012, WF-TEAT-002, UC-TEAT-007, RN-TEAT-135 and the alcohol blueprint or equivalent source needed to prove all twelve inconsistencies.",
+      "fix": "Add every affected canonical source and only exact destinations that may require reconciliation."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0013/prompts/TASK-0002.md",
+      "line": 5,
+      "claim": "Workers are forbidden from Git but are required to verify sibling HEAD/status/remote and git-diff scope; no maestro preflight artifact delegates those checks.",
+      "fix": "Permit exact read-only Git commands or create a hashed maestro preflight artifact and make diff checks maestro-owned."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0013/plan.md",
+      "line": 72,
+      "claim": "The new ops-provisioning package is created by TASK-0007, but pnpm install/lockfile capture is delayed until after TASK-0009, so Inspector RED may be dependency failure.",
+      "fix": "Insert the maestro install/lock checkpoint immediately after TASK-0007 and before TASK-0008."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0013/tasks/TASK-0007.json",
+      "line": 30,
+      "claim": "Provisioning contracts generate clients, but contracts:clients is absent before contracts:check and no task owns public re-exports in packages/api-clients/src/index.ts.",
+      "fix": "Add contracts:clients, explicit barrel ownership and a public-surface gate."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0013/prompts/TASK-0017.md",
+      "line": 26,
+      "claim": "packages/api-clients/src/generated/index.ts does not exist; the public barrel is packages/api-clients/src/index.ts.",
+      "fix": "Use the real barrel and ensure provisioning re-exports are created upstream."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0013/prompts/TASK-0012.md",
+      "line": 114,
+      "claim": "src/test-setup.ts is writable by scaffold Engineer and Inspector in both apps, contradicting disjoint ownership.",
+      "fix": "Keep test-setup exclusively with scaffold or add a separate Inspector-owned setup fragment."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "work/rounds/R-0013/tasks/TASK-0008.json",
+      "line": 30,
+      "claim": "The Inspector prompt requires reset and two seeds in detran_r13, but task acceptance omits all three operations.",
+      "fix": "Add explicit environment precondition, reset and two separate seed commands to task acceptance."
+    }
+  ],
+  "notes": [
+    "The 18 task JSONs form the exact serial chain and CTGs agree with the plan.",
+    "All 18 prompt hashes, PC identifiers, models and efforts match; JSON parses.",
+    "Sibling HEAD/status and five source hashes match; matrices are 67/576 mobile, 56/163 web and 9 journeys.",
+    "Sheet allowlists match 67 plus D-01/D-04/D-05 and all 56 web screenIds.",
+    "Current baselines are KB 549/446, parameter tests 25 and catalogue 89 entries/14 namespaces."
+  ]
+}
