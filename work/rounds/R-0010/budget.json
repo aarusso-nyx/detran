@@ -3,8 +3,8 @@
   "window": 5,
   "window_input_budget": 800000,
   "checkpoint_threshold": 640000,
-  "estimated_input_total": 492000,
-  "estimated_output_total": 74100,
+  "estimated_input_total": 512000,
+  "estimated_output_total": 76600,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -916,6 +916,15 @@
       "output_tokens": 0,
       "status": "completed",
       "note": "Restricted read-only Codex review returned PASS with no findings"
+    },
+    {
+      "kind": "maestro-validation",
+      "id": "CTG-0002-post-R0013-integrated-candidate",
+      "window": 5,
+      "input_tokens": 20000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "note": "Merged origin/main 2c82b269 cleanly; R-0013 changed only TEAT corpus and DEVAI chain. Frozen install, pnpm check, shared 404, app unit 120, EST unit 1, full reset, seed twice, integration 19, E2E 382 plus 2 todo, upgrade 18 and real PDF/A 2 all passed. Local macOS WeasyPrint library propagation retry classified sensor-error."
     }
   ]
 }

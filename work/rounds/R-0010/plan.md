@@ -795,3 +795,23 @@ e este plano. Definições adicionais ficam nas listas fechadas dos workers.
   `sensor-error`. A execução com o ambiente idêntico ao CI passou integralmente.
 - A entrega está liberada para commit, evidência DEVAI, integração normal de
   `origin/main`, push, PR, CI e merge conforme §9.
+
+### Candidato integrado pós-R-0013 — gates finais (2026-09-20)
+
+- Commit de conteúdo `8f02e914` integrado por merge normal ao `origin/main`
+  `2c82b269`; o merge `cefbb926` trouxe somente o corpus TEAT da R-0013 e a
+  cadeia DEVAI correspondente. Nenhum arquivo BOAT revisado mudou, portanto o
+  `PASS` restrito do ciclo 3 permanece aplicável.
+- `pnpm install --frozen-lockfile` e `pnpm check`: **PASS**. Blueprints,
+  contratos, catálogo de parâmetros, typecheck, limites SENATRAN, RLS, Portal
+  1.314 testes + 14 todo e builds ficaram verdes.
+- Gates dirigidos: shared 404/404, app unit 120/120, EST unit 1/1, reset PostGIS
+  completo, seed duas vezes, app integration 19/19, app E2E 382 PASS + 2 todo,
+  demais pacotes E2E verdes e upgrade 18/18.
+- O tier real instalou Python 3.13.7 e o lock WeasyPrint 70.0 com
+  `--require-hashes`; o rerun documental passou 2/2 com a imagem veraPDF pelo
+  digest aprovado. A primeira invocação local não propagou a biblioteca
+  Homebrew ao subprocesso WeasyPrint no macOS; classificada `sensor-error` e
+  corrigida apenas no ambiente por wrapper temporário, sem mudança no produto.
+- Cadeia DEVAI anterior à nova evidência: válida, head
+  `458f088f1baf5a9471435a0cbf1d00d4931bf262ae6044a172e6fc2cecbc76af`.
