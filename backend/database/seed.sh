@@ -33,6 +33,7 @@ case "$rait_seed_profile" in
       70-fixtures-est-crash.sql
       70-fixtures-portal.sql
       71-fixtures-portal-events.sql
+      72-fixtures-boat-projections.sql
     )
     ;;
   legacy-upgrade)
@@ -52,6 +53,7 @@ case "$rait_seed_profile" in
       70-fixtures-est-crash.sql
       70-fixtures-portal.sql
       71-fixtures-portal-events.sql
+      72-fixtures-boat-projections.sql
     )
     ;;
   *)

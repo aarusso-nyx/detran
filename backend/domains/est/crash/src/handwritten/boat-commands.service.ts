@@ -17,8 +17,11 @@ type Sql = {
 
 type CrashRow = {
   id: string;
+  traffic_agency_id: string;
   state: string;
   national_status: string | null;
+  occurred_at: string;
+  location_description: string | null;
   version: number;
 };
 
@@ -338,7 +341,11 @@ export class BoatCrashCommandsService {
 
   private async record(query: Sql, id: string): Promise<CrashRow> {
     const found = await query.query<CrashRow>(
-      'select id, state, national_status, version from est.crash_record where id = $1 for update',
+      `select id, traffic_agency_id, state, national_status,
+              occurred_at, location_description, version
+         from est.crash_record
+        where id = $1
+        for update`,
       [id],
     );
     if (!found.rows[0])

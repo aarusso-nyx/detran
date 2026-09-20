@@ -91,6 +91,10 @@ application composition.
    to be the official BAT. BAT fields therefore remain pending in DT-061/OD-B08 but do not block
    C-2-13. Signature and informational-content policy for the preliminary report remain separately
    pending until the Owner chooses them.
+   On 2026-09-20 the Owner approved Default D1: this document kind has no signers, PAdES level
+   `NONE`, no TSA and no gov.br level in its initial policy. It carries the approved non-BAT notice
+   and seals only after PDF/A-2b validation; `signature_ref` remains null. A future signed policy is
+   a new policy revision.
 3. The facade flow is `render(templateKey, data)` then `sign(documentId, signer)` when the resolved
    policy permits a resolved signer, then `seal(documentId)`. Rendering resolves the active
    tenant-scoped template and policy, invokes the mounted substrate once in `backend/app`, and
@@ -121,3 +125,15 @@ application composition.
    blocking BOAT PDF/A PR job provisions Chromium, the converter dependencies, and the pinned
    veraPDF image, runs positive and invalid bytes without `skip`, and fails when any dependency is
    unavailable. TASK-0017 owns the corresponding CI and real-tier configuration.
+7. Default D1 approves WeasyPrint 70.0 as the BOAT real PDF/A backend, pinned by the wheel SHA-256
+   recorded in `work/rounds/R-0010/contracts/CTG-0002-documents.md`. It produces PDF/A-2b directly
+   and is followed by veraPDF using the immutable Docker Hub digest recorded there. The real tier
+   must reproduce both generation and validation; the preliminary Architect probe is not delivery
+   evidence.
+8. The sealed BOAT report metadata is persisted in the blueprint owned
+   `est.crash_report_document` table under forced tenant RLS. Rows are inserted
+   only after the validated bytes are uploaded through the application mounted
+   STYNX `S3Service`; `role_app_backend` has no `UPDATE` or `DELETE` privilege on
+   this table. A new issuance inserts a successor row. The full veraPDF result,
+   template version, policy id, hash, storage key and null signature reference
+   survive application restart.

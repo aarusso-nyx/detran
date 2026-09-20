@@ -1,4 +1,4 @@
--- Generated from BP-EST-CRASH-001 v1.0.0 sha256:c18a59211bfcb807a25253f1870329f9736463b1ecef41b564397f1eed088513
+-- Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
 
 -- Regenerable-only DDL for BP-EST-CRASH-001; request-path writes use role_app_backend.
 
@@ -256,6 +256,41 @@ create table if not exists est.crash_subject_request (
 create index if not exists ix_crash_subject_request_tenant_id on est.crash_subject_request (tenant_id);
 create index if not exists ix_crash_subject_request_crash_record_id on est.crash_subject_request (crash_record_id);
 
+create table if not exists est.crash_report_document (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  crash_record_id uuid not null,
+  document_kind varchar(80) not null,
+  template_key varchar(160) not null,
+  template_version varchar(80) not null,
+  policy_id uuid not null,
+  storage_key text not null,
+  content_hash varchar(64) not null,
+  byte_size integer not null,
+  signature_ref text,
+  pdfa_conformance varchar(20) not null,
+  pdfa_validation jsonb not null,
+  supersedes_document_id uuid,
+  sealed_at timestamptz,
+  created_at timestamptz default clock_timestamp() not null,
+  updated_at timestamptz,
+  constraint pk_crash_report_document primary key (id),
+  constraint ck_est_crash_report_document_kind check (document_kind = 'RELATORIO_PRELIMINAR_SINISTRO'),
+  constraint ck_est_crash_report_pdfa check (pdfa_conformance = 'PDF/A-2b'),
+  constraint ck_est_crash_report_hash check (content_hash ~ '^[0-9a-f]{64}$'),
+  constraint ck_est_crash_report_size check (byte_size > 0),
+  constraint ck_est_crash_report_validation check (pdfa_validation ->> 'valid' = 'true' and pdfa_validation #>> '{declared,version}' = 'A-2' and pdfa_validation #>> '{declared,conformance}' = 'b'),
+  constraint fk_est_crash_report_record foreign key (crash_record_id) references est.crash_record (id),
+  constraint fk_est_crash_report_policy foreign key (policy_id) references inf.signature_policy (id),
+  constraint fk_est_crash_report_supersedes foreign key (supersedes_document_id) references est.crash_report_document (id)
+);
+create unique index if not exists ux_est_crash_report_storage_key on est.crash_report_document (tenant_id, storage_key);
+create index if not exists ix_est_crash_report_record_created on est.crash_report_document (tenant_id, crash_record_id, created_at);
+create index if not exists ix_crash_report_document_tenant_id on est.crash_report_document (tenant_id);
+create index if not exists ix_crash_report_document_crash_record_id on est.crash_report_document (crash_record_id);
+create index if not exists ix_crash_report_document_policy_id on est.crash_report_document (policy_id);
+create index if not exists ix_crash_report_document_supersedes_document_id on est.crash_report_document (supersedes_document_id);
+
 select auth.create_rls_policy('est', 'crash_record');
 
 select auth.create_rls_policy('est', 'crash_vehicle');
@@ -278,10 +313,14 @@ select auth.create_rls_policy('est', 'crash_renaest_submission');
 
 select auth.create_rls_policy('est', 'crash_subject_request');
 
+select auth.create_rls_policy('est', 'crash_report_document');
+
 select auth.install_tenant_triggers();
 
 grant usage on schema est to role_app_backend;
 
 grant select, insert, update, delete on all tables in schema est to role_app_backend;
+
+revoke update, delete on table est.crash_report_document from role_app_backend;
 
 grant usage, select on all sequences in schema est to role_app_backend;

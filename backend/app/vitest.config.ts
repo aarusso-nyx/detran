@@ -192,6 +192,12 @@ export default defineConfig({
     passWithNoTests: true,
     fileParallelism: false,
     testTimeout:
-      tier === 'unit' ? 10_000 : tier === 'in-house' ? 120_000 : 30_000,
+      tier === 'unit'
+        ? 10_000
+        : tier === 'real'
+          ? 180_000
+          : tier === 'in-house'
+            ? 120_000
+            : 30_000,
   },
 });

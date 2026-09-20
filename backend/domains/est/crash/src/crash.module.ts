@@ -1,4 +1,4 @@
-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:c18a59211bfcb807a25253f1870329f9736463b1ecef41b564397f1eed088513
+// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
 import { Module } from '@nestjs/common';
 import { CrashRecordController } from './controllers/crash-record.controller.js';
 import { CrashRecordService } from './services/crash-record.service.js';
@@ -33,6 +33,9 @@ import { CrashRenaestSubmissionRepository } from './repositories/crash-renaest-s
 import { CrashSubjectRequestController } from './controllers/crash-subject-request.controller.js';
 import { CrashSubjectRequestService } from './services/crash-subject-request.service.js';
 import { CrashSubjectRequestRepository } from './repositories/crash-subject-request.repository.js';
+import { CrashReportDocumentController } from './controllers/crash-report-document.controller.js';
+import { CrashReportDocumentService } from './services/crash-report-document.service.js';
+import { CrashReportDocumentRepository } from './repositories/crash-report-document.repository.js';
 import { BoatCrashCommandsController } from './handwritten/boat-commands.controller.js';
 import { BoatCrashCommandsService } from './handwritten/boat-commands.service.js';
 
@@ -50,6 +53,7 @@ import { BoatCrashCommandsService } from './handwritten/boat-commands.service.js
     CrashLinkController,
     CrashRenaestSubmissionController,
     CrashSubjectRequestController,
+    CrashReportDocumentController,
   ],
   providers: [
     CrashRecordService,
@@ -74,6 +78,8 @@ import { BoatCrashCommandsService } from './handwritten/boat-commands.service.js
     CrashRenaestSubmissionRepository,
     CrashSubjectRequestService,
     CrashSubjectRequestRepository,
+    CrashReportDocumentService,
+    CrashReportDocumentRepository,
     BoatCrashCommandsService,
   ],
 })

@@ -1,4 +1,4 @@
-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:c18a59211bfcb807a25253f1870329f9736463b1ecef41b564397f1eed088513
+// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
 export interface CreateCrashVehicleDto {
   crash_record_id: string;
   vehicle_snapshot_id?: string | null;

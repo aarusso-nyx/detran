@@ -27,6 +27,16 @@ SELECT auth.install_tenant_triggers();
 
 GRANT USAGE ON SCHEMA auth, tenancy, audit, storage, integration, inf, est, ch, ops TO role_app_backend;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA auth, tenancy, storage, integration, inf, est, ch, ops TO role_app_backend;
+-- The legacy-upgrade fixture applies this file without the optional EST crash
+-- module.  On the current schema, restore the blueprint's append-only grant
+-- after the repository-wide grant above.
+DO $$
+BEGIN
+  IF to_regclass('est.crash_report_document') IS NOT NULL THEN
+    EXECUTE 'REVOKE UPDATE, DELETE ON TABLE est.crash_report_document FROM role_app_backend';
+  END IF;
+END
+$$;
 REVOKE ALL ON TABLE audit.events FROM role_app_backend;
 GRANT SELECT ON TABLE audit.events TO role_app_backend;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA auth, audit, storage, integration, inf, est, ch, ops TO role_app_backend;

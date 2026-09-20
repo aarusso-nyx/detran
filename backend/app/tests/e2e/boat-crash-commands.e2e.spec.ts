@@ -30,6 +30,8 @@ const TEST_DATABASE_URL =
   process.env.DATABASE_URL ??
   `postgresql://${process.env.DB_USER ?? 'postgres'}:${process.env.DB_PASSWORD ?? 'postgres'}@${process.env.DB_HOST ?? 'localhost'}:${process.env.DB_PORT ?? '5432'}/${process.env.DB_NAME ?? 'detran_r10'}`;
 const client = new Client({ connectionString: TEST_DATABASE_URL });
+const REPORT_BYTES = Buffer.from('%PDF-1.7\nfixture-e2e\n%%EOF');
+const REPORT_HASH = createHash('sha256').update(REPORT_BYTES).digest('hex');
 
 let app: Awaited<ReturnType<typeof NestFactory.create>>;
 let idempotencySequence = 0;
@@ -196,12 +198,48 @@ beforeAll(async () => {
 
   await client.connect();
   await client.query(`select set_config('app.role', 'owner', false)`);
-  const { NestFactory: factory } = await import('@nestjs/core');
+  const { Test } = await import('@nestjs/testing');
+  const { DOCUMENTS_FACADE } = await import('@detran/shared');
   const { AppModule } = await import('../../src/app.module.js');
-  app = await factory.create(AppModule.forRoot(), {
-    logger: false,
-    abortOnError: false,
-  });
+  const documents = new Map<string, Buffer>();
+  const module = await Test.createTestingModule({
+    imports: [AppModule.forRoot()],
+  })
+    .overrideProvider(DOCUMENTS_FACADE)
+    .useValue({
+      render: async () => {
+        const documentId = randomUUID();
+        documents.set(documentId, REPORT_BYTES);
+        return {
+          documentId,
+          kind: 'RELATORIO_PRELIMINAR_SINISTRO',
+          storageKey: `e2e/${documentId}.pdf`,
+          contentHash: REPORT_HASH,
+          pdfaConformance: 'PDF/A-2b',
+          supersedesDocumentId: null,
+        };
+      },
+      sign: async () => {
+        throw new Error('Default D1 forbids signing');
+      },
+      seal: async (documentId: string) => ({
+        documentId,
+        kind: 'RELATORIO_PRELIMINAR_SINISTRO',
+        storageKey: `e2e/${documentId}.pdf`,
+        contentHash: REPORT_HASH,
+        pdfaConformance: 'PDF/A-2b',
+        supersedesDocumentId: null,
+        signatureRef: null,
+        sealedAt: '2026-09-20T00:00:00.000Z',
+      }),
+      read: async (documentId: string) => {
+        const bytes = documents.get(documentId);
+        if (!bytes) throw new Error('Document not found');
+        return bytes;
+      },
+    })
+    .compile();
+  app = module.createNestApplication({ logger: false });
   await app.init();
   await app.listen(0);
   const address = app.getHttpServer().address();
@@ -395,7 +433,50 @@ describe('CTG-0002 — comandos HTTP BOAT', () => {
     expect(response.status, JSON.stringify(response.body)).toBe(200);
     expect(response.headers['content-type']).toContain('application/pdf');
     expect(response.body.subarray(0, 4).toString('utf8')).toBe('%PDF');
-    expect(response.body.toString('utf8')).toContain('pdfaid:part');
+    expect(response.headers.etag).toMatch(/^"sha256:[a-f0-9]{64}"$/u);
+    expect(response.headers['content-disposition']).toContain(
+      'relatorio-preliminar-sinistro.pdf',
+    );
+  });
+
+  it('dada a rota do relatório quando cada papel canônico tenta acessar então só a matriz contratada e o admin global passam', async () => {
+    const { DETRAN_ROLES } = await import('@detran/shared');
+    const granted = new Set([
+      'field-agent',
+      'processing-operator',
+      'traffic-authority',
+      // Administradores globais vinculantes de policy.ts.
+      'ADMIN',
+      'GESTOR_DETRAN',
+      'SUPORTE',
+      'technical-admin',
+    ]);
+    for (const role of DETRAN_ROLES) {
+      const response = await request(app.getHttpServer())
+        .get(`/v1/est/crash/records/${BOAT_REGISTERED}/report`)
+        .set(headers(role));
+      expect(response.status, `${role}: ${JSON.stringify(response.body)}`).toBe(
+        granted.has(role) ? 200 : 403,
+      );
+    }
+  });
+
+  it('dado tenant divergente quando pede relatório então falha fechado antes da fachada', async () => {
+    const otherTenant = '00000000-0000-7000-8000-00000000a002';
+    process.env.DETRAN_LOCAL_TENANT_ID = otherTenant;
+    try {
+      const response = await request(app.getHttpServer())
+        .get(`/v1/est/crash/records/${BOAT_REGISTERED}/report`)
+        .set(headers('field-agent', { 'x-tenant-id': otherTenant }));
+      expect(response.status).toBe(403);
+      expect(response.body).toEqual({
+        message: 'Principal is not entitled for tenant context',
+        error: 'Forbidden',
+        statusCode: 403,
+      });
+    } finally {
+      process.env.DETRAN_LOCAL_TENANT_ID = TENANT_ID;
+    }
   });
 
   it('dado crash-record canônico quando sincronizado então C-2-09 aplica recibo, fila, agregado e outbox na mesma transação', async () => {

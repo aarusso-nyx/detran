@@ -4,6 +4,8 @@
 
 **Data da pesquisa:** 2026-09-19
 
+**Decisão:** Default D1 aprovado integralmente pelo Owner em 2026-09-20.
+
 **Decisão Owner já vigente:** o relatório preliminar pode satisfazer C-2-13 sem alegar ser o BAT
 oficial. Os campos normativos do BAT permanecem `source_pending` sob DT-061/OD-B08 e não
 bloqueiam o relatório preliminar.
@@ -70,10 +72,10 @@ decisão de licença. Fontes: [WeasyPrint API](https://doc.courtbouillon.org/wea
 O veraPDF aceita seleção explícita do perfil `2b`. A organização publica imagem CLI no GHCR; na
 data da pesquisa a página oficial mostrava `v1.31.118` e digest
 `sha256:cfb5bff1a2ea0d19a36bed2d09dd89b1b12ea6c4c01be5836019c37f273512d9`.
-Esse valor é **candidato**, não digest aprovado: a máquina local estava sem daemon Docker e a
-resolução independente ainda não foi concluída. Antes de TASK-0016, o maestro deve resolver a tag
-em ambiente com acesso ao registry, registrar plataforma e manifest digest e provar que o pull por
-digest funciona. Fontes: [veraPDF CLI validation](https://docs.verapdf.org/cli/validation/) e
+O Default D1 usa, em vez desse candidato, o digest já publicado pelo STYNX:
+`verapdf/cli@sha256:20202b4bcc2410a25db1f637c7b461a2e0dda1d97dd8a6df658286b30d56c842`.
+Em 2026-09-20 o maestro resolveu o manifesto e executou `docker pull` pelo digest. Fontes:
+[veraPDF CLI validation](https://docs.verapdf.org/cli/validation/) e
 [pacote CLI oficial no GHCR](https://github.com/veraPDF/veraPDF-apps/pkgs/container/cli).
 
 Default ajustável:
@@ -114,9 +116,9 @@ Se o Owner optar por assinatura agora, os defaults recomendados são:
 Esses defaults exigem que o Owner indique a autoridade signatária, a política/OID aplicável, o
 provedor de certificado/custódia e a ACT. Portanto são menos adequados para o desbloqueio imediato.
 
-## 5. Decisões solicitadas ao Owner
+## 5. Decisões aprovadas pelo Owner
 
-Para liberar TASK-0016/0017 pelo caminho mais curto, basta aprovar em conjunto:
+O Owner aprovou em conjunto:
 
 1. **D1-a:** relatório preliminar inicialmente sem PAdES, TSA ou gov.br, com selo técnico
    imutável;
@@ -124,10 +126,11 @@ Para liberar TASK-0016/0017 pelo caminho mais curto, basta aprovar em conjunto:
 3. **D1-c:** WeasyPrint como backend real aprovado para PDF/A-2b, sempre seguido de veraPDF;
 4. **D1-d:** parâmetros ajustáveis de §2/§3 e resolução do digest pelo maestro antes do RED real.
 
-Depois dessa manifestação, o maestro ainda precisa produzir duas evidências técnicas antes do
-despacho do Inspector: digest veraPDF resolvido por plataforma e um PDF/A-2b positivo gerado pelo
-caminho escolhido e aprovado pelo veraPDF. Isso é trabalho de engenharia reproduzível, não uma
-nova decisão de produto.
+As duas evidências técnicas preliminares também foram produzidas em 2026-09-20. O wheel oficial do
+WeasyPrint 70.0 tem SHA-256
+`5043e55e38d2a2af2b2b871e869697b1f65dad5f8b4a3677961d04ceacf9c5fe`. Um PDF gerado com
+`--pdf-variant pdf/a-2b` foi aceito pelo veraPDF 1.30.1 com 144 regras e 1.401 checks aprovados. O
+tier `real` deve reproduzir a prova no código de produção; a execução preliminar não fecha C-2-13.
 
 Se D1-c for rejeitada por impacto de layout, a segunda melhor escolha é Chromium + Ghostscript,
 condicionada à aprovação explícita da licença aplicável. A exigência futura de assinatura deve ser

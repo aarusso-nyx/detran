@@ -131,29 +131,32 @@ registro em `open-decisions-rait.md`, nos §4 dos build packs ou em `open-issues
 
 ## Namespaces i18n (allowlist do verificador)
 
-Uma chave i18n não é um parâmetro: ela não entra nas cinco tabelas acima. Um namespace de
-i18n entra nesta tabela somente para que `verify:parameter-catalogue --check-usage`
+Uma chave de catálogo que não representa parâmetro (como i18n ou template documental) não entra
+nas cinco tabelas acima. Seu namespace entra nesta tabela somente para que
+`verify:parameter-catalogue --check-usage`
 (`tools/parameters/verify.mjs`) deixe de tratar seus literais como candidato a parâmetro
-desconhecido — nunca por exclusão de diretório. Origem: `OD-P46`
+desconhecido — nunca por exclusão de diretório. Para i18n, a origem é `OD-P46`
 (`docs/framework/arch/portal-build-pack.md` §4) e método §4.17
-(`docs/meta/agents/orchestra/README.md`).
+(`docs/meta/agents/orchestra/README.md`); para template documental, a decisão e o catálogo
+autoridade aparecem na própria linha.
 
-| Namespace              | App               | Catálogo                         | Decisão |
-| ---------------------- | ----------------- | -------------------------------- | ------- |
-| `portal.shell`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.common`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.states`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.errors`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.situation`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.screens`       | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.forms`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.legal`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.requests`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.evaluations`   | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.notifications` | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.documents`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.services`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
-| `portal.a11y`          | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json` | OD-P46  |
+| Namespace              | App               | Catálogo                          | Decisão |
+| ---------------------- | ----------------- | --------------------------------- | ------- |
+| `portal.shell`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.common`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.states`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.errors`        | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.situation`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.screens`       | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.forms`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.legal`         | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.requests`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.evaluations`   | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.notifications` | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.documents`     | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.services`      | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `portal.a11y`          | `apps/portal/web` | `src/app/i18n/portal.pt-BR.json`  | OD-P46  |
+| `est.crash`            | `backend/app`     | `inf.normative_document_template` | OD-B08  |
 
 ## Regras do catálogo
 

@@ -1,7 +1,9 @@
 # R-0010 — frente `boat-backend` (WP-B0…B3 do BOAT: política, modelo `est/crash`, comandos, sincronização, RENAEST e contratos)
 
-**Status:** CTG-0001 integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e`. Em CTG-0002, TASK-0007…0015, TASK-0018…0022 estão concluídas; contratos passaram 40/40 testes e `contracts:check` com 152 operações e 61 clientes. Em 2026-09-19, o Owner autorizou `role_app_backend` a executar somente a função estreita `jobs.discover_active_boat_renaest_tenants()`; TASK-0020 concluiu a porta SQL e o wiring na segunda iteração. O Owner também decidiu que o relatório preliminar pode satisfazer C-2-13 sem alegar ser BAT oficial; os campos do BAT permanecem `source_pending`, mas deixaram de bloquear C-2-13. TASK-0016/0017 permanecem bloqueadas pela escolha da política inicial do relatório e pelas fontes técnicas de PDF/A/veraPDF. CTG-0002 ainda não pode receber revisão final, evidência ou merge. Checkpoint detalhado em §Auditoria de continuidade. Autorização do Owner em
-`AUTHORIZATION.md`. Reviewer: Opus via `tools/orchestra/bridge.sh claude`.
+**Status:** CTG-0001 integrado pelo PR #55 em `4f0345532433fb37670447fe22f32bc95ffc0f9e`. Em CTG-0002, TASK-0007…0015, TASK-0018…0022 estão concluídas; contratos passaram 40/40 testes e `contracts:check` com 152 operações e 61 clientes. Em 2026-09-19, o Owner autorizou `role_app_backend` a executar somente a função estreita `jobs.discover_active_boat_renaest_tenants()`; TASK-0020 concluiu a porta SQL e o wiring na segunda iteração. O Owner decidiu que o relatório preliminar pode satisfazer C-2-13 sem alegar ser BAT oficial e, em 2026-09-20, aprovou o Default D1 completo. WeasyPrint 70.0 e o digest veraPDF foram resolvidos e uma prova preliminar PDF/A-2b passou; TASK-0016/0017 estão desbloqueadas para execução sequencial. CTG-0002 ainda não pode receber revisão final, evidência ou merge antes dos gates. Checkpoint detalhado em §Auditoria de continuidade. Autorização do Owner em
+`AUTHORIZATION.md`. Reviewer: by temporary Owner exception on 2026-09-20, an
+isolated Codex Auditor via `tools/orchestra/bridge.sh codex` during this session;
+the normal Opus reviewer resumes when the Owner reports Claude available.
 **Concorrência:** R-0005, R-0008 e R-0009 estão em `main`. Fila de sincronização em `backend/domains/ops/offline-sync` (contrato em `work/rounds/R-0008/contracts/CTG-0002.md`; schema `docs/framework/schemas/teat-offline-sync-batch.schema.json`); evidência em `backend/domains/ops/evidence`; `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`) e `policy-routes.e2e.spec.ts` prontos (estender com `est:*`). Na inspeção de 2026-09-19, a worktree R-0007 `rait-backend` só mantém alterações nos três caminhos de composição `backend/app/src/app.module.ts`, `package.json` e `pnpm-lock.yaml`; os caminhos de documentos/ADR/catálogo normativo não aparecem modificados. A R-0007 confirmou documentalmente que `MOD-shared-documents`, `MOD-adr-0018`, `MOD-inf-normative-document-catalogue` e `MOD-rait-test-strategy` foram liberados no fechamento local de CTG-0001/CTG-0002. Os Engineers de projeções/job/documentos serializam `app.module.ts`.
 **Janelas previstas:** 3.
 
@@ -63,7 +65,10 @@ anteriores em TEAT/Portal, fora da alteração do job. TASK-0016/0017 continuam
 paradas pelas fontes técnicas de PDF/A/veraPDF e pela política inicial do
 relatório registradas por TASK-0015. A decisão Owner de 2026-09-19 retirou os
 campos normativos do BAT dessa lista de bloqueios: o BAT permanece
-`source_pending` sob DT-061/OD-B08 e não é inferido do relatório.
+`source_pending` sob DT-061/OD-B08 e não é inferido do relatório. Em 2026-09-20,
+o Owner aprovou o Default D1 completo; o maestro resolveu os pinos técnicos e
+provou preliminarmente WeasyPrint 70.0 → PDF/A-2b → veraPDF 1.30.1. TASK-0016
+e TASK-0017 estão liberadas, mantendo C-2-13 aberto até o gate real de produção.
 
 **Continuidade desbloqueada concluída em 2026-09-19:** TASK-0007 passou a
 emitir `schemaVersion: 1` separado da versão do agregado; banco descartável
@@ -296,6 +301,22 @@ ao reviewer produziu JSON inválido e foi rejeitado pela ponte, sem veredito.
 
 ## Triagem
 
+- Integração R-0007 sobre Default D1: `plant-bug` em quatro contratos de
+  integração. O inventário fechado de `apply.sh` foi atualizado de 57 para 60
+  DDLs ordinários (63 arquivos com os três scripts manuais); o grant global do
+  DDL 20 passou a restaurar condicionalmente a revogação append-only após o DDL
+  70; `72-fixtures-boat-projections.sql` entrou nos dois perfis fechados de
+  seed; e o sensor de worklist volta à identidade owner antes de comparar a
+  evidência visível antes/depois da negação RLS. Nenhum teste foi relaxado.
+  A primeira repetição do E2E completo teve `sensor-error` transitório do
+  parser HTTP em `portal-payload-lint`; a suíte passou isoladamente 27/27 e o
+  E2E completo passou no rerun com 382 testes e 2 `todo`. Upgrade 18/18, real
+  PDF/A 2/2, blueprints e `pnpm check` passaram.
+
+- TASK-0016/0017 Default D1: a primeira execução agregada de backend não exportou `DB_NAME`, então um sensor interno usou o banco padrão parcial; classificação `sensor-error`. A repetição com banco dedicado passou unit e integration. A primeira repetição E2E encontrou o mock SENATRAN inativo; classificação `sensor-error`. Com o mock oficial ativo, `pnpm backend:test:e2e` passou 20 arquivos, 267 testes e 2 `todo` preexistentes. Nenhum teste foi relaxado.
+
+- TASK-0016/0017 pós-D-13-08: o primeiro `backend:test:ci` encontrou a asserção estrutural ainda fixada em 11 entidades após a adição Architect de `CrashReportDocument`; classificação `plant-bug`. A expectativa foi atualizada para as 12 entidades autorizadas pelo blueprint. O primeiro teste dirigido sem `DB_NAME` repetiu o sensor do banco padrão parcial; com `DB_NAME=detran_r10_documents`, EST integration passou 21/21. Após reset completo, duas execuções de seed e mock SENATRAN ativo, `pnpm backend:test:ci` passou integralmente, inclusive app E2E 20 arquivos, 267 testes e 2 `todo`.
+
 - Integração pós-R-0009, gate `backend:test:ci`: primeira execução parou em
   `portal-identity` por instalação ausente no worktree; `pnpm install
 --frozen-lockfile` restaurou os links de workspace sem mudar o lockfile.
@@ -431,6 +452,57 @@ P-09 ou rota cidadã de BAT é inferida de projeção interna: identidade confi�
 do titular e os controles de RN-DASH-161 permanecem fronteiras explícitas.
 
 ## Retomada
+
+### Checkpoint Default D1 pós-R-0007 — 2026-09-20
+
+- Branch publicado `orchestra/boat-backend`, HEAD
+  `8aa5b5f9` após merge normal de `origin/main=a0f62cb67383ba31354f4c72e24bec91a3f22138`.
+  Alterações locais do Default D1 permanecem sem commit; stash de segurança
+  `stash@{0}` e snapshot `/tmp/r0010-documents-pre-r0007-1789880912` foram
+  preservados.
+- TASK-0016 e TASK-0017 estão `completed`. Default D1 produz
+  `RELATORIO_PRELIMINAR_SINISTRO` 1.0.0 em PDF/A-2b por WeasyPrint 70.0,
+  valida com veraPDF por digest, sela SHA-256, persiste metadados/evidência SQL
+  append-only sob RLS e bytes no `S3Service` STYNX. BAT oficial e seus campos
+  permanecem `source_pending`.
+- Gates finais: shared 404/404; app unit 116/116; app integration 19/19; Portal
+  projection integration 7/7; E2E completo 382 aprovados e 2 `todo`; upgrade
+  18/18; real documental 2/2 com 1 PostGIS não relacionado ignorado;
+  `blueprints:check`, `git diff --check` e `pnpm check` PASS. O primeiro E2E
+  completo teve erro transitório de parser HTTP; rerun completo e reprodução
+  isolada 27/27 passaram.
+- O reviewer obrigatório ainda não emitiu veredito. A tentativa anterior foi
+  bloqueada pela cota semanal do Claude CLI. Em 2026-09-20, o Owner autorizou
+  excepcionalmente a família Codex como reviewer durante esta sessão, até novo
+  aviso de disponibilidade do Claude. Regenerar o diff/prompt final e executar
+  exatamente `tools/orchestra/bridge.sh codex gpt-5.6-sol
+work/rounds/R-0010/reviews/delivery-review-CTG-0002-documents-cycle-1.md
+work/rounds/R-0010/reviews/delivery-review-CTG-0002-documents-cycle-1.json
+/Volumes/Thiamat\ II/stech/detran-worktrees/boat-backend`. Somente `PASS`
+  libera commit, evidência, push, PR, CI e merge.
+
+### Delivery review documental — Codex ciclo 1 (2026-09-20)
+
+A exceção de família autorizada pelo Owner foi executada em sandbox somente
+leitura por `gpt-5.6-sol`. O JSON válido
+`reviews/delivery-review-CTG-0002-documents-cycle-1.json` retornou **FAIL**, com
+seis achados `high` e um `low`: resolução transitiva STYNX 1.4.0 incompatível
+com ADR-0015; ausência de prova integrada da fachada com `S3Service`; teste de
+persistência sem comparar o resultado veraPDF integral produzido pela fachada;
+negação cross-tenant aceitando dois status; caminhos independentes de falha do
+renderer/template/política sem prova; e dependências WeasyPrint sem hashes
+completos. A referência residual a Chromium é `low`. Conforme §8 do maestro,
+nenhum commit, evidência, push ou PR é permitido antes da escalada Owner.
+
+### Remediação escalada do delivery review — 2026-09-20
+
+O Owner autorizou corrigir o `FAIL` do ciclo 1 e repetir o review. A remediação
+ficou restrita aos seis achados `high` e ao `low`: peer STYNX fixado em 1.3.1;
+prova integrada pela fachada, repositório SQL e adapter `S3Service`, com
+recriação e leitura; comparação integral da evidência veraPDF; negação tenant
+exata; testes independentes de runner/template/política; requirements lock com
+hashes completos e Python fixado; texto residual de Chromium removido. O ciclo
+2 deve revisar somente essas correções conforme a regra da R-0006.
 
 ### Decisão do Owner — job mensal
 
@@ -705,3 +777,21 @@ Em `09963911d3d37e4e2ce7e7d79f853bf78f6a71a9`, o maestro leu, nesta ordem:
 `docs/meta/knowledge-base/decision-closure-plan.md`, `steering.md` §H,
 `docs/meta/agents/{architect-blueprint,engineer-backend,engineer-frontend,inspector-tests,transcriber-docs}.md`
 e este plano. Definições adicionais ficam nas listas fechadas dos workers.
+
+### Checkpoint de integração CTG-0002 — delivery review PASS (2026-09-20)
+
+- O ciclo 2 Codex reavaliou somente os sete achados do ciclo 1: seis highs e o
+  low foram aceitos como corrigidos; restou um high porque `setup-python`
+  estava no job `evidence-gate`.
+- O Engineer moveu o action fixado `actions/setup-python` v6.2.0 e Python
+  3.13.7 para `boat-documents-real`, antes do venv e da instalação única
+  `--require-hashes`. O ciclo 3 restrito retornou **PASS**, sem achados.
+- Gates pós-remediação: app unit 120/120, integration 19/19, E2E 382 PASS + 2
+  todo preexistentes, upgrade 18/18, tier real documental 2/2, instalação
+  Python integralmente hasheada, `pnpm install --frozen-lockfile`,
+  `git diff --check` e `pnpm check` completos PASS.
+- O primeiro E2E pós-remediação omitiu o mock SENATRAN e a preparação RAIT; o
+  segundo não propagou `SENATRAN_MOCK_BASE_URL`. Ambos foram classificados
+  `sensor-error`. A execução com o ambiente idêntico ao CI passou integralmente.
+- A entrega está liberada para commit, evidência DEVAI, integração normal de
+  `origin/main`, push, PR, CI e merge conforme §9.

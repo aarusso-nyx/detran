@@ -4,11 +4,20 @@ import {
   Get,
   Headers,
   HttpCode,
+  Inject,
   Param,
   Post,
   Res,
 } from '@nestjs/common';
-import { Action, Audit, DetranError, Resource, etagOf } from '@detran/shared';
+import {
+  Action,
+  Audit,
+  DOCUMENTS_FACADE,
+  DetranError,
+  Resource,
+  etagOf,
+  type DocumentsFacade,
+} from '@detran/shared';
 
 import { BoatCrashCommandsService } from './boat-commands.service.js';
 
@@ -32,7 +41,10 @@ function requireMatch(header: string | undefined, version: number): void {
 @Controller('v1/est/crash')
 @Resource('est:crash-record')
 export class BoatCrashCommandsController {
-  constructor(private readonly commands: BoatCrashCommandsService) {}
+  constructor(
+    private readonly commands: BoatCrashCommandsService,
+    @Inject(DOCUMENTS_FACADE) private readonly documents: DocumentsFacade,
+  ) {}
 
   private async command(
     id: string,
@@ -250,18 +262,24 @@ export class BoatCrashCommandsController {
   }
 
   @Get('records/:id/report')
-  @Action('read')
-  report(
-    @Param('id') _id: string,
+  @Action('report')
+  async report(
+    @Param('id') id: string,
     @Res({ passthrough: true }) res: ResponseLike,
   ) {
-    // The concrete ADR-0018 façade is pending its owning scope. This keeps the
-    // legacy route response shape for now, but is not a PDF/A implementation.
+    const crash = await this.commands.current(id);
+    const rendered = await this.documents.render(
+      'est.crash.report.preliminary',
+      crash as unknown as Record<string, unknown>,
+    );
+    const sealed = await this.documents.seal(rendered.documentId);
+    const bytes = await this.documents.read(sealed.documentId);
     res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('ETag', `"sha256:${sealed.contentHash}"`);
     res.setHeader(
       'Content-Disposition',
-      'inline; filename="bat-preliminar.pdf"',
+      'inline; filename="relatorio-preliminar-sinistro.pdf"',
     );
-    return res.end(Buffer.from('%PDF-1.4\n% pdfaid:part 2\n%%EOF\n'));
+    return res.end(Buffer.from(bytes));
   }
 }

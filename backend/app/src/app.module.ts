@@ -117,6 +117,7 @@ import {
   type PortalPublicRequestLike,
 } from './detran-runtime.js';
 import { PortalDelegationTargetsModule } from './portal-delegation.providers.js';
+import { BoatDocumentsRuntimeModule } from './boat-documents.js';
 import { PortalNationalReadPortsModule } from './portal-national-read.providers.js';
 import { PortalStreamController } from './portal-stream.controller.js';
 import {
@@ -634,6 +635,7 @@ export class AppModule {
         StynxTenancyModule.forRoot({}),
         StynxAuditModule.forRoot({ sink: detranAuditSink }),
         StynxStorageModule.forRoot(detranStorageOptions()),
+        BoatDocumentsRuntimeModule,
         StynxPlatformPipelineModule.forRoot(detranPipelineOptions()),
         StynxHealthModule.forRoot(
           detranHealthOptions(

@@ -506,6 +506,11 @@ const EST_COMMAND_RULES: Array<[string, string, readonly DetranRole[]]> = [
   ['crash-record', 'cancel', ['field-agent', 'traffic-authority']],
   ['crash-record', 'transmit', ['processing-operator', 'traffic-authority']],
   ['crash-record', 'rectify', ['processing-operator', 'traffic-authority']],
+  [
+    'crash-record',
+    'report',
+    ['field-agent', 'processing-operator', 'traffic-authority'],
+  ],
   ['crash-record', 'archive', ['traffic-authority']],
   [
     'crash-subject-request',

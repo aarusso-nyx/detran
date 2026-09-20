@@ -103,6 +103,10 @@ describe('CTG-0002 worklist corrective database boundary', () => {
         ),
       ).rejects.toMatchObject({ code: '42501' });
       await client.query('rollback to savepoint ctg2_worklist_rls_denial');
+      // Compare the same owner-visible evidence set captured before the RLS
+      // denial.  The application role intentionally sees zero rows without a
+      // tenant context, which is the boundary exercised above.
+      await client.query('reset role');
       const after = await client.query<{ outbox: string; audit: string }>(
         `select
            (select count(*)::text from integration.outbox where tenant_id = $1) as outbox,

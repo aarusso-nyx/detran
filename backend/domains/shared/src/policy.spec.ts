@@ -60,6 +60,10 @@ describe('DETRAN unified policy kit', () => {
           : [[`est:${resource}:create`, []] as [string, string[]]]),
       ]),
       ['est:crash-record:start', ['field-agent']],
+      [
+        'est:crash-record:report',
+        ['field-agent', 'processing-operator', 'traffic-authority'],
+      ],
       ['est:crash-record:add-vehicle', ['field-agent']],
       ['est:crash-record:add-person', ['field-agent']],
       ['est:crash-record:add-victim', ['field-agent']],

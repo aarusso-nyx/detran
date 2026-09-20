@@ -1,0 +1,20 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": ".github/workflows/ci.yml",
+      "line": 255,
+      "claim": "O job `boat-documents-real` não executa `actions/setup-python`; o action e Python 3.13.7 foram fixados no job isolado `evidence-gate`, enquanto a instalação documental usa o `python` ambiente do runner. Portanto, o Python da única instalação com `--require-hashes` continua não fixado.",
+      "fix": "Mover ou repetir o passo `actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405` com `python-version: '3.13.7'` dentro de `boat-documents-real`, antes da criação do venv, e repetir o gate."
+    }
+  ],
+  "notes": [
+    "Os achados 1, 2, 3, 4, 5 e 7 do ciclo anterior estão corrigidos.",
+    "O lockfile não contém resolução STYNX 1.4.0.",
+    "O requirements lock cobre as dependências declaradas com hashes e a CI realiza uma única instalação `pip install --require-hashes`."
+  ]
+}

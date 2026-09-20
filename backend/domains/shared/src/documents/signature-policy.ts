@@ -11,7 +11,7 @@ import type { DocumentKind } from './document-kind.js';
  * PAdES-B-LT + TSA para decisões e atas (steering A.8). Outros níveis são
  * OD proposta — a união cresce quando a decisão existir.
  */
-export type PadesLevel = 'PAdES-B-LT';
+export type PadesLevel = 'NONE' | 'PAdES-B-LT';
 
 /** Conformidade validada por @stynx-nyx/pdf-a (ADR-0018 Context). */
 export type PdfaConformance = 'PDF/A-2b';

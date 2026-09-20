@@ -1,4 +1,4 @@
-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:c18a59211bfcb807a25253f1870329f9736463b1ecef41b564397f1eed088513
+// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
 export * from './controllers/crash-record.controller.js';
 export * from './dto/create-crash-record.dto.js';
 export * from './entities/crash-record.entity.js';
@@ -54,5 +54,10 @@ export * from './dto/create-crash-subject-request.dto.js';
 export * from './entities/crash-subject-request.entity.js';
 export * from './repositories/crash-subject-request.repository.js';
 export * from './services/crash-subject-request.service.js';
+export * from './controllers/crash-report-document.controller.js';
+export * from './dto/create-crash-report-document.dto.js';
+export * from './entities/crash-report-document.entity.js';
+export * from './repositories/crash-report-document.repository.js';
+export * from './services/crash-report-document.service.js';
 export * from './crash.module.js';
 export * from './handwritten/index.js';
