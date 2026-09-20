@@ -2,6 +2,7 @@ import { RequestContextMutator } from '@stynx-nyx/core';
 import { Database } from '@stynx-nyx/data';
 import {
   BoatRenaestJobService,
+  type BoatRenaestExecutionTarget,
   type BoatRenaestMonthlyLedger,
   type BoatRenaestTenantDiscovery,
 } from './boat-renaest-job.service.js';
@@ -14,14 +15,27 @@ export const BOAT_RENAEST_MONTHLY_LEDGER = Symbol(
   'BOAT_RENAEST_MONTHLY_LEDGER',
 );
 
-/**
- * The administrative discovery function has deliberately no application-role
- * grant in DDL 75. Until the Owner supplies a separately authorized control
- * plane port, booting this provider must not enumerate tenants by owner role.
- */
-export class UnconfiguredBoatRenaestTenantDiscovery implements BoatRenaestTenantDiscovery {
-  async listEligible(): Promise<readonly never[]> {
-    throw new Error('BOAT RENAEST administrative discovery is not configured');
+interface BoatRenaestExecutionTargetRow {
+  tenant_id: string;
+  actor_id: string;
+  timezone: string;
+}
+
+export class SqlBoatRenaestTenantDiscovery implements BoatRenaestTenantDiscovery {
+  constructor(private readonly database: Database) {}
+
+  async listEligible(): Promise<readonly BoatRenaestExecutionTarget[]> {
+    const result = await this.database.tx((transaction) =>
+      transaction.query<BoatRenaestExecutionTargetRow>(
+        `select tenant_id, actor_id, timezone
+           from jobs.discover_active_boat_renaest_tenants()`,
+      ),
+    );
+    return result.rows.map((row) => ({
+      tenantId: row.tenant_id,
+      actorId: row.actor_id,
+      timezone: row.timezone,
+    }));
   }
 }
 

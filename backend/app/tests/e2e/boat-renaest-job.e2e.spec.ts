@@ -55,7 +55,7 @@ describe('substrato e isolamento do job T-BOAT-TRANSM', () => {
     ).toBe(true);
   });
 
-  it('dado o papel role_app_backend quando a superfície administrativa é consultada então não recebe EXECUTE de provisionamento ou descoberta', async () => {
+  it('dado o papel role_app_backend quando a superfície administrativa é consultada então recebe EXECUTE apenas para descoberta', async () => {
     if (!client) {
       const ddl = await readFile(
         new URL(
@@ -68,7 +68,13 @@ describe('substrato e isolamento do job T-BOAT-TRANSM', () => {
         'REVOKE ALL ON FUNCTION jobs.discover_active_boat_renaest_tenants() FROM PUBLIC',
       );
       expect(ddl).toContain(
+        'GRANT EXECUTE ON FUNCTION jobs.discover_active_boat_renaest_tenants() TO role_app_backend',
+      );
+      expect(ddl).toContain(
         'REVOKE ALL ON FUNCTION jobs.provision_boat_renaest_identity(uuid, uuid, uuid) FROM PUBLIC',
+      );
+      expect(ddl).toContain(
+        'REVOKE ALL ON FUNCTION jobs.revoke_boat_renaest_identity(uuid, uuid, text) FROM PUBLIC',
       );
       return;
     }
@@ -81,7 +87,8 @@ describe('substrato e isolamento do job T-BOAT-TRANSM', () => {
          from information_schema.role_routine_grants
         where specific_schema = 'jobs'
           and routine_name = any($1::text[])
-          and grantee = 'role_app_backend'`,
+          and grantee = 'role_app_backend'
+        order by routine_name`,
       [
         [
           'discover_active_boat_renaest_tenants',
@@ -90,7 +97,12 @@ describe('substrato e isolamento do job T-BOAT-TRANSM', () => {
         ],
       ],
     );
-    expect(result.rows).toEqual([]);
+    expect(result.rows).toEqual([
+      {
+        routine_name: 'discover_active_boat_renaest_tenants',
+        grantee: 'role_app_backend',
+      },
+    ]);
   });
 
   it('dado a descoberta administrativa quando sua definição é inspecionada então ela não acessa est ou integration', async () => {

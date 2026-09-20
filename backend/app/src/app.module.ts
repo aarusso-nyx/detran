@@ -157,7 +157,7 @@ import {
   BOAT_RENAEST_MONTHLY_LEDGER,
   BOAT_RENAEST_TENANT_DISCOVERY,
   SqlBoatRenaestMonthlyLedger,
-  UnconfiguredBoatRenaestTenantDiscovery,
+  SqlBoatRenaestTenantDiscovery,
   createBoatRenaestJobService,
 } from './boat-renaest-job.providers.js';
 import { BoatRenaestJobService } from './boat-renaest-job.service.js';
@@ -650,7 +650,9 @@ export class AppModule {
         BoatRenaestTransmissionService,
         {
           provide: BOAT_RENAEST_TENANT_DISCOVERY,
-          useClass: UnconfiguredBoatRenaestTenantDiscovery,
+          useFactory: (database: Database) =>
+            new SqlBoatRenaestTenantDiscovery(database),
+          inject: [Database],
         },
         {
           provide: BOAT_RENAEST_MONTHLY_LEDGER,

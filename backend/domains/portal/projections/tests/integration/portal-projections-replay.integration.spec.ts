@@ -281,11 +281,52 @@ describe('CTG-0002 §7.6 — replay das cinco projeções (C-0002-57)', () => {
       }
     });
 
-    // primeira passagem: a mesma janela que o rebuild lê (topic inf.% | rait.%), em ordem (created_at, id)
+    // primeira passagem: a mesma janela canônica que o rebuild lê, incluindo
+    // BOAT uma única vez por (domainEvent, aggregate.id, aggregate.version).
     await inTenantTx(async (transaction) => {
       const projectors = buildProjectors(transaction);
       const window = await transaction.query<{ payload: unknown }>(
-        `select payload from integration.outbox where (topic like 'inf.%' or topic like 'rait.%') order by created_at, id`,
+        `with candidates as (
+           select id, created_at, topic, payload
+             from integration.outbox
+            where (
+              topic like 'inf.%'
+              or topic like 'rait.%'
+              or topic in ('crash.changed', 'crash.renaest.changed')
+              or topic like 'SINISTRO_%'
+            )
+              and (
+                coalesce(payload ->> 'domainEvent', '') not like 'SINISTRO_%'
+                or (
+                  topic = payload ->> 'domainEvent'
+                  and topic not in ('crash.changed', 'crash.renaest.changed')
+                )
+                or (
+                  payload ->> 'domainEvent' = 'SINISTRO_RECEBIDO_SINCRONIZACAO'
+                  and topic in ('SINISTRO_RECEBIDO_SINCRONIZACAO', 'crash.changed')
+                )
+              )
+         ), canonical as (
+           select id, created_at, payload,
+                  row_number() over (
+                    partition by case
+                      when coalesce(payload ->> 'domainEvent', '') like 'SINISTRO_%'
+                        then concat_ws(
+                          ':',
+                          payload ->> 'domainEvent',
+                          payload -> 'aggregate' ->> 'id',
+                          payload -> 'aggregate' ->> 'version'
+                        )
+                      else id::text
+                    end
+                    order by created_at, id
+                  ) as factual_rank
+             from candidates
+         )
+         select payload
+           from canonical
+          where factual_rank = 1
+          order by created_at, id`,
       );
       expect(window.rows.length).toBeGreaterThanOrEqual(10);
       for (const row of window.rows)
@@ -304,7 +345,7 @@ describe('CTG-0002 §7.6 — replay das cinco projeções (C-0002-57)', () => {
     expect(firstCounts.infraction_view).toBeGreaterThanOrEqual(5);
     expect(firstCounts.process_timeline).toBeGreaterThanOrEqual(3);
     expect(firstCounts.points_view).toBeGreaterThanOrEqual(1);
-    expect(firstCounts.crash_view ?? 0).toBe(0);
+    expect(firstCounts.crash_view).toBeGreaterThanOrEqual(1);
     expect(firstCounts.exam_view ?? 0).toBe(0);
 
     const failedFirst = await asOwner(() =>

@@ -212,3 +212,4 @@ REVOKE ALL ON FUNCTION jobs.require_active_membership(uuid, uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION jobs.provision_boat_renaest_identity(uuid, uuid, uuid) FROM PUBLIC;
 REVOKE ALL ON FUNCTION jobs.revoke_boat_renaest_identity(uuid, uuid, text) FROM PUBLIC;
 REVOKE ALL ON FUNCTION jobs.discover_active_boat_renaest_tenants() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION jobs.discover_active_boat_renaest_tenants() TO role_app_backend;

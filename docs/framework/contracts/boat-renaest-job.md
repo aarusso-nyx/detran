@@ -3,7 +3,7 @@ id: CONTRACT-BOAT-RENAEST-JOB
 title: Contrato de execução do job BOAT RENAEST
 status: draft
 apps: [boat]
-updated: 2026-09-16
+updated: 2026-09-19
 ---
 
 # Contrato de execução de `T-BOAT-TRANSM`
@@ -41,7 +41,10 @@ permitida é `jobs.discover_active_boat_renaest_tenants()`, que retorna somente
 
 A função tem privilégio administrativo apenas para a leitura mínima de
 `auth.*` e `jobs.*`. Ela não possui nem concede acesso a `est.*` ou
-`integration.*`. O DDL não semeia conta, ator ou tenant de produção.
+`integration.*`. Em 2026-09-19, o Owner autorizou `role_app_backend` a executar
+somente `jobs.discover_active_boat_renaest_tenants()`. O papel continua sem DML
+nas tabelas de identidade e sem `EXECUTE` nas funções de provisionamento ou
+revogação. O DDL não semeia conta, ator ou tenant de produção.
 
 ## 3. Identidade, provisionamento e `RequestContext`
 
@@ -167,13 +170,13 @@ sempre `role_app_backend` sob RLS.
 
 ## 7. Decisões e bloqueio remanescente
 
-| Decisão                                     | Limite aprovado                                                                                                               | Estado                                                                                                            |
-| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| OD-B14 — descoberta e identidade por tenant | Conta técnica por tenant, provisionamento/revogação auditáveis, descoberta mínima de tenants e vínculos ativos.               | Aprovada pelo Owner; DDL 75 materializa o controle, mas não o expõe sem porta autorizada.                         |
-| OD-B15 — âncora mensal                      | Dia 1 às 12h no fuso `auth.tenants.timezone`; regra DST em §4.                                                                | Aprovada pelo Owner; disparo único recalculado.                                                                   |
-| Prova de adaptação STYNX jobs               | Propagação de identidade para schedule materializada e separação comprovada entre controle `jobs.*` e SQL de domínio app/RLS. | Bloqueio remanescente: `StynxJobsModule` não dispara BOAT.                                                        |
-| Autorização da porta administrativa         | Papel autorizado e fonte confiável do ator administrativo no banco/request context.                                           | Bloqueio remanescente: nenhuma função `SECURITY DEFINER` recebe `EXECUTE`; membership ativa sozinha não autoriza. |
+| Decisão                                     | Limite aprovado                                                                                                               | Estado                                                                                   |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| OD-B14 — descoberta e identidade por tenant | Conta técnica por tenant, provisionamento/revogação auditáveis, descoberta mínima de tenants e vínculos ativos.               | Aprovada pelo Owner; `role_app_backend` recebe somente `EXECUTE` na descoberta estreita. |
+| OD-B15 — âncora mensal                      | Dia 1 às 12h no fuso `auth.tenants.timezone`; regra DST em §4.                                                                | Aprovada pelo Owner; disparo único recalculado.                                          |
+| Prova de adaptação STYNX jobs               | Propagação de identidade para schedule materializada e separação comprovada entre controle `jobs.*` e SQL de domínio app/RLS. | Bloqueio remanescente: `StynxJobsModule` não dispara BOAT.                               |
+| Autorização da porta administrativa         | `role_app_backend` executa somente a descoberta estreita; provisionamento/revogação permanecem fora do papel da aplicação.    | Aprovada pelo Owner em 2026-09-19; TASK-0020 concluída na segunda iteração.              |
 
-O Engineer monta a porta administrativa, orquestrador dedicado e registro no
-`AppModule` somente após a definição dessa porta autorizada. Nenhuma conta
-técnica real é criada por esta tarefa.
+O Engineer monta a porta SQL, o orquestrador dedicado e o registro no
+`AppModule` contra essa função. Nenhuma conta técnica real é criada por esta
+tarefa.
