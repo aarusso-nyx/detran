@@ -109,6 +109,8 @@ export const PROJECTOR_BY_AGGREGATE_KIND: Readonly<
   Record<string, readonly PortalProjectionName[]>
 > = {
   crash: ['crash_view'],
+  'crash-record': ['crash_view'],
+  'crash-renaest-submission': ['crash_view'],
   exam: ['exam_view'],
 };
 
@@ -157,24 +159,112 @@ const INSERT_APPLIED_SQL = `insert into portal.projection_applied_event
 
 const DELETE_APPLIED_SQL = `delete from portal.projection_applied_event where projection = $1`;
 
-const LAST_APPLIED_SQL = `select max(applied_at) as last_applied_at
-     from portal.projection_applied_event`;
-
-const WINDOW_SQL = `select id, payload
+const WINDOW_SQL = `select id, topic, payload
      from integration.outbox
-    where (topic like $1 or topic like $2)
+    where (topic like $1 or topic like $2 or topic = $3 or topic = $4 or topic like $5)
     order by created_at, id`;
 
-const WINDOW_SINCE_SQL = `select id, payload
-     from integration.outbox
-    where (topic like $1 or topic like $2) and created_at > $3
+/**
+ * Não há cursor por tempo: uma linha que comitou tardiamente permanece sem
+ * ledger e volta à janela. Para BOAT o anti-join é pela projeção exata.
+ */
+const TICK_WINDOW_SQL = `select o.id, o.topic, o.payload
+     from integration.outbox o
+    where (o.topic like $1 or o.topic like $2 or o.topic = $3 or o.topic = $4 or o.topic like $5)
+      and (
+        (o.aggregate_type in ('crash-record', 'crash-renaest-submission')
+         and not exists (
+           select 1
+             from portal.projection_applied_event applied
+            where applied.event_id = o.id
+              and applied.projection = 'crash_view'
+         ))
+        or o.aggregate_type not in ('crash-record', 'crash-renaest-submission')
+      )
     order by created_at, id`;
 
 const TENANT_SQL = `select timezone from auth.tenants where id = auth.current_tenant()`;
 
+const CURRENT_TENANT_SQL = `select auth.current_tenant() as tenant_id`;
+
 interface OutboxRow extends Record<string, unknown> {
   id: string;
+  topic: string;
   payload: unknown;
+}
+
+const BOAT_TECHNICAL_TOPICS = new Set([
+  'crash.changed',
+  'crash.renaest.changed',
+]);
+
+function asRecord(value: unknown): Record<string, unknown> | undefined {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : undefined;
+}
+
+function boatDomainEventOf(value: unknown): string | undefined {
+  const event = asRecord(value)?.domainEvent;
+  return typeof event === 'string' && event.startsWith('SINISTRO_')
+    ? event
+    : undefined;
+}
+
+function aggregateOf(value: unknown): Record<string, unknown> | undefined {
+  return asRecord(asRecord(value)?.aggregate);
+}
+
+/**
+ * O envelope legado do Portal usa `version`; BOAT usa `schemaVersion`.
+ * Normalizar aqui preserva as demais projeções e não transforma a versão do
+ * agregado em versão de schema.
+ */
+function normalizedEvent(value: unknown): unknown {
+  const domainEvent = boatDomainEventOf(value);
+  if (!domainEvent) return value;
+  const record = asRecord(value);
+  const schemaVersion = record?.schemaVersion;
+  if (!Number.isInteger(schemaVersion) || (schemaVersion as number) !== 1) {
+    throw new PortalError('PORTAL.VALIDATION_FAILED', {
+      status: 400,
+      context: { fields: ['schemaVersion'] },
+    });
+  }
+  return { ...record, version: schemaVersion };
+}
+
+function factualKey(value: unknown): string | undefined {
+  const domainEvent = boatDomainEventOf(value);
+  const aggregate = aggregateOf(value);
+  if (!domainEvent || !aggregate) return undefined;
+  const id = aggregate.id;
+  const version = aggregate.version;
+  return typeof id === 'string' && Number.isInteger(version)
+    ? `${domainEvent}:${id}:${version}`
+    : undefined;
+}
+
+/** Seleciona a linha nomeada do fato; exceção explícita da sincronização. */
+function isCanonicalBoatRow(row: OutboxRow): boolean {
+  const domainEvent = boatDomainEventOf(row.payload);
+  if (!domainEvent) return true;
+  if (domainEvent === 'SINISTRO_RECEBIDO_SINCRONIZACAO') {
+    return row.topic === domainEvent || row.topic === 'crash.changed';
+  }
+  return row.topic === domainEvent && !BOAT_TECHNICAL_TOPICS.has(row.topic);
+}
+
+function canonicalWindow(rows: readonly OutboxRow[]): OutboxRow[] {
+  const facts = new Set<string>();
+  return rows.filter((row) => {
+    if (!isCanonicalBoatRow(row)) return false;
+    const key = factualKey(row.payload);
+    if (!key) return true;
+    if (facts.has(key)) return false;
+    facts.add(key);
+    return true;
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -185,6 +275,12 @@ interface OutboxRow extends Record<string, unknown> {
 export class PortalProjectors {
   private readonly clock: PortalClockLike;
   private readonly projectors: ReadonlyMap<PortalProjectionName, Projector>;
+  /**
+   * Um envelope inválido não ganha ledger. Evitamos, porém, que o mesmo lote
+   * sem suporte derrube indefinidamente o poller vivo; uma nova instância
+   * (depois de suporte explícito de schema) o tenta novamente.
+   */
+  private readonly rejectedInvalidEventIds = new Set<string>();
 
   constructor(
     private readonly database: Database,
@@ -227,7 +323,15 @@ export class PortalProjectors {
     tx: PortalSqlTransaction,
     only?: PortalProjectionName,
   ): Promise<ApplyOutcome | ApplyOutcome[]> {
-    const parsed = PORTAL_CONSUMED_ENVELOPE.safeParse(event);
+    let normalized: unknown;
+    try {
+      normalized = normalizedEvent(event);
+    } catch (error) {
+      const id = asRecord(event)?.id;
+      if (typeof id === 'string') this.rejectedInvalidEventIds.add(id);
+      throw error;
+    }
+    const parsed = PORTAL_CONSUMED_ENVELOPE.safeParse(normalized);
     if (!parsed.success) {
       return {
         projection: only ?? '',
@@ -240,6 +344,16 @@ export class PortalProjectors {
       (projection) => only === undefined || projection === only,
     );
     if (targets.length === 0) {
+      return {
+        projection: only ?? '',
+        applied: false,
+        skipped: 'not_consumed',
+      };
+    }
+    const currentTenant = (
+      await tx.query<{ tenant_id: string | null }>(CURRENT_TENANT_SQL)
+    ).rows[0]?.tenant_id;
+    if (currentTenant && currentTenant !== consumed.tenantId) {
       return {
         projection: only ?? '',
         applied: false,
@@ -259,7 +373,7 @@ export class PortalProjectors {
     return this.inTenant(tenantId, async (tx) => {
       const context = await this.contextOf(tx);
       const projector = this.projectorOf(projection);
-      const window = await this.window(tx);
+      const window = canonicalWindow(await this.window(tx));
       await projector.reset(
         context,
         window.map((row) => row.id),
@@ -278,23 +392,12 @@ export class PortalProjectors {
     }
   }
 
-  /** Poller ao vivo (§7.1): a janela desde o último `applied_at` do tenant. */
+  /** Poller ao vivo (§7.1): candidatos sem ledger, inclusive commit tardio. */
   tick(tenantId: string): Promise<number> {
     return this.inTenant(tenantId, async (tx) => {
-      const last = (
-        await tx.query<{ last_applied_at: Date | string | null }>(
-          LAST_APPLIED_SQL,
-        )
-      ).rows[0]?.last_applied_at;
-      const window = last
-        ? (
-            await tx.query<OutboxRow>(WINDOW_SINCE_SQL, [
-              `${INF_TYPE_PREFIX}%`,
-              `${RAIT_TYPE_PREFIX}%`,
-              last,
-            ])
-          ).rows
-        : await this.window(tx);
+      const window = canonicalWindow(await this.unappliedWindow(tx)).filter(
+        (row) => !this.rejectedInvalidEventIds.has(row.id),
+      );
       for (const row of window) await this.applyEvent(row.payload, tx);
       return window.length;
     });
@@ -377,6 +480,23 @@ export class PortalProjectors {
       await tx.query<OutboxRow>(WINDOW_SQL, [
         `${INF_TYPE_PREFIX}%`,
         `${RAIT_TYPE_PREFIX}%`,
+        'crash.changed',
+        'crash.renaest.changed',
+        'SINISTRO_%',
+      ])
+    ).rows;
+  }
+
+  private async unappliedWindow(
+    tx: PortalSqlTransaction,
+  ): Promise<OutboxRow[]> {
+    return (
+      await tx.query<OutboxRow>(TICK_WINDOW_SQL, [
+        `${INF_TYPE_PREFIX}%`,
+        `${RAIT_TYPE_PREFIX}%`,
+        'crash.changed',
+        'crash.renaest.changed',
+        'SINISTRO_%',
       ])
     ).rows;
   }

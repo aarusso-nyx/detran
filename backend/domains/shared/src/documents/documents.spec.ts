@@ -23,8 +23,8 @@ import {
   type SignerRequirement,
 } from '../documents/index.js';
 
-describe('DocumentKind (ADR-0018 §Decision 2 — 12 tokens canônicos, sem tradução)', () => {
-  it('dado o catálogo DOCUMENT_KINDS quando lido então tem exatamente os 12 tokens, na ordem da especificação', () => {
+describe('DocumentKind (ADR-0018 §Decision 2 — 13 tokens canônicos, sem tradução)', () => {
+  it('dado o catálogo DOCUMENT_KINDS quando lido então tem exatamente os 13 tokens, na ordem da especificação', () => {
     expect(DOCUMENT_KINDS).toEqual([
       'AIT',
       'NA',
@@ -38,8 +38,9 @@ describe('DocumentKind (ADR-0018 §Decision 2 — 12 tokens canônicos, sem trad
       'ORDEM_RESTITUICAO',
       'COMPROVANTE_PROTOCOLO',
       'CERTIDAO',
+      'RELATORIO_PRELIMINAR_SINISTRO',
     ]);
-    expect(DOCUMENT_KINDS).toHaveLength(12);
+    expect(DOCUMENT_KINDS).toHaveLength(13);
   });
 
   it('dado o tipo DocumentKind quando comparado então é a união literal dos 12 tokens de DOCUMENT_KINDS', () => {
@@ -70,8 +71,8 @@ describe('SignaturePolicy (ADR-0018 §Decision 3 — política é dado, não có
     }>();
   });
 
-  it('dado o tipo PadesLevel quando comparado então é a união de um membro PAdES-B-LT (única exigência com fonte no corpus)', () => {
-    expectTypeOf<PadesLevel>().toEqualTypeOf<'PAdES-B-LT'>();
+  it('dado o tipo PadesLevel quando comparado então inclui ausência aprovada e PAdES-B-LT', () => {
+    expectTypeOf<PadesLevel>().toEqualTypeOf<'NONE' | 'PAdES-B-LT'>();
   });
 });
 
@@ -95,6 +96,9 @@ describe('DocumentsFacade (ADR-0018 §Decision 1 e 4 — render/sign/seal, tenan
     expectTypeOf<DocumentsFacade['seal']>().returns.toEqualTypeOf<
       Promise<SealedDocument>
     >();
+    expectTypeOf<DocumentsFacade['read']>().returns.toEqualTypeOf<
+      Promise<Uint8Array>
+    >();
   });
 
   it('dado o tipo RenderedDocument quando comparado então tem documentId, kind, storageKey, contentHash, pdfaConformance e supersedesDocumentId', () => {
@@ -108,9 +112,10 @@ describe('DocumentsFacade (ADR-0018 §Decision 1 e 4 — render/sign/seal, tenan
     }>();
   });
 
-  it('dado o tipo SealedDocument quando comparado então estende SignedDocument com pdfaConformance obrigatório e sealedAt', () => {
+  it('dado o tipo SealedDocument quando comparado então aceita selo técnico sem assinatura', () => {
     expectTypeOf<SealedDocument>().toMatchTypeOf<
-      SignedDocument & {
+      RenderedDocument & {
+        readonly signatureRef: string | null;
         readonly pdfaConformance: PdfaConformance;
         readonly sealedAt: string;
       }

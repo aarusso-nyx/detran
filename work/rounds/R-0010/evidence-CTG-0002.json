@@ -1,0 +1,163 @@
+{
+  "action": "Deliver R-0010 CTG-0002: complete BOAT WP-B2/WP-B3 commands, projections, monthly RENAEST job and Owner-approved Default D1 preliminary PDF/A-2b report without claiming official BAT authority",
+  "round": "R-0010",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": [
+    "8f02e914bfdf4f5bd669506465265b35837106f4",
+    "cefbb92666a35bb1fcc42422a55961d164b6ab50"
+  ],
+  "artifacts": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "d336be36f45569608ad23fca6bc2708b9e80603a3a36eba6dfc2963dcdb8fbbd"
+    },
+    {
+      "path": ".github/requirements/boat-weasyprint.txt",
+      "sha256": "474b3d4df5132e74a189b0e3c074cc79673cdb77405d008dcf419bec78a0a91b"
+    },
+    {
+      "path": "backend/app/src/boat-documents.ts",
+      "sha256": "4450fc8b382165a169e234c7c2dd9b9485f1e3dce2f2d591d820b5e0fd131176"
+    },
+    {
+      "path": "backend/app/tests/integration/boat-documents.integration.spec.ts",
+      "sha256": "37b46826244c3fbe08d99dadb8061dc87305095378013bd5b96e01ba7f0f2004"
+    },
+    {
+      "path": "backend/app/tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "sha256": "4a12d80026fb94571546790d32a997e18fc783f5b412be2e8acd333c157fcfa2"
+    },
+    {
+      "path": "backend/app/tests/real/boat-documents.real.spec.ts",
+      "sha256": "aacb433e63e841dfd3b178bb168ca28f4ce4f9f0e6b040d17c87dc6cd9633daa"
+    },
+    {
+      "path": "backend/database/ddl/70-est-crash.sql",
+      "sha256": "ef6fa1e095204908f2c3bb81ce69a468c504eb8a651418d3de5022e3351a201b"
+    },
+    {
+      "path": "backend/database/ddl/75-boat-renaest-job.sql",
+      "sha256": "36e0a8343057a27e59f5c14f8e9833059412740b8effdbd8d734c6506340060b"
+    },
+    {
+      "path": "docs/framework/blueprints/BP-EST-CRASH-001.json",
+      "sha256": "99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0018-documents-and-signature-substrate.md",
+      "sha256": "1617c8eaa083e50a1fc9286f3e185b027590f8035a4ff40a08f5a1438f640a98"
+    },
+    {
+      "path": "work/rounds/R-0010/contracts/CTG-0002-documents.md",
+      "sha256": "a1e6c646effeb7cd9a457aac592159b455a55ee3013b43da51e884e7453b6ae6"
+    },
+    {
+      "path": "work/rounds/R-0010/reviews/delivery-review-CTG-0002-documents-cycle-3.json",
+      "sha256": "1aadd29e08300c2b008e9fa187c34412b4ee0214de84743c7d964c6fbfced99f"
+    },
+    {
+      "path": "work/rounds/R-0010/reports/TASK-0016.md",
+      "sha256": "75e1c10f72218d170e57c1708258d075ef8979814134b8712c3e5737da9d7f32"
+    },
+    {
+      "path": "work/rounds/R-0010/reports/TASK-0017.md",
+      "sha256": "638ebd3bfc8f9b13f2782a65a4b4302412650c439e7f354d23def51fb45e260b"
+    },
+    {
+      "path": "work/rounds/R-0010/budget.json",
+      "sha256": "d66f25d5900706da80f4c844fdb606e0138350aed2864be0cc72135d51b36d98"
+    },
+    {
+      "path": "work/rounds/R-0010/plan.md",
+      "sha256": "ec2a81bd4fa6f63b9c834681c0c8cfa24a712cb22df509b0f9d9900e52885050"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm install --frozen-lockfile",
+      "result": "pass"
+    },
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Blueprints, contracts, parameters, type integrity, RLS, SENATRAN boundary, Portal 1314 pass plus 14 todo and builds"
+    },
+    {
+      "name": "shared unit",
+      "result": "pass",
+      "note": "404/404"
+    },
+    {
+      "name": "app unit",
+      "result": "pass",
+      "note": "120/120"
+    },
+    {
+      "name": "EST crash unit",
+      "result": "pass",
+      "note": "1/1"
+    },
+    {
+      "name": "full PostGIS apply and double seed",
+      "result": "pass",
+      "note": "Disposable detran_r7_ctg1_a2 database in isolated container"
+    },
+    {
+      "name": "app integration",
+      "result": "pass",
+      "note": "19/19 including facade, SQL, STYNX storage adapter, restart and full veraPDF evidence"
+    },
+    {
+      "name": "backend e2e with official SENATRAN mock",
+      "result": "pass",
+      "note": "App 382 pass plus 2 pre-existing todo; remaining package tiers green"
+    },
+    {
+      "name": "RAIT destructive upgrade rehearsal",
+      "result": "pass",
+      "note": "18/18"
+    },
+    {
+      "name": "real PDF/A document tier",
+      "result": "pass",
+      "note": "2/2 using WeasyPrint 70.0 and immutable veraPDF image; unrelated PostGIS real test skipped by profile"
+    },
+    {
+      "name": "delivery review cycle 3 (Owner-authorized Codex GPT-5.6 Sol)",
+      "result": "pass",
+      "note": "Restricted review, no findings"
+    },
+    {
+      "name": "DEVAI evidence chain pre-record verify",
+      "result": "pass",
+      "note": "head 458f088f1baf5a9471435a0cbf1d00d4931bf262ae6044a172e6fc2cecbc76af"
+    }
+  ],
+  "tasks": [
+    "TASK-0006",
+    "TASK-0007",
+    "TASK-0008",
+    "TASK-0009",
+    "TASK-0010",
+    "TASK-0011",
+    "TASK-0012",
+    "TASK-0013",
+    "TASK-0014",
+    "TASK-0015",
+    "TASK-0016",
+    "TASK-0017",
+    "TASK-0018",
+    "TASK-0019",
+    "TASK-0020",
+    "TASK-0021",
+    "TASK-0022"
+  ],
+  "decisions": [
+    "Owner approved projection option 1 with consumer-owned Dashboard, Portal and RENAEST mirror models",
+    "Owner approved monthly RENAEST execution boundaries OD-B14 and OD-B15",
+    "Owner approved Default D1 preliminary report as satisfying C-2-13 without official BAT claim",
+    "Official BAT and its normative fields remain source_pending under DT-061 and OD-B08",
+    "Owner authorized Codex family reviewer exception for this session; delivery cycle 3 returned PASS"
+  ]
+}

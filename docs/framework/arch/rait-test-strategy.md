@@ -15,14 +15,14 @@ o CI**. Usa a infraestrutura que já existe: vitest 4 com tiers `unit | integrat
 
 ## 1. Tiers
 
-| Tier          | Onde                                      | Banco                          | Cobre                                                                                                   | Roda em                                         |
-| ------------- | ----------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `unit`        | `src/**/*.spec.ts`, `tests/unit/`         | nenhum (`Database` stubado)    | guardas de estado, validação de forma, `DeadlineEngine` com relógio fixo, política, mapeamento de erros | todo PR (`pnpm backend:test:unit`)              |
-| `integration` | `tests/integration/*.integration.spec.ts` | Postgres real, RLS forçada     | comando ponta a ponta no módulo (transação, eventos na outbox, RLS, triggers de tenant)                 | todo PR (`backend-kernel`)                      |
-| `e2e`         | `tests/e2e/*.e2e.spec.ts`                 | Postgres real + app Nest       | HTTP → guarda de política → comando → resposta/erro; SSE                                                | todo PR (`backend-kernel`)                      |
-| `real`        | `tests/real/*.real.spec.ts`               | serviços reais (PostGIS, mock) | contratos com senatran-mock, assinatura, storage                                                        | manual / noturno (`backend:test:real`)          |
-| frontend      | `apps/rait/web/**/*.spec.ts`              | jsdom + fixtures JSON          | componentes (TestBed), roteamento por papel, facades, mapeamento de erros                               | todo PR (`pnpm --filter @detran/rait-web test`) |
-| gates         | `tools/check-*.ts`, `docs/kb`             | —                              | decoradores, RLS no DDL, catálogo de papéis, vocabulário, fronteira SENATRAN, contratos, KB             | `pnpm check`                                    |
+| Tier          | Onde                                      | Banco                          | Cobre                                                                                                    | Roda em                                         |
+| ------------- | ----------------------------------------- | ------------------------------ | -------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `unit`        | `src/**/*.spec.ts`, `tests/unit/`         | nenhum (`Database` stubado)    | guardas de estado, validação de forma, `DeadlineEngine` com relógio fixo, política, mapeamento de erros  | todo PR (`pnpm backend:test:unit`)              |
+| `integration` | `tests/integration/*.integration.spec.ts` | Postgres real, RLS forçada     | comando ponta a ponta no módulo (transação, eventos na outbox, RLS, triggers de tenant)                  | todo PR (`backend-kernel`)                      |
+| `e2e`         | `tests/e2e/*.e2e.spec.ts`                 | Postgres real + app Nest       | HTTP → guarda de política → comando → resposta/erro; SSE                                                 | todo PR (`backend-kernel`)                      |
+| `real`        | `tests/real/*.real.spec.ts`               | serviços reais (PostGIS, mock) | contratos com senatran-mock, assinatura, storage e, para BOAT, renderização, conversão e validação PDF/A | manual / noturno (`backend:test:real`)          |
+| frontend      | `apps/rait/web/**/*.spec.ts`              | jsdom + fixtures JSON          | componentes (TestBed), roteamento por papel, facades, mapeamento de erros                                | todo PR (`pnpm --filter @detran/rait-web test`) |
+| gates         | `tools/check-*.ts`, `docs/kb`             | —                              | decoradores, RLS no DDL, catálogo de papéis, vocabulário, fronteira SENATRAN, contratos, KB              | `pnpm check`                                    |
 
 Todo teste com prazo usa relógio injetado (`Clock`/`vi.useFakeTimers`), calendário de feriados
 das fixtures e datas fixas em ISO. Testes de tier `unit` nunca abrem conexão.
@@ -87,14 +87,21 @@ PR.
 
 ## 7. Gates de CI (bloqueantes)
 
-| Job              | Comandos                                                                                            | Novo nesta rodada                                                                              |
-| ---------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| `foundation`     | `pnpm check`, `docs:check`, `docs:security`, `devai doctor`                                         | `verify:role-catalog`, `verify:lifecycle-vocabulary` já dentro de `check`                      |
-| `backend-kernel` | `backend:db:reset`, `verify:decorators`, `backend:rls-smoke`, `blueprints:check`, `backend:test:ci` | acrescentar `bash backend/database/seed.sh` após o reset (WP-A) e `backend:test:matrix` (WP-B) |
-| frontend (novo)  | `pnpm --filter @detran/rait-web typecheck && test && build`                                         | WP-F cria o job                                                                                |
-| `evidence-gate`  | `devai evidence verify`                                                                             | —                                                                                              |
+| Job                 | Comandos                                                                                            | Novo nesta rodada                                                                                                                                                   |
+| ------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `foundation`        | `pnpm check`, `docs:check`, `docs:security`, `devai doctor`                                         | `verify:role-catalog`, `verify:lifecycle-vocabulary` já dentro de `check`                                                                                           |
+| `backend-kernel`    | `backend:db:reset`, `verify:decorators`, `backend:rls-smoke`, `blueprints:check`, `backend:test:ci` | acrescentar `bash backend/database/seed.sh` após o reset (WP-A) e `backend:test:matrix` (WP-B)                                                                      |
+| frontend (novo)     | `pnpm --filter @detran/rait-web typecheck && test && build`                                         | WP-F cria o job                                                                                                                                                     |
+| `evidence-gate`     | `devai evidence verify`                                                                             | —                                                                                                                                                                   |
+| `boat-pdf-a` (novo) | `pnpm --filter @detran/app test:real`                                                               | TASK-0017 cria job bloqueante de PR: provisiona Chromium, o conversor PDF/A-2b aprovado e a imagem veraPDF por digest; cobre bytes positivos e inválidos sem `skip` |
 
 Nunca: reduzir `testTimeout`, adicionar `passWithNoTests` a tiers com testes, `it.skip` sem `OD-nnn`.
+
+O `e2e` BOAT confirma HTTP, política, tenant/RLS e falha fechada com runner injetável; não prova
+conformidade. O `real` executa o caminho de produção e falha quando Chromium, Docker, a imagem
+por digest ou o conversor aprovado não estiverem disponíveis. TASK-0017 também ajusta o timeout
+do tier `real` para cobrir o launch do Chromium, a conversão e o timeout do veraPDF; o Inspector
+nunca reduz timeout nem troca uma indisponibilidade por `skip`.
 
 ## 8. Definição de pronto de um teste
 

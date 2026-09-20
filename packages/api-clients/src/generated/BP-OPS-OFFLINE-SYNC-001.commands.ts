@@ -1277,12 +1277,17 @@ export interface operations {
               /** Format: uuid */
               server_entity_id?: string;
               /**
-               * @description Ausente/null quando status=applied. TEAT.SYNC_INVALID_ALCOHOL_SIGNS_TERM_RECORD, …_AIT_CANCELLATION_REQUEST e …_CRASH_RECORD (catálogo §1 linha 2) ficam fora do enum: o catálogo só os grafa por abreviação "…_" e o gate lê literais TEAT\.[A-Z0-9_]+ — nenhum deles aparece por extenso no documento (source_pending até o catálogo soletrar os três; ver relatório).
+               * @description Ausente/null quando status=applied; os códigos BOAT abaixo são emitidos pelo applier do item crash-record.
                * @enum {string|null}
                */
               error_code?:
                 | 'TEAT.SYNC_LEGACY_ITEM_NOT_APPLIED'
                 | 'TEAT.SYNC_DESTINATION_NOT_WIRED'
+                | 'BOAT.SYNC_INVALID_CRASH_RECORD'
+                | 'BOAT.SYNC_VICTIMS_INCONSISTENT'
+                | 'BOAT.SYNC_EVIDENCE_PENDING'
+                | 'BOAT.SYNC_LINK_UNRESOLVED'
+                | 'BOAT.SYNC_DUPLICATE_NATURAL_KEY'
                 | 'TEAT.SYNC_UNSUPPORTED_ENTITY_TYPE'
                 | 'TEAT.SYNC_INVALID_CANONICAL_AIT'
                 | 'TEAT.SYNC_INVALID_ADMINISTRATIVE_MEASURE_RECORD'
@@ -1473,12 +1478,17 @@ export interface operations {
               /** Format: uuid */
               server_entity_id?: string;
               /**
-               * @description Ausente/null quando status=applied. TEAT.SYNC_INVALID_ALCOHOL_SIGNS_TERM_RECORD, …_AIT_CANCELLATION_REQUEST e …_CRASH_RECORD (catálogo §1 linha 2) ficam fora do enum: o catálogo só os grafa por abreviação "…_" e o gate lê literais TEAT\.[A-Z0-9_]+ — nenhum deles aparece por extenso no documento (source_pending até o catálogo soletrar os três; ver relatório).
+               * @description Ausente/null quando status=applied; os códigos BOAT abaixo são emitidos pelo applier do item crash-record.
                * @enum {string|null}
                */
               error_code?:
                 | 'TEAT.SYNC_LEGACY_ITEM_NOT_APPLIED'
                 | 'TEAT.SYNC_DESTINATION_NOT_WIRED'
+                | 'BOAT.SYNC_INVALID_CRASH_RECORD'
+                | 'BOAT.SYNC_VICTIMS_INCONSISTENT'
+                | 'BOAT.SYNC_EVIDENCE_PENDING'
+                | 'BOAT.SYNC_LINK_UNRESOLVED'
+                | 'BOAT.SYNC_DUPLICATE_NATURAL_KEY'
                 | 'TEAT.SYNC_UNSUPPORTED_ENTITY_TYPE'
                 | 'TEAT.SYNC_INVALID_CANONICAL_AIT'
                 | 'TEAT.SYNC_INVALID_ADMINISTRATIVE_MEASURE_RECORD'

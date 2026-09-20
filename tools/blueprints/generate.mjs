@@ -455,6 +455,12 @@ end $$;`,
     `select auth.install_tenant_triggers();`,
     `grant usage on schema ${module.namespace} to role_app_backend;`,
     `grant select, insert, update, delete on all tables in schema ${module.namespace} to role_app_backend;`,
+    ...entities
+      .filter((entity) => entity.applicationAppendOnly)
+      .map(
+        (entity) =>
+          `revoke update, delete on table ${module.namespace}.${entity.table} from role_app_backend;`,
+      ),
     `grant usage, select on all sequences in schema ${module.namespace} to role_app_backend;`,
   ].join('\n\n');
   write(

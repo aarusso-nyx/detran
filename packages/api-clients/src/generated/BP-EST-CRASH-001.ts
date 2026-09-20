@@ -806,6 +806,60 @@ export interface components {
       /** @default 'REGISTRADO' */
       status: string;
     };
+    CrashReportDocument: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      crash_record_id: string;
+      document_kind: string;
+      template_key: string;
+      template_version: string;
+      /** Format: uuid */
+      policy_id: string;
+      storage_key: string;
+      content_hash: string;
+      byte_size: number;
+      signature_ref?: string | null;
+      pdfa_conformance: string;
+      pdfa_validation: {
+        [key: string]: unknown;
+      };
+      /** Format: uuid */
+      supersedes_document_id?: string | null;
+      /** Format: date-time */
+      sealed_at?: string | null;
+      /**
+       * Format: date-time
+       * @default clock_timestamp()
+       */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateCrashReportDocumentDto: {
+      /** Format: uuid */
+      crash_record_id: string;
+      document_kind: string;
+      template_key: string;
+      template_version: string;
+      /** Format: uuid */
+      policy_id: string;
+      storage_key: string;
+      content_hash: string;
+      byte_size: number;
+      signature_ref?: string | null;
+      pdfa_conformance: string;
+      pdfa_validation: {
+        [key: string]: unknown;
+      };
+      /** Format: uuid */
+      supersedes_document_id?: string | null;
+    };
   };
   responses: never;
   parameters: never;

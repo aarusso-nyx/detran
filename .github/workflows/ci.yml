@@ -248,6 +248,44 @@ jobs:
           env "${backend_env[@]}" pnpm backend:test:upgrade
           pnpm --filter @detran/senatran-adapter test:e2e
 
+  boat-documents-real:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.13.7'
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Install pinned WeasyPrint PDF/A backend
+        run: |
+          python -m venv /tmp/boat-weasyprint
+          /tmp/boat-weasyprint/bin/pip install --require-hashes -r .github/requirements/boat-weasyprint.txt
+          /tmp/boat-weasyprint/bin/weasyprint --version | grep -Fx 'WeasyPrint version 70.0'
+
+      - name: Resolve immutable veraPDF image
+        run: docker pull verapdf/cli@sha256:20202b4bcc2410a25db1f637c7b461a2e0dda1d97dd8a6df658286b30d56c842
+
+      - name: Prove BOAT production PDF/A-2b path
+        env:
+          STYNX_VERAPDF_IMAGE: verapdf/cli@sha256:20202b4bcc2410a25db1f637c7b461a2e0dda1d97dd8a6df658286b30d56c842
+          WEASYPRINT_BIN: /tmp/boat-weasyprint/bin/weasyprint
+        run: pnpm --filter @detran/app test:real
+
   # ---------------------------------------------------------------------------
   # Activated (W0.2, 2026-08-24): the senatran-mock port landed at
   # ./senatran-mock (245 tests: 119 unit + 14 integration + 112 e2e; 114

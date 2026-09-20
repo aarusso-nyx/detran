@@ -1,4 +1,4 @@
-// Generated from BP-EST-CRASH-001 v1.0.0 sha256:b47af7c82f17c4a1fa3e3eefb69f476ee022559780b97f30285d2582d18c8231
+// Generated from BP-EST-CRASH-001 v1.0.0 sha256:99e87798f6392afe656eee02132c995fd478884241fc5f7b1ccf7f409e687a62
 import { Module } from '@nestjs/common';
 import { CrashRecordController } from './controllers/crash-record.controller.js';
 import { CrashRecordService } from './services/crash-record.service.js';
@@ -33,9 +33,15 @@ import { CrashRenaestSubmissionRepository } from './repositories/crash-renaest-s
 import { CrashSubjectRequestController } from './controllers/crash-subject-request.controller.js';
 import { CrashSubjectRequestService } from './services/crash-subject-request.service.js';
 import { CrashSubjectRequestRepository } from './repositories/crash-subject-request.repository.js';
+import { CrashReportDocumentController } from './controllers/crash-report-document.controller.js';
+import { CrashReportDocumentService } from './services/crash-report-document.service.js';
+import { CrashReportDocumentRepository } from './repositories/crash-report-document.repository.js';
+import { BoatCrashCommandsController } from './handwritten/boat-commands.controller.js';
+import { BoatCrashCommandsService } from './handwritten/boat-commands.service.js';
 
 @Module({
   controllers: [
+    BoatCrashCommandsController,
     CrashRecordController,
     CrashVehicleController,
     CrashPersonController,
@@ -47,6 +53,7 @@ import { CrashSubjectRequestRepository } from './repositories/crash-subject-requ
     CrashLinkController,
     CrashRenaestSubmissionController,
     CrashSubjectRequestController,
+    CrashReportDocumentController,
   ],
   providers: [
     CrashRecordService,
@@ -71,6 +78,9 @@ import { CrashSubjectRequestRepository } from './repositories/crash-subject-requ
     CrashRenaestSubmissionRepository,
     CrashSubjectRequestService,
     CrashSubjectRequestRepository,
+    CrashReportDocumentService,
+    CrashReportDocumentRepository,
+    BoatCrashCommandsService,
   ],
 })
 export class CrashModule {}

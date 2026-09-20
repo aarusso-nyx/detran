@@ -1,0 +1,113 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0012.md",
+      "line": 27,
+      "claim": "TASK-0012 cria `BP-PORTAL-CRASH-VIEW-001.json` e o DDL `71-portal-crash-view.sql` (linha 39), mas `work/rounds/R-0009/plan.md:28-29` atribui `portal.crash_view` à frente `portal-backend` ('BOAT; projetor real em R-0010') e a TASK-0002 de R-0009 detém os locks `MOD-bp-portal-*` e `MOD-ddl-61-64`; `docs/meta/agents/orchestra/waves.md` §Regras proíbe duas frentes ativas com lock no mesmo blueprint/DDL e dá `backend/domains/portal/*` a R-0009. Nenhum dos três prompts da tríade exige coordenação entre rodadas, ao contrário da §Precondição de TASK-0015 quanto a R-0007.",
+      "fix": "Antes do disparo, decidir e registrar em `plan.md` quem escreve o blueprint/DDL de `portal.crash_view` (R-0009, dona do domínio) e limitar R-0010 ao projetor, ou obter liberação documentada do lock de R-0009 e acrescentar a TASK-0012/0013/0014 a mesma §Precondição de despacho e parada usada em TASK-0015."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0010/prompts/TASK-0014.md",
+      "line": 30,
+      "claim": "O prompt do Engineer fixa `backend/domains/integration/renaest-mirror/**` como fronteira, criando um domínio de topo `integration` que não consta da lista sancionada por ADR-0001 §Decision (`inf`, `est`, `ch`, `vam` reservado, `ops`, `portal`, `dashboard`, `shared`, `packages/senatran-adapter`); ADR-0020 §Decision 2 atribui o espelho equivalente (`integration.renainf_mirror`) ao `adapter`, e `BP-INF-RAIT-INTEGRATION-001` registra o precedente de que o fato de conciliação nasce no domínio dono. A propriedade é decidida no prompt do Engineer, não pelo Architect de TASK-0012.",
+      "fix": "Remover a rota pré-decidida: TASK-0012 fixa o dono de `integration.renaest_mirror` conforme ADR-0001/ADR-0020 (adapter ou domínio sancionado) e o `namespace` do blueprint; TASK-0014 recebe a fronteira derivada dessa decisão, com emenda de ADR se um novo domínio de topo for mesmo necessário."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0014.md",
+      "line": 26,
+      "claim": "As três linhas `backend/domains/*/*/package.json` (26, 28, 30) autorizam edição manual de artefato gerado: `tools/blueprints/generate.mjs:258-300` emite `backend/domains/${namespace}/${name}/package.json` e `tools/blueprints/generated-files.json` o lista (ex.: `backend/domains/est/crash/package.json`); `tools/blueprints/check.mjs` compara byte a byte, de modo que a própria aceitação `pnpm blueprints:check` (linha 49) falharia. Contraria ADR-0007 e o item 4 do §4 do método.",
+      "fix": "Retirar os três `package.json` da fronteira de TASK-0014 e exigir que dependências extras entrem em `module.dependencies`/`module.devDependencies` dos blueprints de TASK-0012, com regeneração pelo maestro."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0014.md",
+      "line": 32,
+      "claim": "TASK-0014 monta três pacotes novos no `AppModule` mas sua fronteira não inclui `backend/app/vitest.config.ts` nem `backend/app/package.json`, exigidos pelo item 10 do §4 de `docs/meta/agents/orchestra/README.md` (alias para `src/index.ts` e dependência de workspace, lição de R-0006); `backend/app/vitest.config.ts` tem um alias por pacote e os testes de TASK-0013 rodam em `@detran/app`, logo o critério da linha 48 é inalcançável.",
+      "fix": "Acrescentar `backend/app/vitest.config.ts` e `backend/app/package.json` à lista 'Pode tocar' de TASK-0014 (e avaliar os filtros de `backend:test:*` na raiz), como já faz TASK-0017 nas linhas 32-34."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 27,
+      "claim": "O arquivo permitido `tools/tests/verify-domain-boundaries.test.mjs` não tem executor: o diretório `tools/tests/` não existe e os únicos runners de `node --test` na raiz são `contracts:test` (`tools/contracts/tests/*.test.mjs`) e `parameters:test` (`tools/parameters/tests/*.test.mjs`); nenhum critério de TASK-0013 (linhas 40-42) ou de TASK-0014 (linhas 48-50) executa esse teste, de modo que o gate `verify:domain-boundaries` entregaria sem prova comportamental.",
+      "fix": "Colocar o teste do gate sob um runner existente (padrão `tools/<área>/tests/*.test.mjs`) ou autorizar, em TASK-0014, um script de raiz que o execute, e incluir o comando correspondente nos critérios de TASK-0013 e TASK-0014."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0016.md",
+      "line": 47,
+      "claim": "A fronteira do Inspector inclui `backend/app/src/*boat*document*.spec.ts` e `backend/app/tests/e2e/*boat*document*.e2e.spec.ts` (linhas 30-31), mas os critérios só rodam `pnpm --filter @detran/shared test` e `pnpm --filter @detran/est-crash test:unit`; TASK-0017 acrescenta apenas `@detran/app test:unit` e `pnpm check` (que não inclui tier e2e). O RED de `GET /v1/est/crash/records/{id}/report` pela fachada nunca é executado por critério algum da tríade, repetindo o padrão `sensor-error` já triado na rodada.",
+      "fix": "Incluir `pnpm --filter @detran/app test:unit` e `pnpm --filter @detran/app test:e2e` (banco isolado) nos critérios de TASK-0016 e TASK-0017, ou restringir a fronteira do Inspector às superfícies efetivamente executadas."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0015.md",
+      "line": 46,
+      "claim": "A definição vinculante '`@stynx-nyx/pdf-a` valida `PDF/A-2b`' é falsa na fonte: o pacote do STYNX é contrato puro de tipos com os stubs `NoopPdfAValidator` e `StrictPdfAValidator` (`packages/pdf-a/src/stubs/`), e o validador concreto é `@stynx-nyx/pdf-a-vera-docker` (veraPDF em contêiner); nenhum dos dois é dependência do repositório hoje. Como está, TASK-0016 e TASK-0017 podem fechar C-2-13 com o stub `strict`, exatamente a 'conformidade não provada' que a adenda A-1 item 5 proíbe.",
+      "fix": "Exigir que a emenda de TASK-0015 fixe o adaptador concreto de conformidade (`@stynx-nyx/pdf-a-vera-docker` ou equivalente), a estratégia de execução em teste/CI e o que é `source_pending` se o contêiner não estiver disponível; replicar o token correto nas Definições vinculantes de TASK-0016 (linha 39) e TASK-0017 (linha 47)."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0018.md",
+      "line": 21,
+      "claim": "A lista fechada do STYNX jobs traz `index.ts`, `jobs.module.ts`, `jobs.service.ts`, `jobs.worker.ts` e `jobs.repository.ts`, mas omite justamente os arquivos que definem o que a tarefa deve decidir: `jobs.scheduler.ts` (materialização das agendas), `cron.ts` (expressão/periodicidade), `jobs.registry.ts` (registro do handler), `types.ts` (contrato do job, inclusive a nota de que o handler deve escopar as próprias escritas) e `backoff.ts` (retry). O mesmo vale para a lista de TASK-0020 (linha 23), que precisa registrar o job.",
+      "fix": "Acrescentar `jobs.scheduler.ts`, `jobs.registry.ts`, `cron.ts`, `types.ts` e `backoff.ts` às listas fechadas de TASK-0018 e TASK-0020 (somente leitura), mantendo a proibição de editar o repositório irmão."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0017.md",
+      "line": 32,
+      "claim": "`backend/app/src/**` é fronteira larga e se sobrepõe a `backend/app/src/boat-projections*.ts` e `app.module.ts` de TASK-0014 (linhas 31-32) e a `boat-renaest-job*.ts` de TASK-0020 (linha 27); a serialização dos três Engineers só existe em `plan.md` §Adenda A-1, não nos prompts.",
+      "fix": "Enumerar em TASK-0017 os arquivos de `backend/app/src/` que a fachada monta e repetir em TASK-0014/0017/0020 a precondição explícita de serialização registrada pelo maestro."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0020.md",
+      "line": 32,
+      "claim": "`backend/database/ddl/<número-livre>-boat-renaest-job.sql` deixa o número ao Engineer, mas 71, 72, 73 e 74 já estão reservados por TASK-0012 (linhas 30 e 39) e essa reserva não aparece na lista fechada de TASK-0020; além disso o DDL manual da rodada vinha sendo ato do Architect (TASK-0002/`MOD-ddl-70`, TASK-0012/ddl 74).",
+      "fix": "Fixar o número em TASK-0018 (por exemplo `75-boat-renaest-job.sql`), registrar a reserva 71-74 no contexto de TASK-0020 e manter o DDL manual sob a mesma regra de autoria usada nas demais tríades."
+    },
+    {
+      "severity": "low",
+      "item": 13,
+      "file": "work/rounds/R-0010/prompts/TASK-0016.md",
+      "line": 39,
+      "claim": "A tarefa pede isolamento tenant e falha de conformidade, mas não exige matriz de papéis para `GET /v1/est/crash/records/{id}/report` — positivos `field-agent`, `processing-operator`, `traffic-authority` de CTG-0002 §2 e negativos exaustivos para os demais papéis canônicos (item 8 do §4 do método).",
+      "fix": "Acrescentar à tarefa de TASK-0016 a exigência de testes positivos e negativos exaustivos de papel para a rota de relatório, citando a linha da tabela de CTG-0002 §2."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0010/tasks/TASK-0012.json",
+      "line": 29,
+      "claim": "`acceptance_commands` traz `pnpm format:check` (Prettier em todo o repositório) enquanto o critério do prompt é `node_modules/.bin/prettier --check <arquivos criados>`; a mesma divergência ocorre em TASK-0015.json e TASK-0018.json.",
+      "fix": "Alinhar `acceptance_commands` ao critério do prompt (ou vice-versa), para que o resultado esperado seja o mesmo nos dois artefatos."
+    }
+  ],
+  "notes": [
+    "Os nove sha256 de `prompts/TASK-0012.md`…`TASK-0020.md` conferem com `compositions.json`; todos os caminhos das listas fechadas existem na worktree, inclusive os cinco arquivos lidos do irmão STYNX.",
+    "Ordem Architect → Inspector → Engineer preservada nas três tríades: `upstream_task_id` encadeia 0012→0013→0014, 0015→0016→0017 e 0018→0019→0020, e os Engineers estão proibidos de editar testes, blueprint gerado e `pnpm-lock.yaml`.",
+    "`pnpm install`, lockfile, git e geração de blueprints permanecem exclusivos do maestro em todos os nove prompts; nenhum worker recebe comando `git`.",
+    "Replay idempotente com ledger `(tenant_id, projection_name, event_id)`, commit tardio com `created_at` anterior, `event.version` separado de `aggregate.version`, ausência de escrita de volta em `est.*` e SSE como não-fonte estão exigidos nos três prompts da tríade de projeções.",
+    "`source_pending` de identidade do titular, supressão primária e secundária com `dashboard.cell_threshold=10` e o fechamento de P-09 sob RN-DASH-161/RN-BOAT-131 aparecem de forma consistente em TASK-0012/0013/0014; nenhum prompt abre rota cidadã.",
+    "O lock de ADR-0018 com R-0007 tem precondição de parada explícita em TASK-0015, TASK-0016 e TASK-0017, e a alteração de `DOCUMENT_KINDS`/catálogo `inf/normative` é especificada pelo Architect antes de qualquer escrita do Engineer.",
+    "O job mensal exige descoberta autorizada de tenants, identidade de sistema e `RequestContext` antes de `runOnce`, com proibição explícita de owner-role em SQL de domínio e recusa de `runOnce` manual como prova de C-2-08.",
+    "Os parâmetros citados conferem com o catálogo: `est.renaest.transmit_period=monthly` (OD-B04/DT-017) e `dashboard.cell_threshold=10` (OD-D02/DT-029)."
+  ]
+}

@@ -112,7 +112,7 @@ describe('contrato persistente BOAT est/crash', () => {
       ),
     ) as { module: { namespace: string }; database: { entities: unknown[] } };
     expect(blueprint.module.namespace).toBe('est');
-    expect(blueprint.database.entities).toHaveLength(11);
+    expect(blueprint.database.entities).toHaveLength(12);
     const ddl = readFileSync(
       new URL(
         '../../../../../../backend/database/ddl/70-est-crash.sql',

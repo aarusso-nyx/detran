@@ -1,0 +1,199 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RenaestMirror — BP-INTEGRATION-RENAEST-MIRROR-001",
+    "version": "1.0.0",
+    "description": "Espelho consumidor integration.renaest_mirror fisicamente em backend/domains/integration/renaest-mirror e logicamente do adapter (ADR-0001 amendment; ADR-0020 Decision 1, 3 e 4; C-2-14). O projetor manuscrito recebe eventos e recibos BOAT canonicos da integration.outbox, mantendo somente protocolo, situacao nacional, retificacoes e ledger local. Ele nao chama SENATRAN, nao tem FK para est.*, nao le est.* exceto pela leitura de evento permitida em arquivo *.projection.ts, e nunca altera o estado BOAT.",
+    "x-blueprint": "BP-INTEGRATION-RENAEST-MIRROR-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "RenaestMirror": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "crash_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "national_status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["RECEBIDO", "EM_ANALISE", "CONSOLIDADO", "REJEITADO"],
+            "nullable": true
+          },
+          "rectifications_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "crash_id",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Espelho por sinistro do protocolo e da situacao nacional recebidos em SINISTRO_TRANSMITIDO, SINISTRO_SITUACAO_NACIONAL e SINISTRO_RETIFICADO. retifications_json conserva somente fatos de retificacao necessarios ao painel de integracao, sem dados pessoais ou de saude."
+      },
+      "CreateRenaestMirrorDto": {
+        "type": "object",
+        "properties": {
+          "crash_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocol": {
+            "type": "string",
+            "maxLength": 160,
+            "nullable": true
+          },
+          "national_status": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": ["RECEBIDO", "EM_ANALISE", "CONSOLIDADO", "REJEITADO"],
+            "nullable": true
+          },
+          "rectifications_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "crash_id",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "RenaestMirrorAppliedEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projection_name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "projection_name",
+          "event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Ledger idempotente de integration.renaest_mirror. O efeito no espelho e a linha desta chave unica sao atomicos sob RLS, para replay integral e incremental sem duplicar recibo ou retificacao."
+      },
+      "CreateRenaestMirrorAppliedEventDto": {
+        "type": "object",
+        "properties": {
+          "projection_name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "projection_name",
+          "event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      }
+    }
+  }
+}

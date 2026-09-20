@@ -17,6 +17,7 @@ export const DOCUMENT_KINDS = [
   'ORDEM_RESTITUICAO',
   'COMPROVANTE_PROTOCOLO',
   'CERTIDAO',
+  'RELATORIO_PRELIMINAR_SINISTRO',
 ] as const;
 
 export type DocumentKind = (typeof DOCUMENT_KINDS)[number];

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0020",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Montar o job mensal RENAEST com contexto tenant",
+  "description": "Integrar scheduler e worker no app, com descoberta autorizada, execução tenant-scoped sob RLS, retry e idempotência, fazendo os REDs do Inspector passarem sem editar testes nem lockfile. A montagem em AppModule e manifests é serializada com TASK-0014/0017; DDL pertence ao Architect.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-jobs-substrate",
+    "MOD-auth-tenancy",
+    "MOD-ops-parameter",
+    "MOD-app-composition"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-b2", "renaest", "tenant-job"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-8baea3f912e5e0ad",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/app", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "backend:test:ci"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-16T21:40:39Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-8baea3f912e5e0ad",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0019"
+}

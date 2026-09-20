@@ -109,6 +109,16 @@ insert into inf.normative_document_template (id, tenant_id, traffic_agency_id, d
 values ('00000000-0000-7000-8000-0000e1200001','00000000-0000-7000-8000-00000000a001','00000000-0000-7000-8000-0000e2000001','ait','Modelo de talão eletrônico (fixtures)','2026.1','Auto de Infração de Trânsito nº {{ait_number}}','2026-01-01','active')
 on conflict (id) do update set tenant_id=excluded.tenant_id, traffic_agency_id=excluded.traffic_agency_id, document_kind=excluded.document_kind, name=excluded.name, version=excluded.version, template_body=excluded.template_body, valid_from=excluded.valid_from, status=excluded.status;
 
+-- Default D1 do relatório preliminar BOAT: documento informativo distinto do
+-- BAT oficial, PDF/A-2b obrigatório e sem assinatura na política inicial.
+insert into inf.normative_document_template (id, tenant_id, traffic_agency_id, document_kind, domain_scope, name, version, template_body, valid_from, status)
+values ('00000000-0000-7000-8000-0000e1200013','00000000-0000-7000-8000-00000000a001','00000000-0000-7000-8000-0000e2000001','relatorio_preliminar_sinistro','est','est.crash.report.preliminary','1.0.0','<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório preliminar de sinistro</title><style>@page{size:A4;margin:20mm}body{font-family:sans-serif}dt{font-weight:bold}</style></head><body><h1>Relatório preliminar de sinistro</h1><dl><dt>Identificador</dt><dd>{{id}}</dd><dt>Órgão</dt><dd>{{traffic_agency_id}}</dd><dt>Estado</dt><dd>{{state}}</dd><dt>Ocorrência</dt><dd>{{occurred_at}}</dd><dt>Local</dt><dd>{{location_description}}</dd></dl><p>Relatório preliminar de sinistro. Documento informativo sujeito a complementação e validação. Não constitui Boletim de Acidente de Trânsito (BAT) oficial.</p></body></html>','2026-09-20','active')
+on conflict (id) do update set tenant_id=excluded.tenant_id, traffic_agency_id=excluded.traffic_agency_id, document_kind=excluded.document_kind, domain_scope=excluded.domain_scope, name=excluded.name, version=excluded.version, template_body=excluded.template_body, valid_from=excluded.valid_from, status=excluded.status;
+
+insert into inf.signature_policy (id, tenant_id, traffic_agency_id, document_kind, required_signers_json, pades_level, tsa_required, pdfa_required, govbr_level, status)
+values ('00000000-0000-7000-8000-0000e1400013','00000000-0000-7000-8000-00000000a001','00000000-0000-7000-8000-0000e2000001','relatorio_preliminar_sinistro','[]'::jsonb,'NONE',false,true,null,'active')
+on conflict (id) do update set tenant_id=excluded.tenant_id, traffic_agency_id=excluded.traffic_agency_id, document_kind=excluded.document_kind, required_signers_json=excluded.required_signers_json, pades_level=excluded.pades_level, tsa_required=excluded.tsa_required, pdfa_required=excluded.pdfa_required, govbr_level=excluded.govbr_level, status=excluded.status;
+
 -- inf.normative_agency_parameter: parâmetro ativo do órgão …e2000001, entra
 -- no manifesto (§3).
 insert into inf.normative_agency_parameter (id, tenant_id, traffic_agency_id, key, value_json, value_type, valid_from, status)

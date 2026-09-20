@@ -1,0 +1,48 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0017.md",
+      "line": 26,
+      "claim": "A lista fechada do Engineer traz só `packages/pdf-a/README.md` e `packages/pdf-a-vera-docker/README.md`, mas a tarefa (linha 46) manda montar os \"adaptadores STYNX previstos pela ADR-0018\", que são `StynxPdfModule`, `StynxSignatureModule` e `StynxStorageModule` (ADR-0018 §Decision 1). O adaptador veraPDF só entra pelo slot `pdfAAdapter` de `@stynx-nyx/pdf` (`/Volumes/Thiamat II/stech/stynx/packages/pdf/README.md:58,97`), e bytes realmente conformes exigem o `LocalPdfRenderBackend` com Playwright/Chromium (mesmo README, linhas 3, 21, 65, 148), porque `createFixturePdfBackend` só produz bytes determinísticos (linha 66). Sem os READMEs de `pdf`, `signature` e `storage` na lista, o worker não executa sem procurar fora dela (item 2 da rubrica; lição R-0006 sobre listas fechadas suficientes).",
+      "fix": "Acrescentar às listas fechadas de TASK-0016 e TASK-0017 os READMEs `/Volumes/Thiamat II/stech/stynx/packages/pdf/README.md`, `packages/signature/README.md` e `packages/storage/README.md` (somente leitura) e nomear explicitamente o backend de render exigido no tier de conformidade."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0017.md",
+      "line": 59,
+      "claim": "O critério afirma que `pnpm backend:test:ci` na job `backend-kernel` prova PDF/A-2b positivo com veraPDF em contêiner por digest e rejeita falso `%PDF`, sendo indisponibilidade falha e não `skip`. A job `backend-kernel` (`.github/workflows/ci.yml:132-189`) provisiona apenas Postgres/PostGIS como service container e não tem passo de veraPDF nem `npx playwright install chromium` (nenhum workflow do repositório menciona playwright/chromium); `.github/workflows/ci.yml` está fora do \"Pode tocar\" de TASK-0015, 0016 e 0017, e nenhuma das três tarefas pode criar o provisionamento. Além disso não há fonte autorizada de bytes PDF/A-2b positivos: a fronteira do Inspector (linhas 30-33 de TASK-0016) só admite `*.spec.ts` e `createFixturePdfBackend` produz bytes determinísticos, não conformes — logo o caso positivo do critério é inalcançável como especificado.",
+      "fix": "Fixar em TASK-0015 a origem dos bytes positivos (render real por `LocalPdfRenderBackend` ou artefato de fixture com fonte declarada) e atribuir a um responsável com fronteira sobre `.github/workflows/ci.yml` os passos de Chromium e de imagem veraPDF por digest, antes de manter esse critério na tríade."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0010/prompts/TASK-0015.md",
+      "line": 44,
+      "claim": "A frase \"o teste real pertence ao tier `@detran/app test:e2e`\" coloca provedor real em tier bloqueante de PR, enquanto ADR-0018 §Decision 5 determina \"`FixturePdfBackend` and `createMockSignatureBackend` in the `unit`/`integration` tiers; real providers only in the `real` tier (`rait-test-strategy.md`)\" e `docs/framework/arch/rait-test-strategy.md:22-23` define `e2e` como \"Postgres real + app Nest\" e o tier `real` (serviços reais; assinatura, storage) como manual/noturno. A mesma linha 35 de TASK-0015 autoriza só \"emenda numerada apenas, preservando decisões anteriores\", e nem `rait-test-strategy.md` nem `docs/framework/**` estão na leitura obrigatória ou na fronteira de escrita das três tarefas: a tríade decide o tier sem citar nem poder reconciliar a ADR e o documento canônico de tiers/gates. Não foi levantado antes porque esta escolha de tier é texto novo, introduzido na correção do achado item 5 de `reviews/prompt-review-9.json`.",
+      "fix": "Ou acrescentar `docs/framework/arch/rait-test-strategy.md` §§1 e 7 à leitura de TASK-0015 e exigir que a emenda numerada reconcilie explicitamente ADR-0018 §Decision 5 (registrando quem atualiza o documento de tiers e a job de CI), ou manter o validador real no tier `real` e deixar no `e2e` o gate com `runner` injetável, preservando a proibição de stub como prova de conformidade."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0017.md",
+      "line": 46,
+      "claim": "\"imagem por digest\" não tem fonte nas listas fechadas: `@stynx-nyx/pdf-a-vera-docker` expõe `DEFAULT_VERAPDF_IMAGE = 'verapdf/cli'` (tag, não digest) e o único sha256 disponível é ilustrativo, no Exemplo 1 do README do irmão; nenhum documento canônico do repositório fixa o digest.",
+      "fix": "Exigir em TASK-0015 que o digest seja registrado com fonte (resolução de registry datada ou linha no catálogo de parâmetros) ou fique `source_pending`, em vez de copiar o exemplo do README."
+    }
+  ],
+  "notes": [
+    "Achado high item 5 (TASK-0015.md:46 da revisão 9) corrigido: `Definições vinculantes` de TASK-0015 linha 48, TASK-0016 linha 45 e TASK-0017 linha 50 dizem que `@stynx-nyx/pdf-a` é só contrato/stubs e que `@stynx-nyx/pdf-a-vera-docker` é o validador concreto, coerente com `/Volumes/Thiamat II/stech/stynx/packages/pdf-a/README.md:1-3` e `packages/pdf-a-vera-docker/README.md:1-3`; `NoopPdfAValidator`, `StrictPdfAValidator` e marcador `%PDF` são explicitamente recusados como prova.",
+    "Achado high item 4 (TASK-0016.md:47 da revisão 9) corrigido quanto à execução do RED HTTP: TASK-0016 linhas 51-52 e TASK-0017 linhas 56-57 acrescentam `pnpm --filter @detran/app test:unit` e `test:e2e` com `DETRAN_TEST_DATABASE_URL` em banco dedicado e resetado; os scripts existem em `backend/app/package.json` e `backend/app/vitest.config.ts:8-12` inclui `src/**/*.spec.ts` no tier unit e `tests/e2e/**/*.e2e.spec.ts` no e2e, de modo que as quatro superfícies da fronteira do Inspector são executadas. `tasks/TASK-0016.json` e `tasks/TASK-0017.json` têm `acceptance_commands` alinhados aos critérios e `db_isolation: \"database\"`.",
+    "Achado low item 13 (TASK-0016.md:39 da revisão 9) corrigido: TASK-0016 linha 41 exige positivos `field-agent`, `processing-operator`, `traffic-authority` e negativos para **todos** os demais papéis canônicos, mais tenant cruzado, exatamente como `contracts/CTG-0002.md:49`; `backend/domains/shared/src/roles.ts` está na leitura obrigatória (linha 25), o que torna a matriz negativa exaustiva executável.",
+    "Achado low item 3 (TASK-0017.md:32 da revisão 9) corrigido: a fronteira larga `backend/app/src/**` foi substituída por `app.module.ts` (somente registro), `boat-documents*.ts`, `vitest.config.ts` e os dois `package.json` (linhas 34-37), e a §Precondição linha 15 exige serialização explícita de `app.module.ts` com TASK-0014 e TASK-0020, conforme `plan.md` §Adenda A-1.",
+    "Lock não liberado: `plan.md:148-153` e `plan.md:359-360` registram que a R-0007 mantém alterações não integradas em `shared/documents`, `app.module.ts` e `pnpm-lock.yaml`, sem transferência nem ETA. As três tarefas têm §Precondição de despacho e parada explícita (TASK-0015 linha 15, TASK-0016 linha 15, TASK-0017 linha 15) e TASK-0017 linha 38 condiciona `inf/normative/src/handwritten/**` à liberação documentada; este veredito não libera o lock.",
+    "Integridade formal verificada: sha256 de `prompts/TASK-0015.md` (e8665a8a…), `TASK-0016.md` (4c804363…) e `TASK-0017.md` (cb993ec1…) conferem com `compositions.json:99-121` e com os `prompt_composition_id` dos três JSONs; ordem Architect → Inspector → Engineer encadeada por `upstream_task_id` (0015→0016→0017); nenhum worker recebe `git`, `pnpm install` ou lockfile. Todos os caminhos das listas fechadas existem, exceto `work/rounds/R-0010/contracts/CTG-0002-documents.md`, criado por TASK-0015 e lido a jusante — correto na sequência.",
+    "Tokens verificados contra fonte: `PdfaConformance = 'PDF/A-2b'` e `pdfaRequired` existem em `backend/domains/shared/src/documents/signature-policy.ts`; `DOCUMENT_KINDS` tem 12 tokens `inf` em `document-kind.ts`; BAT oficial permanece `source_pending` sob DT-061/OD-B08 (`boat-build-pack.md:118`). Observação não bloqueante: o comentário de `signature-policy.ts:15` e o §Context da ADR-0018 ainda afirmam que `@stynx-nyx/pdf-a` valida PDF/A-2b — a emenda de TASK-0015 e a fronteira de TASK-0017 permitem corrigir ambos, e convém exigi-lo explicitamente."
+  ]
+}

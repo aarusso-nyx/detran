@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0019",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Provar agendamento mensal e isolamento tenant do job BOAT",
+  "description": "Codificar REDs de agenda operacional, descoberta autorizada, contexto tenant/RLS, dois tenants, falhas seguras, retry e idempotência antes da montagem Engineer.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-jobs-substrate",
+    "MOD-auth-tenancy",
+    "MOD-ops-parameter"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-b2", "renaest", "tenant-job"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-e07b83ac081cd076",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/app", "test:unit"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-16T21:40:39Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-e07b83ac081cd076",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0018"
+}

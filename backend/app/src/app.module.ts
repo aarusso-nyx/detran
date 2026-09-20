@@ -73,6 +73,8 @@ import { RequestsModule } from '@detran/portal-requests';
 import { InboxModule } from '@detran/portal-inbox';
 import { CitizenServiceModule } from '@detran/portal-citizen-service';
 import { ProjectionsModule } from '@detran/portal-projections';
+import { CrashesModule } from '@detran/dashboard-crashes';
+import { RenaestMirrorModule } from '@detran/integration-renaest-mirror';
 import { AitModule } from '@detran/inf-ait';
 import { AlcoholModule } from '@detran/inf-alcohol';
 import { MeasuresModule } from '@detran/inf-measures';
@@ -115,6 +117,7 @@ import {
   type PortalPublicRequestLike,
 } from './detran-runtime.js';
 import { PortalDelegationTargetsModule } from './portal-delegation.providers.js';
+import { BoatDocumentsRuntimeModule } from './boat-documents.js';
 import { PortalNationalReadPortsModule } from './portal-national-read.providers.js';
 import { PortalStreamController } from './portal-stream.controller.js';
 import {
@@ -151,6 +154,18 @@ import {
   PEC_RENACH_PORT,
   PecRenachTransmissionService,
 } from './pec-renach-transmission.service.js';
+import {
+  BOAT_RENAEST_PORT,
+  BoatRenaestTransmissionService,
+} from './boat-renaest-transmission.service.js';
+import {
+  BOAT_RENAEST_MONTHLY_LEDGER,
+  BOAT_RENAEST_TENANT_DISCOVERY,
+  SqlBoatRenaestMonthlyLedger,
+  SqlBoatRenaestTenantDiscovery,
+  createBoatRenaestJobService,
+} from './boat-renaest-job.providers.js';
+import { BoatRenaestJobService } from './boat-renaest-job.service.js';
 import { RenachWebhookGuard } from './renach-webhook.guard.js';
 import { PecToxicologyInboundController } from './pec-toxicology-inbound.controller.js';
 import { PecToxicologyInboundService } from './pec-toxicology-inbound.service.js';
@@ -620,6 +635,7 @@ export class AppModule {
         StynxTenancyModule.forRoot({}),
         StynxAuditModule.forRoot({ sink: detranAuditSink }),
         StynxStorageModule.forRoot(detranStorageOptions()),
+        BoatDocumentsRuntimeModule,
         StynxPlatformPipelineModule.forRoot(detranPipelineOptions()),
         StynxHealthModule.forRoot(
           detranHealthOptions(
@@ -660,6 +676,8 @@ export class AppModule {
         InboxModule,
         CitizenServiceModule,
         ProjectionsModule,
+        CrashesModule,
+        RenaestMirrorModule,
         // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
         // handwritten AIT lifecycle commands (WP-T0).
         // Portas do protocolo de sincronização (CTG-0002 §4.8) antes dos
@@ -731,6 +749,31 @@ export class AppModule {
         PecProcessParametersService,
         PecRenachProcessService,
         PecRenachTransmissionService,
+        BoatRenaestTransmissionService,
+        {
+          provide: BOAT_RENAEST_TENANT_DISCOVERY,
+          useFactory: (database: Database) =>
+            new SqlBoatRenaestTenantDiscovery(database),
+          inject: [Database],
+        },
+        {
+          provide: BOAT_RENAEST_MONTHLY_LEDGER,
+          useFactory: (
+            database: Database,
+            requestContext: RequestContextMutator,
+          ) => new SqlBoatRenaestMonthlyLedger(database, requestContext),
+          inject: [Database, RequestContextMutator],
+        },
+        {
+          provide: BoatRenaestJobService,
+          useFactory: createBoatRenaestJobService,
+          inject: [
+            BOAT_RENAEST_TENANT_DISCOVERY,
+            BOAT_RENAEST_MONTHLY_LEDGER,
+            BoatRenaestTransmissionService,
+            RequestContextMutator,
+          ],
+        },
         PecToxicologyInboundService,
         PecSefazService,
         PecAuditQueryService,
@@ -739,6 +782,10 @@ export class AppModule {
         {
           provide: PEC_RENACH_PORT,
           useFactory: () => createSenatranAdapter().ports.renach,
+        },
+        {
+          provide: BOAT_RENAEST_PORT,
+          useFactory: () => createSenatranAdapter().ports.renaest,
         },
         {
           provide: PEC_SEFAZ_PORT,

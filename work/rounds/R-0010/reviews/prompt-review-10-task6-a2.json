@@ -1,0 +1,55 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 221,
+      "claim": "A adenda A-2 manda o sensor E2E exigir `error_code: 'BOAT.SYNC_INVALID_CRASH_RECORD'` na resposta de `POST /v1/ops/offline-sync/sync-batches`, mas o `error_code` do recibo é enum FECHADO no contrato dono da rota, `docs/framework/contracts/BP-OPS-OFFLINE-SYNC-001.commands.openapi.json` linhas 1819-1830 e 2178-2189, cujos onze valores são todos `TEAT.*` e não incluem nenhum código `BOAT.*`; além disso `work/rounds/R-0008/contracts/CTG-0002.md` §4.3 linha 222 e §4.4 linha 242 fixam `TEAT.SYNC_INVALID_CRASH_RECORD` como o código de `validate` falho de `crash-record`, e `work/rounds/R-0010/prompts/TASK-0008.md` linha 47, na mesma rodada, afirma literalmente que `BOAT.SYNC_INVALID_CRASH_RECORD` vale apenas para resposta do módulo est/crash. O R-0010 §1 só declara substituído o fallback `TEAT.SYNC_DESTINATION_NOT_WIRED`, nunca a linha de payload inválido. Não levantado em ciclos anteriores porque o texto da adenda A-2 é novo e é ele que roteia um código `BOAT.*` para a superfície do recibo TEAT; admissível fora do primeiro ciclo por ser contradição canônica.",
+      "fix": "Registrar na A-2 (e em §3) a emenda explícita que supera `R-0008/CTG-0002.md` §4.3/§4.4 para `crash-record`, atribuir a TASK-0008 (`MOD-contracts-commands`, ainda `queued`) a inclusão de `BOAT.SYNC_INVALID_CRASH_RECORD` no enum `error_code` das duas ocorrências do BP-OPS-OFFLINE-SYNC-001.commands.openapi.json, e alinhar `prompts/TASK-0008.md` linha 47; enquanto a emenda não existir, o sensor deve continuar sob o código do enum vigente"
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0006.md",
+      "line": 31,
+      "claim": "A leitura obrigatória fecha `work/rounds/R-0008/contracts/CTG-0002.md` em §5.1/§5.13 e não lista `docs/framework/contracts/BP-OPS-OFFLINE-SYNC-001.commands.openapi.json`, que são exatamente as duas fontes onde o código do recibo diverge do exigido na linha 50; com a regra da linha 3 (`Se houver contradição de fonte, pare e reporte`) o worker não tem como enxergar a contradição dentro da lista fechada",
+      "fix": "Acrescentar à leitura obrigatória o enum `error_code` do BP-OPS-OFFLINE-SYNC-001.commands.openapi.json e §4.3/§4.4 de `R-0008/CTG-0002.md`, junto da frase de supersessão decidida no achado anterior"
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0006.md",
+      "line": 40,
+      "claim": "A fronteira `somente sensor C-0002-44` não é exata para o arquivo: o caso a corrigir depende de `crashRecordPayload` e `syncBatchBody()` (`backend/app/tests/e2e/teat-field-sync.e2e.spec.ts` linhas 85-106), compartilhados com o sensor 403 de C-0002-44 (linha 248) e com o bloco §5.13 de validação de forma (linhas 292-330), e o comentário das linhas 95-96 (`não tem destino nesta rodada (§4.3): o lote responde 200 e nada de domínio é tocado`) fica factualmente falso após A-2, porém fora do que o worker pode tocar. Há ainda dois `it` rotulados C-0002-44 (linhas 232 e 248), e só a linha 50 desambigua qual é o alvo",
+      "fix": "Na linha 40, nomear o alvo como `o caso C-0002-44 que hoje espera TEAT.SYNC_DESTINATION_NOT_WIRED (linhas 232-246)`, autorizar apenas a atualização do comentário das linhas 95-96 e proibir explicitamente alterar a forma de `crashRecordPayload`/`syncBatchBody()`"
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0010/prompts/TASK-0006.md",
+      "line": 3,
+      "claim": "A linha 3 proíbe sem ressalva `ajustar testes para passar`, e a linha 50 manda editar um teste depois da implementação já montada (o applier existe em `backend/domains/est/crash/src/handwritten/crash-sync-applier.ts` linha 127); o prompt não declara que essa é exceção autorizada pela adenda A-2, o que deixa a instrução em conflito com a própria regra de abertura",
+      "fix": "Na linha 50, dizer explicitamente que a alteração é emenda de contrato pela adenda A-2, exceção declarada à linha 3, e que a asserção resultante deve ser estritamente mais forte (recibo `rejected`, item `rejected`, ausência de efeito de domínio)"
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0010/tasks/TASK-0006.json",
+      "line": 17,
+      "claim": "O registro da tarefa está `status: \"completed\"` (linha 5) com `iteration_count: 0` (linha 17) e `max_iterations: 2`, embora esta seja a segunda execução (retentativa A-2, já com gate global rodado); a retentativa não é contabilizada e o teto de iterações deixa de ser verificável",
+      "fix": "Mover o registro para o estado de retentativa e incrementar `iteration_count` para 1 antes de despachar o worker"
+    }
+  ],
+  "notes": [
+    "Os quatro comandos de aceitação existem: `test:unit` em `backend/domains/est/crash/package.json` e `backend/domains/ops/offline-sync/package.json`, `senatran-adapter:test:ci` no `package.json` raiz e `test:e2e` em `backend/app/package.json`.",
+    "A prova do fallback está protegida por construção: `submit-batch.spec.ts` não casa com o glob `backend/domains/ops/offline-sync/src/handwritten/*crash*.spec.ts` de Pode tocar, e C-0002-13 (linhas 554-576) monta `deps()` sem applier de `crash-record`, então continua exercitando `TEAT.SYNC_DESTINATION_NOT_WIRED`.",
+    "Nenhum outro prompt de R-0010 declara `backend/app/tests/e2e/teat-field-sync.e2e.spec.ts` em sua fronteira; a disjunção de escrita está preservada.",
+    "A definição de C-0002-44 em `R-0008/CTG-0002.md` (item 44, linhas 1490-1491) fixa apenas 200 com `field-agent` e 403 com `field-supervisor`; o envelope preservado pela redação de A-2 é compatível com ela.",
+    "TASK-0007 está `in_progress` e é dona de `MOD-est-handwritten`/`MOD-integration-outbox`, produção da qual o critério 4 (`@detran/app test:e2e`) depende; convém serializar o gate global em banco isolado depois que TASK-0007 parar, para o resultado de C-0002-44 não ser alvo móvel.",
+    "O mesmo par recibo/rollback já está coberto por `backend/app/tests/e2e/boat-crash-commands.e2e.spec.ts` linhas 457-497, que herda o mesmo risco de enum do achado alto."
+  ]
+}

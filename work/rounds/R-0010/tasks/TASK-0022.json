@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0022",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Completar enums de erro das respostas do contrato de comandos BOAT",
+  "description": "Transcrever codigos literais BOAT/TEAT nas respostas 4xx/5xx das 13 operacoes montadas, sem inventar tokens e sem alterar o gate.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contracts-commands"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0011",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 9,
+  "tags": ["wp-b3", "contracts", "adenda-a5"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-1839f78292650ece",
+  "acceptance_commands": [
+    [
+      "node",
+      "-e",
+      "JSON.parse(require('fs').readFileSync('docs/framework/contracts/BP-EST-CRASH-001.commands.openapi.json','utf8'))"
+    ],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-19T22:05:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
+    "prompt_composition_id": "PC-1839f78292650ece",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  }
+}

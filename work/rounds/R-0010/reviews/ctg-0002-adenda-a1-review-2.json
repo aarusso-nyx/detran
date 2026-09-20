@@ -1,0 +1,72 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": 5,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 195,
+      "claim": "A Ordem de retomada atribui ao Engineer 'a fachada concreta com dependências STYNX e lockfile', mas (a) `prompts/00-maestro.md`:51 reserva `pnpm install` e o commit de `pnpm-lock.yaml` ao maestro, e `prompts/TASK-0007.md` lista `pnpm-lock.yaml` em 'Não pode tocar' e repete 'o maestro é o único que usa git e instala pacotes'; (b) a fachada concreta vive em `backend/domains/shared/src/documents/`, fora do 'Pode tocar' de TASK-0007 (que cobre `est/crash`, `ops/offline-sync`, `backend/app` wiring, `backend/app/package.json`, raiz e senatran-adapter); (c) ADR-0018 §Status registra os adaptadores de render/assinatura/storage como R-0007/WP-P, frente com a qual o plano já declara lock (`plan.md`:6,102). A adenda encerra com 'TASK-0007 continua apenas nos arquivos de sua fronteira', logo não instrui violação — mas a tarefa sucessora não tem fronteira nem dono nomeados.",
+      "fix": "Na Ordem de retomada: dizer que a fachada concreta exige nova tarefa com 'Pode tocar' estendido a `backend/domains/shared/src/documents/**` e à montagem STYNX em `backend/app/src/**`; atribuir `pnpm install`/`pnpm-lock.yaml` ao maestro (00-maestro.md:51), cabendo ao Engineer somente declarar as dependências em `package.json`; e registrar a coordenação com R-0007 (ADR-0018 §Status) antes de abrir a tarefa."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 147,
+      "claim": "A condição 'Cada projetor que precise hidratar o fato de origem chama-se `*.projection.ts`' é mais estreita que o gatilho de ADR-0020 §Decision 4, que falha em 'SQL or repository code referencing another domain's schema' fora de `*.projection.ts`. Um projetor de `portal`/`dashboard` que só leia `integration.outbox` já referencia schema de outro domínio sem 'hidratar o fato de origem' em `est.*`: pela letra da adenda ele não precisaria do nome, e pela letra do ADR o gate o reprovaria.",
+      "fix": "Trocar a condição pelo gatilho do ADR: os três projetores chamam-se `*.projection.ts` e declaram os eventos consumidos, porque qualquer referência a schema de outro domínio — inclusive `integration.outbox` — cai em ADR-0020 §Decision 4."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 177,
+      "claim": "A adenda manda o Architect fixar token e propriedade do template, mas não nomeia o instrumento: `DOCUMENT_KINDS` é lista canônica fechada de 12 tokens (`backend/domains/shared/src/documents/document-kind.ts`, anotada como especificação de R-0006 `CTG-0002-modules.md` §f.1) e ADR-0018 §Decision 2 enumera esses mesmos tokens e escopa o catálogo a `inf.normative_document_template`. Acrescentar um token `est` ou generalizar o catálogo altera um artefato canônico de outra frente e o texto de um ADR aceito, o que não é decisão local de rodada.",
+      "fix": "Acrescentar que a escolha do Architect se registra como adenda/emenda a ADR-0018 §Decision 2 (escopo do catálogo e lista de tipos) e como alteração especificada da lista canônica `DOCUMENT_KINDS`, com o dono de `inf/normative` ciente — nunca por edição direta do Engineer."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 166,
+      "claim": "Citação inexistente: `docs/framework/arch/dashboard-frontends.md` tem apenas §1…§10 (não há §11). O texto vencido sobre P-09 está em §2 invariante 11 (linha 50), na linha D-13 da tabela de §4 (linha 86) e na linha de dependências de §10 (linha 164). 'dashboard-frontends.md §11/D-13' manda TASK-0009 reconciliar uma seção que não existe.",
+      "fix": "Escrever '`dashboard-frontends.md` §2 invariante 11, D-13 (§4) e a linha de bloqueios de §10'."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 171,
+      "claim": "'`@detran/shared/documents` contém somente a interface `DocumentsFacade`' é literalmente falso e é contradito pela frase seguinte da própria adenda: o diretório tem `document-kind.ts` (`DOCUMENT_KINDS`/`DocumentKind`), `signature-policy.ts` (`SignaturePolicy`, `PadesLevel`, `PdfaConformance`), `documents-facade.ts` (`RenderedDocument`/`SignedDocument`/`SealedDocument`/`DOCUMENT_ERROR_CODES`), `index.ts` e `documents.spec.ts`. A lacuna real é de implementação, não de tipos.",
+      "fix": "Escrever '`@detran/shared/documents` contém somente tipos e a interface `DocumentsFacade`; nenhuma implementação concreta e nenhuma adaptação STYNX de PDF/A estão montadas neste branch'."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 176,
+      "claim": "'a partir de UC-1.251' aponta para um caso de uso que não existe como ficha no corpus: `use-cases/INDEX.md`:26 dobra UC-1.251–1.254 em [UC-BOAT-005], :80 lista 'relatório preliminar como documento próprio — UC-1.251' como backlog não escrito, `_intake/proposals.md`:48 e `UC-BOAT-012.md`:47 o mantêm como item a avaliar em rodada futura. Derivar token e chave de template de uma ficha inexistente é o mesmo risco de invenção que o item pretende fechar.",
+      "fix": "Citar as fontes que existem: [UC-BOAT-005] (que absorve UC-1.251–1.254), `boat-route-contract.md`:62 (`GET records/{id}/report` — relatório preliminar/BAT em PDF/A) e `boat-build-pack.md`:69 (WP-B2), registrando que UC-1.251 não tem ficha própria (INDEX.md:80)."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0010/contracts/CTG-0002.md",
+      "line": 149,
+      "claim": "'ADR-0020 §4' não resolve: o ADR tem as seções Status/Context/Decision/Consequences, e o gate está no item 4 da Decision. A convenção do repositório para esse tipo de remissão é '§Decision N' (ex.: `document-kind.ts` cita 'ADR-0018 §Decision 2').",
+      "fix": "Escrever 'ADR-0020 §Decision 4'."
+    }
+  ],
+  "notes": [
+    "Os cinco achados da revisão anterior estão corrigidos e nenhum `high` permanece; as correções conferem com a fonte. Item 1 (era high): o item 5 agora nomeia token `DocumentKind`, chave e propriedade/versão do template, linha com `pdfaRequired=true`, `PDF/A-2b` e assinatura como decisão prévia do Architect, e a Ordem de retomada repete 'o catálogo/template/política de documento'; a separação relatório preliminar × BAT oficial `source_pending` sob DT-061 (open-issues.md:88) é coerente com `boat-route-contract.md`:62 e preserva C-2-15.",
+    "Item 2 corrigido: o item 1 agora exige `*.projection.ts` com eventos declarados e o gate `verify:domain-boundaries` como entregável do Engineer. Substrato confere: nenhum `*.projection.ts` em `backend/` e nenhuma implementação do gate no repositório (só menções em `rait-build-pack.md`, `dashboard-build-pack.md`, ADR-0020 e `implementation-gate-2026-09-13.md`).",
+    "Item 3 corrigido com fidelidade literal a RN-DASH-161 §Decisão do Owner ('2026-08-28, DT-029; confirmada em 2026-09-13, steering.md H.54'; limiar 10 com supressão primária e secundária; 'o parecer sobre o limiar valida o número depois … não bloqueia a primeira publicação'); bate com open-issues.md:60 e com IU-DASH-001 §E.",
+    "Item 4 corrigido: a reconciliação de IU-DASH-001 §D e de `dashboard-frontends.md` passou a TASK-0009, sem antecipar P-09 em TASK-0007 — resta apenas a imprecisão de citação apontada acima.",
+    "Item 5 corrigido sem impor formato: a frase agora reproduz o título de RN-PORTAL-118 ('mascaramento é controle de acesso de terceiros, nunca do titular') e coincide com `boat-route-contract.md`:95 e com a seção 5 do próprio CTG-0002 (linha 106). Nenhuma regra de produto nova.",
+    "Verificações de substrato para o item 5: `PdfaConformance = 'PDF/A-2b'` e `SignaturePolicy.pdfaRequired` já existem em `signature-policy.ts`, e `RenderedDocument.pdfaConformance` em `documents-facade.ts` — a decisão do Architect preenche dado, não cria tipo; `DOCUMENT_KINDS` segue com os 12 tokens `inf` de ADR-0018 §Decision 2.",
+    "Nenhuma contradição canônica, de ADR ou de Constituição foi encontrada na adenda corrigida, e ela não instrui escrita fora de fronteira — o fecho 'TASK-0007 continua apenas nos arquivos de sua fronteira' e a reafirmação de C-2-05/06/08/13/14 permanecem intactos. Daí REVIEW por correção local, não FAIL; as sete correções acima são textuais e não bloqueiam o Architect."
+  ]
+}

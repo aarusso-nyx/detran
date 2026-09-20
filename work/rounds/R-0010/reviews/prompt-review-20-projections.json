@@ -1,0 +1,81 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0010/prompts/TASK-0012.md",
+      "line": 28,
+      "claim": "A fronteira autoriza R-0010 a editar `docs/framework/blueprints/BP-PORTAL-PROJECTIONS-001.json` e incrementar `module.version`, mas R-0009 continua ativa e detém esse blueprint: `work/rounds/R-0009/plan.md:352` dá a TASK-0002 os locks `MOD-bp-portal`/`MOD-ddl-61-65` e `plan.md:355` reserva à TASK-0005 (CTG-0002, não mesclada) o 'wiring M24 dos 4 blueprints de CTG-0002 + regeneração' — o BP hoje não tem nenhuma chave `handwritten*` e sua própria descrição diz 'wiring manuscrito declarado por TASK-0005 (M24)', provando que essa tarefa ainda não rodou. `docs/meta/agents/orchestra/waves.md:10` proíbe duas frentes ativas com lock no mesmo blueprint, e `work/rounds/R-0010/plan.md` §Bloqueios registra 'R-0009 mantém ownership desses artefatos; R-0010 fica com o projetor BOAT', sem qualquer liberação documentada. Além disso o header gerado carrega `sha256` do arquivo inteiro do blueprint (`tools/blueprints/generate.mjs:36,69`), de modo que qualquer edição reescreve `backend/database/ddl/65-portal-projections.sql` e os ~35 fontes gerados de `@detran/portal-projections`, todos de R-0009.",
+      "fix": "Retirar `BP-PORTAL-PROJECTIONS-001.json` da lista 'Pode tocar' de TASK-0012 e pedir a R-0009 que declare o projetor BOAT no wiring M24 da sua TASK-0005; ou obter liberação documentada do lock (resposta de coordenação registrada em `plan.md` §Bloqueios, como já foi feito com R-0007) e acrescentar a TASK-0012 a mesma §Precondição de despacho e parada usada em TASK-0015."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0014.md",
+      "line": 25,
+      "claim": "`backend/domains/portal/projections/src/handwritten/*crash*.projection.ts` cai dentro do lock `MOD-portal-projections-hw` da TASK-0008 de R-0009 (`work/rounds/R-0009/plan.md:358`), que entrega 'rotas §4, §6, §7, §8; projetores e replay (M16)' no mesmo diretório e ainda não foi executada (o pacote não tem `src/handwritten/`). A serialização registrada nos prompts cobre apenas TASK-0017/0020 da própria rodada (linha 11) e o lock de R-0007 em `shared/documents`; nenhum dos dois planos serializa escrita de R-0010 em `portal/projections`.",
+      "fix": "Condicionar a fronteira a liberação documentada de `MOD-portal-projections-hw` por R-0009 (registrada em `plan.md` §Bloqueios) ou mover a implementação BOAT para fora do pacote Portal, consumindo `portal.crash_view` pelo projetor que R-0009 declarar; replicar em TASK-0014 a precondição de parada de TASK-0015."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0010/prompts/TASK-0013.md",
+      "line": 27,
+      "claim": "A permissão do Inspector para `tools/domain-boundaries/tests/verify-domain-boundaries.test.mjs` é condicional ('apenas se o gate novo de TASK-0014 for especificado no contrato'), mas TASK-0012 em nenhum ponto (linhas 38 e 40) exige que `work/rounds/R-0010/contracts/boat-projections.md` especifique o gate `verify:domain-boundaries` — a regra sobre `*.projection.ts` aparece só nas Regras de execução (linha 50). Ao mesmo tempo a Tarefa (linha 36) e o critério (linha 41) de TASK-0013 exigem o teste sem condição, e TASK-0014 deve implementar o gate (linha 41) com critério `node --test tools/domain-boundaries/tests/*.test.mjs` (linha 48). Com o contrato silencioso, o Inspector fica sem autorização para o arquivo que sua própria tarefa manda escrever e o escopo do gate volta a ser decidido no prompt do Engineer — mesma classe do achado 2 de `prompt-review-9`.",
+      "fix": "Acrescentar à Tarefa de TASK-0012 a especificação do gate (escopo da leitura cruzada proibida, exceção estrita `*.projection.ts` com eventos declarados, nome do script `verify:domain-boundaries` e caminho em `tools/domain-boundaries/`) como entregável do contrato, e tornar incondicional a linha 27 de TASK-0013."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0012.md",
+      "line": 38,
+      "claim": "A Tarefa não exige que `BP-DASHBOARD-CRASHES-001` e `BP-INTEGRATION-RENAEST-MIRROR-001` declarem `handwrittenProviders`/`handwrittenExports`, embora TASK-0014 só possa escrever `src/handwritten/**` nesses pacotes (linhas 26-27) e esteja proibida de editar arquivos gerados (linha 37). `tools/blueprints/generate.mjs:373` exporta de `src/index.ts` apenas o que estiver em `module.handwrittenExports`, e `generate.mjs:225-255` só registra provider manuscrito no módulo Nest via `module.handwrittenProviders` (precedente: `BP-EST-CRASH-001`). Sem essas chaves, o projetor fica inalcançável a partir de `backend/app/src/boat-projections*.ts` salvo por import relativo profundo, vedado pela ADR-0001 §Decision e pela linha 53 do próprio TASK-0014.",
+      "fix": "Exigir em TASK-0012 que os dois blueprints novos declarem `handwrittenProviders` e `handwrittenExports` dos projetores/ledger manuscritos, com os símbolos e caminhos que TASK-0014 deve implementar."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0010/tasks/TASK-0014.json",
+      "line": 28,
+      "claim": "`acceptance_commands` de TASK-0014 lista `verify:domain-boundaries`, `blueprints:check`, `verify:rls-ddl`, `typecheck`, `format:check` e `node --test`, mas omite `pnpm --filter @detran/app test:integration` e `test:e2e`, que são o primeiro critério do prompt (linha 47) e a prova de que os REDs de TASK-0013 ficaram verdes; TASK-0013.json:28 inclui corretamente esses dois comandos.",
+      "fix": "Acrescentar os dois comandos de teste do app a `acceptance_commands` de TASK-0014.json, alinhando o artefato ao critério do prompt."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/prompts/TASK-0014.md",
+      "line": 32,
+      "claim": "A fronteira coloca a implementação do gate em `tools/verify-domain-boundaries.mjs` com o parêntese '(novo; runner em `tools/domain-boundaries/tests/`)', misturando dois lugares: a convenção do repositório é `tools/<área>/<script>.mjs` ao lado de `tools/<área>/tests/*.test.mjs` (`tools/contracts/`, `tools/parameters/`, `tools/blueprints/`), e os testes de TASK-0013 ficam em `tools/domain-boundaries/tests/`.",
+      "fix": "Fixar a implementação em `tools/domain-boundaries/verify.mjs` (script `verify:domain-boundaries` apontando para ela) e remover o parêntese ambíguo."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0010/prompts/TASK-0012.md",
+      "line": 27,
+      "claim": "A emenda pedida é descrita apenas como autorização do pacote físico, mas `docs/meta/adr/ADR-0001-domain-first-layout.md:43` afirma em §Consequences que 'Cross-domain code has exactly two sanctioned homes — `backend/domains/shared` e a plataforma stynx'; um domínio de topo `integration` é um terceiro, e sem tocar essa consequência a ADR fica autocontraditória.",
+      "fix": "Exigir que a emenda limitada atualize também a linha de §Consequences (ou registre explicitamente a exceção do espelho sob propriedade lógica do adapter, ADR-0020), além da lista de §Decision."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0010/prompts/TASK-0014.md",
+      "line": 11,
+      "claim": "A precondição serializa `app.module.ts` apenas com TASK-0017/0020, mas `work/rounds/R-0010/plan.md:5` registra que R-0007 ainda detém alterações não integradas em `app.module.ts` e no lockfile e que 'os Engineers de projeções/job/documentos serializam `app.module.ts`'; TASK-0015/0016/0017 carregam a parada explícita por R-0007 e TASK-0014 não.",
+      "fix": "Acrescentar à §Precondição de TASK-0014 a menção ao lock externo de R-0007 sobre `app.module.ts`/lockfile, com a mesma regra de parada e base exata usada na tríade de documentos."
+    }
+  ],
+  "notes": [
+    "PR #54 está integrado: `1175f4f` ('Merge pull request #54 from aarusso-nyx/orchestra/portal-backend') é ancestral do HEAD da worktree, e `backend/database/ddl/65-portal-projections.sql`, `BP-PORTAL-PROJECTIONS-001.json` e o pacote `@detran/portal-projections` estão presentes na árvore.",
+    "Os sha256 de `prompts/TASK-0012.md`, `TASK-0013.md` e `TASK-0014.md` conferem byte a byte com `compositions.json`, e os `pc_id` (`PC-07e765dc04ed6627`, `PC-5b4f4aacf9f1110d`, `PC-8180f7257c61756c`) coincidem com `prompt_composition_id` dos respectivos JSONs; `upstream_task_id` encadeia 0012→0013→0014 e as disciplinas/posições de pipeline estão corretas.",
+    "Achados 3, 4 e 10 de `prompt-review-9` estão corrigidos: os `backend/domains/*/*/package.json` saíram da fronteira de TASK-0014 (dependências vão para `module.dependencies` dos blueprints), `backend/app/vitest.config.ts` e `backend/app/package.json` entraram (linhas 30-31), e o pacote `integration.renaest-mirror` deixou de ser rota decidida pelo Engineer — TASK-0012 fixa namespace e emenda de ADR-0001 antes.",
+    "Os padrões de teste do app cobrem os arquivos de TASK-0013: `backend/app/vitest.config.ts` inclui `tests/integration/**/*.integration.spec.ts` no tier `integration` e `tests/e2e/**/*.e2e.spec.ts` no tier `e2e`; o gate novo agora tem executor direto (`node --test tools/domain-boundaries/tests/*.test.mjs`) nos critérios de TASK-0013 e TASK-0014.",
+    "Numeração de DDL livre e coerente: 71 e 72 não estão ocupados (`70-est-crash.sql` e `75-boat-renaest-job.sql` são os vizinhos), e o seed `71-fixtures-boat-projections.sql` de TASK-0013 vive em `backend/database/seed/`, sem colisão. O schema `integration` já existe em `04-integration-storage.sql` (outbox), e o gerador emite `create schema if not exists` idempotente.",
+    "Invariantes preservados nos três prompts: ledger `(tenant_id, projection_name, event_id)` atômico com o efeito, replay integral e incremental que não perde commit tardio com `created_at` anterior, `event.version` separado de `aggregate.version`, RLS por tenant sem owner-role, ausência de escrita de volta em `est.*`, SSE não é fonte, identidade `source_pending` fechando rota cidadã e supressão primária/secundária com `dashboard.cell_threshold=10`, com P-09 fechada sem os cinco controles de RN-DASH-161 e RN-BOAT-131.",
+    "A saída SENATRAN permanece porta única: nenhum dos três prompts autoriza chamada externa fora de `packages/senatran-adapter`, e o espelho recebe apenas eventos/recibos canônicos, sem transicionar estado BOAT.",
+    "`tools/blueprints/check.mjs` compara byte a byte apenas os caminhos de `generated-files.json`, então arquivos manuscritos novos em `src/handwritten/` não quebram o gate — mas também não são exportados nem registrados sem declaração no blueprint, o que sustenta o achado de item 3."
+  ]
+}

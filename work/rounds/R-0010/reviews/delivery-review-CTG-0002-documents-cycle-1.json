@@ -1,0 +1,69 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0010",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "pnpm-lock.yaml",
+      "line": 305,
+      "claim": "`@stynx-nyx/pdf@1.3.1` foi resolvido com `@stynx-nyx/signature@1.4.0`, que ainda introduz `@stynx-nyx/integration-adapter@1.4.0`; isso contradiz o alvo vinculante de todos os pacotes STYNX em 1.3.1 fixado pela ADR-0015 linhas 46-53.",
+      "fix": "resolver o peer de `@stynx-nyx/pdf` com `@stynx-nyx/signature@1.3.1`, eliminar as resoluções STYNX 1.4.0 do lockfile e repetir instalação congelada e gates."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "backend/app/tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "line": 208,
+      "claim": "o E2E substitui integralmente `DOCUMENTS_FACADE` por um Map em memória; nenhum teste de integração ou real percorre a fachada composta com `S3Service`, portanto não está provado que o armazenamento STYNX montado é efetivamente usado nem que bytes e metadados sobrevivem juntos a reinício.",
+      "fix": "adicionar prova no tier apropriado que execute a composição real com runner/storage injetável compatível com STYNX, sele, recrie a fachada/aplicação e leia os mesmos bytes e metadados persistidos; manter provedores externos reais exclusivamente no tier `real`."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/app/tests/integration/boat-documents.integration.spec.ts",
+      "line": 98,
+      "claim": "o teste denominado `persiste evidência integral` insere a fixture diretamente por SQL e verifica somente `valid`, versão e conformidade; não compara o objeto veraPDF completo nem prova que o resultado produzido pela fachada atravessa o repositório sem perda.",
+      "fix": "persistir pela fachada/repositório de produção e comparar integralmente o JSON de validação, incluindo `rulesetVersion`, `validatedAt`, `durationMs`, `errors` e quaisquer demais campos retornados."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "backend/app/tests/e2e/boat-crash-commands.e2e.spec.ts",
+      "line": 472,
+      "claim": "a negação cross-tenant aceita alternativamente 403 ou 421, contrariando a regra vinculante da rodada que veda asserções por conjunto de status e impedindo verificar o erro canônico exato.",
+      "fix": "determinar pelo contrato/interceptor o único status e código canônicos esperados e afirmá-los exatamente."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0010/reports/TASK-0016.md",
+      "line": 22,
+      "claim": "o relatório afirma cobertura de falha fechada para renderer, validador, template e política, mas os testes documentais exercitam apenas rejeição do validador; não há casos executáveis para falha do renderer, template ausente ou política ausente/divergente.",
+      "fix": "adicionar REDs independentes para falha do WeasyPrint runner, template ausente, política ausente e política divergente, com resultado esperado explícito, e corrigir o relatório para refletir apenas evidência executada."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": ".github/workflows/ci.yml",
+      "line": 277,
+      "claim": "somente o wheel principal do WeasyPrint usa `--require-hashes`; as dependências são instaladas numa segunda resolução sem hashes, de modo que o provisionamento não é integralmente reproduzível conforme o contrato.",
+      "fix": "usar um requirements lock completo com hashes para todas as distribuições instaladas e executar uma única instalação com `--require-hashes`, preservando o teste bloqueante de versão."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0010/contracts/CTG-0002-documents.md",
+      "line": 114,
+      "claim": "a fronteira final ainda diz que a CI provisiona Chromium, embora a decisão aprovada e a implementação usem WeasyPrint 70.0.",
+      "fix": "substituir a referência residual a Chromium por WeasyPrint 70.0 e suas dependências reproduzíveis."
+    }
+  ],
+  "notes": [
+    "A ordem Architect → Inspector → Engineer e o retorno ao Architect para D-13-08 estão documentados.",
+    "A matriz percorre todos os `DETRAN_ROLES` e inclui grants positivos, negativos e administradores globais; falta apenas tornar a negação cross-tenant exata.",
+    "A reconciliação registra 60 DDLs ordinários, os dois perfis de seed, a revogação append-only posterior ao grant global e a restauração da identidade owner antes da comparação pós-RLS.",
+    "Não foi encontrada chamada direta ao SENATRAN fora de `packages/senatran-adapter` neste corte."
+  ]
+}

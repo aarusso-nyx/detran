@@ -17,6 +17,7 @@ atendimento seguinte. Regra própria: nenhum erro expõe dado de vítima em `con
 
 | Código                                    | Status | Quando                                                                          | `context`                                          | Base                         |
 | ----------------------------------------- | ------ | ------------------------------------------------------------------------------- | -------------------------------------------------- | ---------------------------- |
+| `BOAT.CRASH_NOT_FOUND`                    | 404    | registro inexistente ou fora do tenant corrente                                 | `crashRecordId`                                    | implementação CTG-0002       |
 | `BOAT.CRASH_STATE_INVALID`                | 409    | comando fora do estado ([WF-BOAT-001])                                          | `recordId`, `currentState`, `allowed[]`, `command` | [WF-BOAT-001]                |
 | `BOAT.CRASH_TYPE_NOT_IN_CATALOG`          | 422    | `crash_type` fora do catálogo do órgão                                          | `allowed[]`                                        | [RN-BOAT-109]                |
 | `BOAT.CRASH_TERM_ACIDENTE_FORBIDDEN`      | 400    | campo livre contendo "acidente" em rótulo/termo oficial (lint de conteúdo)      | `field`                                            | [RN-BOAT-110]                |

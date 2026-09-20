@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0013",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever REDs de replay, RLS e publicação segura das projeções BOAT",
+  "description": "Refazer REDs com par canônico para deduplicação e rejeição tipada do par legado sem schemaVersion, deixando somente seu sucesso pendente de TASK-0007, além de tick, RLS e fronteiras.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-portal-crash-view",
+    "MOD-dashboard-crashes",
+    "MOD-integration-renaest-mirror"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-b2", "wp-p", "projections"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-834a95b71002361f",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/app", "test:integration"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["node", "--test", "tools/domain-boundaries/tests/*.test.mjs"]
+  ],
+  "created_at": "2026-09-16T18:45:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-834a95b71002361f",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "upstream_task_id": "TASK-0012"
+}

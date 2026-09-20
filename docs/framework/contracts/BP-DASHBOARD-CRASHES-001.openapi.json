@@ -1,0 +1,195 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Crashes — BP-DASHBOARD-CRASHES-001",
+    "version": "1.0.0",
+    "description": "Agregacao interna de sinistros para dashboard.crashes (ADR-0020 Decision 1, 3 e 4; C-2-13/14; RN-DASH-161 e RN-BOAT-131). O projetor manuscrito consome somente o envelope canonico BOAT da integration.outbox, guarda event_schema_version separado de aggregate_version e registra efeito e ledger na mesma transacao. Nao ha rota publica, dado individual, escrita em est.* ou habilitacao de P-09; leitura e exportacao aplicam dashboard.cell_threshold=10 com supressao primaria e secundaria antes da entrega.",
+    "x-blueprint": "BP-DASHBOARD-CRASHES-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "CrashAggregate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "crash_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "period_start",
+          "municipality_code",
+          "severity",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Celula interna agregada por tenant, periodo, municipio e gravidade. Nao contem identificador de pessoa, veiculo, localizacao precisa ou dados de saude; o projetor mantem as versoes distintas do envelope e do agregado para replay auditavel."
+      },
+      "CreateCrashAggregateDto": {
+        "type": "object",
+        "properties": {
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "municipality_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "crash_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "period_start",
+          "municipality_code",
+          "severity",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "CrashProjectionAppliedEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projection_name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "projection_name",
+          "event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Ledger idempotente de dashboard.crashes. A chave (tenant_id, projection_name, event_id) permite replay integral ou incremental sem aceitar o mesmo evento duas vezes; insercao do ledger e efeito agregado compartilham a mesma transacao sob RLS."
+      },
+      "CreateCrashProjectionAppliedEventDto": {
+        "type": "object",
+        "properties": {
+          "projection_name": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "projection_name",
+          "event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      }
+    }
+  }
+}

@@ -24,6 +24,10 @@ Applied in lexical order by `../apply.sh` (every numbered file, `20-rls-policies
     (`pnpm verify:lifecycle-vocabulary`).
 12. `20-rls-policies.sql` — forced RLS, trigger installation and least-privilege
     grants.
+13. `75-boat-renaest-job.sql` — `jobs` control substrate for the BOAT RENAEST
+    monthly executor: audited per-tenant technical identities, restricted active
+    tenant discovery, execution ledger and forced RLS. It grants no administrative
+    access to BOAT domain data.
 
 `auth.tenants` is the canonical DETRAN tenant table. `tenancy.tenants` is a
 simple, automatically updatable compatibility view exposing the columns used by

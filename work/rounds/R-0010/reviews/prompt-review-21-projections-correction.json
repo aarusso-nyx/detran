@@ -1,0 +1,42 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0010",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/plan.md",
+      "line": 313,
+      "claim": "A linha de lock da tríade continua `projeções; MOD-portal-crash-view, MOD-dashboard-crashes, MOD-integration-renaest-mirror`, mas a correção mudou a distribuição: `tasks/TASK-0012.json:11-15` agora declara `MOD-dashboard-crashes`, `MOD-integration-renaest-mirror` e `MOD-adr-0001` (sem `MOD-portal-crash-view`, coerente com a saída do blueprint Portal da fronteira), enquanto `MOD-portal-crash-view` passou a valer só para TASK-0013/0014 e depende de liberação de `MOD-portal-projections-hw` por R-0009 (`work/rounds/R-0009/plan.md:358`). O plano não registra `MOD-adr-0001`, embora o precedente da tríade de documentos registre `MOD-adr-0018` na mesma coluna (`plan.md:314`).",
+      "fix": "Atualizar a linha 313 para `projeções; MOD-adr-0001 (TASK-0012), MOD-dashboard-crashes, MOD-integration-renaest-mirror, MOD-portal-crash-view (TASK-0013/0014, sob liberação de R-0009)`, sem alterar os prompts."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0010/tasks/TASK-0014.json",
+      "line": 11,
+      "claim": "`target_modules` lista apenas `MOD-portal-crash-view`, `MOD-dashboard-crashes` e `MOD-integration-renaest-mirror`, mas o prompt corrigido serializa explicitamente `backend/app/src/app.module.ts` (linhas 11 e 29) e autoriza o `package.json` raiz (linha 33); o par Engineer da tríade do job declara esse lock como `MOD-app-composition` (`tasks/TASK-0020.json:11-15`) para os mesmos arquivos, e `plan.md:319-322` serializa TASK-0014/0017/0020 justamente por `app.module.ts` e `package.json` raiz.",
+      "fix": "Acrescentar `MOD-app-composition` a `target_modules` de `TASK-0014.json`, alinhando o artefato à serialização já escrita no prompt e ao precedente de TASK-0020."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0010/prompts/TASK-0012.md",
+      "line": 37,
+      "claim": "A Tarefa instrui 'O maestro executa a geração dos dois blueprints novos, sem regenerar o Portal', mas `tools/blueprints/generate.mjs:17-21` lê e regenera todo `BP-*.json` de `docs/framework/blueprints` e não expõe seletor por blueprint (apenas `BLUEPRINTS_DIR`, `BLUEPRINTS_OUTPUT` e `--check`); `pnpm blueprints:generate` (`package.json:39`) reescreve também `@detran/portal-projections` e `65-portal-projections.sql`. O invariante alcançável é saída byte a byte idêntica, pois o header carrega o sha256 do próprio blueprint (`generate.mjs:36,68-69`), que não muda — é o que o critério da linha 46 já verifica.",
+      "fix": "Trocar a frase por 'o maestro executa `pnpm blueprints:generate` (geração do diretório inteiro) e exige diff vazio em `docs/framework/blueprints/BP-PORTAL-PROJECTIONS-001.json`, `backend/database/ddl/65-portal-projections.sql` e `backend/domains/portal/projections/**`, com `pnpm blueprints:check` verde'."
+    }
+  ],
+  "notes": [
+    "Os oito achados de `prompt-review-20-projections.json` estão corrigidos: (1) `BP-PORTAL-PROJECTIONS-001.json` saiu de 'Pode tocar' (TASK-0012.md:24-29) e entrou em 'Não pode tocar' (linha 33), com a declaração do projetor BOAT registrada no contrato para R-0009 acrescentar ao liberar o lock (linha 37) e o critério de não alteração na linha 45; (5-high) TASK-0014.md:11 condiciona o despacho à liberação documentada de `MOD-portal-projections-hw` e do wiring M24 por R-0009, com parada antes de qualquer escrita; (2-high) TASK-0012.md:39 torna o gate `verify:domain-boundaries` entregável do contrato e TASK-0013.md:27 ficou incondicional ('gate definido no contrato de TASK-0012'); (3-high) TASK-0012.md:37 exige `module.handwrittenProviders`/`handwrittenExports` com símbolos e caminhos exatos nos dois blueprints novos; (6-low) `tasks/TASK-0014.json:29-30` inclui `test:integration` e `test:e2e`; (3-low) o caminho do gate é `tools/domain-boundaries/verify.mjs` em TASK-0012.md:39 e TASK-0014.md:32, sem parêntese ambíguo; (1-low) TASK-0012.md:37 manda emendar §Decision **e** a consequência dos dois homes cross-domain (ADR-0001:43); (5-low) TASK-0014.md:11 acrescenta o lock externo de R-0007 sobre `app.module.ts`/lockfile com 'integração da base exata'.",
+    "Integridade de composição: `shasum -a 256` dos três prompts bate byte a byte com `compositions.json` (`a38754476d3dc84f…`, `402306020144e6eb…`, `a51025a66cd1f870…`) e com `prompt_composition_id` de cada JSON (`PC-a38754476d3dc84f`, `PC-402306020144e6eb`, `PC-a51025a66cd1f870`); modelo/esforço coincidem (terra alto/médio/alto) e `upstream_task_id` encadeia 0012→0013→0014 com posições architect/inspector/engineer.",
+    "Fronteira de geração confirmada contra o gerador: `module.handwrittenProviders` é registrado no módulo Nest (`generate.mjs:226,231,253`), `module.handwrittenExports` é reexportado de `src/index.ts` (`:373`), `module.dependencies`/`devDependencies` entram no `package.json` gerado (`:285-296`) e `module.ddlFile` fixa o nome do DDL (`:390`) — logo `71-dashboard-crashes.sql` e `72-integration-renaest-mirror.sql` são alcançáveis sem edição manual. O schema aceita o namespace `integration` (`module-blueprint.schema.json:22-26`, padrão `^[a-z][a-z0-9-]*$`) e admite `handwrittenProviders`/`handwrittenExports` (`:35-44`), de modo que a emenda ADR-0001 basta e nada fora da fronteira de TASK-0012 precisa mudar.",
+    "Convenção de ferramentas e runner conferidos: `tools/parameters/verify.mjs` + `tools/parameters/tests/` é o precedente exato de `tools/domain-boundaries/verify.mjs` + `tools/domain-boundaries/tests/`; `engines.node` é `>=24 <25` (`package.json:9-11`) e o repositório já usa `node --test tools/<área>/tests/*.test.mjs` (`parameters:test`, `contracts:test`), então o executor direto dos critérios de TASK-0013/0014 é válido. `backend/app/vitest.config.ts:7-13` mantém `tests/integration/**/*.integration.spec.ts` e `tests/e2e/**/*.e2e.spec.ts` nos tiers usados.",
+    "`tools/check-rls-ddl.ts:18-23` varre o diretório inteiro de DDL, então os DDLs gerados 71/72 entram no gate sem editar o verificador — que está fora da fronteira de TASK-0014. `tools/blueprints/check.mjs` compara apenas os caminhos de `generated-files.json`, preservando os manuscritos em `src/handwritten/`.",
+    "Discrepância de nomenclatura preexistente (não reaberta): o ledger Portal já materializado tem colunas `(tenant_id, event_id, projection)` (`backend/database/ddl/65-portal-projections.sql:113-124`), enquanto os três prompts descrevem a chave como `(tenant_id, projection_name, event_id)`. É a mesma tupla e o DDL 65 está fora da fronteira; o Engineer deve usar a coluna existente `projection` no Portal e `projection_name` só nos ledgers novos que TASK-0012 definir.",
+    "Locks externos permanecem fechados no momento desta revisão: `work/rounds/R-0009/plan.md:352,355,358` mantém `MOD-bp-portal`/`MOD-blueprints-generated` (TASK-0005, wiring M24) e `MOD-portal-projections-hw` (TASK-0008), e `work/rounds/R-0010/plan.md:107-119,167-173` não registra liberação de R-0009 nem de R-0007. Portanto este PASS libera TASK-0012 e, após entrega e geração, TASK-0013; TASK-0014 continua parada por precondição própria. Cabe ao maestro atualizar §Bloqueios registrando a repartição de responsabilidade (projetor BOAT declarado pelo contrato, wiring M24 a cargo de R-0009) que substituiu a fronteira rejeitada na revisão 20.",
+    "A geração dos dois blueprints novos também reescreve `tools/blueprints/generated-files.json` (`generate.mjs:399`), artefato que R-0009 mantém sob `MOD-blueprints-generated` na sua própria branch; isso é conflito de merge entre rodadas, com precedente resolvido em CTG-0001 (DDL 70), não violação de fronteira dentro de R-0010.",
+    "TASK-0007 segue aberta (`plan.md:3`, checkpoint da janela 3) e também monta componentes em `backend/app/src/app.module.ts`; a serialização escrita cobre apenas TASK-0014/0017/0020 (`plan.md:319-322`, TASK-0014.md:11). O maestro não deve manter TASK-0007 e TASK-0014 simultâneas nesse arquivo."
+  ]
+}

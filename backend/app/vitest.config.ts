@@ -75,6 +75,9 @@ export default defineConfig({
       '@detran/ch-toxicology': fileURLToPath(
         new URL('../domains/ch/toxicology/src/index.ts', import.meta.url),
       ),
+      '@detran/dashboard-crashes': fileURLToPath(
+        new URL('../domains/dashboard/crashes/src/index.ts', import.meta.url),
+      ),
       '@detran/inf-ait': fileURLToPath(
         new URL('../domains/inf/ait/src/index.ts', import.meta.url),
       ),
@@ -141,6 +144,12 @@ export default defineConfig({
       '@detran/portal-requests': fileURLToPath(
         new URL('../domains/portal/requests/src/index.ts', import.meta.url),
       ),
+      '@detran/integration-renaest-mirror': fileURLToPath(
+        new URL(
+          '../domains/integration/renaest-mirror/src/index.ts',
+          import.meta.url,
+        ),
+      ),
       '@detran/portal-inbox': fileURLToPath(
         new URL('../domains/portal/inbox/src/index.ts', import.meta.url),
       ),
@@ -183,6 +192,12 @@ export default defineConfig({
     passWithNoTests: true,
     fileParallelism: false,
     testTimeout:
-      tier === 'unit' ? 10_000 : tier === 'in-house' ? 120_000 : 30_000,
+      tier === 'unit'
+        ? 10_000
+        : tier === 'real'
+          ? 180_000
+          : tier === 'in-house'
+            ? 120_000
+            : 30_000,
   },
 });

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0010",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Definir contrato e blueprints das três projeções consumidoras BOAT",
+  "description": "Fixar forma canônica, blueprints Dashboard/Espelho e replay seguro, reconciliando Portal com PortalProjectors e CrashViewProjector já materializados pela R-0009.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-dashboard-crashes",
+    "MOD-integration-renaest-mirror",
+    "MOD-adr-0001"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 8,
+  "tags": ["wp-b2", "wp-p", "projections"],
+  "branch": "orchestra/boat-backend",
+  "worktree_id": "WT-boat-backend",
+  "prompt_composition_id": "PC-240bba3b3cea3d20",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-16T18:45:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-240bba3b3cea3d20",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

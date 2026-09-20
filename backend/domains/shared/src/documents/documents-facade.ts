@@ -24,7 +24,8 @@ export interface SignedDocument extends RenderedDocument {
   readonly signatureRef: string;
 }
 
-export interface SealedDocument extends SignedDocument {
+export interface SealedDocument extends RenderedDocument {
+  readonly signatureRef: string | null;
   readonly pdfaConformance: PdfaConformance;
   readonly sealedAt: string;
 }
@@ -43,7 +44,10 @@ export interface DocumentsFacade {
   ): Promise<RenderedDocument>;
   sign(documentId: string, signer: DocumentSigner): Promise<SignedDocument>;
   seal(documentId: string): Promise<SealedDocument>;
+  read(documentId: string): Promise<Uint8Array>;
 }
+
+export const DOCUMENTS_FACADE = Symbol.for('detran.documents.facade');
 
 /**
  * Três códigos já existentes no catálogo (rait-error-catalog.md §3.5-§3.6),
