@@ -26,13 +26,15 @@
   "tags": ["wp-t4", "wp-t5", "wp-t6"],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
-  "prompt_composition_id": "PC-9d2bdd0aa1d18c03",
+  "prompt_composition_id": "PC-6c7d38a31a218ecb",
   "acceptance_commands": [
     ["pnpm", "blueprints:generate"],
     ["pnpm", "contracts:openapi"],
+    ["pnpm", "contracts:clients"],
     ["pnpm", "blueprints:check"],
     ["pnpm", "contracts:check"],
-    ["pnpm", "verify:rls-ddl"]
+    ["pnpm", "verify:rls-ddl"],
+    ["pnpm", "--filter", "@detran/api-clients", "typecheck"]
   ],
   "created_at": "2026-09-20T03:00:00.000Z",
   "executor": {
@@ -44,7 +46,7 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-terra"
     },
-    "prompt_composition_id": "PC-9d2bdd0aa1d18c03",
+    "prompt_composition_id": "PC-6c7d38a31a218ecb",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

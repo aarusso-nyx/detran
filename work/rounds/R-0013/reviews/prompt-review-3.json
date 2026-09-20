@@ -1,0 +1,36 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0013",
+  "verdict": "FAIL",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0013/prompts/TASK-0007.md",
+      "line": 46,
+      "claim": "The post-rebase repository already assigns ADR-0025 to ADR-0025-rait-operation-clock-composition.md and the registry continues through ADR-0027, so creating ADR-0025-provisionamento-operacional-offline.md would duplicate a canonical ADR identifier.",
+      "fix": "Allocate the actual next free ADR number, currently ADR-0028, and update the plan, TASK-0007 through TASK-0009 paths, task metadata, prompt hashes and compositions before dispatch."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0013/plan.md",
+      "line": 30,
+      "claim": "The provisioning goal still names 19-ops-provisioning.sql while the binding task table, A1 and TASK-0007 through TASK-0009 consistently require 21-ops-provisioning.sql.",
+      "fix": "Replace the stale DDL 19 reference with 21-ops-provisioning.sql so the whole plan names one destination."
+    }
+  ],
+  "notes": [
+    "All seven prompt-review-2 findings are otherwise corrected: TASK-0001 has the added workflow, use-case, rule and alcohol-blueprint sources; workers consume the maestro preflight without Git; the install/lock checkpoint precedes TASK-0008; TASK-0007 runs contracts:clients and owns the public barrel; TASK-0017 reads packages/api-clients/src/index.ts; test-setup is scaffold-only; and TASK-0008 has separate environment, reset and two seed commands.",
+    "The 18 task JSONs form the exact TASK-0001 through TASK-0018 serial chain, and task IDs, upstream IDs, CTGs, models, efforts, prompt hashes and PC identifiers agree with compositions.json.",
+    "Live verification matched origin/main a0f62cb67383ba31354f4c72e24bec91a3f22138, the read-only source remote and clean HEAD 8880f4294c24ff7bd4bf5e0afecfc44faa86ffab, and all six declared source hashes.",
+    "The source matrices remain 67 mobile screens with 576 transitions, 56 web screens with 163 transitions and 9 journeys; the accepted 70-mobile and 60-web derivations remain intact.",
+    "No additional regression was found in corpus, matrix, i18n, provisioning, app-role, SENATRAN-boundary or Inspector ownership requirements."
+  ]
+}

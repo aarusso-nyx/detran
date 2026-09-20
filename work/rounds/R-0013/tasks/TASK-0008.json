@@ -28,6 +28,26 @@
   "worktree_id": "WT-teat-frontends",
   "prompt_composition_id": "PC-cd858ebbe0d14fb1",
   "acceptance_commands": [
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && test \"$DB_NAME\" = detran_r13 && test \"$DATABASE_URL\" = postgresql://postgres:postgres@localhost:5432/detran_r13 && test \"$DETRAN_TEST_DATABASE_URL\" = postgresql://postgres:postgres@localhost:5432/detran_r13"
+    ],
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && DB_NAME=detran_r13 pnpm backend:db:reset"
+    ],
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && bash backend/database/seed.sh"
+    ],
+    [
+      "bash",
+      "-lc",
+      "source work/rounds/R-0013/env-detran-r13.sh && bash backend/database/seed.sh"
+    ],
     ["pnpm", "contracts:test"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "typecheck"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "test:unit"],

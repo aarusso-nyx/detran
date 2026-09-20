@@ -69,8 +69,10 @@ package/config/shell vazio compilável: nenhum comportamento, rota de produto ou
 CTG-0001, CTG-0002, CTG-0003, CTG-0004a, CTG-0004b e CTG-0005 são seis fronteiras de PR. O
 scaffold de CTG-0004a/b é substrato não comportamental autorizado pelo Architect do mesmo CTG;
 depois do scaffold, o Inspector escreve RED e os testes ficam congelados antes do Engineer de
-feature. O maestro roda `pnpm install`, guarda `pnpm-lock.yaml` e estende `pnpm check` logo após
-TASK-0009, TASK-0011 e TASK-0015. Banco da rodada: `work/rounds/R-0013/env-detran-r13.sh`.
+feature. O maestro roda `pnpm install`, guarda `pnpm-lock.yaml` e estende `pnpm check`
+imediatamente após TASK-0007, TASK-0011 e TASK-0015. TASK-0008 não pode iniciar antes do
+checkpoint de instalação/lockfile posterior a TASK-0007. Banco da rodada:
+`work/rounds/R-0013/env-detran-r13.sh`.
 
 ## Critérios de aceitação (comandos → resultado)
 
@@ -123,6 +125,29 @@ prompts anteriores; não é um ciclo incremental de `REVIEW`.
 9. As quatro rotas web operacionais, além das 56 telas da matriz, são fixadas pelo Architect como
    `/acesso-negado`, `/conta`, `/erro` e wildcard `**`; não geram fichas de produto.
 
+## Adenda estrutural A2 — resposta ao `prompt-review-2=FAIL`
+
+Autorizada pelo Owner em 2026-09-20 e limitada aos sete achados registrados. A cadeia de 18 tarefas,
+papéis e CTGs aceita pelo reviewer permanece inalterada.
+
+1. TASK-0001 recebe as fontes/destinos faltantes para itens 8–11: WF-TEAT-001/002,
+   UC-TEAT-007/012, RN-TEAT-135 e os blueprints de álcool adotado/origem; blueprints são leitura.
+2. `preflight-a2.json` fixa base, sibling somente leitura, remote, HEAD, limpeza e hashes. Workers
+   não invocam Git: validam hashes legíveis e reportam paths; somente o maestro verifica diff.
+3. O checkpoint `pnpm install` + captura de lockfile passa a ocorrer imediatamente após TASK-0007
+   e antes do Inspector TASK-0008.
+4. TASK-0007 roda `contracts:clients`, possui o barrel manuscrito
+   `packages/api-clients/src/index.ts` e prova a superfície pública por typecheck.
+5. TASK-0017 lê o barrel real `packages/api-clients/src/index.ts`, não um index gerado inexistente.
+6. `src/test-setup.ts` é propriedade exclusiva dos scaffolds TASK-0011/TASK-0015; Inspectors só
+   escrevem specs e `src/testing/**`.
+7. O JSON da TASK-0008 traz, como comandos separados, precondição explícita de ambiente, reset e
+   duas execuções de seed em `detran_r13`.
+
+O preflight é renovado pelo maestro antes do dispatch se qualquer identidade/hash mudar. O avanço de
+`origin/main` para `a0f62cb67383ba31354f4c72e24bec91a3f22138` foi integrado por rebase antes desta
+adenda; a branch continua inédita.
+
 ## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
 
 - Transcrição de fichas, contratos, i18n e docs é ato de **Architect** (`transcriber-docs`); tarefas assim aparecem como "Architect (transcr.)".
@@ -170,6 +195,13 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
   cadeia/CTGs, matrizes, hashes e modelos foi aceita; persistem lacunas executáveis de fontes do
   corpus, preflight Git, checkpoint de instalação, geração/export de clientes, path de barrel,
   dono de `test-setup` e reset/seeds no task JSON. A rodada continua `escalated`; nenhum worker.
+- `2026-09-20`: Owner autorizou explicitamente a Adenda A2. Os sete achados foram corrigidos sem
+  alterar a cadeia/CTGs; a rodada permanece sem workers até novo `PASS` do reviewer.
+- `prompt-review-3` após Adenda A2: **FAIL**, com 1 high e 1 low novos após o rebase. Os sete
+  achados da revisão anterior foram aceitos, mas o PR #69 ocupou ADR-0025 e o registro já segue até
+  ADR-0027; provisionamento precisa migrar integralmente para ADR-0028. O objetivo também conserva
+  uma referência residual a DDL 19, enquanto tarefas/prompts usam DDL 21. Por ser o terceiro ciclo
+  e haver `FAIL`, §5 exige nova parada antes de qualquer worker.
 
 ## Retomada
 
@@ -183,11 +215,12 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
 - pendente: todos os workers `TASK-0001…0018`, todos os delivery reviews, gates de entrega,
   evidência, PRs, merges, observação e fechamento;
 - último veredito: `FAIL`; nenhum worker autorizado;
-- próximo passo exige nova decisão do Architect/Owner para uma Adenda A2 que corrija os sete
-  achados de `prompt-review-2.json`; pelo §5, este maestro não inicia um terceiro redesenho nesta
-  tentativa nem converte `FAIL` em `REVIEW`;
-- estado Git: branch ainda não publicada, sem PR; integrar qualquer avanço de `origin/main` por
-  rebase antes da retomada e repetir os gates se a base mudar substantivamente.
+- concluídos: Adenda A2, gates estruturais e `prompt-review-3=FAIL` excepcional Codex/Sol/high;
+- próximo passo exige autorização explícita para Adenda A3: trocar ADR-0025 por ADR-0028 em toda
+  a superfície de TASK-0007…0009 e corrigir a referência residual DDL 19→21; depois, nova revisão;
+- somente `PASS` pode liberar TASK-0001; o terceiro ciclo `FAIL` mantém a rodada escalada;
+- estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até
+  `a0f62cb67383ba31354f4c72e24bec91a3f22138` integrado por rebase antes da A2.
 
 ## Leitura
 
