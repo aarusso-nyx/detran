@@ -1,7 +1,9 @@
 # Prompt review — R-0013 `teat-frontends`
 
-Você é o reviewer da família oposta, modelo Opus, em modo `prompt-review`. Papel constitucional:
-Auditor (soft gate, Constituição DEVAI Art. 18). Trabalhe somente em leitura na worktree
+Por autorização excepcional e explícita do Owner nesta sessão, você é o reviewer da mesma família
+Codex, modelo GPT-5.6 Sol, em modo `prompt-review`. Papel constitucional: Auditor (soft gate,
+Constituição DEVAI Art. 18). A exceção substitui somente a regra de família deste review; não muda
+a rubrica nem cria precedente. Trabalhe somente em leitura na worktree
 `/Volumes/Thiamat II/stech/detran-worktrees/teat-frontends` e responda apenas com JSON.
 
 ## Leitura, nesta ordem
@@ -49,5 +51,6 @@ constitucional ou de fronteira. Este primeiro ciclo é exaustivo.
 
 ## Material do maestro
 
-Base exata: `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`. O plano, tarefas, prompts e hashes acima são o
-material anexado. Verifique os arquivos atuais na worktree, não versões em memória.
+Base original: `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`; checkpoint do maestro:
+`7beaba3a39df9769ee5df81fe36754016109c5e2`. O plano, tarefas, prompts e hashes acima são o material
+anexado. Verifique os arquivos atuais na worktree, não versões em memória.

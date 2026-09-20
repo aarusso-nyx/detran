@@ -122,6 +122,15 @@ merge contra `main`; nenhum usa base empilhada. Antes de cada PR, o maestro volt
   `tools/orchestra/bridge.sh claude opus`: a CLI Claude respondeu `You've hit your weekly limit ·
 resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §5 exige `PASS`
   da outra família. Não há bloqueio de produto, código, upstream ou decisão OD.
+- `2026-09-20`, exceção explícita do Owner para o restante desta sessão: o reviewer pode ser da
+  mesma família Codex, com modelo/esforço adequado. A ponte Codex foi descartada para este gate ao
+  revelar esforço fixo `low`; o review válido foi executado por agente nativo Codex/Sol/high,
+  somente leitura. Esta exceção não altera a política permanente nem vale para sessões futuras.
+- `prompt-review-1` excepcional Codex/Sol/high: **FAIL**, com 16 achados high e 2 low. Por §5 do
+  prompt do maestro, o plano está `escalated` e a sessão para antes dos workers. Temas: papéis e
+  CTGs, fronteiras de escrita, fontes canônicas, dependências/barreiras, ordem scaffold→Inspector
+  RED→Engineer, comandos de aceitação, testes de contrato/policy, banco explícito e caminhos
+  resolvidos de ADR/DDL.
 
 ## Retomada
 
@@ -130,16 +139,14 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
 - concluído: worktree/branch em `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`; autorização;
   `pnpm install --frozen-lockfile`; baseline `pnpm check`; `devai doctor`; leitura mandatória;
   concorrência; plano; 12 task JSON; 12 prompts e `compositions.json`;
-- em curso: `prompt-review-1`, sem veredito por quota semanal da CLI Claude;
+- concluído: `prompt-review-1` por Codex/Sol/high, veredito `FAIL` (16 high, 2 low), registrado em
+  `reviews/prompt-review-1.json`;
 - pendente: todos os workers `TASK-0001…0012`, todos os delivery reviews, gates de entrega,
   evidência, PRs, merges, observação e fechamento;
-- último veredito: nenhum — não confundir falha de infraestrutura com `REVIEW`/`FAIL`;
-- próximo passo exato após `2026-09-21 04:00 America/Sao_Paulo`: confirmar que os hashes em
-  `compositions.json` ainda correspondem aos prompts e repetir somente
-  `tools/orchestra/bridge.sh claude opus work/rounds/R-0013/reviews/prompt-review-1.md
-work/rounds/R-0013/reviews/prompt-review-1.json
-/Volumes/Thiamat\ II/stech/detran-worktrees/teat-frontends`; ler o JSON inteiro; corrigir no
-  máximo dois ciclos; só com `PASS` marcar `TASK-0001` in_progress e dispará-la;
+- último veredito: `FAIL`; nenhum worker autorizado;
+- próximo passo: Architect/humano decide autorizar a reescrita estrutural do plano e prompts para
+  corrigir integralmente os 16 achados high; depois recalcular todas as composições e submeter um
+  novo `prompt-review`. Não tratar este `FAIL` como ciclo `REVIEW` incremental;
 - estado Git: branch ainda não publicada, sem PR; integrar qualquer avanço de `origin/main` por
   rebase antes da retomada e repetir os gates se a base mudar substantivamente.
 

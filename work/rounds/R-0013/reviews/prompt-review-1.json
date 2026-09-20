@@ -1,0 +1,162 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0013",
+  "verdict": "FAIL",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0013/tasks/TASK-0005.json",
+      "line": 6,
+      "claim": "TASK-0005 declares Engineer but architect pipeline position and assigns i18n transcription to Engineer; model/effort is also below Engineer-frontend level.",
+      "fix": "Split Architect i18n/contract, Inspector tests and Terra/medium Engineer schemas/transitions."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0013/plan.md",
+      "line": 56,
+      "claim": "The app tasks do not form an Architect to Inspector to Engineer coupled group.",
+      "fix": "Define explicit mobile/web CTGs or one correctly ordered group with disjoint scopes."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0013/prompts/TASK-0010.md",
+      "line": 23,
+      "claim": "Recursive app allowlists let Engineers edit Inspector-owned tests and overlapping artifacts; TASK-0011 has the same defect.",
+      "fix": "Use exact production paths and explicitly exclude specs, fixtures, test setup and test configuration."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0013/prompts/TASK-0003.md",
+      "line": 23,
+      "claim": "TASK-0003 and TASK-0004 can both edit import-manifest.json without MOD-kb-manifest lock.",
+      "fix": "Serialize manifest maintenance in one locked task or a post-ficha task."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0013/prompts/TASK-0001.md",
+      "line": 19,
+      "claim": "The closed reading list cannot support all twelve corpus reconciliations and the write grant is open-ended.",
+      "fix": "List every source and destination explicitly, including UC-TEAT-013, JRN-TEAT-006 and affected workflows/rules/use cases."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0013/prompts/TASK-0005.md",
+      "line": 19,
+      "claim": "Transition/route tasks omit authoritative origin mobile-matrix.json, web-matrix.json and journeys.json.",
+      "fix": "Add exact read-only origin paths or port them first as immutable canonical inputs."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "work/rounds/R-0013/prompts/TASK-0006.md",
+      "line": 19,
+      "claim": "Provisioning architecture omits the origin P0-P6 workflow and INV-OFFLINE-001 source.",
+      "fix": "Read the exact origin workflow/invariant and require source-to-artifact traceability."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "work/rounds/R-0013/prompts/TASK-0002.md",
+      "line": 35,
+      "claim": "H.54 is incorrectly used as the authority for i18n namespaces.",
+      "fix": "Use the canonical OD-P46/R-0014 allowlist authority or a new explicit TEAT decision."
+    },
+    {
+      "severity": "high",
+      "item": 9,
+      "file": "work/rounds/R-0013/prompts/TASK-0002.md",
+      "line": 19,
+      "claim": "The app Architect omits steering H, parameter catalogue, roles.ts and policy.ts.",
+      "fix": "Add those sources and explicitly bind H.39, H.54 and H.55."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0013/prompts/TASK-0009.md",
+      "line": 19,
+      "claim": "The app Inspector lacks canonical role/policy sources and exhaustive route-by-role proof requirements.",
+      "fix": "Add roles.ts, policy.ts and the route-role matrix; prove every allowed and omitted canonical role."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "work/rounds/R-0013/tasks/TASK-0009.json",
+      "line": 16,
+      "claim": "Task JSON dependency metadata omits binding prerequisites at join points.",
+      "fix": "Serialize join points or add schema-supported barriers and align plan/task/CTG metadata."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0013/plan.md",
+      "line": 58,
+      "claim": "The checkpoint orders app creation before Inspector despite the mandated tests-before-apps order; Inspector cannot run before a non-behavioral scaffold exists.",
+      "fix": "Add a role-authorized scaffold checkpoint, then Inspector RED, freeze tests, then Engineers."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0013/plan.md",
+      "line": 65,
+      "claim": "Pipe-separated acceptance scripts are shell pipelines, and task JSONs omit exact package-specific gates.",
+      "fix": "Use separate argv arrays or && and exact commands/results in every task."
+    },
+    {
+      "severity": "high",
+      "item": 14,
+      "file": "work/rounds/R-0013/prompts/TASK-0007.md",
+      "line": 23,
+      "claim": "No Inspector owns executable provisioning contract and shared policy tests.",
+      "fix": "Allow exact provisioning, shared policy and contract test files with locks and commands."
+    },
+    {
+      "severity": "high",
+      "item": 15,
+      "file": "work/rounds/R-0013/prompts/TASK-0007.md",
+      "line": 36,
+      "claim": "Provisioning DB isolation lacks DB_NAME reset/seed and explicit test database URLs.",
+      "fix": "Specify detran_r13 reset/seed, explicit URLs, database identity and cleanup."
+    },
+    {
+      "severity": "high",
+      "item": 16,
+      "file": "work/rounds/R-0013/prompts/TASK-0006.md",
+      "line": 23,
+      "claim": "Provisioning write paths use unresolved next ADR/DDL/contract/generated wildcards; the planned DDL number is already non-unique.",
+      "fix": "Resolve exact paths and locks before dispatch and bound generator output."
+    },
+    {
+      "severity": "low",
+      "item": 17,
+      "file": "work/rounds/R-0013/plan.md",
+      "line": 63,
+      "claim": "The KB expected result is ambiguous; current baseline is 549 artifacts/446 tokens and UC-TEAT-013 already exists.",
+      "fix": "Set the exact expected post-ficha count, presently 675/446 absent another authorized artifact."
+    },
+    {
+      "severity": "low",
+      "item": 18,
+      "file": "work/rounds/R-0013/tasks/TASK-0012.json",
+      "line": 14,
+      "claim": "TASK-0012 uses undeclared CTG-0005 and therefore has no defined PR boundary.",
+      "fix": "Declare CTG-0005 or assign the task to an intended existing group after prerequisites."
+    }
+  ],
+  "notes": [
+    "All twelve prompt hashes and PC identifiers match; JSON syntax is valid.",
+    "Other model choices are proportional and every prompt states the SENATRAN adapter boundary.",
+    "Read-only checks: docs KB 549/446, parameters 25/25, catalogue 89 entries/14 namespaces and formatting green."
+  ]
+}
