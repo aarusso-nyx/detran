@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0013",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever as 56 fichas web e diagramas TEAT",
+  "description": "Transcrever as 56 fichas web e diagramas TEAT conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-teat-screens-web"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0002",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t4", "wp-t5", "wp-t6"],
+  "branch": "orchestra/teat-frontends",
+  "worktree_id": "WT-teat-frontends",
+  "prompt_composition_id": "PC-6238641eeb1b5790",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-20T02:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-6238641eeb1b5790",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,8 +1,7 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
-(prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude`
-(Fable 5.1 no `delivery-review` do provisionamento).
+**Status:** em execução desde 2026-09-20 pelo maestro Codex. Reviewer: Opus via
+`tools/orchestra/bridge.sh claude` (Fable no `delivery-review` do provisionamento).
 **Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (reconciliação do corpus), CTG-0002 (126 fichas, i18n, transições, diagramas), CTG-0003 (provisionamento offline — R-0005 em `main`) e CTG-0004 (apps — schemas, `@detran/api-clients` e contratos do TEAT em `main` desde R-0008; padrão de scaffold em `apps/portal/web` desde R-0014). O lock em `packages/ui` com R-0012 `rait-web` só vale se as duas estiverem ativas ao mesmo tempo: R-0012 não abriu, logo esta rodada vai primeiro e R-0012 espera. Allowlist i18n já existe (`parameter-catalogue.md` §Namespaces i18n): esta rodada só acrescenta as linhas `teat.*`.
 **Janelas previstas:** 5 (o maior da carteira; um PR por grupo).
 
@@ -39,20 +38,20 @@
 
 ## Tarefas
 
-| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                          | Depende de           | Entrega                                                                                                                                                                                      |
-| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat`, `MOD-kb-manifest`                         | —                    | reconciliação §5 (12 itens), PR próprio                                                                                                                                                      |
-| TASK-0002 | Architect            | architect-blueprint | Terra / alto   | `MOD-teat-apps-arch`                                          | TASK-0001            | decisões dos apps (copiando o padrão de `apps/portal/web`; pastas §10, forma dos schemas, porta da impressora, pontos de extensão para o BOAT), lista fechada tela → ficha → rota, critérios |
-| TASK-0003 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-mobile`                             | TASK-0002            | 70 fichas mobile; manifesto                                                                                                                                                                  |
-| TASK-0004 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-web`                                | TASK-0002            | 56 fichas web; diagramas de estrutura                                                                                                                                                        |
-| TASK-0005 | Engineer             | engineer-frontend   | Luna / baixo   | `MOD-teat-i18n-transitions`                                   | TASK-0002            | `i18n/teat.pt-BR.json` (+ linhas `teat.*` na allowlist do catálogo, `pnpm parameters:generate`), `transitions.ts` (576)                                                                      |
-| TASK-0006 | Architect            | architect-blueprint | Terra / alto   | `MOD-adr`, `MOD-bp-ops-provisioning`, `MOD-ddl-19`            | TASK-0002            | ADR de provisionamento, blueprint, contrato das rotas, matriz de prova (pacote copiado/alterado/expirado/revogado)                                                                           |
-| TASK-0007 | Inspector            | inspector-tests     | Terra / alto   | `MOD-ops-provisioning-tests`                                  | TASK-0006            | testes da matriz de prova; "sem chave privada no servidor" (teste de configuração)                                                                                                           |
-| TASK-0008 | Engineer             | engineer-backend    | Terra / médio  | `MOD-ops-provisioning`, `MOD-shared-policy`, `MOD-app-module` | TASK-0007            | módulo, rotas, `ReadinessGate` (contrato consumido pelo mobile); testes verdes                                                                                                               |
-| TASK-0009 | Inspector            | inspector-tests     | Luna / médio   | `MOD-teat-mobile-tests`, `MOD-teat-web-tests`                 | TASK-0005            | testes de roteamento por papel (70 + 60), matriz de 576 transições, TestBed dos compartilhados, `FixturePrinter`; teste "cada tela da matriz tem ficha e rota" (126/126)                     |
-| TASK-0010 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-mobile-app`, `MOD-packages-ui`                      | TASK-0008, TASK-0009 | `apps/teat/mobile` completo (8 módulos, 70 rotas, formulários, serviços); testes verdes                                                                                                      |
-| TASK-0011 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-web-app`, `MOD-package-json`                        | TASK-0009            | `apps/teat/web` (12 módulos, 60 rotas); `pnpm check` estendido; testes verdes                                                                                                                |
-| TASK-0012 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                    | TASK-0010, TASK-0011 | build pack (gates reais), `teat-frontends.md`, ADR, backlog                                                                                                                                  |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                          | Depende de           | Entrega                                                                                                                                                                  |
+| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| TASK-0001 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat`, `MOD-kb-manifest`                         | —                    | reconciliação §5 (12 itens), PR próprio                                                                                                                                  |
+| TASK-0002 | Architect            | architect-blueprint | Terra / alto   | `MOD-teat-apps-arch`, `MOD-parameter-catalogue-doc`           | TASK-0001            | decisões dos apps, lista fechada tela → ficha → rota, critérios e allowlist documental `teat.*` antes de qualquer catálogo i18n                                          |
+| TASK-0003 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-mobile`                             | TASK-0002            | 70 fichas mobile; manifesto                                                                                                                                              |
+| TASK-0004 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-teat-screens-web`                                | TASK-0002            | 56 fichas web; diagramas de estrutura                                                                                                                                    |
+| TASK-0005 | Engineer             | engineer-frontend   | Luna / baixo   | `MOD-teat-i18n-transitions`, `MOD-parameter-generated`        | TASK-0002            | schemas, `i18n/teat.pt-BR.json`, `transitions.ts` (576) e regeneração após a allowlist já declarada pelo Architect                                                       |
+| TASK-0006 | Architect            | architect-blueprint | Terra / alto   | `MOD-adr`, `MOD-bp-ops-provisioning`, `MOD-ddl-19`            | TASK-0002            | ADR de provisionamento, blueprint, contrato das rotas, matriz de prova (pacote copiado/alterado/expirado/revogado)                                                       |
+| TASK-0007 | Inspector            | inspector-tests     | Terra / alto   | `MOD-ops-provisioning-tests`                                  | TASK-0006            | testes da matriz de prova; "sem chave privada no servidor" (teste de configuração)                                                                                       |
+| TASK-0008 | Engineer             | engineer-backend    | Terra / médio  | `MOD-ops-provisioning`, `MOD-shared-policy`, `MOD-app-module` | TASK-0007            | módulo, rotas, `ReadinessGate` (contrato consumido pelo mobile); testes verdes                                                                                           |
+| TASK-0009 | Inspector            | inspector-tests     | Terra / alto   | `MOD-teat-mobile-tests`, `MOD-teat-web-tests`                 | TASK-0003…0005       | testes de roteamento por papel (70 + 60), matriz de 576 transições, TestBed dos compartilhados, `FixturePrinter`; teste "cada tela da matriz tem ficha e rota" (126/126) |
+| TASK-0010 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-mobile-app`, `MOD-packages-ui`                      | TASK-0008, TASK-0009 | `apps/teat/mobile` completo (8 módulos, 70 rotas, formulários, serviços); testes verdes                                                                                  |
+| TASK-0011 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-teat-web-app`, `MOD-package-json`                        | TASK-0009            | `apps/teat/web` (12 módulos, 60 rotas); `pnpm check` estendido; testes verdes                                                                                            |
+| TASK-0012 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                                    | TASK-0010, TASK-0011 | build pack (gates reais), `teat-frontends.md`, ADR, backlog                                                                                                              |
 
 CTG-0001 = 0001; CTG-0002 = 0003…0005 (fichas/i18n); CTG-0003 = 0006…0008 (provisionamento);
 
@@ -109,17 +108,50 @@ CTG-0004 = 0009…0011 (apps). Um PR por CTG.
 
 ## Concorrência
 
-(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
-em base empilhada e sobre qual branch)
+Bootstrap em `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, criado diretamente de
+`origin/main` e validado após `fetch --prune`. O mínimo `80d705a` está contido na base. R-0005
+(offline), R-0008/PR #52 (schemas, clientes e contratos TEAT) e R-0014/PRs #60…#67 (scaffold do
+Portal) já estão em `main`; o refresh desta rodada é o PR #68. R-0012 ainda não abriu, portanto
+não há lock ativo em `packages/ui`. CTG-0001…CTG-0004 estão liberados para desenvolvimento e
+merge contra `main`; nenhum usa base empilhada. Antes de cada PR, o maestro volta a buscar
+`origin/main` e integra avanço sem reescrever branch publicada.
 
 ## Bloqueios
 
-(nenhum)
+- `2026-09-20`: `prompt-review-1` não pôde ser executado pela ponte obrigatória
+  `tools/orchestra/bridge.sh claude opus`: a CLI Claude respondeu `You've hit your weekly limit ·
+resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §5 exige `PASS`
+  da outra família. Não há bloqueio de produto, código, upstream ou decisão OD.
 
 ## Retomada
 
-(vazio)
+Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
+
+- concluído: worktree/branch em `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`; autorização;
+  `pnpm install --frozen-lockfile`; baseline `pnpm check`; `devai doctor`; leitura mandatória;
+  concorrência; plano; 12 task JSON; 12 prompts e `compositions.json`;
+- em curso: `prompt-review-1`, sem veredito por quota semanal da CLI Claude;
+- pendente: todos os workers `TASK-0001…0012`, todos os delivery reviews, gates de entrega,
+  evidência, PRs, merges, observação e fechamento;
+- último veredito: nenhum — não confundir falha de infraestrutura com `REVIEW`/`FAIL`;
+- próximo passo exato após `2026-09-21 04:00 America/Sao_Paulo`: confirmar que os hashes em
+  `compositions.json` ainda correspondem aos prompts e repetir somente
+  `tools/orchestra/bridge.sh claude opus work/rounds/R-0013/reviews/prompt-review-1.md
+work/rounds/R-0013/reviews/prompt-review-1.json
+/Volumes/Thiamat\ II/stech/detran-worktrees/teat-frontends`; ler o JSON inteiro; corrigir no
+  máximo dois ciclos; só com `PASS` marcar `TASK-0001` in_progress e dispará-la;
+- estado Git: branch ainda não publicada, sem PR; integrar qualquer avanço de `origin/main` por
+  rebase antes da retomada e repetir os gates se a base mudar substantivamente.
 
 ## Leitura
 
-(preenchido pelo maestro)
+Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
+prompt: `AGENTS.md`; `CODESTYLE.md`; `docs/meta/agents/README.md`;
+`docs/meta/agents/orchestra/{README,model-ladder,waves}.md`; `teat-build-pack.md` inteiro;
+`teat-frontends.md`; `teat-error-catalog.md`; `rait-web-structure-diagrams.md`; `IU-TEAT-001`;
+`JRN-TEAT-001…006`; `WF-TEAT-001…005`; `RN-TEAT-001…006` e `RN-TEAT-101…144`;
+`parameter-catalogue.md`; `decision-closure-plan.md`; `steering.md` §H; manuais
+`architect-blueprint`, `engineer-backend`, `engineer-frontend`, `inspector-tests` e
+`transcriber-docs`; este plano. A leitura confirmou 70 rotas mobile, 60 web (56 telas + 4
+operacionais), 126 fichas, 576 transições, enums fechados, pares metrológicos obrigatórios e a
+proibição de calcular prazos legais no cliente.

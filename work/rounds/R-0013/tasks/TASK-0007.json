@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0013",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codificar as provas do provisionamento offline",
+  "description": "Codificar as provas do provisionamento offline conforme o plano vinculante, sem ampliar escopo ou decidir produto.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-ops-provisioning-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["wp-t4", "wp-t5", "wp-t6"],
+  "branch": "orchestra/teat-frontends",
+  "worktree_id": "WT-teat-frontends",
+  "prompt_composition_id": "PC-a43cceaf2b2a762d",
+  "acceptance_commands": [
+    ["pnpm", "typecheck"],
+    ["pnpm", "verify:role-catalog"]
+  ],
+  "created_at": "2026-09-20T02:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-a43cceaf2b2a762d",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
