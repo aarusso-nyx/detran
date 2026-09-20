@@ -152,8 +152,7 @@ reafirmando [RN-TEAT-004].
 - **Res. CONTRAN 1.025/2026** publicada há ~2 meses da pesquisa original — recomenda-se validação
   jurídica humana antes de tratar como base normativa definitiva de produto (herdado do handoff
   LEGAL do dossiê de pesquisa).
-- (fonte pendente) mecanismo operacional de apuração quando o prazo de retirada do §1º do art. 14
-  (Res. 1.025/2026 — "prazo para retirada do veículo, sob pena de leilão") diverge dos prazos do
-  próprio CTB (271 §10, 6 meses) — não há conflito jurídico aparente (prazos servem a propósitos
-  distintos: retirada vs. cobrança), mas o produto precisa de dois campos de prazo distintos, hoje
-  não modelados.
+- O prazo de retirada do §1º do art. 14 (Res. 1.025/2026 — "prazo para retirada do veículo, sob
+  pena de leilão") e o prazo aplicável pelo CTB são campos distintos e **ambos são impressos** no
+  Termo. Têm finalidades distintas e não são valores intercambiáveis (OD-T05); `T-DEPOSITO6M`
+  continua sendo o teto de despesas.

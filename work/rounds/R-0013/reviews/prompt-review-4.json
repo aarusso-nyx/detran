@@ -1,0 +1,19 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0013",
+  "verdict": "PASS",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [],
+  "notes": [
+    "ADR-0028 is the next free identifier after ADR-0027, and no active provisioning ADR exists.",
+    "The active plan, TASK-0007 through TASK-0009 metadata and prompts consistently use ADR-0028 and docs/meta/adr/ADR-0028-provisionamento-operacional-offline.md; ADR-0025 provisioning references remain only in immutable review or migration history.",
+    "The active plan and TASK-0007 through TASK-0009 prompts consistently use backend/database/ddl/21-ops-provisioning.sql, with no operational reference to 19-ops-provisioning.sql.",
+    "All 18 prompt SHA-256 values and PC identifiers match compositions.json and their task metadata; TASK-0007 through TASK-0009 also match compositions model and effort fields.",
+    "The A3 diff is limited to the authorized ADR renumbering, DDL correction, derived prompt composition identifiers and review bookkeeping. None of the seven A2 corrections accepted by prompt-review-3 was reopened."
+  ]
+}

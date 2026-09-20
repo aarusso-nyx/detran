@@ -96,8 +96,7 @@ mesmo agente em dispositivos diferentes é processado sem apuração prévia da 
 - **Dado** a detecção de concorrência
 - **Quando** é avaliada
 - **Então** a janela temporal é configuração declarada e auditável, não constante escondida — o
-  valor segue pendente de decisão do Owner, com risco bilateral registrado em
-  `_intake/legal-assessment.md`
+  valor permanece `source_pending` (OD-T03); não há prazo de apuração nem expiração automática.
 
 **AC-TEAT-012-6 — o agente é identificado eletronicamente por meio admitido**
 

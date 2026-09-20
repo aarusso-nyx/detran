@@ -1,0 +1,109 @@
+{
+  "action": "Deliver R-0013 CTG-0001: reconcile the twelve TEAT corpus inconsistencies, close the residual OD-T07 source-pending marker, and obtain extraordinary delivery review cycle 3 PASS",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0001",
+  "role": "engineer",
+  "commits": ["68228cdeb0b418e7188ec47e70ae566ff885b212"],
+  "artifacts": [
+    {
+      "path": "docs/framework/product/domains/inf/teat/APP.md",
+      "sha256": "d459c16327199533afdb83c38ad12b87b31c93e2d7c696d89f87711d8dad21bf"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/journeys/JRN-TEAT-006.md",
+      "sha256": "55abc91ae6a859f1eefa9e6391d2f8e22eb74278544fbfd25ef418044fc509bf"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/use-cases/INDEX.md",
+      "sha256": "250e13c44679019aecb443b5c0811e7e10cc93667013e78e5ab3c699ec610fe8"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/use-cases/UC-TEAT-002.md",
+      "sha256": "2cb99a0c969588cd07ff4e0e93c12845a9779e5793730f366dc0673ec617621c"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/use-cases/UC-TEAT-008.md",
+      "sha256": "af018a6cde0e2da0c624618ded27b4faaae45ee1c42e3e9e9f0e64735d2b4dd4"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/use-cases/UC-TEAT-009.md",
+      "sha256": "87afdbf8656a1737e1e1fd2cd3dd7a3c4c4938ee9ff21bc0792c703784864c8b"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/use-cases/UC-TEAT-012.md",
+      "sha256": "8ef43b9230641b6ddd93ed7e28caf7233b380ee4cca93927bbb6f0047664c410"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-001.md",
+      "sha256": "57c1b6eeed9bb0c81f2e0830e2029c11d8c4113fec6b363db631ddaa6efc3a39"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-002.md",
+      "sha256": "85ef98a417898b8d3bb30661be58b9751ac5accb143dd36cf3a10ca967582987"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-004.md",
+      "sha256": "8bc44e07adcf6bef774028c80185f498a3c4996de3419401854dc1380ea60c05"
+    },
+    {
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-005.md",
+      "sha256": "ff3f9804b3c3f0c9c09e0d3eed8f5739843c97b168590dbb32b760dac4a942ff"
+    },
+    {
+      "path": "work/rounds/R-0013/budget.json",
+      "sha256": "7b2dbfe229c280690cda3624d62cf80e394ed63c1429235c3fb17c50bfbf9e4d"
+    },
+    {
+      "path": "work/rounds/R-0013/plan.md",
+      "sha256": "5a6ca937965c59110072fad51f887e1195a7f6b5c5a4fcafd6330ae5d4fcd982"
+    },
+    {
+      "path": "work/rounds/R-0013/reviews/delivery-review-CTG-0001-3-extraordinary.json",
+      "sha256": "133644bb9953bedb83ae48df66e86d8191ac9feeb21c2d7c8cdb6458b17414b3"
+    },
+    {
+      "path": "work/rounds/R-0013/reviews/delivery-review-CTG-0001-3-extraordinary.md",
+      "sha256": "0eb011454d19dff31bbd3dd18411e3e159f74223c237bcd2bc9e2bc3d49b2066"
+    },
+    {
+      "path": "work/rounds/R-0013/tasks/TASK-0001.json",
+      "sha256": "9b27263cad9371971f8815b61c5cca320bc531981d63c753e1eb9192a44444a0"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Full repository gate passed after pnpm install --frozen-lockfile refreshed workspace links; lockfile unchanged"
+    },
+    {
+      "name": "pnpm format:check",
+      "result": "pass"
+    },
+    {
+      "name": "pnpm docs:kb:check",
+      "result": "pass",
+      "note": "549 artifacts and 446 canonical tokens"
+    },
+    {
+      "name": "pnpm docs:kb:publish-check",
+      "result": "pass",
+      "note": "201 published files"
+    },
+    {
+      "name": "git diff --check",
+      "result": "pass"
+    },
+    {
+      "name": "delivery-review cycle 3 extraordinary (Codex GPT-5.6 Sol, high)",
+      "result": "pass",
+      "note": "No findings; F-003 closed and no direct regression found"
+    }
+  ],
+  "tasks": ["TASK-0001"],
+  "decisions": [
+    "OD-T07 preserved: ATIVA to ESGOTADA exactly when next_number > end_number",
+    "Expired unused subrange returns to disponivel during reconciliation",
+    "Owner-authorized same-family reviewer exception and extraordinary third review"
+  ]
+}

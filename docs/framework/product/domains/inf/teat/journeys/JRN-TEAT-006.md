@@ -85,7 +85,8 @@ de artigo específico.
 ## Pontos de contato (apps/canais)
 
 Aplicativo mobile TEAT (proposta: nova tela/ação "declarar falha de dispositivo", hoje não
-presente no inventário de 68 telas — ver `_intake/ux-notes.md` §b); backoffice web TEAT
+presente no inventário de 67 telas; o contrato mobile adiciona D-01 e D-04 e mantém D-05
+desabilitada, totalizando 70 rotas; backoffice web TEAT
 (field-supervisor registra/confirma o incidente); rádio/telefone da operação (canal externo ao
 TEAT para o contato inicial); fila de sincronização (`sync`, `sync-item`, `sync-conflict`).
 

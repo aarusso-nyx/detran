@@ -1,0 +1,29 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "ctg": "CTG-0001",
+  "cycle": 2,
+  "verdict": "REVIEW",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "id": "F-003",
+      "severity": "blocking",
+      "item": 9,
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-002.md",
+      "lines": [61, 81, 82, 83],
+      "issue": "OD-T07 fecha retorno a disponivel e next_number > end_number, mas a transição de expiração ainda diz fonte pendente — mecanismo exato de devolução, contradizendo que somente o risco técnico das constraints permaneça pendente.",
+      "required_correction": "Remover a marca de fonte pendente da transição de expiração e declarar o retorno na reconciliação como comportamento adotado por OD-T07; manter apenas o risco técnico de constraints."
+    }
+  ],
+  "notes": [
+    "F-001, F-002, F-004 e F-005 foram resolvidos.",
+    "Nenhuma regressão direta adicional foi encontrada.",
+    "Gates independentes: format PASS; KB 549/446; publish 201; git diff --check PASS."
+  ]
+}

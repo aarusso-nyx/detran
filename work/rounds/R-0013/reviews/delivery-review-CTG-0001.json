@@ -1,0 +1,64 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "ctg": "CTG-0001",
+  "verdict": "REVIEW",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "blocking",
+      "item": 7,
+      "path": "docs/framework/product/domains/inf/teat/use-cases/UC-TEAT-008.md",
+      "lines": [31, 33, 38, 39, 48, 50],
+      "issue": "A renumeração não ficou coerente: o fluxo principal usa 2a/2b e 3a/3b, mas os fluxos alternativos repetem 2a e vinculam a expiração da regularização a 3b-1, embora ela derive de 2b.",
+      "required_correction": "Dar identificadores únicos aos fluxos alternativos e vincular a expiração ao ramo correto de retenção com prazo; por exemplo, usar 2c para ausência de condutor habilitado e 2b-1 para expiração sem regularização, ajustando referências internas."
+    },
+    {
+      "id": "F-002",
+      "severity": "blocking",
+      "item": 7,
+      "path": "docs/framework/product/domains/inf/teat/use-cases/UC-TEAT-009.md",
+      "lines": [17, 44],
+      "issue": "A introdução ainda afirma que o caminho do MVP segue para EM_DEPOSITO no passo 5b, mas o ramo foi renumerado para 4b.",
+      "required_correction": "Trocar a referência da linha 17 de passo 5b para passo 4b."
+    },
+    {
+      "id": "F-003",
+      "severity": "blocking",
+      "item": 9,
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-002.md",
+      "lines": [61, 79, 81, 82, 83, 84],
+      "issue": "OD-T07 aparece como adotada, mas os mesmos resultados permanecem em decisões pendentes, fonte pendente e permanece aberto.",
+      "required_correction": "Retirar os resultados adotados da seção pendente; se houver risco técnico, delimitá-lo sem reabrir retorno a disponivel nem next_number > end_number."
+    },
+    {
+      "id": "F-004",
+      "severity": "blocking",
+      "item": 5,
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-004.md",
+      "lines": [155, 156, 157, 158],
+      "issue": "A reconciliação só declara o prazo de retirada como impresso, mas OD-T05 exige dois campos distintos e ambos impressos.",
+      "required_correction": "Registrar explicitamente ambos os campos como impressos, com finalidades distintas e não intercambiáveis."
+    },
+    {
+      "id": "F-005",
+      "severity": "blocking",
+      "item": 11,
+      "path": "docs/framework/product/domains/inf/teat/workflows/WF-TEAT-005.md",
+      "lines": [127, 128, 129, 130],
+      "issue": "O workflow ainda nega confirmação da entidade de sinais psicomotores, embora ambos os blueprints contenham witnesses_json e PsychomotorSign.",
+      "required_correction": "Substituir a pendência por prova de consistência dos dois blueprints; separar eventual lacuna documental sem negar PsychomotorSign."
+    }
+  ],
+  "notes": [
+    "Os 11 documentos TEAT modificados estão dentro da allowlist e nenhum blueprint foi modificado.",
+    "INDEX, APP, OD-T03, OD-T06, T-REG30/T-REG15, JRN-006 e o bloqueio metrológico foram aceitos.",
+    "Verificação independente: Prettier PASS; KB 549/446; publish 201; git diff --check PASS."
+  ]
+}
