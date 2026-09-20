@@ -1,0 +1,506 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RAIT priority intake command",
+    "version": "1.1.6",
+    "x-blueprint": "BP-INF-RAIT-CASE-001",
+    "x-kind": "commands"
+  },
+  "paths": {
+    "/v1/inf/rait/cases": {
+      "post": {
+        "operationId": "protocolRaitCase",
+        "tags": ["rait-case"],
+        "x-resource": "inf:rait-case",
+        "x-action": "protocol",
+        "x-audit": {
+          "action": "INF_RAIT_CASE_PROTOCOL",
+          "entity": "inf.rait_case"
+        },
+        "description": "Authenticated rait-secretary with an active matching tenant/person/pool/instance/unit membership. Admin and permission shortcuts alone do not authorize protocol. The operation captures one Clock instant and tenant timezone; actor and tenant come solely from RequestContext. Case, documents, initial assessment, all proofs, projection, idempotency ledger and audit are atomic. Creation requires no If-Match. Post-protocol requalification is forbidden under ADR-0024-2026-09-16. Existing domain events only; no new priority event.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Same key and canonical payload replay the persisted response; a differing payload conflicts."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProtocolRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Atomic protocol success or identical idempotent replay; initial case version and ETag. No separate qualification endpoint.",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommandSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failure; no partial case, proofs, assessment, ledger, audit or outbox commit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetranError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failure from the existing authentication pipeline."
+          },
+          "403": {
+            "description": "Failure; no partial case, proofs, assessment, ledger, audit or outbox commit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetranError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Failure; no partial case, proofs, assessment, ledger, audit or outbox commit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetranError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failure; no partial case, proofs, assessment, ledger, audit or outbox commit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetranError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failure; no partial case, proofs, assessment, ledger, audit or outbox commit.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetranError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "ProtocolRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "origin_case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "protocol_number": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "instance": {
+            "type": "string",
+            "enum": ["defesa_previa", "jari", "cetran"]
+          },
+          "circuit": {
+            "type": "integer",
+            "enum": [1, 2]
+          },
+          "intake_channel": {
+            "type": "string",
+            "enum": ["balcao", "portal", "sne", "postal"]
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unit_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "agency_jurisdiction_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntakeDocument"
+            }
+          },
+          "proofs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PriorityProof"
+            }
+          }
+        },
+        "required": [
+          "ait_id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "intake_channel",
+          "protocolled_at",
+          "documents",
+          "proofs"
+        ],
+        "description": "Intake fields retain their existing snake_case names. protocolled_at is the original intake/ECT mark, immutable after insert; it does not set the qualification time. State, version, tenant, actor, assessed/verified metadata, outcome, rank and policy are server-owned and rejected. Empty proofs produce none at protocol. PCD requires an attachment validated by the authenticated secretary; age accepts an attested presented document/CNH without upload. All references must resolve within this intake and tenant."
+      },
+      "IntakeDocument": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "origin": {
+            "type": "string",
+            "enum": ["requerente", "oficio"]
+          },
+          "storage_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "content_hash": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "digitised_from_paper": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "origin",
+          "storage_key",
+          "filename",
+          "content_hash"
+        ]
+      },
+      "PriorityProof": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "basis_code": {
+            "type": "string",
+            "enum": ["pcd", "age_60_plus", "age_80_plus"]
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": ["attached_document", "presented_document", "presented_cnh"]
+          },
+          "source_ref": {
+            "type": "string",
+            "minLength": 1,
+            "x-pii": "indirect"
+          },
+          "document_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "evidence_hash": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": ["basis_code", "source_kind", "source_ref"],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "basis_code": {
+                  "const": "pcd"
+                }
+              }
+            },
+            "then": {
+              "required": ["document_id", "evidence_hash"],
+              "properties": {
+                "source_kind": {
+                  "const": "attached_document"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "basis_code": {
+                  "enum": ["age_60_plus", "age_80_plus"]
+                }
+              }
+            },
+            "then": {
+              "required": ["birth_date"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "source_kind": {
+                  "const": "attached_document"
+                }
+              }
+            },
+            "then": {
+              "required": ["document_id"]
+            }
+          }
+        ]
+      },
+      "RaitCase": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ait_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "origin_case_id": {
+            "type": ["string", "null"],
+            "format": "uuid"
+          },
+          "protocol_number": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          },
+          "circuit": {
+            "type": "integer"
+          },
+          "state": {
+            "type": "string"
+          },
+          "intake_channel": {
+            "type": "string"
+          },
+          "protocolled_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "admitted_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "judge_body_received_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "judge_body_received_on": {
+            "type": ["string", "null"],
+            "format": "date"
+          },
+          "cetran_received_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "cetran_received_on": {
+            "type": ["string", "null"],
+            "format": "date"
+          },
+          "remitted_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "decided_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "communicated_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "closed_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "suspensive_effect": {
+            "type": "boolean"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "non_admission_reason": {
+            "type": ["string", "null"]
+          },
+          "withdrawal_document_id": {
+            "type": ["string", "null"],
+            "format": "uuid"
+          },
+          "last_movement_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pending_completion": {
+            "type": "boolean"
+          },
+          "legal_priority": {
+            "type": ["string", "null"]
+          },
+          "unit_id": {
+            "type": ["string", "null"],
+            "format": "uuid"
+          },
+          "agency_jurisdiction_id": {
+            "type": ["string", "null"],
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "tenant_id",
+          "ait_id",
+          "protocol_number",
+          "instance",
+          "circuit",
+          "state",
+          "intake_channel",
+          "protocolled_at",
+          "version",
+          "created_at"
+        ]
+      },
+      "CommandSuccess": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/RaitCase"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "description": "Only existing domain/motor event envelopes, exactly corresponding to transactional outbox rows; no PII or proof hashes."
+          }
+        },
+        "required": ["data", "events"]
+      },
+      "DetranError": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "RAIT.VALIDATION_FAILED",
+              "RAIT.ENUM_INVALID",
+              "RAIT.FORBIDDEN_ACTION",
+              "RAIT.FORBIDDEN_CASE_SCOPE",
+              "RAIT.TENANT_MISMATCH",
+              "RAIT.IDEMPOTENCY_REPLAY",
+              "RAIT.PARAMETER_SOURCE_PENDING",
+              "RAIT.INTERNAL"
+            ]
+          },
+          "status": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "messageKey": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": ["code", "status", "message", "messageKey", "context"]
+      }
+    }
+  }
+}

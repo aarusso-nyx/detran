@@ -87,7 +87,24 @@ ON CONFLICT (key) DO UPDATE SET
   is_staff = EXCLUDED.is_staff,
   source = EXCLUDED.source,
   introduced_on = EXCLUDED.introduced_on,
-  updated_at = clock_timestamp();
+  updated_at = clock_timestamp()
+WHERE ROW(
+  role_catalog.family,
+  role_catalog.name,
+  role_catalog.description,
+  role_catalog.apps,
+  role_catalog.is_staff,
+  role_catalog.source,
+  role_catalog.introduced_on
+) IS DISTINCT FROM ROW(
+  EXCLUDED.family,
+  EXCLUDED.name,
+  EXCLUDED.description,
+  EXCLUDED.apps,
+  EXCLUDED.is_staff,
+  EXCLUDED.source,
+  EXCLUDED.introduced_on
+);
 
 DO $$
 BEGIN

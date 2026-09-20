@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0044",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Reconciliar contrato e propriedade de rotas da CTG-0002",
+  "description": "Ciclo corretivo OWNER dos 16 comandos: matriz nominal dos 20 comandos, chaves de política e bypasses CRUD, sem alterar blueprint ou runtime. Preserva TASK-0006 2/2 e TASK-0007 1/2.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-contract-worklist-session"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0005",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-055c6f085b5cdd31",
+  "acceptance_commands": [
+    ["test", "-s", "work/rounds/R-0007/contracts/CTG-0002.md"],
+    ["test", "-s", "work/rounds/R-0007/reports/CTG-0002-ROUTE-OWNERSHIP.md"],
+    ["pnpm", "contracts:check"]
+  ],
+  "created_at": "2026-09-18T03:16:29Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-055c6f085b5cdd31",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente contrato e matriz de propriedade de rotas CTG-0002; nenhuma alteração de produto ou derivados."
+  }
+}

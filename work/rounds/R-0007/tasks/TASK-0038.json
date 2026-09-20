@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0038",
+  "round_id": "R-0007",
+  "status": "checkpoint",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Preparação excepcional de Clock e seed20 antes do RED integral",
+  "description": "OWNER autorizou a preparação delimitada, revisão independente do delta e continuação Inspector sem reset. Engineer Terra/High produziu somente o provider Clock; typecheck e DI 1/1 PASS. A tentativa seed20 foi retirada após prova fresh: 19/20 protocolos precedem a vigência 2026-09-13 do parâmetro; DDL19 exige assessment na mesma transação. Não há candidato completo para revisão, que não ocorreu. TASK-0020 continua 5/5 checkpoint e a continuação Inspector não foi despachada. Ver reports/TASK-0038-CLOCK-SEED-PREP-STOP.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-case"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0020",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": [
+    "attempt-2",
+    "c4-od-v3",
+    "owner-bounded-pre-red",
+    "blocked-fresh-seed"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-80875388e2d02141",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"]
+  ],
+  "created_at": "2026-09-17T14:08:58Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-80875388e2d02141",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Preparação Clock/seed20 com parada ao exigir ampliação de fronteira",
+    "planned_files": [
+      "backend/domains/inf/rait-case/src/handwritten/rait-operation-clock.ts",
+      "backend/database/seed/20-fixtures-rait.sql"
+    ]
+  }
+}

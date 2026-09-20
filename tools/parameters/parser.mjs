@@ -80,6 +80,45 @@ function jsonDefault(type, raw, pending) {
   return raw;
 }
 
+function hasExactKeys(value, keys) {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === keys.length &&
+    keys.every((key) => Object.hasOwn(value, key))
+  );
+}
+
+function legalBasesDefault(type, raw) {
+  if (type !== 'json') throw new Error('legal bases type must be json');
+  let value;
+  try {
+    value = JSON.parse(raw);
+  } catch {
+    throw new Error('legal bases default must be valid JSON');
+  }
+  if (
+    !hasExactKeys(value, [
+      'schemaVersion',
+      'policyCode',
+      'basisRanks',
+      'noneRank',
+      'postProtocolRevision',
+    ]) ||
+    value.schemaVersion !== 1 ||
+    value.policyCode !== 'ADR-0024-2026-09-16' ||
+    !hasExactKeys(value.basisRanks, ['pcd', 'age_80_plus', 'age_60_plus']) ||
+    value.basisRanks.pcd !== 2 ||
+    value.basisRanks.age_80_plus !== 2 ||
+    value.basisRanks.age_60_plus !== 1 ||
+    value.noneRank !== 0 ||
+    value.postProtocolRevision !== 'forbidden'
+  )
+    throw new Error('legal bases default must match the approved schema');
+  return value;
+}
+
 function numericReference(reference) {
   const match = reference.match(/^(.*?)(\d+)$/);
   if (!match) return undefined;
@@ -334,7 +373,10 @@ export async function parseCatalogue(source) {
         throw new Error(`${source}:${row + 1}: decision reference missing`);
       let value_json;
       try {
-        value_json = jsonDefault(type, defaultText, sourcePending);
+        value_json =
+          key === 'rait.priority.legal_bases'
+            ? legalBasesDefault(type, defaultText)
+            : jsonDefault(type, defaultText, sourcePending);
       } catch (error) {
         throw new Error(`${source}:${row + 1}: ${key}: ${error.message}`);
       }

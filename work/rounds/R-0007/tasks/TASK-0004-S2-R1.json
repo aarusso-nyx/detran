@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004-S2-R1",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-tooling",
+  "title": "Complete syntax-aware parameter sensor correction",
+  "description": "Align the event map with explicit type syntax and regenerate catalogue derivatives so the syntax-aware sensor closes without weakening.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-parameter-verifier",
+    "MOD-parameter-catalogue-contract",
+    "MOD-rait-case"
+  ],
+  "target_substrates": ["F2"],
+  "target_invariants": ["ADR-0021", "WF-RAIT-001"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "corrective-engineer-retry",
+  "upstream_task_id": "TASK-0004-S2",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-a", "attempt-2", "reference-gap"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "acceptance_commands": [
+    ["pnpm", "parameters:test"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "check"]
+  ],
+  "created_at": "2026-09-15T20:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-WORKLIST-001 v1.1.0 sha256:972161ec1957bb785b269fd1714f3431aae529393cf58c5a2ef7fa2984a65f8f
+-- Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1 sha256:fc1505677703646b1e55dc6283e1e0cce5331627fd5b9bd0ed732c1a77c00430
 
 -- Regenerable-only DDL for BP-INF-RAIT-WORKLIST-001; request-path writes use role_app_backend.
 
@@ -58,18 +58,66 @@ create table if not exists inf.rait_pool_member (
   unjustified_absence_count integer default 0 not null,
   is_substitute boolean default false not null,
   jurisdiction varchar(80),
+  agency_jurisdiction_id uuid,
+  representation_block varchar(30),
+  institutional_seat_ref varchar(120),
+  appointment_act_ref varchar(160),
+  institutional_valid_from date,
+  institutional_valid_to date,
+  institutional_identity_hash varchar(64),
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_rait_pool_member primary key (id),
-  constraint ck_inf_rait_pool_member_role check (member_role in ('analista','relator','presidente','coordenador','secretaria')),
+  constraint ck_inf_rait_pool_member_role check (member_role in ('analista','relator','presidente','coordenador','secretaria','autoridade')),
   constraint ck_inf_rait_pool_member_status check (status in ('ATIVO','IMPEDIDO','ADVERTIDO','AFASTADO_TEMP','MANDATO_ENCERRADO')),
   constraint ck_inf_rait_pool_member_mandate_order check (mandate_ends_on is null or mandate_starts_on is null or mandate_ends_on >= mandate_starts_on),
-  constraint fk_inf_rait_pool_member_pool foreign key (pool_id) references inf.rait_pool (id)
+  constraint ck_inf_rait_pool_member_authority_jurisdiction check (member_role <> 'autoridade' or agency_jurisdiction_id is not null),
+  constraint ck_inf_rait_pool_member_representation_block check (representation_block is null or representation_block in ('executivo_estadual','municipal_rodoviario','sociedade_civil')),
+  constraint ck_inf_rait_pool_member_institutional_identity check (representation_block is null or (institutional_seat_ref is not null and btrim(institutional_seat_ref) <> '' and appointment_act_ref is not null and btrim(appointment_act_ref) <> '' and institutional_valid_from is not null and mandate_starts_on is not null and institutional_identity_hash is not null)),
+  constraint ck_inf_rait_pool_member_institutional_validity_order check (institutional_valid_to is null or institutional_valid_from is null or institutional_valid_to >= institutional_valid_from),
+  constraint ck_inf_rait_pool_member_institutional_identity_hash check (institutional_identity_hash is null or institutional_identity_hash ~ '^[0-9a-f]{64}$'),
+  constraint fk_inf_rait_pool_member_pool foreign key (pool_id) references inf.rait_pool (id),
+  constraint fk_inf_rait_pool_member_agency_jurisdiction foreign key (agency_jurisdiction_id) references ops.agency_jurisdiction (id)
 );
+alter table inf.rait_pool_member add column if not exists representation_block varchar(30);
+alter table inf.rait_pool_member add column if not exists institutional_seat_ref varchar(120);
+alter table inf.rait_pool_member add column if not exists appointment_act_ref varchar(160);
+alter table inf.rait_pool_member add column if not exists institutional_valid_from date;
+alter table inf.rait_pool_member add column if not exists institutional_valid_to date;
+alter table inf.rait_pool_member add column if not exists institutional_identity_hash varchar(64);
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_pool_member_representation_block' and conrelid = 'inf.rait_pool_member'::regclass) then
+    alter table inf.rait_pool_member add constraint ck_inf_rait_pool_member_representation_block check (representation_block is null or representation_block in ('executivo_estadual','municipal_rodoviario','sociedade_civil'));
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_pool_member_institutional_identity' and conrelid = 'inf.rait_pool_member'::regclass) then
+    alter table inf.rait_pool_member add constraint ck_inf_rait_pool_member_institutional_identity check (representation_block is null or (institutional_seat_ref is not null and btrim(institutional_seat_ref) <> '' and appointment_act_ref is not null and btrim(appointment_act_ref) <> '' and institutional_valid_from is not null and mandate_starts_on is not null and institutional_identity_hash is not null));
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_pool_member_institutional_validity_order' and conrelid = 'inf.rait_pool_member'::regclass) then
+    alter table inf.rait_pool_member add constraint ck_inf_rait_pool_member_institutional_validity_order check (institutional_valid_to is null or institutional_valid_from is null or institutional_valid_to >= institutional_valid_from);
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_pool_member_institutional_identity_hash' and conrelid = 'inf.rait_pool_member'::regclass) then
+    alter table inf.rait_pool_member add constraint ck_inf_rait_pool_member_institutional_identity_hash check (institutional_identity_hash is null or institutional_identity_hash ~ '^[0-9a-f]{64}$');
+  end if;
+end $$;
 create unique index if not exists ux_inf_rait_pool_member on inf.rait_pool_member (tenant_id, pool_id, person_id);
+create index if not exists ix_inf_rait_pool_member_agency_jurisdiction on inf.rait_pool_member (tenant_id, agency_jurisdiction_id);
+create unique index if not exists ux_inf_rait_pool_member_tenant_id on inf.rait_pool_member (tenant_id, id);
+create unique index if not exists ux_inf_rait_pool_member_institutional_seat on inf.rait_pool_member (tenant_id, pool_id, institutional_seat_ref, institutional_valid_from) where institutional_seat_ref is not null;
 create index if not exists ix_rait_pool_member_tenant_id on inf.rait_pool_member (tenant_id);
 create index if not exists ix_rait_pool_member_pool_id on inf.rait_pool_member (pool_id);
 create index if not exists ix_rait_pool_member_person_id on inf.rait_pool_member (person_id);
+create index if not exists ix_rait_pool_member_agency_jurisdiction_id on inf.rait_pool_member (agency_jurisdiction_id);
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ux_inf_rait_pool_member_tenant_id' and conrelid = 'inf.rait_pool_member'::regclass) then
+    alter table inf.rait_pool_member add constraint ux_inf_rait_pool_member_tenant_id unique using index ux_inf_rait_pool_member_tenant_id;
+  end if;
+end $$;
 
 create table if not exists inf.rait_schedule (
   id uuid default gen_random_uuid() not null,
@@ -84,6 +132,7 @@ create table if not exists inf.rait_schedule (
   absence_reason varchar(30),
   published_at timestamptz,
   published_by uuid,
+  version integer default 1 not null,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_rait_schedule primary key (id),
@@ -93,9 +142,16 @@ create table if not exists inf.rait_schedule (
   constraint ck_inf_rait_schedule_absence_reason check (absence_reason is null or absence_reason in ('ferias','licenca','curso','sessao_externa')),
   constraint ck_inf_rait_schedule_absence_reason_required check (availability <> 'AUSENTE_PROGRAMADO' or absence_reason is not null),
   constraint ck_inf_rait_schedule_wip_limit_non_negative check (wip_limit is null or wip_limit >= 0),
+  constraint ck_inf_rait_schedule_version_positive check (version > 0),
   constraint fk_inf_rait_schedule_pool foreign key (pool_id) references inf.rait_pool (id),
   constraint fk_inf_rait_schedule_member foreign key (member_id) references inf.rait_pool_member (id)
 );
+alter table inf.rait_schedule add column if not exists version integer default 1 not null;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_schedule_version_positive' and conrelid = 'inf.rait_schedule'::regclass) then
+    alter table inf.rait_schedule add constraint ck_inf_rait_schedule_version_positive check (version > 0);
+  end if;
+end $$;
 create unique index if not exists ux_inf_rait_schedule_member_period on inf.rait_schedule (tenant_id, member_id, kind, period_start);
 create index if not exists ix_inf_rait_schedule_pool_period on inf.rait_schedule (tenant_id, pool_id, period_start);
 create index if not exists ix_rait_schedule_tenant_id on inf.rait_schedule (tenant_id);
@@ -136,6 +192,11 @@ create table if not exists inf.rait_batch (
   minutes_document_id uuid,
   homologated_at timestamptz,
   homologated_by uuid,
+  version integer default 1 not null,
+  approval_signature_ref varchar(160),
+  approval_receipt_hash varchar(64),
+  approval_verified_at timestamptz,
+  approval_signer_person_id uuid,
   created_at timestamptz default now() not null,
   updated_at timestamptz,
   constraint pk_rait_batch primary key (id),
@@ -145,13 +206,110 @@ create table if not exists inf.rait_batch (
   constraint ck_inf_rait_batch_draw_consistency check ((state = 'LOTE_ABERTO' and drawn_at is null) or (state in ('LOTE_SORTEADO','LOTE_ACEITO') and drawn_at is not null)),
   constraint ck_inf_rait_batch_accept_consistency check ((state = 'LOTE_ACEITO' and accepted_at is not null) or (state <> 'LOTE_ACEITO' and accepted_at is null)),
   constraint ck_inf_rait_batch_homologation_complete check (homologated_at is null or homologated_by is not null),
+  constraint ck_inf_rait_batch_version_positive check (version > 0),
+  constraint ck_inf_rait_batch_approval_receipt_hash check (approval_receipt_hash is null or approval_receipt_hash ~ '^[0-9a-f]{64}$'),
   constraint fk_inf_rait_batch_pool foreign key (pool_id) references inf.rait_pool (id)
 );
+alter table inf.rait_batch add column if not exists version integer default 1 not null;
+alter table inf.rait_batch add column if not exists approval_signature_ref varchar(160);
+alter table inf.rait_batch add column if not exists approval_receipt_hash varchar(64);
+alter table inf.rait_batch add column if not exists approval_verified_at timestamptz;
+alter table inf.rait_batch add column if not exists approval_signer_person_id uuid;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_batch_version_positive' and conrelid = 'inf.rait_batch'::regclass) then
+    alter table inf.rait_batch add constraint ck_inf_rait_batch_version_positive check (version > 0);
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_batch_approval_receipt_hash' and conrelid = 'inf.rait_batch'::regclass) then
+    alter table inf.rait_batch add constraint ck_inf_rait_batch_approval_receipt_hash check (approval_receipt_hash is null or approval_receipt_hash ~ '^[0-9a-f]{64}$');
+  end if;
+end $$;
 create unique index if not exists ux_inf_rait_batch_pool_week on inf.rait_batch (tenant_id, pool_id, week_start) where kind = 'semanal';
 create index if not exists ix_inf_rait_batch_state on inf.rait_batch (tenant_id, pool_id, state);
+create unique index if not exists ux_inf_rait_batch_tenant_id on inf.rait_batch (tenant_id, id);
 create index if not exists ix_rait_batch_tenant_id on inf.rait_batch (tenant_id);
 create index if not exists ix_rait_batch_pool_id on inf.rait_batch (pool_id);
 create index if not exists ix_rait_batch_minutes_document_id on inf.rait_batch (minutes_document_id);
+create index if not exists ix_rait_batch_approval_signer_person_id on inf.rait_batch (approval_signer_person_id);
+
+create table if not exists inf.rait_batch_draw_snapshot (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  batch_id uuid not null,
+  snapshot_version varchar(20) not null,
+  snapshot jsonb not null,
+  snapshot_hash varchar(64) not null,
+  origin varchar(30) default 'server_draw' not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_batch_draw_snapshot primary key (id),
+  constraint ck_inf_rait_batch_draw_snapshot_hash check (snapshot_hash ~ '^[0-9a-f]{64}$'),
+  constraint ck_inf_rait_batch_draw_snapshot_origin check (origin = 'server_draw'),
+  constraint ck_inf_rait_batch_draw_snapshot_version check (snapshot_version = 'draw-v1'),
+  constraint fk_inf_rait_batch_draw_snapshot_batch foreign key (tenant_id, batch_id) references inf.rait_batch (tenant_id, id)
+);
+create unique index if not exists ux_inf_rait_batch_draw_snapshot_batch on inf.rait_batch_draw_snapshot (tenant_id, batch_id);
+create unique index if not exists ux_inf_rait_batch_draw_snapshot_hash on inf.rait_batch_draw_snapshot (tenant_id, batch_id, snapshot_hash);
+create index if not exists ix_rait_batch_draw_snapshot_tenant_id on inf.rait_batch_draw_snapshot (tenant_id);
+create index if not exists ix_rait_batch_draw_snapshot_batch_id on inf.rait_batch_draw_snapshot (batch_id);
+
+create table if not exists inf.rait_batch_minutes_manifest (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  batch_id uuid not null,
+  document_id uuid not null,
+  content_hash varchar(64) not null,
+  snapshot_hash varchar(64) not null,
+  snapshot_version varchar(20) not null,
+  document_kind varchar(40) default 'BATCH_DISTRIBUTION_MINUTES' not null,
+  expected_signer_person_id uuid not null,
+  manifest_hash varchar(64),
+  manifest_version varchar(40),
+  prepared_at timestamptz,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_rait_batch_minutes_manifest primary key (id),
+  constraint ck_inf_rait_batch_minutes_manifest_content_hash check (content_hash ~ '^[0-9a-f]{64}$'),
+  constraint ck_inf_rait_batch_minutes_manifest_snapshot_hash check (snapshot_hash ~ '^[0-9a-f]{64}$'),
+  constraint ck_inf_rait_batch_minutes_manifest_kind check (document_kind = 'BATCH_DISTRIBUTION_MINUTES'),
+  constraint ck_inf_rait_batch_minutes_manifest_version check (snapshot_version = 'draw-v1'),
+  constraint ck_inf_rait_batch_minutes_manifest_manifest_hash check (manifest_hash is null or manifest_hash ~ '^[0-9a-f]{64}$'),
+  constraint ck_inf_rait_batch_minutes_manifest_preparation_complete check ((manifest_hash is null and manifest_version is null and prepared_at is null) or (manifest_hash is not null and manifest_version is not null and btrim(manifest_version) <> '' and prepared_at is not null)),
+  constraint fk_inf_rait_batch_minutes_manifest_batch foreign key (tenant_id, batch_id) references inf.rait_batch (tenant_id, id),
+  constraint fk_inf_rait_batch_minutes_manifest_snapshot foreign key (tenant_id, batch_id, snapshot_hash) references inf.rait_batch_draw_snapshot (tenant_id, batch_id, snapshot_hash)
+);
+alter table inf.rait_batch_minutes_manifest add column if not exists manifest_hash varchar(64);
+alter table inf.rait_batch_minutes_manifest add column if not exists manifest_version varchar(40);
+alter table inf.rait_batch_minutes_manifest add column if not exists prepared_at timestamptz;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_batch_minutes_manifest_manifest_hash' and conrelid = 'inf.rait_batch_minutes_manifest'::regclass) then
+    alter table inf.rait_batch_minutes_manifest add constraint ck_inf_rait_batch_minutes_manifest_manifest_hash check (manifest_hash is null or manifest_hash ~ '^[0-9a-f]{64}$');
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ck_inf_rait_batch_minutes_manifest_preparation_complete' and conrelid = 'inf.rait_batch_minutes_manifest'::regclass) then
+    alter table inf.rait_batch_minutes_manifest add constraint ck_inf_rait_batch_minutes_manifest_preparation_complete check ((manifest_hash is null and manifest_version is null and prepared_at is null) or (manifest_hash is not null and manifest_version is not null and btrim(manifest_version) <> '' and prepared_at is not null));
+  end if;
+end $$;
+create unique index if not exists ux_inf_rait_batch_minutes_manifest_batch on inf.rait_batch_minutes_manifest (tenant_id, batch_id);
+create unique index if not exists ux_inf_rait_batch_minutes_manifest_document on inf.rait_batch_minutes_manifest (tenant_id, document_id);
+create unique index if not exists ux_inf_rait_batch_minutes_manifest_batch_document on inf.rait_batch_minutes_manifest (tenant_id, batch_id, document_id);
+create unique index if not exists ux_inf_rait_batch_minutes_manifest_hash on inf.rait_batch_minutes_manifest (tenant_id, batch_id, manifest_hash) where manifest_hash is not null;
+create index if not exists ix_rait_batch_minutes_manifest_tenant_id on inf.rait_batch_minutes_manifest (tenant_id);
+create index if not exists ix_rait_batch_minutes_manifest_batch_id on inf.rait_batch_minutes_manifest (batch_id);
+create index if not exists ix_rait_batch_minutes_manifest_document_id on inf.rait_batch_minutes_manifest (document_id);
+create index if not exists ix_rait_batch_minutes_manifest_expected_signer_person_id on inf.rait_batch_minutes_manifest (expected_signer_person_id);
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ux_inf_rait_batch_minutes_manifest_batch' and conrelid = 'inf.rait_batch_minutes_manifest'::regclass) then
+    alter table inf.rait_batch_minutes_manifest add constraint ux_inf_rait_batch_minutes_manifest_batch unique using index ux_inf_rait_batch_minutes_manifest_batch;
+  end if;
+end $$;
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'ux_inf_rait_batch_minutes_manifest_document' and conrelid = 'inf.rait_batch_minutes_manifest'::regclass) then
+    alter table inf.rait_batch_minutes_manifest add constraint ux_inf_rait_batch_minutes_manifest_document unique using index ux_inf_rait_batch_minutes_manifest_document;
+  end if;
+end $$;
 
 create table if not exists inf.rait_batch_item (
   id uuid default gen_random_uuid() not null,
@@ -319,6 +477,34 @@ create unique index if not exists ux_inf_rait_clock_alert_level on inf.rait_cloc
 create index if not exists ix_rait_clock_alert_tenant_id on inf.rait_clock_alert (tenant_id);
 create index if not exists ix_rait_clock_alert_clock_id on inf.rait_clock_alert (clock_id);
 
+do $$ begin
+  if not exists (select 1 from pg_constraint where conname = 'fk_inf_rait_batch_minutes_manifest' and conrelid = 'inf.rait_batch'::regclass) then
+    alter table inf.rait_batch add constraint fk_inf_rait_batch_minutes_manifest
+      foreign key (tenant_id, id, minutes_document_id) references inf.rait_batch_minutes_manifest (tenant_id, batch_id, document_id);
+  end if;
+end $$;
+
+create or replace function inf.reject_immutable_blueprint_row()
+returns trigger language plpgsql as $$ begin
+  raise exception 'Immutable blueprint row cannot be changed' using errcode = '42501';
+end $$;
+
+drop trigger if exists rait_batch_draw_snapshot_immutable on inf.rait_batch_draw_snapshot;
+create trigger rait_batch_draw_snapshot_immutable before update or delete on inf.rait_batch_draw_snapshot
+  for each row execute function inf.reject_immutable_blueprint_row();
+drop trigger if exists rait_batch_draw_snapshot_no_truncate on inf.rait_batch_draw_snapshot;
+drop trigger if exists rait_batch_draw_snapshot_immutable_truncate on inf.rait_batch_draw_snapshot;
+create trigger rait_batch_draw_snapshot_no_truncate before truncate on inf.rait_batch_draw_snapshot
+  for each statement execute function inf.reject_immutable_blueprint_row();
+
+drop trigger if exists rait_batch_minutes_manifest_immutable on inf.rait_batch_minutes_manifest;
+create trigger rait_batch_minutes_manifest_immutable before update or delete on inf.rait_batch_minutes_manifest
+  for each row execute function inf.reject_immutable_blueprint_row();
+drop trigger if exists rait_batch_minutes_manifest_no_truncate on inf.rait_batch_minutes_manifest;
+drop trigger if exists rait_batch_minutes_manifest_immutable_truncate on inf.rait_batch_minutes_manifest;
+create trigger rait_batch_minutes_manifest_no_truncate before truncate on inf.rait_batch_minutes_manifest
+  for each statement execute function inf.reject_immutable_blueprint_row();
+
 select auth.create_rls_policy('inf', 'rait_unit');
 
 select auth.create_rls_policy('inf', 'rait_pool');
@@ -330,6 +516,10 @@ select auth.create_rls_policy('inf', 'rait_schedule');
 select auth.create_rls_policy('inf', 'rait_schedule_slot');
 
 select auth.create_rls_policy('inf', 'rait_batch');
+
+select auth.create_rls_policy('inf', 'rait_batch_draw_snapshot');
+
+select auth.create_rls_policy('inf', 'rait_batch_minutes_manifest');
 
 select auth.create_rls_policy('inf', 'rait_batch_item');
 

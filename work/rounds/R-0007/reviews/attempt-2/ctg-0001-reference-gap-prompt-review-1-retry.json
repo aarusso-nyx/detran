@@ -1,0 +1,91 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "attempt": 2,
+  "cycle": "CTG-0001-REFERENCE-GAP-1",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 119,
+      "claim": "PREP-CTG1-MODEL item 1 manda materializar em BP-INF-RAIT-CASE-001 uma evidencia imutavel de assinatura (caso, minuta, documento, hash, signatario, certificado, PAdES-B-LT, TSA, sem CRUD publico) e diz que o verificador de decide le essa evidencia. CTG-0001 secao 8 nao contem essa entidade: os deltas do case sao apenas agency_jurisdiction_id, constraint de minuta submetida, constraints de assinatura em rait_decision e dependencias/aliases (linhas 336-345), e a verificacao e feita pelo DocumentTrustVerifier/DocumentTrustHttpAdapter fail-closed (linhas 285-334). O maestro executaria o PREP inventando tabela, colunas, constraints e supressao de CRUD nao contratadas.",
+      "fix": "Reescrever o item 1 do PREP-CTG1-MODEL como ponteiro literal para CTG-0001 secao 8 (lista exata de colunas/constraints) ou, se a evidencia persistida for mesmo desejada, contrata-la primeiro em CTG-0001 com entidade, campos, constraints e flag de supressao de CRUD."
+    },
+    {
+      "severity": "high",
+      "item": 8,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 122,
+      "claim": "PREP-CTG1-MODEL item 2 fixa o token autoridade_signataria em rait_pool_member.member_role e declara jurisdiction textual como o id de ops.agency_jurisdiction. CTG-0001 linhas 346-349 usam o token autoridade, acrescentam agency_jurisdiction_id uuid com FK e constraint condicional, e rebaixam jurisdiction a compatibilidade que nao autoriza decide. Alem da divergencia, autoridade_signataria tem 21 caracteres e nao cabe em member_role varchar(20) (DDL 35 linha 52), e autoridade e o token ja canonico em rait_party.role (DDL 34 linha 70). O PREP produziria um check e uma coluna que a guarda de decide nao reconhece.",
+      "fix": "Alinhar o item 2 do plano a CTG-0001 secao 8: token autoridade, coluna agency_jurisdiction_id uuid anulavel com FK para ops.agency_jurisdiction(id), constraint de obrigatoriedade quando member_role=autoridade, e jurisdiction textual so por compatibilidade."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0007/contracts/CTG-0001.md",
+      "line": 359,
+      "claim": "A secao 8 diz que TASK-0003 deve disponibilizar exatamente quatro arquivos handwritten (linhas 362-367), mas handwrittenProviders e handwrittenExports (linhas 397-408) referenciam handwritten/rait-document-trust.verifier com o simbolo RaitDocumentTrustVerifier. O gerador emite import e export * literais para esse alvo (tools/blueprints/generate.mjs linhas 237 e 369), de modo que TASK-0004 quebra typecheck e pnpm check se o quinto arquivo nao existir. O prompt de TASK-0003 tambem so exige o provider concreto em prosa (linha 118), sem nomear o caminho.",
+      "fix": "Incluir handwritten/rait-document-trust.verifier.ts na lista de arquivos obrigatorios de TASK-0003 em CTG-0001 secao 8 e no item 9 do prompt TASK-0003."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/contracts/CTG-0001.md",
+      "line": 137,
+      "claim": "O checklist F-J-0 exige todos os links de evidencia do AIT marcados ops.evidence_link.mandatory=true, mas ops.evidence_link.entity_type e varchar(60) livre, sem check nem token canonico no DDL 17 (linha 42), no BP-OPS-EVIDENCE-001 ou no corpus; role tambem e varchar(80) livre. Nao ha como filtrar os links do AIT sem inventar um literal de entity_type. Os demais tokens do checklist sao demonstraveis (notice.kind NA/NP e document_id, notice_acknowledgement, rait_document.origin=requerente, os quatro criterios de rait_admissibility, infraction.ait_id), so TEAT_EVIDENCE nao e.",
+      "fix": "Fixar em CTG-0001 secao 4 o par entity_type/entity_id usado para o AIT (e se role participa do filtro) com fonte canonica, ou marcar TEAT_EVIDENCE como source_pending/OD ate a decisao, sem deixar o Inspector escolher o literal."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/contracts/CTG-0001.md",
+      "line": 80,
+      "claim": "A secao 3 declara claim-next como unica excecao ao If-Match porque rait_pool nao tem version, mas inf.rait_inquiry e inf.rait_pending_content tambem nao possuem version (DDL 34). As rotas /inquiries/{inquiryId}/commands/{answer,extend,expire} nao dizem contra qual ETag o If-Match e validado nem qual recurso devolve o ETag de sucesso. O prompt TASK-0002 linha 87 manda testar If-Match ausente e divergente para esses comandos com claim-next como unica excecao, o que o Inspector nao consegue codificar sem inventar. Alem disso expire e caminho interno de timer e mesmo assim cai na regra de Idempotency-Key obrigatorio para todos os comandos da secao.",
+      "fix": "Declarar em CTG-0001 secao 3 que as rotas de diligencia usam o ETag/If-Match do caso associado (ou que sao excecao explicita) e isentar expire de If-Match e de Idempotency-Key de cliente, mantendo a idempotencia pelo efeito TimerExpiredData."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/contracts/CTG-0001.md",
+      "line": 146,
+      "claim": "A precedencia de erros de decide cita etapas sem codigo atribuido. A guarda da linha 106 exige instance=defesa_previa, mas nenhum codigo cobre um caso jari/cetran em PRONTO_P_DECISAO: nao e CASE_STATE_INVALID (o estado e valido) nem DECISION_KIND_INVALID_FOR_INSTANCE (o token seria compativel com a instancia). A etapa minuta/completude tambem nao tem codigo na lista de decide, ja que RAIT.DRAFT_INCOMPLETE so aparece em ready. O Inspector precisa inventar o codigo dos dois ramos.",
+      "fix": "Atribuir codigos ja catalogados aos dois ramos de decide (instancia incompativel e minuta incompleta) na tabela da secao 4 e na precedencia da linha 146."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 126,
+      "claim": "CTG-0001 linha 345 manda o PREP acrescentar dependencias e aliases de teste de @detran/ops-evidence, @detran/inf-infraction e @detran/inf-notification ao BP-INF-RAIT-CASE-001, mas os passos 3 e 4 do PREP-CTG1-MODEL nao executam pnpm install nem pnpm install --frozen-lockfile, ao contrario do PREP-CTG1-DEPS (linhas 107-109). Sem os links workspace e o lockfile resolvidos, os criterios de TASK-0002 (typecheck e test:unit/test:integration do pacote) falham por resolucao de modulo e os workers estao proibidos de instalar pacotes.",
+      "fix": "Replicar no PREP-CTG1-MODEL o passo de pnpm install seguido de pnpm install --frozen-lockfile antes dos checks, como ja faz o PREP-CTG1-DEPS."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/contracts/CTG-0001.md",
+      "line": 353,
+      "claim": "A guarda de decide admite somente o membro ativo com member_role=autoridade em escala kind=escala_assinatura publicada, vigente e DISPONIVEL/EM_PLANTAO. RN-RAIT-143 (Verificacao) exige que o signatario esteja na escala do dia ou seja substituto designado, e UC-RAIT-016 AC-1 e o fluxo 3b repetem que o substituto designado assina. O DDL 35 linha 57 modela is_substitute, que o contrato nunca menciona. O Inspector escreveria uma negativa que contradiz um criterio de aceitacao canonico.",
+      "fix": "Declarar em CTG-0001 secao 8 como is_substitute participa da guarda (aceito quando designado para o periodo/circunscricao) ou registrar explicitamente o adiamento com OD, citando RN-RAIT-143 e AC-RAIT-016-1."
+    }
+  ],
+  "notes": [
+    "Verificado e correto, nao reabrir: os 37 codigos de erro usados no contrato existem em docs/framework/arch/rait-error-catalog.md; os quatro sha256 de prompts batem com compositions.json e com os pc_id; BP-INF-RAIT-CASE-001 ja esta em v1.1.1 com @detran/inf-deadlines e o testAlias do PREP-CTG1-DEPS; DDL 34 declara o mesmo v1.1.1.",
+    "Jurisdicao gerada e valida: tools/blueprints/generate.mjs emite references literalmente, e ops.agency_jurisdiction nasce no DDL 13, antes de 34 e 35, com PK (id); a FK cross-schema e a primeira do repo, mas nao viola a ordem nem o gerador.",
+    "Escala demonstravel: DDL 35 ja tem kind=escala_assinatura, availability DISPONIVEL/EM_PLANTAO, period_start/period_end e published_at; rait_pool nao tem version, o que confirma a excecao de claim-next.",
+    "F-J-0 mapeia 1 para 1 o dossie de UC-RAIT-017 fluxo 1 e os tokens de missing[] sao consistentes com RAIT.REMIT_CHECKLIST_INCOMPLETE do catalogo; a unica peca nao executavel e TEAT_EVIDENCE.",
+    "DocumentTrustHttpAdapter reproduz fielmente o padrao fail-closed de PadesSigningHttpAdapter (config obrigatoria, HTTPS fora de local/test, probe de capabilities, igualdade literal do recibo) e respeita ADR-0018 decisao 1, ja que o dominio fala so com a fachada; PAdES-B-LT coincide com o tipo PadesLevel ja existente em signature-policy.ts.",
+    "Baixa severidade: o prompt de TASK-0002 lista backend/domains/shared/src/documents/document-trust.ts na leitura fechada, arquivo que ainda nao existe, e nunca nomeia document-trust.http-adapter.ts, alvo do sensor do item 7.",
+    "Baixa severidade: a fronteira de escrita de TASK-0003 nao inclui backend/domains/shared/src/documents/index.ts, o barril reexportado por shared/src/index.ts, e @detran/shared/documents nao e subpath de exports no package.json de @detran/shared (so o ponto).",
+    "Baixa severidade: o criterio de TASK-0002 para pnpm --filter @detran/shared test diz falha apenas por rules ausentes, mas o novo sensor de document-trust tambem ficara vermelho por adaptador ausente.",
+    "Baixa severidade: o contrato nunca afirma que RequestContext.snapshot().actorId e o mesmo identificador de rait_pool_member.person_id e rait_draft.author_id, exigido pelas guardas de autoria e circunscricao de decide.",
+    "Baixa severidade: DetranPolicyGuard lanca ForbiddenException sem code, entao a regra de que toda falha usa envelope DetranError nao vale para negativas estaticas de politica, e policy.guard.ts esta fora da fronteira de TASK-0003.",
+    "Baixa severidade: redirect grava um uuid em rait_redirect.counterpart_agency varchar(120), coluna de nome, e reaproveita protocol_number sem delta que torne a identidade explicita; a guarda contra ait_ait.traffic_agency_id em si e demonstravel.",
+    "Baixa severidade: a guarda de escala ignora inf.rait_schedule_slot, cuja availability diaria pode contradizer a do cabecalho da escala.",
+    "Baixa severidade: o delta de dependencias e assimetrico, pois inclui ops-evidence, inf-infraction e inf-notification mas omite ops-agency e inf-rait-worklist, cujas tabelas decide e claim-next leem.",
+    "Baixa severidade: a precondicao de T-DEC aberto de UC-RAIT-016 e o AC-016-4 nao aparecem na guarda nem na precedencia de decide, e o adiamento para CTG-0003 nao esta registrado.",
+    "Baixa severidade, contabilidade: plan.md linha 11 diz Janelas previstas 9, enquanto budget.json declara planned_windows 11 e tem entradas ate a janela 11; a janela 7 fecha em 480000 de 800000, coerente. TASK-0002.json usa upstream_task_id composto TASK-0001+PREP-CTG1-DEPS+PREP-CTG1-MODEL em vez de um id unico, e a emenda de TASK-0001 aparece no budget como architect-gap-audit em gpt-6-astra enquanto TASK-0001.json declara executor gpt-5.6-terra e status in_progress.",
+    "Baixa severidade: o item 12 do prompt TASK-0003 manda acrescentar @detran/inf-rait-case test:integration ao script raiz backend:test:integration, que ja o contem; a clausula sem duplica-lo cobre o caso, mas o texto sugere trabalho inexistente."
+  ]
+}

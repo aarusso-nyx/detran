@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0040",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Provar perfis de seed RAIT com runner integral",
+  "description": "Inspector Terra/High substituiu sensor falso de primeiro INSERT e preservou dois casos runtime. Novo sensor criou scratch apenas se ausente, executou apply.sh e seed.sh integral, verificou fresh padrão+explícito 1 case/1 assessment none/0 bases, mesmo instante protocolo, idempotência e recusa legacy-upgrade 0/20 antes de escrita. Correção posterior testou default sem SEED_PROFILE herdado. Sensor filtrado 1/1, typecheck/Prettier PASS, scratch removido. Review Fable5 do mesmo hash PASS suplementar zero high/três low. Prompt de registro normalizado pós-despacho, não byte stream. Sem commit/merge.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-case-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0039",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 1,
+  "tags": ["attempt-2", "c4-od-v3", "owner-fresh-legacy-split"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-77ccef33d40b4cb0",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/rait-seed-profiles.integration.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-17T14:51:59Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-77ccef33d40b4cb0",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente sensores do runner; preservar os dois casos runtime",
+    "planned_files": [
+      "backend/domains/inf/rait-case/tests/integration/rait-case-runtime.integration.spec.ts",
+      "backend/domains/inf/rait-case/tests/integration/rait-seed-profiles.integration.spec.ts"
+    ]
+  }
+}

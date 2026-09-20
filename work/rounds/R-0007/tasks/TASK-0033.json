@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0033",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Correção manual estrita do upsert DDL05",
+  "description": "OWNER-authorized Architect manual 0x correction completed in iteration 1/1; awaiting independent exact-byte delivery review, not a PostgreSQL PASS. Only backend/database/ddl/05-role-catalog.sql changed, baseline SHA-256 4cf0316afdb235495420cddb7297fe20ac2d5714aa449e049cf531b2ca6124d9 to 8533a73f56608059477ff25894905c3ad9435ca42c2c6ff19686a14c978feef4, adding the seven-field null-safe ROW guard. Frozen Inspector sensor changed from genuine 3/4 RED to 4/4 static GREEN, zero skip/todo; pnpm verify:role-catalog PASS 36 roles; Maestro git diff --check PASS. DDL14, checker, sensor0028 and two new sensors unchanged. No DB connection/apply/seed/integration execution. Single writer, MOD-role-catalog-ddl lock released; estimate 35000/7000 tokens window19 not measured; no retry.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-role-catalog-ddl"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0032",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": [
+    "attempt-2",
+    "c4-od-v3",
+    "ddl05-corrective",
+    "completed-delivery-review-pass"
+  ],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-d1a782d6808c537c",
+  "acceptance_commands": [
+    ["node", "--test", "backend/database/tests/ddl05-role-catalog.test.mjs"],
+    ["pnpm", "verify:role-catalog"],
+    ["git", "diff", "--check", "--", "backend/database/ddl/05-role-catalog.sql"]
+  ],
+  "created_at": "2026-09-16T22:33:29Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-astra",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-6-astra" },
+    "prompt_composition_id": "PC-d1a782d6808c537c",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Correção manual estrita do upsert DDL05",
+    "planned_files": ["backend/database/ddl/05-role-catalog.sql"]
+  }
+}

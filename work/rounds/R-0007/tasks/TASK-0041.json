@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0041",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Reconciliar sensor C3 de DI com o quinto Clock contratual",
+  "description": "Correção delimitada OWNER para desbloquear o gate backend:test:ci da TASK-0022; um sensor legado apenas, sem alterar produto ou revisão intermediária.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-case-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0022",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": ["attempt-2", "c4-od-v3", "task-0022-gate-correction"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-24c99716f6d26a98",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:unit",
+      "--passWithNoTests=false"
+    ],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"]
+  ],
+  "created_at": "2026-09-17T18:05:11Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-24c99716f6d26a98",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Corrigir somente expectativa C3 de DI conforme contrato C4 já congelado.",
+    "planned_files": [
+      "backend/domains/inf/rait-case/tests/unit/rait-case-delivery-c3.spec.ts"
+    ]
+  }
+}

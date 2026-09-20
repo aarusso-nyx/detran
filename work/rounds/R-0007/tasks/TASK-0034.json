@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0034",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Sensor independente da ordenação legal claim-next",
+  "description": "SQL review1 F3 Inspector completed 1/1 after independent Fable5 prompt-review PASS candidate 32dcacf87e08e29f820d049a6e3cf2ee38616af113c9be9653c9eeb8eaa2beb7. Sole test file SHA 05cbba71637227831a72cf5489b3ab86f8c10a71c6b508f55671a71116853e64, 35 collected/34 PASS/1 genuine contractual RED on actual lexical claim-next query; Maestro independently reproduced. Prettier PASS. No DB or shared R-0010 lock. Estimate 35000/6000 window20 not measured.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-case-tests"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0027",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": ["attempt-2", "c4-od-v3", "sql1-corrective", "dispatched-completed"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-13d8859075656b3c",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-rait-case",
+      "test:unit",
+      "--passWithNoTests=false",
+      "tests/unit/rait-case-command-contract.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-17T00:15:15Z",
+  "completed_at": "2026-09-17T00:35:10Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-13d8859075656b3c",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Sensor independente da ordenação legal claim-next",
+    "planned_files": [
+      "backend/domains/inf/rait-case/tests/unit/rait-case-command-contract.spec.ts"
+    ]
+  }
+}

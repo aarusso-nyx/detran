@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-SESSION-001 v1.1.0 sha256:24f07dd684f9142de9db5e84913c3e2899499e68aebd1d6ac33dc0a03c5eca01
+// Generated from BP-INF-RAIT-SESSION-001 v1.2.2 sha256:0a9063935f0017c3da8110a51763354850095992f1a56199395ef7eda620a45b
 import { Injectable } from '@nestjs/common';
 import { RaitOralArgumentRepository } from '../repositories/rait-oral-argument.repository.js';
 import type { RaitOralArgument } from '../entities/rait-oral-argument.entity.js';

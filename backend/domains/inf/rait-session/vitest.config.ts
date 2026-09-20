@@ -19,6 +19,9 @@ export default defineConfig({
       '@detran/inf-rait-worklist': fileURLToPath(
         new URL('../rait-worklist/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-deadlines': fileURLToPath(
+        new URL('../deadlines/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {

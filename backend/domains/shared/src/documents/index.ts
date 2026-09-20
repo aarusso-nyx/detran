@@ -4,3 +4,5 @@
 export * from './document-kind.js';
 export * from './signature-policy.js';
 export * from './documents-facade.js';
+export * from './document-trust.js';
+export * from './document-trust.http-adapter.js';

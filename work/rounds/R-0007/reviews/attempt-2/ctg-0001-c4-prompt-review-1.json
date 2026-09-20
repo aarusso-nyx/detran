@@ -1,0 +1,82 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "attempt": 2,
+  "cycle": "CTG-0001-C4-1",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0024.md",
+      "line": 18,
+      "claim": "A allowlist exclusiva (WF-RAIT-001.md + UC-RAIT-017.md) torna impossível o próprio critério de aceitação `pnpm docs:kb:check`: o checker compara `canonicalTokens.size` com `baselines.canonicalWorkflowTokenCount` (tools/docs/kb/check.mjs:241-246, baseline 446 em docs/meta/knowledge-base/import-manifest.json). A execução atual devolve exatamente um achado (`TEAT_EVIDENCE` is not owned by a workflow); dar posse do token a qualquer workflow eleva a contagem para 447 e troca esse achado por `workflow token baseline drift: expected 446, found 447`, sem que nenhum arquivo autorizado possa corrigir a baseline.",
+      "fix": "Ou acrescentar `docs/meta/knowledge-base/import-manifest.json` à allowlist, restrito a `baselines.canonicalWorkflowTokenCount` 446→447 com justificativa no relatório (exceção prevista em docs/meta/agents/transcriber-docs.md §Pode tocar), ou adotar a rota sem novo token canônico: retirar as crases de `TEAT_EVIDENCE` em UC-RAIT-017.md (regra 3 do manual do transcriber — token ALL_CAPS só em crases quando pertence a workflow), que fecha o gate dentro da allowlist atual e sem editar workflow."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/prompts/TASK-0024.md",
+      "line": 20,
+      "claim": "O adendo e o prompt tratam WF-RAIT-001 como \"workflow proprietário\" da categoria F-J-0, mas a fonte canônica contradiz: `F-J-0` só existe em WF-RAIT-004.md (linhas 137, 337, 381) e não aparece em WF-RAIT-001.md. Além disso WF-RAIT-001 tem `status: approved` (front-matter linha 3) e é o workflow do vocabulário de estados/timers/eventos — exatamente onde o adendo diz que TEAT_EVIDENCE não deve entrar como estado; o manual do papel (transcriber-docs §Não pode tocar) proíbe editar workflows/casos de uso já reviewed/approved, enquanto WF-RAIT-004 é `draft`.",
+      "fix": "Retirar WF-RAIT-001.md da allowlist e ancorar a posse onde a fonte a sustenta: ou UC-RAIT-017.md em prosa (sem crases), ou, se a decisão do Owner for criar posse de workflow, WF-RAIT-004.md (dono de F-J-0, status draft), citando [RN-RAIT-141]/OD-R7-FJ0-001 e declarando explicitamente que é categoria de checklist, não estado. Qualquer edição em artefato `approved` exige decisão do Owner registrada e revisão de delta antes da execução."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0007/prompts/TASK-0023.md",
+      "line": 16,
+      "claim": "A leitura fechada de TASK-0023 (EV, error-catalog, deadline-engine, WF-RAIT-001/004, RN-RAIT-003/106/121/143, UC-RAIT-003/012/017/028, DDL02/14/34/35/36/38) não contém as fontes da fila que a linha 18 manda fechar: a ordem única é [RN-RAIT-141] (não listada) e a bandeira de risco é definida em WF-RAIT-002 §4 (`SEM_RISCO`→`ALERTA_N1..N3`→`CRITICO`, WF-RAIT-002.md:23-25,161-163), também fora da lista — WF-RAIT-004.md:109 apenas remete a elas. Com a proibição de ler fora da lista, o worker fica entre procurar fonte não autorizada e declarar BLOCKED no primeiro passo do último ciclo.",
+      "fix": "Acrescentar à leitura obrigatória de TASK-0023 (e às \"Fontes fechadas\" de TASK-0002-D1/TASK-0003-D1) `rules/RN-RAIT-141.md` e `workflows/WF-RAIT-002.md` §4, indicando que os tokens de risco vêm de WF-RAIT-002 §4 e a precedência risco > prioridade legal > cronológico de RN-RAIT-141/WF-RAIT-004 §108-109."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0007/prompts/TASK-0023.md",
+      "line": 14,
+      "claim": "A fronteira de escrita não é exata: a allowlist autoriza \"work/rounds/R-0007/contracts/CTG-0001-C4.md somente seção de bindings\", mas esse arquivo não possui seção de bindings (suas seções são Sequência e orçamento, Fechamento dos findings, Gates globais e autoridade documental, Allowlists e passagem de bastão) — o worker teria de criar a seção no contrato que governa as demais tarefas, sem heading nomeado. O único acceptance_command (tasks/TASK-0023.json) é `prettier --check` sobre o contrato e não cobre `reports/CTG-0001-C4-BINDINGS.md`, que `pnpm format:check` dentro de `pnpm check` (TASK-0022) passará a exigir.",
+      "fix": "Nomear literalmente o heading a ser acrescentado (ex.: \"## Bindings C4 fechados por TASK-0023\", apêndice ao fim do arquivo, sem alterar §§ existentes) e incluir `work/rounds/R-0007/reports/CTG-0001-C4-BINDINGS.md` no `prettier --check` de aceitação da tarefa."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0025.md",
+      "line": 17,
+      "claim": "O sensor a ser editado tem fallback proibido: backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts:6-9 usa `process.env.DETRAN_TEST_DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/detran'`, o que CTG-0001 §10.8 (\"DETRAN_TEST_DATABASE_URL é obrigatório e não admite fallback detran\") e o adendo C4 (\"nenhum fallback, skip ou passWithNoTests é evidência\") proíbem; a vitest.config.ts do pacote ainda tem `passWithNoTests: true`. O prompt não manda corrigir isso, embora o arquivo esteja na allowlist — um run sem a variável apontaria para outro banco e produziria verde/vermelho falso no gate `backend:test:ci`.",
+      "fix": "Exigir em TASK-0025 que o sensor falhe fechado na ausência de `DETRAN_TEST_DATABASE_URL` (sem string default) e que o relatório informe nominalmente o `current_database()` e a contagem de testes executados, para que `passWithNoTests` não possa ser lido como evidência."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0007/prompts/TASK-0025.md",
+      "line": 18,
+      "claim": "O adendo exige provar \"isolamento tenant/falta de contexto na identidade role_app_backend onde aplicável\", mas nem o prompt nem a task dizem de onde vem essa conexão no pacote @detran/inf-ait: o sensor só conhece `DETRAN_TEST_DATABASE_URL` (conexão de inspeção), §10.8 atribui `role_app_backend` a `STYNX_APP_DATABASE_URL` e o adendo limita o PREP a \"confirmar ambiente/schema existentes\". Sob superusuário/owner o RLS é contornado, de modo que o Inspector produziria RED espúrio ou inventaria um principal — ambos fora do contrato.",
+      "fix": "Nomear no prompt a variável que fornece o principal `role_app_backend` para o pacote ait (STYNX_APP_DATABASE_URL, conforme §10.8), mandar o teste provar `current_user`/`current_role` da conexão usada no isolamento, e registrar no PREP a confirmação dessa URL; se ela não existir para o pacote, declarar stop condition em vez de RED contratual."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0007/reports/CTG-0001-C4-PLAN.md",
+      "line": 38,
+      "claim": "A validação declarada (\"unicidade de IDs e Prettier PASS\") não se sustenta: `npx prettier --check 'work/rounds/R-0007/**/*.md'` acusa hoje `work/rounds/R-0007/reviews/attempt-2/ctg-0001-c4-prompt-review-1.md`, artefato criado na própria preparação C4, e `work/` não está em .prettierignore. Como `pnpm check` começa por `format:check` sobre o repositório inteiro, o gate global que TASK-0022 precisa reproduzir no candidato congelado falha por um arquivo que não está na allowlist de nenhum worker.",
+      "fix": "Maestro formata (ou remove) o artefato antes do congelamento e retira os temporários de zero byte `ctg-0001-c4-prompt-review-1.json.raw.*`/`.formatted.*` do diretório de reviews; corrigir a asserção do relatório para o estado real antes do dispatch de TASK-0023."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/prompts/TASK-0004-D1.md",
+      "line": 88,
+      "claim": "O binding do relógio oficial não está fechado e colide com a lista congelada de providers. O relógio hoje é ambiente dentro da fábrica: rait-case-command.service.ts:186 (`const today = () => new Date()...`) e :302 (`now: () => new Date()`), com `RaitDeadlineEngineFactory` em `constructor() {}` (:242-244). O adendo C4 exige instante/dia pelo Clock oficial sem `new Date`/`current_date`, mas CTG-0001 §8 fixa exatamente cinco `handwrittenProviders` e esta tarefa manda conferir \"cinco providers\"; TASK-0021 só pode fazer wiring dos adapters já listados e TASK-0022 só mexe nos hooks \"contratados\" — não há slot autorizado para uma porta Clock nem entrada correspondente na matriz de DI negativa.",
+      "fix": "TASK-0023 deve fechar explicitamente a porta do relógio (quem injeta Clock/fuso para resolve-pending, decide e expire, se continua dentro do RaitDeadlineEngineFactory ou vira provider próprio) e dizer se a lista de §8 permanece em cinco; se virar seis, autorizar antecipadamente o delta de hook em TASK-0022 e o provider adicional na matriz de DI negativa, com revisão de delta antes da execução."
+    }
+  ],
+  "notes": [
+    "Coerência verificada e sem achado: os seis SHA-256 batem com compositions.json e com o campo description de cada task (shasum -a 256 dos prompts); PC = primeiros 16 hex; modelos Astra/medium (0023, 0024, 0022) e Sol/high (0025, 0020, 0021) conforme vinculação do Owner.",
+    "Budget coerente: soma das entradas = 6.845.000 input / 913.000 output, idêntica aos totais de campanha; janela 16 = 515.000 e janela 17 = 500.000, ambas abaixo do checkpoint 640.000 e do teto 800.000; entradas C4 marcadas como estimativa.",
+    "Histórico e tetos preservados: iteration_count 3/3/1 com max_iterations 4 em 0020/0021/0022; 0023/24/25 com max_iterations 1; cadeia upstream 0023→0024→0025→0020→0021→0022 é serial e não sobrepõe escritores; locks MOD-contract-case/MOD-rait-kb/MOD-ait-rls-tests são disjuntos dos locks D1.",
+    "Inventário 88 confirmado independentemente: `grep -h 'create table if not exists inf\\.' backend/database/ddl/*.sql` devolve 88 (DDL34 com 15), e as três relações novas recebem `auth.create_rls_policy` em 34-inf-rait-case.sql:414-418; o comentário do sensor (linhas 40-48) também precisa ir de 85→88 e de rait-case 12→15.",
+    "TASK-0023 linha 16 cita \"EV\" sem caminho resolúvel; presumivelmente docs/framework/arch/rait-events-sse-contract.md (tabela de eventos com instance/memberId, linhas 48-65). Em leitura fechada, abreviação não resolúvel convida a busca fora da lista — nomear o arquivo.",
+    "Risco previsível de stop legítimo: RN-RAIT-141 tipa a prioridade legal como \"pessoa idosa, fonte a capturar\" e inf.rait_case.legal_priority (DDL34:33) é varchar(30) sem check nem tabela de referência. Se TASK-0023 concluir BLOCKED nesse item, é conduta correta (fonte ambígua é stop condition), mas o maestro deve prever que a fila só fecha parcialmente dentro do teto 4.",
+    "A revisão foi de prompts; suítes específicas verdes de TASK-0022-D1 não foram tratadas como entrega, e o FAIL histórico permanece o estado vigente."
+  ]
+}

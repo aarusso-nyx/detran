@@ -1,0 +1,36 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "attempt": 2,
+  "cycle": 2,
+  "technical_retry": true,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0007/budget.json",
+      "line": 192,
+      "claim": "A entrada PREP-WIRING aparece na lista depois de TASK-0015, embora plan.md determine que ela ocorra depois de TASK-0014 e antes de TASK-0015; as demais entradas da janela 5 seguem ordem de execucao e PREP-DEPS esta corretamente entre TASK-0016 e TASK-0017, de modo que a posicao de PREP-WIRING e a unica que destoa. Nao altera a ordem real de disparo, governada por plan.md e por upstream_task_id, mas torna o razao de janela enganoso.",
+      "fix": "Mover a entrada PREP-WIRING para imediatamente antes da entrada TASK-0015; os totais por janela e de campanha nao mudam."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0007/prompts/TASK-0016.md",
+      "line": 73,
+      "claim": "TASK-0016 recebeu nesta correcao o fechamento dos gates mais pesados da rodada (app test:e2e, backend:test:ci e pnpm check), mas permanece composta como gpt-5.6-luna com esforco baixo em compositions.json e em tasks/TASK-0016.json, coerente com a descricao de integracao mecanica do plano. Como sua fronteira nao autoriza tocar backend/app nem testes, qualquer vermelho nesses tres comandos so pode virar bloqueio relatado ao maestro.",
+      "fix": "Manter a composicao e registrar explicitamente nas Definicoes vinculantes que vermelho em test:e2e, backend:test:ci ou check que nao decorra de hook de blueprint e bloqueio a devolver ao maestro, nunca objeto de correcao pelo proprio worker."
+    }
+  ],
+  "notes": [
+    "Achado high 1 do ciclo 1 corrigido: o sensor bidirecional passou a se chamar backend/app/tests/e2e/policy-routes.e2e.spec.ts, casando com o include do tier e2e de backend/app/vitest.config.ts; o nome foi propagado a plan.md linhas 33, 116, 125 e 134 e aos prompts TASK-0014, TASK-0015 e TASK-0017, sem ocorrencia residual do nome antigo fora do historico do bloco Bloqueios.",
+    "Achado high 2 do ciclo 1 corrigido por redistribuicao coerente: TASK-0015 ganhou pnpm --filter @detran/app build no prompt e em acceptance_commands, e app test:e2e, backend:test:ci e pnpm check passaram a TASK-0016, no prompt e em acceptance_commands; plan.md linhas 121-123 e a regra de wiring descrevem a mesma divisao. Nenhum comando do criterio de aceitacao da rodada ficou sem tarefa responsavel.",
+    "Achado high 3 do ciclo 1 corrigido: a secao Nao pode tocar de TASK-0014 passou a enumerar backend/domains/inf/*/src/**, backend/app/src/**, policy.ts e roles.ts, deixando de cobrir backend/domains/shared/src/policy.spec.ts, que segue autorizado em Pode tocar.",
+    "Correcao PREP-WIRING verificada: plan.md descreve as seis dependencias workspace com protocolo literal workspace:*, instaladas por pnpm --filter @detran/app add, com o pnpm como unico autor de backend/app/package.json, pnpm-lock.yaml e links, sem tocar AppModule, aliases Vitest ou codigo de produto, seguida de pnpm install --frozen-lockfile e commit chore(deps) separado; a tabela registra TASK-0015 dependendo de TASK-0014 + PREP-WIRING e a secao fica posicionada entre as duas tarefas.",
+    "TASK-0015 e consistente com PREP-WIRING: backend/app/package.json e pnpm-lock.yaml estao em Nao pode tocar, o manifesto entra na leitura como somente leitura, a tarefa manda confirmar sem editar e o resultado esperado voltou a 0 falhas. Conferi que backend/app/package.json hoje nao declara nenhum dos seis pacotes e que backend/app/vitest.config.ts ja tem alias de rait-org, collection e rait-integration mas nao de infraction, deadlines e notification, alias que TASK-0015 pode criar por estar autorizada no arquivo.",
+    "Demais achados medios e baixos do ciclo 1 corrigidos e conferidos na fonte: compositions.json e tasks TASK-0004, 0008, 0012 e 0016 agora em gpt-5.6-luna com esforco baixo, alinhados a plan.md; TASK-0016 lista os tres blueprints e os tres OpenAPI por caminho completo; TASK-0006 ganhou os dois criterios test:integration; TASK-0011 e TASK-0015 passaram a instruir verificacao sem duplicar filtros do gate raiz, o que confere com package.json, onde backend:test:integration ja enumera infraction, collection, rait-org e rait-integration e falta apenas case, worklist e session; TASK-0011 recebeu deadlines/src/** e rait-deadline-engine.md na leitura; TASK-0001 recebeu tools/contracts/generate-openapi.mjs e rait-events-sse-contract.md; TASK-0002, 0006, 0010 e 0014 declaram o sufixo por tier e exigem contagem de arquivos e casos coletados, com zero coletados nunca valendo PASS; budget.json passou a ter entrada por tarefa, por PREP e por delivery-review.",
+    "Integridade das composicoes revalidada apos as edicoes: os dezoito sha256 de prompts/TASK-*.md conferem byte a byte com compositions.json e cada pc_id e PC- seguido dos primeiros dezesseis hexadigitos do hash. Os totais de budget.json fecham por aritmetica: janela 1 igual a 480000 e campanha igual a 2300000 de entrada e 314000 de saida.",
+    "Nenhuma contradicao canonica, de decisao do Owner, de ADR, da Constituicao ou de fronteira de escrita foi encontrada no texto alterado neste ciclo; nenhum achado novo sobre texto nao alterado atinge o limiar de FAIL. Nenhum achado high subsiste, por isso o veredito e PASS e os dois itens acima ficam como notas acionaveis sem bloqueio de disparo."
+  ]
+}

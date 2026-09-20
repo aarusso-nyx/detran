@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0082",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "auditor",
+  "discipline_specialization": "auditor-independent",
+  "title": "Emitir parecer independente final da CTG-0002",
+  "description": "Auditoria read-only Fable 5 do terceiro candidato, focada nos dois resíduos de ETag e na não regressão.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-worklist", "MOD-rait-session", "MOD-backend-ci"],
+  "target_substrates": ["F3", "F5"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "auditor",
+  "upstream_task_id": "TASK-0081",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "final-review", "etag"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-ctg2-final-review-fable5-3",
+  "acceptance_commands": [
+    [
+      "node",
+      "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final-3.runner.mjs",
+      "freeze"
+    ],
+    [
+      "node",
+      "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final-3.runner.mjs",
+      "review"
+    ]
+  ],
+  "created_at": "2026-09-19T21:43:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "claude-fable-5",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "claude-fable-5" },
+    "prompt_composition_id": "PC-ctg2-final-review-fable5-3",
+    "max_iterations": 1,
+    "capabilities": ["read"]
+  },
+  "intent_diff": {
+    "summary": "Gate independente final do candidato recongelado; nenhuma escrita durante a revisão."
+  },
+  "execution_evidence": {
+    "role": "Auditor",
+    "iteration": "1/1",
+    "result": "PASS",
+    "candidate_sha256": "066672b53ad41071a56c40b29091a24a24c0deea2cf81fe467395d36dcdfb963",
+    "review": "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final-3.json",
+    "bridge": "work/rounds/R-0007/reviews/attempt-2/ctg-0002-final-3.bridge.json",
+    "findings": "0 high, 8 low não estruturais",
+    "result_validation": "schema válido, hashes íntegros, referências e linhas válidas, verdict/high coerente"
+  }
+}

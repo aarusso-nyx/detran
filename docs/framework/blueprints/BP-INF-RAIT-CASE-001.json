@@ -4,10 +4,14 @@
   "module": {
     "name": "RaitCase",
     "namespace": "inf",
-    "version": "1.1.0",
+    "version": "1.1.7",
     "ddlFile": "34-inf-rait-case.sql",
     "dependencies": {
-      "@detran/inf-ait": "workspace:*"
+      "@detran/inf-ait": "workspace:*",
+      "@detran/inf-deadlines": "workspace:*",
+      "@detran/ops-evidence": "workspace:*",
+      "@detran/inf-infraction": "workspace:*",
+      "@detran/inf-notification": "workspace:*"
     },
     "devDependencies": {
       "@types/pg": "^8.15.4",
@@ -21,10 +25,71 @@
       {
         "package": "@detran/inf-ait",
         "target": "../ait/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../deadlines/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-evidence",
+        "target": "../../ops/evidence/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-infraction",
+        "target": "../infraction/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-notification",
+        "target": "../notification/src/index.ts"
       }
     ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/rait-case-commands.controller",
+        "symbol": "RaitCaseCommandsController"
+      },
+      {
+        "target": "handwritten/rait-inquiry-commands.controller",
+        "symbol": "RaitInquiryCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/rait-case-command.service",
+        "symbol": "RaitCaseCommandService"
+      },
+      {
+        "target": "handwritten/rait-inquiry-command.service",
+        "symbol": "RaitInquiryCommandService"
+      },
+      {
+        "target": "handwritten/rait-case-command.service",
+        "symbol": "RaitDeadlineEngineFactory"
+      },
+      {
+        "target": "handwritten/rait-document-trust.verifier",
+        "symbol": "RaitDocumentTrustVerifier"
+      },
+      {
+        "target": "handwritten/rait-document-trust.verifier",
+        "symbol": "DocumentTrustHttpAdapter"
+      },
+      {
+        "target": "handwritten/rait-operation-clock",
+        "symbol": "RaitOperationClock"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/rait-case-commands.controller",
+      "handwritten/rait-inquiry-commands.controller",
+      "handwritten/rait-case-command.service",
+      "handwritten/rait-inquiry-command.service",
+      "handwritten/rait-document-trust.verifier",
+      "handwritten/rait-operation-clock",
+      "handwritten/rait-case-transition.port"
+    ],
     "owners": ["detran-inf"],
-    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4)."
+    "description": "Ciclo de vida do caso RAIT (WF-RAIT-001): protocolo multicanal, juizo de admissibilidade, instrucao com diligencia, decisao e comunicacao. Vocabulario de estados canonico da base de conhecimento em docs/framework/product. v1.1.0 acrescenta prioridade legal de tramitacao, unidade de julgamento e versao do caso, mais pendencia de conteudo (UC-RAIT-028), redirecionamento de intake (UC-RAIT-027) e minuta versionada (WF-RAIT-004 secao 4). v1.1.1 declara a dependencia e o alias de teste do motor canonico de prazos para os comandos manuscritos do caso. v1.1.2 acrescenta o snapshot de jurisdicao institucional, reforca a completude estrutural da minuta submetida e a coerencia da assinatura da decisao, e declara as dependencias de leitura do checklist F-J-0. v1.1.5 acrescenta datas civis de recebimento/resposta e relacoes internas de documentos para diligencia, pendencia e atestado de desistência, sem CRUD HTTP. v1.1.6: CTG-0001-C4-OD V3, ADR-0024 e ADR-0025; apuracao inicial e provas internas imutaveis, protocolo handwritten e Clock explicito. v1.1.7 exporta oficialmente a porta same-transaction de transicao do caso exigida por CTG-0002 secao 10."
   },
   "database": {
     "entities": [
@@ -75,7 +140,8 @@
           },
           {
             "name": "protocolled_at",
-            "type": "timestamptz"
+            "type": "timestamptz",
+            "writable": false
           },
           {
             "name": "admitted_at",
@@ -88,8 +154,18 @@
             "nullable": true
           },
           {
+            "name": "judge_body_received_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
             "name": "cetran_received_at",
             "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "cetran_received_on",
+            "type": "date",
             "nullable": true
           },
           {
@@ -145,10 +221,16 @@
           {
             "name": "legal_priority",
             "type": "varchar(30)",
-            "nullable": true
+            "nullable": true,
+            "writable": false
           },
           {
             "name": "unit_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "agency_jurisdiction_id",
             "type": "uuid",
             "nullable": true
           },
@@ -175,6 +257,15 @@
           {
             "name": "ix_inf_rait_case_cetran_received",
             "columns": ["tenant_id", "cetran_received_at"]
+          },
+          {
+            "name": "ix_inf_rait_case_agency_jurisdiction",
+            "columns": ["tenant_id", "agency_jurisdiction_id"]
+          },
+          {
+            "name": "ux_inf_rait_case_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true
           }
         ],
         "checks": [
@@ -229,6 +320,14 @@
             "columns": ["origin_case_id"],
             "references": {
               "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_case_agency_jurisdiction",
+            "columns": ["agency_jurisdiction_id"],
+            "references": {
+              "table": "ops.agency_jurisdiction",
               "columns": ["id"]
             }
           }
@@ -386,6 +485,11 @@
           {
             "name": "ix_inf_rait_document_case",
             "columns": ["tenant_id", "case_id", "kind"]
+          },
+          {
+            "name": "ux_inf_rait_document_case_id",
+            "columns": ["tenant_id", "case_id", "id"],
+            "unique": true
           }
         ],
         "checks": [
@@ -401,6 +505,233 @@
             "references": {
               "table": "inf.rait_case",
               "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitPriorityAssessment",
+        "table": "rait_priority_assessment",
+        "primaryKey": ["id"],
+        "description": "ADR-0024 e CTG-0001-C4-OD V3: qualificacao no protocolo, politica e instante preservados; revision posterior reservada e vedada na politica atual.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "revision",
+            "type": "integer"
+          },
+          {
+            "name": "outcome",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "assessed_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "assessed_by",
+            "type": "uuid"
+          },
+          {
+            "name": "qualification_on",
+            "type": "date"
+          },
+          {
+            "name": "timezone",
+            "type": "text"
+          },
+          {
+            "name": "policy_parameter_id",
+            "type": "uuid"
+          },
+          {
+            "name": "policy_version",
+            "type": "integer"
+          },
+          {
+            "name": "policy_snapshot",
+            "type": "jsonb"
+          },
+          {
+            "name": "reason",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_priority_assessment_revision",
+            "columns": ["tenant_id", "case_id", "revision"],
+            "unique": true
+          },
+          {
+            "name": "ux_inf_rait_priority_assessment_case_id",
+            "columns": ["tenant_id", "case_id", "id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_priority_assessment_revision",
+            "expression": "revision > 0"
+          },
+          {
+            "name": "ck_inf_rait_priority_assessment_outcome",
+            "expression": "outcome in ('none','priority')"
+          },
+          {
+            "name": "ck_inf_rait_priority_assessment_policy_version",
+            "expression": "policy_version > 0"
+          },
+          {
+            "name": "ck_inf_rait_priority_assessment_reason",
+            "expression": "revision = 1 or (reason is not null and length(btrim(reason)) > 0)"
+          },
+          {
+            "name": "ck_inf_rait_priority_assessment_timezone",
+            "expression": "length(btrim(timezone)) > 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_priority_assessment_case",
+            "columns": ["tenant_id", "case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["tenant_id", "id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitPriorityBasis",
+        "table": "rait_priority_basis",
+        "primaryKey": ["id"],
+        "description": "ADR-0024 e CTG-0001-C4-OD V3: todas as provas do ato, anexo PCD obrigatorio; documento/CNH apresentado para idade sem upload obrigatorio.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "assessment_id",
+            "type": "uuid"
+          },
+          {
+            "name": "basis_code",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "verified_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "verified_by",
+            "type": "uuid"
+          },
+          {
+            "name": "source_kind",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "source_ref",
+            "type": "text",
+            "pii": "indirect",
+            "retention": "processo+20a"
+          },
+          {
+            "name": "document_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "birth_date",
+            "type": "date",
+            "nullable": true,
+            "pii": "direct",
+            "retention": "processo+20a"
+          },
+          {
+            "name": "evidence_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_priority_basis_evidence",
+            "columns": [
+              "tenant_id",
+              "assessment_id",
+              "basis_code",
+              "source_kind",
+              "source_ref"
+            ],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_priority_basis_code",
+            "expression": "basis_code in ('pcd','age_60_plus','age_80_plus')"
+          },
+          {
+            "name": "ck_inf_rait_priority_basis_source",
+            "expression": "source_kind in ('attached_document','presented_document','presented_cnh')"
+          },
+          {
+            "name": "ck_inf_rait_priority_basis_ref",
+            "expression": "length(btrim(source_ref)) > 0"
+          },
+          {
+            "name": "ck_inf_rait_priority_basis_pcd",
+            "expression": "basis_code <> 'pcd' or (source_kind = 'attached_document' and document_id is not null and evidence_hash is not null and length(btrim(evidence_hash)) > 0)"
+          },
+          {
+            "name": "ck_inf_rait_priority_basis_age",
+            "expression": "basis_code = 'pcd' or birth_date is not null"
+          },
+          {
+            "name": "ck_inf_rait_priority_basis_attachment",
+            "expression": "source_kind <> 'attached_document' or document_id is not null"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_priority_basis_assessment",
+            "columns": ["tenant_id", "case_id", "assessment_id"],
+            "references": {
+              "table": "inf.rait_priority_assessment",
+              "columns": ["tenant_id", "case_id", "id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_priority_basis_document",
+            "columns": ["tenant_id", "case_id", "document_id"],
+            "references": {
+              "table": "inf.rait_document",
+              "columns": ["tenant_id", "case_id", "id"]
             }
           }
         ]
@@ -811,6 +1142,11 @@
             "nullable": true
           },
           {
+            "name": "answered_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
             "name": "outcome",
             "type": "varchar(20)",
             "nullable": true
@@ -843,6 +1179,212 @@
             "columns": ["case_id"],
             "references": {
               "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitInquiryDocument",
+        "table": "rait_inquiry_document",
+        "primaryKey": ["id"],
+        "description": "Relacao interna entre resposta de diligencia e documento existente; sem CRUD HTTP.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "inquiry_id",
+            "type": "uuid"
+          },
+          {
+            "name": "document_id",
+            "type": "uuid"
+          },
+          {
+            "name": "attached_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "attached_by",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_inquiry_document_once",
+            "columns": ["tenant_id", "inquiry_id", "document_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_inquiry_document_inquiry",
+            "columns": ["inquiry_id"],
+            "references": {
+              "table": "inf.rait_inquiry",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_inquiry_document_document",
+            "columns": ["document_id"],
+            "references": {
+              "table": "inf.rait_document",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitPendingDocument",
+        "table": "rait_pending_document",
+        "primaryKey": ["id"],
+        "description": "Relacao interna entre resolucao de pendencia e documento existente; sem CRUD HTTP.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "pending_id",
+            "type": "uuid"
+          },
+          {
+            "name": "document_id",
+            "type": "uuid"
+          },
+          {
+            "name": "attached_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "attached_by",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_pending_document_once",
+            "columns": ["tenant_id", "pending_id", "document_id"],
+            "unique": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_pending_document_pending",
+            "columns": ["pending_id"],
+            "references": {
+              "table": "inf.rait_pending_content",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_pending_document_document",
+            "columns": ["document_id"],
+            "references": {
+              "table": "inf.rait_document",
+              "columns": ["id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitWithdrawalAttestation",
+        "table": "rait_withdrawal_attestation",
+        "primaryKey": ["id"],
+        "description": "Atestado interno verificavel do termo de desistência fisico ou digital; sem CRUD HTTP.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "document_id",
+            "type": "uuid"
+          },
+          {
+            "name": "signer_party_id",
+            "type": "uuid"
+          },
+          {
+            "name": "verification_method",
+            "type": "varchar(30)"
+          },
+          {
+            "name": "evidence_ref",
+            "type": "text"
+          },
+          {
+            "name": "verified_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "recorded_by",
+            "type": "uuid"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_withdrawal_attestation_case",
+            "columns": ["tenant_id", "case_id"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_withdrawal_attestation_method",
+            "expression": "verification_method in ('physical_verified','digital_verified')"
+          },
+          {
+            "name": "ck_inf_rait_withdrawal_attestation_evidence_ref",
+            "expression": "length(btrim(evidence_ref)) > 0"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_withdrawal_attestation_case",
+            "columns": ["case_id"],
+            "references": {
+              "table": "inf.rait_case",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_withdrawal_attestation_document",
+            "columns": ["document_id"],
+            "references": {
+              "table": "inf.rait_document",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_withdrawal_attestation_signer",
+            "columns": ["signer_party_id"],
+            "references": {
+              "table": "inf.rait_party",
               "columns": ["id"]
             }
           }
@@ -940,7 +1482,7 @@
           },
           {
             "name": "ck_inf_rait_draft_submitted_required",
-            "expression": "status = 'rascunho' or submitted_at is not null"
+            "expression": "status = 'rascunho' or (submitted_at is not null and document_id is not null and length(btrim(content_hash)) > 0)"
           }
         ],
         "foreignKeys": [
@@ -1034,6 +1576,14 @@
           {
             "name": "ck_inf_rait_decision_signature_kind",
             "expression": "signature_kind is null or signature_kind = 'PAdES-TSA'"
+          },
+          {
+            "name": "ck_inf_rait_decision_signature_pair",
+            "expression": "(signature_kind is null) = (signature_ref is null)"
+          },
+          {
+            "name": "ck_inf_rait_decision_circuit_one_signature",
+            "expression": "circuit <> 1 or (signature_kind = 'PAdES-TSA' and signature_ref is not null)"
           }
         ],
         "foreignKeys": [
@@ -1210,7 +1760,8 @@
       {
         "entity": "RaitCase",
         "path": "cases",
-        "resource": "rait-case"
+        "resource": "rait-case",
+        "operations": ["list", "get", "update", "delete"]
       },
       {
         "entity": "RaitParty",
@@ -1248,6 +1799,24 @@
         "resource": "rait-inquiry"
       },
       {
+        "entity": "RaitInquiryDocument",
+        "path": "internal/inquiry-documents",
+        "resource": "rait-inquiry-document",
+        "operations": []
+      },
+      {
+        "entity": "RaitPendingDocument",
+        "path": "internal/pending-documents",
+        "resource": "rait-pending-document",
+        "operations": []
+      },
+      {
+        "entity": "RaitWithdrawalAttestation",
+        "path": "internal/withdrawal-attestations",
+        "resource": "rait-withdrawal-attestation",
+        "operations": []
+      },
+      {
         "entity": "RaitDraft",
         "path": "drafts",
         "resource": "rait-draft"
@@ -1266,6 +1835,18 @@
         "entity": "RaitCaseEvent",
         "path": "events",
         "resource": "rait-case-event"
+      },
+      {
+        "entity": "RaitPriorityAssessment",
+        "path": "internal/priority-assessments",
+        "resource": "rait-priority-assessment",
+        "operations": []
+      },
+      {
+        "entity": "RaitPriorityBasis",
+        "path": "internal/priority-bases",
+        "resource": "rait-priority-basis",
+        "operations": []
       }
     ]
   },

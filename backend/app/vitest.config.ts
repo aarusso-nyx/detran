@@ -93,6 +93,12 @@ export default defineConfig({
       '@detran/inf-alcohol': fileURLToPath(
         new URL('../domains/inf/alcohol/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-infraction': fileURLToPath(
+        new URL('../domains/inf/infraction/src/index.ts', import.meta.url),
+      ),
+      '@detran/inf-notification': fileURLToPath(
+        new URL('../domains/inf/notification/src/index.ts', import.meta.url),
+      ),
       '@detran/inf-rait-case': fileURLToPath(
         new URL('../domains/inf/rait-case/src/index.ts', import.meta.url),
       ),

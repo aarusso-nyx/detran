@@ -11,7 +11,7 @@ sources:
     REF-CONTRAN-357,
     REF-LEI-10741-2003,
   ]
-updated: 2026-09-13
+updated: 2026-09-16
 ---
 
 **Regra.** A escolha de quem trabalha cada caso e de qual caso é trabalhado primeiro é feita pelo
@@ -46,3 +46,25 @@ saltos de ordem exigem motivo em {`impedimento`, `afastamento`, `rebalanceamento
 **Controvérsia/risco.** Nenhuma norma de trânsito impõe sorteio; a impessoalidade decorre de
 princípio geral. A prioridade da pessoa idosa é regra de lei federal geral cuja aplicação ao
 processo administrativo estadual é a leitura corrente, mas o texto não está no corpus.
+
+**Política vigente do Owner (ADR-0024/OD-016, 2026-09-16).** Para o ordenamento,
+após o risco vigente de prescrição, PCD e a faixa 80+ têm o mesmo nível, seguido
+da faixa 60+ e da ausência de prioridade comprovada. O desempate usa
+protocolled_at e id, ambos ascendentes. Preservam-se todas as bases comprovadas;
+aplica-se o maior nível. Esta política complementa a redação histórica acima:
+a fonte de idade foi capturada e a igualdade PCD = 80+ teve validação jurídica
+atestada pelo Owner; este registro não afirma consulta independente de parecer.
+
+A secretaria confirma no próprio protocolo: idade pela data de nascimento
+comprovada em documento/CNH e PCD por documento anexado e validado. Idade usa o
+ato de qualificação inclusive no postal; postagem ECT conserva sua função
+cronológica e de tempestividade. Ausência de comprovação produz none, sem prova
+negativa específica. NULL é não apurado, não equivale a none e fica fora do
+consumo automático; legado não pode ser convertido por inferência.
+
+A política atual torna a qualificação definitiva: prova nova ou invalidação
+posterior não altera o ordenamento. Preserva-se o mecanismo auditável de revisão
+excepcional pelo coordenador para política futura autorizada por portaria,
+versionada e revisada; ele permanece bloqueado hoje. Não se cria confirmação
+ordinária pelo analista nem poder de qualificar casos para agency-admin.
+O status desta regra permanece draft; a transcrição não promove fonte legal.

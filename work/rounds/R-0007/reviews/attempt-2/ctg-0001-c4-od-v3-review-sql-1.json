@@ -1,0 +1,55 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "backend/database/seed/05-parameters.sql",
+      "line": 25,
+      "claim": "The only rait.priority.legal_bases row (status vigente, value_type json, effective 2026-09-13, open-ended) carries value_json '\"[{60+:1},{80+:2}] + PcD\"', a prose JSON string that is jsonb-distinct from the ADR-0024 snapshot pinned byte-exactly in backend/database/ddl/19-rait-priority-enforce.sql lines 108 and 175. In any database seeded from this catalogue, every inf.rait_record_initial_priority call raises 'Priority policy is not recognized or ready' (22023), and because the deferred trigger rait_priority_case_complete demands a revision-1 assessment for every new inf.rait_case row, ALL post-apply case intake fails at COMMIT: the schema applies green but the system cannot protocol a single new RAIT case.",
+      "fix": "Replace the seed value_json with the exact object {\"schemaVersion\":1,\"policyCode\":\"ADR-0024-2026-09-16\",\"basisRanks\":{\"pcd\":2,\"age_80_plus\":2,\"age_60_plus\":1},\"noneRank\":0,\"postProtocolRevision\":\"forbidden\"} (keeping status vigente / value_type json / single effective window to avoid STRICT TOO_MANY_ROWS), and re-prepare or version the dedicated detran_r7_ctg1_a2 baseline with the corrected row before the rehearsal."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts",
+      "line": 676,
+      "claim": "The frozen TASK-0028 harness never executes inf.rait_record_initial_priority and never INSERTs a new inf.rait_case row after the upgrade: the successful-upgrade test asserts only zero assessments/bases for the legacy case (line 727) and immutability of existing rows. Apply ordering, rollback, idempotency and --full equivalence are well covered with positive counts, but the qualification happy path (marker consume, none/age/PCD proof validation, projection write, deferred consistency success) is exercised zero times, so a candidate whose new-case intake is completely inoperative (see the seed policy finding) still passes the rehearsal.",
+      "fix": "Add positive rehearsal tests that, as role_app_backend with app.tenant_id set, INSERT a new case and call inf.rait_record_initial_priority in the same transaction for none, age_60_plus/age_80_plus and pcd proof sets (asserting legal_priority projection, append-only assessment/basis rows and successful COMMIT), plus negatives for a spoofed pg_temp marker and a post-protocol requalification attempt, before any TASK-0030 eligibility is considered."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/domains/inf/rait-case/src/handwritten/rait-case-command.service.ts",
+      "line": 1533,
+      "claim": "The claim-next command orders the queue by item.legal_priority desc nulls last as raw text. With the projection vocabulary fixed by 19-rait-priority-enforce.sql ('none' rank 0, 'level_1' rank 1, 'level_2' rank 2), lexicographic DESC places 'none' above 'level_2' and 'level_1', so non-priority cases are pulled FIRST and the legal tramitation priority that this whole candidate implements is inverted at its only point of consumption; legacy unknown strings sort arbitrarily between them.",
+      "fix": "Order by an explicit rank expression, e.g. `order by case item.legal_priority when 'level_2' then 2 when 'level_1' then 1 else 0 end desc, item.protocolled_at, item.id`, treating NULL and unknown legacy strings as rank 0."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "backend/domains/inf/rait-case/src/rait-case.module.ts",
+      "line": 61,
+      "claim": "The module imports RaitOperationClock from './handwritten/rait-operation-clock.js' (and src/index.ts line 93 re-exports it), but no handwritten/rait-operation-clock.ts exists in the candidate, so the package cannot compile until the declared later Clock task lands; this matches the coordinator's staging statement but leaves the six blueprint provider declarations wired to a dangling import.",
+      "fix": "Land the RaitOperationClock provider in the follow-up task (or temporarily gate the module/index wiring) before any build- or runtime-dependent gate is claimed; no PASS of this SQL review implies build PASS."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/database/apply.sh",
+      "line": 79,
+      "claim": "The canonical-catalog preflight counts a row missing from a legacy DB as divergence (t.key IS NULL OR column mismatch) and aborts, so the dedicated rehearsal DB must already hold byte-identical DDL05 (1 INSERT) and DDL14 (10 INSERT) catalogue rows, and no future canonical catalogue addition can ever reach an existing DB through this script; safe fail-closed for this rehearsal but a documented upgrade dead-end.",
+      "fix": "Confirm the frozen detran_r7_ctg1_a2 baseline matches the eleven canonical INSERT sources exactly before rehearsal; if catalogue growth is later authorized, introduce an explicit allow-list of new keys rather than loosening the divergence comparison."
+    }
+  ],
+  "notes": [
+    "Independent read-only Auditor review of SQL bytes only; no shell, DB connection, SQL execution, generation or Git was used. A future PASS approves bytes for the authorized detran_r7_ctg1_a2 rehearsal only and is not a PostgreSQL/TASK-0028/TASK-0030/PR approval; it is non-transferable after origin/main integration without exact revalidation.",
+    "Gate 1 verified against actual shell/psql behavior: closed 52-file inventory with exact-once composition (pre injected immediately before DDL34; DDL20 moved after 30-60 so install_tenant_triggers/grants see all tables; enforce then verify last), one psql -X -v ON_ERROR_STOP=1 --single-transaction connection for schema apply, pg_advisory_xact_lock(7007,1) first, ACCESS EXCLUSIVE table locks in preflight and pre, fail-closed lexer banning transaction-control/non-transactional statements and psql meta-commands (E-string edge cases fail closed), success echo only after psql commit. --full drops only detran_r7_ctg1_a2 under name+env+datdba postgres triple guard, creates outside the transaction with OWNER postgres, and makes no recovery claim.",
+    "Gate 2/3 verified: pre.sql's 17-table expected shape matches DDL34 byte-for-byte for inf.rait_case (31 columns) with only the four authorized additive columns and the identically named fk_inf_rait_case_agency_jurisdiction (DDL34 line 51) for fresh/upgrade convergence; legacy legal_priority values and unknown strings are never rewritten (harness freezes and re-hashes every legacy table). role_rait_priority_writer matches the OWNER authorization (NOLOGIN/NOSUPERUSER/NOBYPASSRLS/NOCREATEDB/NOCREATEROLE/NOREPLICATION, zero memberships, hard error on incompatible pre-existing role), functions are SECURITY DEFINER with search_path=pg_catalog,inf, PUBLIC EXECUTE revoked, app limited to SELECT plus EXECUTE on the single non-dynamic entry function; RLS/FORCE with tenant_isolation and enforce_tenant_id confirmed via auth.create_rls_policy and verify.sql; pg_temp marker is owner-checked before every use, ON COMMIT DELETE ROWS covers pool reuse, and app pre-creation of the marker only fails closed.",
+    "Gate 4 verified in the bytes: exact pinned policy jsonb in both the writer function and the deferred consistency trigger, age computed at the qualification act in validated tenant timezone, PCD requires attached document plus evidence hash validated against inf.rait_document, none default on empty proofs, revision pinned to 1 with append-only immutable/no-truncate triggers, rank derived only from validated basis rows (never caller rank), id/protocolled_at immutable via BEFORE trigger. DDL05=1 and DDL14=10 canonical INSERTs satisfy the preflight's eleven-source expectation with single-column conflict keys.",
+    "Gate 5 counts confirmed in bytes: 17 case entities (pre.sql/DDL34/blueprint), 14 handwritten command endpoints (11 case + 3 inquiry), six handwrittenProviders including RaitOperationClock per ADR-0025, manual POST protocolRaitCase contract present, legal_priority absent from CreateRaitCaseDto/WRITABLE_FIELDS so the generated repository cannot write it (DB trigger enforces regardless). Two-generation zero drift, checks/README manual PASS, 96-path and 49+3 DDL SHA aggregates are accepted strictly as coordinator-reported; no build or runtime PASS is inferred (Clock provider file intentionally absent).",
+    "Verdict REVIEW, not FAIL: the apply/SQL19 bytes are parseable, transactional, converge fresh/upgrade and protect legacy data; the high findings are correctable defects in the seeded policy catalogue, harness coverage and the claim-next consumer, all of which must be resolved (with baseline re-preparation where applicable) before the dedicated-DB rehearsal can be meaningful."
+  ]
+}

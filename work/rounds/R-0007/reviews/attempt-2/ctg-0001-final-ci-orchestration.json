@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "backend/domains/inf/rait-case/vitest.config.ts",
+      "line": 6,
+      "claim": "The integration-tier include glob still matches tests/integration/rait-priority-upgrade.integration.spec.ts; the mandated exclusion of the destructive rehearsal from the ordinary integration tier exists only as the CLI flag --exclude '**/rait-priority-upgrade.integration.spec.ts' in the root backend:test:integration script (package.json line 33). Inside backend:test:ci this is honored (Vitest 4 appends CLI --exclude to config exclude, and --passWithNoTests=false guards against a zero-match glob typo), but any invocation of the package-level test:integration that bypasses the root script while carrying the job-wide CI authorization env (ci.yml sets all DETRAN_PRIORITY_UPGRADE_* flags at job scope) re-runs the destructive rehearsal mid-tier and re-creates the fresh/one-case interference that broke the previous aggregate. It can never hit a non-dedicated database (the harness pins detran_r7_ctg1_a2), so this is ordering fragility, not a wrong-target path.",
+      "fix": "Add a dedicated 'upgrade' tier to vitest.config.ts whose include is exactly tests/integration/rait-priority-upgrade.integration.spec.ts, exclude that file from the 'integration' tier include, and point backend:test:upgrade at DETRAN_TEST_TIER=upgrade instead of reusing test:integration with a positional filename filter (a config-level exclude cannot be used with the current filter approach because exclude wins over filename filters)."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": ".github/workflows/ci.yml",
+      "line": 155,
+      "claim": "All five DETRAN_PRIORITY_UPGRADE_* authorization flags (lines 155-159) are declared at backend-kernel job scope, so they are exported to every step, including the ordinary integration/E2E tiers, the SENATRAN adapter steps, and the pre-test backend:db:reset. The in-repo guards contain the blast radius (apply.sh --full refuses unless DB_NAME=detran_r7_ctg1_a2 at apply.sh line 17; the baseline harness verifies target URL, owner postgres, and zero client sessions before DROP), so no wrong-target destructive path exists, but the flags authorize more steps than need them.",
+      "fix": "Move DETRAN_PRIORITY_UPGRADE_TEST_AUTHORIZED, _BASELINE_AUTHORIZED, _BASELINE_RESET_AUTHORIZED and _RESTORE_AUTHORIZED from job-level env to the single 'Run backend unit, integration and e2e tiers' step (backend:test:ci), keeping only DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED job-wide for the initial backend:db:reset, or duplicate it on that step as well."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "backend/database/apply.sh",
+      "line": 4,
+      "claim": "apply.sh (line 4) and seed.sh (line 7) default DB_NAME to a database literally named 'detran' when the variable is unset. This default is unreachable in the reviewed backend:test:ci path — the CI job pins DB_NAME=detran_r7_ctg1_a2, prepare-rait-priority-upgraded-legacy.mjs blocks unless DATABASE_URL and all STYNX_* URLs target the dedicated database before the integration/E2E tiers run, both prepare scripts and the upgrade spec pass explicit DB_* env, and the --full destructive path independently refuses any DB_NAME other than detran_r7_ctg1_a2 — but a bare local 'bash backend/database/apply.sh' still applies DDL to a database named detran, and many pre-existing integration/E2E specs carry .../detran URL fallbacks that only the prepare-step validation neutralizes.",
+      "fix": "Either remove the ':-detran' fallback and require DB_NAME explicitly (exit 2 when unset), or keep it and record it as the intentional local-developer default in a comment; no change is required for the CI orchestration itself."
+    }
+  ],
+  "notes": [
+    "Sequence verified in backend/database/tests/run-backend-ci.mjs: backend:test:unit, then backend:test:prepare-legacy (prepareLegacyPriorityV1Baseline builds the exact historical baseline from the hash-pinned v1.1.0 fixture DDLs 05/34/35 plus the 46 normal current DDLs and legacy seeds, then the normal current apply.sh upgrades it), then backend:test:integration with the upgrade file excluded there only, then backend:test:e2e, then backend:test:upgrade last. This matches the mandated order and resolves the prior aggregate failure (upgrade suite restoring fresh/one-case before fixture-dependent tests).",
+    "Inescapability: backend:test:ci is the single node runner; the final run('backend:test:upgrade') cannot be skipped, uses --passWithNoTests=false with an exact filename filter (fails if the spec is renamed or matches nothing), and ci.yml line 198 invokes pnpm backend:test:ci in backend-kernel. The directed suite statically enumerates to exactly 18 tests (1 static apply-contract + 17 in the sequential describe block).",
+    "Preflight verified: prepare-rait-priority-upgraded-legacy.mjs lines 109-133 assert 20 legacy cases, the legacy_unmapped_task0028 marker, and presence of inf.rait_priority_assessment/inf.rait_priority_basis (current schema) after the upgrade apply; the upgrade spec's beforeAll independently re-asserts the 20-case pre-V3 baseline.",
+    "Restoration without masking verified at three layers: prepare-rait-priority-v1-baseline.mjs lines 398-409 and prepare-rait-priority-upgraded-legacy.mjs lines 134-146 restore on their own failures and rethrow the original error (AggregateError if restoration also fails); run-backend-ci.mjs lines 36-48 restore after any post-prep failure including a hard-killed upgrade run whose afterAll never fired, preserving the root error; the spec's afterAll restores with the original test failure still reported by vitest.",
+    "Destructive targeting verified: DROP/CREATE DATABASE occurs only in createDedicatedDatabase (pinned to detran_r7_ctg1_a2, owner postgres, zero client sessions) and apply.sh --full, which exits unless DB_NAME=detran_r7_ctg1_a2 AND DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED=1 (apply.sh line 17) plus a datdba ownership check before drop. All ci.yml URLs (lines 146-153) target detran_r7_ctg1_a2, its _seed_profiles scratch sibling, or the postgres maintenance DB for admin; POSTGRES_DB=detran at line 138 exists only as the service-container bootstrap/health-check database and nothing in the test path connects to it.",
+    "No weakened test found: the upgrade spec's SHA-256 in this manifest (03dd3a11…) is identical to the pin in the previously PASSed ctg-0001-final-upgrade-catalog-delta manifest, so the 18 assertions are byte-unchanged; the exclusion removes the spec only from the ordinary tier where it re-runs later, and the closed 49-entry DDL inventory report the spec reads was confirmed at exactly 49 entries.",
+    "Assumptions and limitations: no shell/DB access, so manifest SHA-256 digests were not recomputed (file contents were read from the working tree, which git status shows as modified, i.e. the candidate state); Vitest 4.1.7 CLI --exclude is taken as additive to config exclude per current Vitest semantics; pnpm 9 forwards post-script-name args to vitest. This verdict is a static delta review and does not substitute for the final runtime DB run."
+  ]
+}

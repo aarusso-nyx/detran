@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0054",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Persistir snapshot e manifestação da ata de distribuição",
+  "description": "Iteração 1/1 concluída: blueprint v1.2.0 e derivados oficiais persistem snapshot imutável, manifestação de ata e referência/recibo de homologação em lote; DDL35 aplicado e reaplicado transacionalmente ao banco dedicado sem reset, preservando 20 casos. Sensor SQL TASK-0053 coletou 5/5 PASS; blueprints:check, contracts:check, typecheck e diff --check PASS. O preflight incluiu tools/blueprints/generated-files.json na allowlist por autorização do Maestro. Hashes dos três sensores TASK-0053 preservados. Não comprova verificação criptográfica nem CTG-0002 GREEN.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-contract-document-trust"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0053",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "batch-trust"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-0bcde9888ef97e4b",
+  "acceptance_commands": [
+    ["pnpm", "blueprints:check"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "--filter", "@detran/inf-rait-worklist", "typecheck"]
+  ],
+  "created_at": "2026-09-18T04:30:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-0bcde9888ef97e4b",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Blueprint e schema gerado da ata; sem comando, adapter, teste ou ativação HTTP."
+  }
+}

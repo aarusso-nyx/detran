@@ -1,0 +1,60 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "attempt": 2,
+  "cycle": "CTG-0001-C3-2",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 407,
+      "claim": "O checkpoint antigo continua dizendo fim da janela 8 em 600k/800k, mas budget.json soma 310.000 na janela 8 e 600.000 realizados na janela 9. O checkpoint novo da linha 436 ja diz encerramento da janela 9 em 600k, entao o plano carrega duas afirmacoes incompativeis sobre a mesma cifra. O proximo dispatch em si nao fica ambiguo, porque a linha 436 e mais recente e explicita TASK-0019 a TASK-0022 na janela 12, coerente com budget.json.",
+      "fix": "Corrigir a numeracao de janela na linha 407 para janela 9 ou marcar aquela linha como historico superado pelo checkpoint da linha 436."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 332,
+      "claim": "A secao Retomada ainda descreve o checkpoint da janela 7, lista TASK-0004 a TASK-0018 como pendentes e termina com proximo passo TASK-0003-C2 contra sensores imutaveis. Isso e anterior ao FAIL de entrega, ao lote C3 e a janela 12. O achado low equivalente do ciclo C3-1 pedia atualizar exatamente essa secao e ela nao foi atualizada; o estado vigente so aparece nos paragrafos finais da secao Triagem.",
+      "fix": "Reescrever a secao Retomada para o estado pos-FAIL, com janela 12 aberta em 80k, prompt-review C3-2 em curso e TASK-0019 como proximo dispatch apos PASS."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 11,
+      "claim": "O cabecalho do plano declara Janelas previstas 11, enquanto budget.json declara planned_windows 12 e ja possui entradas nominais na janela 12. A janela do lote C3 existe no budget mas nao no plano.",
+      "fix": "Elevar o cabecalho do plano para 12 janelas previstas, descrevendo a janela adicional como a de recuperacao C3."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0007/budget.json",
+      "line": 455,
+      "claim": "A janela 9 foi encerrada com 600.000 realizados, mas continua carregando cinco entradas planned de CTG-0002 (TASK-0005 a TASK-0008 e CTG-0002-delivery-review, 370.000 de entrada), o que leva o total nominal da janela 9 a 970.000, acima do window_input_budget de 800.000. Como as janelas 10 e 11 estao reservadas a CTG-0003 e CTG-0004 e a janela 12 e do lote C3, CTG-0002 fica sem janela aberta. Nao bloqueia TASK-0019: os totais de campanha batem exatamente com a soma das entradas (5.270.000 de entrada e 693.000 de saida).",
+      "fix": "Realocar as cinco entradas planned de CTG-0002 para uma janela aberta futura, mantendo os totais de campanha iguais a soma das entradas."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0007/prompts/TASK-0002-D1.md",
+      "line": 110,
+      "claim": "Nenhum arquivo de backend/database/seed insere linhas em ops.evidence_evidence ou ops.evidence_link: 25-fixtures-teat.sql so semeia ops_operational_device, ait_numbering_range e numbering_reservation, e nenhum outro seed toca essas tabelas. Os sensores nomeados de F-J-0 exigem linha valida, linha invalida, obrigatorio ausente e multiplos obrigatorios, mas o prompt diz que fixtures SQL sao overrides nomeados das canonicas, e nao existe fixture canonica de evidencia para sobrepor. O predicado, os grants de role_app_backend em ops e a RLS por tenant estao corretos e disponiveis, entao o caminho existe; o que falta e dizer quem cria as linhas.",
+      "fix": "Declarar explicitamente no prompt do Inspector, ou em CTG-0001 secao 10.8, que as linhas de ops.evidence_evidence e ops.evidence_link dos cenarios F-J-0 sao criadas pelo proprio Inspector nos arquivos de fixture ja listados na sua fronteira, por serem inexistentes no corpus de seed."
+    }
+  ],
+  "notes": [
+    "Item 1 fechado: o relatorio CTG-0001-C3-PLAN.md abre com bloco de supersessao datado, a secao Resultado afirma que RG-FJ0-EMPTY foi fechada por OD-R7-FJ0-001 e a secao historica da linha 90 declara que suas perguntas e proibicoes nao regem os workers. Nao restou instrucao mandando manter a lacuna aberta nem proibindo o piso de um vinculo.",
+    "Itens 2 e 3 fechados: CTG-0001 secao 10.1 enuncia o piso de forma afirmativa, inclusive o caso unico com mandatory=false, exige todos os mandatory=true validos e define validade em colunas do DDL 17: mesmo tenant_id do caso, entity_type igual a inf.ait_ait, entity_id do AIT, status em validated, linked ou packaged e storage_uri, hash_algorithm e hash_value nao vazios. Os seis tokens restantes do check ck_ops_evidence_status (pending_upload, uploaded, archived, rejected, quarantined, superseded) sao nomeados como reprovados, cobrindo os nove tokens do DDL e do BP-OPS-EVIDENCE-001 sem lacuna. A secao 4 do mesmo contrato repete a regra sem divergencia e UC-RAIT-017 fluxo 1 e excecao 1b coincidem com steering item 58.",
+    "Item 4 fechado: UC-TEAT-003 e BP-OPS-EVIDENCE-001 aparecem uma vez na lista fechada de cada um dos quatro prompts, e CTG-0001 secao 10.8 nomeia os seis sensores de F-J-0, incluindo o vinculo unico valido mandatory=false, nenhum vinculo valido, obrigatorio ausente, obrigatorio invalido, ausencia total e multiplos obrigatorios. O prompt do Inspector enumera quatro deles e cobre nenhum valido na frase seguinte, alem de obrigar a matriz integral da secao 10.8; a cobertura resulta completa, mas a lista curta do prompt poderia ser alinhada a lista de seis na proxima edicao de contrato.",
+    "Itens 5 e 6 conferidos: budget.json soma exatamente 5.270.000 de entrada e 693.000 de saida, iguais aos totais declarados; a janela 12 contem TASK-0019, TASK-0020, TASK-0021, TASK-0022 e CTG-0001-C3-PROMPT-REVIEW-2, com modelo gpt-5.6-terra e esforco high em cada worker; a janela 9 fecha em 600.000 realizados e as janelas 10 e 11 permanecem com CTG-0003 e CTG-0004. Os hashes conferidos com shasum -a 256 batem byte a byte: 25da4be6 para TASK-0019, 6c577dd4 para TASK-0020, ab4c4b0d para TASK-0021 e 18c6e9fb para TASK-0022, iguais em compositions.json, no prompt_composition_id da tarefa e do executor e no SHA-256 escrito na description.",
+    "Item 7 fechado: CTG-0001 secao 10.1, a secao Ambiente e passagem de bastao do relatorio e a linha 17 dos quatro prompts declaram a mesma conta, isto e, C3-1 gateia TASK-0019 e C3-2 so ocorre se TASK-0019 alterar contrato ou prompts, com recomputo de hash. O budget registra CTG-0001-C3-PROMPT-REVIEW-1 como completed e CTG-0001-C3-PROMPT-REVIEW-2 como in_progress em entradas separadas, portanto nenhum ciclo e consumido em silencio.",
+    "Item 8 fechado: os prompts de TASK-0020 e TASK-0022 declaram cetran-receipt.schema.spec.ts e documents.spec.ts como must-stay-green e imutaveis, com ordem de interromper e reportar em caso de conflito com o contrato; os dois arquivos existem no worktree. O Engineer de TASK-0021 esta proibido de editar qualquer teste e deve confirmar os hashes intactos, o que fecha o impasse apontado no ciclo anterior.",
+    "Item 9 fechado: TASK-0002-D1.json voltou a ter os tres typechecks de case, shared e app junto das quatro suites, e a description diz que os comandos de teste devem produzir RED classificado enquanto os typechecks permanecem verdes. O prompt separa RED contratual de BLOCKED ambiental e exige classificacao por finding e por codigo.",
+    "Achados low do ciclo C3-1 verificados como fechados: a tabela de identidade do relatorio deixou de publicar pc_ids divergentes e aponta para compositions.json; a posicao do gate e a contagem de ciclos foram declaradas; os dois sensores preexistentes foram declarados must-stay-green; os typechecks voltaram aos acceptance_commands do Inspector. Permanece aberto apenas o low de reconciliacao entre plan.md e budget.json, agora detalhado em tres findings.",
+    "Nenhum dos 23 achados ja mapeados foi reaberto e nenhuma decisao nova de Owner e exigida por esta revisao. Sem findings high, TASK-0019 esta liberada para dispatch."
+  ]
+}

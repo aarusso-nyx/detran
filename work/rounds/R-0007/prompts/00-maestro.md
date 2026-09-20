@@ -1,5 +1,14 @@
 # Prompt do maestro — orquestra `rait-backend` (rodada `R-0007`)
 
+> Direção OWNER vigente para despachos ainda não realizados: Maestro Sol;
+> Architect Sol/Medium; Inspector e Engineer Terra/High; chamadas anteriormente
+> designadas Terra passam a Luna. Não usar Astra. Os registros históricos de
+> modelo, revisões e orçamento concluído não são instruções de novo despacho.
+> Para TASK-0005–0018 e TASK-0020–0022, usar somente o último PC por
+> `task_id` em `compositions.json`, o modelo do respectivo JSON de tarefa e o
+> prompt ativo correspondente. TASK-0020/21 mantêm 3/4 e TASK-0022 mantém
+> 1/4. Esta atualização não libera nenhum gate nem autoriza merge.
+
 > Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `OpenAI — Codex CLI com GPT-5.6 Sol`
 > (Claude Code com Fable 5.1, ou Codex CLI com GPT-5.6 Sol), aberta na worktree `/Volumes/Thiamat II/stech/detran-worktrees/rait-backend`.
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;

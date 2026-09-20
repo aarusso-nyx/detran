@@ -1,0 +1,91 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0007",
+  "attempt": 2,
+  "cycle": "CTG-0001-C3-1",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0007/reports/CTG-0001-C3-PLAN.md",
+      "line": 93,
+      "claim": "O relatorio C3 esta na lista de leitura obrigatoria dos quatro prompts (TASK-0001-D1.md:23, TASK-0002-D1.md:23, TASK-0003-D1.md:23, TASK-0004-D1.md:23) e ainda declara RG-FJ0-EMPTY aberta: a linha 12 diz que remit e PASS integral continuam bloqueados por RG-FJ0-EMPTY, as linhas 90-94 mandam levar a pergunta a autoridade e ordenam literalmente nao impor o piso de um vinculo. Isso contradiz OD-R7-FJ0-001 reproduzida em steering.md:223-227, UC-RAIT-017:20,29, plan.md:5-7 e CTG-0001.md:529-534. O worker recebe duas instrucoes opostas sobre a mesma regra fail-closed e a leitura mais recente do lote diz para nao aplica-la.",
+      "fix": "Acrescentar no topo do relatorio, sem apagar historico, um bloco de supersessao explicito dizendo que a secao Fonte da lacuna RG-FJ0-EMPTY foi fechada por OD-R7-FJ0-001 em 2026-09-15 e que o piso de um vinculo valido e obrigatorio, ou retirar o relatorio das quatro listas de leitura; em qualquer caso recalcular os SHA-256 dos prompts alterados e sincronizar tasks/compositions antes do dispatch."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0007/contracts/CTG-0001.md",
+      "line": 532,
+      "claim": "A regra F-J-0 exige que cada evidencia referenciada tenha metadados de conteudo persistido validos conforme o contrato de ops/evidence, mas nenhum artefato do lote define o predicado. O DDL 17-ops-evidence.sql:23,28 declara ops.evidence_evidence.status com nove tokens, incluindo pending_upload, rejected, quarantined e superseded, alem de storage_uri, hash_algorithm e hash_value. O contrato nao enumera quais status contam como disponivel e integro, e a fonte canonica dessa semantica de ciclo de vida, UC-TEAT-003:36,46 e BP-OPS-EVIDENCE-001, nao esta na lista fechada de leitura dos prompts. O Inspector nao consegue escrever o sensor sem inventar o criterio e o Engineer pode aceitar evidencia pending_upload ou quarantined, reabrindo fail-open exatamente no ponto que a decisao do Owner fechou.",
+      "fix": "Fechar em CTG-0001 secao 10.1 o predicado exato de vinculo valido em termos de colunas do DDL 17: conjunto literal de status aceitos, exigencia de storage_uri, hash_algorithm e hash_value nao nulos e tenant igual ao do caso; e acrescentar a fonte canonica do ciclo de vida da evidencia as listas fechadas de leitura dos quatro prompts, recalculando hashes."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0007/contracts/CTG-0001.md",
+      "line": 534,
+      "claim": "O tratamento de um unico vinculo TEAT_EVIDENCE valido com mandatory=false fica indefinido. O contrato diz apenas que o default mandatory=false nao transforma conjunto vazio em completude; TASK-0002-D1.md:111-112 repete a forma eliptica mandatory=false isolado nao autoriza conjunto vazio e TASK-0003-D1.md:100-101 diz nao transforme mandatory=false em dispensa da categoria. Nenhuma dessas frases responde se um unico link valido nao obrigatorio satisfaz o piso de ao menos um vinculo. As duas leituras produzem resultados opostos para o mesmo dossie: remit 200 ou RAIT.REMIT_CHECKLIST_INCOMPLETE 422. O Inspector congelaria o sensor por sua propria escolha e o Engineer implementaria contra ela.",
+      "fix": "Reproduzir literalmente steering.md:223-227 em CTG-0001 secao 10.1 e nos quatro prompts, declarando de forma afirmativa se um vinculo valido com mandatory=false satisfaz ou nao o piso, e exigir na secao 10.8 um sensor nomeado para esse caso unico, alem dos casos de ausencia total, obrigatorio ausente e obrigatorio invalido."
+    },
+    {
+      "severity": "high",
+      "item": 12,
+      "file": "work/rounds/R-0007/budget.json",
+      "line": 9,
+      "claim": "As quatro tarefas C3 nao possuem entrada em budget.json: nenhuma entrada com id TASK-0019, TASK-0020, TASK-0021, TASK-0022 ou alias D1 existe nas 59 entradas. A soma das entradas e 4.900.000 de entrada e 649.000 de saida, contra os totais declarados de 5.190.000 e 687.000; a diferenca de 290.000 e 38.000 corresponde exatamente ao lote de quatro workers que ficou sem linha. Alem disso a janela 9 ja realizou 600.000 de 800.000, acima do checkpoint de 640.000 apos o primeiro worker Terra/alto, e nao ha checkpoint nem janela aberta para acomodar os quatro; as entradas da janela 10 pertencem a CTG-0003.",
+      "fix": "Registrar as quatro entradas nominais com modelo, esforco, janela e estimativa antes do dispatch, atribuir o lote a uma janela nova com checkpoint declarado e reconciliar os totais de campanha com a soma das entradas."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "work/rounds/R-0007/reports/CTG-0001-C3-PLAN.md",
+      "line": 27,
+      "claim": "A tabela de identidade do relatorio publica pc_ids que nao existem em lugar nenhum: PC-d9007b8e2c0c79d7, PC-81ba3eb9aeadeec9, PC-8481031817467801 e PC-767ad98ec264a708. Os valores governados, conferidos byte a byte, sao PC-d2755ff1adbe3409, PC-8894a2b57b1c74cf, PC-a239b1926161d750 e PC-396309eb4368da60, coerentes entre prompts, tasks e compositions.json. Como o relatorio e leitura obrigatoria, o worker le uma identidade de composicao divergente da que o executor recebe.",
+      "fix": "Atualizar a tabela do relatorio com os quatro pc_ids e SHA-256 vigentes, ou remover a coluna e apontar para compositions.json como fonte unica."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "work/rounds/R-0007/prompts/TASK-0001-D1.md",
+      "line": 17,
+      "claim": "A posicao do prompt-review diverge entre artefatos. Os quatro prompts e CTG-0001.md:524 colocam o gate depois de TASK-0001-D1 e antes de PREP-CTG1-D1, enquanto CTG-0001-C3-PLAN.md:106 coloca a validacao de ids, PC, hashes e o prompt-review antes do dispatch, que e o ciclo em execucao agora. Sem a conta explicita de ciclos, a reemenda do contrato por TASK-0019 pode consumir silenciosamente o limite de dois ciclos do mesmo item.",
+      "fix": "Declarar no plano e no contrato que este ciclo gateia o dispatch de TASK-0019 e que um segundo ciclo so ocorre se TASK-0019 alterar o contrato ou os prompts, com recomputo de hash e contagem registrada em budget.json."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0007/prompts/TASK-0002-D1.md",
+      "line": 73,
+      "claim": "A lista fechada do Inspector nao inclui dois sensores preexistentes que a correcao C3 pode invalidar e que nenhum dos quatro workers pode tocar: backend/domains/inf/rait-case/tests/unit/cetran-receipt.schema.spec.ts, que afirma texto literal do DDL34 regenerado pelo PREP e constroi o controller a mao, e backend/domains/shared/src/documents/documents.spec.ts, que fixa a superficie do pacote documental alterado por TASK-0021 em document-trust.ts e index.ts. Se qualquer um quebrar, o Engineer esta proibido de editar teste e o Inspector esta fora de fronteira, criando impasse igual ao ja vivido nas escaladas de TASK-0002 e TASK-0003.",
+      "fix": "Declarar os dois arquivos como must-stay-green com verificacao explicita no relatorio, ou inclui-los na fronteira do Inspector apenas para correcao de expectativa demonstravelmente contraria ao contrato."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0007/tasks/TASK-0002-D1.json",
+      "line": 30,
+      "claim": "Os acceptance_commands do Inspector sao quatro suites de teste sem resultado esperado declarado, mas a entrega contratada da tarefa e RED classificado por finding; executadas literalmente, as quatro terminam em falha e nao distinguem RED contratual de BLOCKED ambiental. A tarefa tambem perdeu o typecheck que TASK-0002.json exigia, embora o Inspector escreva TypeScript novo em quatro pacotes.",
+      "fix": "Registrar no contrato de tarefa o resultado esperado por comando, vermelho classificado para as suites e verde para typecheck, e reintroduzir pnpm --filter @detran/inf-rait-case typecheck e o typecheck de shared/app nos acceptance_commands."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0007/plan.md",
+      "line": 407,
+      "claim": "O checkpoint do plano registra fim da janela 8 em 600k/800k, enquanto budget.json declara janela 9 com 600.000 realizados e soma apenas 310.000 na janela 8. A numeracao de janela do plano e a do budget deixaram de coincidir, e a secao Retomada continua descrevendo a janela 7 com TASK-0004 a TASK-0018 pendentes, anterior ao FAIL de entrega e ao lote C3.",
+      "fix": "Reconciliar a numeracao de janelas entre plan.md e budget.json e atualizar a secao Retomada para o estado pos-FAIL, com o lote C3 como proximo dispatch."
+    }
+  ],
+  "notes": [
+    "Hashes conferidos byte a byte com shasum -a 256: os quatro prompts batem exatamente com sha256 e pc_id em compositions.json (TASK-0019 a TASK-0022) e com o SHA-256 escrito na description e no prompt_composition_id do executor de cada task. Item 10 aprovado para o pacote governado; a unica divergencia esta na tabela do relatorio C3, registrada como finding low.",
+    "Divergencia entre o enunciado desta revisao e a fonte registrada: o brief afirma que todos os vinculos TEAT_EVIDENCE devem ter mandatory=true e que qualquer vinculo nao obrigatorio bloqueia, enquanto steering.md:223-227 e UC-RAIT-017:20,29 registram ao menos um vinculo valido mais todos os links mandatory=true disponiveis e integros. O pacote segue a fonte registrada. Se a leitura estrita for a intencao real do Owner, ela exige emenda de steering item 58 e de UC-RAIT-017, o que seria FAIL por decisao do Owner e nao REVIEW; por isso o ponto foi tratado como ambiguidade de piso no finding high correspondente, sem reescrever a decisao.",
+    "Cobertura conferida item a item: os 15 highs da revisao tecnica tem ancora em CTG-0001 secao 10 (H1/H2 em 10.2, H3 em 10.6, H4 em 10.5, H5 em 10.1 e 4, H6 e H7 em 10.6, H8 em 10.7, H9 em 10.3 e 10.5, H10 em 10.5, H11 em 10.8, H12 em 4 e 10.2, H13 em 10.5 e 10.7, H14 em 10.2, H15 em 10.2, 10.3 e 10.4), sensor correspondente em 10.8 e dono entre as quatro tarefas. Os oito achados adicionais do audit tambem tem ancora: CETRAN e retirada de pauta em 10.5, payload e ETag em 10.7, datas e codecs em 10.5 e 10.8, escala e slot em 10.6, status e mensagens em 10.2, idempotencia concorrente em 10.2 e providers e SQL artificial na secao 8 mais TASK-0022. Nao encontrei finding sem responsavel alem dos pontos listados nos findings.",
+    "Fronteiras de escrita conferidas como disjuntas: TASK-0019 so contrato; TASK-0020 so sensores e backend/app/vitest.config.ts, que nao e arquivo gerado (tools/blueprints/generate.mjs:343 escreve apenas o vitest.config.ts do pacote de dominio); TASK-0021 so oito fontes handwritten e portas documentais compartilhadas, sem qualquer teste; TASK-0022 so o blueprint e as saidas oficiais do gerador. Sensores permanecem imutaveis para o Engineer e schema so muda por PREP e gerador.",
+    "Comandos de aceitacao verificados contra os manifests: test:unit, test:integration, test:e2e e typecheck existem em @detran/inf-rait-case, @detran/shared e @detran/app, e blueprints:check, contracts:check, check, backend:test:ci e verify:decorators existem no package.json raiz. Os codigos citados batem com rait-error-catalog.md: INQUIRY_EXTENSION_LIMIT 422 na linha 142, ENUM_INVALID 400 na 88, MEMBER_NOT_AVAILABLE e ASSIGNMENT_WIP_LIMIT 422 nas 119 e 120, FORBIDDEN_CASE_SCOPE 403 na 79 e REMIT_CHECKLIST_INCOMPLETE 422 na 195. Grants de role_app_backend sobre ops.evidence_link existem em 17-ops-evidence.sql:180-184, portanto a consulta F-J-0 nao depende de grant novo.",
+    "A ordem TASK-0019, PREP-CTG1-D1, TASK-0020, TASK-0021, TASK-0022 e inequivoca nos quatro prompts, em CTG-0001 secao 10.1, na tabela do plano e na cadeia upstream_task_id das tasks; a unica ressalva e a posicao do gate de prompt-review, registrada como finding low. Nenhuma tarefa escreve em paralelo com outra nem com o PREP.",
+    "Modelos e esforcos: os quatro executores usam gpt-5.6-terra com effort high, status queued, iteration_count 0 e max_iterations 2. Para TASK-0022 a escada de modelos sugeriria nivel pequeno e esforco baixo em regeneracao mecanica, mas a tarefa tambem reverifica os 15 highs e os oito adicionais, o que justifica o nivel escolhido; nao bloqueia.",
+    "Fora os findings high 2 e 3, nao identifiquei decisao de produto nova delegada ao worker: o contrato mantem fail-closed para cadastro ausente, preserva as vias fisica e digital ja aprovadas para o termo de desistencia sem impor PAdES ao cidadao, mantem expire sem grant humano e proibe grant ou identidade inventada."
+  ]
+}

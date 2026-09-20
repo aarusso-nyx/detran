@@ -1719,6 +1719,59 @@ const GLOBAL_ADMIN_ROLES = new Set<DetranRole>([
   'technical-admin',
 ]);
 
+/**
+ * These are statutory command grants, not administrative CRUD permissions.
+ * In particular, a global administration role does not stand in for the
+ * member/office relationship checked by the command transaction.  Keeping
+ * this exception before the generic administrative shortcut prevents an
+ * accidental broadening when new global roles are added.
+ */
+const RAIT_STRICT_COMMAND_RULES = new Map<
+  DetranPolicyKey,
+  readonly DetranRole[]
+>([
+  ['inf:rait-schedule:create', ['rait-coordinator']],
+  ['inf:rait-schedule:publish', ['rait-coordinator']],
+  ['inf:rait-batch:create', ['rait-secretary']],
+  ['inf:rait-batch:open', ['rait-secretary']],
+  ['inf:rait-batch:draw', ['rait-secretary']],
+  ['inf:rait-batch:approve', ['rait-chair']],
+  ['inf:rait-batch-item:accept', ['rait-rapporteur']],
+  ['inf:rait-batch-item:impediment', ['rait-rapporteur']],
+  [
+    'inf:rait-assignment:reassign',
+    ['rait-coordinator', 'rait-manager', 'rait-chair'],
+  ],
+  [
+    'inf:rait-impediment:declare',
+    ['rait-rapporteur', 'rait-signing-authority', 'rait-analyst'],
+  ],
+  ['inf:rait-impediment:suspicion', ['rait-secretary']],
+  ['inf:rait-agenda:close', ['rait-chair']],
+  ['inf:rait-session:close-agenda', ['rait-chair']],
+  ['inf:rait-session:open', ['rait-chair']],
+  ['inf:rait-session:adjourn', ['rait-chair', 'rait-secretary']],
+  ['inf:rait-session:convene-extraordinary', ['rait-chair']],
+  ['inf:rait-agenda-item:read', ['rait-rapporteur']],
+  ['inf:rait-agenda-item:view', ['rait-rapporteur']],
+  ['inf:rait-agenda-item:withdraw', ['rait-chair']],
+  ['inf:rait-vote:create', ['rait-chair', 'rait-rapporteur']],
+  ['inf:rait-agenda-item:proclaim', ['rait-chair']],
+  ['inf:rait-minutes:create', ['rait-secretary']],
+  ['inf:rait-minutes:sign', ['rait-chair', 'rait-rapporteur']],
+  ['inf:rait-minutes:publish', ['rait-secretary']],
+  ['inf:rait-session:vote', ['rait-rapporteur', 'rait-chair']],
+  ['inf:rait-session:casting-vote', ['rait-chair']],
+  ['inf:rait-session:view-request', ['rait-rapporteur']],
+  ['inf:rait-session:proclaim', ['rait-chair']],
+  ['inf:rait-minutes:generate', ['rait-secretary']],
+  ['inf:rait-minutes:sign', ['rait-chair', 'rait-rapporteur']],
+  ['inf:rait-minutes:publish', ['rait-secretary']],
+]);
+const RAIT_DISABLED_POLICY_KEYS = new Set<DetranPolicyKey>([
+  'inf:rait-oral-argument:create',
+]);
+
 export function policyKey(resource: string, action: string): DetranPolicyKey {
   const segments = resource.split(':');
   if (
@@ -1757,6 +1810,18 @@ export function isDetranActionAllowed(
     !canonicalRoles(principal.roles).includes('DPO')
   ) {
     return false;
+  }
+  // Protocol is a deliberately narrow intake authority.  It must not inherit
+  // the global administrator or permission-wildcard shortcuts below: only an
+  // active secretary role may begin an immutable RAIT intake.
+  if (key === 'inf:rait-case:protocol') {
+    return canonicalRoles(principal.roles).includes('rait-secretary');
+  }
+  if (RAIT_DISABLED_POLICY_KEYS.has(key)) return false;
+  const strictRaitRoles = RAIT_STRICT_COMMAND_RULES.get(key);
+  if (strictRaitRoles) {
+    const roles = canonicalRoles(principal.roles);
+    return strictRaitRoles.some((role) => roles.includes(role));
   }
   if (
     principal.permissions.includes('*') ||

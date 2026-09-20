@@ -4,9 +4,10 @@
   "module": {
     "name": "RaitWorklist",
     "namespace": "inf",
-    "version": "1.1.0",
+    "version": "1.4.1",
     "ddlFile": "35-inf-rait-worklist.sql",
     "dependencies": {
+      "@detran/inf-deadlines": "workspace:*",
       "@detran/inf-rait-case": "workspace:*"
     },
     "devDependencies": {
@@ -21,10 +22,30 @@
       {
         "package": "@detran/inf-rait-case",
         "target": "../rait-case/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../deadlines/src/index.ts"
       }
     ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/rait-worklist-commands.controller",
+        "symbol": "RaitWorklistCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/rait-worklist-command.service",
+        "symbol": "RaitWorklistCommandService"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/rait-worklist-commands.controller",
+      "handwritten/rait-worklist-command.service"
+    ],
     "owners": ["detran-inf"],
-    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao."
+    "description": "Distribuicao por pools e escada de SLA anti-prescricao (WF-RAIT-002): quatro relogios de extincao com bandeiras e cadeia de escalonamento. v1.1.0 acrescenta a organizacao do trabalho de WF-RAIT-004 secoes 3, 5, 6, 7 e 10: unidades de julgamento, escalas e plantao, lotes de sorteio, plantao de suplencia e bancas de sessao. v1.1.1 acrescenta a autoridade signataria e sua jurisdicao institucional canonicamente identificada. v1.2.0 persiste snapshot, manifestacao e recibo verificavel da ata de distribuicao de WF-RAIT-004 secao 5. v1.3.0 fecha o schema aditivo e a superficie de leitura da worklist para os comandos de escala e lote de CTG-0002 secoes 4, 9 e 10. v1.4.0 acrescenta a identidade institucional CETRAN verificavel exigida por RN-RAIT-142 e WF-RAIT-004 secoes 5 e 6, sem promover a projecao legada de paridade a prova. v1.4.1 registra oficialmente controller, provider e exports manuscritos dos comandos CTG-0002, preservando a superficie CRUD somente de leitura."
   },
   "database": {
     "entities": [
@@ -174,7 +195,7 @@
         "name": "RaitPoolMember",
         "table": "rait_pool_member",
         "primaryKey": ["id"],
-        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48).",
+        "description": "Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48). v1.4.0 registra bloco de representacao, assento, ato e vigencia institucionais verificaveis para a composicao CETRAN de WF-RAIT-004 secoes 5 e 6.",
         "fields": [
           {
             "name": "id",
@@ -231,6 +252,48 @@
             "name": "jurisdiction",
             "type": "varchar(80)",
             "nullable": true
+          },
+          {
+            "name": "agency_jurisdiction_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "representation_block",
+            "type": "varchar(30)",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "institutional_seat_ref",
+            "type": "varchar(120)",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "appointment_act_ref",
+            "type": "varchar(160)",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "institutional_valid_from",
+            "type": "date",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "institutional_valid_to",
+            "type": "date",
+            "nullable": true,
+            "additive": true
+          },
+          {
+            "name": "institutional_identity_hash",
+            "type": "varchar(64)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
           }
         ],
         "indexes": [
@@ -238,12 +301,33 @@
             "name": "ux_inf_rait_pool_member",
             "columns": ["tenant_id", "pool_id", "person_id"],
             "unique": true
+          },
+          {
+            "name": "ix_inf_rait_pool_member_agency_jurisdiction",
+            "columns": ["tenant_id", "agency_jurisdiction_id"]
+          },
+          {
+            "name": "ux_inf_rait_pool_member_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true,
+            "constraint": true
+          },
+          {
+            "name": "ux_inf_rait_pool_member_institutional_seat",
+            "columns": [
+              "tenant_id",
+              "pool_id",
+              "institutional_seat_ref",
+              "institutional_valid_from"
+            ],
+            "unique": true,
+            "where": "institutional_seat_ref is not null"
           }
         ],
         "checks": [
           {
             "name": "ck_inf_rait_pool_member_role",
-            "expression": "member_role in ('analista','relator','presidente','coordenador','secretaria')"
+            "expression": "member_role in ('analista','relator','presidente','coordenador','secretaria','autoridade')"
           },
           {
             "name": "ck_inf_rait_pool_member_status",
@@ -252,6 +336,30 @@
           {
             "name": "ck_inf_rait_pool_member_mandate_order",
             "expression": "mandate_ends_on is null or mandate_starts_on is null or mandate_ends_on >= mandate_starts_on"
+          },
+          {
+            "name": "ck_inf_rait_pool_member_authority_jurisdiction",
+            "expression": "member_role <> 'autoridade' or agency_jurisdiction_id is not null"
+          },
+          {
+            "name": "ck_inf_rait_pool_member_representation_block",
+            "expression": "representation_block is null or representation_block in ('executivo_estadual','municipal_rodoviario','sociedade_civil')",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_pool_member_institutional_identity",
+            "expression": "representation_block is null or (institutional_seat_ref is not null and btrim(institutional_seat_ref) <> '' and appointment_act_ref is not null and btrim(appointment_act_ref) <> '' and institutional_valid_from is not null and mandate_starts_on is not null and institutional_identity_hash is not null)",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_pool_member_institutional_validity_order",
+            "expression": "institutional_valid_to is null or institutional_valid_from is null or institutional_valid_to >= institutional_valid_from",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_pool_member_institutional_identity_hash",
+            "expression": "institutional_identity_hash is null or institutional_identity_hash ~ '^[0-9a-f]{64}$'",
+            "additive": true
           }
         ],
         "foreignKeys": [
@@ -260,6 +368,14 @@
             "columns": ["pool_id"],
             "references": {
               "table": "inf.rait_pool",
+              "columns": ["id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_pool_member_agency_jurisdiction",
+            "columns": ["agency_jurisdiction_id"],
+            "references": {
+              "table": "ops.agency_jurisdiction",
               "columns": ["id"]
             }
           }
@@ -324,6 +440,13 @@
             "name": "published_by",
             "type": "uuid",
             "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1",
+            "additive": true,
+            "writable": false
           }
         ],
         "indexes": [
@@ -361,6 +484,11 @@
           {
             "name": "ck_inf_rait_schedule_wip_limit_non_negative",
             "expression": "wip_limit is null or wip_limit >= 0"
+          },
+          {
+            "name": "ck_inf_rait_schedule_version_positive",
+            "expression": "version > 0",
+            "additive": true
           }
         ],
         "foreignKeys": [
@@ -520,6 +648,41 @@
             "name": "homologated_by",
             "type": "uuid",
             "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1",
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "approval_signature_ref",
+            "type": "varchar(160)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "approval_receipt_hash",
+            "type": "varchar(64)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "approval_verified_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "approval_signer_person_id",
+            "type": "uuid",
+            "nullable": true,
+            "additive": true,
+            "writable": false
           }
         ],
         "indexes": [
@@ -532,6 +695,11 @@
           {
             "name": "ix_inf_rait_batch_state",
             "columns": ["tenant_id", "pool_id", "state"]
+          },
+          {
+            "name": "ux_inf_rait_batch_tenant_id",
+            "columns": ["tenant_id", "id"],
+            "unique": true
           }
         ],
         "checks": [
@@ -558,6 +726,16 @@
           {
             "name": "ck_inf_rait_batch_homologation_complete",
             "expression": "homologated_at is null or homologated_by is not null"
+          },
+          {
+            "name": "ck_inf_rait_batch_version_positive",
+            "expression": "version > 0",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_batch_approval_receipt_hash",
+            "expression": "approval_receipt_hash is null or approval_receipt_hash ~ '^[0-9a-f]{64}$'",
+            "additive": true
           }
         ],
         "foreignKeys": [
@@ -567,6 +745,200 @@
             "references": {
               "table": "inf.rait_pool",
               "columns": ["id"]
+            }
+          }
+        ],
+        "deferredForeignKeys": [
+          {
+            "name": "fk_inf_rait_batch_minutes_manifest",
+            "columns": ["tenant_id", "id", "minutes_document_id"],
+            "references": {
+              "table": "inf.rait_batch_minutes_manifest",
+              "columns": ["tenant_id", "batch_id", "document_id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitBatchDrawSnapshot",
+        "table": "rait_batch_draw_snapshot",
+        "primaryKey": ["id"],
+        "immutable": true,
+        "description": "Snapshot canônico e imutável do sorteio por lote, produzido pelo servidor antes da ata (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "batch_id", "type": "uuid", "writable": false },
+          {
+            "name": "snapshot_version",
+            "type": "varchar(20)",
+            "writable": false
+          },
+          { "name": "snapshot", "type": "jsonb", "writable": false },
+          { "name": "snapshot_hash", "type": "varchar(64)", "writable": false },
+          {
+            "name": "origin",
+            "type": "varchar(30)",
+            "default": "'server_draw'",
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_batch_draw_snapshot_batch",
+            "columns": ["tenant_id", "batch_id"],
+            "unique": true
+          },
+          {
+            "name": "ux_inf_rait_batch_draw_snapshot_hash",
+            "columns": ["tenant_id", "batch_id", "snapshot_hash"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_batch_draw_snapshot_hash",
+            "expression": "snapshot_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_batch_draw_snapshot_origin",
+            "expression": "origin = 'server_draw'"
+          },
+          {
+            "name": "ck_inf_rait_batch_draw_snapshot_version",
+            "expression": "snapshot_version = 'draw-v1'"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_batch_draw_snapshot_batch",
+            "columns": ["tenant_id", "batch_id"],
+            "references": {
+              "table": "inf.rait_batch",
+              "columns": ["tenant_id", "id"]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RaitBatchMinutesManifest",
+        "table": "rait_batch_minutes_manifest",
+        "primaryKey": ["id"],
+        "immutable": true,
+        "description": "Manifestacao imutavel da ata de distribuicao PAdES+TSA, vinculada ao snapshot do sorteio e ao presidente (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca).",
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "batch_id", "type": "uuid", "writable": false },
+          { "name": "document_id", "type": "uuid", "writable": false },
+          { "name": "content_hash", "type": "varchar(64)", "writable": false },
+          { "name": "snapshot_hash", "type": "varchar(64)", "writable": false },
+          {
+            "name": "snapshot_version",
+            "type": "varchar(20)",
+            "writable": false
+          },
+          {
+            "name": "document_kind",
+            "type": "varchar(40)",
+            "default": "'BATCH_DISTRIBUTION_MINUTES'",
+            "writable": false
+          },
+          {
+            "name": "expected_signer_person_id",
+            "type": "uuid",
+            "writable": false
+          },
+          {
+            "name": "manifest_hash",
+            "type": "varchar(64)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "manifest_version",
+            "type": "varchar(40)",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          },
+          {
+            "name": "prepared_at",
+            "type": "timestamptz",
+            "nullable": true,
+            "additive": true,
+            "writable": false
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_inf_rait_batch_minutes_manifest_batch",
+            "columns": ["tenant_id", "batch_id"],
+            "unique": true,
+            "constraint": true
+          },
+          {
+            "name": "ux_inf_rait_batch_minutes_manifest_document",
+            "columns": ["tenant_id", "document_id"],
+            "unique": true,
+            "constraint": true
+          },
+          {
+            "name": "ux_inf_rait_batch_minutes_manifest_batch_document",
+            "columns": ["tenant_id", "batch_id", "document_id"],
+            "unique": true
+          },
+          {
+            "name": "ux_inf_rait_batch_minutes_manifest_hash",
+            "columns": ["tenant_id", "batch_id", "manifest_hash"],
+            "unique": true,
+            "where": "manifest_hash is not null"
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_inf_rait_batch_minutes_manifest_content_hash",
+            "expression": "content_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_batch_minutes_manifest_snapshot_hash",
+            "expression": "snapshot_hash ~ '^[0-9a-f]{64}$'"
+          },
+          {
+            "name": "ck_inf_rait_batch_minutes_manifest_kind",
+            "expression": "document_kind = 'BATCH_DISTRIBUTION_MINUTES'"
+          },
+          {
+            "name": "ck_inf_rait_batch_minutes_manifest_version",
+            "expression": "snapshot_version = 'draw-v1'"
+          },
+          {
+            "name": "ck_inf_rait_batch_minutes_manifest_manifest_hash",
+            "expression": "manifest_hash is null or manifest_hash ~ '^[0-9a-f]{64}$'",
+            "additive": true
+          },
+          {
+            "name": "ck_inf_rait_batch_minutes_manifest_preparation_complete",
+            "expression": "(manifest_hash is null and manifest_version is null and prepared_at is null) or (manifest_hash is not null and manifest_version is not null and btrim(manifest_version) <> '' and prepared_at is not null)",
+            "additive": true
+          }
+        ],
+        "foreignKeys": [
+          {
+            "name": "fk_inf_rait_batch_minutes_manifest_batch",
+            "columns": ["tenant_id", "batch_id"],
+            "references": {
+              "table": "inf.rait_batch",
+              "columns": ["tenant_id", "id"]
+            }
+          },
+          {
+            "name": "fk_inf_rait_batch_minutes_manifest_snapshot",
+            "columns": ["tenant_id", "batch_id", "snapshot_hash"],
+            "references": {
+              "table": "inf.rait_batch_draw_snapshot",
+              "columns": ["tenant_id", "batch_id", "snapshot_hash"]
             }
           }
         ]
@@ -1181,67 +1553,92 @@
       {
         "entity": "RaitUnit",
         "path": "units",
-        "resource": "rait-unit"
+        "resource": "rait-unit",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitPool",
         "path": "pools",
-        "resource": "rait-pool"
+        "resource": "rait-pool",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitPoolMember",
         "path": "pool-members",
-        "resource": "rait-pool-member"
+        "resource": "rait-pool-member",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitSchedule",
         "path": "schedules",
-        "resource": "rait-schedule"
+        "resource": "rait-schedule",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitScheduleSlot",
         "path": "schedule-slots",
-        "resource": "rait-schedule-slot"
+        "resource": "rait-schedule-slot",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitBatch",
         "path": "batches",
-        "resource": "rait-batch"
+        "resource": "rait-batch",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "RaitBatchDrawSnapshot",
+        "path": "batch-draw-snapshots",
+        "resource": "rait-batch-draw-snapshot",
+        "operations": []
+      },
+      {
+        "entity": "RaitBatchMinutesManifest",
+        "path": "batch-minutes-manifests",
+        "resource": "rait-batch-minutes-manifest",
+        "operations": []
       },
       {
         "entity": "RaitBatchItem",
         "path": "batch-items",
-        "resource": "rait-batch-item"
+        "resource": "rait-batch-item",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitAssignment",
         "path": "assignments",
-        "resource": "rait-assignment"
+        "resource": "rait-assignment",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitImpediment",
         "path": "impediments",
-        "resource": "rait-impediment"
+        "resource": "rait-impediment",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitSubstituteDuty",
         "path": "substitute-duties",
-        "resource": "rait-substitute-duty"
+        "resource": "rait-substitute-duty",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitBench",
         "path": "benches",
-        "resource": "rait-bench"
+        "resource": "rait-bench",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitClock",
         "path": "clocks",
-        "resource": "rait-clock"
+        "resource": "rait-clock",
+        "operations": ["list", "get"]
       },
       {
         "entity": "RaitClockAlert",
         "path": "clock-alerts",
-        "resource": "rait-clock-alert"
+        "resource": "rait-clock-alert",
+        "operations": ["list", "get"]
       }
     ]
   },

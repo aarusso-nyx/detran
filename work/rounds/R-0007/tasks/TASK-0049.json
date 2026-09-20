@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0049",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Congelar RED produtivo de deliberação e ata",
+  "description": "Inspector 1/2 congelou sete sensores novos e executáveis. Inspector 2/2 corrigiu somente os dois regexes que exigiam barra literal e substituiu a matriz histórica de aliases pela matriz nominal CTG-0002 congelada: publish de schedule para coordinator, accept/impediment de batch-item para rapporteur, adjourn chair+secretary e sign de minutes chair+rapporteur conforme ADR-0027; M17 preserva schedule:create e batch:create como comandos estritos sem bypass global. Gates PASS: trust 18/18, session alvo 39/39, policy histórica 134/134, matrizes dedicadas worklist 34/34, agenda 43/43 e minutes 37/37, shared completo 323/323 e session unit completo 39/39; typechecks shared/session, Prettier e diff-check PASS. Hashes alterados: trust 2e7733bc3e9f44a0d26c8c98e55644e8abfa08288c6d5245bd43dd0053f56611; session-unit a06f172720872d901d1c9fc193010c7952212c1560f98ef5d927073eeb758586; policy 7a467d79e8b3c79f6d940c624f5e29a3f83b6ee9fc4e63ad0c74006b36b74aee. Hashes preservados: case-port 98bd3a676c7f51a237af6600de1d268d39fd42f695831e7fe76e31de3282b361; session-integration cbc518971f938d23a13e4c2dc331f76972bc8a5200115c3b51795b844196a0d6; app-e2e e7510fbc48678c42330d0b0165c0a2e2da3e1927ce476cc0ab319a11509d5fd2; app-audit 3d1a7ef2180cb8e6609e108729eb1383d745b65d3dbe007d354834e7bb652512. Sem produção, blueprint, DDL, gerados, package/lock, banco, corpus, record ou irmãos.",
+  "lifecycle": "supported",
+  "target_modules": [
+    "MOD-contract-worklist-session",
+    "MOD-contract-document-trust",
+    "MOD-bp-rait-session"
+  ],
+  "target_substrates": ["F2", "F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0047",
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["attempt-2", "owner-corrective-16-commands", "deliberation-minutes"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-7dcd9fc3f78c7a63",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/shared", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-case", "typecheck"],
+    ["pnpm", "--filter", "@detran/inf-rait-session", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"]
+  ],
+  "created_at": "2026-09-19T06:00:00Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-7dcd9fc3f78c7a63",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Somente sensores novos de deliberação/ata; sem produção/schema."
+  }
+}

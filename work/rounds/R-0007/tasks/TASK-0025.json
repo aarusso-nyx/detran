@@ -1,0 +1,55 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0025",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Atualizar sensor RLS com prova das três relações",
+  "description": "C4 historical state preserved; V3 Inspector 1/1 completed after TASK-0024 closure. Active prompt SHA-256 86aaf84dd1a0408a12d684a9acee8e7325af18e938368312278ff6704c8bcd12 and Terra/High composition under ADR-0026. Single allowed sensor SHA 4d32eb08664353e10e5aa5858d2a0dec1cfc1d41faccfae490b3f505ca58882f. Dedicated DB detran_r7_ctg1_a2 with explicit owner/application URLs, effective role_app_backend non-superuser/non-BYPASSRLS, canonical AIT fixture, inventory 90 tenant/10 reference and DDL34 case17, five C4/C4-OD relations nominal, RLS/FORCE/policy/trigger on all 90 and cross-tenant isolation. Acceptance command collected 3/3 PASS exit 0; missing URL negatives exit 1 with zero tests are infrastructure blocks, not functional PASS. Typecheck, Prettier and verify:rls-ddl PASS. See TASK-0024-0025-V3-DELIVERY. No counter reset, production write, commit or merge; SQL2 OWNER waiver remains narrow.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-ait-rls-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0024",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 2,
+  "tags": ["attempt-2", "cycle-4", "c4-od-v3"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-86aaf84dd1a0408a",
+  "acceptance_commands": [
+    [
+      "pnpm",
+      "--filter",
+      "@detran/inf-ait",
+      "test:integration",
+      "--passWithNoTests=false",
+      "tests/integration/inf-rls.integration.spec.ts"
+    ]
+  ],
+  "created_at": "2026-09-16T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-86aaf84dd1a0408a",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "C4-OD V3 future bounded inspector task; active prompt work/rounds/R-0007/prompts/TASK-0025-V3.md",
+    "planned_files": [
+      "backend/domains/inf/ait/tests/integration/inf-rls.integration.spec.ts"
+    ]
+  }
+}

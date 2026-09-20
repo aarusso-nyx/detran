@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0043",
+  "round_id": "R-0007",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Reconciliar SQL de upgrade sobre baseline RAIT histórico",
+  "description": "Ciclo final OWNER: SQL manual de pré-upgrade reconciliado com DDL34/35 históricos; revisão independente PASS antes de apply e ensaio de upgrade dirigido 18/18 PASS. Sem afirmação de aceite integral de TASK-0022.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-priority-upgrade"],
+  "target_substrates": ["F3"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0042",
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 1,
+  "priority": 1,
+  "tags": ["attempt-2", "c4-od-v3", "final-cycle"],
+  "branch": "orchestra/rait-backend",
+  "worktree_id": "WT-rait-backend",
+  "prompt_composition_id": "PC-16bb10a35d1d43c5",
+  "acceptance_commands": [["pnpm", "verify:rls-ddl"]],
+  "created_at": "2026-09-17T20:40:04Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-sol",
+    "effort": "medium",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-sol" },
+    "prompt_composition_id": "PC-16bb10a35d1d43c5",
+    "max_iterations": 1,
+    "capabilities": ["read", "local-write"]
+  },
+  "intent_diff": {
+    "summary": "Corrigir apenas SQL manual de upgrade, preservando dados legados."
+  }
+}

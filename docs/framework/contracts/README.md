@@ -1,6 +1,8 @@
 # Contracts
 
-OpenAPI 3.1 documents, one per module blueprint that declares `api.resources`.
+OpenAPI 3.1 documents. Root-level `BP-*.openapi.json` files are generated,
+one per module blueprint that declares `api.resources`. Architect-authored
+command contracts live separately in [`manual/`](manual/README.md).
 
 **Generated — never hand-edited.** `tools/contracts/generate-openapi.mjs` derives each
 document from `docs/framework/blueprints/BP-*.json`, mirroring exactly the controller
@@ -24,6 +26,16 @@ Regenerate with:
 ```bash
 pnpm contracts:openapi
 ```
+
+The generated checker remains unchanged: it scans root-level `*.openapi.json`
+and rejects drift, missing outputs and orphans. Its PASS covers generated
+documents only. Manual contracts require the executable validation and positive
+surface checks in [the manual contract guide](manual/README.md), in addition to
+`pnpm contracts:check`. Neither gate substitutes for the other.
+
+The planned RAIT intake contract is
+`docs/framework/contracts/manual/rait-priority-intake.commands.openapi.json`.
+It is not created by this documentary delta and has no validation PASS yet.
 
 ## `*.commands.openapi.json` — hand-written command contracts (WP-T3, CTG-0005)
 

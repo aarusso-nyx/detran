@@ -10,7 +10,7 @@ export interface paths {
     /** List RaitSession (most recent first, capped at 500) */
     get: operations['listRaitSession'];
     put?: never;
-    post: operations['createRaitSession'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -29,10 +29,10 @@ export interface paths {
     get: operations['getRaitSession'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitSession'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitSession'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/agenda-items': {
@@ -45,7 +45,7 @@ export interface paths {
     /** List RaitAgendaItem (most recent first, capped at 500) */
     get: operations['listRaitAgendaItem'];
     put?: never;
-    post: operations['createRaitAgendaItem'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -64,10 +64,10 @@ export interface paths {
     get: operations['getRaitAgendaItem'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitAgendaItem'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitAgendaItem'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/attendance': {
@@ -80,7 +80,7 @@ export interface paths {
     /** List RaitAttendance (most recent first, capped at 500) */
     get: operations['listRaitAttendance'];
     put?: never;
-    post: operations['createRaitAttendance'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -99,10 +99,10 @@ export interface paths {
     get: operations['getRaitAttendance'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitAttendance'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitAttendance'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/votes': {
@@ -115,7 +115,7 @@ export interface paths {
     /** List RaitVote (most recent first, capped at 500) */
     get: operations['listRaitVote'];
     put?: never;
-    post: operations['createRaitVote'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -134,45 +134,10 @@ export interface paths {
     get: operations['getRaitVote'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitVote'];
-    options?: never;
-    head?: never;
-    patch: operations['updateRaitVote'];
-    trace?: never;
-  };
-  '/v1/inf/rait/oral-arguments': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** List RaitOralArgument (most recent first, capped at 500) */
-    get: operations['listRaitOralArgument'];
-    put?: never;
-    post: operations['createRaitOralArgument'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
-    trace?: never;
-  };
-  '/v1/inf/rait/oral-arguments/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    get: operations['getRaitOralArgument'];
-    put?: never;
-    post?: never;
-    delete: operations['removeRaitOralArgument'];
-    options?: never;
-    head?: never;
-    patch: operations['updateRaitOralArgument'];
     trace?: never;
   };
   '/v1/inf/rait/minutes': {
@@ -185,7 +150,7 @@ export interface paths {
     /** List RaitMinutes (most recent first, capped at 500) */
     get: operations['listRaitMinutes'];
     put?: never;
-    post: operations['createRaitMinutes'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -204,10 +169,10 @@ export interface paths {
     get: operations['getRaitMinutes'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitMinutes'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitMinutes'];
+    patch?: never;
     trace?: never;
   };
 }
@@ -268,6 +233,8 @@ export interface components {
       modality: 'presencial' | 'virtual' | 'hibrida';
       /** @default false */
       short_notice_ack: boolean;
+      /** @default 1 */
+      version: number;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -358,6 +325,8 @@ export interface components {
       view_requested_by?: string | null;
       /** Format: date */
       view_due_on?: string | null;
+      /** @default 1 */
+      version: number;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -394,7 +363,7 @@ export interface components {
       /** Format: date */
       view_due_on?: string | null;
     };
-    /** @description Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3). */
+    /** @description Presenca por membro. left_at permite reverificar quorum por caso, nao so na abertura (AC-RAIT-006-3). v1.2.0 congela bloco, titularidade, mandato, ato, assento e vigencia institucionais usados para quorum e paridade reproduziveis em WF-RAIT-003 e WF-RAIT-004 secao 6. */
     RaitAttendance: {
       /**
        * Format: uuid
@@ -418,6 +387,25 @@ export interface components {
       /** Format: date-time */
       left_at?: string | null;
       absence_justified?: boolean | null;
+      /** @enum {string|null} */
+      representation_block?:
+        | 'executivo_estadual'
+        | 'municipal_rodoviario'
+        | 'sociedade_civil'
+        | null;
+      /** @enum {string|null} */
+      membership_kind?: 'titular' | 'suplente' | null;
+      /** Format: date */
+      mandate_starts_on_snapshot?: string | null;
+      /** Format: date */
+      mandate_ends_on_snapshot?: string | null;
+      institutional_seat_ref?: string | null;
+      appointment_act_ref?: string | null;
+      /** Format: date */
+      institutional_valid_from?: string | null;
+      /** Format: date */
+      institutional_valid_to?: string | null;
+      composition_snapshot_hash?: string | null;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -526,7 +514,7 @@ export interface components {
       held_at?: string | null;
       duration_minutes?: number | null;
     };
-    /** @description Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING). */
+    /** @description Ata gerada dos registros ao vivo, nunca redigida do zero (AC-RAIT-006-7). Assinatura PAdES+TSA (steering A.8). v1.1.0: published_at marca a publicacao da ata, que e o marco de T-R2 (WF-RAIT-004 secao 2.2 fila F-J-5; RN-RAIT-103) e so existe depois da assinatura (RAIT.MINUTES_SIGNERS_MISSING). v1.2.0 preserva campos single-signature apenas como legado legivel; novas atas usam snapshot, manifesto, signatarios e recibos normalizados de ADR-0027 e UC-RAIT-020. v1.2.2 protege o conteudo e a identidade originais contra UPDATE/DELETE/TRUNCATE, permitindo apenas o avanco controlado dos marcos de assinatura e publicacao pelo comando. */
     RaitMinutes: {
       /**
        * Format: uuid
@@ -554,6 +542,8 @@ export interface components {
       document_hash?: string | null;
       /** Format: date-time */
       published_at?: string | null;
+      /** @default 1 */
+      version: number;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -580,6 +570,125 @@ export interface components {
       /** Format: date-time */
       published_at?: string | null;
     };
+    /** @description Snapshot canonico session-minutes-v1, server-owned e imutavel dos registros vivos da sessao, incluindo pauta, presencas, composicao/paridade, quorum por item, relatoria, votos, resultado, vista, retiradas e signatarios requeridos (ADR-0027, UC-RAIT-020 e WF-RAIT-003). */
+    RaitSessionMinutesSnapshot: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      session_id: string;
+      /** @default 'session-minutes-v1' */
+      snapshot_version: string;
+      snapshot: {
+        [key: string]: unknown;
+      };
+      snapshot_hash: string;
+      /** @default 'server_session_records' */
+      origin: string;
+      /** Format: date-time */
+      captured_at: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitSessionMinutesSnapshotDto: Record<string, never>;
+    /** @description Manifesto imutavel da ata SESSION_MINUTES preparada pelo servico documental sobre o snapshot server-owned (ADR-0027, UC-RAIT-020 e WF-RAIT-003). */
+    RaitSessionMinutesManifest: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      session_id: string;
+      /** Format: uuid */
+      minutes_id: string;
+      /** Format: uuid */
+      document_id: string;
+      content_hash: string;
+      snapshot_hash: string;
+      manifest_hash: string;
+      /** @default 'SESSION_MINUTES' */
+      document_kind: string;
+      manifest_version: string;
+      /** Format: date-time */
+      prepared_at: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitSessionMinutesManifestDto: Record<string, never>;
+    /** @description Conjunto server-owned e imutavel de signatarios obrigatorios da ata: presidente efetivo e relatores dos itens, exceto relator formalmente ausente e dispensado no snapshot (ADR-0027, UC-RAIT-020 e WF-RAIT-003). */
+    RaitMinutesRequiredSigner: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      minutes_id: string;
+      /** Format: uuid */
+      person_id: string;
+      /** @enum {string} */
+      signer_role: 'presidente' | 'relator';
+      /** @enum {string} */
+      signer_basis: 'effective_chair' | 'item_rapporteur';
+      /** Format: uuid */
+      agenda_item_id?: string | null;
+      /** Format: date-time */
+      derived_at: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitMinutesRequiredSignerDto: Record<string, never>;
+    /** @description Recibo append-only e imutavel de verificacao SESSION_MINUTES por signatario requerido, vinculado aos mesmos documento, conteudo, snapshot e manifesto, com PAdES-B-LT, TSA e OCSP/CRL (ADR-0027 e UC-RAIT-020). */
+    RaitMinutesSignatureReceipt: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      minutes_id: string;
+      /** Format: uuid */
+      document_id: string;
+      /** Format: uuid */
+      signer_person_id: string;
+      signature_ref: string;
+      receipt_digest: string;
+      content_hash: string;
+      snapshot_hash: string;
+      manifest_hash: string;
+      /** @default 'PAdES-B-LT' */
+      signature_level: string;
+      tsa_status: string;
+      certificate_status: string;
+      /** @enum {string} */
+      revocation_method: 'OCSP' | 'CRL';
+      /** Format: date-time */
+      signed_at: string;
+      /** Format: date-time */
+      validated_at: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitMinutesSignatureReceiptDto: Record<string, never>;
   };
   responses: never;
   parameters: never;
@@ -609,30 +718,6 @@ export interface operations {
       };
     };
   };
-  createRaitSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitSessionDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitSession'];
-        };
-      };
-    };
-  };
   getRaitSession: {
     parameters: {
       query?: never;
@@ -643,66 +728,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitSession'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitSessionDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -742,30 +767,6 @@ export interface operations {
       };
     };
   };
-  createRaitAgendaItem: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAgendaItemDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAgendaItem'];
-        };
-      };
-    };
-  };
   getRaitAgendaItem: {
     parameters: {
       query?: never;
@@ -776,66 +777,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAgendaItem'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitAgendaItem: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitAgendaItem: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAgendaItemDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -875,30 +816,6 @@ export interface operations {
       };
     };
   };
-  createRaitAttendance: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAttendanceDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAttendance'];
-        };
-      };
-    };
-  };
   getRaitAttendance: {
     parameters: {
       query?: never;
@@ -909,66 +826,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAttendance'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitAttendance: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitAttendance: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAttendanceDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -1008,30 +865,6 @@ export interface operations {
       };
     };
   };
-  createRaitVote: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitVoteDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitVote'];
-        };
-      };
-    };
-  };
   getRaitVote: {
     parameters: {
       query?: never;
@@ -1050,199 +883,6 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['RaitVote'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitVote: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitVote: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitVoteDto'];
-      };
-    };
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitVote'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  listRaitOralArgument: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitOralArgument'][];
-        };
-      };
-    };
-  };
-  createRaitOralArgument: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitOralArgumentDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitOralArgument'];
-        };
-      };
-    };
-  };
-  getRaitOralArgument: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitOralArgument'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitOralArgument: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitOralArgument: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitOralArgumentDto'];
-      };
-    };
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitOralArgument'];
         };
       };
       /** @description not found */
@@ -1274,30 +914,6 @@ export interface operations {
       };
     };
   };
-  createRaitMinutes: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitMinutesDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitMinutes'];
-        };
-      };
-    };
-  };
   getRaitMinutes: {
     parameters: {
       query?: never;
@@ -1308,66 +924,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitMinutes'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitMinutes: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitMinutes: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitMinutesDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {

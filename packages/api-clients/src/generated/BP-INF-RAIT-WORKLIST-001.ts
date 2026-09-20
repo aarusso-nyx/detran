@@ -10,7 +10,7 @@ export interface paths {
     /** List RaitUnit (most recent first, capped at 500) */
     get: operations['listRaitUnit'];
     put?: never;
-    post: operations['createRaitUnit'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -29,10 +29,10 @@ export interface paths {
     get: operations['getRaitUnit'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitUnit'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitUnit'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/pools': {
@@ -45,7 +45,7 @@ export interface paths {
     /** List RaitPool (most recent first, capped at 500) */
     get: operations['listRaitPool'];
     put?: never;
-    post: operations['createRaitPool'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -64,10 +64,10 @@ export interface paths {
     get: operations['getRaitPool'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitPool'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitPool'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/pool-members': {
@@ -80,7 +80,7 @@ export interface paths {
     /** List RaitPoolMember (most recent first, capped at 500) */
     get: operations['listRaitPoolMember'];
     put?: never;
-    post: operations['createRaitPoolMember'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -99,10 +99,10 @@ export interface paths {
     get: operations['getRaitPoolMember'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitPoolMember'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitPoolMember'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/schedules': {
@@ -115,7 +115,7 @@ export interface paths {
     /** List RaitSchedule (most recent first, capped at 500) */
     get: operations['listRaitSchedule'];
     put?: never;
-    post: operations['createRaitSchedule'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -134,10 +134,10 @@ export interface paths {
     get: operations['getRaitSchedule'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitSchedule'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitSchedule'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/schedule-slots': {
@@ -150,7 +150,7 @@ export interface paths {
     /** List RaitScheduleSlot (most recent first, capped at 500) */
     get: operations['listRaitScheduleSlot'];
     put?: never;
-    post: operations['createRaitScheduleSlot'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -169,10 +169,10 @@ export interface paths {
     get: operations['getRaitScheduleSlot'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitScheduleSlot'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitScheduleSlot'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/batches': {
@@ -185,7 +185,7 @@ export interface paths {
     /** List RaitBatch (most recent first, capped at 500) */
     get: operations['listRaitBatch'];
     put?: never;
-    post: operations['createRaitBatch'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -204,10 +204,10 @@ export interface paths {
     get: operations['getRaitBatch'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitBatch'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitBatch'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/batch-items': {
@@ -220,7 +220,7 @@ export interface paths {
     /** List RaitBatchItem (most recent first, capped at 500) */
     get: operations['listRaitBatchItem'];
     put?: never;
-    post: operations['createRaitBatchItem'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -239,10 +239,10 @@ export interface paths {
     get: operations['getRaitBatchItem'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitBatchItem'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitBatchItem'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/assignments': {
@@ -255,7 +255,7 @@ export interface paths {
     /** List RaitAssignment (most recent first, capped at 500) */
     get: operations['listRaitAssignment'];
     put?: never;
-    post: operations['createRaitAssignment'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -274,10 +274,10 @@ export interface paths {
     get: operations['getRaitAssignment'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitAssignment'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitAssignment'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/impediments': {
@@ -290,7 +290,7 @@ export interface paths {
     /** List RaitImpediment (most recent first, capped at 500) */
     get: operations['listRaitImpediment'];
     put?: never;
-    post: operations['createRaitImpediment'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -309,10 +309,10 @@ export interface paths {
     get: operations['getRaitImpediment'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitImpediment'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitImpediment'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/substitute-duties': {
@@ -325,7 +325,7 @@ export interface paths {
     /** List RaitSubstituteDuty (most recent first, capped at 500) */
     get: operations['listRaitSubstituteDuty'];
     put?: never;
-    post: operations['createRaitSubstituteDuty'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -344,10 +344,10 @@ export interface paths {
     get: operations['getRaitSubstituteDuty'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitSubstituteDuty'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitSubstituteDuty'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/benches': {
@@ -360,7 +360,7 @@ export interface paths {
     /** List RaitBench (most recent first, capped at 500) */
     get: operations['listRaitBench'];
     put?: never;
-    post: operations['createRaitBench'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -379,10 +379,10 @@ export interface paths {
     get: operations['getRaitBench'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitBench'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitBench'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/clocks': {
@@ -395,7 +395,7 @@ export interface paths {
     /** List RaitClock (most recent first, capped at 500) */
     get: operations['listRaitClock'];
     put?: never;
-    post: operations['createRaitClock'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -414,10 +414,10 @@ export interface paths {
     get: operations['getRaitClock'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitClock'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitClock'];
+    patch?: never;
     trace?: never;
   };
   '/v1/inf/rait/clock-alerts': {
@@ -430,7 +430,7 @@ export interface paths {
     /** List RaitClockAlert (most recent first, capped at 500) */
     get: operations['listRaitClockAlert'];
     put?: never;
-    post: operations['createRaitClockAlert'];
+    post?: never;
     delete?: never;
     options?: never;
     head?: never;
@@ -449,10 +449,10 @@ export interface paths {
     get: operations['getRaitClockAlert'];
     put?: never;
     post?: never;
-    delete: operations['removeRaitClockAlert'];
+    delete?: never;
     options?: never;
     head?: never;
-    patch: operations['updateRaitClockAlert'];
+    patch?: never;
     trace?: never;
   };
 }
@@ -541,7 +541,7 @@ export interface components {
        */
       priority_policy: 'ordem_unica';
     };
-    /** @description Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48). */
+    /** @description Membro do pool e sua situacao (WF-RAIT-002 secao 5). Mandato de 1-2 anos na JARI (RN-RAIT-116). v1.1.0: is_substitute marca o suplente (Res. 357 item 4.1.b.3, RN-RAIT-142) e jurisdiction a circunscricao da autoridade signataria (CTB art. 281; relacao das 55 autoridades pendente, steering H.48). v1.4.0 registra bloco de representacao, assento, ato e vigencia institucionais verificaveis para a composicao CETRAN de WF-RAIT-004 secoes 5 e 6. */
     RaitPoolMember: {
       /**
        * Format: uuid
@@ -556,7 +556,12 @@ export interface components {
       person_id: string;
       /** @enum {string} */
       member_role:
-        'analista' | 'relator' | 'presidente' | 'coordenador' | 'secretaria';
+        | 'analista'
+        | 'relator'
+        | 'presidente'
+        | 'coordenador'
+        | 'secretaria'
+        | 'autoridade';
       /**
        * @default 'ATIVO'
        * @enum {string}
@@ -578,6 +583,21 @@ export interface components {
       /** @default false */
       is_substitute: boolean;
       jurisdiction?: string | null;
+      /** Format: uuid */
+      agency_jurisdiction_id?: string | null;
+      /** @enum {string|null} */
+      representation_block?:
+        | 'executivo_estadual'
+        | 'municipal_rodoviario'
+        | 'sociedade_civil'
+        | null;
+      institutional_seat_ref?: string | null;
+      appointment_act_ref?: string | null;
+      /** Format: date */
+      institutional_valid_from?: string | null;
+      /** Format: date */
+      institutional_valid_to?: string | null;
+      institutional_identity_hash?: string | null;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -590,7 +610,12 @@ export interface components {
       person_id: string;
       /** @enum {string} */
       member_role:
-        'analista' | 'relator' | 'presidente' | 'coordenador' | 'secretaria';
+        | 'analista'
+        | 'relator'
+        | 'presidente'
+        | 'coordenador'
+        | 'secretaria'
+        | 'autoridade';
       /**
        * @default 'ATIVO'
        * @enum {string}
@@ -612,6 +637,20 @@ export interface components {
       /** @default false */
       is_substitute: boolean;
       jurisdiction?: string | null;
+      /** Format: uuid */
+      agency_jurisdiction_id?: string | null;
+      /** @enum {string|null} */
+      representation_block?:
+        | 'executivo_estadual'
+        | 'municipal_rodoviario'
+        | 'sociedade_civil'
+        | null;
+      institutional_seat_ref?: string | null;
+      appointment_act_ref?: string | null;
+      /** Format: date */
+      institutional_valid_from?: string | null;
+      /** Format: date */
+      institutional_valid_to?: string | null;
     };
     /** @description Escala e plantao do membro — WF-RAIT-004 secao 3 e secao 10. Disponibilidade DISPONIVEL/EM_PLANTAO/AUSENTE_PROGRAMADO (secao 9); wip_limit nulo usa o parametro rait.wip.limit (ops.parameter, ADR-0021) e ausencia programada rebaixa o limite a zero. */
     RaitSchedule: {
@@ -648,6 +687,8 @@ export interface components {
       published_at?: string | null;
       /** Format: uuid */
       published_by?: string | null;
+      /** @default 1 */
+      version: number;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -760,6 +801,14 @@ export interface components {
       homologated_at?: string | null;
       /** Format: uuid */
       homologated_by?: string | null;
+      /** @default 1 */
+      version: number;
+      approval_signature_ref?: string | null;
+      approval_receipt_hash?: string | null;
+      /** Format: date-time */
+      approval_verified_at?: string | null;
+      /** Format: uuid */
+      approval_signer_person_id?: string | null;
       /** Format: date-time */
       created_at: string;
       /** Format: date-time */
@@ -799,6 +848,60 @@ export interface components {
       /** Format: uuid */
       homologated_by?: string | null;
     };
+    /** @description Snapshot canônico e imutável do sorteio por lote, produzido pelo servidor antes da ata (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca). */
+    RaitBatchDrawSnapshot: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      batch_id: string;
+      snapshot_version: string;
+      snapshot: {
+        [key: string]: unknown;
+      };
+      snapshot_hash: string;
+      /** @default 'server_draw' */
+      origin: string;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitBatchDrawSnapshotDto: Record<string, never>;
+    /** @description Manifestacao imutavel da ata de distribuicao PAdES+TSA, vinculada ao snapshot do sorteio e ao presidente (WF-RAIT-004 secao 5; CTG-0002 adendo de confianca). */
+    RaitBatchMinutesManifest: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      batch_id: string;
+      /** Format: uuid */
+      document_id: string;
+      content_hash: string;
+      snapshot_hash: string;
+      snapshot_version: string;
+      /** @default 'BATCH_DISTRIBUTION_MINUTES' */
+      document_kind: string;
+      /** Format: uuid */
+      expected_signer_person_id: string;
+      manifest_hash?: string | null;
+      manifest_version?: string | null;
+      /** Format: date-time */
+      prepared_at?: string | null;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateRaitBatchMinutesManifestDto: Record<string, never>;
     /** @description Item do lote de sorteio — WF-RAIT-004 secao 5 passos 4-5. Posicao na ordem sorteada, relator designado, claim_due_on do T-CLAIM (rait.timer.T-CLAIM, 2 dias uteis) e recusa por impedimento ou suspeicao, que redistribui ao proximo da ordem no mesmo lote. */
     RaitBatchItem: {
       /**
@@ -1214,30 +1317,6 @@ export interface operations {
       };
     };
   };
-  createRaitUnit: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitUnitDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitUnit'];
-        };
-      };
-    };
-  };
   getRaitUnit: {
     parameters: {
       query?: never;
@@ -1248,66 +1327,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitUnit'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitUnit: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitUnit: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitUnitDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -1347,30 +1366,6 @@ export interface operations {
       };
     };
   };
-  createRaitPool: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitPoolDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitPool'];
-        };
-      };
-    };
-  };
   getRaitPool: {
     parameters: {
       query?: never;
@@ -1381,66 +1376,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitPool'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitPool: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitPool: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitPoolDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -1480,30 +1415,6 @@ export interface operations {
       };
     };
   };
-  createRaitPoolMember: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitPoolMemberDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitPoolMember'];
-        };
-      };
-    };
-  };
   getRaitPoolMember: {
     parameters: {
       query?: never;
@@ -1514,66 +1425,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitPoolMember'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitPoolMember: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitPoolMember: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitPoolMemberDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -1613,30 +1464,6 @@ export interface operations {
       };
     };
   };
-  createRaitSchedule: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitScheduleDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitSchedule'];
-        };
-      };
-    };
-  };
   getRaitSchedule: {
     parameters: {
       query?: never;
@@ -1647,66 +1474,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitSchedule'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitSchedule: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitSchedule: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitScheduleDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -1746,30 +1513,6 @@ export interface operations {
       };
     };
   };
-  createRaitScheduleSlot: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitScheduleSlotDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitScheduleSlot'];
-        };
-      };
-    };
-  };
   getRaitScheduleSlot: {
     parameters: {
       query?: never;
@@ -1780,66 +1523,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitScheduleSlot'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitScheduleSlot: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitScheduleSlot: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitScheduleSlotDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -1879,30 +1562,6 @@ export interface operations {
       };
     };
   };
-  createRaitBatch: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitBatchDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitBatch'];
-        };
-      };
-    };
-  };
   getRaitBatch: {
     parameters: {
       query?: never;
@@ -1913,66 +1572,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitBatch'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitBatch: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitBatch: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitBatchDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -2012,30 +1611,6 @@ export interface operations {
       };
     };
   };
-  createRaitBatchItem: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitBatchItemDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitBatchItem'];
-        };
-      };
-    };
-  };
   getRaitBatchItem: {
     parameters: {
       query?: never;
@@ -2046,66 +1621,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitBatchItem'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitBatchItem: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitBatchItem: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitBatchItemDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -2145,30 +1660,6 @@ export interface operations {
       };
     };
   };
-  createRaitAssignment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAssignmentDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAssignment'];
-        };
-      };
-    };
-  };
   getRaitAssignment: {
     parameters: {
       query?: never;
@@ -2179,66 +1670,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitAssignment'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitAssignment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitAssignment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitAssignmentDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -2278,30 +1709,6 @@ export interface operations {
       };
     };
   };
-  createRaitImpediment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitImpedimentDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitImpediment'];
-        };
-      };
-    };
-  };
   getRaitImpediment: {
     parameters: {
       query?: never;
@@ -2312,66 +1719,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitImpediment'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitImpediment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitImpediment: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitImpedimentDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -2411,30 +1758,6 @@ export interface operations {
       };
     };
   };
-  createRaitSubstituteDuty: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitSubstituteDutyDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitSubstituteDuty'];
-        };
-      };
-    };
-  };
   getRaitSubstituteDuty: {
     parameters: {
       query?: never;
@@ -2445,66 +1768,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitSubstituteDuty'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitSubstituteDuty: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitSubstituteDuty: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitSubstituteDutyDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -2544,30 +1807,6 @@ export interface operations {
       };
     };
   };
-  createRaitBench: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitBenchDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitBench'];
-        };
-      };
-    };
-  };
   getRaitBench: {
     parameters: {
       query?: never;
@@ -2578,66 +1817,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitBench'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitBench: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitBench: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitBenchDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -2677,30 +1856,6 @@ export interface operations {
       };
     };
   };
-  createRaitClock: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitClockDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitClock'];
-        };
-      };
-    };
-  };
   getRaitClock: {
     parameters: {
       query?: never;
@@ -2711,66 +1866,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitClock'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitClock: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitClock: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitClockDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
@@ -2810,30 +1905,6 @@ export interface operations {
       };
     };
   };
-  createRaitClockAlert: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitClockAlertDto'];
-      };
-    };
-    responses: {
-      /** @description created */
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitClockAlert'];
-        };
-      };
-    };
-  };
   getRaitClockAlert: {
     parameters: {
       query?: never;
@@ -2844,66 +1915,6 @@ export interface operations {
       cookie?: never;
     };
     requestBody?: never;
-    responses: {
-      /** @description ok */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RaitClockAlert'];
-        };
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  removeRaitClockAlert: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description deleted */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description not found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  updateRaitClockAlert: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CreateRaitClockAlertDto'];
-      };
-    };
     responses: {
       /** @description ok */
       200: {
