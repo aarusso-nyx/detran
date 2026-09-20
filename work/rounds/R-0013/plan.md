@@ -23,11 +23,11 @@ CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar 
    (§8); `i18n/teat.pt-BR.json` (estados [WF-TEAT-001…005], bloqueadores do bootstrap, erros,
    rótulos); `transitions.ts` com as 576 transições; diagramas de estrutura no modelo de
    `rait-web-structure-diagrams.md`. Baseline do KB sobe em 126 (+1 se UC-TEAT-013 for novo).
-3. **Provisionamento offline** (WP-T5): ADR "Provisionamento operacional offline" (número livre
-   seguinte; previsto ADR-0025): chave do dispositivo no Keystore, grant `OfflineOperationalGrantV1`,
+3. **Provisionamento offline** (WP-T5): ADR "Provisionamento operacional offline" (próximo número
+   livre verificado: ADR-0028): chave do dispositivo no Keystore, grant `OfflineOperationalGrantV1`,
    pacote assinado por KMS, envelope cifrado, revogação por época, reconciliação obrigatória;
    `BP-OPS-PROVISIONING-001` (`device_key`, `offline_authorization_grant`, `provisioning_package`,
-   `provisioning_receipt`, `device_revocation`; DDL `19-ops-provisioning.sql`); rotas
+   `provisioning_receipt`, `device_revocation`; DDL `21-ops-provisioning.sql`); rotas
    `/v1/ops/provisioning/*` (desafio, registro de chave, emissão, download, recibo, prontidão,
    revogação, reconciliação); `ReadinessGate` integrado. Fases P0–P6 da origem como plano.
 4. **Apps** (WP-T6): `apps/teat/mobile` (`@detran/teat-mobile`; Capacitor via `@stynx-nyx/mobile-runtime`;
@@ -53,7 +53,7 @@ package/config/shell vazio compilável: nenhum comportamento, rota de produto ou
 | TASK-0004 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0002  | 0003       | 56 fichas web e diagramas; atualizar uma vez o manifesto KB para 675/446                     |
 | TASK-0005 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0002  | 0004       | catálogo i18n canônico e allowlist `teat.*` sob autoridade OD-P46/R-0014                     |
 | TASK-0006 | Engineer             | engineer-backend    | Luna/baixo     | CTG-0002  | 0005       | regenerar exatamente os três artefatos de parâmetros e provar 89/25/allowlist                |
-| TASK-0007 | Architect            | architect-blueprint | Terra/alto     | CTG-0003  | 0006       | ADR-0025, BP-OPS-PROVISIONING-001, DDL 21, contratos e matriz completa P0–P6/INV-OFFLINE-001 |
+| TASK-0007 | Architect            | architect-blueprint | Terra/alto     | CTG-0003  | 0006       | ADR-0028, BP-OPS-PROVISIONING-001, DDL 21, contratos e matriz completa P0–P6/INV-OFFLINE-001 |
 | TASK-0008 | Inspector            | inspector-tests     | Terra/alto     | CTG-0003  | 0007       | testes RED de contrato, policy, RLS, DB, segurança e idempotência no banco `detran_r13`      |
 | TASK-0009 | Engineer             | engineer-backend    | Terra/médio    | CTG-0003  | 0008       | provisioning handwritten/wiring/policy até todos os testes verdes                            |
 | TASK-0010 | Architect            | architect-blueprint | Terra/alto     | CTG-0004a | 0009       | contrato mobile: 70 rotas, papéis, 576 transições, forms, readiness e caminhos exatos        |
@@ -116,7 +116,8 @@ prompts anteriores; não é um ciclo incremental de `REVIEW`.
 1. I18n canônico e allowlist são Architect/transcriber sob OD-P46; regeneração é Engineer mecânico.
 2. Matrizes oficiais são portadas antes das fichas, fixadas ao HEAD/hashes da origem somente leitura.
 3. Todos os joins foram serializados em 18 tarefas; plano, task JSON e CTGs têm a mesma cadeia.
-4. Provisioning é uma tríade A→I→E com ADR-0025, DDL 21 e contratos/caminhos resolvidos.
+4. Provisioning é uma tríade A→I→E com ADR-0028 (renumerado pela A3), DDL 21 e contratos/caminhos
+   resolvidos.
 5. Cada app é A→scaffold E não comportamental→Inspector RED→Engineer feature; testes/configuração
    têm donos disjuntos e exclusões explícitas.
 6. Contratos de app obrigam H.39/H.54/H.55, roles/policy e produto cartesiano de autorização.
@@ -147,6 +148,19 @@ papéis e CTGs aceita pelo reviewer permanece inalterada.
 O preflight é renovado pelo maestro antes do dispatch se qualquer identidade/hash mudar. O avanço de
 `origin/main` para `a0f62cb67383ba31354f4c72e24bec91a3f22138` foi integrado por rebase antes desta
 adenda; a branch continua inédita.
+
+## Adenda estrutural A3 — resposta ao `prompt-review-3=FAIL`
+
+Autorizada pelo Owner em 2026-09-20 e limitada aos dois achados pós-rebase. Os sete achados da A2,
+a cadeia de 18 tarefas, papéis e CTGs aceitos pelo reviewer permanecem inalterados.
+
+1. O ADR de provisionamento passa integralmente de ADR-0025 para o próximo identificador livre
+   verificado no repositório, ADR-0028. Plano, metadata e prompts TASK-0007…0009 usam apenas
+   `docs/meta/adr/ADR-0028-provisionamento-operacional-offline.md`.
+2. O objetivo do plano passa a nomear exclusivamente `backend/database/ddl/21-ops-provisioning.sql`,
+   em concordância com a tabela, tarefas e prompts.
+
+Relatórios `prompt-review-1…3` são evidência histórica imutável e preservam as referências antigas.
 
 ## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
 
@@ -202,6 +216,10 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
   ADR-0027; provisionamento precisa migrar integralmente para ADR-0028. O objetivo também conserva
   uma referência residual a DDL 19, enquanto tarefas/prompts usam DDL 21. Por ser o terceiro ciclo
   e haver `FAIL`, §5 exige nova parada antes de qualquer worker.
+- `2026-09-20`: Owner autorizou explicitamente a Adenda A3 limitada a ADR-0028 e DDL 21. Nenhum
+  worker será liberado antes de novo `PASS`.
+- `prompt-review-4` após Adenda A3: **PASS**, sem achados. ADR-0028, DDL 21, 18/18 hashes/PCs e
+  preservação dos sete reparos A2 foram confirmados; TASK-0001 está liberada pela cadeia serial.
 
 ## Retomada
 
@@ -216,9 +234,9 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
   evidência, PRs, merges, observação e fechamento;
 - último veredito: `FAIL`; nenhum worker autorizado;
 - concluídos: Adenda A2, gates estruturais e `prompt-review-3=FAIL` excepcional Codex/Sol/high;
-- próximo passo exige autorização explícita para Adenda A3: trocar ADR-0025 por ADR-0028 em toda
-  a superfície de TASK-0007…0009 e corrigir a referência residual DDL 19→21; depois, nova revisão;
-- somente `PASS` pode liberar TASK-0001; o terceiro ciclo `FAIL` mantém a rodada escalada;
+- concluídos: Adenda A3, gates estruturais e `prompt-review-4=PASS` excepcional Codex/Sol/high;
+- em curso: nenhum worker no instante deste checkpoint; TASK-0001 é a única tarefa pronta;
+- próximo passo: marcar TASK-0001 `in_progress`, despachar Luna/low e aplicar os gates do CTG-0001;
 - estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até
   `a0f62cb67383ba31354f4c72e24bec91a3f22138` integrado por rebase antes da A2.
 
