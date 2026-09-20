@@ -194,8 +194,11 @@ jobs:
       - name: Verify blueprint regeneration has no drift
         run: pnpm blueprints:check
 
-      - name: Run governed backend test sequence
-        run: pnpm backend:test:ci
+      - name: Run backend unit and integration tiers
+        run: |
+          pnpm backend:test:unit
+          pnpm backend:test:prepare-legacy
+          pnpm backend:test:integration
 
       - name: Verify SENATRAN boundary and generated contract drift
         run: |
@@ -231,14 +234,18 @@ jobs:
             fi
             sleep 1
           done
-          DB_NAME=detran \
-          DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran \
-          DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran \
-          STYNX_OWNER_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran \
-          STYNX_APP_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/detran?options=-c%20role%3Drole_app_backend' \
-          STYNX_READER_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/detran?options=-c%20role%3Drole_app_backend' \
-          SENATRAN_PROVIDER=mock \
-          pnpm backend:test:e2e
+          backend_env=(
+            DB_NAME=detran_r7_ctg1_a2
+            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
+            DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
+            STYNX_OWNER_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
+            'STYNX_APP_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend'
+            'STYNX_READER_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend'
+            SENATRAN_PROVIDER=mock
+          )
+          env "${backend_env[@]}" pnpm backend:test:prepare-legacy
+          env "${backend_env[@]}" pnpm backend:test:e2e
+          env "${backend_env[@]}" pnpm backend:test:upgrade
           pnpm --filter @detran/senatran-adapter test:e2e
 
   # ---------------------------------------------------------------------------
