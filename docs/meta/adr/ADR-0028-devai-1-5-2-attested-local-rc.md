@@ -26,6 +26,10 @@ keeps its package, source identity and provenance independently pinned in the ge
    protected control surface changes. A present invalid tag blocks; it never falls back.
 5. Replace the required `backend-kernel` context with `verified-local-rc` only after the protected
    workflow is on `main` and one real candidate proves the remote fallback or attested route.
+6. Select `backend-kernel` for every versioned change, but compute its reusable command input from
+   the enumerated backend, generated-contract, tooling and root-configuration surfaces it actually
+   consumes. Exact commit and tree binding still cover the complete candidate; control-surface
+   changes still force the remote fallback.
 
 ## Consequences
 
@@ -35,3 +39,5 @@ keeps its package, source identity and provenance independently pinned in the ge
 - Revoking the signer or restoring `backend-kernel` as a required check disables the economy path
   without weakening the remaining gates.
 - Extending local evidence to another job requires a separate Owner decision.
+- The bounded command-input roster avoids the legacy 64 MiB `git cat-file --batch` ceiling without
+  allowing a receipt or bundle to attest a different candidate tree.
