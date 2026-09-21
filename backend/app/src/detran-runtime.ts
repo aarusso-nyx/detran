@@ -954,6 +954,10 @@ export function detranPipelineOptions() {
       ttlMs: Number(
         process.env.STYNX_IDEMPOTENCY_TTL_MS ?? 24 * 60 * 60 * 1_000,
       ),
+      // A concurrent replay waits for the durable owner to publish its result.
+      // Keep the wait bounded, but allow for slower database-backed CI runs.
+      waitAttempts: 100,
+      waitIntervalMs: 50,
       durableStrict: true,
       store: detranPersistentPipelineStore,
       backend: detranIdempotencyBackend,
