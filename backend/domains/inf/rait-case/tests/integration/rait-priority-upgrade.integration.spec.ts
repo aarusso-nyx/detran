@@ -211,14 +211,14 @@ async function inventory(): Promise<string[]> {
   const files = JSON.parse(encoded) as unknown;
   if (
     !Array.isArray(files) ||
-    files.length !== 60 ||
+    files.length !== 61 ||
     files.some(
       (file) =>
         typeof file !== 'string' || !/^[0-9][0-9A-Za-z-]*\.sql$/u.test(file),
     ) ||
     new Set(files).size !== files.length
   )
-    throw new Error('The closed 60-DDL inventory is incomplete');
+    throw new Error('The closed 61-DDL inventory is incomplete');
   return files;
 }
 
@@ -584,18 +584,21 @@ async function priorityState(
 }
 
 describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
-  it('dado inventário fechado quando compõe apply então ordena cada DDL uma vez sem conectar DB', async () => {
+  it('dado inventário fechado quando compõe apply então preserva a ordem ordinária e reaplica DDL21 após DDL20 sem conectar DB', async () => {
     const source = await readFile(join(databaseDir, 'apply.sh'), 'utf8');
     expect(source).toContain('--single-transaction');
     expect(source).toContain('pg_advisory_xact_lock(7007, 1)');
     const listed = await inventory();
-    expect(new Set(listed).size).toBe(60);
+    expect(new Set(listed).size).toBe(61);
     const directory = await isolatedCopy(true);
     try {
       const copied = await readdir(join(directory, 'ddl'));
-      expect(copied.length).toBe(63);
+      expect(copied.length).toBe(64);
       expect(
         copied.filter((name) => name === '20-rls-policies.sql'),
+      ).toHaveLength(1);
+      expect(
+        copied.filter((name) => name === '21-ops-provisioning.sql'),
       ).toHaveLength(1);
       const bin = join(directory, 'bin');
       const calls = join(directory, 'psql-calls');
@@ -629,6 +632,10 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
       const files = argv
         .filter((arg) => arg.endsWith('.sql'))
         .map((arg) => arg.split('/').at(-1));
+      expect(files).toHaveLength(65);
+      expect(
+        files.filter((name) => name === '21-ops-provisioning.sql'),
+      ).toHaveLength(2);
       const ordinary = listed.filter(
         (name) =>
           name !== '20-rls-policies.sql' && name !== '34-inf-rait-case.sql',
@@ -645,6 +652,7 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
         '34-inf-rait-case.sql',
         ...after34,
         '20-rls-policies.sql',
+        '21-ops-provisioning.sql',
         manual[1],
         manual[2],
       ]);

@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0009",
   "round_id": "R-0013",
-  "status": "queued",
+  "status": "completed",
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
   "title": "Implementar provisionamento offline até as provas verdes",
@@ -21,14 +21,16 @@
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0008",
   "db_isolation": "database",
-  "iteration_count": 0,
-  "max_iterations": 2,
+  "iteration_count": 5,
+  "max_iterations": 5,
   "priority": 1,
   "tags": ["wp-t4", "wp-t5", "wp-t6"],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
-  "prompt_composition_id": "PC-8107563e0f70cb67",
+  "prompt_composition_id": "PC-aaa285b57ed37ae7",
   "acceptance_commands": [
+    ["pnpm", "contracts:test"],
+    ["pnpm", "contracts:check"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "test:unit"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "test:integration"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "test:e2e"],
@@ -47,8 +49,8 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-terra"
     },
-    "prompt_composition_id": "PC-8107563e0f70cb67",
-    "max_iterations": 2,
+    "prompt_composition_id": "PC-aaa285b57ed37ae7",
+    "max_iterations": 5,
     "capabilities": ["read", "local-write"]
   }
 }

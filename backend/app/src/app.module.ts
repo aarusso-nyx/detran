@@ -89,6 +89,7 @@ import { EvidenceModule } from '@detran/ops-evidence';
 import { FieldModule } from '@detran/ops-field';
 import { OfflineSyncModule } from '@detran/ops-offline-sync';
 import { ParameterModule } from '@detran/ops-parameter';
+import { ProvisioningModule } from '@detran/ops-provisioning';
 import { SnapshotsModule } from '@detran/ops-snapshots';
 
 import {
@@ -568,6 +569,103 @@ class DetranDatabaseBinder implements OnModuleInit {
   }
 }
 
+/**
+ * ADR-0028 makes command preconditions observable before any tenant or policy
+ * decision.  In particular, callers learn that an optimistic-concurrency
+ * token is required (428) rather than receiving an authorization oracle.
+ */
+@Injectable()
+class ProvisioningIfMatchGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest<{
+      method?: string;
+      path?: string;
+      url?: string;
+      headers?: Record<string, string | undefined>;
+    }>();
+    const path = request.path ?? request.url ?? '';
+    if (
+      request.method === 'POST' &&
+      path.startsWith('/v1/ops/provisioning/') &&
+      !request.headers?.['if-match']?.trim()
+    ) {
+      throw new DetranError('TEAT.IF_MATCH_REQUIRED', { status: 428 });
+    }
+    return true;
+  }
+}
+
+/** The final resource binding is rechecked under the command transaction lock. */
+@Injectable()
+class ProvisioningPolicyGuard implements CanActivate {
+  constructor(
+    private readonly delegate: DetranPolicyErrorGuard,
+    private readonly reflector: Reflector,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const resource = this.reflector.getAllAndOverride<string>(
+      DETRAN_RESOURCE_METADATA_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+    const action = this.reflector.get<string>(
+      DETRAN_ACTION_METADATA_KEY,
+      context.getHandler(),
+    );
+    const readTables: Record<string, string> = {
+      'ops:device-key': 'device_key',
+      'ops:grant': 'offline_authorization_grant',
+      'ops:package': 'provisioning_package',
+      'ops:receipt': 'provisioning_receipt',
+      'ops:device-revocation': 'device_revocation',
+    };
+    if (resource !== 'ops:provisioning' && !(resource in readTables))
+      return this.delegate.canActivate(context);
+    const request = context
+      .switchToHttp()
+      .getRequest<
+        RequestLike & { tenantId?: string; params?: { id?: string } }
+      >();
+    const principal = getPrincipalFromRequest(request);
+    if (
+      !principal ||
+      !request.tenantId ||
+      !principal.tenants.includes(request.tenantId)
+    )
+      throw new DetranError('TEAT.AUTH_REQUIRED', { status: 401 });
+    const roles = principal.roles,
+      claims = principal.claims ?? {};
+    const technical = roles.includes('technical-admin'),
+      agency = roles.includes('agency-admin');
+    if (resource === 'ops:provisioning') {
+      const permitted =
+        action === 'create-key-challenge' || action === 'revoke-offline-grant'
+          ? technical || agency
+          : action === 'issue-provisioning-package'
+            ? agency || roles.includes('field-supervisor')
+            : action === 'readiness'
+              ? technical || agency || typeof claims.agent_id === 'string'
+              : action === 'register-device-key' ||
+                  action === 'download-provisioning-package'
+                ? !!principal.id
+                : action === 'record-provisioning-receipt' ||
+                    action === 'reconcile-offline-grant'
+                  ? typeof claims.device_id === 'string'
+                  : false;
+      if (!permitted)
+        throw new DetranError('TEAT.FORBIDDEN_ACTION', { status: 403 });
+      return true;
+    }
+    if (action !== 'read')
+      throw new DetranError('TEAT.FORBIDDEN_ACTION', { status: 403 });
+    // A5 grants agency administrators specific commands, not generic CRUD.
+    // Generated readers remain tenant-scoped and need no pre-read agency TOCTOU.
+    if (!technical)
+      throw new DetranError('TEAT.FORBIDDEN_ACTION', { status: 403 });
+    return true;
+  }
+}
+
 @Module({})
 export class AppModule {
   static forRoot(): DynamicModule {
@@ -700,6 +798,7 @@ export class AppModule {
         SnapshotsModule,
         EvidenceModule,
         OfflineSyncModule,
+        ProvisioningModule,
         DetranErrorFilterModule,
         // Speed meters stay behind the `teat.speed_meters` flag (steering H.54:
         // the agency does not operate meters today).
@@ -722,6 +821,11 @@ export class AppModule {
         PecCognitoAdminController,
       ],
       providers: [
+        ProvisioningIfMatchGuard,
+        {
+          provide: APP_GUARD,
+          useExisting: ProvisioningIfMatchGuard,
+        },
         DetranDatabaseBinder,
         ...authProviders,
         BoatVictimPurposeInterceptor,
@@ -825,7 +929,8 @@ export class AppModule {
         { provide: DetranPersistedAuditSink, useValue: detranAuditSink },
         { provide: DetranPostgresReadiness, useValue: detranPostgresReadiness },
         DetranPolicyErrorGuard,
-        { provide: APP_GUARD, useExisting: DetranPolicyErrorGuard },
+        ProvisioningPolicyGuard,
+        { provide: APP_GUARD, useExisting: ProvisioningPolicyGuard },
         RaitTransactionalAuditInterceptor,
         {
           provide: APP_INTERCEPTOR,

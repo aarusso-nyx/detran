@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0008",
   "round_id": "R-0013",
-  "status": "queued",
+  "status": "completed",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Escrever provas RED do provisionamento offline",
@@ -20,13 +20,13 @@
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0007",
   "db_isolation": "database",
-  "iteration_count": 0,
-  "max_iterations": 2,
+  "iteration_count": 5,
+  "max_iterations": 5,
   "priority": 1,
   "tags": ["wp-t4", "wp-t5", "wp-t6"],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
-  "prompt_composition_id": "PC-3c25f8fa7d521d73",
+  "prompt_composition_id": "PC-f4e736230a13c777",
   "acceptance_commands": [
     [
       "bash",
@@ -48,7 +48,6 @@
       "-lc",
       "source work/rounds/R-0013/env-detran-r13.sh && bash backend/database/seed.sh"
     ],
-    ["pnpm", "contracts:test"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "typecheck"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "test:unit"],
     ["pnpm", "--filter", "@detran/ops-provisioning", "test:integration"],
@@ -65,8 +64,8 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-terra"
     },
-    "prompt_composition_id": "PC-3c25f8fa7d521d73",
-    "max_iterations": 2,
+    "prompt_composition_id": "PC-f4e736230a13c777",
+    "max_iterations": 5,
     "capabilities": ["read", "local-write"]
   }
 }

@@ -28,6 +28,7 @@ case "$rait_seed_profile" in
       26-fixtures-teat-field.sql
       27-fixtures-teat-evidence.sql
       28-fixtures-teat-measures-alcohol.sql
+      29-fixtures-ops-provisioning.sql
       30-fixtures-infraction.sql
       50-fixtures-collection.sql
       70-fixtures-est-crash.sql
@@ -46,6 +47,7 @@ case "$rait_seed_profile" in
       26-fixtures-teat-field.sql
       27-fixtures-teat-evidence.sql
       28-fixtures-teat-measures-alcohol.sql
+      29-fixtures-ops-provisioning.sql
       30-fixtures-infraction.sql
       40-fixtures-rait-org.sql
       50-fixtures-collection.sql

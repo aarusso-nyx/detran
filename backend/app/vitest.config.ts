@@ -183,6 +183,9 @@ export default defineConfig({
       '@detran/ops-parameter': fileURLToPath(
         new URL('../domains/ops/parameter/src/index.ts', import.meta.url),
       ),
+      '@detran/ops-provisioning': fileURLToPath(
+        new URL('../domains/ops/provisioning/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {

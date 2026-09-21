@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0007",
   "round_id": "R-0013",
-  "status": "queued",
+  "status": "completed",
   "discipline": "architect",
   "discipline_specialization": "architect-blueprint",
   "title": "Modelar provisionamento operacional offline P0 a P6",
@@ -20,19 +20,18 @@
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0006",
   "db_isolation": "database",
-  "iteration_count": 0,
-  "max_iterations": 2,
+  "iteration_count": 4,
+  "max_iterations": 4,
   "priority": 1,
   "tags": ["wp-t4", "wp-t5", "wp-t6"],
   "branch": "orchestra/teat-frontends",
   "worktree_id": "WT-teat-frontends",
-  "prompt_composition_id": "PC-1b2d77f68d65a2c0",
+  "prompt_composition_id": "PC-6031f57e40d70c12",
   "acceptance_commands": [
     ["pnpm", "blueprints:generate"],
     ["pnpm", "contracts:openapi"],
     ["pnpm", "contracts:clients"],
     ["pnpm", "blueprints:check"],
-    ["pnpm", "contracts:check"],
     ["pnpm", "verify:rls-ddl"],
     ["pnpm", "--filter", "@detran/api-clients", "typecheck"]
   ],
@@ -46,8 +45,8 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-terra"
     },
-    "prompt_composition_id": "PC-1b2d77f68d65a2c0",
-    "max_iterations": 2,
+    "prompt_composition_id": "PC-6031f57e40d70c12",
+    "max_iterations": 4,
     "capabilities": ["read", "local-write"]
   }
 }
