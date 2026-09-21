@@ -1,0 +1,6283 @@
+{
+  "kind": "mobile",
+  "source": "docs/meta/prototypes/app/docs/navigation/navigation-transitions.json",
+  "expectedScreens": 67,
+  "expectedNumberedScreens": 62,
+  "expectedComplementaryScreens": 5,
+  "expectedTransitions": 576,
+  "routeStrategy": {
+    "recommended_router": "React Router, Expo Router, TanStack Router ou state-machine local no protótipo",
+    "screen_id_field": "id",
+    "history": "usar stack para voltar; __previous__ representa retorno contextual",
+    "home": "home",
+    "auth_entry": "auth-login",
+    "post_login_default": "shift-context",
+    "bottom_nav": [
+      "home",
+      "ait-start",
+      "measure-start",
+      "crash-start",
+      "sync"
+    ]
+  },
+  "screens": [
+    {
+      "prototypeId": "auth-login",
+      "screenId": "auth-login",
+      "uxCode": "UX-MOB-001",
+      "group": "autenticacao-e-turno",
+      "label": "Login",
+      "route": "/ux/mobile/auth-login",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "context-help",
+        "auth-mfa",
+        "shift-context",
+        "device-blocked",
+        "support"
+      ]
+    },
+    {
+      "prototypeId": "auth-mfa",
+      "screenId": "auth-mfa",
+      "uxCode": "UX-MOB-002",
+      "group": "autenticacao-e-turno",
+      "label": "MFA/Reautenticação",
+      "route": "/ux/mobile/auth-mfa",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "context-help",
+        "shift-context",
+        "auth-login"
+      ]
+    },
+    {
+      "prototypeId": "device-blocked",
+      "screenId": "device-blocked",
+      "uxCode": "UX-MOB-003",
+      "group": "autenticacao-e-turno",
+      "label": "Dispositivo bloqueado",
+      "route": "/ux/mobile/device-blocked",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "context-help",
+        "support"
+      ]
+    },
+    {
+      "prototypeId": "shift-context",
+      "screenId": "shift-context",
+      "uxCode": "UX-MOB-004",
+      "group": "autenticacao-e-turno",
+      "label": "Selecionar unidade/equipe/viatura",
+      "route": "/ux/mobile/shift-context",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "operation-select",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "operation-select",
+      "screenId": "operation-select",
+      "uxCode": "UX-MOB-005",
+      "group": "autenticacao-e-turno",
+      "label": "Selecionar operação",
+      "route": "/ux/mobile/operation-select",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "open-shift",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "open-shift",
+      "screenId": "open-shift",
+      "uxCode": "UX-MOB-006",
+      "group": "autenticacao-e-turno",
+      "label": "Abertura de turno",
+      "route": "/ux/mobile/open-shift",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "home",
+      "screenId": "home",
+      "uxCode": "UX-MOB-007",
+      "group": "autenticacao-e-turno",
+      "label": "Home do turno",
+      "route": "/ux/mobile/home",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "context-help",
+        "close-shift",
+        "ait-start",
+        "vehicle-search",
+        "driver-search",
+        "measure-start",
+        "alcohol-start",
+        "crash-start",
+        "sync",
+        "diagnostics",
+        "messages",
+        "approach-no-ait",
+        "document-check",
+        "special-inspection",
+        "local-settings",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "close-shift",
+      "screenId": "close-shift",
+      "uxCode": "UX-MOB-008",
+      "group": "autenticacao-e-turno",
+      "label": "Encerramento de turno",
+      "route": "/ux/mobile/close-shift",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "shift-summary",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "shift-summary",
+      "screenId": "shift-summary",
+      "uxCode": "UX-MOB-009",
+      "group": "autenticacao-e-turno",
+      "label": "Resumo do turno",
+      "route": "/ux/mobile/shift-summary",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "auth-login",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "vehicle-search",
+      "screenId": "vehicle-search",
+      "uxCode": "UX-MOB-010",
+      "group": "consultas",
+      "label": "Consulta de veículo",
+      "route": "/ux/mobile/vehicle-search",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "vehicle-result",
+        "query-failure",
+        "vehicle-search",
+        "vehicle-result"
+      ]
+    },
+    {
+      "prototypeId": "vehicle-result",
+      "screenId": "vehicle-result",
+      "uxCode": "UX-MOB-011",
+      "group": "consultas",
+      "label": "Resultado de veículo",
+      "route": "/ux/mobile/vehicle-result",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-vehicle",
+        "crash-vehicles",
+        "vehicle-divergence"
+      ]
+    },
+    {
+      "prototypeId": "vehicle-divergence",
+      "screenId": "vehicle-divergence",
+      "uxCode": "UX-MOB-012",
+      "group": "consultas",
+      "label": "Divergência veicular",
+      "route": "/ux/mobile/vehicle-divergence",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "vehicle-result"
+      ]
+    },
+    {
+      "prototypeId": "driver-search",
+      "screenId": "driver-search",
+      "uxCode": "UX-MOB-013",
+      "group": "consultas",
+      "label": "Consulta de condutor",
+      "route": "/ux/mobile/driver-search",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "driver-result",
+        "query-failure",
+        "driver-result"
+      ]
+    },
+    {
+      "prototypeId": "driver-result",
+      "screenId": "driver-result",
+      "uxCode": "UX-MOB-014",
+      "group": "consultas",
+      "label": "Resultado de condutor",
+      "route": "/ux/mobile/driver-result",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-driver",
+        "alcohol-start",
+        "query-failure"
+      ]
+    },
+    {
+      "prototypeId": "query-failure",
+      "screenId": "query-failure",
+      "uxCode": "UX-MOB-015",
+      "group": "consultas",
+      "label": "Falha de consulta",
+      "route": "/ux/mobile/query-failure",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-vehicle",
+        "ait-driver",
+        "__previous__"
+      ]
+    },
+    {
+      "prototypeId": "ait-start",
+      "screenId": "ait-start",
+      "uxCode": "UX-MOB-020",
+      "group": "ait-completo",
+      "label": "Novo AIT — início",
+      "route": "/ux/mobile/ait-start",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-vehicle",
+        "ait-vehicle",
+        "ait-vehicle"
+      ]
+    },
+    {
+      "prototypeId": "ait-vehicle",
+      "screenId": "ait-vehicle",
+      "uxCode": "UX-MOB-021",
+      "group": "ait-completo",
+      "label": "AIT — veículo",
+      "route": "/ux/mobile/ait-vehicle",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-driver",
+        "vehicle-search"
+      ]
+    },
+    {
+      "prototypeId": "ait-driver",
+      "screenId": "ait-driver",
+      "uxCode": "UX-MOB-022",
+      "group": "ait-completo",
+      "label": "AIT — condutor/infrator",
+      "route": "/ux/mobile/ait-driver",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-frame",
+        "driver-search"
+      ]
+    },
+    {
+      "prototypeId": "ait-frame",
+      "screenId": "ait-frame",
+      "uxCode": "UX-MOB-023",
+      "group": "ait-completo",
+      "label": "AIT — enquadramento",
+      "route": "/ux/mobile/ait-frame",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-frame-detail",
+        "ait-frame-detail"
+      ]
+    },
+    {
+      "prototypeId": "ait-frame-detail",
+      "screenId": "ait-frame-detail",
+      "uxCode": "UX-MOB-024",
+      "group": "ait-completo",
+      "label": "AIT — detalhe do enquadramento",
+      "route": "/ux/mobile/ait-frame-detail",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-location",
+        "ait-location"
+      ]
+    },
+    {
+      "prototypeId": "ait-location",
+      "screenId": "ait-location",
+      "uxCode": "UX-MOB-025",
+      "group": "ait-completo",
+      "label": "AIT — local",
+      "route": "/ux/mobile/ait-location",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-notes"
+      ]
+    },
+    {
+      "prototypeId": "ait-notes",
+      "screenId": "ait-notes",
+      "uxCode": "UX-MOB-026",
+      "group": "ait-completo",
+      "label": "AIT — observações",
+      "route": "/ux/mobile/ait-notes",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-validations"
+      ]
+    },
+    {
+      "prototypeId": "ait-validations",
+      "screenId": "ait-validations",
+      "uxCode": "UX-MOB-027",
+      "group": "ait-completo",
+      "label": "AIT — validações",
+      "route": "/ux/mobile/ait-validations",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-evidence",
+        "ait-notes",
+        "ait-location",
+        "ait-frame"
+      ]
+    },
+    {
+      "prototypeId": "ait-evidence",
+      "screenId": "ait-evidence",
+      "uxCode": "UX-MOB-028",
+      "group": "ait-completo",
+      "label": "AIT — evidências",
+      "route": "/ux/mobile/ait-evidence",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-measures"
+      ]
+    },
+    {
+      "prototypeId": "ait-measures",
+      "screenId": "ait-measures",
+      "uxCode": "UX-MOB-029",
+      "group": "ait-completo",
+      "label": "AIT — medidas sugeridas",
+      "route": "/ux/mobile/ait-measures",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-signature",
+        "retention",
+        "removal",
+        "alcohol-start"
+      ]
+    },
+    {
+      "prototypeId": "ait-signature",
+      "screenId": "ait-signature",
+      "uxCode": "UX-MOB-030",
+      "group": "ait-completo",
+      "label": "AIT — assinatura/ciência",
+      "route": "/ux/mobile/ait-signature",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-review"
+      ]
+    },
+    {
+      "prototypeId": "ait-review",
+      "screenId": "ait-review",
+      "uxCode": "UX-MOB-031",
+      "group": "ait-completo",
+      "label": "AIT — revisão final",
+      "route": "/ux/mobile/ait-review",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-done",
+        "ait-done",
+        "ait-validations"
+      ]
+    },
+    {
+      "prototypeId": "ait-done",
+      "screenId": "ait-done",
+      "uxCode": "UX-MOB-032",
+      "group": "ait-completo",
+      "label": "AIT — finalizado",
+      "route": "/ux/mobile/ait-done",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-print",
+        "ait-shift-detail",
+        "ait-start",
+        "home"
+      ]
+    },
+    {
+      "prototypeId": "ait-print",
+      "screenId": "ait-print",
+      "uxCode": "UX-MOB-033",
+      "group": "ait-completo",
+      "label": "AIT — impressão",
+      "route": "/ux/mobile/ait-print",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-done",
+        "ait-print"
+      ]
+    },
+    {
+      "prototypeId": "ait-shift-detail",
+      "screenId": "ait-shift-detail",
+      "uxCode": "UX-MOB-034",
+      "group": "ait-completo",
+      "label": "AIT — detalhes do turno",
+      "route": "/ux/mobile/ait-shift-detail",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "measure-start",
+      "screenId": "measure-start",
+      "uxCode": "UX-MOB-040",
+      "group": "medidas-administrativas",
+      "label": "Nova medida",
+      "route": "/ux/mobile/measure-start",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "crash-start",
+        "sync",
+        "retention",
+        "removal",
+        "transshipment"
+      ]
+    },
+    {
+      "prototypeId": "retention",
+      "screenId": "retention",
+      "uxCode": "UX-MOB-041",
+      "group": "medidas-administrativas",
+      "label": "Retenção",
+      "route": "/ux/mobile/retention",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "measure-term",
+        "measure-done"
+      ]
+    },
+    {
+      "prototypeId": "removal",
+      "screenId": "removal",
+      "uxCode": "UX-MOB-042",
+      "group": "medidas-administrativas",
+      "label": "Remoção",
+      "route": "/ux/mobile/removal",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "inventory"
+      ]
+    },
+    {
+      "prototypeId": "inventory",
+      "screenId": "inventory",
+      "uxCode": "UX-MOB-043",
+      "group": "medidas-administrativas",
+      "label": "Inventário",
+      "route": "/ux/mobile/inventory",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "measure-term"
+      ]
+    },
+    {
+      "prototypeId": "transshipment",
+      "screenId": "transshipment",
+      "uxCode": "UX-MOB-044",
+      "group": "medidas-administrativas",
+      "label": "Transbordo",
+      "route": "/ux/mobile/transshipment",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "measure-term"
+      ]
+    },
+    {
+      "prototypeId": "measure-term",
+      "screenId": "measure-term",
+      "uxCode": "UX-MOB-045",
+      "group": "medidas-administrativas",
+      "label": "Termo administrativo",
+      "route": "/ux/mobile/measure-term",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "measure-done"
+      ]
+    },
+    {
+      "prototypeId": "measure-done",
+      "screenId": "measure-done",
+      "uxCode": "UX-MOB-046",
+      "group": "medidas-administrativas",
+      "label": "Finalização da medida",
+      "route": "/ux/mobile/measure-done",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "sync",
+        "home"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-start",
+      "screenId": "alcohol-start",
+      "uxCode": "UX-MOB-050",
+      "group": "alcoolemia",
+      "label": "Início alcoolemia",
+      "route": "/ux/mobile/alcohol-start",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "alcohol-device",
+        "alcohol-refusal",
+        "alcohol-signs"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-device",
+      "screenId": "alcohol-device",
+      "uxCode": "UX-MOB-051",
+      "group": "alcoolemia",
+      "label": "Etilômetro",
+      "route": "/ux/mobile/alcohol-device",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "alcohol-result"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-result",
+      "screenId": "alcohol-result",
+      "uxCode": "UX-MOB-052",
+      "group": "alcoolemia",
+      "label": "Resultado do teste",
+      "route": "/ux/mobile/alcohol-result",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "alcohol-links"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-refusal",
+      "screenId": "alcohol-refusal",
+      "uxCode": "UX-MOB-053",
+      "group": "alcoolemia",
+      "label": "Recusa",
+      "route": "/ux/mobile/alcohol-refusal",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "alcohol-term",
+        "ait-start"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-signs",
+      "screenId": "alcohol-signs",
+      "uxCode": "UX-MOB-054",
+      "group": "alcoolemia",
+      "label": "Sinais psicomotores",
+      "route": "/ux/mobile/alcohol-signs",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "alcohol-links"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-forward",
+      "screenId": "alcohol-forward",
+      "uxCode": "UX-MOB-055",
+      "group": "alcoolemia",
+      "label": "Encaminhamento",
+      "route": "/ux/mobile/alcohol-forward",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "alcohol-links"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-links",
+      "screenId": "alcohol-links",
+      "uxCode": "UX-MOB-056",
+      "group": "alcoolemia",
+      "label": "AIT/medidas vinculadas",
+      "route": "/ux/mobile/alcohol-links",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-start",
+        "retention",
+        "alcohol-term"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-term",
+      "screenId": "alcohol-term",
+      "uxCode": "UX-MOB-057",
+      "group": "alcoolemia",
+      "label": "Termo de alcoolemia",
+      "route": "/ux/mobile/alcohol-term",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "sync",
+        "home"
+      ]
+    },
+    {
+      "prototypeId": "crash-start",
+      "screenId": "crash-start",
+      "uxCode": "UX-MOB-060",
+      "group": "sinistros",
+      "label": "Novo sinistro",
+      "route": "/ux/mobile/crash-start",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "sync",
+        "crash-location"
+      ]
+    },
+    {
+      "prototypeId": "crash-location",
+      "screenId": "crash-location",
+      "uxCode": "UX-MOB-061",
+      "group": "sinistros",
+      "label": "Local e horário",
+      "route": "/ux/mobile/crash-location",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-conditions"
+      ]
+    },
+    {
+      "prototypeId": "crash-conditions",
+      "screenId": "crash-conditions",
+      "uxCode": "UX-MOB-062",
+      "group": "sinistros",
+      "label": "Condições",
+      "route": "/ux/mobile/crash-conditions",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-vehicles"
+      ]
+    },
+    {
+      "prototypeId": "crash-vehicles",
+      "screenId": "crash-vehicles",
+      "uxCode": "UX-MOB-063",
+      "group": "sinistros",
+      "label": "Veículos envolvidos",
+      "route": "/ux/mobile/crash-vehicles",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-people",
+        "vehicle-search"
+      ]
+    },
+    {
+      "prototypeId": "crash-people",
+      "screenId": "crash-people",
+      "uxCode": "UX-MOB-064",
+      "group": "sinistros",
+      "label": "Pessoas envolvidas",
+      "route": "/ux/mobile/crash-people",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-victims",
+        "driver-search"
+      ]
+    },
+    {
+      "prototypeId": "crash-victims",
+      "screenId": "crash-victims",
+      "uxCode": "UX-MOB-065",
+      "group": "sinistros",
+      "label": "Vítimas",
+      "route": "/ux/mobile/crash-victims",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-dynamics",
+        "crash-victims"
+      ]
+    },
+    {
+      "prototypeId": "crash-dynamics",
+      "screenId": "crash-dynamics",
+      "uxCode": "UX-MOB-066",
+      "group": "sinistros",
+      "label": "Dinâmica",
+      "route": "/ux/mobile/crash-dynamics",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-sketch"
+      ]
+    },
+    {
+      "prototypeId": "crash-sketch",
+      "screenId": "crash-sketch",
+      "uxCode": "UX-MOB-067",
+      "group": "sinistros",
+      "label": "Croqui",
+      "route": "/ux/mobile/crash-sketch",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-evidence",
+        "crash-evidence"
+      ]
+    },
+    {
+      "prototypeId": "crash-evidence",
+      "screenId": "crash-evidence",
+      "uxCode": "UX-MOB-068",
+      "group": "sinistros",
+      "label": "Evidências do sinistro",
+      "route": "/ux/mobile/crash-evidence",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-ait-links"
+      ]
+    },
+    {
+      "prototypeId": "crash-ait-links",
+      "screenId": "crash-ait-links",
+      "uxCode": "UX-MOB-069",
+      "group": "sinistros",
+      "label": "AITs vinculados",
+      "route": "/ux/mobile/crash-ait-links",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "crash-review",
+        "ait-start",
+        "measure-start"
+      ]
+    },
+    {
+      "prototypeId": "crash-review",
+      "screenId": "crash-review",
+      "uxCode": "UX-MOB-070",
+      "group": "sinistros",
+      "label": "Revisão do sinistro",
+      "route": "/ux/mobile/crash-review",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "sync",
+        "crash-review"
+      ]
+    },
+    {
+      "prototypeId": "sync",
+      "screenId": "sync",
+      "uxCode": "UX-MOB-080",
+      "group": "sincronizacao-suporte-e-diagnostico",
+      "label": "Fila de sincronização",
+      "route": "/ux/mobile/sync",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "implemented",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync-item",
+        "sync-conflict",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "sync-item",
+      "screenId": "sync-item",
+      "uxCode": "UX-MOB-081",
+      "group": "sincronizacao-suporte-e-diagnostico",
+      "label": "Detalhe de item pendente",
+      "route": "/ux/mobile/sync-item",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "implemented",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "sync"
+      ]
+    },
+    {
+      "prototypeId": "sync-conflict",
+      "screenId": "sync-conflict",
+      "uxCode": "UX-MOB-082",
+      "group": "sincronizacao-suporte-e-diagnostico",
+      "label": "Conflito de sincronização",
+      "route": "/ux/mobile/sync-conflict",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "implemented",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "messages"
+      ]
+    },
+    {
+      "prototypeId": "diagnostics",
+      "screenId": "diagnostics",
+      "uxCode": "UX-MOB-083",
+      "group": "sincronizacao-suporte-e-diagnostico",
+      "label": "Diagnóstico do app",
+      "route": "/ux/mobile/diagnostics",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "support"
+      ]
+    },
+    {
+      "prototypeId": "support",
+      "screenId": "support",
+      "uxCode": "UX-MOB-084",
+      "group": "sincronizacao-suporte-e-diagnostico",
+      "label": "Suporte técnico",
+      "route": "/ux/mobile/support",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "messages"
+      ]
+    },
+    {
+      "prototypeId": "messages",
+      "screenId": "messages",
+      "uxCode": "UX-MOB-085",
+      "group": "sincronizacao-suporte-e-diagnostico",
+      "label": "Comunicados da operação",
+      "route": "/ux/mobile/messages",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "messages"
+      ]
+    },
+    {
+      "prototypeId": "approach-no-ait",
+      "screenId": "approach-no-ait",
+      "uxCode": "UX-MOB-C01",
+      "group": "complementares",
+      "label": "Abordagem sem autuação",
+      "route": "/ux/mobile/approach-no-ait",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "home"
+      ]
+    },
+    {
+      "prototypeId": "document-check",
+      "screenId": "document-check",
+      "uxCode": "UX-MOB-C02",
+      "group": "complementares",
+      "label": "Fiscalização documental",
+      "route": "/ux/mobile/document-check",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-start"
+      ]
+    },
+    {
+      "prototypeId": "special-inspection",
+      "screenId": "special-inspection",
+      "uxCode": "UX-MOB-C03",
+      "group": "complementares",
+      "label": "Fiscalização de carga/equipamento",
+      "route": "/ux/mobile/special-inspection",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "ait-start"
+      ]
+    },
+    {
+      "prototypeId": "context-help",
+      "screenId": "context-help",
+      "uxCode": "UX-MOB-C04",
+      "group": "complementares",
+      "label": "Ajuda contextual MBFT",
+      "route": "/ux/mobile/context-help",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "__previous__"
+      ]
+    },
+    {
+      "prototypeId": "local-settings",
+      "screenId": "local-settings",
+      "uxCode": "UX-MOB-C05",
+      "group": "complementares",
+      "label": "Configurações locais",
+      "route": "/ux/mobile/local-settings",
+      "roles": [
+        "field-agent",
+        "field-supervisor"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-mobile-shell",
+      "navigationTargets": [
+        "__previous__",
+        "context-help",
+        "home",
+        "ait-start",
+        "measure-start",
+        "crash-start",
+        "sync",
+        "local-settings"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "from": "auth-login",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "auth-mfa",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "device-blocked",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "shift-context",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "shift-context",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "operation-select",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "operation-select",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "open-shift",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "open-shift",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "home",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "close-shift",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "close-shift",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "shift-summary",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "shift-summary",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "driver-search",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "driver-search",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "driver-result",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "driver-result",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "query-failure",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "query-failure",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-start",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-start",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-driver",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-driver",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-frame",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-frame",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-location",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-location",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-notes",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-notes",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-validations",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-validations",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-measures",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-measures",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-signature",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-signature",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-review",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-review",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-done",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-done",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-print",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-print",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "measure-start",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "measure-start",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "retention",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "retention",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "removal",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "removal",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "inventory",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "inventory",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "transshipment",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "transshipment",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "measure-term",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "measure-term",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "measure-done",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "measure-done",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-start",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-start",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-location",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-location",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-people",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-people",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-victims",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-victims",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "crash-review",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "crash-review",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "sync",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "sync",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "sync-item",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "sync-item",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "diagnostics",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "diagnostics",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "support",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "support",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "messages",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "messages",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "document-check",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "document-check",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "special-inspection",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "special-inspection",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "context-help",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "local-settings",
+      "action": "Voltar",
+      "to": "__previous__",
+      "condition": "quando houver histórico de navegação",
+      "type": "global",
+      "notes": "Usar stack de navegação; se não houver histórico, ir para home."
+    },
+    {
+      "from": "local-settings",
+      "action": "Ajuda contextual",
+      "to": "context-help",
+      "condition": "quando o usuário tocar em ajuda/orientação",
+      "type": "global",
+      "notes": "Preservar origem para retorno."
+    },
+    {
+      "from": "auth-login",
+      "action": "Entrar",
+      "to": "auth-mfa",
+      "condition": "credenciais válidas e MFA exigido",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "auth-login",
+      "action": "Entrar",
+      "to": "shift-context",
+      "condition": "credenciais válidas, MFA não exigido, dispositivo autorizado",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "auth-login",
+      "action": "Entrar",
+      "to": "device-blocked",
+      "condition": "dispositivo revogado, app bloqueado ou risco local",
+      "type": "exception",
+      "notes": ""
+    },
+    {
+      "from": "auth-login",
+      "action": "Ajuda de acesso",
+      "to": "support",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "auth-mfa",
+      "action": "Validar código",
+      "to": "shift-context",
+      "condition": "MFA válido",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "auth-mfa",
+      "action": "Cancelar",
+      "to": "auth-login",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "device-blocked",
+      "action": "Reportar ao suporte",
+      "to": "support",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "shift-context",
+      "action": "Continuar",
+      "to": "operation-select",
+      "condition": "contexto mínimo selecionado",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "operation-select",
+      "action": "Continuar",
+      "to": "open-shift",
+      "condition": "operação selecionada ou opção sem operação confirmada",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "open-shift",
+      "action": "Abrir turno",
+      "to": "home",
+      "condition": "turno criado com sucesso",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Encerrar turno",
+      "to": "close-shift",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "close-shift",
+      "action": "Confirmar encerramento",
+      "to": "shift-summary",
+      "condition": "sem bloqueios ou justificativa de pendências informada",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "shift-summary",
+      "action": "Concluir",
+      "to": "auth-login",
+      "condition": "logout/encerramento confirmado",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Novo AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Veículo",
+      "to": "vehicle-search",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Condutor",
+      "to": "driver-search",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Medida",
+      "to": "measure-start",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Alcoolemia",
+      "to": "alcohol-start",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Sincronização",
+      "to": "sync",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Diagnóstico",
+      "to": "diagnostics",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Comunicados",
+      "to": "messages",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Abordagem sem autuação",
+      "to": "approach-no-ait",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Fiscalização documental",
+      "to": "document-check",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Carga/equipamento",
+      "to": "special-inspection",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Configurações",
+      "to": "local-settings",
+      "condition": "",
+      "type": "home_action",
+      "notes": ""
+    },
+    {
+      "from": "shift-context",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-context",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-context",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-context",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-context",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "operation-select",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "operation-select",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "operation-select",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "operation-select",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "operation-select",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "open-shift",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "open-shift",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "open-shift",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "open-shift",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "open-shift",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "home",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "close-shift",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "close-shift",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "close-shift",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "close-shift",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "close-shift",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-summary",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-summary",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-summary",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-summary",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "shift-summary",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-start",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-start",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-start",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-start",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-driver",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-driver",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-driver",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-driver",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-driver",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-location",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-location",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-location",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-location",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-location",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-notes",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-notes",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-notes",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-notes",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-notes",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-signature",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-signature",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-signature",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-signature",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-signature",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-print",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-print",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-print",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-print",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-print",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-start",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-start",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-start",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-start",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "retention",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "retention",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "retention",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "retention",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "retention",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "removal",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "removal",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "removal",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "removal",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "removal",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "inventory",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "inventory",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "inventory",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "inventory",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "inventory",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "transshipment",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "transshipment",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "transshipment",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "transshipment",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "transshipment",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-term",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-term",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-term",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-term",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-term",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-done",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-done",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-done",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-done",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "measure-done",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-start",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-start",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-start",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-start",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-location",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-location",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-location",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-location",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-location",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-people",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-people",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-people",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-people",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-people",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-victims",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-victims",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-victims",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-victims",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-victims",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-review",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-review",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-review",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-review",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "crash-review",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-item",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-item",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-item",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-item",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-item",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "diagnostics",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "diagnostics",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "diagnostics",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "diagnostics",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "diagnostics",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "support",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "support",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "support",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "support",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "support",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "messages",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "messages",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "messages",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "messages",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "messages",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "document-check",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "document-check",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "document-check",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "document-check",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "document-check",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "special-inspection",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "special-inspection",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "special-inspection",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "special-inspection",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "special-inspection",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "context-help",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "context-help",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "context-help",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "context-help",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "context-help",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "local-settings",
+      "action": "Nav Início",
+      "to": "home",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "local-settings",
+      "action": "Nav AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "local-settings",
+      "action": "Nav Medidas",
+      "to": "measure-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "local-settings",
+      "action": "Nav Sinistro",
+      "to": "crash-start",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "local-settings",
+      "action": "Nav Sync",
+      "to": "sync",
+      "condition": "",
+      "type": "bottom_nav",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Consultar veículo",
+      "to": "vehicle-result",
+      "condition": "consulta bem-sucedida",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Consultar veículo",
+      "to": "query-failure",
+      "condition": "base indisponível, timeout ou erro externo",
+      "type": "exception",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Ler placa por câmera",
+      "to": "vehicle-search",
+      "condition": "OCR preenchido no campo placa",
+      "type": "in_place",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-search",
+      "action": "Ler QR CRLV-e",
+      "to": "vehicle-result",
+      "condition": "leitura bem-sucedida",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Usar em AIT",
+      "to": "ait-vehicle",
+      "condition": "quando fluxo de origem for AIT ou usuário optar por novo AIT",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Usar em Sinistro",
+      "to": "crash-vehicles",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-result",
+      "action": "Registrar divergência",
+      "to": "vehicle-divergence",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "vehicle-divergence",
+      "action": "Confirmar divergência",
+      "to": "vehicle-result",
+      "condition": "divergência salva no snapshot",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "Consultar condutor",
+      "to": "driver-result",
+      "condition": "consulta bem-sucedida",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "Consultar condutor",
+      "to": "query-failure",
+      "condition": "base indisponível, timeout ou erro externo",
+      "type": "exception",
+      "notes": ""
+    },
+    {
+      "from": "driver-search",
+      "action": "QR CNH",
+      "to": "driver-result",
+      "condition": "leitura bem-sucedida",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Usar em AIT",
+      "to": "ait-driver",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Usar em alcoolemia",
+      "to": "alcohol-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "driver-result",
+      "action": "Registrar impossibilidade/divergência",
+      "to": "query-failure",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Preencher manualmente",
+      "to": "ait-vehicle",
+      "condition": "se consulta veicular falhou e fluxo for AIT",
+      "type": "conditional",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Preencher manualmente",
+      "to": "ait-driver",
+      "condition": "se consulta condutor falhou e fluxo for AIT",
+      "type": "conditional",
+      "notes": ""
+    },
+    {
+      "from": "query-failure",
+      "action": "Tentar novamente",
+      "to": "__previous__",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-start",
+      "action": "Continuar",
+      "to": "ait-vehicle",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Continuar",
+      "to": "ait-driver",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-driver",
+      "action": "Continuar",
+      "to": "ait-frame",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame",
+      "action": "Continuar",
+      "to": "ait-frame-detail",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Continuar",
+      "to": "ait-location",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-location",
+      "action": "Continuar",
+      "to": "ait-notes",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-notes",
+      "action": "Continuar",
+      "to": "ait-validations",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Continuar",
+      "to": "ait-evidence",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-evidence",
+      "action": "Continuar",
+      "to": "ait-measures",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Continuar",
+      "to": "ait-signature",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-signature",
+      "action": "Continuar",
+      "to": "ait-review",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Continuar",
+      "to": "ait-done",
+      "condition": "validações da etapa satisfeitas",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-start",
+      "action": "Selecionar com abordagem",
+      "to": "ait-vehicle",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-start",
+      "action": "Selecionar sem abordagem",
+      "to": "ait-vehicle",
+      "condition": "motivo de não abordagem deverá ser exigido",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-vehicle",
+      "action": "Consultar veículo",
+      "to": "vehicle-search",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-driver",
+      "action": "Consultar condutor",
+      "to": "driver-search",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame",
+      "action": "Selecionar enquadramento",
+      "to": "ait-frame-detail",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-frame-detail",
+      "action": "Selecionar/confirmar",
+      "to": "ait-location",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Corrigir bloqueios",
+      "to": "ait-notes",
+      "condition": "quando houver campo obrigatório/observação pendente",
+      "type": "exception",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Corrigir localização",
+      "to": "ait-location",
+      "condition": "quando houver erro de competência ou local",
+      "type": "exception",
+      "notes": ""
+    },
+    {
+      "from": "ait-validations",
+      "action": "Corrigir enquadramento",
+      "to": "ait-frame",
+      "condition": "quando enquadramento incompatível",
+      "type": "exception",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Criar retenção",
+      "to": "retention",
+      "condition": "medida cabível selecionada",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Criar remoção",
+      "to": "removal",
+      "condition": "medida cabível selecionada",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-measures",
+      "action": "Criar alcoolemia",
+      "to": "alcohol-start",
+      "condition": "quando infração envolver alcoolemia",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Finalizar AIT",
+      "to": "ait-done",
+      "condition": "sem bloqueios formais",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "ait-review",
+      "action": "Voltar e revisar",
+      "to": "ait-validations",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Imprimir",
+      "to": "ait-print",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Ver detalhes",
+      "to": "ait-shift-detail",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Novo AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-done",
+      "action": "Home",
+      "to": "home",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "ait-print",
+      "action": "Registrar falha de impressão",
+      "to": "ait-done",
+      "condition": "falha preservada no histórico",
+      "type": "exception",
+      "notes": ""
+    },
+    {
+      "from": "ait-print",
+      "action": "Reimprimir",
+      "to": "ait-print",
+      "condition": "nova tentativa registrada",
+      "type": "in_place",
+      "notes": ""
+    },
+    {
+      "from": "ait-shift-detail",
+      "action": "Ver fila",
+      "to": "sync",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "measure-start",
+      "action": "Selecionar retenção",
+      "to": "retention",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "measure-start",
+      "action": "Selecionar remoção",
+      "to": "removal",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "measure-start",
+      "action": "Selecionar transbordo",
+      "to": "transshipment",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "retention",
+      "action": "Gerar termo",
+      "to": "measure-term",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "retention",
+      "action": "Registrar liberação",
+      "to": "measure-done",
+      "condition": "regularização no local ou liberação autorizada",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "removal",
+      "action": "Ir para inventário",
+      "to": "inventory",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "inventory",
+      "action": "Gerar termo",
+      "to": "measure-term",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "transshipment",
+      "action": "Gerar termo",
+      "to": "measure-term",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "measure-term",
+      "action": "Coletar assinatura/recusa",
+      "to": "measure-done",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "measure-done",
+      "action": "Ver fila",
+      "to": "sync",
+      "condition": "se pendente de sincronização",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "measure-done",
+      "action": "Home",
+      "to": "home",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Selecionar teste",
+      "to": "alcohol-device",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Selecionar recusa",
+      "to": "alcohol-refusal",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-start",
+      "action": "Selecionar sinais",
+      "to": "alcohol-signs",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-device",
+      "action": "Continuar",
+      "to": "alcohol-result",
+      "condition": "equipamento válido ou justificativa aceita",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-result",
+      "action": "Salvar procedimento",
+      "to": "alcohol-links",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Gerar termo",
+      "to": "alcohol-term",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-refusal",
+      "action": "Criar AIT correspondente",
+      "to": "ait-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-signs",
+      "action": "Continuar",
+      "to": "alcohol-links",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-forward",
+      "action": "Continuar",
+      "to": "alcohol-links",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Criar/vincular AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Criar/vincular medida",
+      "to": "retention",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-links",
+      "action": "Gerar termo",
+      "to": "alcohol-term",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Finalizar",
+      "to": "sync",
+      "condition": "se pendente de transmissão",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "alcohol-term",
+      "action": "Home",
+      "to": "home",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "crash-start",
+      "action": "Continuar",
+      "to": "crash-location",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-location",
+      "action": "Continuar",
+      "to": "crash-conditions",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-conditions",
+      "action": "Continuar",
+      "to": "crash-vehicles",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "Continuar",
+      "to": "crash-people",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-people",
+      "action": "Continuar",
+      "to": "crash-victims",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-victims",
+      "action": "Continuar",
+      "to": "crash-dynamics",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-dynamics",
+      "action": "Continuar",
+      "to": "crash-sketch",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Continuar",
+      "to": "crash-evidence",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-evidence",
+      "action": "Continuar",
+      "to": "crash-ait-links",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Continuar",
+      "to": "crash-review",
+      "condition": "dados mínimos da etapa satisfeitos",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-vehicles",
+      "action": "+ Veículo",
+      "to": "vehicle-search",
+      "condition": "reusar consulta veicular",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "crash-people",
+      "action": "+ Pessoa",
+      "to": "driver-search",
+      "condition": "reusar consulta de condutor quando aplicável",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "crash-victims",
+      "action": "Adicionar vítima",
+      "to": "crash-victims",
+      "condition": "adiciona novo card de vítima",
+      "type": "in_place",
+      "notes": ""
+    },
+    {
+      "from": "crash-sketch",
+      "action": "Anexar croqui",
+      "to": "crash-evidence",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Criar AIT decorrente",
+      "to": "ait-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "crash-ait-links",
+      "action": "Criar medida vinculada",
+      "to": "measure-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "crash-review",
+      "action": "Finalizar registro",
+      "to": "sync",
+      "condition": "se offline ou com evidências pendentes",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "crash-review",
+      "action": "Gerar relatório preliminar",
+      "to": "crash-review",
+      "condition": "gera PDF/termo e permanece na revisão",
+      "type": "in_place",
+      "notes": ""
+    },
+    {
+      "from": "sync",
+      "action": "Abrir pendência",
+      "to": "sync-item",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "sync",
+      "action": "Abrir conflito",
+      "to": "sync-conflict",
+      "condition": "item com status conflito",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "sync",
+      "action": "Sincronizar agora",
+      "to": "sync",
+      "condition": "tenta processar fila e atualiza status",
+      "type": "in_place",
+      "notes": ""
+    },
+    {
+      "from": "sync-item",
+      "action": "Reenviar",
+      "to": "sync",
+      "condition": "reenvio executado ou erro atualizado",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "sync-conflict",
+      "action": "Encaminhar para tratamento",
+      "to": "messages",
+      "condition": "opcionalmente comunica supervisor",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "diagnostics",
+      "action": "Exportar pacote diagnóstico",
+      "to": "support",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "support",
+      "action": "Enviar chamado",
+      "to": "messages",
+      "condition": "confirma solicitação enviada",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "messages",
+      "action": "Confirmar leitura",
+      "to": "messages",
+      "condition": "marca comunicado como lido",
+      "type": "in_place",
+      "notes": ""
+    },
+    {
+      "from": "approach-no-ait",
+      "action": "Registrar abordagem",
+      "to": "home",
+      "condition": "",
+      "type": "primary",
+      "notes": ""
+    },
+    {
+      "from": "document-check",
+      "action": "Usar irregularidade em AIT",
+      "to": "ait-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "special-inspection",
+      "action": "Gerar AIT especializado",
+      "to": "ait-start",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "context-help",
+      "action": "Voltar à origem",
+      "to": "__previous__",
+      "condition": "",
+      "type": "secondary",
+      "notes": ""
+    },
+    {
+      "from": "local-settings",
+      "action": "Testar impressora",
+      "to": "local-settings",
+      "condition": "resultado exibido na própria tela",
+      "type": "in_place",
+      "notes": ""
+    }
+  ]
+}

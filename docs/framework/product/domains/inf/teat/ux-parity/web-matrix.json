@@ -1,0 +1,2152 @@
+{
+  "kind": "web",
+  "source": "docs/meta/prototypes/web/src/screenRegistry.js",
+  "expectedScreens": 56,
+  "expectedTransitions": 163,
+  "screens": [
+    {
+      "prototypeId": "login",
+      "screenId": "login",
+      "uxCode": "UX-WEB-001",
+      "group": "entry",
+      "label": "Login Web",
+      "route": "/ux/web/login",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin",
+        "auditor",
+        "bi-analyst",
+        "integration-operator"
+      ],
+      "implementationStatus": "implemented",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "dashboard-home"
+      ]
+    },
+    {
+      "prototypeId": "dashboard-home",
+      "screenId": "dashboard-home",
+      "uxCode": "UX-WEB-002",
+      "group": "entry",
+      "label": "Dashboard inicial",
+      "route": "/ux/web/dashboard-home",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin",
+        "auditor",
+        "bi-analyst",
+        "integration-operator"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ops-dashboard",
+        "ait-inbox",
+        "bi-enforcement"
+      ]
+    },
+    {
+      "prototypeId": "ops-dashboard",
+      "screenId": "ops-dashboard",
+      "uxCode": "UX-WEB-003",
+      "group": "operations",
+      "label": "Dashboard operacional",
+      "route": "/ux/web/ops-dashboard",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ops-map",
+        "active-shifts",
+        "operation-messages"
+      ]
+    },
+    {
+      "prototypeId": "ops-map",
+      "screenId": "ops-map",
+      "uxCode": "UX-WEB-004",
+      "group": "operations",
+      "label": "Mapa de agentes/equipes",
+      "route": "/ux/web/ops-map",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "active-shifts",
+        "operation-detail",
+        "agent-timeline"
+      ]
+    },
+    {
+      "prototypeId": "operations-list",
+      "screenId": "operations-list",
+      "uxCode": "UX-WEB-005",
+      "group": "operations",
+      "label": "Lista de operações",
+      "route": "/ux/web/operations-list",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "operation-detail",
+        "ops-dashboard",
+        "operation-messages"
+      ]
+    },
+    {
+      "prototypeId": "operation-detail",
+      "screenId": "operation-detail",
+      "uxCode": "UX-WEB-006",
+      "group": "operations",
+      "label": "Detalhe da operação",
+      "route": "/ux/web/operation-detail",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "active-shifts",
+        "operation-messages",
+        "bi-enforcement"
+      ]
+    },
+    {
+      "prototypeId": "active-shifts",
+      "screenId": "active-shifts",
+      "uxCode": "UX-WEB-007",
+      "group": "operations",
+      "label": "Turnos ativos",
+      "route": "/ux/web/active-shifts",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "agent-timeline",
+        "ops-map",
+        "operation-messages"
+      ]
+    },
+    {
+      "prototypeId": "operation-messages",
+      "screenId": "operation-messages",
+      "uxCode": "UX-WEB-008",
+      "group": "operations",
+      "label": "Mensagens operacionais",
+      "route": "/ux/web/operation-messages",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "operation-detail",
+        "active-shifts"
+      ]
+    },
+    {
+      "prototypeId": "ait-inbox",
+      "screenId": "ait-inbox",
+      "uxCode": "UX-WEB-020",
+      "group": "ait",
+      "label": "Fila de AIT recebidos",
+      "route": "/ux/web/ait-inbox",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-detail",
+        "ait-validation",
+        "ait-integration"
+      ]
+    },
+    {
+      "prototypeId": "ait-validation",
+      "screenId": "ait-validation",
+      "uxCode": "UX-WEB-021",
+      "group": "ait",
+      "label": "Fila de validação",
+      "route": "/ux/web/ait-validation",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-sanitize",
+        "ait-detail",
+        "ait-rejected"
+      ]
+    },
+    {
+      "prototypeId": "ait-sanitization-queue",
+      "screenId": "ait-sanitization-queue",
+      "uxCode": "UX-WEB-022",
+      "group": "ait",
+      "label": "AIT pendentes de saneamento",
+      "route": "/ux/web/ait-sanitization-queue",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-sanitize",
+        "ait-detail"
+      ]
+    },
+    {
+      "prototypeId": "ait-rejected",
+      "screenId": "ait-rejected",
+      "uxCode": "UX-WEB-023",
+      "group": "ait",
+      "label": "AIT rejeitados",
+      "route": "/ux/web/ait-rejected",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-reject",
+        "ait-detail",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "ait-detail",
+      "screenId": "ait-detail",
+      "uxCode": "UX-WEB-024",
+      "group": "ait",
+      "label": "Detalhe do AIT",
+      "route": "/ux/web/ait-detail",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "evidence-viewer",
+        "ait-timeline",
+        "ait-sanitize"
+      ]
+    },
+    {
+      "prototypeId": "ait-sanitize",
+      "screenId": "ait-sanitize",
+      "uxCode": "UX-WEB-025",
+      "group": "ait",
+      "label": "Saneamento de AIT",
+      "route": "/ux/web/ait-sanitize",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-detail",
+        "ait-validation",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "ait-reject",
+      "screenId": "ait-reject",
+      "uxCode": "UX-WEB-026",
+      "group": "ait",
+      "label": "Rejeição de AIT",
+      "route": "/ux/web/ait-reject",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-rejected",
+        "ait-detail",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "ait-integration",
+      "screenId": "ait-integration",
+      "uxCode": "UX-WEB-027",
+      "group": "ait",
+      "label": "Integração RENAINF/estadual",
+      "route": "/ux/web/ait-integration",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-queues",
+        "tech-integrations",
+        "bi-integrations"
+      ]
+    },
+    {
+      "prototypeId": "ait-mirror",
+      "screenId": "ait-mirror",
+      "uxCode": "UX-WEB-028",
+      "group": "ait",
+      "label": "Espelho do AIT",
+      "route": "/ux/web/ait-mirror",
+      "roles": [
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-detail",
+        "probative-package"
+      ]
+    },
+    {
+      "prototypeId": "measures-list",
+      "screenId": "measures-list",
+      "uxCode": "UX-WEB-040",
+      "group": "measures",
+      "label": "Lista de medidas",
+      "route": "/ux/web/measures-list",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "measure-detail",
+        "removals",
+        "release"
+      ]
+    },
+    {
+      "prototypeId": "measure-detail",
+      "screenId": "measure-detail",
+      "uxCode": "UX-WEB-041",
+      "group": "measures",
+      "label": "Detalhe de medida",
+      "route": "/ux/web/measure-detail",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "evidence-viewer",
+        "removals",
+        "release"
+      ]
+    },
+    {
+      "prototypeId": "removals",
+      "screenId": "removals",
+      "uxCode": "UX-WEB-042",
+      "group": "measures",
+      "label": "Remoções",
+      "route": "/ux/web/removals",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "measure-detail",
+        "release",
+        "admin-competencies"
+      ]
+    },
+    {
+      "prototypeId": "release",
+      "screenId": "release",
+      "uxCode": "UX-WEB-043",
+      "group": "measures",
+      "label": "Liberação",
+      "route": "/ux/web/release",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "measure-detail",
+        "measures-list",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "alcohol-procedures",
+      "screenId": "alcohol-procedures",
+      "uxCode": "UX-WEB-050",
+      "group": "alcohol",
+      "label": "Procedimentos de alcoolemia",
+      "route": "/ux/web/alcohol-procedures",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "breathalyzers",
+        "evidence-viewer",
+        "bi-quality"
+      ]
+    },
+    {
+      "prototypeId": "breathalyzers",
+      "screenId": "breathalyzers",
+      "uxCode": "UX-WEB-051",
+      "group": "alcohol",
+      "label": "Etilômetros",
+      "route": "/ux/web/breathalyzers",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "alcohol-procedures",
+        "norm-rules",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "crashes-list",
+      "screenId": "crashes-list",
+      "uxCode": "UX-WEB-060",
+      "group": "crashes",
+      "label": "Lista de sinistros",
+      "route": "/ux/web/crashes-list",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "crash-detail",
+        "crash-complement",
+        "renaest-integration"
+      ]
+    },
+    {
+      "prototypeId": "crash-detail",
+      "screenId": "crash-detail",
+      "uxCode": "UX-WEB-061",
+      "group": "crashes",
+      "label": "Detalhe de sinistro",
+      "route": "/ux/web/crash-detail",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "crash-complement",
+        "evidence-viewer",
+        "ait-inbox"
+      ]
+    },
+    {
+      "prototypeId": "crash-complement",
+      "screenId": "crash-complement",
+      "uxCode": "UX-WEB-062",
+      "group": "crashes",
+      "label": "Complementação de sinistro",
+      "route": "/ux/web/crash-complement",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "crash-detail",
+        "renaest-integration",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "renaest-integration",
+      "screenId": "renaest-integration",
+      "uxCode": "UX-WEB-063",
+      "group": "crashes",
+      "label": "Integração RENAEST",
+      "route": "/ux/web/renaest-integration",
+      "roles": [
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-queues",
+        "tech-integrations",
+        "bi-integrations"
+      ]
+    },
+    {
+      "prototypeId": "evidence-search",
+      "screenId": "evidence-search",
+      "uxCode": "UX-WEB-070",
+      "group": "evidence",
+      "label": "Consulta de evidências",
+      "route": "/ux/web/evidence-search",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "auditor",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "evidence-viewer",
+        "custody-chain",
+        "probative-package"
+      ]
+    },
+    {
+      "prototypeId": "evidence-viewer",
+      "screenId": "evidence-viewer",
+      "uxCode": "UX-WEB-071",
+      "group": "evidence",
+      "label": "Visualizador de evidência",
+      "route": "/ux/web/evidence-viewer",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "auditor",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "custody-chain",
+        "probative-package",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "custody-chain",
+      "screenId": "custody-chain",
+      "uxCode": "UX-WEB-072",
+      "group": "evidence",
+      "label": "Cadeia de custódia",
+      "route": "/ux/web/custody-chain",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "auditor",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "probative-package",
+        "audit-events",
+        "evidence-viewer"
+      ]
+    },
+    {
+      "prototypeId": "probative-package",
+      "screenId": "probative-package",
+      "uxCode": "UX-WEB-073",
+      "group": "evidence",
+      "label": "Pacote probatório",
+      "route": "/ux/web/probative-package",
+      "roles": [
+        "field-agent",
+        "field-supervisor",
+        "processing-operator",
+        "traffic-authority",
+        "auditor",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "audit-events",
+        "ait-timeline",
+        "evidence-search"
+      ]
+    },
+    {
+      "prototypeId": "audit-events",
+      "screenId": "audit-events",
+      "uxCode": "UX-WEB-080",
+      "group": "audit",
+      "label": "Eventos de auditoria",
+      "route": "/ux/web/audit-events",
+      "roles": [
+        "auditor",
+        "traffic-authority",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "implemented",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-timeline",
+        "agent-timeline",
+        "anomalies"
+      ]
+    },
+    {
+      "prototypeId": "ait-timeline",
+      "screenId": "ait-timeline",
+      "uxCode": "UX-WEB-081",
+      "group": "audit",
+      "label": "Timeline do AIT",
+      "route": "/ux/web/ait-timeline",
+      "roles": [
+        "auditor",
+        "traffic-authority",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-detail",
+        "external-queries-audit",
+        "probative-package"
+      ]
+    },
+    {
+      "prototypeId": "agent-timeline",
+      "screenId": "agent-timeline",
+      "uxCode": "UX-WEB-082",
+      "group": "audit",
+      "label": "Timeline do agente",
+      "route": "/ux/web/agent-timeline",
+      "roles": [
+        "auditor",
+        "traffic-authority",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "active-shifts",
+        "audit-events",
+        "anomalies"
+      ]
+    },
+    {
+      "prototypeId": "external-queries-audit",
+      "screenId": "external-queries-audit",
+      "uxCode": "UX-WEB-083",
+      "group": "audit",
+      "label": "Consultas externas",
+      "route": "/ux/web/external-queries-audit",
+      "roles": [
+        "auditor",
+        "traffic-authority",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "audit-events",
+        "ait-timeline",
+        "tech-integrations"
+      ]
+    },
+    {
+      "prototypeId": "anomalies",
+      "screenId": "anomalies",
+      "uxCode": "UX-WEB-084",
+      "group": "audit",
+      "label": "Anomalias",
+      "route": "/ux/web/anomalies",
+      "roles": [
+        "auditor",
+        "traffic-authority",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "agent-timeline",
+        "audit-events",
+        "bi-quality"
+      ]
+    },
+    {
+      "prototypeId": "bi-enforcement",
+      "screenId": "bi-enforcement",
+      "uxCode": "UX-WEB-090",
+      "group": "bi",
+      "label": "BI fiscalização",
+      "route": "/ux/web/bi-enforcement",
+      "roles": [
+        "bi-analyst",
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-inbox",
+        "ops-dashboard",
+        "bi-quality"
+      ]
+    },
+    {
+      "prototypeId": "bi-crashes",
+      "screenId": "bi-crashes",
+      "uxCode": "UX-WEB-091",
+      "group": "bi",
+      "label": "BI sinistros",
+      "route": "/ux/web/bi-crashes",
+      "roles": [
+        "bi-analyst",
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "crashes-list",
+        "crash-detail",
+        "bi-quality"
+      ]
+    },
+    {
+      "prototypeId": "bi-quality",
+      "screenId": "bi-quality",
+      "uxCode": "UX-WEB-092",
+      "group": "bi",
+      "label": "BI qualidade",
+      "route": "/ux/web/bi-quality",
+      "roles": [
+        "bi-analyst",
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "ait-validation",
+        "ait-rejected",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "bi-integrations",
+      "screenId": "bi-integrations",
+      "uxCode": "UX-WEB-093",
+      "group": "bi",
+      "label": "BI integração",
+      "route": "/ux/web/bi-integrations",
+      "roles": [
+        "bi-analyst",
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-queues",
+        "tech-integrations",
+        "ait-integration"
+      ]
+    },
+    {
+      "prototypeId": "admin-orgs",
+      "screenId": "admin-orgs",
+      "uxCode": "UX-WEB-100",
+      "group": "admin",
+      "label": "Órgãos",
+      "route": "/ux/web/admin-orgs",
+      "roles": [
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "admin-units",
+        "admin-competencies",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "admin-units",
+      "screenId": "admin-units",
+      "uxCode": "UX-WEB-101",
+      "group": "admin",
+      "label": "Unidades",
+      "route": "/ux/web/admin-units",
+      "roles": [
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "admin-users-agents",
+        "admin-orgs",
+        "admin-competencies"
+      ]
+    },
+    {
+      "prototypeId": "admin-users-agents",
+      "screenId": "admin-users-agents",
+      "uxCode": "UX-WEB-102",
+      "group": "admin",
+      "label": "Usuários/agentes",
+      "route": "/ux/web/admin-users-agents",
+      "roles": [
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "admin-profiles",
+        "admin-devices",
+        "agent-timeline"
+      ]
+    },
+    {
+      "prototypeId": "admin-profiles",
+      "screenId": "admin-profiles",
+      "uxCode": "UX-WEB-103",
+      "group": "admin",
+      "label": "Perfis/permissões",
+      "route": "/ux/web/admin-profiles",
+      "roles": [
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "admin-users-agents",
+        "audit-events",
+        "admin-orgs"
+      ]
+    },
+    {
+      "prototypeId": "admin-devices",
+      "screenId": "admin-devices",
+      "uxCode": "UX-WEB-104",
+      "group": "admin",
+      "label": "Dispositivos",
+      "route": "/ux/web/admin-devices",
+      "roles": [
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-health",
+        "admin-users-agents",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "admin-competencies",
+      "screenId": "admin-competencies",
+      "uxCode": "UX-WEB-105",
+      "group": "admin",
+      "label": "Convênios e competências",
+      "route": "/ux/web/admin-competencies",
+      "roles": [
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "norm-rules",
+        "admin-orgs",
+        "operations-list"
+      ]
+    },
+    {
+      "prototypeId": "norm-catalogs",
+      "screenId": "norm-catalogs",
+      "uxCode": "UX-WEB-110",
+      "group": "normative",
+      "label": "Catálogos normativos",
+      "route": "/ux/web/norm-catalogs",
+      "roles": [
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "norm-violations",
+        "norm-mobile-packages",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "norm-violations",
+      "screenId": "norm-violations",
+      "uxCode": "UX-WEB-111",
+      "group": "normative",
+      "label": "Enquadramentos",
+      "route": "/ux/web/norm-violations",
+      "roles": [
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "norm-rules",
+        "norm-catalogs",
+        "ait-validation"
+      ]
+    },
+    {
+      "prototypeId": "norm-rules",
+      "screenId": "norm-rules",
+      "uxCode": "UX-WEB-112",
+      "group": "normative",
+      "label": "Regras de validação",
+      "route": "/ux/web/norm-rules",
+      "roles": [
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "norm-templates",
+        "norm-mobile-packages",
+        "ait-validation"
+      ]
+    },
+    {
+      "prototypeId": "norm-templates",
+      "screenId": "norm-templates",
+      "uxCode": "UX-WEB-113",
+      "group": "normative",
+      "label": "Templates",
+      "route": "/ux/web/norm-templates",
+      "roles": [
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "norm-mobile-packages",
+        "ait-mirror",
+        "measure-detail"
+      ]
+    },
+    {
+      "prototypeId": "norm-mobile-packages",
+      "screenId": "norm-mobile-packages",
+      "uxCode": "UX-WEB-114",
+      "group": "normative",
+      "label": "Pacotes mobile",
+      "route": "/ux/web/norm-mobile-packages",
+      "roles": [
+        "traffic-authority",
+        "agency-admin",
+        "technical-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-queues",
+        "tech-health",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "tech-integrations",
+      "screenId": "tech-integrations",
+      "uxCode": "UX-WEB-120",
+      "group": "technical",
+      "label": "Integrações",
+      "route": "/ux/web/tech-integrations",
+      "roles": [
+        "integration-operator",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-queues",
+        "tech-certificates",
+        "bi-integrations"
+      ]
+    },
+    {
+      "prototypeId": "tech-queues",
+      "screenId": "tech-queues",
+      "uxCode": "UX-WEB-121",
+      "group": "technical",
+      "label": "Filas",
+      "route": "/ux/web/tech-queues",
+      "roles": [
+        "integration-operator",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-jobs",
+        "ait-integration",
+        "renaest-integration"
+      ]
+    },
+    {
+      "prototypeId": "tech-certificates",
+      "screenId": "tech-certificates",
+      "uxCode": "UX-WEB-122",
+      "group": "technical",
+      "label": "Certificados",
+      "route": "/ux/web/tech-certificates",
+      "roles": [
+        "integration-operator",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-integrations",
+        "tech-health",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "tech-jobs",
+      "screenId": "tech-jobs",
+      "uxCode": "UX-WEB-123",
+      "group": "technical",
+      "label": "Jobs",
+      "route": "/ux/web/tech-jobs",
+      "roles": [
+        "integration-operator",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-health",
+        "tech-queues",
+        "audit-events"
+      ]
+    },
+    {
+      "prototypeId": "tech-health",
+      "screenId": "tech-health",
+      "uxCode": "UX-WEB-124",
+      "group": "technical",
+      "label": "Saúde do sistema",
+      "route": "/ux/web/tech-health",
+      "roles": [
+        "integration-operator",
+        "technical-admin",
+        "agency-admin"
+      ],
+      "implementationStatus": "gap",
+      "implementationType": "official-angular-shell",
+      "navigationTargets": [
+        "tech-queues",
+        "tech-integrations",
+        "bi-integrations"
+      ]
+    }
+  ],
+  "transitions": [
+    {
+      "from": "login",
+      "action": "web-action-01",
+      "to": "dashboard-home",
+      "type": "prototype-action"
+    },
+    {
+      "from": "dashboard-home",
+      "action": "web-action-01",
+      "to": "ops-dashboard",
+      "type": "prototype-action"
+    },
+    {
+      "from": "dashboard-home",
+      "action": "web-action-02",
+      "to": "ait-inbox",
+      "type": "prototype-action"
+    },
+    {
+      "from": "dashboard-home",
+      "action": "web-action-03",
+      "to": "bi-enforcement",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ops-dashboard",
+      "action": "web-action-01",
+      "to": "ops-map",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ops-dashboard",
+      "action": "web-action-02",
+      "to": "active-shifts",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ops-dashboard",
+      "action": "web-action-03",
+      "to": "operation-messages",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ops-map",
+      "action": "web-action-01",
+      "to": "active-shifts",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ops-map",
+      "action": "web-action-02",
+      "to": "operation-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ops-map",
+      "action": "web-action-03",
+      "to": "agent-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operations-list",
+      "action": "web-action-01",
+      "to": "operation-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operations-list",
+      "action": "web-action-02",
+      "to": "ops-dashboard",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operations-list",
+      "action": "web-action-03",
+      "to": "operation-messages",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operation-detail",
+      "action": "web-action-01",
+      "to": "active-shifts",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operation-detail",
+      "action": "web-action-02",
+      "to": "operation-messages",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operation-detail",
+      "action": "web-action-03",
+      "to": "bi-enforcement",
+      "type": "prototype-action"
+    },
+    {
+      "from": "active-shifts",
+      "action": "web-action-01",
+      "to": "agent-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "active-shifts",
+      "action": "web-action-02",
+      "to": "ops-map",
+      "type": "prototype-action"
+    },
+    {
+      "from": "active-shifts",
+      "action": "web-action-03",
+      "to": "operation-messages",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operation-messages",
+      "action": "web-action-01",
+      "to": "operation-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "operation-messages",
+      "action": "web-action-02",
+      "to": "active-shifts",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-inbox",
+      "action": "web-action-01",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-inbox",
+      "action": "web-action-02",
+      "to": "ait-validation",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-inbox",
+      "action": "web-action-03",
+      "to": "ait-integration",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-validation",
+      "action": "web-action-01",
+      "to": "ait-sanitize",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-validation",
+      "action": "web-action-02",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-validation",
+      "action": "web-action-03",
+      "to": "ait-rejected",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-sanitization-queue",
+      "action": "web-action-01",
+      "to": "ait-sanitize",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-sanitization-queue",
+      "action": "web-action-02",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-rejected",
+      "action": "web-action-01",
+      "to": "ait-reject",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-rejected",
+      "action": "web-action-02",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-rejected",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-detail",
+      "action": "web-action-01",
+      "to": "evidence-viewer",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-detail",
+      "action": "web-action-02",
+      "to": "ait-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-detail",
+      "action": "web-action-03",
+      "to": "ait-sanitize",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-sanitize",
+      "action": "web-action-01",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-sanitize",
+      "action": "web-action-02",
+      "to": "ait-validation",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-sanitize",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-reject",
+      "action": "web-action-01",
+      "to": "ait-rejected",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-reject",
+      "action": "web-action-02",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-reject",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-integration",
+      "action": "web-action-01",
+      "to": "tech-queues",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-integration",
+      "action": "web-action-02",
+      "to": "tech-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-integration",
+      "action": "web-action-03",
+      "to": "bi-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-mirror",
+      "action": "web-action-01",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-mirror",
+      "action": "web-action-02",
+      "to": "probative-package",
+      "type": "prototype-action"
+    },
+    {
+      "from": "measures-list",
+      "action": "web-action-01",
+      "to": "measure-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "measures-list",
+      "action": "web-action-02",
+      "to": "removals",
+      "type": "prototype-action"
+    },
+    {
+      "from": "measures-list",
+      "action": "web-action-03",
+      "to": "release",
+      "type": "prototype-action"
+    },
+    {
+      "from": "measure-detail",
+      "action": "web-action-01",
+      "to": "evidence-viewer",
+      "type": "prototype-action"
+    },
+    {
+      "from": "measure-detail",
+      "action": "web-action-02",
+      "to": "removals",
+      "type": "prototype-action"
+    },
+    {
+      "from": "measure-detail",
+      "action": "web-action-03",
+      "to": "release",
+      "type": "prototype-action"
+    },
+    {
+      "from": "removals",
+      "action": "web-action-01",
+      "to": "measure-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "removals",
+      "action": "web-action-02",
+      "to": "release",
+      "type": "prototype-action"
+    },
+    {
+      "from": "removals",
+      "action": "web-action-03",
+      "to": "admin-competencies",
+      "type": "prototype-action"
+    },
+    {
+      "from": "release",
+      "action": "web-action-01",
+      "to": "measure-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "release",
+      "action": "web-action-02",
+      "to": "measures-list",
+      "type": "prototype-action"
+    },
+    {
+      "from": "release",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "alcohol-procedures",
+      "action": "web-action-01",
+      "to": "breathalyzers",
+      "type": "prototype-action"
+    },
+    {
+      "from": "alcohol-procedures",
+      "action": "web-action-02",
+      "to": "evidence-viewer",
+      "type": "prototype-action"
+    },
+    {
+      "from": "alcohol-procedures",
+      "action": "web-action-03",
+      "to": "bi-quality",
+      "type": "prototype-action"
+    },
+    {
+      "from": "breathalyzers",
+      "action": "web-action-01",
+      "to": "alcohol-procedures",
+      "type": "prototype-action"
+    },
+    {
+      "from": "breathalyzers",
+      "action": "web-action-02",
+      "to": "norm-rules",
+      "type": "prototype-action"
+    },
+    {
+      "from": "breathalyzers",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crashes-list",
+      "action": "web-action-01",
+      "to": "crash-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crashes-list",
+      "action": "web-action-02",
+      "to": "crash-complement",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crashes-list",
+      "action": "web-action-03",
+      "to": "renaest-integration",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crash-detail",
+      "action": "web-action-01",
+      "to": "crash-complement",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crash-detail",
+      "action": "web-action-02",
+      "to": "evidence-viewer",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crash-detail",
+      "action": "web-action-03",
+      "to": "ait-inbox",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crash-complement",
+      "action": "web-action-01",
+      "to": "crash-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crash-complement",
+      "action": "web-action-02",
+      "to": "renaest-integration",
+      "type": "prototype-action"
+    },
+    {
+      "from": "crash-complement",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "renaest-integration",
+      "action": "web-action-01",
+      "to": "tech-queues",
+      "type": "prototype-action"
+    },
+    {
+      "from": "renaest-integration",
+      "action": "web-action-02",
+      "to": "tech-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "renaest-integration",
+      "action": "web-action-03",
+      "to": "bi-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "evidence-search",
+      "action": "web-action-01",
+      "to": "evidence-viewer",
+      "type": "prototype-action"
+    },
+    {
+      "from": "evidence-search",
+      "action": "web-action-02",
+      "to": "custody-chain",
+      "type": "prototype-action"
+    },
+    {
+      "from": "evidence-search",
+      "action": "web-action-03",
+      "to": "probative-package",
+      "type": "prototype-action"
+    },
+    {
+      "from": "evidence-viewer",
+      "action": "web-action-01",
+      "to": "custody-chain",
+      "type": "prototype-action"
+    },
+    {
+      "from": "evidence-viewer",
+      "action": "web-action-02",
+      "to": "probative-package",
+      "type": "prototype-action"
+    },
+    {
+      "from": "evidence-viewer",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "custody-chain",
+      "action": "web-action-01",
+      "to": "probative-package",
+      "type": "prototype-action"
+    },
+    {
+      "from": "custody-chain",
+      "action": "web-action-02",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "custody-chain",
+      "action": "web-action-03",
+      "to": "evidence-viewer",
+      "type": "prototype-action"
+    },
+    {
+      "from": "probative-package",
+      "action": "web-action-01",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "probative-package",
+      "action": "web-action-02",
+      "to": "ait-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "probative-package",
+      "action": "web-action-03",
+      "to": "evidence-search",
+      "type": "prototype-action"
+    },
+    {
+      "from": "audit-events",
+      "action": "web-action-01",
+      "to": "ait-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "audit-events",
+      "action": "web-action-02",
+      "to": "agent-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "audit-events",
+      "action": "web-action-03",
+      "to": "anomalies",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-timeline",
+      "action": "web-action-01",
+      "to": "ait-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-timeline",
+      "action": "web-action-02",
+      "to": "external-queries-audit",
+      "type": "prototype-action"
+    },
+    {
+      "from": "ait-timeline",
+      "action": "web-action-03",
+      "to": "probative-package",
+      "type": "prototype-action"
+    },
+    {
+      "from": "agent-timeline",
+      "action": "web-action-01",
+      "to": "active-shifts",
+      "type": "prototype-action"
+    },
+    {
+      "from": "agent-timeline",
+      "action": "web-action-02",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "agent-timeline",
+      "action": "web-action-03",
+      "to": "anomalies",
+      "type": "prototype-action"
+    },
+    {
+      "from": "external-queries-audit",
+      "action": "web-action-01",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "external-queries-audit",
+      "action": "web-action-02",
+      "to": "ait-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "external-queries-audit",
+      "action": "web-action-03",
+      "to": "tech-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "anomalies",
+      "action": "web-action-01",
+      "to": "agent-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "anomalies",
+      "action": "web-action-02",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "anomalies",
+      "action": "web-action-03",
+      "to": "bi-quality",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-enforcement",
+      "action": "web-action-01",
+      "to": "ait-inbox",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-enforcement",
+      "action": "web-action-02",
+      "to": "ops-dashboard",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-enforcement",
+      "action": "web-action-03",
+      "to": "bi-quality",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-crashes",
+      "action": "web-action-01",
+      "to": "crashes-list",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-crashes",
+      "action": "web-action-02",
+      "to": "crash-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-crashes",
+      "action": "web-action-03",
+      "to": "bi-quality",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-quality",
+      "action": "web-action-01",
+      "to": "ait-validation",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-quality",
+      "action": "web-action-02",
+      "to": "ait-rejected",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-quality",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-integrations",
+      "action": "web-action-01",
+      "to": "tech-queues",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-integrations",
+      "action": "web-action-02",
+      "to": "tech-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "bi-integrations",
+      "action": "web-action-03",
+      "to": "ait-integration",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-orgs",
+      "action": "web-action-01",
+      "to": "admin-units",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-orgs",
+      "action": "web-action-02",
+      "to": "admin-competencies",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-orgs",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-units",
+      "action": "web-action-01",
+      "to": "admin-users-agents",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-units",
+      "action": "web-action-02",
+      "to": "admin-orgs",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-units",
+      "action": "web-action-03",
+      "to": "admin-competencies",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-users-agents",
+      "action": "web-action-01",
+      "to": "admin-profiles",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-users-agents",
+      "action": "web-action-02",
+      "to": "admin-devices",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-users-agents",
+      "action": "web-action-03",
+      "to": "agent-timeline",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-profiles",
+      "action": "web-action-01",
+      "to": "admin-users-agents",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-profiles",
+      "action": "web-action-02",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-profiles",
+      "action": "web-action-03",
+      "to": "admin-orgs",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-devices",
+      "action": "web-action-01",
+      "to": "tech-health",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-devices",
+      "action": "web-action-02",
+      "to": "admin-users-agents",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-devices",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-competencies",
+      "action": "web-action-01",
+      "to": "norm-rules",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-competencies",
+      "action": "web-action-02",
+      "to": "admin-orgs",
+      "type": "prototype-action"
+    },
+    {
+      "from": "admin-competencies",
+      "action": "web-action-03",
+      "to": "operations-list",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-catalogs",
+      "action": "web-action-01",
+      "to": "norm-violations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-catalogs",
+      "action": "web-action-02",
+      "to": "norm-mobile-packages",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-catalogs",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-violations",
+      "action": "web-action-01",
+      "to": "norm-rules",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-violations",
+      "action": "web-action-02",
+      "to": "norm-catalogs",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-violations",
+      "action": "web-action-03",
+      "to": "ait-validation",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-rules",
+      "action": "web-action-01",
+      "to": "norm-templates",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-rules",
+      "action": "web-action-02",
+      "to": "norm-mobile-packages",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-rules",
+      "action": "web-action-03",
+      "to": "ait-validation",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-templates",
+      "action": "web-action-01",
+      "to": "norm-mobile-packages",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-templates",
+      "action": "web-action-02",
+      "to": "ait-mirror",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-templates",
+      "action": "web-action-03",
+      "to": "measure-detail",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-mobile-packages",
+      "action": "web-action-01",
+      "to": "tech-queues",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-mobile-packages",
+      "action": "web-action-02",
+      "to": "tech-health",
+      "type": "prototype-action"
+    },
+    {
+      "from": "norm-mobile-packages",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-integrations",
+      "action": "web-action-01",
+      "to": "tech-queues",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-integrations",
+      "action": "web-action-02",
+      "to": "tech-certificates",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-integrations",
+      "action": "web-action-03",
+      "to": "bi-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-queues",
+      "action": "web-action-01",
+      "to": "tech-jobs",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-queues",
+      "action": "web-action-02",
+      "to": "ait-integration",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-queues",
+      "action": "web-action-03",
+      "to": "renaest-integration",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-certificates",
+      "action": "web-action-01",
+      "to": "tech-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-certificates",
+      "action": "web-action-02",
+      "to": "tech-health",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-certificates",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-jobs",
+      "action": "web-action-01",
+      "to": "tech-health",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-jobs",
+      "action": "web-action-02",
+      "to": "tech-queues",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-jobs",
+      "action": "web-action-03",
+      "to": "audit-events",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-health",
+      "action": "web-action-01",
+      "to": "tech-queues",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-health",
+      "action": "web-action-02",
+      "to": "tech-integrations",
+      "type": "prototype-action"
+    },
+    {
+      "from": "tech-health",
+      "action": "web-action-03",
+      "to": "bi-integrations",
+      "type": "prototype-action"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** em replanejamento estrutural desde 2026-09-20 após `prompt-review-1=FAIL`; nenhum
-worker foi liberado. Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
+**Status:** CTG-0001 mesclado; CTG-0002 delivery review final `PASS`, em hard gates/integração.
+Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
 **Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
 (matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
 CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar todos os joins no
@@ -223,6 +223,56 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
 
 ## Triagem
 
+- `delivery-review-CTG-0002/cycle-4-final-extraordinary` — **PASS**, sem findings. F-008/F-009
+  fechados; 51 contratos TEAT semanticamente distintos, cinco fronteiras BOAT uniformes corretas,
+  126/126 hashes e regressões/gates confirmados por Auditor Codex Astra/max.
+- `CTG-0002/delivery-correction-3-final` — Astra/max corrigiu F-008/F-009: 36 fichas e somente
+  seus 36 pares de hash no manifest; `ait-print` distingue as variantes, `ait-reject` ficou isolada
+  e 51/51 contratos TEAT web permanecem distintos após normalização estrita. Pré-auditoria do
+  maestro e todos os gates passaram; quarto review extraordinário liberado.
+- `2026-09-21`: Owner autorizou explicitamente a correção final de F-008/F-009 e um quarto review
+  extraordinário, exigindo atenção suficiente para fechamento nesta iteração. Correção escalada a
+  Codex Astra/max; pré-auditoria do maestro obrigatória antes do reviewer.
+- `delivery-review-CTG-0002/cycle-3-extraordinary` — **FAIL / escalated**: F-003 passou e mobile
+  passou salvo distinção de assinatura em impressão imediata versus diferida/reimpressão; 34/56
+  fichas web ainda reduzem a template parametrizado e `ait-reject` conserva comportamento de telas
+  irmãs. A autorização extraordinária foi consumida; nenhum quarto ciclo sem nova autorização.
+- `CTG-0002/delivery-correction-2-extraordinary` — F-003/F-008/F-009 corrigidos: 114 mensagens
+  pt-BR completas e 29 estados localizados, 67 contratos mobile distintos, 56 contratos web
+  distintos e 126/126 hashes finais. Format global, KB, publish, parâmetros, verifier e diff
+  passaram; terceiro review extraordinário liberado pela autorização explícita do Owner.
+- `2026-09-21`: Owner autorizou explicitamente corrigir os três findings residuais do CTG-0002 e
+  realizar terceiro review extraordinário. O escopo permanece limitado a localização pt-BR de
+  estados/erros e contratos específicos mobile/web; os seis findings aceitos não serão reabertos.
+- `delivery-review-CTG-0002/cycle-2` — **FAIL / escalated**: F-001/F-002/F-004/F-005/F-006/F-007
+  passaram; persistem três achados high em valores pt-BR de estados/erros e contratos específicos
+  mobile/web ainda colapsados por grupo. Regra §8: `FAIL → escalated`; nenhum commit ou novo ciclo
+  sem autorização explícita do Owner.
+- `CTG-0002/delivery-correction-1` — nove findings corrigidos por Terra/high: 126 hashes finais,
+  337 chaves i18n flat com 126 títulos e 114 erros, diagrama 56+4, 16 fronteiras BOAT,
+  transições integrais, três deltas corrigidos e contratos específicos mobile/web. Format global,
+  KB 675/446, publish 201, parâmetros 34/34, verifier 89/18/27/0 e diff passaram; ciclo 2 aberto.
+- `delivery-review-CTG-0002/cycle-1` — **FAIL**: nove achados bloqueiam commit; corrigir hashes
+  finais do manifest, catálogo i18n completo/canônico, diagrama 56+4, fronteira BOAT em 16 fichas,
+  navegação repetida, rotas dos três deltas e a transcrição específica dos contratos mobile/web.
+  Primeiro ciclo corretivo liberado com modelo de nível superior; nova revisão integral obrigatória.
+- `TASK-0006/attempt-1` — `baseline-drift`: a regeneração mecânica passou com 34 testes e 27
+  namespaces, não as contagens históricas 25/26 ainda escritas no prompt. O preflight já havia
+  fixado 34 testes e 15 namespaces antes das 12 adições; logo 34/34 e 27 namespaces são as saídas
+  coerentes atuais. Os três, e somente os três, gerados autorizados mudaram.
+- `TASK-0004/attempt-1` — `implementation-bug`: o primeiro manifest confundiu
+  `sourceFileCount` com `artifactIdCount`, registrou só 55 fichas web e omitiu `tech-health`.
+  A tentativa 2 corrigiu exclusivamente o manifest: 126 entradas novas, 746 fontes, 675
+  artefatos e 446 tokens; todas as fichas, o diagrama, format, KB, publish e diff passaram.
+- `TASK-0003/attempt-1` — `policy-issue`: as 70 fichas mobile existem exatamente, sem faltas ou
+  extras, e passam Prettier, publish-check e `git diff --check`; `docs:kb:check` detecta corretamente
+  619 artefatos, mas ainda espera 549 porque o próprio prompt proíbe alterar o manifest nesta tarefa.
+  A atualização única do manifest para as 126 fichas pertence expressamente a TASK-0004. A barreira
+  foi aceita sem enfraquecer o gate: TASK-0004 deve atualizar o manifest e fechar em 675/446.
+- `TASK-0002/attempt-1` — `policy-issue`: as três matrizes oficiais conferem byte a byte e por
+  SHA-256, mas os bytes imutáveis não seguem o Prettier local; a política existente para capturas
+  imutáveis foi estendida somente aos três JSONs, enquanto `PROVENANCE.md` continua formatado. Isso
+  preserva simultaneamente proveniência exata e o gate global, sem ignorar conteúdo autoral.
 - `TASK-0001/attempt-1` — `reference-gap`: worker encerrou antes de completar a tabela 1–12;
   allowlist preservada, KB checks verdes, `format:check` inconclusivo. Uma tentativa corretiva foi
   liberada para concluir todos os itens, revisar coerência interna das alterações e rodar os três
@@ -280,6 +330,41 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
   iniciar TASK-0002 nesta janela;
 - estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até
   `a0f62cb67383ba31354f4c72e24bec91a3f22138` integrado por rebase antes da A2.
+
+Checkpoint 2 (janela 2, preflight de TASK-0002):
+
+- CTG-0001 mesclado pelo PR #70 em `2c82b2698d153005aaf0ea5d4d49667411ed7ace` após cinco
+  checks remotos verdes; branch publicada foi preservada para a continuação da rodada;
+- `origin/main` `3cdc281e643f20d5a6409eb61dc5da599ea7538d` integrado por
+  `git merge --no-edit origin/main` (fast-forward), sem conflitos; nenhum PR `orchestra/*` aberto;
+- `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm devai:doctor`, `git diff --check` e cadeia
+  DEVAI passaram; baseline atual: KB 549/446, publish 201, contratos 152 operações/61 clientes,
+  parâmetros 34/34 e 89 entradas/15 namespaces, contratos 40/40, 948 handlers, 237 tabelas RLS,
+  portal 118 arquivos/1.314 testes;
+- Auditor independente observou o merge no HEAD exato, evento `EV-34d4ee8bc41350a6`; artefatos
+  integrados em `b0dddf6ed8e724c945999bd5166a727767cd4862` e registrados como R-0013
+  `generic sequence 2`, chain head
+  `2800f2e0ae01f72b3d394580933adb71177ed2381f47dd6e46b6daa06d6d0fae`;
+- revalidação Architect: origem TEAT continua limpa em `8880f4294c24ff7bd4bf5e0afecfc44faa86ffab`,
+  os seis hashes imutáveis conferem, 18/18 prompts conferem com `compositions.json` e TASK-0002
+  permanece `PC-beefdb86efc5fefc`; o delta BOAT/infra não invalida `prompt-review-4=PASS`, portanto
+  novo reviewer não é necessário;
+- `preflight-a2.json` renovado para o novo `origin/main` e branch publicada; ADR-0028 e DDL 21
+  permanecem livres;
+- janela 2 aberta com 65.000/800.000 tokens de entrada estimados (8,125%); TASK-0002 permanece
+  `queued` e está pronto, mas nenhum worker foi iniciado durante este preflight.
+
+Checkpoint 3 (janela 2, correção final CTG-0002):
+
+- TASK-0002…0006 concluídas; 126 fichas, i18n, diagrama, manifest e três gerados presentes;
+- delivery reviews ciclos 1, 2 e 3 retornaram `FAIL`; no ciclo 3 restam somente F-008
+  (`ait-print`) e F-009 (34 contratos web parametrizados, incluindo `ait-reject`);
+- Owner autorizou explicitamente a correção final e quarto review extraordinário, com atenção
+  reforçada para fechamento nesta iteração;
+- orçamento estimado da janela: 755.000/800.000 tokens de entrada (94,375%); checkpoint gravado ao
+  ultrapassar 80%, mas a autorização explícita vigente limita e libera somente esta última
+  correção/revisão, gates, commit/evidência e integração do CTG-0002;
+- nenhuma publicação do conteúdo CTG-0002 ocorreu; branch remota permanece em `b72d1e8a`.
 
 ## Leitura
 
