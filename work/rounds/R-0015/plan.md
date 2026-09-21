@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (17 fichas, i18n, transições): nenhum upstream. CTG-0002 (biblioteca mobile, módulo `sinistros` web, formulários): `boat-backend` R-0010 (CTG-0001 já em `main`, PR #55; CTG-0002 em curso) e `teat-frontends` R-0013 (shell de campo e `apps/teat/web`) em `main`.
+**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (17 fichas, i18n, transições): nenhum upstream. CTG-0002 (biblioteca mobile, módulo `sinistros` web, formulários): `boat-backend` R-0010 já em `main` (PC-0008); falta `teat-frontends` R-0013 CTG-0004 (shell de campo e `apps/teat/web`), ainda não iniciado — empilhar em `orchestra/teat-frontends` quando os apps existirem ou aguardar.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -74,9 +74,9 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
 - Ciclos de review a partir do segundo restritos aos itens corrigidos; contradições contrato × código resolvidas pelo Architect por adenda numerada em `plan.md` antes de redespachar.
 - O CTG seguinte só começa a escrever depois do merge do anterior ou nasce em branch empilhado; nunca commits novos no branch de um PR aberto; integrar `main` por merge, nunca `--force`.
 - Listas de leitura dos workers fechadas e completas (DDL gerado, blueprint, `seed.sh`, fixtures, specs de referência como `backend/app/tests/e2e/policy-routes.e2e.spec.ts`); lacuna aqui foi `reference-gap` em R-0010.
-- Padrão de app: o primeiro frontend (R-0012, `apps/rait/web`) fixa `package.json` (scripts `build|test|lint|typecheck`), configuração Angular 22/vitest/eslint e a extensão de `pnpm check`; os apps seguintes copiam a estrutura, sem variantes.
+- Padrão de app (R-0014, `apps/portal/web`): copiar scripts, `angular.json`, `eslint.config.js`, `tsconfig.*`, `vitest.config.ts` com `angularJitApplicationTransform` e a árvore de pastas; `pnpm check` recebe a tripla `lint|test|build` da biblioteca.
 - Pacote de workspace novo: o maestro roda `pnpm install`, guarda o `pnpm-lock.yaml` para o commit do grupo e só então libera o Inspector (CI é `--frozen-lockfile`).
-- Chaves i18n não são parâmetros (OD-P46): o namespace deste app entra na allowlist de i18n do `parameter-catalogue.md` lida por `tools/parameters/verify.mjs`; se R-0012 ainda não tiver mesclado essa regra, esta rodada a aplica (nunca exclusão por diretório).
+- Chaves i18n não são parâmetros (OD-P46): allowlist já existe; acrescentar as linhas `boat.<namespace>` antes de `i18n/boat.pt-BR.json` entrar em código; placeholders `{x}`.
 - Testes de roteamento cobrem papéis com e sem acesso (presença e ausência), não só o papel mínimo.
 
 ## Concorrência

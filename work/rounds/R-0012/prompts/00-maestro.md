@@ -20,7 +20,7 @@
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
   (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (fichas de tela): nenhum upstream. CTG-0002 (app, formulários): `rait-backend` R-0007 (`orchestra/rait-backend`, contratos de comando do RAIT gerando clientes em `@detran/api-clients`) — empilhe nele se ainda não mesclou; lock `packages/ui` com R-0013 `teat-frontends`: só um dos dois grupos de app ativo por vez. Esta rodada fixa o padrão de scaffold dos apps e resolve OD-P46 (allowlist i18n) antes de qualquer `i18n/*.json` entrar em código**. No bootstrap, registre em `plan.md`
+  **merge de cada grupo acoplado**: **CTG-0001 (fichas por rota): nenhum upstream. CTG-0002 (app, formulários): comandos e contratos de `rait-case`/`rait-worklist`/`rait-session` já em `main` (R-0007 CTG-0001/0002, PR #69; clientes em `@detran/api-clients`); org, financeiro e integrações chegam com R-0007 CTG-0004 — até lá esses módulos renderizam "indisponível nesta versão". Padrão de scaffold em `main` (`apps/portal/web`, R-0014): copiar. Allowlist i18n existe: acrescentar as linhas `rait.*`. Lock `packages/ui` com R-0013 CTG-0004 (não iniciado): esta rodada toma o lock primeiro; R-0013 integra `main` depois**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
