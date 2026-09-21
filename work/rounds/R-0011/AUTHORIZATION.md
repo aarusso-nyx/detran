@@ -53,3 +53,13 @@ This record transcribes the instruction through the prompt's declared boundary: 
 PASS, exact-SHA audit observation, and governed round-close. It grants no package publication,
 release, deployment, force-push, or mutation outside this repository. It was written by the maestro
 from the Owner's instruction, not by the Owner; the Owner may revoke or amend it.
+
+## Amendment 1 — 2026-09-21 (Owner)
+
+The Owner (Antonio A. Russo) instructed the maestro, in the session of 2026-09-21 after checkpoint 1
+(`676c935c`, ≈68 % of window 1): **"prosseguir até a completa finalização — registre em
+AUTHORIZATION.md"**. Per condition 6 above, this replaces the per-window 80 % cut for this round: the
+maestro continues through CTG-0001 (TASK-0002 ∥ 0011, TASK-0010 ∥ 0003, delivery-review, evidence,
+PR, merge, audit observe) and, when its upstream (R-0007 CTG-0003) allows, CTG-0002 and the round
+close, recording consumption in `budget.json` as before. Every other boundary of this record is
+unchanged.
