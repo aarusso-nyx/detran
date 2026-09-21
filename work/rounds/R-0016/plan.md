@@ -40,9 +40,10 @@
 | TASK-0004 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-dashboard-web-tests`                               | TASK-0003  | testes: roteamento por papel × camada (N3 sempre bloqueado), 9 schemas, `freshnessInterceptor`, célula suprimida visível, a11y (severidade por forma); teste tela ↔ ficha ↔ rota (18/18)                                                                                                                                                                                               |
 | TASK-0005 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-dashboard-web-app`, `MOD-package-json`             | TASK-0004  | app completo (18 telas, guardas, SSE, gráficos); `pnpm check` estendido; README; testes verdes                                                                                                                                                                                                                                                                                         |
 | TASK-0006 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-dashboard-web-forms`                               | TASK-0005  | 9 schemas com gates; testes verdes                                                                                                                                                                                                                                                                                                                                                     |
+| TASK-0008 | Architect            | architect-blueprint | Opus / alto    | `MOD-r16-contract-ctg2`                                 | TASK-0003  | `contracts/CTG-0002.md` §1–§14 (scaffold, manifesto TS, rotas, guardas, shell, SSE/frescor, error boundary, 18 componentes, 18 páginas L0, i18n, schemas, fixtures, critérios C-02-nn) — A5                                                                                                                                                                                            |
 | TASK-0007 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                              | TASK-0006  | build pack, `dashboard-frontends.md`, backlog                                                                                                                                                                                                                                                                                                                                          |
 
-CTG-0001 = 0001/0002/0003 (Architect explícito; 0002 ∥ 0003 com fronteiras disjuntas); CTG-0002 = 0004…0006 (+ TASK-0008 Architect, contrato detalhado, se `contracts/CTG-0002.md` §Decisões não bastar — decidido no checkpoint de M7); 0007 fecha. Um PR por CTG (M7).
+CTG-0001 = 0001/0002/0003 (Architect explícito; 0002 ∥ 0003 com fronteiras disjuntas); CTG-0002 = 0008 → 0004 → 0005 ∥ 0006 (A5); CTG-0003 = 0007. Um PR por CTG (M7).
 
 **Checkpoints de dependências (maestro, Engineer):** (a) após TASK-0001, `pnpm parameters:generate` + `pnpm verify:parameter-catalogue` (allowlist M5) e libera TASK-0002 ∥ TASK-0003; (b) no CTG-0002, o scaffold copiado de `apps/portal/web` + `pnpm install` + lockfile + extensão de `pnpm check` (tripla `pnpm --filter @detran/dashboard-web lint|test|build`) antes de liberar o Inspector (§4.18), como em R-0012 M1.
 
@@ -194,6 +195,13 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
   contrato; corrigido. Correções mecânicas aplicadas pelo maestro (Architect, dono de `docs/` e
   dos contratos — parcimônia §5, precedente R-0012 M6) em vez de redespachar; gates
   `docs:kb:check`/`format:check` verdes; ciclo 2 restrito.
+- 2026-09-21 — CI do PR #80, `backend-kernel` (fallback remoto): 3 falhas em
+  `backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts`
+  (hash do `pg_dump --data-only` oscila entre dois valores antes/depois de `apply.sh` abortado;
+  suíte de R-0007). O diff do PR não toca dado (só a linha de comentário com o SHA do cabeçalho de
+  `05-parameters.sql`, invisível ao `pg_dump`) e a mesma suíte passou em `main` 08fb84e8 duas
+  horas antes → `sensor-error` (flake); `gh run rerun --failed` → verde (20 min). Registrar no
+  fechamento como recomendação a R-0007 (determinismo do snapshot de dados).
 
 ## Adendas
 
@@ -219,6 +227,18 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
   `contracts/CTG-0002.md` §Decisões 2 não é transcrito como rótulo. Critério C-01 do Inspector: a
   cobertura fecha em 307 (312 − 5), e `SeverityChip` prova forma + rótulo por `dashboard.a11y.severity_shape.*`
   só quando a OD fechar; até lá, a forma é provada por atributo de teste, não por texto.
+- **A5 — "Prosseguir até a completa finalização" (Owner, 2026-09-21; AUTHORIZATION.md Amendment 1).**
+  O corte por janela cai. CTG-0002 nasce **neste branch**, após o merge de #80, sem base empilhada
+  (R-0011 sem código): toda tela em nível **L0** (`contracts/CTG-0002.md` §Decisões 6 — "indisponível
+  nesta versão", nunca mock silencioso; nenhum `HttpClient` nas features), com roteamento, guardas,
+  shell, SSE/frescor, error boundary, 18 componentes §5, 9 schemas, i18n e fixtures provados sem
+  backend. Tríade: **TASK-0008** (Architect, Opus — contrato detalhado §1–§14) → TASK-0004
+  (Inspector) → TASK-0005 (Engineer, app) **∥** TASK-0006 (Engineer, `forms/` — fronteira
+  disjunta; antes dependia de 0005). Checkpoint b do maestro (scaffold de configuração copiado de
+  `apps/portal/web`, `pnpm install`, lockfile, `pnpm check` estendido) entre TASK-0008 e TASK-0004.
+  Quando R-0011 publicar `BP-DASH-MONITOR-001.commands.openapi.json` e o seed, integra-se por
+  merge e as features sobem a L2 num CTG posterior (fora desta rodada se R-0011 não mesclar antes
+  do fechamento — registrado em `backlog.md` por TASK-0007).
 
 ## Bloqueios
 
@@ -232,7 +252,26 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Retomada
 
-(vazio)
+**Estado em 2026-09-21 (maestro Fable 5.1) — sem parada:** o Owner instruiu "prosseguir até a
+completa finalização" (AUTHORIZATION.md Amendment 1; adenda A5): o corte por janela cai e o
+CTG-0002 segue neste branch em nível L0. PR #80 **mesclado** (merge 6a50f026, `audit observe`
+EV-ded786c48daa2c5f). O texto abaixo vale como retomada se uma sessão cair.
+
+- **Concluídas:** TASK-0001 (Architect, Opus — manifesto, contratos, allowlist), TASK-0002
+  (18 fichas, baseline 756), TASK-0003 (semente i18n, 307 chaves). Reviews: prompt-review 1
+  FAIL/2 PASS; delivery-review CTG-0001 1 FAIL/2 PASS. Evidência: generic sequence 1, head
+  `511d404d…c71b59`. **PR #80** (`orchestra/dashboard-console` → `main`) aberto; CI e merge
+  conforme §9 (merge só com CI verde; depois `audit observe` no SHA do merge e novo checkpoint).
+- **Em curso:** TASK-0008 (Architect, Opus — contrato detalhado; prompt-review 3 FAIL → 4 PASS).
+- **Pendentes:** checkpoint b (scaffold + `pnpm install`), TASK-0004 (Inspector), TASK-0005 ∥
+  TASK-0006 (Engineers), delivery-review CTG-0002, PR, merge, `audit observe`; TASK-0007 (docs),
+  PR, merge, `audit observe`, `round close`.
+- **Próximos passos (se retomar):** (1) `git fetch` e `git merge --no-edit origin/main` (branch
+  publicado, nunca rebase); (2) se `origin/orchestra/dashboard-backend` já tiver contrato e seed,
+  integrá-lo por merge e subir as features a L2 (senão, L0 até o fim — A5); (3) seguir a tríade
+  de A5 pelos prompts de `prompts/TASK-0004…0006.md` quando existirem, ou compô-los a partir de
+  `contracts/CTG-0002.md` §1–§14; (4) TASK-0007 fecha (build pack, `dashboard-frontends.md`
+  §7/§9/§10 com OD-D16-011, backlog, `waves.md` com a troca Sol → Fable).
 
 ## Leitura
 

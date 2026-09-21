@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0016",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0016/prompts/TASK-0008.md",
+      "line": 149,
+      "claim": "Exige matriz rota × papel de 20 × 36, mas C-01-05 fixa a matriz em 18 rotas com ficha × 36; as duas auxiliares ficam explicitamente fora dela em C-01-08. Isso contradiz o contrato canônico CTG-0001 §4.",
+      "fix": "Substituir por \"matriz das 18 rotas com ficha × 36 papéis (C-01-05/06/07); auxiliares em C-01-08\"."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0016/prompts/TASK-0008.md",
+      "line": 39,
+      "claim": "A lista fechada manda ler `engineer-frontend.md` e `inspector-tests.md`, mas esses caminhos não existem na raiz; os manuais existentes são `docs/meta/agents/engineer-frontend.md` e `docs/meta/agents/inspector-tests.md`.",
+      "fix": "Usar os dois caminhos completos existentes em `docs/meta/agents/`."
+    }
+  ],
+  "notes": []
+}
