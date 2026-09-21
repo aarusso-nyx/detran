@@ -779,6 +779,21 @@ Checkpoint 30 (janela 3, review extraordinário final CTG-0003):
   commit e evidence record pela sequência vinculante do Maestro; os limites `source_pending` e a
   autoridade de publicação permanecem inalterados.
 
+Checkpoint 31 (janela 3, integração de `origin/main` e recertificação):
+
+- os commits funcional `b8aa4ddc…` e de evidência inicial `793487ef…` foram criados; antes do PR,
+  `origin/main` havia avançado até `08fb84e8…` e foi integrado por merge normal `dcc35cb1…`, sem
+  rebase nem force-push;
+- o único conflito foi `record/proofs/chain.json`; a versão de `main` foi aceita integralmente e a
+  evidência de CTG-0003 será regravada sobre a cadeia corrente, sem merge manual de hashes;
+- `pnpm install --frozen-lockfile` adotou DEVAI 1.5.3 da base integrada sem alterar o lockfile;
+  `pnpm check` passou com 738 artefatos KB, 160 operações/63 clientes, 57 projetos typechecked,
+  966 handlers, RLS 245/2, PEC 611 specs e portal 1314 testes;
+- `pnpm backend:test:ci` passou no ambiente exato do workflow: provisioning integration 694/694,
+  provisioning e2e 10/10 e upgrade 18/18, além de todos os demais tiers do backend;
+- o merge de upstream não alterou os arquivos centrais revisados de CTG-0003; o `PASS` final segue
+  aplicável e o candidato está pronto para regravação de evidência, push e PR.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
