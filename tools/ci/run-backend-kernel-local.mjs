@@ -101,6 +101,31 @@ try {
     image,
   ]);
   started = true;
+  let initializationComplete = false;
+  for (let attempt = 0; attempt < 90; attempt += 1) {
+    const logs = spawnSync('docker', ['logs', container], {
+      encoding: 'utf8',
+    });
+    const output = `${logs.stdout ?? ''}\n${logs.stderr ?? ''}`;
+    if (
+      output.includes('PostgreSQL init process complete; ready for start up.')
+    ) {
+      initializationComplete = true;
+      break;
+    }
+    const running = spawnSync(
+      'docker',
+      ['inspect', '--format', '{{.State.Running}}', container],
+      { encoding: 'utf8' },
+    );
+    if (running.status !== 0 || running.stdout.trim() !== 'true')
+      throw new Error(
+        'BLOCKED: disposable PostGIS exited during initialization',
+      );
+    await new Promise((resolvePromise) => setTimeout(resolvePromise, 1000));
+  }
+  if (!initializationComplete)
+    throw new Error('BLOCKED: disposable PostGIS initialization timed out');
   let ready = false;
   for (let attempt = 0; attempt < 90; attempt += 1) {
     const probe = spawnSync(
