@@ -2,7 +2,7 @@
 
 **Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro Fable 5.1
 (prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via `tools/orchestra/bridge.sh codex`.
-**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (fichas): nenhum upstream. CTG-0002 (app, formulários): os comandos de `rait-case`/`rait-worklist`/`rait-session` e seus contratos já estão em `main` (R-0007 CTG-0001/0002, PR #69, clientes em `@detran/api-clients`); org, financeiro e integrações chegam com R-0007 CTG-0004 — até lá esses módulos renderizam "indisponível nesta versão" (regra do build pack WP-F). Padrão de scaffold já em `main` (`apps/portal/web`, R-0014): copiar. Allowlist i18n já existe: acrescentar as linhas `rait.*`. Lock `packages/ui` com R-0013 CTG-0004 (ainda não iniciado): esta rodada toma o lock primeiro e R-0013 integra `main` depois.
+**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (fichas): nenhum upstream. CTG-0002 (app, formulários): os **controladores** de comando de `rait-case`/`rait-worklist`/`rait-session` estão em `main` (R-0007 CTG-0001/0002, PR #69), mas os contratos `BP-INF-RAIT-*.commands.openapi.json` (WP-C) só chegam com R-0007 CTG-0004; `@detran/api-clients` hoje gera apenas o CRUD do RAIT. Portanto: scaffold, rotas, `core/`, 22 componentes, 16 schemas de formulário, i18n e facades sobre os clientes CRUD entram já; os métodos de facade que disparam comandos (`POST …/commands/*`) e seus testes ficam `todo` citando R-0007 CTG-0004 e são ligados quando os contratos mesclarem — nunca DTO digitado à mão nem cliente fora de `contracts:clients`. Org, financeiro e integrações renderizam "indisponível nesta versão" até o mesmo CTG. Padrão de scaffold em `main` (`apps/portal/web`, R-0014): copiar. Allowlist i18n existe: acrescentar as linhas `rait.*`. Lock `packages/ui` com R-0013 CTG-0004 (não iniciado): esta rodada toma o lock primeiro; R-0013 integra `main` depois. Pedido a R-0007: publicar os contratos de comando de case/worklist/sessão como tarefa de transcrição antes do CTG-0004, para fechar os `todo` desta rodada.
 **Lock compartilhado:** `packages/ui` — nunca ativa ao mesmo tempo que `teat-frontends` (R-0013).
 **Janelas previstas:** 3.
 
@@ -55,7 +55,7 @@ CTG-0001 = 0002/0003 (fichas, PR próprio); CTG-0002 = 0004…0006 (app). TASK-0
 
 ## Critérios de aceitação (comandos → resultado)
 
-- `node tools/docs/kb/check.mjs` → `521 + N` artefatos (N = fichas criadas) / 446 tokens, com o
+- `node tools/docs/kb/check.mjs` → `baseline vigente + N` artefatos (N = fichas criadas; baseline em `import-manifest.json`, 675 em 2026-09-21) / 446 tokens, com o
   baseline atualizado no mesmo commit; `pnpm docs:kb:publish-check` → OK.
 - `pnpm --filter @detran/rait-web typecheck`, `test`, `build`, `lint` → verdes (scripts criados na TASK-0005).
 - `pnpm --filter @detran/ui test` e `build` → verdes (se `packages/ui` for tocado).
