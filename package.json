@@ -37,6 +37,10 @@
     "backend:test:ci": "node backend/database/tests/run-backend-ci.mjs",
     "backend:test:prepare-legacy": "node backend/database/tests/prepare-rait-priority-upgraded-legacy.mjs",
     "backend:test:upgrade": "pnpm --filter @detran/inf-rait-case test:integration --passWithNoTests=false tests/integration/rait-priority-upgrade.integration.spec.ts",
+    "ci:backend-full": "bash tools/ci/run-backend-kernel.sh",
+    "ci:backend-kernel:local": "node tools/ci/run-backend-kernel-local.mjs",
+    "devai:rc:prepare": "node tools/ci/prepare-local-rc.mjs",
+    "devai:rc:publish": "node tools/ci/publish-local-rc.mjs",
     "devai:doctor": "devai doctor",
     "blueprints:generate": "node tools/blueprints/generate.mjs",
     "parameters:generate": "node tools/parameters/generate-seed.mjs",
@@ -58,7 +62,7 @@
     "senatran-adapter:test:ci": "pnpm --filter @detran/senatran-adapter test:ci"
   },
   "devDependencies": {
-    "@aarusso-nyx/devai": "1.4.5",
+    "@aarusso-nyx/devai": "1.5.3",
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.4",
     "openapi-typescript": "7.13.0",

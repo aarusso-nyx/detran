@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "1.0.0",
+  "descriptorVersion": "1.0.0",
+  "repositoryId": "aarusso-nyx/detran",
+  "fallbackNodeId": "backend-kernel",
+  "dynamicFallbackSelectors": [
+    {
+      "kind": "glob",
+      "pattern": "**/*"
+    }
+  ],
+  "tasks": [
+    {
+      "nodeId": "backend-kernel",
+      "dependencies": [],
+      "argv": ["pnpm", "run", "ci:backend-kernel:local"],
+      "cwd": ".",
+      "runner": "pnpm",
+      "inputSelectors": [
+        {
+          "kind": "glob",
+          "pattern": "**/*"
+        }
+      ],
+      "toolchainKeys": ["node", "pnpm"],
+      "allowlistedEnv": [
+        "DEVAI_DB_TESTS",
+        "DETRAN_RC_CONTAINER_RUNTIME",
+        "DETRAN_RC_POSTGIS_IMAGE",
+        "DETRAN_RC_POSTGRES_MAJOR",
+        "DETRAN_RC_POSTGIS_VERSION"
+      ],
+      "outputContract": {}
+    }
+  ],
+  "profiles": [
+    {
+      "profileId": "rc",
+      "mode": "fixed",
+      "requiredNodes": ["backend-kernel"]
+    }
+  ]
+}

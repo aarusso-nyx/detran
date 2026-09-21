@@ -10,7 +10,7 @@ one unified NestJS modular-monolith backend organised domain-first around the na
 traffic systems (`inf`/RENAINF, `est`/RENAEST, `ch`/RENACH, `ops` cross-domain;
 `vam`/RENAVAM reserved), frontend apps only under `apps/` (TEAT, BOAT, RAIT, PORTAL,
 DASHBOARD), the `senatran-mock` national-API mock and the `senatran-adapter` sole
-integration boundary. DEVAI-governed (`@aarusso-nyx/devai@1.4.5`, Constitution
+integration boundary. DEVAI-governed (`@aarusso-nyx/devai@1.5.3`, Constitution
 1.0.0) on the STYNX 1.3.1 platform substrate (Angular 22, ADR-0015).
 
 ## Status

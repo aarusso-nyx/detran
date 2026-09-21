@@ -156,6 +156,8 @@ describe('DETRAN runtime hooks', () => {
       },
       idempotency: {
         ttlMs: 86_400_000,
+        waitAttempts: 100,
+        waitIntervalMs: 50,
         durableStrict: true,
         store: expect.anything(),
       },

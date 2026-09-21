@@ -35,19 +35,20 @@ jobs:
   # this job, and the foundation job below converts that into a red required
   # check — the gate never silently opens.
   #
-  # evidence_mode is constantly 'false' (no local-evidence policy verifier
-  # exists here yet), i.e. nothing heavy is ever skipped — pec's chain-file-
-  # only semantics. TODO(Phase 2, or the devai 1.x migration round): adopt a
-  # local-evidence policy + trusted-actors allowlist as teat does, and emit a
-  # real evidence_mode.
+  # `evidence_mode` selects the externally attested RC route only when an
+  # immutable proof tag exists for the exact candidate tree and no protected
+  # control surface changed. Tag presence is only a claim: the separate
+  # DEVAI verifier must still publish the required `verified-local-rc` check.
+  # A malformed claim therefore blocks; it never silently falls back or opens.
   evidence-gate:
     runs-on: ubuntu-latest
     outputs:
-      evidence_mode: 'false'
+      evidence_mode: ${{ steps.attested.outputs.evidence_mode }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
         with:
@@ -65,6 +66,43 @@ jobs:
 
       - name: Verify the DEVAI proof chain (fail-closed)
         run: pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human
+
+      - name: Select exact-tree attested evidence route
+        id: attested
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          echo "evidence_mode=false" >> "$GITHUB_OUTPUT"
+          case "$EVENT_NAME" in
+            pull_request|push) ;;
+            *) exit 0 ;;
+          esac
+          if test -z "$BASE_SHA" || test "$BASE_SHA" = "0000000000000000000000000000000000000000"; then
+            exit 0
+          fi
+          git cat-file -e "${BASE_SHA}^{commit}"
+          protected=false
+          while IFS= read -r path; do
+            case "$path" in
+              .github/*|.devai/config/*|law/policy/*|test-tasks.json|package.json|pnpm-lock.yaml|tools/ci/*)
+                protected=true
+                break
+                ;;
+            esac
+          done < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          if test "$protected" = true; then
+            echo "Protected CI control changed; the full remote backend suite is mandatory."
+            exit 0
+          fi
+          tree="$(git rev-parse "${HEAD_SHA}^{tree}")"
+          tag="devai-local-evidence/${tree}"
+          if test -n "$(git ls-remote --tags origin "refs/tags/${tag}")"; then
+            echo "Exact-tree evidence claim found: ${tag}"
+            echo "evidence_mode=true" >> "$GITHUB_OUTPUT"
+          fi
 
   foundation:
     runs-on: ubuntu-latest
@@ -129,11 +167,17 @@ jobs:
   # separate architecture-named job so database/RLS failures are distinguishable
   # from the general foundation floor. Recommended for branch protection after
   # the orchestrator observes the first green PR run.
-  backend-kernel:
+  backend-kernel-full:
+    name: backend-kernel
+    needs: evidence-gate
+    if: ${{ !cancelled() && needs.evidence-gate.result == 'success' && needs.evidence-gate.outputs.evidence_mode != 'true' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
     services:
       postgres:
-        image: postgis/postgis:16-3.4
+        image: postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5
         env:
           POSTGRES_DB: detran
           POSTGRES_USER: postgres
@@ -164,6 +208,8 @@ jobs:
       DB_NAME: detran_r7_ctg1_a2
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
         with:
@@ -179,74 +225,28 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
         run: pnpm install --frozen-lockfile
 
-      - name: Apply unified backend DDL
-        run: pnpm backend:db:reset
+      - name: Run complete remote backend-kernel fallback
+        run: pnpm ci:backend-full
 
-      - name: Load canonical fixtures (rait-fixtures.md; WP-A)
-        run: bash backend/database/seed.sh
-
-      - name: Verify controller decorators
-        run: pnpm verify:decorators
-
-      - name: Verify live RLS and audit persistence
-        run: pnpm backend:rls-smoke
-
-      - name: Verify blueprint regeneration has no drift
-        run: pnpm blueprints:check
-
-      - name: Run backend unit and integration tiers
-        run: |
-          pnpm backend:test:unit
-          pnpm backend:test:prepare-legacy
-          pnpm backend:test:integration
-
-      - name: Verify SENATRAN boundary and generated contract drift
-        run: |
-          pnpm verify:senatran-boundary
-          pnpm verify:senatran-contracts
-
-      - name: Run SENATRAN adapter unit and HTTP integration tiers
-        run: |
-          pnpm --filter @detran/senatran-adapter test:unit
-          pnpm --filter @detran/senatran-adapter test:integration
-
-      # Jobs cannot share service containers. Keep the contract floor lean by
-      # reusing this job's PostGIS service, but isolate the mock in its own
-      # database and process. The required senatran-mock-tests job still owns
-      # the mock's complete 245-test regression suite.
-      - name: Run backend e2e and adapter contract tiers against the in-repo SENATRAN mock
+      - name: Publish exact-candidate fallback check
+        if: always()
         env:
-          DB_NAME: senatran
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/senatran
-          SENATRAN_MOCK_BASE_URL: http://127.0.0.1:3001
-          PORT: '3001'
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          JOB_STATUS: ${{ job.status }}
         run: |
-          pnpm --dir senatran-mock db:reset
-          pnpm --dir senatran-mock build
-          node senatran-mock/dist/apps/api/src/main.js > /tmp/senatran-adapter-mock.log 2>&1 &
-          mock_pid=$!
-          trap 'kill "$mock_pid" 2>/dev/null || true' EXIT
-          for attempt in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:3001/health >/dev/null; then break; fi
-            if [ "$attempt" = 30 ]; then
-              cat /tmp/senatran-adapter-mock.log
-              exit 1
-            fi
-            sleep 1
-          done
-          backend_env=(
-            DB_NAME=detran_r7_ctg1_a2
-            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
-            DETRAN_TEST_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
-            STYNX_OWNER_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2
-            'STYNX_APP_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend'
-            'STYNX_READER_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/detran_r7_ctg1_a2?options=-c%20role%3Drole_app_backend'
-            SENATRAN_PROVIDER=mock
-          )
-          env "${backend_env[@]}" pnpm backend:test:prepare-legacy
-          env "${backend_env[@]}" pnpm backend:test:e2e
-          env "${backend_env[@]}" pnpm backend:test:upgrade
-          pnpm --filter @detran/senatran-adapter test:e2e
+          set -euo pipefail
+          conclusion=failure
+          if test "$JOB_STATUS" = success; then conclusion=success; fi
+          jq -n \
+            --arg name verified-local-rc \
+            --arg head_sha "$CANDIDATE_SHA" \
+            --arg conclusion "$conclusion" \
+            --arg title "Remote backend fallback" \
+            --arg summary "No eligible exact-tree attestation was selected; the complete backend suite ran remotely." \
+            '{name:$name,head_sha:$head_sha,status:"completed",conclusion:$conclusion,output:{title:$title,summary:$summary}}' \
+            | gh api --method POST "repos/$GITHUB_REPOSITORY/check-runs" --input -
+          test "$conclusion" = success
 
   boat-documents-real:
     runs-on: ubuntu-latest
