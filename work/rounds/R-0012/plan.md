@@ -276,9 +276,10 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   R-0014 (PC-0007, PRs #60…#67 — padrão de app e allowlist OD-P46), R-0007 CTG-0001/0002 (PR #69:
   controladores de comando de `rait-case`/`rait-worklist`/`rait-session`), R-0013 CTG-0001 (PR #70)
   e contratos do CTG-0002 (PR #73).
-- PR #78 (`docs/r-0012-contracts-note`, plano/prompt desta rodada) **aberto**, CI em curso; os
-  arquivos já estão neste branch (commit b9aa8ff7); ao mesclar, integrar com
-  `git merge --no-edit origin/main`.
+- PR #78 (`docs/r-0012-contracts-note`, plano/prompt desta rodada) **mesclado** em 2026-09-21
+  18:42 UTC (46e87d3b); o branch, ainda não publicado, foi rebaseado sobre `origin/main`
+  (`git rebase origin/main`, permitido antes do primeiro push) — a importação prévia do PR ficou
+  reduzida ao `AUTHORIZATION.md`.
 - Branches `orchestra/*` remotos: `orchestra/rait-backend` (R-0007, CTG-0003/0004 em curso — sem PR
   aberto contra `main`), `orchestra/teat-frontends` (R-0013, aberto, workers não disparados; lock
   `packages/ui` livre e tomado por esta rodada). Nenhum PR aberto com lock comum aos grupos desta
@@ -292,6 +293,13 @@ merged --limit 20`, `gh pr list --search orchestra/`):
 ## Bloqueios
 
 (nenhum)
+
+## Triagem
+
+- CTG-0001, delivery-review 1 → REVIEW: 13 fichas com `apps: [rait, portal|dashboard|teat]` contra
+  M6 (`apps: [rait]`). Triagem: `plant-bug` de transcrição (lotes B/C). Correção mecânica aplicada
+  pelo maestro (Architect, dono de `docs/`) por sed no front-matter — parcimônia (§5) — em vez de
+  redespachar; gates `docs:kb:check`/`format:check` verdes; ciclo 2 restrito.
 
 ## Adendas
 
