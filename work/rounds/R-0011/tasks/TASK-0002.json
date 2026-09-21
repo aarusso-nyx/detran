@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "queued",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-2dc497a285192b02",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0002",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Testes do pacote dashboard-monitor (vocabulário, transições, RLS, seeds, replay das projeções) e fixtures de estado",
+  "description": "Codifica os critérios M9 a–f do contrato CTG-0001 em tests/** do pacote gerado e entrega 81-fixtures-dashboard-state.sql; os testes podem falhar até TASK-0010.",
+  "target_modules": ["MOD-dashboard-monitor-tests", "MOD-seed-81"],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "priority": 2,
+  "tags": ["wp-d1"],
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/dashboard-monitor", "typecheck"],
+    ["pnpm", "format:check"],
+    ["bash", "backend/database/seed.sh"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-2dc497a285192b02",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

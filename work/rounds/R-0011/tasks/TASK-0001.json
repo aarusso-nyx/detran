@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "queued",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-072ad3ed8cb5caa0",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0001",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Modelar BP-DASH-MONITOR-001, vocabulário DDL 19 e contrato CTG-0001 (mapa de projeções, timers, critérios)",
+  "description": "Estado próprio, referências e tabelas de projeção do DASHBOARD (WP-D1, ADR-0020, WF-DASH-001…003, RN-DASH-120/142/170) como blueprint gerável, DDL manuscrito de vocabulário e contrato que Inspector e Engineers codificam; nenhuma rota, nenhum código.",
+  "target_modules": [
+    "MOD-bp-dash-monitor",
+    "MOD-ddl-19-dashboard",
+    "MOD-ddl-80",
+    "MOD-apply-sh",
+    "MOD-r11-contracts"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "priority": 1,
+  "tags": ["wp-d1"],
+  "acceptance_commands": [
+    [
+      "node",
+      "-e",
+      "JSON.parse(require('fs').readFileSync('docs/framework/blueprints/BP-DASH-MONITOR-001.json','utf8'))"
+    ],
+    ["pnpm", "format:check"],
+    ["pnpm", "verify:rls-ddl"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-072ad3ed8cb5caa0",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

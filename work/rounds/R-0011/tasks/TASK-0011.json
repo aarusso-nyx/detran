@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "queued",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-453b9e280385791e",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0011",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Testes do gate verify:domain-boundaries generalizado e extensão de check-lifecycle-vocabulary ao DASHBOARD",
+  "description": "Casos positivo/negativo/ref/dívida/projeção-sem-consumedEvents para tools/domain-boundaries/verify.mjs (M6) em node --test; vocabulário de 19-dashboard-lifecycle-vocabulary.sql comparado a WF-DASH-001/002/003 em tools/check-lifecycle-vocabulary.ts.",
+  "target_modules": [
+    "MOD-tools-boundaries-tests",
+    "MOD-check-lifecycle-vocabulary"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "priority": 2,
+  "tags": ["wp-d1"],
+  "acceptance_commands": [
+    ["pnpm", "verify:lifecycle-vocabulary"],
+    ["pnpm", "format:check"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-453b9e280385791e",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
