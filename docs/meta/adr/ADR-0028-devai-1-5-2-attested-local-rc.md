@@ -37,3 +37,17 @@ generated workflow continues to pin verifier package, source identity and proven
 - Revoking the signer or restoring `backend-kernel` as a required check disables the economy path
   without weakening the remaining gates.
 - Extending local evidence to another job requires a separate Owner decision.
+
+## Activation preparation
+
+The first local attempt after DEVAI 1.5.3 reached `main` exposed a readiness race in the local
+harness: `pg_isready` could observe the temporary initialization server immediately before the
+container stopped it and started the final PostgreSQL server. The harness now waits for the
+entrypoint's initialization-complete marker before accepting readiness.
+
+Because the harness is a protected control surface, this correction must merge through the full
+remote fallback and is not activation evidence. A subsequent candidate that leaves protected
+surfaces unchanged may merge only when its exact commit and tree produce a signed local RC bundle,
+the protected verifier reports `verified-local-rc=success`, and the ordinary remote checks that
+remain mandatory are green. That later result satisfies decision 5 above without broadening the
+set of locally replaceable jobs.
