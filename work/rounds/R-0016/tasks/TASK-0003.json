@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0016",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever a semente i18n docs/framework/arch/i18n/dashboard.pt-BR.json",
+  "description": "Catálogo pt-BR plano do console (M5): shell/títulos das 18 telas, estados, frescor, estados de alerta e de dever, severidades, blocos, camadas, relógios, classificação, 42 nomes de indicador de [APP-DASHBOARD] §Catálogo, erros DASH.*, textos fixos, 9 formulários; chaves só nos namespaces da allowlist; placeholders {x}.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-dashboard-i18n"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-d4", "i18n", "transcricao"],
+  "branch": "orchestra/dashboard-console",
+  "worktree_id": "WT-dashboard-console",
+  "prompt_composition_id": "PC-5e56bbbfb28d78f3",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "verify:parameter-catalogue"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-5e56bbbfb28d78f3",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

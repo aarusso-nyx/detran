@@ -1,6 +1,6 @@
 # Prompt do maestro — orquestra `dashboard-console` (rodada `R-0016`)
 
-> Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `OpenAI — Codex CLI com GPT-5.6 Sol`
+> Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `Anthropic — Claude Code com Fable 5.1`
 > (Claude Code com Fable 5.1, ou Codex CLI com GPT-5.6 Sol), aberta na worktree `/Volumes/Thiamat II/stech/detran-worktrees/dashboard-console`.
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;
 > não há contexto anterior a recuperar.
@@ -11,16 +11,16 @@
 - Declare, na primeira linha da sua primeira resposta, o papel constitucional em que atua em cada
   fase: **Architect** ao planejar e revisar, **Engineer** ao commitar código, **Auditor** nunca
   (o reviewer é a outra família). Os workers declaram o papel deles no próprio prompt.
-- Família dos seus workers: **a sua** (`OpenAI — Codex CLI com GPT-5.6 Sol`), por subagentes nativos da sua CLI.
-  Família do reviewer: **a outra** (`claude`), modelo `opus`, sempre
+- Família dos seus workers: **a sua** (`Anthropic — Claude Code com Fable 5.1`), por subagentes nativos da sua CLI.
+  Família do reviewer: **a outra** (`codex`), modelo `gpt-5.6-terra`, sempre
   pela ponte `tools/orchestra/bridge.sh`. Nunca inverta.
-- Orçamento desta janela de 5 h: **frente prevista para 3 janela(s); nesta janela, um planejamento de maestro + até 7 tarefas de worker (Terra/Luna) com revisões — ≈ 800 k tokens de entrada; ao atingir 80 % grave checkpoint**. Contabilize em
+- Orçamento desta janela de 5 h: **frente prevista para 3 janela(s); nesta janela, um planejamento de maestro + até 7 tarefas de worker (Opus/Sonnet) com revisões — ≈ 700 k tokens de entrada; ao atingir 80 % grave checkpoint**. Contabilize em
   `work/rounds/R-0016/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
   (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (18 fichas, i18n — nomes dos 42 indicadores copiados do seed de R-0011): nenhum upstream. CTG-0002 (console, formulários): `dashboard-backend` R-0011 (`orchestra/dashboard-backend`) — empilhe nele se ainda não mesclou. Allowlist de namespaces i18n no catálogo de parâmetros (OD-P46, método §4.17) precisa estar em `main` (R-0012) antes de qualquer `i18n/*.json` entrar em código — senão esta rodada a aplica (`dashboard.*` já é prefixo de parâmetros vigentes)**. No bootstrap, registre em `plan.md`
+  **merge de cada grupo acoplado**: **CTG-0001 (18 fichas D-01…D-18, i18n — nomes dos 42 indicadores transcritos de [APP-DASHBOARD] §Catálogo, iguais ao seed que R-0011 entregará): nenhum upstream. CTG-0002 (console, formulários): `dashboard-backend` R-0011 (`orchestra/dashboard-backend`) — empilhe nele quando existir ou grave checkpoint após o CTG-0001. Padrão de scaffold em `main` (`apps/portal/web`, R-0014): copiar. Allowlist i18n existe em `parameter-catalogue.md` §Namespaces i18n: acrescentar as linhas `dashboard.*` (prefixo de parâmetros vigentes, ex.: `dashboard.cell_threshold`) antes de `i18n/dashboard.pt-BR.json` entrar em código. Troca de família decidida pelo Owner em 2026-09-21: maestro Fable 5.1 (Claude Code), workers Opus/Sonnet, reviewer `codex gpt-5.6-terra` — registre a troca em `waves.md` (coluna Maestro e §Histórico) na tarefa de documentação**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
@@ -156,7 +156,7 @@ Monte `reviews/prompt-review-<n>.md` com `docs/meta/agents/orchestra/reviewer-pr
 em modo `prompt-review`, anexando `plan.md` e todos os `prompts/*.md`. Invoque:
 
 ```bash
-tools/orchestra/bridge.sh claude opus work/rounds/R-0016/reviews/prompt-review-1.md work/rounds/R-0016/reviews/prompt-review-1.json /Volumes/Thiamat II/stech/detran-worktrees/dashboard-console
+tools/orchestra/bridge.sh codex gpt-5.6-terra work/rounds/R-0016/reviews/prompt-review-1.md work/rounds/R-0016/reviews/prompt-review-1.json /Volumes/Thiamat II/stech/detran-worktrees/dashboard-console
 ```
 
 Leia o veredito. `REVIEW` → corrija os prompts apontados e repita (máximo 2 ciclos). `FAIL` ou

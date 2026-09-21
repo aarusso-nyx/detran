@@ -1,0 +1,59 @@
+{
+  "round": "R-0016",
+  "window": 1,
+  "window_input_budget": 700000,
+  "checkpoint_threshold": 560000,
+  "estimated_input_total": 703000,
+  "estimated_output_total": 124000,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte; workers Opus/Sonnet por subagentes nativos).",
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "bootstrap+plan+prompts-0001..0003",
+      "model": "fable",
+      "input_tokens": 260000,
+      "output_tokens": 32000,
+      "note": "leitura obrigatória §2, plan.md M1–M9/Concorrência/Leitura, 7 tasks, 3 prompts (CTG-0001), prompt-review-1.md; pnpm install --frozen-lockfile OK; pnpm check baseline em curso (08fb84e8 + round docs)."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1+2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 80000,
+      "output_tokens": 3000,
+      "note": "ciclo 1 FAIL por estrutura (3 achados: D-13×DT-066, rótulo de relógio sem fonte, cobertura ficha↔i18n não fechada); ciclo 2 restrito PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "opus/high",
+      "input_tokens": 76000,
+      "output_tokens": 28000,
+      "note": "305 206 brutos, 64 chamadas, 22 min; únicos ≈ ¼. Entregou route-manifest.md (20 linhas), contracts/CTG-0001.md (312 chaves), contracts/CTG-0002.md §Decisões, 16 linhas de allowlist; OD-D16-001…009 propostas."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "model": "sonnet/low",
+      "input_tokens": 73000,
+      "output_tokens": 20000,
+      "note": "291 400 brutos, 29 chamadas, 9,5 min. Semente com 307 chaves (312 − 5 shape.* omitidas por OD-D16-009)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "model": "sonnet/low",
+      "input_tokens": 104000,
+      "output_tokens": 38000,
+      "note": "414 229 brutos, 102 chamadas, 17,4 min. 18 fichas + baseline 738→756; OD-D16-010 proposta."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001+2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 110000,
+      "output_tokens": 3000,
+      "note": "ciclo 1 FAIL (4 achados: evidência de prove × UC-DASH-003, agency-admin em incident:read, matriz por comando C-01-11, C-01-04 = 307); ciclo 2 restrito PASS."
+    }
+  ]
+}
