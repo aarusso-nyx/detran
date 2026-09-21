@@ -3,25 +3,33 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 398000,
-  "estimated_output_total": 34000,
+  "estimated_input_total": 475000,
+  "estimated_output_total": 67000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte).",
   "entries": [
     {
       "kind": "maestro-planning",
       "id": "bootstrap+plan+prompts-CTG-0001",
       "model": "opus",
-      "input_tokens": 260000,
-      "output_tokens": 32000,
-      "note": "leitura obrigatória §2, varredura de leituras SQL cruzadas (base de M6), plan.md M1–M14/A1–A6, 11 tasks, 5 prompts do CTG-0001, env-detran-r11.sh; pnpm check baseline verde (08fb84e8)."
+      "input_tokens": 300000,
+      "output_tokens": 35000,
+      "note": "leitura obrigatória §2, varredura de leituras SQL cruzadas (base de M6), plan.md M1–M14/A1–A6, 11 tasks, 5 prompts do CTG-0001, env-detran-r11.sh; pnpm check baseline verde (08fb84e8). Consumo da sessão do maestro ≈375 k brutos até o fim de TASK-0001."
     },
     {
       "kind": "reviewer",
       "id": "prompt-review-1+2",
       "model": "gpt-5.6-terra",
-      "input_tokens": 138000,
+      "input_tokens": 70000,
       "output_tokens": 2000,
-      "note": "ciclo 1 REVIEW (1 high: duration_unit sem adenda → A7), ciclo 2 restrito PASS; brutos 88.972 + 48.613 tokens reportados pela CLI."
+      "note": "ciclo 1 REVIEW (1 high: duration_unit sem adenda → A7), ciclo 2 restrito PASS; brutos 88.972 + 48.613 reportados pela CLI (únicos ≈ metade)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "opus",
+      "input_tokens": 105000,
+      "output_tokens": 30000,
+      "note": "Architect: blueprint 20 entidades, DDL 19, apply.sh, contrato CTG-0001.md (1.386 linhas); brutos 404 k + 9 k (iteração A8), 86 chamadas de ferramenta, 47 min."
     }
   ]
 }

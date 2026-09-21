@@ -238,7 +238,9 @@ CTG-0001 = 0001 → {0002 ∥ 0011} → {0010 ∥ 0003} (fronteiras disjuntas; n
 - `pnpm verify:rls-ddl`, `pnpm verify:lifecycle-vocabulary` (refs `dashboard.*`), `pnpm verify:decorators` → OK.
 - `pnpm verify:domain-boundaries` → `domain boundaries verified (N files)` com a dívida OD-D15 impressa como aviso;
   `node --test tools/domain-boundaries/tests/*.test.mjs` → verde (inclui violação inserida de propósito → exit 1).
-- `DB_NAME=detran_r11 DB_PASSWORD=postgres bash backend/database/apply.sh --full` + `seed.sh` duas vezes → OK;
+- `source work/rounds/R-0011/env-detran-r11.sh && bash backend/database/apply.sh` (sem `--full`: R-0007 restringiu
+  `--full` a `detran_r7_ctg1_a2` com `DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED=1`; o banco `detran_r11` é criado
+  uma vez com `create database` e o `apply.sh` incremental é idempotente) + `seed.sh` duas vezes → OK;
   `select count(*) from dashboard.indicator where tenant_id = '00000000-0000-7000-8000-00000000a001'` = 42;
   `select count(*) from dashboard.duty …` = contagem de A4; `select count(*) from dashboard.alert …` = uma linha por (estado, trilha) admitida.
 - `pnpm --filter @detran/dashboard-monitor test:unit|test:integration|test:e2e` → verdes; `pnpm --filter @detran/shared test` → `policy.spec.ts` cobre `dashboard:*` usados pelas rotas.
@@ -284,8 +286,9 @@ Registro do bootstrap (2026-09-21, `origin/main` = `08fb84e8`, PR #79; `gh pr li
 
 - **Já em `main`**: R-0003 (dash-roles, PR #32: `dash-operator`/`dash-duty-owner`, `dashboard:*`,
   `dashboardLayerFor`), R-0004, R-0005, R-0006 (PRs #39/#43/#46: `@detran/inf-deadlines`,
-  `inf.infraction.*`/`inf.timer.*`), R-0007 CTG-0001/0002 (PR #69: `rait.case.*`, `rait.decision.published`,
-  `rait.assignment.changed`, `rait.clock.flag-changed`, `DetranError`), R-0008 (PRs #47…#52: eventos TEAT em
+  `inf.infraction.*`/`inf.timer.*`), R-0007 CTG-0001/0002 (PR #69: `rait.case.changed|admitted|received|withdrawn`,
+  `rait.assignment.changed`, `DetranError`; **`rait.clock.flag-changed`, `rait.decision.published`,
+  `rait.case.created` ainda sem produtor** — OD-D17, ver §Triagem), R-0008 (PRs #47…#52: eventos TEAT em
   `docs/framework/schemas/events/`), R-0009 (PRs #54/#56/#57: `portal.*` projeções, `check-commands.mjs`,
   `contracts:clients`, `policy-routes.e2e.spec.ts`), R-0010 (PRs #55/#71/#72: `BP-DASHBOARD-CRASHES-001`,
   `71-dashboard-crashes.sql`, `tools/domain-boundaries/verify.mjs`, `72-fixtures-boat-projections.sql`),
@@ -337,6 +340,17 @@ Registro do bootstrap (2026-09-21, `origin/main` = `08fb84e8`, PR #79; `gh pr li
   mês subsequente", "mensal", "30 de abril", "31/12 + preparação", "auditoria mensal"). A cadência
   textual verbatim vai em `applies_to`/`legal_basis`; o token só classifica a unidade. Nenhum outro
   valor é admitido.
+- **A8 (2026-09-21, relatório TASK-0001 OD-D18)** — [WF-DASH-001] traz `ESCALONADO --> NOTIFICADO :
+reinicia notificação no próximo nível da cadeia` no diagrama de estados (aprovado) e a omite na tabela
+  "Transições e gatilhos". O diagrama é parte do workflow aprovado e sem a aresta `ESCALONADO` é terminal
+  de fato, o que contradiz [WF-DASH-001] §Atores ("mantém a cadeia de escalonamento viva"). Decisão:
+  `alert_transition_ref` inclui a linha `seq 65: ESCALONADO → NOTIFICADO, actor system, track both,
+rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 alinhar a tabela do corpus.
+- **A9 (2026-09-21, checkpoint 1)** — o gerador emite controllers vazios mesmo com `operations: []` e o
+  módulo os registra (igual a `crashes`); C-0001-06 do contrato ("nenhum controller registrado") contradizia
+  o gerador (`sensor-error` do contrato). Redação nova em `contracts/CTG-0001.md` §6 e no prompt de TASK-0002
+  item 5: nenhum controller com método de rota, `operations` todos `[]`, sem `*Controller` exportado, sem
+  `*.controller.ts` manuscrito, OpenAPI gerado sem operações.
 - **A6 (2026-09-21)** — CTG-0001 decomposto em 5 tarefas (0001; 0002 ∥ 0011; 0010 ∥ 0003) em vez de 3, para
   manter cada worker dentro de um lock e do orçamento de um Sonnet/Opus médio.
 
@@ -348,9 +362,43 @@ Registro do bootstrap (2026-09-21, `origin/main` = `08fb84e8`, PR #79; `gh pr li
 
 (uma linha por falha de hard gate: `plant-bug | sensor-error | policy-issue | reference-gap`)
 
+- 2026-09-21 TASK-0001 — `reference-gap` (OD-D17): §Concorrência afirmava `rait.clock.flag-changed` e
+  `rait.decision.published` em `main` (PR #69) a partir do contrato publicado; o grep de produtores em
+  `backend/domains/**/src` mostra só `rait.case.changed|admitted|received|withdrawn` e
+  `rait.assignment.changed`. Efeito: IND-DASH-101…105 nascem `connected = false` até R-0007 CTG-0003
+  (relógios/timers); bloco A no CTG-0001 = 2/11 conectados (108, 109). Sem retrabalho: M5 já previa a
+  regra; a linha de §Concorrência foi corrigida.
+
 ## Retomada
 
-(vazio)
+**Checkpoint 1 — 2026-09-21, fim da janela 1 (≈68 % do orçamento; as duas tarefas seguintes ultrapassariam
+os 80 %).** Estado:
+
+- **Concluídas**: bootstrap (`4bfb11d4`), prompt-review 1 REVIEW → 2 PASS (`af3f5d87`), TASK-0001 (Architect,
+  Opus; relatório em `reports/TASK-0001.md`; adendas A7, A8, A9), checkpoint 1 do maestro (regeneração única de
+  `BP-DASH-MONITOR-001` → `backend/domains/dashboard/monitor`, `80-dashboard.sql`, `BP-DASH-MONITOR-001.openapi.json`,
+  cliente gerado; `pnpm install` com lockfile; `blueprints:check`, `contracts:check`, `verify:rls-ddl`,
+  `verify:decorators` verdes; `typecheck` do pacote vermelho só por `./handwritten/{index,projectors}.js` — M24;
+  banco `detran_r11` criado, `apply.sh` incremental ×2 e `seed.sh` ×2 OK; 32 tabelas `dashboard.*`).
+- **Em curso**: nenhuma.
+- **Pendentes (CTG-0001)**: TASK-0002 ∥ TASK-0011 (Inspectors, Sonnet/médio; prompts `PC-…` em
+  `compositions.json`, já com PASS do reviewer; TASK-0002 item 5 realinhado por A9 — recalcular `pc_id` antes do
+  disparo) → depois TASK-0010 (Engineer, Opus) ∥ TASK-0003 (Engineer, Sonnet) → checkpoint 2 (gates do grupo,
+  `pnpm check`, `backend:test:ci`) → `delivery-review-CTG-0001` → evidência → merge de `origin/main` → push →
+  PR → CI → merge → `audit observe`. CTG-0002: prompts a compor após o merge (M14), preso a R-0007 CTG-0003.
+- **Último veredito do reviewer**: `prompt-review-2.json` PASS (2026-09-21).
+- **Próximos passos do maestro ao retomar**: `git fetch -q origin && git log --oneline HEAD..origin/main`
+  (integrar por `git merge --no-edit origin/main` só se houver commits novos — o branch ainda **não** foi
+  publicado, logo `git rebase origin/main` é admissível); `source work/rounds/R-0011/env-detran-r11.sh`;
+  recalcular `pc_id` de TASK-0002 (`compositions.json`) e disparar TASK-0002 e TASK-0011 em paralelo com os
+  prompts de `prompts/`; ao receber os relatórios, gravar `reports/TASK-000n.md`, marcar `status`, atualizar
+  `budget.json`; depois TASK-0010 ∥ TASK-0003.
+- **Lições desta janela** (para `waves.md` §Histórico via TASK-0007): (1) grep de **produtores** antes de
+  afirmar que um evento contratado "está em `main`" (OD-D17); (2) `apply.sh --full` não é mais utilizável fora
+  do ensaio de R-0007 — o banco da rodada nasce com `create database` + `apply.sh` incremental; (3) o gerador
+  emite controllers vazios com `operations: []` — critérios "nenhuma rota" devem falar de métodos de rota, não
+  de controllers (A9); (4) a divisão 0002 ∥ 0011 / 0010 ∥ 0003 mantém locks disjuntos a custo de dois
+  prompts a mais — avaliar no fechamento.
 
 ## Leitura
 
