@@ -158,7 +158,8 @@ false` + `source.state = 'INDISPONIVEL'` com `heartbeat_contract` nulo ([WF-DASH
 - **M7 — Timers sem tocar `@detran/inf-deadlines`.** R-0007 CTG-0003 (infração e timers) está
   ativo sobre o motor de prazos; esta rodada **não altera** `backend/domains/inf/deadlines`. No
   CTG-0001 os timers do DASHBOARD são vocabulário em `dashboard.timer_ref` (`owner = 'dashboard'`,
-  `code`, `duration_value`, `duration_unit` ∈ {`horas_uteis`,`dias_corridos`,`percentual`,`imediato`},
+  `code`, `duration_value`, `duration_unit` ∈ {`horas_uteis`,`dias_corridos`,`percentual`,`imediato`,
+  `data_fixa`,`mensal`,`anual`} (conjunto fechado por A7),
   `applies_to`, `status`, `legal_basis`/`decision_ref`): `T-DASH-ACK-N1` 24 h úteis, `T-DASH-ACK-N2`
   8 h úteis, `T-DASH-ACK-N3` 2 h úteis, `T-DASH-ACK-CRITICO` imediato (`dashboard.ack_sla`, DT-030);
   `T-DASH-MARCO-50/75/90` ([WF-DASH-001] matriz; [WF-RAIT-002] §4); `T-DASH-DUTY-<código>` para as
@@ -330,6 +331,12 @@ Registro do bootstrap (2026-09-21, `origin/main` = `08fb84e8`, PR #79; `gh pr li
   vira **OD-D14** (build pack §5, TASK-0007). Nenhuma linha inventada, nenhuma omitida.
 - **A5 (2026-09-21)** — fixtures divididas por papel (M8): catálogo (Engineer, 80) e estado (Inspector, 81),
   para que Inspector e Engineer nunca escrevam no mesmo arquivo.
+- **A7 (2026-09-21, prompt-review-1 item 5)** — M7 fecha `dashboard.timer_ref.duration_unit` em sete
+  tokens: `horas_uteis`, `dias_corridos`, `percentual`, `imediato` (SLA de ACK, marcos, piso) **e**
+  `data_fixa`, `mensal`, `anual` (viradas de período dos deveres — [WF-DASH-002] §Prazos: "dia 20 do
+  mês subsequente", "mensal", "30 de abril", "31/12 + preparação", "auditoria mensal"). A cadência
+  textual verbatim vai em `applies_to`/`legal_basis`; o token só classifica a unidade. Nenhum outro
+  valor é admitido.
 - **A6 (2026-09-21)** — CTG-0001 decomposto em 5 tarefas (0001; 0002 ∥ 0011; 0010 ∥ 0003) em vez de 3, para
   manter cada worker dentro de um lock e do orçamento de um Sonnet/Opus médio.
 
