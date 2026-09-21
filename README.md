@@ -3,7 +3,7 @@
 Private monorepo consolidating the DETRAN software suite: the former `pec`, `teat` and
 `senatran` repositories, plus four new applications (RAIT, PORTAL, BOAT, DASHBOARD),
 built on the **STYNX** platform (`@stynx-nyx/*`; 1.3.1 / Angular 22 per ADR-0015, WP-0 merged) and governed by **DEVAI**
-(`@aarusso-nyx/devai@1.4.5`, Constitution 1.0.0).
+(`@aarusso-nyx/devai@1.5.2`, Constitution 1.0.0).
 
 One unified NestJS **modular-monolith backend** (single deployable, one PostgreSQL with
 schema-per-domain + RLS), `apps/` holding **frontends only**, and a single
