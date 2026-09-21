@@ -508,6 +508,28 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       (PR #39 CTG-0001, 2026-09-14; PR #43 CTG-0002, 2026-09-15); rotas, jobs e projeções do RAIT seguem para R-0007 / WP-P;
       a partir da onda 3, abrir a próxima frente de uma família quando a anterior daquela família mesclar (added 2026-09-14)
 - [x] **WP-T2 + WP-T3 teat-backend (R-0008)**: comandos manuscritos de AIT, bootstrap/turno/handoff, numeração e sincronização, evidência, snapshots, normativo, medidas, alcoolemia, velocidade, SSE e integrações (CTG-0001…0004, PRs #47–#50, 2026-09-15/16), contratos de comando + gate + clientes tipados + schemas + docs (CTG-0005, PR #51) e fechamento `PC-0005` em 2026-09-16; OD-T13…OD-T73 em `open-decisions-rait.md` §F; status HTTP divergentes (OD-T70/T71), enum do recibo (OD-T72), `integration.item.changed` (OD-T73) e `BP-INF-SPEED-001.commands` (OD-T66) roteados a rodadas futuras.
+- [x] **R-0010 `boat-backend` fechada como `PC-0008`** (PR #55 CTG-0001, 2026-09-16; PR #71 WP-B2/WP-B3, 2026-09-20; PR #72
+      fechamento): política `est:*`, `UC-BOAT-013`, `BP-EST-CRASH-001` (DDL 70), comandos, fila, RENAEST, job mensal aprovado pelo Owner
+- [x] **R-0014 `portal-pwa` fechada como `PC-0007`** (PRs #60…#67, 2026-09-17/19): primeiro app do repositório (`apps/portal/web`,
+      padrão de scaffold), allowlist de namespaces i18n (OD-P46), 27 fichas, PWA, WP-P6 no mock; workers/reviewer Codex por
+      autorização do Owner (B3); handoffs OD-P15/16/17/19/88 e delegações reais para R-0007
+- [ ] **R-0007 `rait-backend` em curso (Sol)**: CTG-0001 (`DetranError`, case) e CTG-0002 (worklist/sessão) em `main` pelo PR #69
+      (2026-09-20); **pendentes CTG-0003** (infração, consumidores, motor de timers — libera R-0011 CTG-0002 e a delegação de
+      indicação no Portal) **e CTG-0004** (org, financeiro, integrações, SSE — libera a delegação de pagamento); branch
+      `orchestra/rait-backend` publicado. No mesmo worktree, adoção de DEVAI 1.5.x (PR #74 mesclado; PR #75 aberto) (added 2026-09-21)
+- [ ] **R-0013 `teat-frontends` em curso (Sol/Codex)**: CTG-0001 (reconciliação do corpus, PR #70) e contratos de paridade do
+      CTG-0002 (PR #73) em `main`; prompt-review em `FAIL` por dois ciclos, nenhum worker disparado; pendentes as 126 fichas
+      (CTG-0002), o provisionamento offline (CTG-0003) e os apps `apps/teat/{mobile,web}` (CTG-0004) (added 2026-09-21)
+- [ ] **Rodadas ainda não abertas**: R-0011 `dashboard-backend` (Sol; CTG-0001 livre, CTG-0002 espera R-0007 CTG-0003),
+      R-0012 `rait-web` (Fable), R-0015 `boat-mobile` (Fable), R-0016 `dashboard-console` (Sol; fichas livres, console espera R-0011) (added 2026-09-21)
+- [ ] **Podem abrir em sessões Claude imediatamente (2026-09-21)**:
+      **R-0012 `rait-web`** — CTG-0001 (fichas por rota) e CTG-0002 (app): os comandos de case/worklist/sessão e seus contratos já
+      estão em `main` (R-0007 CTG-0001/0002); os módulos org/financeiro/integrações renderizam "indisponível nesta versão" até o
+      CTG-0004 de R-0007; copia o scaffold de `apps/portal/web` e acrescenta `rait.*` à allowlist i18n; toma o lock
+      `packages/ui` antes de R-0013 CTG-0004 (que ainda não começou) e R-0013 integra `main` depois.
+      **R-0015 `boat-mobile`** — só CTG-0001 (17 fichas, i18n, transições); a biblioteca mobile e o módulo `sinistros` esperam os
+      apps do TEAT (R-0013 CTG-0004). Alternativa se houver janela Claude sobrando: R-0011 CTG-0001 ou R-0016 CTG-0001 com o prompt
+      regenerado para maestro Fable e reviewer `codex gpt-5.6-terra` (troca de família registrada em `waves.md`) (added 2026-09-21)
 - [x] **WP-T1 ops-agency (R-0005)**: agência, modelos ops, deltas inf e fixtures entregues nos CTG-0001/0002 (PRs #40/#41, 2026-09-14), CTG-0003 (PR #42), documentação final (PR #44) e fechamento `PC-0003` em 2026-09-15; `shift.status`, demais vocabulários source-pending e provisioning (R-0013/WP-T5) permanecem roteados a WP-T2+.
 - [ ] **PORTAL OD-P15 — gov.br real**: credenciais e retorno institucional; dono Architect-backend/Owner; fonte `plan.md` A14 e CTG-0004 §10.
 - [ ] **PORTAL OD-P16 — SNE real**: homologar `SnePort` além do mock; dono Architect-backend; fonte `plan.md` A14 e CTG-0004 §10.
