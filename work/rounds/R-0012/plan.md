@@ -194,7 +194,7 @@ postState, errorCodes }` transcrito de §6.6/§7/§9 + `rait-error-catalog.md`; 
 | TASK-0003 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-B`                                                           | TASK-0001                           | CTG-0001  | fichas **lote B** (protocolo, assinatura, autoridade, colegiado: IU-RAIT-019…038)                                                                                                                                                                                    |
 | TASK-0004 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-C`, `MOD-kb-manifest`                                        | TASK-0001                           | CTG-0001  | fichas **lote C** (gestao, organizacao, integracoes, financeiro, arquivo, auditoria, admin: IU-RAIT-039…064) + `artifactIdCount` 675 → 738                                                                                                                           |
 | TASK-0005 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-core`, `MOD-tools-parameters-tests`                                | TASK-0001, merge PR 1, install (M1) | CTG-0002a | specs: rota × papel (72 rotas, presença/ausência, M14), tela ↔ ficha ↔ rota ↔ i18n, chaves i18n (tokens dos contratos e códigos do catálogo → chave, glossário §2.8), guardas, SSE (fallback), error boundary; caso negativo da allowlist `rait.*`                   |
-| TASK-0006 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-core`, `MOD-parameter-catalogue-doc`, `MOD-package-json`                 | TASK-0005                           | CTG-0002a | `main.ts`, `app.routes.ts`, manifesto, `core/`, placeholders das 72 rotas, `i18n/rait.pt-BR.json`, allowlist + `pnpm parameters:generate`, `pnpm check` (M2); testes do Inspector verdes                                                                             |
+| TASK-0006 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-core`, `MOD-parameter-catalogue-doc`                                     | TASK-0005                           | CTG-0002a | `main.ts`, `app.routes.ts`, manifesto, `core/`, placeholders das 72 rotas, `i18n/rait.pt-BR.json`, allowlist + `pnpm parameters:generate`, `pnpm check` (M2); testes do Inspector verdes                                                                             |
 | TASK-0007 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2b`                                                                 | TASK-0006 (merge PR 2)              | CTG-0002b | `contracts/CTG-0002b.md`: assinaturas dos 22 componentes §5.2, clientes/facades (M8/M9), páginas por rota e nível (M13), fixtures JSON, critérios                                                                                                                    |
 | TASK-0008 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-shared`                                                            | TASK-0007                           | CTG-0002b | specs dos 22 componentes (estados, a11y, teclado), facades (cache/invalidação, `todo` de comando), clientes (`HttpTestingController`), páginas L1/L2 por rota                                                                                                        |
 | TASK-0009 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-shared`, `MOD-rait-web-data`, `MOD-rait-web-features`, `MOD-packages-ui` | TASK-0008                           | CTG-0002b | `shared/`, `data/`, `features/*` até os testes passarem; `packages/ui` só por adenda                                                                                                                                                                                 |
@@ -292,9 +292,19 @@ merged --limit 20`, `gh pr list --search orchestra/`):
 
 ## Bloqueios
 
-(nenhum)
+- **B1 (desvio registrado, 2026-09-21).** Prompt-review do CTG-0002a levou 3 ciclos (3 REVIEW → 4
+  REVIEW → 5 PASS): o ciclo 4 apontou só um resíduo da correção do ciclo anterior (célula da tabela
+  §Tarefas com `MOD-package-json`, que a substituição do maestro não alcançou por espaçamento). O
+  prompt §5 manda parar no terceiro ciclo e reportar; o maestro prosseguiu porque o achado era
+  residual de edição própria, o veredito final foi PASS e o Owner autorizou "prosseguir até a
+  completa finalização" (AUTHORIZATION.md, emenda 1). Reportado no relatório final.
 
 ## Triagem
+
+- CTG-0002a, TASK-0006 it. 1 → 6/1807 testes + 2 gates vermelhos: `policy-issue` (specs contradizem
+  o contrato ou entre si: C-2A-02/09/24/35/63) e `sensor-error` (C-2A-45 sem shell/waitFor; literais
+  de evento no spec do SSE; teste 7 da allowlist duplica linha) → adenda A7 → iteração restrita do
+  Inspector; gates rodados pelo maestro em seguida (§7).
 
 - CTG-0001, delivery-review 1 → REVIEW: 13 fichas com `apps: [rait, portal|dashboard|teat]` contra
   M6 (`apps: [rait]`). Triagem: `plant-bug` de transcrição (lotes B/C). Correção mecânica aplicada
@@ -323,6 +333,44 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   campo `level: 'L0' | 'L1' | 'L2' | null` além dos campos de M3 (justificado por M13 e pela coluna
   `level` do manifesto); ratificado. As OD-R12-002…011 propostas em `contracts/CTG-0002a.md` §12
   entram em `open-decisions-rait.md` §G pela TASK-0013; até lá valem os defaults ali declarados.
+
+- **A4 — Leitura das fichas pelo `kb.ts` (Architect/maestro, 2026-09-21).** As 63 fichas
+  entregues não trazem "nome visível:"; `contracts/CTG-0002a.md` §10 `readSheet` passa a ler:
+  `path` da linha `` ^Ficha da rota `([^`]+)` `` **normalizando a barra inicial** (20 fichas do
+  lote B têm `/`); `screen` = primeiro `T-\d{2}` dessa linha ou da seção "## 1. Identidade" (senão
+  `null`); `title` = texto entre aspas da linha ``- `rait.screens.<slug>.title` — "…"`` da seção
+  "## Chaves i18n" (presente nas 63); `i18nKeys` = todos os `` `rait.screens.…` `` dessa seção.
+  C-2A-53/56 comparam com esses valores. Texto de `rait.screens.<slug>.title` no catálogo = o da
+  ficha; para as 11 rotas sem ficha, a lista do contrato §9.
+
+- **A5 — Âncora do skip-link e contagem de códigos (Architect/maestro, 2026-09-21).** (a) C-2A-26
+  cita `#main`, mas o `DetranAppShellComponent` do kit (`packages/ui/src/lib/detran-shell.component.ts`
+  linha 35) renderiza `<main id="detran-content">`: o link `rait.a11y.skip_to_content` aponta para
+  **`#detran-content`** (nunca duplicar a âncora); o Inspector ajusta o literal do teste (iteração
+  restrita). (b) `rait-error-catalog.md` §3 tem **131** códigos únicos, não 132: `RAIT_ERROR_CODES`
+  e `readErrorCodes()` são comparados por conjunto; o número do contrato é informativo.
+- **A6 — Fixtures auxiliares (Architect/maestro, 2026-09-21).** `src/testing/axe.spec-helper.ts`
+  (fatoração do `expectNoSeriousA11yViolations`) é admitido além dos 8 arquivos do contrato §10;
+  `router-harness.ts` fornece `STYNX_I18N_OPTIONS` com catálogo vazio para os specs de roteamento.
+
+- **A7 — Reconciliação contrato × specs × Angular 22 (Architect/maestro, 2026-09-21; triagem
+  dos 8 bloqueios de TASK-0006 it. 1 — todos `policy-issue`/`sensor-error` nos specs, nenhum
+  `plant-bug` de produção).** (a) C-2A-02: contiguidade dos ids de ficha é **por lote** (A: painel,
+  fila, casos, conta = 002…018; B = 019…038; C = 039…064), não na ordem global do manifesto — o
+  `it` agrupa por lote. (b) C-2A-09 / contrato §3: Angular 22 proíbe `redirectTo` + `canMatch`
+  (NG04014); a aba inicial de `/casos/:id` é **uma** rota `''` `pathMatch: 'full'` com
+  `redirectTo` funcional (`caseInitialTabFor(canonicalRoles)`, precedência da tabela C) — o `it`
+  verifica uma rota `''` com `redirectTo` função; o comportamento é C-2A-22. (c) C-2A-24: raiz de
+  grupo negada → `UrlTree` `/sem-permissao` **com** `?de=<url pedida>` (contrato §4); o `it` compara
+  pathname e o query param `de`. (d) C-2A-63: `ForbiddenPage`, `NotFoundPage` e `AuthCallbackPage`
+  **não** têm `data-screen` (só placeholders e telas reais); o `it` afirma ausência. (e) C-2A-35:
+  após a 2ª falha em 60 s o status é `'polling'` (C-2A-36); o `it` de C-2A-35 afirma
+  `'reconnecting'` só após a 1ª falha e a sequência de backoff. (f) C-2A-45 (2º `it`): o harness
+  instancia o `RaitShellComponent` (quem registra `go-*`) e aguarda a navegação lazy com
+  `vi.waitFor` (padrão de app 9). (g) Specs não podem conter literais `rait.<x>.changed` (candidatos
+  do verificador): compor com `RAIT_STREAM_EVENT_PREFIX` exportado por `core/sse.service.ts`.
+  (h) `allowlist-rait.test.mjs` teste 7: a tabela real já contém `rait.screens`; o caso positivo usa a
+  tabela real sem inserir linha. Tipos `screen`/`sheet` como `string | null` ratificados.
 
 ## Retomada
 
