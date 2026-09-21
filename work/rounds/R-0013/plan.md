@@ -1,6 +1,6 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** CTG-0001 mesclado; CTG-0002 delivery review final `PASS`, em hard gates/integração.
+**Status:** CTG-0001 e CTG-0002 mesclados e observados; CTG-0003 é a próxima fronteira.
 Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
 **Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
 (matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
@@ -365,6 +365,25 @@ Checkpoint 3 (janela 2, correção final CTG-0002):
   ultrapassar 80%, mas a autorização explícita vigente limita e libera somente esta última
   correção/revisão, gates, commit/evidência e integração do CTG-0002;
 - nenhuma publicação do conteúdo CTG-0002 ocorreu; branch remota permanece em `b72d1e8a`.
+
+Checkpoint 4 (janela 2, fechamento CTG-0002):
+
+- quarto delivery review extraordinário independente retornou `PASS`, sem findings; F-008 e F-009
+  foram confirmados fechados no candidato final;
+- conteúdo commitado em `e2565bde774e794ca7ad7186159d65154accc184`; evidência de entrega
+  R-0013 `generic sequence 3` em `deeb3b076c4d62a2ef3d30c2e6735907d03dbacd`;
+- `pnpm check` passou antes e depois da sincronização; `devai:doctor`, `git diff --check` e cadeia
+  passaram; `origin/main` não avançou durante a integração;
+- PR #73 teve seis checks remotos verdes e foi mesclado como
+  `3da2b61ee8e418e634a7364417175a1e86a8c9e0`;
+- Auditor independente observou o merge no HEAD exato: evento `EV-b2cdee5c709b0b18`, status
+  `completed`, diagnóstico conservador `YELLOW` por 43 lacunas de sensores e
+  `readiness_promoting=false`; isso não reabre o delivery review;
+- artefatos de observação preservados em `c9148c53f875c5ba3e48ba6f54d1393b730758e8` e registrados
+  como R-0013 `generic sequence 4` em `992ec77befbac30e5bc7f9ec9664caad3b8bcaaf`;
+  chain head `eae4e44dd145eea6c970dfc0b39b91e48751e6321a472ac8f89dd744b5b11c72`;
+- branch de continuidade publicada em `992ec77b`; CTG-0002 está completamente fechado e CTG-0003
+  permanece pendente, sem implementação iniciada nesta iteração.
 
 ## Leitura
 
