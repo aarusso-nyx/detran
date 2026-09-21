@@ -1,0 +1,90 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "ctg": "CTG-0002",
+  "verdict": "FAIL",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "high",
+      "file": "docs/meta/knowledge-base/import-manifest.json",
+      "line": 4373,
+      "claim": "55 web sheet hashes are stale against the final formatted bytes.",
+      "required_correction": "Recalculate both hashes for all 126 new entries against final bytes and verify entry by entry."
+    },
+    {
+      "id": "F-002",
+      "severity": "high",
+      "file": "docs/framework/arch/i18n/teat.pt-BR.json",
+      "line": 38,
+      "claim": "Only 123 screen titles exist; three delta titles are absent and present titles are slug-derived rather than canonical pt-BR.",
+      "required_correction": "Transcribe all 126 canonical titles, including device-handoff, ait-cancel-request and ait-speed-measurement."
+    },
+    {
+      "id": "F-003",
+      "severity": "high",
+      "file": "docs/framework/arch/i18n/teat.pt-BR.json",
+      "line": 8,
+      "claim": "Eight required namespaces are placeholders and 105 of 114 explicit TEAT error codes are absent.",
+      "required_correction": "Transcribe canonical workflow states, readiness blockers, error codes and required labels under all twelve namespaces."
+    },
+    {
+      "id": "F-004",
+      "severity": "high",
+      "file": "docs/framework/arch/teat-web-structure-diagrams.md",
+      "line": 36,
+      "claim": "The navigation diagram names only 13 of 56 screens and none of the four operational routes.",
+      "required_correction": "Represent all 56 screens and /acesso-negado, /conta, /erro and wildcard ** without product sheets for the operational routes."
+    },
+    {
+      "id": "F-005",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-crash-start.md",
+      "line": 15,
+      "claim": "Sixteen crash sheets omit the BOAT ownership boundary.",
+      "required_correction": "Mark BOAT ownership on all 11 mobile and five web crash surfaces and limit TEAT to shortcut, link or extension."
+    },
+    {
+      "id": "F-006",
+      "severity": "medium",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-open-shift.md",
+      "line": 17,
+      "claim": "Twenty-three mobile sheets deduplicate authoritative repeated navigation targets.",
+      "required_correction": "Preserve the full ordered navigation sequence or represent each repeated transition separately."
+    },
+    {
+      "id": "F-007",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-device-handoff.md",
+      "line": 16,
+      "claim": "The three delta sheets invent /ux/mobile routes and navigation lists not supplied by their source.",
+      "required_correction": "Use /<screenId> routes and mark undefined navigation source_pending."
+    },
+    {
+      "id": "F-008",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-ait-signature.md",
+      "line": 31,
+      "claim": "All 70 mobile sheets use generic source_pending blocks despite closed fields/actions/ACs and omit H.55.",
+      "required_correction": "Transcribe known per-screen contracts and AC-TEAT criteria; retain source_pending only for real gaps and add H.55 where pertinent."
+    },
+    {
+      "id": "F-009",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-ait-sanitize.md",
+      "line": 31,
+      "claim": "All 56 web sheets use generic source_pending blocks despite closed contracts.",
+      "required_correction": "Transcribe known per-screen fields, commands, validation and transitions, retaining source_pending only for real gaps."
+    }
+  ],
+  "notes": [
+    "Independent gates passed: format, KB 675/446, publish 201, parameters 34/34, verifier 89/18/27/0 and diff-check.",
+    "Matrices/provenance, path counts, matrix identity fields and generated-output scope otherwise passed."
+  ]
+}

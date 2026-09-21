@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "status": "cycle-3-wave-q",
+  "journeys": [
+    {
+      "id": "ait-complete",
+      "label": "AIT completo",
+      "web": ["ait-inbox", "ait-validation", "ait-detail", "ait-sanitize", "ait-mirror"],
+      "mobile": ["auth-login", "shift-context", "home", "ait-start", "ait-vehicle", "ait-driver", "ait-frame", "ait-location", "ait-evidence", "ait-signature", "ait-review", "ait-done", "ait-print"]
+    },
+    {
+      "id": "administrative-measure",
+      "label": "Medida administrativa",
+      "web": ["measures-list", "measure-detail", "removals", "release"],
+      "mobile": ["measure-start", "retention", "removal", "inventory", "measure-term", "measure-done"]
+    },
+    {
+      "id": "alcohol-procedure",
+      "label": "Alcoolemia",
+      "web": ["alcohol-procedures", "breathalyzers"],
+      "mobile": ["alcohol-start", "alcohol-device", "alcohol-result", "alcohol-refusal", "alcohol-signs", "alcohol-links", "alcohol-term"]
+    },
+    {
+      "id": "crash-record",
+      "label": "Sinistro",
+      "web": ["crashes-list", "crash-detail", "crash-complement", "renaest-integration"],
+      "mobile": ["crash-start", "crash-location", "crash-conditions", "crash-vehicles", "crash-people", "crash-victims", "crash-sketch", "crash-review"]
+    },
+    {
+      "id": "evidence-custody",
+      "label": "Evidencia e custodia",
+      "web": ["evidence-search", "evidence-viewer", "custody-chain", "probative-package"],
+      "mobile": ["ait-evidence", "crash-evidence", "sync", "sync-item"]
+    },
+    {
+      "id": "sync-conflict",
+      "label": "Sincronizacao e conflito",
+      "web": ["tech-queues", "active-shifts", "anomalies"],
+      "mobile": ["sync", "sync-item", "sync-conflict", "diagnostics", "support"]
+    },
+    {
+      "id": "audit-export",
+      "label": "Auditoria e exportacao",
+      "web": ["audit-events", "ait-timeline", "agent-timeline", "external-queries-audit", "anomalies"],
+      "mobile": ["diagnostics", "support", "messages"]
+    },
+    {
+      "id": "bi-dashboard",
+      "label": "BI",
+      "web": ["bi-enforcement", "bi-crashes", "bi-quality", "bi-integrations"],
+      "mobile": ["home", "shift-summary", "sync"]
+    },
+    {
+      "id": "integration-monitoring",
+      "label": "Integracoes",
+      "web": ["tech-integrations", "tech-queues", "tech-certificates", "tech-jobs", "tech-health"],
+      "mobile": ["vehicle-search", "vehicle-result", "driver-search", "driver-result", "query-failure"]
+    }
+  ]
+}

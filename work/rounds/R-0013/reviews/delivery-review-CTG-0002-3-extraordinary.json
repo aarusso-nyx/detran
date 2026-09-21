@@ -1,0 +1,38 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "ctg": "CTG-0002",
+  "cycle": 3,
+  "extraordinary": true,
+  "verdict": "FAIL",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session and extraordinary cycle 3"
+  },
+  "findings": [
+    {
+      "id": "F-008",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-ait-print.md",
+      "line": 24,
+      "claim": "The sheet requires the agent signature on every printed copy, but RN-TEAT-105 limits it to printing at issuance; deferred printing/reprinting uses electronic agent identification.",
+      "required_correction": "Distinguish issuance-time printing from deferred printing/reprinting and apply the signature only to the first variant."
+    },
+    {
+      "id": "F-009",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-login.md",
+      "line": 22,
+      "claim": "After normalizing identifiers and metadata, 34 of 56 web sheets still reduce to one generic template; ait-reject also retains sibling correction/cancellation behavior.",
+      "required_correction": "Transcribe substantive source-specific contracts for the 34 sheets and limit ait-reject to rejection-only commands, fields and states."
+    }
+  ],
+  "notes": [
+    "F-003 passed completely.",
+    "Mobile matrix identity/navigation and contracts passed except the ait-print signature distinction.",
+    "H.55, BOAT, deltas, five source_pending gaps and 126 manifest hashes remained correct.",
+    "Independent gates passed: format, KB 675/446, publish 201, parameters 34/34, verifier 89/18/27/0 and diff-check."
+  ]
+}

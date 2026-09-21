@@ -1,0 +1,45 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "ctg": "CTG-0002",
+  "cycle": 2,
+  "verdict": "FAIL",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-5.6-sol",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "id": "F-003",
+      "severity": "high",
+      "file": "docs/framework/arch/i18n/teat.pt-BR.json",
+      "line": 14,
+      "claim": "The 29 state and 114 error values echo canonical tokens instead of substantive pt-BR translations.",
+      "required_correction": "Preserve canonical keys/codes but transcribe substantive pt-BR values from workflows and the error catalogue."
+    },
+    {
+      "id": "F-008",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-ait-print.md",
+      "line": 22,
+      "claim": "The 67 matrix mobile sheets still collapse to nine contract bodies, omitting closed per-screen details for print, measures, alcohol and sync.",
+      "required_correction": "Transcribe per-screen fields, commands, validations, states and ACs where sources close them, preserving corrected signature, H.55, BOAT and navigation."
+    },
+    {
+      "id": "F-009",
+      "severity": "high",
+      "file": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-ait-reject.md",
+      "line": 22,
+      "claim": "The 56 web sheets still collapse to fifteen group contracts; reject, normative-package states and technical screens retain omissions or sibling-screen actions.",
+      "required_correction": "Replace group templates with per-screen contracts only where sources close behavior; preserve the corrected sanitize contract."
+    }
+  ],
+  "notes": [
+    "F-001, F-002, F-004, F-005, F-006 and F-007 passed.",
+    "F-003 passed structurally at 337 flat keys, 12 namespaces and 114 error codes but failed localization semantics.",
+    "Residual source_pending passed at exactly five source-backed gaps.",
+    "Independent gates passed: format, KB 675/446, publish 201, parameters 34/34, verifier 89/18/27/0, evidence chain and diff-check."
+  ]
+}
