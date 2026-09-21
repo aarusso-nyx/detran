@@ -239,6 +239,15 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
   Quando R-0011 publicar `BP-DASH-MONITOR-001.commands.openapi.json` e o seed, integra-se por
   merge e as features sobem a L2 num CTG posterior (fora desta rodada se R-0011 não mesclar antes
   do fechamento — registrado em `backlog.md` por TASK-0007).
+- **A6 — Ratificações do contrato CTG-0002 (Architect/maestro, 2026-09-21, TASK-0008).**
+  (a) OD-D16-018: `DashboardRouteEntry` ganha `parent` (filhas `:id` de D-14/D-16 dentro do
+  manifesto, C-01-01 mantido em 18) — ratificado, precedente R-0012 A3. (b) OD-D16-019: no app
+  vale a **semente** (M5, cópia inalterada); TASK-0007 alinha `intro`/`empty` das fichas ao
+  texto da semente (34/36). (c) OD-D16-012/014/015/016: os provisórios do contrato §14.1 valem
+  nesta CTG; nenhuma chave i18n nova, nada em `packages/ui`. (d) Checkpoint b executado pelo
+  maestro (f48cf2c6): a linha `check` da raiz já está estendida — TASK-0005 **não** a toca.
+  (e) `pnpm check` completo só no checkpoint do grupo (após 0005 e 0006); cada Engineer prova a
+  própria fronteira com `pnpm --filter @detran/dashboard-web typecheck` (§14.2 regra 2).
 
 ## Bloqueios
 
