@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0016",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever as 18 fichas de tela IU-DASH-D-01…D-18 e subir o baseline do KB",
+  "description": "Uma ficha por linha do route-manifest.md, no esqueleto de contracts/CTG-0001.md, com os seis estados obrigatórios e os textos fixos do WP-D4; artifactIdCount + 18 no import-manifest.json; status draft; nenhuma decisão (lacuna vira OD-D16-nnn proposta).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-dashboard-screens", "MOD-kb-manifest"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-d4", "transcricao"],
+  "branch": "orchestra/dashboard-console",
+  "worktree_id": "WT-dashboard-console",
+  "prompt_composition_id": "PC-ac2edb3b323a0941",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-ac2edb3b323a0941",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
