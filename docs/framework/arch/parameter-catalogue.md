@@ -140,35 +140,51 @@ desconhecido — nunca por exclusão de diretório. Para i18n, a origem é `OD-P
 (`docs/meta/agents/orchestra/README.md`); para template documental, a decisão e o catálogo
 autoridade aparecem na própria linha.
 
-| Namespace              | App                                | Catálogo                                   | Decisão |
-| ---------------------- | ---------------------------------- | ------------------------------------------ | ------- |
-| `portal.shell`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.common`        | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.states`        | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.errors`        | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.situation`     | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.screens`       | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.forms`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.legal`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.requests`      | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.evaluations`   | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.notifications` | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.documents`     | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.services`      | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `portal.a11y`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`           | OD-P46  |
-| `est.crash`            | `backend/app`                      | `inf.normative_document_template`          | OD-B08  |
-| `teat.shell`           | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.common`          | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.states`          | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.errors`          | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.screens`         | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.forms`           | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.legal`           | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.sync`            | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.readiness`       | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.navigation`      | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.a11y`            | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
-| `teat.provisioning`    | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
+| Namespace                  | App                                | Catálogo                                        | Decisão |
+| -------------------------- | ---------------------------------- | ----------------------------------------------- | ------- |
+| `portal.shell`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.common`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.states`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.errors`            | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.situation`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.screens`           | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.forms`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.legal`             | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.requests`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.evaluations`       | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.notifications`     | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.documents`         | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.services`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `portal.a11y`              | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
+| `est.crash`                | `backend/app`                      | `inf.normative_document_template`               | OD-B08  |
+| `teat.shell`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.common`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.states`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.errors`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.screens`             | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.forms`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.legal`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.sync`                | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.readiness`           | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.navigation`          | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.a11y`                | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `teat.provisioning`        | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
+| `dashboard.a11y`           | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.alert_states`   | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.blocks`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.classification` | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.clocks`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.common`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.duty_states`    | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.errors`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.forms`          | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.freshness`      | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.indicators`     | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.layers`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.screens`        | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.severity`       | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.shell`          | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
+| `dashboard.states`         | `apps/dashboard/web`               | `docs/framework/arch/i18n/dashboard.pt-BR.json` | OD-P46  |
 
 ## Regras do catálogo
 

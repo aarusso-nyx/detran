@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0016",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever os testes do console: rota × papel × camada, tela ↔ ficha ↔ rota ↔ i18n, 9 schemas, freshnessInterceptor, célula suprimida, a11y",
+  "description": "Specs vitest/TestBed no app scaffoldado pelo maestro (M7): presença e ausência por papel canônico em cada rota do manifesto, N3 sempre bloqueado, 18/18 fichas × rotas × chaves i18n, 9 schemas com gates, interceptor de frescor, SuppressedCell visível, severidade nunca só por cor (axe sem serious/critical). Escritos antes da implementação (tríade).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-dashboard-web-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["wp-d5", "testes"],
+  "branch": "orchestra/dashboard-console",
+  "worktree_id": "WT-dashboard-console",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/dashboard-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/dashboard-web", "lint"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
