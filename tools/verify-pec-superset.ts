@@ -112,16 +112,30 @@ if (!ledger.transferredArtifacts.some(({ origin }) => origin.endsWith('#35'))) {
   failures.push('PEC PR #35 has no DETRAN disposition');
 }
 
-const workflowText = fs
+const workflows = fs
   .readdirSync(path.join(root, '.github/workflows'))
   .filter((name) => /\.ya?ml$/u.test(name))
-  .map((name) =>
-    fs.readFileSync(path.join(root, '.github/workflows', name), 'utf8'),
-  )
-  .join('\n');
-if (/actions\/upload-artifact@/u.test(workflowText)) {
+  .map((name) => ({
+    name,
+    text: fs.readFileSync(path.join(root, '.github/workflows', name), 'utf8'),
+  }));
+const approvedArtifactUse = {
+  workflow: 'devai-local-rc-verify.yml',
+  reference: 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02',
+};
+const artifactUses = workflows.flatMap(({ name, text }) =>
+  [...text.matchAll(/actions\/upload-artifact@[^\s#]+/gu)].map((match) => ({
+    workflow: name,
+    reference: match[0],
+  })),
+);
+if (
+  artifactUses.length !== 1 ||
+  artifactUses[0]?.workflow !== approvedArtifactUse.workflow ||
+  artifactUses[0]?.reference !== approvedArtifactUse.reference
+) {
   failures.push(
-    'PEC PR #35 is not superseded: DETRAN still depends on actions/upload-artifact',
+    'PEC PR #35 is not superseded: expected exactly the immutable DEVAI verification-summary upload',
   );
 }
 
