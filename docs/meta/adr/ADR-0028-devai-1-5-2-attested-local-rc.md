@@ -37,3 +37,11 @@ generated workflow continues to pin verifier package, source identity and proven
 - Revoking the signer or restoring `backend-kernel` as a required check disables the economy path
   without weakening the remaining gates.
 - Extending local evidence to another job requires a separate Owner decision.
+
+## Activation proof
+
+The first candidate created after DEVAI 1.5.3 reached `main` is intentionally limited to this
+record. It may merge only when its exact commit and tree produce a signed local RC bundle, the
+protected verifier reports `verified-local-rc=success`, and the ordinary remote checks that remain
+mandatory are green. That result is the activation evidence required by decision 5 above; it does
+not broaden the set of locally replaceable jobs.
