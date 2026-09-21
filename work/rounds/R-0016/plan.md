@@ -184,7 +184,16 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Triagem
 
-(nenhuma)
+- 2026-09-21 — `delivery-review-CTG-0001` ciclo 1: **FAIL** (4 achados `high`): (1) D-09 `prove`
+  "evidência completa" contradiz [UC-DASH-003] AC-DASH-003-1 ("protocolo, captura ou hash") —
+  `reference-gap` de transcrição: a fonte do prompt (`dashboard-frontends.md` §7) diverge do
+  produto; corrigido pela regra "vale o artefato de produto", OD-D16-011 aberta para alinhar §7 e
+  o contrato de rotas; (2) D-02 `incident:read` sem `agency-admin` (policy.ts o concede; A1) —
+  `plant-bug` de transcrição; (3) contrato sem critério de matriz por comando — `reference-gap`
+  do Architect; C-01-11 acrescentado; (4) C-01-04 dizia 312 e A4 fixa 307 — `sensor-error` do
+  contrato; corrigido. Correções mecânicas aplicadas pelo maestro (Architect, dono de `docs/` e
+  dos contratos — parcimônia §5, precedente R-0012 M6) em vez de redespachar; gates
+  `docs:kb:check`/`format:check` verdes; ciclo 2 restrito.
 
 ## Adendas
 
@@ -204,6 +213,12 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
   e `TASK-0003.md` tiveram só as referências `§B.1/§B.2/§B.3` trocadas por `§1/§2/§3` (numeração
   real de `contracts/CTG-0001.md`); hashes recalculados em `compositions.json`. Sem mudança de
   conteúdo — não reabre revisão.
+- **A4 — Semente com 307 chaves (Architect/maestro, 2026-09-21, TASK-0003).** As 5 chaves
+  `dashboard.severity.shape.*` do contrato §1.2 ficam **ausentes** da semente até OD-D16-009
+  (vocabulário de formas do `SeverityChip`, decisor Owner); o valor provisório de
+  `contracts/CTG-0002.md` §Decisões 2 não é transcrito como rótulo. Critério C-01 do Inspector: a
+  cobertura fecha em 307 (312 − 5), e `SeverityChip` prova forma + rótulo por `dashboard.a11y.severity_shape.*`
+  só quando a OD fechar; até lá, a forma é provada por atributo de teste, não por texto.
 
 ## Bloqueios
 

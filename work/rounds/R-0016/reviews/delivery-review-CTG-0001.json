@@ -1,0 +1,42 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0016",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "docs/framework/product/transversal/dashboard/screens/IU-DASH-D-09.md",
+      "line": 69,
+      "claim": "Exige protocolo, captura e hash completos para `prove`, mas a definição canônica aceita protocolo, captura ou hash; o contrato mantém os três campos opcionais.",
+      "fix": "Trocar por exigência de pelo menos uma evidência e testar os três casos válidos isoladamente, além da ausência total."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "docs/framework/product/transversal/dashboard/screens/IU-DASH-D-02.md",
+      "line": 82,
+      "claim": "A matriz do comando `dashboard:incident:read` omite `agency-admin`, embora `policy.ts` o conceda e a adenda A1 determine que a política prevalece.",
+      "fix": "Incluir `agency-admin` como grant positivo do comando e cobrir todos os papéis canônicos omitidos com negativas."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0016/contracts/CTG-0001.md",
+      "line": 274,
+      "claim": "C-01-05 exige matriz exaustiva apenas para navegação; não há critério equivalente para os comandos com grants próprios das fichas, portanto faltam negativas exaustivas por papel.",
+      "fix": "Adicionar critério de Inspector para cada comando `dashboard:*:*`: grants positivos literais e negativas para todos os papéis canônicos omitidos, preservando checagens dinâmicas de dono e domínio."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0016/contracts/CTG-0001.md",
+      "line": 273,
+      "claim": "C-01-04 ainda exige total de 312 chaves, mas a adenda A4 fixa a entrega atual em 307 por omitir as cinco `dashboard.severity.shape.*` até OD-D16-009.",
+      "fix": "Atualizar C-01-04 para 307 e explicitar as cinco chaves ausentes como exclusão temporária condicionada a OD-D16-009."
+    }
+  ],
+  "notes": [
+    "A divergência de evidência em D-09 contradiz diretamente UC-DASH-003 e impede PASS mesmo com os gates documentais verdes."
+  ]
+}
