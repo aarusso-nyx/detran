@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0012",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codificar os critérios do CTG-0002b: componentes, facades, clientes e páginas",
+  "description": "Specs TestBed dos 22 componentes (estados, a11y, teclado), facades (cache/invalidação por SSE, it.todo dos comandos com OD), clientes com HttpTestingController e páginas L1/L2 por rota.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-web-tests-shared"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002b",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-f", "inspector"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/rait-web", "typecheck"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

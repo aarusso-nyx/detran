@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0005",
+  "round_id": "R-0012",
+  "status": "queued",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codificar os critérios do CTG-0002a: rota × papel (72 rotas), tela ↔ ficha ↔ rota ↔ i18n, chaves i18n, guardas, SSE, error boundary, allowlist",
+  "description": "Specs em apps/rait/web/src/app que codificam contracts/CTG-0002a.md e route-manifest.md (M14: presença e ausência por papel canônico; A18/A15) e caso negativo da allowlist rait.* em tools/parameters/tests. Os testes podem falhar nesta entrega.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-web-tests-core", "MOD-tools-parameters-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002a",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["wp-f", "inspector"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
+    ["pnpm", "parameters:test"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

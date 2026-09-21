@@ -1,0 +1,43 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0001.md",
+      "line": 23,
+      "claim": "A leitura obrigatória pressupõe oito clientes gerados BP-INF-RAIT-*.ts, mas nesta worktree só existem BP-INF-COLLECTION-001.ts, BP-INF-INFRACTION-001.ts e BP-INF-NOTIFICATION-001.ts. O Architect não consegue cumprir a exigência posterior de citar arquivos/tipos exatos.",
+      "fix": "Corrigir o inventário para os artefatos realmente presentes ou registrar os clientes RAIT ausentes como source_pending/bloqueio com upstream verificável antes de exigir tipos exatos no contrato."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0002.md",
+      "line": 34,
+      "claim": "A lista fechada não inclui steering.md §H nem open-decisions-rait.md, embora o prompt obrigue transcrever e não reabrir decisões desses documentos na linha 135.",
+      "fix": "Adicionar docs/meta/knowledge-base/steering.md §H e os registros aplicáveis de open-decisions-rait.md à leitura obrigatória."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0003.md",
+      "line": 34,
+      "claim": "A lista fechada não inclui steering.md §H nem open-decisions-rait.md, embora o prompt obrigue transcrever e não reabrir decisões desses documentos na linha 135.",
+      "fix": "Adicionar docs/meta/knowledge-base/steering.md §H e os registros aplicáveis de open-decisions-rait.md à leitura obrigatória."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0004.md",
+      "line": 34,
+      "claim": "A lista fechada não inclui steering.md §H nem open-decisions-rait.md, embora o prompt obrigue transcrever e não reabrir decisões desses documentos na linha 136.",
+      "fix": "Adicionar docs/meta/knowledge-base/steering.md §H e os registros aplicáveis de open-decisions-rait.md à leitura obrigatória."
+    }
+  ],
+  "notes": [
+    "As fronteiras de escrita dos lotes A/B/C estão disjuntas; somente TASK-0004 detém o manifesto do KB.",
+    "Os comandos de aceitação citados existem no package.json, incluindo os gates provisórios de @detran/ui."
+  ]
+}

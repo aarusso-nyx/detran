@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0012",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar o contrato do CTG-0002b: 22 componentes compartilhados, clientes, facades e páginas por nível",
+  "description": "contracts/CTG-0002b.md a partir de rait-web-frontend.md §5.2/§5.3/§8, D5/D6, rait-fixtures.md e dos clientes gerados: assinaturas input()/output(), modelos, métodos de leitura e de comando (M8 todo), nível por rota (M13), fixtures JSON, critérios.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r12-contracts-2b"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002b",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-f", "architect"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [["pnpm", "format:check"]],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

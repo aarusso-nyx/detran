@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0002",
+  "round_id": "R-0012",
+  "status": "in_progress",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever as fichas de tela do lote A (painel, fila, casos, conta) — IU-RAIT-002…018",
+  "description": "Uma ficha por rota com página do lote A, no padrão M6, a partir de rait-web-frontend.md §4–§7, §9–§10, IU-RAIT-001, jornadas JW-01/JW-07 e catálogo de erros; status draft; sem baseline do KB.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-product-rait-screens-A"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-d", "transcricao"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-2da00827abc864c2",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:publish-check"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-2da00827abc864c2",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

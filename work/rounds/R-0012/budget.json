@@ -1,0 +1,35 @@
+{
+  "round": "R-0012",
+  "window": 1,
+  "window_input_budget": 700000,
+  "checkpoint_threshold": 560000,
+  "estimated_input_total": 476000,
+  "estimated_output_total": 68000,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte).",
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "bootstrap+plan+prompts-0001..0004",
+      "model": "fable",
+      "input_tokens": 300000,
+      "output_tokens": 35000,
+      "note": "leitura obrigatória §2, plan.md M1–M14/A1/A2, 13 tasks, 4 prompts, prompt-review-1.md; pnpm check baseline verde (b9aa8ff7)."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1+2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 90000,
+      "output_tokens": 3000,
+      "note": "ciclo 1 REVIEW (4 achados: sensor do reviewer sobre clientes RAIT + leitura de steering §H/OD); ciclo 2 restrito PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "opus/high",
+      "input_tokens": 86000,
+      "output_tokens": 30000,
+      "note": "343 011 brutos, 65 chamadas, 27 min; únicos ≈ ¼."
+    }
+  ]
+}
