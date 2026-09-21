@@ -169,6 +169,20 @@ autoridade aparecem na própria linha.
 | `teat.navigation`      | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
 | `teat.a11y`            | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
 | `teat.provisioning`    | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json` | OD-P46  |
+| `rait.action`          | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.common`          | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.errors`          | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.nav`             | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.role`            | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.instance`        | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.decision`        | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.channel`         | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.shell`           | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.states`          | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.screens`         | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.forms`           | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.legal`           | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
+| `rait.a11y`            | `apps/rait/web`                    | `src/app/i18n/rait.pt-BR.json`             | OD-P46  |
 
 ## Regras do catálogo
 

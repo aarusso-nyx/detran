@@ -1,9 +1,12 @@
-// Raiz provisória do scaffold (R-0012 M1): o Engineer do CTG-0002a monta aqui o RaitShellComponent.
+// Raiz do app (spec §5.1; contrato CTG-0002a §5): monta o `RaitShellComponent`, que envolve o
+// `DetranAppShellComponent` do kit (com o `router-outlet`).
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RaitShellComponent } from './core/rait-shell.component';
 
 @Component({
   selector: 'rait-root',
+  imports: [RaitShellComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `<main></main>`,
+  template: `<rait-shell />`,
 })
 export class AppComponent {}
