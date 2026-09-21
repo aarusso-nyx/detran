@@ -326,7 +326,28 @@ merged --limit 20`, `gh pr list --search orchestra/`):
 
 ## Retomada
 
-(vazio)
+**Checkpoint 1 — janela 1 (2026-09-21, maestro Fable 5.1).** Orçamento estimado da janela em
+`budget.json` acima do limiar de 80 % (≈ 770 k únicos estimados, incluindo os quatro workers e os
+quatro ciclos do reviewer) → parada por corte de janela após fechar o CTG-0001 como ponto natural.
+
+- **Concluídas:** TASK-0001 (Architect: `route-manifest.md`, `contracts/CTG-0002a.md`), TASK-0002/
+  0003/0004 (63 fichas IU-RAIT-002…064, baseline 738). Prompt-review 1 REVIEW → 2 PASS;
+  delivery-review CTG-0001 1 REVIEW → 2 PASS. Evidência `generic sequence 1` (head 95f0986c).
+  PR #79 (`orchestra/rait-web` → `main`) **mesclado** em 2026-09-21 (CI 7/7 verde) como 08fb84e8; `audit observe` no sha exato → EV-b4d8707038beb8a2; `origin/main` integrado por merge (fast-forward).
+- **Em curso:** nenhuma tarefa de worker.
+- **Pendentes:** CTG-0002a (TASK-0005 Inspector, TASK-0006 Engineer — prompts ainda não compostos;
+  antes deles o **checkpoint de dependências do maestro**: scaffold de configuração de
+  `apps/rait/web` copiado do Portal (M1), `pnpm install`, `pnpm check` estendido (M2), provado sobre
+  o esqueleto vazio); CTG-0002b (TASK-0007…0009); CTG-0002c (TASK-0010…0012); TASK-0013 (docs);
+  fechamento (`audit observe` por PR, `closure.json`, `round close`, `waves.md` §Histórico,
+  `orchestra/README.md` §10, backlog).
+- **Último veredito:** delivery-review CTG-0001 ciclo 2 = PASS.
+- **Próximos passos do maestro que retoma:** (1) `git fetch` e `git merge --no-edit origin/main` (branch publicado; #79 já observado);
+  (2) checkpoint de dependências (M1/M2) num commit `chore(rait-web): scaffold` + `chore(deps)`;
+  (3) compor prompts de TASK-0005/0006 a partir de `contracts/CTG-0002a.md` (66 critérios C-2A) e
+  `route-manifest.md`; prompt-review restrita; disparar Inspector (Sonnet/médio) e depois Engineer
+  (Opus/médio); (4) gates, delivery-review, evidência, PR 2. Regra do Owner: a mensagem "prosseguir
+  até a completa finalização" substitui o corte por janela (emenda em `AUTHORIZATION.md`).
 
 ## Leitura
 

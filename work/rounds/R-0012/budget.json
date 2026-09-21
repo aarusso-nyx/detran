@@ -3,9 +3,9 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 766000,
-  "estimated_output_total": 193000,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte).",
+  "estimated_input_total": 946000,
+  "estimated_output_total": 209000,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte). Janela 1 encerrada com ≈946 k únicos estimados de entrada.",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -54,6 +54,22 @@
       "input_tokens": 100000,
       "output_tokens": 50000,
       "note": "harness reportou 100 674 brutos (worker interno não contabilizado), 27 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001+2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 120000,
+      "output_tokens": 4000,
+      "note": "ciclo 1 REVIEW (13 front-matters apps:[rait,…]); ciclo 2 restrito PASS."
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0001 gates+evidence+PR+merge+observe+checkpoint",
+      "model": "fable",
+      "input_tokens": 60000,
+      "output_tokens": 12000,
+      "note": "janela 1 encerrada por corte de orçamento após o CTG-0001 (ponto natural)."
     }
   ]
 }
