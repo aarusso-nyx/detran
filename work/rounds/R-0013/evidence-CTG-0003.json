@@ -1,0 +1,112 @@
+{
+  "action": "Deliver R-0013 CTG-0003: implement governed P0-P6 offline operational provisioning with tenant-scoped persistence, fail-closed authorization, append-only bindings and reconciliation, typed contracts, readiness and complete regression proofs after final extraordinary review PASS",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0003",
+  "role": "engineer",
+  "commits": ["b8aa4ddcd95c1037cb75a45dd65c09d087dc3ca7"],
+  "artifacts": [
+    {
+      "path": "docs/framework/blueprints/BP-OPS-PROVISIONING-001.json",
+      "sha256": "d69b89cb05b138c5417b6cfe4784273f1d068fede6dd643403a21e5c314f4ac6"
+    },
+    {
+      "path": "docs/meta/adr/ADR-0028-provisionamento-operacional-offline.md",
+      "sha256": "ab262c281361d1aefe38265e33d75e1b65423fabe0de3ad0150dbd0ecb289e93"
+    },
+    {
+      "path": "backend/database/ddl/21-ops-provisioning.sql",
+      "sha256": "b94dfae5bd49d6671c407422c98cce771bfafcc297731266daacae0c123f5fe4"
+    },
+    {
+      "path": "backend/domains/ops/provisioning/src/handwritten/provisioning.engine.ts",
+      "sha256": "feb7b56ef0b54c78d10bc5753d8cc0cdd339c91db5a3de677d1678c949bc45ea"
+    },
+    {
+      "path": "backend/domains/ops/provisioning/src/handwritten/provisioning.provider.ts",
+      "sha256": "685199e16527d423f2e102be5f237d690be75cc06674cc97ef3096dffaad6b1c"
+    },
+    {
+      "path": "backend/domains/ops/provisioning/tests/integration/provisioning-amendment4.integration.spec.ts",
+      "sha256": "1ec83b454704233f48c10152bfd61bd795c1d28f72558d6f0eca31029e8b05b6"
+    },
+    {
+      "path": "backend/app/tests/e2e/ops-provisioning.e2e.spec.ts",
+      "sha256": "6651911ca3211ad58ada9da0bf3df920d110842c5f7d3e24f2eca07c709653a9"
+    },
+    {
+      "path": "backend/domains/shared/src/policy.ts",
+      "sha256": "0e3b39dcef0660067ed21f2fd52f311047a5bb9b478243de37e06b431088879f"
+    },
+    {
+      "path": "tools/contracts/tests/provisioning-commands.test.mjs",
+      "sha256": "0201fb33652f01b745c91b29ecdd8da9f85387ca2baf0b5928676cefb178da9c"
+    },
+    {
+      "path": "work/rounds/R-0013/reviews/delivery-review-CTG-0003-cycle-4-final-extraordinary.json",
+      "sha256": "5b5a88e86f0c49e7746935692d98c37ddf47b828a22663f6a95b5c8687096a27"
+    },
+    {
+      "path": "work/rounds/R-0013/reviews/delivery-review-CTG-0003-cycle-4-final-extraordinary.md",
+      "sha256": "2a33171cf099b357374509af145bc14bf130ff6af78c3990bdfd363258ba3862"
+    },
+    {
+      "path": "work/rounds/R-0013/plan.md",
+      "sha256": "07018f532a2deb4d917095226974ec3a5bc619908816619c5cb2e7b24f6d9a90"
+    },
+    {
+      "path": "work/rounds/R-0013/budget.json",
+      "sha256": "94189353779199b07a100c46ae3a66ff953288852f86b0dc115d1b9ca953ac18"
+    },
+    {
+      "path": "work/rounds/R-0013/tasks/TASK-0007.json",
+      "sha256": "db15fe00536828b637d2f9d00309c6b3107720f3d90ef6b10c860388916d0b9a"
+    },
+    {
+      "path": "work/rounds/R-0013/tasks/TASK-0008.json",
+      "sha256": "b0502eb7bf08246d5f20bf6889a68645de1f8f0faafc4f4167526a04df539cc9"
+    },
+    {
+      "path": "work/rounds/R-0013/tasks/TASK-0009.json",
+      "sha256": "e186f703023d9389696057671b9d5cdbaf2ff4cb48eab65a3d02027ae3e25080"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Stable candidate passed formatting, orchestration, knowledge-base, blueprint, contracts, type integrity, generated consistency, RLS, role, boundary, UI, portal and architecture gates"
+    },
+    {
+      "name": "pnpm backend:test:ci",
+      "result": "pass",
+      "note": "Exact CI environment passed unit, 694 provisioning integration cases, 10 provisioning domain e2e cases, HTTP/policy suites and upgrade 18/18"
+    },
+    {
+      "name": "focal provisioning and shared-policy gates",
+      "result": "pass",
+      "note": "Unit 7/7, integration 694/694, domain e2e 10/10, HTTP plus policy 19/19, shared 415/415, contracts 46/46, 160 operations/63 clients and 966 decorators"
+    },
+    {
+      "name": "pnpm devai:doctor and evidence verify",
+      "result": "pass",
+      "note": "DEVAI 1.4.5 pinned/running; pre-record chain head eae4e44dd145eea6c970dfc0b39b91e48751e6321a472ac8f89dd744b5b11c72"
+    },
+    {
+      "name": "git diff --check",
+      "result": "pass"
+    },
+    {
+      "name": "delivery-review cycle 4 final extraordinary (same-family CODEX)",
+      "result": "pass",
+      "note": "Owner-authorized independent review; zero findings; 20/20 blocker reproductions, 65 policy negatives and F-001 through F-016 regression audit passed"
+    }
+  ],
+  "tasks": ["TASK-0007", "TASK-0008", "TASK-0009"],
+  "decisions": [
+    "Issuer and enrollment responsibility are distinct from operational recipient agents; every reservation is bound append-only to the exact grant and recipient.",
+    "Package usability requires exact persisted package-to-grant manifest digest equality across download, readiness and receipt.",
+    "Renewal evaluates every historical terminal grant with a strictly later reconciliation and no pending obligations.",
+    "Production cryptography and external KMS, HSM and attestation integration remain source_pending and outside CTG-0003.",
+    "Owner-authorized same-family reviewer exception and final extraordinary correction/review."
+  ]
+}
