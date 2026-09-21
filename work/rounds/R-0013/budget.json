@@ -1,9 +1,11 @@
 {
   "schemaVersion": "1.0.0",
   "round_id": "R-0013",
-  "window": 1,
+  "window": 2,
   "budget_input_tokens": 800000,
   "checkpoint_threshold_pct": 80,
+  "previous_window_input_tokens": 755000,
+  "previous_window_output_tokens": 134000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -139,6 +141,33 @@
       "estimated_output_tokens": 3500,
       "status": "completed",
       "note": "Owner-authorized extraordinary third review; GPT-5.6 Sol, high effort; verdict PASS with no findings"
+    },
+    {
+      "kind": "maestro-preflight",
+      "id": "window-2-TASK-0002-preflight",
+      "window": 2,
+      "estimated_input_tokens": 35000,
+      "estimated_output_tokens": 6000,
+      "status": "completed",
+      "note": "Integrated origin/main 3cdc281e, frozen install, full pnpm check, DEVAI doctor, evidence-chain verification and preflight refresh"
+    },
+    {
+      "kind": "architect-revalidation",
+      "id": "window-2-TASK-0002-drift-audit",
+      "window": 2,
+      "estimated_input_tokens": 15000,
+      "estimated_output_tokens": 3000,
+      "status": "completed",
+      "note": "GPT-5.6 Terra, high effort; 18/18 prompt hashes and six immutable TEAT source hashes match; prompt-review-4 PASS preserved"
+    },
+    {
+      "kind": "auditor",
+      "id": "window-2-CTG-0001-post-merge-observation",
+      "window": 2,
+      "estimated_input_tokens": 15000,
+      "estimated_output_tokens": 3000,
+      "status": "completed",
+      "note": "Independent Codex GPT-5.6 Sol, high effort; exact-HEAD observation event EV-34d4ee8bc41350a6"
     }
   ]
 }

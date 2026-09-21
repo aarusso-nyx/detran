@@ -1,7 +1,7 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** em replanejamento estrutural desde 2026-09-20 após `prompt-review-1=FAIL`; nenhum
-worker foi liberado. Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
+**Status:** CTG-0001 mesclado; preflight da janela 2 concluído e TASK-0002 pronto para dispatch.
+Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
 **Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
 (matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
 CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar todos os joins no
@@ -280,6 +280,29 @@ Checkpoint 1 (janela 1, bloqueio externo antes dos workers):
   iniciar TASK-0002 nesta janela;
 - estado Git: branch ainda não publicada, sem PR; avanço de `origin/main` até
   `a0f62cb67383ba31354f4c72e24bec91a3f22138` integrado por rebase antes da A2.
+
+Checkpoint 2 (janela 2, preflight de TASK-0002):
+
+- CTG-0001 mesclado pelo PR #70 em `2c82b2698d153005aaf0ea5d4d49667411ed7ace` após cinco
+  checks remotos verdes; branch publicada foi preservada para a continuação da rodada;
+- `origin/main` `3cdc281e643f20d5a6409eb61dc5da599ea7538d` integrado por
+  `git merge --no-edit origin/main` (fast-forward), sem conflitos; nenhum PR `orchestra/*` aberto;
+- `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm devai:doctor`, `git diff --check` e cadeia
+  DEVAI passaram; baseline atual: KB 549/446, publish 201, contratos 152 operações/61 clientes,
+  parâmetros 34/34 e 89 entradas/15 namespaces, contratos 40/40, 948 handlers, 237 tabelas RLS,
+  portal 118 arquivos/1.314 testes;
+- Auditor independente observou o merge no HEAD exato, evento `EV-34d4ee8bc41350a6`; artefatos
+  integrados em `b0dddf6ed8e724c945999bd5166a727767cd4862` e registrados como R-0013
+  `generic sequence 2`, chain head
+  `2800f2e0ae01f72b3d394580933adb71177ed2381f47dd6e46b6daa06d6d0fae`;
+- revalidação Architect: origem TEAT continua limpa em `8880f4294c24ff7bd4bf5e0afecfc44faa86ffab`,
+  os seis hashes imutáveis conferem, 18/18 prompts conferem com `compositions.json` e TASK-0002
+  permanece `PC-beefdb86efc5fefc`; o delta BOAT/infra não invalida `prompt-review-4=PASS`, portanto
+  novo reviewer não é necessário;
+- `preflight-a2.json` renovado para o novo `origin/main` e branch publicada; ADR-0028 e DDL 21
+  permanecem livres;
+- janela 2 aberta com 65.000/800.000 tokens de entrada estimados (8,125%); TASK-0002 permanece
+  `queued` e está pronto, mas nenhum worker foi iniciado durante este preflight.
 
 ## Leitura
 
