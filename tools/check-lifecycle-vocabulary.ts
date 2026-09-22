@@ -91,6 +91,60 @@ const boatWf3 = fs.readFileSync(
   'utf8',
 );
 
+// DASHBOARD lifecycle vocabulary (R-0011, plan M9 a / TASK-0011; CTG-0001.md
+// §3, §7). Same pattern as INF/EST above: DDL 19-dashboard-lifecycle-vocabulary.sql
+// (Architect, TASK-0001) compared against the closed state sets of
+// [WF-DASH-001/002/003] (`stateDiagram-v2` tokens).
+const dashboardDdl = fs.readFileSync(
+  path.join(
+    root,
+    'backend',
+    'database',
+    'ddl',
+    '19-dashboard-lifecycle-vocabulary.sql',
+  ),
+  'utf8',
+);
+const wfDash1 = fs.readFileSync(
+  path.join(
+    root,
+    'docs',
+    'framework',
+    'product',
+    'transversal',
+    'dashboard',
+    'workflows',
+    'WF-DASH-001.md',
+  ),
+  'utf8',
+);
+const wfDash2 = fs.readFileSync(
+  path.join(
+    root,
+    'docs',
+    'framework',
+    'product',
+    'transversal',
+    'dashboard',
+    'workflows',
+    'WF-DASH-002.md',
+  ),
+  'utf8',
+);
+const wfDash3 = fs.readFileSync(
+  path.join(
+    root,
+    'docs',
+    'framework',
+    'product',
+    'transversal',
+    'dashboard',
+    'workflows',
+    'WF-DASH-003.md',
+  ),
+  'utf8',
+);
+
 function seededBlock(ddl: string, table: string): string {
   const start = ddl.indexOf(`INSERT INTO ${table}`);
   if (start < 0) return '';
@@ -157,6 +211,26 @@ function diagramStates(markdown: string, openingLine: string): Set<string> {
     if (match[2]) states.add(match[2]);
   }
   return states;
+}
+
+// DASHBOARD diagrams are flat `stateDiagram-v2` blocks (no nested `state "…" {`
+// sub-graphs like the BOAT one above): every fenced block starting at the
+// literal `stateDiagram-v2` line up to the closing ``` fence is the whole
+// diagram. Same token shape as `diagramStates` above (`[A-Z_]+` left/right of
+// `-->`, `[*]` excluded), TASK-0011 §Tarefa 2.
+function stateDiagramTokens(markdown: string): Set<string> {
+  const start = markdown.indexOf('stateDiagram-v2');
+  if (start < 0) return new Set();
+  const end = markdown.indexOf('```', start);
+  const diagram = markdown.slice(start, end < 0 ? undefined : end);
+  const tokens = new Set<string>();
+  for (const match of diagram.matchAll(
+    /^\s*(?:\[\*\]|([A-Z][A-Z0-9_]+))\s*-->\s*(?:\[\*\]|([A-Z][A-Z0-9_]+))/gm,
+  )) {
+    if (match[1]) tokens.add(match[1]);
+    if (match[2]) tokens.add(match[2]);
+  }
+  return tokens;
 }
 
 const statesSection = section(wf3, '## §1 — Estados', '## §2');
@@ -402,14 +476,122 @@ requireWorkflowText(
   '`CONSOLIDADO`/`REJEITADO` é **definitivo**',
 );
 
+// DASHBOARD: DDL 19-dashboard-lifecycle-vocabulary.sql vs the three closed
+// vocabularies. `compareDashboardSet` reports the contract message verbatim
+// (TASK-0011 prompt §Definições que valem como contrato):
+// `dashboard <tabela>: DDL {…} ≠ workflow {…}` for the three state machines
+// (diagram-derived) or `… ≠ catalog {…}` for the flat catalogs that have no
+// `stateDiagram-v2` (severity/layer/classification/block/timer — sourced from
+// CTG-0001.md §3.6–§3.10, never invented here).
+function compareDashboardSet(
+  table: string,
+  seeded: Set<string>,
+  reference: Set<string>,
+  referenceLabel: 'workflow' | 'catalog',
+): void {
+  const same =
+    seeded.size === reference.size &&
+    [...seeded].every((code) => reference.has(code));
+  if (!same)
+    problems.push(
+      `dashboard ${table}: DDL {${[...seeded].sort().join(',')}} ≠ ${referenceLabel} {${[...reference].sort().join(',')}}`,
+    );
+}
+
+const dashAlertStates = seededCodes(dashboardDdl, 'dashboard.alert_state_ref');
+const dashDutyStates = seededCodes(dashboardDdl, 'dashboard.duty_state_ref');
+const dashFreshnessStates = seededCodes(
+  dashboardDdl,
+  'dashboard.freshness_state_ref',
+);
+const dashSeverity = seededCodes(dashboardDdl, 'dashboard.severity_ref');
+const dashLayer = seededCodes(dashboardDdl, 'dashboard.layer_ref');
+const dashClassification = seededCodes(
+  dashboardDdl,
+  'dashboard.classification_ref',
+);
+const dashBlock = seededCodes(dashboardDdl, 'dashboard.block_ref');
+const dashTimerOwners = seededPairs(dashboardDdl, 'dashboard.timer_ref');
+
+compareDashboardSet(
+  'alert_state_ref',
+  dashAlertStates,
+  stateDiagramTokens(wfDash1),
+  'workflow',
+);
+compareDashboardSet(
+  'duty_state_ref',
+  dashDutyStates,
+  stateDiagramTokens(wfDash2),
+  'workflow',
+);
+compareDashboardSet(
+  'freshness_state_ref',
+  dashFreshnessStates,
+  stateDiagramTokens(wfDash3),
+  'workflow',
+);
+
+// Literal closed sets, sourced (never invented) — CTG-0001.md §3.6 (severity),
+// §3.7 (layer, RN-DASH-170), §3.8 (classification, RN-DASH-142), §3.9 (block,
+// APP-DASHBOARD §Catálogo); none of these four has a `stateDiagram-v2`.
+const DASH_SEVERITY_EXPECTED = new Set(['N1', 'N2', 'N3', 'CRITICO']);
+const DASH_LAYER_EXPECTED = new Set(['N0', 'N1', 'N2', 'N3']);
+const DASH_CLASSIFICATION_EXPECTED = new Set(['P1', 'P2', 'P3']);
+const DASH_BLOCK_EXPECTED = new Set(['A', 'B', 'C', 'D']);
+// 14 códigos — CTG-0001.md §3.10 / plan R-0011 M7, adenda A7 (fonte única;
+// se o DDL ou o contrato divergirem de M7, é `reference-gap`, não escolha).
+const DASH_TIMER_EXPECTED = new Set([
+  'T-DASH-ACK-N1',
+  'T-DASH-ACK-N2',
+  'T-DASH-ACK-N3',
+  'T-DASH-ACK-CRITICO',
+  'T-DASH-MARCO-50',
+  'T-DASH-MARCO-75',
+  'T-DASH-MARCO-90',
+  'T-DASH-DUTY-201',
+  'T-DASH-DUTY-202',
+  'T-DASH-DUTY-PNATRANS',
+  'T-DASH-DUTY-206',
+  'T-DASH-DUTY-207',
+  'T-DASH-DUTY-209',
+  'T-DASH-PENDING-FLOOR',
+]);
+
+compareDashboardSet(
+  'severity_ref',
+  dashSeverity,
+  DASH_SEVERITY_EXPECTED,
+  'catalog',
+);
+compareDashboardSet('layer_ref', dashLayer, DASH_LAYER_EXPECTED, 'catalog');
+compareDashboardSet(
+  'classification_ref',
+  dashClassification,
+  DASH_CLASSIFICATION_EXPECTED,
+  'catalog',
+);
+compareDashboardSet('block_ref', dashBlock, DASH_BLOCK_EXPECTED, 'catalog');
+compareDashboardSet(
+  'timer_ref',
+  new Set(dashTimerOwners.keys()),
+  DASH_TIMER_EXPECTED,
+  'catalog',
+);
+for (const [code, owner] of dashTimerOwners)
+  if (owner !== 'dashboard')
+    problems.push(
+      `- dashboard timer_ref ${code}: owner is ${owner}; expected dashboard`,
+    );
+
 if (problems.length > 0) {
   console.error(
-    'check-lifecycle-vocabulary: drift between INF/EST workflows and lifecycle DDL',
+    'check-lifecycle-vocabulary: drift between INF/EST/DASHBOARD workflows and lifecycle DDL',
   );
   problems.forEach((line) => console.error(line));
   process.exitCode = 1;
 } else {
   console.log(
-    `check-lifecycle-vocabulary: OK (${ddlStates.size} INF states, ${ddlSubstates.size} INF substates, ${ddlTimers.size} INF timers, ${ddlAitStates.size} AIT states; ${estLocalStates.size} EST local states, ${estNationalStates.size} EST national states, ${estSeverities.size} EST severities, ${estSceneDuties.size} EST scene duties, ${estConditions.size} EST source_pending catalogs, ${estTimers.size} EST timers)`,
+    `check-lifecycle-vocabulary: OK (${ddlStates.size} INF states, ${ddlSubstates.size} INF substates, ${ddlTimers.size} INF timers, ${ddlAitStates.size} AIT states; ${estLocalStates.size} EST local states, ${estNationalStates.size} EST national states, ${estSeverities.size} EST severities, ${estSceneDuties.size} EST scene duties, ${estConditions.size} EST source_pending catalogs, ${estTimers.size} EST timers; ${dashAlertStates.size} DASHBOARD alert states, ${dashDutyStates.size} DASHBOARD duty states, ${dashFreshnessStates.size} DASHBOARD freshness states, ${dashSeverity.size} DASHBOARD severities, ${dashLayer.size} DASHBOARD layers, ${dashClassification.size} DASHBOARD classifications, ${dashBlock.size} DASHBOARD blocks, ${dashTimerOwners.size} DASHBOARD timers)`,
   );
 }

@@ -228,3 +228,67 @@ test('dado catálogo real quando a varredura cobre packages/api-clients/src/gene
     /unknown parameter literal/,
   );
 });
+
+// R-0011 adenda A14 (work/rounds/R-0011/plan.md §Adendas; método §4.17): a
+// declaração literal `export const consumedEvents = [...] as const` (mesmo
+// formato exigido pelo gate `verify:domain-boundaries`, M6) deve ser
+// reconhecida por `isSourceEventDeclaration` em tools/parameters/verify.mjs
+// (linhas 349–358), hoje restrita à propriedade `sourceEvents`
+// (`ts.isPropertyDeclaration(declaration) || ts.isPropertyAssignment(declaration)`
+// — não cobre `ts.isVariableDeclaration`). Os dois casos abaixo não tocam
+// `tools/parameters/verify.mjs`; o primeiro fica vermelho até o Engineer de
+// TASK-0003 implementar a A14, o segundo já é o comportamento correto hoje e
+// continua sendo depois (a exceção é pelo nome `consumedEvents`, não pelo
+// formato do literal).
+async function temporaryNamedSourceFile(fileName, content) {
+  const directory = await mkdtemp('/tmp/detran-parameter-usage-');
+  const source = join(directory, fileName);
+  await writeFile(source, content, 'utf8');
+  return { directory, source };
+}
+
+test("dado arquivo x.projection.ts com export const consumedEvents = ['rait.case.changed', 'sync.batch.received', 'dashboard.duty.changed'] as const quando verificar então exit 0 sem literal desconhecido (A14) — vermelho esperado hoje", async () => {
+  const temporary = await temporaryNamedSourceFile(
+    'x.projection.ts',
+    "export const consumedEvents = ['rait.case.changed', 'sync.batch.received', 'dashboard.duty.changed'] as const;\n",
+  );
+  try {
+    const result = await run([
+      '--check-usage',
+      '--source',
+      temporary.source,
+      '--catalogue',
+      catalogueNoNamespaces,
+    ]);
+    assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
+    assert.doesNotMatch(
+      `${result.stdout}\n${result.stderr}`,
+      /unknown parameter literal/,
+    );
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});
+
+test('dado o mesmo literal numa variável de outro nome (export const events = [...], não consumedEvents) quando verificar então continua candidato (exit 1) — A14 exime pelo nome, não pelo formato do literal', async () => {
+  const temporary = await temporaryNamedSourceFile(
+    'x.projection.ts',
+    "export const events = ['rait.case.changed', 'sync.batch.received', 'dashboard.duty.changed'] as const;\n",
+  );
+  try {
+    const result = await run([
+      '--check-usage',
+      '--source',
+      temporary.source,
+      '--catalogue',
+      catalogueNoNamespaces,
+    ]);
+    assert.equal(result.status, 1, `${result.stdout}\n${result.stderr}`);
+    assert.match(
+      `${result.stdout}\n${result.stderr}`,
+      /unknown parameter literal rait\.case\.changed/,
+    );
+  } finally {
+    await rm(temporary.directory, { recursive: true, force: true });
+  }
+});

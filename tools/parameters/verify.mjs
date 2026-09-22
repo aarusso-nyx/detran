@@ -350,10 +350,21 @@ if (process.argv.includes('--check-usage')) {
       const array = node.parent;
       if (!ts.isArrayLiteralExpression(array)) return false;
       const declaration = expressionRoot(array).parent;
-      return (
+      if (
         (ts.isPropertyDeclaration(declaration) ||
           ts.isPropertyAssignment(declaration)) &&
         propertyName(declaration.name) === 'sourceEvents'
+      ) {
+        return true;
+      }
+      // M6 (ADR-0020 §4; R-0011 A14): `export const consumedEvents = [...]`
+      // (with or without `as const` — expressionRoot already unwraps it) is
+      // the gate's literal, not a parameter key. Only this exact variable
+      // name qualifies — no other name, no directory allowlist.
+      return (
+        ts.isVariableDeclaration(declaration) &&
+        ts.isIdentifier(declaration.name) &&
+        declaration.name.text === 'consumedEvents'
       );
     }
 

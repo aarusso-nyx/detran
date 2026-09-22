@@ -1,0 +1,2414 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-DASH-MONITOR-001",
+  "module": {
+    "name": "Monitor",
+    "namespace": "dashboard",
+    "version": "1.0.0",
+    "ddlFile": "80-dashboard.sql",
+    "dependencies": {
+      "@detran/ops-parameter": "workspace:*",
+      "@detran/shared": "workspace:*"
+    },
+    "devDependencies": {
+      "@types/pg": "^8.15.4",
+      "pg": "^8.20.0"
+    },
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      },
+      {
+        "package": "@detran/ops-parameter",
+        "target": "../../ops/parameter/src/index.ts"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/projectors",
+        "symbol": "DASHBOARD_MONITOR_PROJECTORS"
+      }
+    ],
+    "handwrittenExports": ["handwritten/index"],
+    "owners": ["detran-dashboard"],
+    "description": "Estado proprio e projecoes do DASHBOARD (dashboard-build-pack secao WP-D1; ADR-0020 Decisoes 1, 3 e 4; WF-DASH-001 ciclo do alerta, WF-DASH-002 calendario de deveres periodicos, WF-DASH-003 frescor; plan R-0011 M1..M5). O DASHBOARD nao tem base de negocio: le projecoes alimentadas por eventos e mantem so o seu proprio estado (alert, alert_trail, duty, duty_cycle, indicator, indicator_config, bi_panel, generated_report, export_log, source, transparency_audit, dataset). As oito projecoes deste pacote (prescription_risk, production, integration_health, pec_deadlines, teat_measures, portal_service_metrics, duty_evidence, source_freshness -> source) sao projetores manuscritos em src/handwritten/projections/*.projection.ts, idempotentes em event.id via o ledger unico monitor_projection_applied_event, replayaveis da integration.outbox e versionados (event_schema_version, aggregate_version). A projecao dashboard.crashes NAO e redefinida aqui: e BP-DASHBOARD-CRASHES-001 (plan M2), citada por indicator.projection dos IND-DASH-203/204/310. Vocabulario global (alert_state_ref, alert_transition_ref, duty_state_ref, duty_transition_ref, freshness_state_ref, severity_ref, layer_ref, classification_ref, block_ref, timer_ref) em 19-dashboard-lifecycle-vocabulary.sql; os checks deste blueprint repetem os mesmos conjuntos. Nenhum dado pessoal, placa, numero de processo ou atributo de saude em coluna alguma (RN-DASH-170 N3): identificacao de objeto so como object_ref opaco com object_layer. Nenhuma rota no CTG-0001 (todo operations = []); rotas, politica e @Audit chegam no CTG-0002 (module.version 1.1.0)."
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "Alert",
+        "table": "alert",
+        "primaryKey": ["id"],
+        "description": "Estado proprio do ciclo do alerta (WF-DASH-001 secao Estados e secao Transicoes e gatilhos; dashboard-route-contract secao 2; plan R-0011 M4). track in {extinction, irregularity} (WF-DASH-001 secao Por que duas trilhas); state in dashboard.alert_state_ref; severity in dashboard.severity_ref (matriz de severidade); block in dashboard.block_ref; objeto opaco por camada = object_kind + object_ref + object_layer (RN-DASH-170: N3 nunca entra, so N0..N2); dono = owner_role + owner_ref; governing_clock in {A,B,C,D} nulo (RN-DASH-131, so RAIT); next_milestone_at e ceiling_on sao gravados a partir do app de origem, nunca calculados aqui (RN-DASH-131 verificacao 4; RN-DASH-101). CRITICO_EXTINCAO e INCIDENTE_REGISTRADO so na trilha de extincao (check); bloco B pode gerar alerta de extincao (IND-DASH-202, WF-DASH-002 nota de leitura), por isso nao ha check bloco x trilha. ack_channel in {origin, manual} (dashboard-route-contract secao 2, ack) obrigatorio quando acknowledged_at existe. Nenhum dado pessoal, placa, numero de processo ou atributo de saude em coluna alguma (RN-DASH-170 N3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "track",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "severity",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "block",
+            "type": "varchar(1)"
+          },
+          {
+            "name": "source_app",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "object_kind",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "object_ref",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "object_layer",
+            "type": "varchar(2)"
+          },
+          {
+            "name": "owner_role",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "owner_ref",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "governing_clock",
+            "type": "varchar(1)",
+            "nullable": true
+          },
+          {
+            "name": "next_milestone_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "ceiling_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "detected_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "classified_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "notified_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "acknowledged_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "treating_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "verified_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "closed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "escalated_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "critical_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "incident_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "ack_channel",
+            "type": "varchar(10)",
+            "nullable": true
+          },
+          {
+            "name": "escalation_level",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "incident_ref",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "source_event_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_dashboard_alert_state_severity",
+            "columns": ["tenant_id", "state", "severity"]
+          },
+          {
+            "name": "ix_dashboard_alert_indicator",
+            "columns": ["tenant_id", "indicator_code", "state"]
+          },
+          {
+            "name": "ix_dashboard_alert_object",
+            "columns": ["tenant_id", "object_kind", "object_ref"]
+          },
+          {
+            "name": "ix_dashboard_alert_owner",
+            "columns": ["tenant_id", "owner_role", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_alert_indicator_code",
+            "expression": "indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_alert_track",
+            "expression": "track in ('extinction','irregularity')"
+          },
+          {
+            "name": "ck_dashboard_alert_state",
+            "expression": "state in ('DETECTADO','CLASSIFICADO','NOTIFICADO','RECONHECIDO','EM_TRATAMENTO','VERIFICADO','ENCERRADO','ESCALONADO','CRITICO_EXTINCAO','INCIDENTE_REGISTRADO')"
+          },
+          {
+            "name": "ck_dashboard_alert_severity",
+            "expression": "severity in ('N1','N2','N3','CRITICO')"
+          },
+          {
+            "name": "ck_dashboard_alert_block",
+            "expression": "block in ('A','B','C','D')"
+          },
+          {
+            "name": "ck_dashboard_alert_source_app",
+            "expression": "source_app in ('rait','pec','boat','teat','portal','senatran-adapter','dashboard','institucional','benchmark','interno','todos')"
+          },
+          {
+            "name": "ck_dashboard_alert_object_layer",
+            "expression": "object_layer in ('N0','N1','N2')"
+          },
+          {
+            "name": "ck_dashboard_alert_governing_clock",
+            "expression": "governing_clock is null or governing_clock in ('A','B','C','D')"
+          },
+          {
+            "name": "ck_dashboard_alert_extinction_states",
+            "expression": "state not in ('CRITICO_EXTINCAO','INCIDENTE_REGISTRADO') or track = 'extinction'"
+          },
+          {
+            "name": "ck_dashboard_alert_ack_channel",
+            "expression": "(acknowledged_at is null) = (ack_channel is null) and (ack_channel is null or ack_channel in ('origin','manual'))"
+          },
+          {
+            "name": "ck_dashboard_alert_escalation_level",
+            "expression": "escalation_level >= 0"
+          },
+          {
+            "name": "ck_dashboard_alert_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "AlertTrail",
+        "table": "alert_trail",
+        "primaryKey": ["id"],
+        "applicationAppendOnly": true,
+        "description": "Trilha imutavel do alerta (WF-DASH-001 secao Transicoes e gatilhos; RN-DASH-131 \"trilha imutavel de emissao, entrega e reconhecimento\"; RN-DASH-135; dashboard-route-contract secao 2, root-cause e GET alerts/{id}): uma linha por transicao ou anotacao, seq crescente por alerta, from_state/to_state in dashboard.alert_state_ref (anotacao sem transicao repete o estado), actor_kind in {system, user, timer} (envelope rait-events-sse-contract secao 1), root_cause_category in {transport, acceptance, payload} (dashboard-route-contract secao 2, DASH.ROOT_CAUSE_CATEGORY_INVALID), event_id = evento de origem que causou a transicao. note nunca carrega dado pessoal (RN-DASH-170 N3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "alert_id",
+            "type": "uuid"
+          },
+          {
+            "name": "seq",
+            "type": "integer"
+          },
+          {
+            "name": "from_state",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "to_state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "actor_kind",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "actor_ref",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "occurred_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "note",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "root_cause_category",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "event_id",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_alert_trail_seq",
+            "columns": ["tenant_id", "alert_id", "seq"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_alert_trail_seq_positive",
+            "expression": "seq > 0"
+          },
+          {
+            "name": "ck_dashboard_alert_trail_from_state",
+            "expression": "from_state is null or from_state in ('DETECTADO','CLASSIFICADO','NOTIFICADO','RECONHECIDO','EM_TRATAMENTO','VERIFICADO','ENCERRADO','ESCALONADO','CRITICO_EXTINCAO','INCIDENTE_REGISTRADO')"
+          },
+          {
+            "name": "ck_dashboard_alert_trail_to_state",
+            "expression": "to_state in ('DETECTADO','CLASSIFICADO','NOTIFICADO','RECONHECIDO','EM_TRATAMENTO','VERIFICADO','ENCERRADO','ESCALONADO','CRITICO_EXTINCAO','INCIDENTE_REGISTRADO')"
+          },
+          {
+            "name": "ck_dashboard_alert_trail_actor_kind",
+            "expression": "actor_kind in ('system','user','timer')"
+          },
+          {
+            "name": "ck_dashboard_alert_trail_root_cause",
+            "expression": "root_cause_category is null or root_cause_category in ('transport','acceptance','payload')"
+          }
+        ]
+      },
+      {
+        "name": "Duty",
+        "table": "duty",
+        "primaryKey": ["id"],
+        "description": "Catalogo dos deveres periodicos por tenant: as 15 linhas da tabela-mestra de RN-DASH-120 (1..14 + linha \"+\" Pnatrans, plan R-0011 A4 / OD-D14), com os cinco campos da tabela (RN-DASH-120 verificacao 1: title, source_ref, periodicity, consequence, rule_ref) verbatim. deadline_rule = regra de data-limite verbatim da fonte que a fixa (WF-DASH-002 secao Prazos; dashboard-route-contract secao 3; parameter-catalogue dashboard.duty.*), nula = \"sem prazo definido\" (RN-DASH-113). deadline_kind classifica a regra (CTG-0001 secao 2). scope in {estadual, federal, historico} (RN-DASH-120 conclusao 3). owner_role = dash-duty-owner (H.38, OD-D01); owner_actor verbatim da coluna Dono de APP-DASHBOARD secao Catalogo quando ha indicador, nulo = source_pending. indicator_code liga a linha ao indicador de bloco B/C quando RN-DASH-120 e o catalogo coincidem (CTG-0001 secao 5). mvp = linhas 1, 2, 8, 9, 10, 11, 13 e 14 (RN-DASH-120 verificacao 3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "line_no",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "title",
+            "type": "text"
+          },
+          {
+            "name": "source_ref",
+            "type": "text"
+          },
+          {
+            "name": "periodicity",
+            "type": "text"
+          },
+          {
+            "name": "deadline_rule",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "deadline_kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "consequence",
+            "type": "text"
+          },
+          {
+            "name": "rule_ref",
+            "type": "text"
+          },
+          {
+            "name": "scope",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "owner_role",
+            "type": "varchar(40)",
+            "default": "'dash-duty-owner'"
+          },
+          {
+            "name": "owner_actor",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "mvp",
+            "type": "boolean",
+            "default": "false"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_duty_code",
+            "columns": ["tenant_id", "code"],
+            "unique": true
+          },
+          {
+            "name": "ux_dashboard_duty_line_no",
+            "columns": ["tenant_id", "line_no"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_duty_code",
+            "expression": "code ~ '^DUTY-[A-Z0-9]+$'"
+          },
+          {
+            "name": "ck_dashboard_duty_line_no",
+            "expression": "line_no is null or (line_no between 1 and 14)"
+          },
+          {
+            "name": "ck_dashboard_duty_deadline_kind",
+            "expression": "deadline_kind in ('fixed_day','monthly','annual_date','continuous','per_event','undefined','historical')"
+          },
+          {
+            "name": "ck_dashboard_duty_scope",
+            "expression": "scope in ('estadual','federal','historico')"
+          },
+          {
+            "name": "ck_dashboard_duty_indicator_code",
+            "expression": "indicator_code is null or indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          }
+        ]
+      },
+      {
+        "name": "DutyCycle",
+        "table": "duty_cycle",
+        "primaryKey": ["id"],
+        "description": "Instancia do ciclo recorrente de um dever (WF-DASH-002 secao Estados e secao Transicoes e gatilhos; dashboard-route-contract secao 3): uma linha por (duty_code, period); period texto YYYY-MM (mensal), YYYY (anual) ou YYYY-MM-DD (por evento/marco) com check de formato; state in dashboard.duty_state_ref; deadline_on nula = \"sem prazo definido\" (RN-DASH-113; DASH.DUTY_NO_LEGAL_DEADLINE); carimbos por transicao; evidencia = protocol + capture_uri + hash (WF-DASH-002 SUBMETIDO_PUBLICADO -> COMPROVADO; DASH.DUTY_EVIDENCE_REQUIRED, DASH.DUTY_EVIDENCE_HASH_INVALID): COMPROVADO/ARQUIVADO exigem evidence_hash (check); draft_ref = minuta de PREPARADO (dashboard-route-contract secao 3, prepare).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "duty_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "period",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "deadline_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "opened_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "started_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "prepared_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "submitted_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "proved_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "archived_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "late_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "unfulfilled_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "draft_ref",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "evidence_protocol",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "evidence_capture_uri",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "evidence_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_duty_cycle_period",
+            "columns": ["tenant_id", "duty_code", "period"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_duty_cycle_state",
+            "columns": ["tenant_id", "state", "deadline_on"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_duty_cycle_code",
+            "expression": "duty_code ~ '^DUTY-[A-Z0-9]+$'"
+          },
+          {
+            "name": "ck_dashboard_duty_cycle_period",
+            "expression": "period ~ '^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$'"
+          },
+          {
+            "name": "ck_dashboard_duty_cycle_state",
+            "expression": "state in ('JANELA_ABERTA','EM_APURACAO','PREPARADO','SUBMETIDO_PUBLICADO','COMPROVADO','ARQUIVADO','ATRASADO','NAO_CUMPRIDO')"
+          },
+          {
+            "name": "ck_dashboard_duty_cycle_evidence",
+            "expression": "state not in ('COMPROVADO','ARQUIVADO') or evidence_hash is not null"
+          },
+          {
+            "name": "ck_dashboard_duty_cycle_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "Indicator",
+        "table": "indicator",
+        "primaryKey": ["id"],
+        "description": "Catalogo dos 42 indicadores por tenant (APP-DASHBOARD secao Catalogo de indicadores, tabelas A..D, verbatim: name, question, source_ref, threshold_rule, owner_actor, expected_action; plan R-0011 M4/M8; dashboard-route-contract secao 4 GET indicators). block in dashboard.block_ref e kind = block_ref.kind (check de coerencia); source_app normaliza o prefixo da coluna Fonte; classification default P3 (RN-DASH-142 verificacao 1: todo indicador nasce P3); latency_band = faixa do bloco (WF-DASH-003 secao Latencia aceitavel, DT-030) e acceptable_latency_minutes nula = source_pending (plan M13); unavailable_strategy nula = default do bloco (WF-DASH-003 secao Duas estrategias: ocultar A, marcar B/C/D), parametrizavel por indicador; projection = nome da projecao (CTG-0001 secao 4.2) ou nula; connected = existe produtor em main dos eventos consumidos (plan M5, OD-P28); clock_code in {A,B,C,D} so para os relogios do RAIT (RN-DASH-131).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "block",
+            "type": "varchar(1)"
+          },
+          {
+            "name": "kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "name",
+            "type": "text"
+          },
+          {
+            "name": "question",
+            "type": "text"
+          },
+          {
+            "name": "source_app",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "source_ref",
+            "type": "text"
+          },
+          {
+            "name": "threshold_rule",
+            "type": "text"
+          },
+          {
+            "name": "owner_actor",
+            "type": "text"
+          },
+          {
+            "name": "expected_action",
+            "type": "text"
+          },
+          {
+            "name": "classification",
+            "type": "varchar(2)",
+            "default": "'P3'"
+          },
+          {
+            "name": "latency_band",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "acceptable_latency_minutes",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "unavailable_strategy",
+            "type": "varchar(10)",
+            "nullable": true
+          },
+          {
+            "name": "projection",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "connected",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "clock_code",
+            "type": "varchar(1)",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_indicator_code",
+            "columns": ["tenant_id", "code"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_indicator_block",
+            "columns": ["tenant_id", "block", "connected"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_indicator_code",
+            "expression": "code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_indicator_block",
+            "expression": "block in ('A','B','C','D')"
+          },
+          {
+            "name": "ck_dashboard_indicator_kind",
+            "expression": "kind in ('legal-ceiling','dever-periodico','sla-operacional','saude-tecnica')"
+          },
+          {
+            "name": "ck_dashboard_indicator_block_kind",
+            "expression": "(block = 'A' and kind = 'legal-ceiling') or (block = 'B' and kind = 'dever-periodico') or (block = 'C' and kind = 'sla-operacional') or (block = 'D' and kind = 'saude-tecnica')"
+          },
+          {
+            "name": "ck_dashboard_indicator_source_app",
+            "expression": "source_app in ('rait','pec','boat','teat','portal','senatran-adapter','dashboard','institucional','benchmark','interno','todos')"
+          },
+          {
+            "name": "ck_dashboard_indicator_classification",
+            "expression": "classification in ('P1','P2','P3')"
+          },
+          {
+            "name": "ck_dashboard_indicator_latency",
+            "expression": "acceptable_latency_minutes is null or acceptable_latency_minutes > 0"
+          },
+          {
+            "name": "ck_dashboard_indicator_unavailable_strategy",
+            "expression": "unavailable_strategy is null or unavailable_strategy in ('hide','mark')"
+          },
+          {
+            "name": "ck_dashboard_indicator_projection",
+            "expression": "projection is null or projection in ('dashboard.prescription_risk','dashboard.production','dashboard.integration_health','dashboard.pec_deadlines','dashboard.teat_measures','dashboard.portal_service_metrics','dashboard.duty_evidence','dashboard.source_freshness','dashboard.crashes')"
+          },
+          {
+            "name": "ck_dashboard_indicator_clock_code",
+            "expression": "clock_code is null or clock_code in ('A','B','C','D')"
+          }
+        ]
+      },
+      {
+        "name": "IndicatorConfig",
+        "table": "indicator_config",
+        "primaryKey": ["id"],
+        "description": "Configuracao de indicador portada de BP-BI-REPORTING-001 (origem TEAT, entidade IndicatorConfig: code, name, description, formula, granularity, status) sem traffic_agency_id (plan R-0011 M4; OD-D13), ligada ao catalogo por indicator_code. Ciclo rascunho -> vigente (dashboard-route-contract secao 4: PATCH indicator-configs/{id} = draft, POST .../publish = published, evento IndicatorConfigChanged no CTG-0002). threshold_json = limiar calibrado (DASH.INDICATOR_THRESHOLD_NOT_CALIBRATED, DT-030) e acceptable_latency_minutes por painel (DASH.INDICATOR_LATENCY_INVALID; valor exato source_pending, M13).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "code",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "name",
+            "type": "varchar(160)"
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "formula",
+            "type": "text"
+          },
+          {
+            "name": "granularity",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "threshold_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "acceptable_latency_minutes",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'draft'"
+          },
+          {
+            "name": "published_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "published_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_indicator_config_code",
+            "columns": ["tenant_id", "code"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_indicator_config_indicator",
+            "columns": ["tenant_id", "indicator_code", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_indicator_config_indicator_code",
+            "expression": "indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_indicator_config_status",
+            "expression": "status in ('draft','published')"
+          },
+          {
+            "name": "ck_dashboard_indicator_config_published",
+            "expression": "status <> 'published' or published_at is not null"
+          },
+          {
+            "name": "ck_dashboard_indicator_config_latency",
+            "expression": "acceptable_latency_minutes is null or acceptable_latency_minutes > 0"
+          },
+          {
+            "name": "ck_dashboard_indicator_config_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "BiPanel",
+        "table": "bi_panel",
+        "primaryKey": ["id"],
+        "description": "Painel de BI portado de BP-BI-REPORTING-001 (origem TEAT, entidade BiPanel: name, description, visibility_profile, config_json, status) sem traffic_agency_id (plan R-0011 M4; OD-D13, telas de apoio D-14/D-16). visibility_profile vira camada N0/N1/N2 de RN-DASH-170 e nunca N3 (dashboard-route-contract secao 8.3; config_json nunca referencia N3). Ciclo rascunho -> publicado (dashboard-route-contract secao 4, POST bi-panels/{id}/publish).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "name",
+            "type": "varchar(160)"
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "visibility_profile",
+            "type": "varchar(2)"
+          },
+          {
+            "name": "config_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'draft'"
+          },
+          {
+            "name": "published_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "published_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_bi_panel_name",
+            "columns": ["tenant_id", "name"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_bi_panel_visibility_profile",
+            "expression": "visibility_profile in ('N0','N1','N2')"
+          },
+          {
+            "name": "ck_dashboard_bi_panel_status",
+            "expression": "status in ('draft','published')"
+          },
+          {
+            "name": "ck_dashboard_bi_panel_published",
+            "expression": "status <> 'published' or published_at is not null"
+          },
+          {
+            "name": "ck_dashboard_bi_panel_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "GeneratedReport",
+        "table": "generated_report",
+        "primaryKey": ["id"],
+        "description": "Relatorio gerado por job, portado de BP-BI-REPORTING-001 (origem TEAT, entidade GeneratedReport: user_ref, report_type, filters_json, requested_at, completed_at, status, file_uri, file_hash) sem traffic_agency_id (plan R-0011 M4). status in {processing, completed, failed} (dashboard-route-contract secao 4: request/complete/fail; DASH.REPORT_STATE_INVALID); completed exige file_uri e file_hash (DASH.REPORT_FILE_HASH_MISMATCH); layer in N0..N2 e purpose (N2) porque o arquivo herda a camada e leva marca d agua (RN-DASH-172 regras 1..3; watermark preenchida no CTG-0002).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "user_ref",
+            "type": "uuid"
+          },
+          {
+            "name": "report_type",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "filters_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          {
+            "name": "layer",
+            "type": "varchar(2)"
+          },
+          {
+            "name": "purpose",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "requested_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "completed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'processing'"
+          },
+          {
+            "name": "file_uri",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "file_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          },
+          {
+            "name": "watermark",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "failure_code",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_dashboard_generated_report_requested",
+            "columns": ["tenant_id", "requested_at"]
+          },
+          {
+            "name": "ix_dashboard_generated_report_status",
+            "columns": ["tenant_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_generated_report_status",
+            "expression": "status in ('processing','completed','failed')"
+          },
+          {
+            "name": "ck_dashboard_generated_report_layer",
+            "expression": "layer in ('N0','N1','N2')"
+          },
+          {
+            "name": "ck_dashboard_generated_report_completed",
+            "expression": "status <> 'completed' or (file_uri is not null and file_hash is not null and completed_at is not null)"
+          },
+          {
+            "name": "ck_dashboard_generated_report_purpose_n2",
+            "expression": "layer <> 'N2' or purpose is not null"
+          },
+          {
+            "name": "ck_dashboard_generated_report_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "ExportLog",
+        "table": "export_log",
+        "primaryKey": ["id"],
+        "description": "Registro de exportacao (RN-DASH-172 cinco regras; RN-DASH-171 conteudo minimo do registro de acesso: quem = user_ref + user_role, quando, o que = scope + filters_json, granularidade = layer, volume = row_count, origem, finalidade = purpose; dashboard-route-contract secao 4 POST exports / approve; plan R-0011 M4). layer in N0..N2 (regra 1 herda a camada; regra 4 veda N3); purpose obrigatoria em N2 (regra 2; DASH.EXPORT_PURPOSE_REQUIRED); watermark (regra 3); status in {registered, pending-approval, approved, rejected} - acima de dashboard.export.approval_rows fica pending-approval e approved exige approved_by nominal (regra 5; DASH.EXPORT_VOLUME_APPROVAL_REQUIRED); suppressed_cells = celulas suprimidas (RN-DASH-161; DASH.CELL_SUPPRESSED).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "user_ref",
+            "type": "uuid"
+          },
+          {
+            "name": "user_role",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "scope",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "filters_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "format",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "layer",
+            "type": "varchar(2)"
+          },
+          {
+            "name": "purpose",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "row_count",
+            "type": "integer"
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'registered'"
+          },
+          {
+            "name": "justification",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "approved_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "approved_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "watermark",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "suppressed_cells",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "origin",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "requested_at",
+            "type": "timestamptz",
+            "default": "now()"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_dashboard_export_log_requested",
+            "columns": ["tenant_id", "requested_at"]
+          },
+          {
+            "name": "ix_dashboard_export_log_status",
+            "columns": ["tenant_id", "status"]
+          },
+          {
+            "name": "ix_dashboard_export_log_user",
+            "columns": ["tenant_id", "user_ref", "requested_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_export_log_layer",
+            "expression": "layer in ('N0','N1','N2')"
+          },
+          {
+            "name": "ck_dashboard_export_log_status",
+            "expression": "status in ('registered','pending-approval','approved','rejected')"
+          },
+          {
+            "name": "ck_dashboard_export_log_rows",
+            "expression": "row_count >= 0 and suppressed_cells >= 0"
+          },
+          {
+            "name": "ck_dashboard_export_log_purpose_n2",
+            "expression": "layer <> 'N2' or purpose is not null"
+          },
+          {
+            "name": "ck_dashboard_export_log_approved",
+            "expression": "status <> 'approved' or (approved_by is not null and approved_at is not null)"
+          }
+        ]
+      },
+      {
+        "name": "Source",
+        "table": "source",
+        "primaryKey": ["id"],
+        "description": "Selo de frescor por fonte (WF-DASH-003 secao Estados; dashboard-route-contract secao 4 GET sources; plan R-0011 M4/M5): source_key unica por tenant, app de origem, state in dashboard.freshness_state_ref, last_seen_at = ultimo heartbeat/evento, last_read_at = ultima leitura de fallback, acceptable_latency_minutes nula = source_pending (M13), heartbeat_contract = type do evento de heartbeat (OD-D07: source.heartbeat) - nula = fonte sem contrato, que nunca fica FRESCO (DASH.SOURCE_HEARTBEAT_UNDEFINED; \"fonte desconectada\" = indicator.connected = false + INDISPONIVEL), stale_since obrigatoria em DESATUALIZADO_MARCADO, hidden = estrategia ocultar aplicada (WF-DASH-003 secao Duas estrategias; OD-D06 apos dashboard.stale_hide_multiplier). Atualizada pelo projetor source-freshness (last_event_id) e pelo servico de frescor do CTG-0002.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "source_key",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "app",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "last_seen_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "last_read_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "acceptable_latency_minutes",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "heartbeat_contract",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "stale_since",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "hidden",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_source_key",
+            "columns": ["tenant_id", "source_key"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_source_state",
+            "columns": ["tenant_id", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_source_app",
+            "expression": "app in ('rait','pec','boat','teat','portal','senatran-adapter','dashboard','institucional','benchmark','interno','todos')"
+          },
+          {
+            "name": "ck_dashboard_source_state",
+            "expression": "state in ('FRESCO','ATRASADO','INDISPONIVEL','DESATUALIZADO_MARCADO')"
+          },
+          {
+            "name": "ck_dashboard_source_latency",
+            "expression": "acceptable_latency_minutes is null or acceptable_latency_minutes > 0"
+          },
+          {
+            "name": "ck_dashboard_source_fresh_requires_heartbeat",
+            "expression": "state <> 'FRESCO' or heartbeat_contract is not null"
+          },
+          {
+            "name": "ck_dashboard_source_stale_since",
+            "expression": "state <> 'DESATUALIZADO_MARCADO' or stale_since is not null"
+          },
+          {
+            "name": "ck_dashboard_source_hidden",
+            "expression": "hidden = false or state in ('INDISPONIVEL','DESATUALIZADO_MARCADO')"
+          },
+          {
+            "name": "ck_dashboard_source_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "TransparencyAudit",
+        "table": "transparency_audit",
+        "primaryKey": ["id"],
+        "description": "Ciclo mensal de auditoria da transparencia ativa (IND-DASH-209; APP-DASHBOARD secao Catalogo B; WF-DASH-002 secao Prazos linha 209; dashboard.transparency.audit_period = monthly, DT-030; dashboard-route-contract secao 4 GET transparency/checklist, POST transparency/audits): period YYYY-MM unico por tenant, checklist_json = itens do checklist tecnico de RN-DASH-151 / LAI art. 8 par. 3 (RN-DASH-140), result = resultado textual (vocabulario fechado pendente, CTG-0001 secao 8), audited_by = quem auditou (papel technical-admin/agency-admin).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "period",
+            "type": "varchar(7)"
+          },
+          {
+            "name": "checklist_json",
+            "type": "jsonb"
+          },
+          {
+            "name": "result",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "audited_by",
+            "type": "uuid"
+          },
+          {
+            "name": "audited_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "notes",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_transparency_audit_period",
+            "columns": ["tenant_id", "period"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_transparency_audit_period",
+            "expression": "period ~ '^[0-9]{4}-[0-9]{2}$'"
+          }
+        ]
+      },
+      {
+        "name": "Dataset",
+        "table": "dataset",
+        "primaryKey": ["id"],
+        "description": "Conjunto de dados publicavel (RN-DASH-151 sete requisitos cumulativos como colunas booleanas req_*; verificacoes 2..6: dicionario, historico, ressalva de qualidade, periodicidade declarada, licenca; RN-DASH-142 verificacoes 1, 4 e 5: nasce P3, promocao a P1/P2 e ato explicito com responsavel, data e fundamento, conjunto derivado versionado; dashboard-route-contract secao 4 GET datasets, GET /open-data/{dataset}; DASH.DATASET_REQUIREMENTS_UNMET). Publicado exige classification in {P1, P2}, os sete requisitos e suppression_applied (RN-DASH-161; DASH.CELL_THRESHOLD_UNDEFINED). changelog_json = historico mantido (requisito 4, verificacao 3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "dataset_key",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "name",
+            "type": "varchar(160)"
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "classification",
+            "type": "varchar(2)",
+            "default": "'P3'"
+          },
+          {
+            "name": "req_open_format",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "req_machine_readable",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "req_data_dictionary",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "req_periodic_update_history",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "req_authenticity_integrity",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "req_searchable",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "req_accessible",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "license",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "periodicity",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "quality_note",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "changelog_json",
+            "type": "jsonb",
+            "default": "'[]'::jsonb"
+          },
+          {
+            "name": "suppression_applied",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "promoted_by",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "promoted_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "promotion_basis",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "published_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_dataset_key",
+            "columns": ["tenant_id", "dataset_key"],
+            "unique": true
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_dataset_classification",
+            "expression": "classification in ('P1','P2','P3')"
+          },
+          {
+            "name": "ck_dashboard_dataset_promotion",
+            "expression": "classification = 'P3' or (promoted_by is not null and promoted_at is not null and promotion_basis is not null)"
+          },
+          {
+            "name": "ck_dashboard_dataset_published",
+            "expression": "published_at is null or (classification in ('P1','P2') and req_open_format and req_machine_readable and req_data_dictionary and req_periodic_update_history and req_authenticity_integrity and req_searchable and req_accessible and suppression_applied)"
+          },
+          {
+            "name": "ck_dashboard_dataset_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "MonitorProjectionAppliedEvent",
+        "table": "monitor_projection_applied_event",
+        "primaryKey": ["id"],
+        "description": "Ledger idempotente unico das oito projecoes deste pacote (ADR-0020 Decisao 1; plan R-0011 M4/M5; padrao de dashboard.crash_projection_applied_event de BP-DASHBOARD-CRASHES-001). A chave (tenant_id, projection_name, event_id) permite replay integral ou incremental sem aceitar o mesmo evento duas vezes; a insercao do ledger e o efeito na tabela de projecao compartilham a mesma transacao sob RLS (CTG-0001 secao 4.3). projection_name in os oito nomes dashboard.<projecao>; event_type = type tecnico ou domainEvent consumido; occurred_at do envelope permite medir o atraso de consumo (IND-DASH-401, CTG-0002).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "projection_name",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_type",
+            "type": "varchar(80)"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          },
+          {
+            "name": "occurred_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "applied_at",
+            "type": "timestamptz",
+            "default": "now()"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_monitor_projection_applied_event",
+            "columns": ["tenant_id", "projection_name", "event_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_monitor_projection_replay",
+            "columns": ["tenant_id", "projection_name", "applied_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_monitor_projection_name",
+            "expression": "projection_name in ('dashboard.prescription_risk','dashboard.production','dashboard.integration_health','dashboard.pec_deadlines','dashboard.teat_measures','dashboard.portal_service_metrics','dashboard.duty_evidence','dashboard.source_freshness')"
+          },
+          {
+            "name": "ck_dashboard_monitor_projection_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "PrescriptionRisk",
+        "table": "prescription_risk",
+        "primaryKey": ["id"],
+        "description": "Projecao dashboard.prescription_risk (ADR-0020 Decisao 2; dashboard-route-contract secao 6; RN-DASH-131; IND-DASH-101..105): uma celula por (case_id, clock_code) - o processo do RAIT e opaco (uuid, camada N2, RN-DASH-170), nunca numero de processo. flag = toFlag de rait.clock.flag-changed (token do RAIT, sem check), days_remaining e ceiling_on gravados do evento, nunca calculados (RN-DASH-131 verificacao 4); instance/case_state/received_on de rait.case.changed e rait.case.received; timer_code/ceiling_effect/extinct_state de inf.timer.expired e inf.infraction.changed (teto atingido, EXTINTO_*); pool_id de rait.assignment.changed. indicator_code derivado de clock_code + instance (CTG-0001 secao 4.1). Idempotente por event.id via monitor_projection_applied_event; event_schema_version e aggregate_version guardadas por linha.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "clock_code",
+            "type": "varchar(1)"
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "clock_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "instance",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "flag",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "days_remaining",
+            "type": "integer",
+            "nullable": true
+          },
+          {
+            "name": "ceiling_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "received_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "case_state",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "pool_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "timer_code",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "ceiling_effect",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "ceiling_reached_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "extinct_state",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "flag_changed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_prescription_risk_cell",
+            "columns": ["tenant_id", "case_id", "clock_code"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_prescription_risk_indicator",
+            "columns": ["tenant_id", "indicator_code", "flag", "ceiling_on"]
+          },
+          {
+            "name": "ix_dashboard_prescription_risk_pool",
+            "columns": ["tenant_id", "pool_id", "clock_code"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_prescription_risk_clock",
+            "expression": "clock_code in ('A','B','C','D')"
+          },
+          {
+            "name": "ck_dashboard_prescription_risk_indicator",
+            "expression": "indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_prescription_risk_instance",
+            "expression": "instance is null or instance in ('jari','cetran')"
+          },
+          {
+            "name": "ck_dashboard_prescription_risk_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "Production",
+        "table": "production",
+        "primaryKey": ["id"],
+        "description": "Projecao dashboard.production (ADR-0020 Decisao 2: tempo por fase, SLA-30, taxa de provimento; dashboard-route-contract secao 6; IND-DASH-304/305): uma celula por caso do RAIT (case_id opaco, N2): instance, current_state/from_state/state_changed_at de rait.case.changed, received_on de rait.case.received, decision_kind/decided_on/decision_published_on de rait.decision.published (sem produtor em main) e rait.minutes.published (RAIT_DECISAO_PUBLICADA por item), session_id/agenda_outcome de rait.session.changed e rait.agenda-item.changed, period_start = mes de state_changed_at para agregacao N0. Nenhum enquadramento (nao publicado) - taxa de provimento por instancia e decision_kind. Idempotente por event.id via monitor_projection_applied_event.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "instance",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "period_start",
+            "type": "date"
+          },
+          {
+            "name": "from_state",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "current_state",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "state_changed_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "received_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "decision_kind",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "decided_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "decision_published_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "session_id",
+            "type": "uuid",
+            "nullable": true
+          },
+          {
+            "name": "agenda_outcome",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "transitions",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_production_case",
+            "columns": ["tenant_id", "case_id"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_production_period",
+            "columns": [
+              "tenant_id",
+              "period_start",
+              "instance",
+              "current_state"
+            ]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_production_instance",
+            "expression": "instance is null or instance in ('jari','cetran','defesa')"
+          },
+          {
+            "name": "ck_dashboard_production_transitions",
+            "expression": "transitions >= 0"
+          },
+          {
+            "name": "ck_dashboard_production_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "IntegrationHealth",
+        "table": "integration_health",
+        "primaryKey": ["id"],
+        "description": "Projecao dashboard.integration_health (ADR-0020 Decisao 2: filas, falhas, recibos por sistema; dashboard-route-contract secao 6; IND-DASH-401..403): uma celula por (period_start dia, system_key, metric) com metric_value e sample_count; hoje alimentada so pelos recibos da sincronizacao offline do TEAT (sync.batch.received: receiptStatus, errorCode) - status da outbox, UPSTREAM_* e telemetria do adapter nao sao eventos publicados (CTG-0001 secao 4.1/4.2, connected = false; OD-D04 fixa so os limiares). Idempotente por event.id via monitor_projection_applied_event.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "period_start",
+            "type": "date"
+          },
+          {
+            "name": "system_key",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "metric",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "metric_value",
+            "type": "numeric(14,3)",
+            "default": "0"
+          },
+          {
+            "name": "sample_count",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "last_error_code",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "last_seen_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_integration_health_cell",
+            "columns": ["tenant_id", "period_start", "system_key", "metric"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_integration_health_system",
+            "columns": ["tenant_id", "system_key", "period_start"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_integration_health_counts",
+            "expression": "sample_count >= 0"
+          },
+          {
+            "name": "ck_dashboard_integration_health_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "PecDeadlines",
+        "table": "pec_deadlines",
+        "primaryKey": ["id"],
+        "description": "Projecao dashboard.pec_deadlines (dashboard-route-contract secao 6, nova; IND-DASH-106/107/306..309; RN-PEC-112 via APP-DASHBOARD secao Catalogo): o PEC nao publica eventos - a projecao nasce com consumedEvents do contrato de dado proposto em WP-D3 (dashboard-build-pack secao WP-D3: {indicador_id, caso_id, estado_anterior, estado_novo, timestamp, base_legal}; type proposto pec.deadline.changed) e connected = false (plan M5). Uma celula por (case_id opaco, indicator_code); from_state/to_state sao tokens do PEC (sem check), legal_basis verbatim do feed; due_on so quando o feed a carregar (CTG-0001 secao 8). Idempotente por event.id via monitor_projection_applied_event.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "case_id",
+            "type": "uuid"
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "from_state",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "to_state",
+            "type": "varchar(60)"
+          },
+          {
+            "name": "changed_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "due_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "legal_basis",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_pec_deadlines_cell",
+            "columns": ["tenant_id", "case_id", "indicator_code"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_pec_deadlines_indicator",
+            "columns": ["tenant_id", "indicator_code", "to_state", "due_on"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_pec_deadlines_indicator",
+            "expression": "indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_pec_deadlines_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "TeatMeasures",
+        "table": "teat_measures",
+        "primaryKey": ["id"],
+        "description": "Projecao dashboard.teat_measures (dashboard-route-contract secao 6, nova; IND-DASH-108..111, 311..314, 404..407; teat-route-contract secao 8; schemas/events do TEAT): uma celula por (indicator_code, object_kind, object_ref) onde object_kind = aggregate.kind do evento (administrative-measure, alcohol-procedure, ait, evidence, normative-package, operational-device) e object_ref = aggregate.id opaco (N2; nunca placa, AIT ou dado de saude - RN-DASH-170). state = toState/currentStatus/eventType do evento (tokens do TEAT, sem check), started_at/ended_at/deadline_at gravados dos campos do evento (TERMO_EMITIDO withdrawalDeadlineAt/ctbDeadlineAt, package.published validUntil), integrity_ok para IND-DASH-404 (custody.event eventType), detail_json com os demais campos primitivos do data. Idempotente por event.id via monitor_projection_applied_event.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "object_kind",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "object_ref",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "state",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "started_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "ended_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "deadline_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "integrity_ok",
+            "type": "boolean",
+            "nullable": true
+          },
+          {
+            "name": "detail_json",
+            "type": "jsonb",
+            "default": "'{}'::jsonb"
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_teat_measures_cell",
+            "columns": [
+              "tenant_id",
+              "indicator_code",
+              "object_kind",
+              "object_ref"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_teat_measures_deadline",
+            "columns": ["tenant_id", "indicator_code", "deadline_at"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_teat_measures_indicator",
+            "expression": "indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_teat_measures_object_kind",
+            "expression": "object_kind in ('administrative-measure','alcohol-procedure','ait','evidence','normative-package','operational-device','numbering-reservation')"
+          },
+          {
+            "name": "ck_dashboard_teat_measures_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "PortalServiceMetrics",
+        "table": "portal_service_metrics",
+        "primaryKey": ["id"],
+        "description": "Projecao dashboard.portal_service_metrics (dashboard-route-contract secao 6, nova; IND-DASH-206..209, 301..303; portal-route-contract secao 10): uma celula por (indicator_code, object_kind, object_ref) com object_kind in {request, manifestation, evaluation} e object_ref = aggregate.id opaco (N2; nunca CPF ou nome - RN-DASH-170): service_key, state, opened_at/closed_at, due_on e extended vindos do evento quando publicados (campos de data do Portal source_pending, CTG-0001 secao 4.1), score para avaliacoes (AVALIACAO_REGISTRADA), period_start = mes de opened_at para agregacao N0. Idempotente por event.id via monitor_projection_applied_event.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "object_kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "object_ref",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "service_key",
+            "type": "varchar(80)",
+            "nullable": true
+          },
+          {
+            "name": "state",
+            "type": "varchar(60)",
+            "nullable": true
+          },
+          {
+            "name": "period_start",
+            "type": "date"
+          },
+          {
+            "name": "opened_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "closed_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "due_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "extended",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "score",
+            "type": "numeric(5,2)",
+            "nullable": true
+          },
+          {
+            "name": "detail_json",
+            "type": "jsonb",
+            "default": "'{}'::jsonb"
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_portal_service_metrics_cell",
+            "columns": [
+              "tenant_id",
+              "indicator_code",
+              "object_kind",
+              "object_ref"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_portal_service_metrics_period",
+            "columns": ["tenant_id", "indicator_code", "period_start", "state"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_portal_service_metrics_indicator",
+            "expression": "indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_portal_service_metrics_object_kind",
+            "expression": "object_kind in ('request','manifestation','evaluation')"
+          },
+          {
+            "name": "ck_dashboard_portal_service_metrics_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      },
+      {
+        "name": "DutyEvidence",
+        "table": "duty_evidence",
+        "primaryKey": ["id"],
+        "description": "Projecao dashboard.duty_evidence (dashboard-route-contract secao 6, nova; IND-DASH-201..209; WF-DASH-002): historico agregavel (N0) dos ciclos de dever alimentado pelos eventos proprios do DASHBOARD (DEVER_JANELA_ABERTA, DEVER_ATRASADO, DEVER_COMPROVADO - type proposto dashboard.duty.changed, publicado so a partir do CTG-0002, connected = false no CTG-0001) e por eventos de publicacao quando existirem. Uma celula por (duty_code, period): state, deadline_on, proved_at, late = comprovado depois da data-limite, evidence_hash (nunca a captura). Idempotente por event.id via monitor_projection_applied_event.",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "duty_code",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "period",
+            "type": "varchar(10)"
+          },
+          {
+            "name": "indicator_code",
+            "type": "varchar(20)",
+            "nullable": true
+          },
+          {
+            "name": "state",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "deadline_on",
+            "type": "date",
+            "nullable": true
+          },
+          {
+            "name": "opened_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "proved_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "late",
+            "type": "boolean",
+            "default": "false"
+          },
+          {
+            "name": "evidence_hash",
+            "type": "varchar(128)",
+            "nullable": true
+          },
+          {
+            "name": "last_event_id",
+            "type": "uuid"
+          },
+          {
+            "name": "event_schema_version",
+            "type": "integer"
+          },
+          {
+            "name": "aggregate_version",
+            "type": "integer"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_duty_evidence_cell",
+            "columns": ["tenant_id", "duty_code", "period"],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_duty_evidence_state",
+            "columns": ["tenant_id", "state", "deadline_on"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_duty_evidence_code",
+            "expression": "duty_code ~ '^DUTY-[A-Z0-9]+$'"
+          },
+          {
+            "name": "ck_dashboard_duty_evidence_period",
+            "expression": "period ~ '^[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?$'"
+          },
+          {
+            "name": "ck_dashboard_duty_evidence_state",
+            "expression": "state in ('JANELA_ABERTA','EM_APURACAO','PREPARADO','SUBMETIDO_PUBLICADO','COMPROVADO','ARQUIVADO','ATRASADO','NAO_CUMPRIDO')"
+          },
+          {
+            "name": "ck_dashboard_duty_evidence_indicator",
+            "expression": "indicator_code is null or indicator_code ~ '^IND-DASH-[0-9]{3}$'"
+          },
+          {
+            "name": "ck_dashboard_duty_evidence_versions_positive",
+            "expression": "event_schema_version > 0 and aggregate_version > 0"
+          }
+        ]
+      }
+    ]
+  },
+  "api": {
+    "basePath": "/v1/dashboard/",
+    "resources": [
+      {
+        "entity": "Alert",
+        "path": "alerts",
+        "resource": "alert",
+        "operations": []
+      },
+      {
+        "entity": "AlertTrail",
+        "path": "alert-trails",
+        "resource": "alert-trail",
+        "operations": []
+      },
+      {
+        "entity": "Duty",
+        "path": "duties",
+        "resource": "duty",
+        "operations": []
+      },
+      {
+        "entity": "DutyCycle",
+        "path": "duty-cycles",
+        "resource": "duty-cycle",
+        "operations": []
+      },
+      {
+        "entity": "Indicator",
+        "path": "indicators",
+        "resource": "indicator",
+        "operations": []
+      },
+      {
+        "entity": "IndicatorConfig",
+        "path": "indicator-configs",
+        "resource": "indicator-config",
+        "operations": []
+      },
+      {
+        "entity": "BiPanel",
+        "path": "bi-panels",
+        "resource": "bi-panel",
+        "operations": []
+      },
+      {
+        "entity": "GeneratedReport",
+        "path": "generated-reports",
+        "resource": "generated-report",
+        "operations": []
+      },
+      {
+        "entity": "ExportLog",
+        "path": "exports",
+        "resource": "export",
+        "operations": []
+      },
+      {
+        "entity": "Source",
+        "path": "sources",
+        "resource": "source",
+        "operations": []
+      },
+      {
+        "entity": "TransparencyAudit",
+        "path": "transparency-audits",
+        "resource": "transparency-audit",
+        "operations": []
+      },
+      {
+        "entity": "Dataset",
+        "path": "datasets",
+        "resource": "dataset",
+        "operations": []
+      },
+      {
+        "entity": "MonitorProjectionAppliedEvent",
+        "path": "applied-events",
+        "resource": "monitor-projection-applied-event",
+        "operations": []
+      },
+      {
+        "entity": "PrescriptionRisk",
+        "path": "prescription-risk",
+        "resource": "prescription-risk",
+        "operations": []
+      },
+      {
+        "entity": "Production",
+        "path": "production",
+        "resource": "production",
+        "operations": []
+      },
+      {
+        "entity": "IntegrationHealth",
+        "path": "integration-health",
+        "resource": "integration-health",
+        "operations": []
+      },
+      {
+        "entity": "PecDeadlines",
+        "path": "pec-deadlines",
+        "resource": "pec-deadlines",
+        "operations": []
+      },
+      {
+        "entity": "TeatMeasures",
+        "path": "teat-measures",
+        "resource": "teat-measures",
+        "operations": []
+      },
+      {
+        "entity": "PortalServiceMetrics",
+        "path": "portal-service-metrics",
+        "resource": "portal-service-metrics",
+        "operations": []
+      },
+      {
+        "entity": "DutyEvidence",
+        "path": "duty-evidence",
+        "resource": "duty-evidence",
+        "operations": []
+      }
+    ]
+  },
+  "auth": {
+    "source": "DASHBOARD_RULES"
+  },
+  "audit": {
+    "enabled": true
+  }
+}
