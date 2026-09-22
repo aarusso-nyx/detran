@@ -52,6 +52,12 @@ inf.infraction.penalty-final.schema.json         RAIT/inf inf/infraction
 inf.infraction.refund-due.schema.json            RAIT/inf inf/infraction
 inf.timer.expired.schema.json                    RAIT/inf inf/infraction
 inf.timer.rescheduled.schema.json                RAIT/inf inf/infraction
+dashboard.alert.changed.schema.json              dashboard dashboard/monitor (cycle/events.ts)
+dashboard.duty.changed.schema.json               dashboard dashboard/monitor (cycle/events.ts)
+dashboard.source.freshness.schema.json           dashboard dashboard/monitor (cycle/events.ts)
+dashboard.export.registered.schema.json          dashboard dashboard/monitor (cycle/events.ts)
+dashboard.report.changed.schema.json             dashboard dashboard/monitor (cycle/events.ts)
+dashboard.indicator-config.changed.schema.json   dashboard dashboard/monitor (cycle/events.ts)
 ```
 
 `integration.item.changed` (citado em `teat-stream.service.ts` e em M17) **não** tem schema

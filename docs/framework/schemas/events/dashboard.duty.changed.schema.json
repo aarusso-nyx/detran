@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/dashboard.duty.changed.schema.json",
+  "title": "dashboard.duty.changed",
+  "description": "Transicao de dashboard.duty_cycle (CTG-0002 Sec.7, Sec.12; produtor dashboard/monitor cycle/duty.service.ts publishCycle). Consumido por duty-evidence.projection.ts (CTG-0001 Sec.4.1.7).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "const": "dashboard.duty.changed" },
+    "domainEvent": {
+      "type": "string",
+      "enum": [
+        "DEVER_JANELA_ABERTA",
+        "DEVER_EM_APURACAO",
+        "DEVER_PREPARADO",
+        "DEVER_SUBMETIDO_PUBLICADO",
+        "DEVER_ATRASADO",
+        "DEVER_COMPROVADO",
+        "DEVER_ARQUIVADO",
+        "DEVER_NAO_CUMPRIDO"
+      ],
+      "description": "duty.service.ts monta o token por concatenacao ('DEVER_' + toState) para toda transicao de dashboard.duty_state_ref (8 codigos, CTG-0001 Sec.3.3) -- nao so as quatro do route contract Sec.6/CTG-0002 Sec.12 (A22 c: tokens DEVER_<estado>). DEVER_JANELA_ABERTA, DEVER_ATRASADO e DEVER_COMPROVADO estao no route contract Sec.6; DEVER_NAO_CUMPRIDO e proposto (OD-D33); DEVER_EM_APURACAO, DEVER_PREPARADO, DEVER_SUBMETIDO_PUBLICADO e DEVER_ARQUIVADO sao transcritos do codigo (publishCycle chamado em toda transicao) e nao constam do route contract Sec.6 nem de CTG-0002 Sec.12 -- x-source-pending, TASK-0007 leva ao route contract."
+    },
+    "version": { "const": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "tenantId": { "type": "string", "format": "uuid" },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["user", "system", "timer"] },
+        "id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "ctx.requestId; ausente para transicoes do sweeper (ator system/timer sem requisicao HTTP)."
+    },
+    "causationId": { "type": "string" },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "const": "duty_cycle" },
+        "id": { "type": "string", "format": "uuid" },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dutyCycleId",
+        "dutyCode",
+        "indicatorCode",
+        "period",
+        "fromState",
+        "toState",
+        "deadlineOn",
+        "late",
+        "occurredAt"
+      ],
+      "properties": {
+        "dutyCycleId": { "type": "string", "format": "uuid" },
+        "dutyCode": { "type": "string" },
+        "indicatorCode": {
+          "type": ["string", "null"],
+          "pattern": "^IND-DASH-\\d{3}$",
+          "description": "duty.indicator_code; alguns deveres sao sem indicador correspondente (nulo)."
+        },
+        "period": { "type": "string" },
+        "fromState": { "type": "string" },
+        "toState": { "type": "string" },
+        "deadlineOn": { "type": ["string", "null"], "format": "date" },
+        "late": { "type": "boolean" },
+        "evidenceHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "so em DEVER_COMPROVADO (evelopeOf omite undefined nas demais transicoes)."
+        },
+        "occurredAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

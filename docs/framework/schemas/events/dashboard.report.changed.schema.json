@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/dashboard.report.changed.schema.json",
+  "title": "dashboard.report.changed",
+  "description": "Ciclo de dashboard.generated_report (CTG-0002 Sec.10.7, Sec.12; produtor dashboard/monitor surface/report.service.ts emit()).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "const": "dashboard.report.changed" },
+    "domainEvent": {
+      "type": "string",
+      "enum": ["ReportRequested", "ReportGenerated", "ReportFailed"],
+      "description": "ReportRequested e ReportGenerated estao no route contract Sec.6; ReportFailed e proposto (OD-D33), TASK-0007 leva-o."
+    },
+    "version": { "const": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "tenantId": { "type": "string", "format": "uuid" },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["user", "system", "timer"] },
+        "id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "correlationId": { "type": "string" },
+    "causationId": { "type": "string" },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "const": "generated_report" },
+        "id": { "type": "string", "format": "uuid" },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reportId",
+        "reportType",
+        "layer",
+        "purpose",
+        "status",
+        "fileHash",
+        "failureCode",
+        "occurredAt"
+      ],
+      "properties": {
+        "reportId": { "type": "string", "format": "uuid" },
+        "reportType": {
+          "type": "string",
+          "enum": [
+            "alerts",
+            "duties",
+            "indicators",
+            "sources",
+            "comparisons",
+            "kpis",
+            "audit-trail"
+          ]
+        },
+        "layer": { "type": "string", "enum": ["N0", "N1", "N2"] },
+        "purpose": { "type": ["string", "null"] },
+        "status": {
+          "type": "string",
+          "enum": ["processing", "completed", "failed"]
+        },
+        "fileHash": {
+          "type": ["string", "null"],
+          "description": "sha256 hex minusculo apos ReportGenerated; null em ReportRequested/ReportFailed."
+        },
+        "failureCode": { "type": ["string", "null"] },
+        "occurredAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

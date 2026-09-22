@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2080000,
-  "estimated_output_total": 602500,
+  "estimated_input_total": 2180000,
+  "estimated_output_total": 642500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3.",
   "entries": [
     {
@@ -214,6 +214,14 @@
       "input_tokens": 70000,
       "output_tokens": 2000,
       "note": "ciclo 9 REVIEW (2 high: filtro teat-*/portal-* do app; 1 low: esforço 0007) → ciclo 10 PASS; brutos 69.619 + 76.630."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "sonnet",
+      "input_tokens": 100000,
+      "output_tokens": 40000,
+      "note": "Transcriber: contrato de comandos (43 ops), 6 schemas de evento, README, 4 feeds; brutos 411 k, 150 chamadas, 23 min."
     }
   ]
 }
