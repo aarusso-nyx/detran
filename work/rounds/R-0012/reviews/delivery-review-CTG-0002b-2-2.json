@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "apps/rait/web/src/app/features/fila/pages/defense-pool-queue.page.spec.ts",
+      "line": 142,
+      "claim": "Ação confirmável claim-next não recebeu os três it prometidos em A15: há um único it que agrupa message, dismiss e confirm; além disso o stub usa CommandRunner genérico (linha 48), sem commandMethod M8, e a asserção da linha 163 só verifica contagem, não `rait-case:claim-next`.",
+      "fix": "Separar C-2B-71 de claim-next em três it e configurar `claimNext: commandMethod('rait-case:claim-next', command)`; no it de confirmação, verificar o único argumento M8 de `runMock`."
+    }
+  ],
+  "notes": [
+    "A16 está presente: o harness que navega pelas rotas em shortcut.service.spec.ts provê StynxSessionService nas linhas 211–216."
+  ]
+}
