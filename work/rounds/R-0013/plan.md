@@ -935,6 +935,20 @@ Checkpoint 40 (janela 4, preflight CTG-0004a):
   `4cec35ce8ad3aa18efa16c067d87cee040244c2c601c61dad523fae32ba026b8`; TASK-0010 abriu a
   tentativa 1/2 em papel Architect, enquanto TASK-0011…TASK-0018 permanecem `queued`.
 
+Checkpoint 41 (janela 4, contrato mobile congelado):
+
+- TASK-0010 criou `ARCH-TEAT-MOBILE-CONTRACT` com 70 rotas/fontes/componentes, oráculo cartesiano
+  sobre os nove papéis TEAT, oito módulos, 14 schemas e importação content-addressed das 576
+  transições no hash `a3175e63…`;
+- o maestro rejeitou ownership divergente do prompt e a ampliação de `sync-conflict` para agente;
+  o contrato final enumera a allowlist exata, registra o handoff sequencial de `app.routes.ts` e
+  mantém `sync-conflict` exclusivamente para `field-supervisor`;
+- a divergência residual da folha IU foi registrada como proposta
+  `OD-TEAT-MOBILE-SYNC-CONFLICT-ROLE`, sem mudar a autoridade vigente de `teat-frontends` §3/§8;
+- `pnpm format:check`, `pnpm docs:kb:check`, o oráculo focal 70/70/576 e `git diff --check`
+  passaram. TASK-0010 está `completed`; TASK-0011 abriu a tentativa 1/2 e TASK-0012…0018 ficam
+  `queued`.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
