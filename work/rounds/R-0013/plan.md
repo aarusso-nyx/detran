@@ -891,6 +891,19 @@ Checkpoint 37 (janela 3, exaustão de locks eliminada na raiz):
   59 projetos, 966 handlers, RLS 265/2, portal 1314, RAIT 1807 e ambos os builds. O candidato está
   liberado para commit, novo evidence record e nova execução remota integral antes do merge.
 
+Checkpoint 38 (janela 3, integração RAIT web e recertificação combinada):
+
+- antes da regravação de evidência, `origin/main` avançou até `72c15ae9…` com a entrega RAIT web
+  da PR #85 e foi integrado por merge normal `b9466b0a…`, sem tocar backend, DDL ou o rehearsal de
+  upgrade; o único conflito foi a cadeia DEVAI, aceita integralmente a partir de `main`;
+- a prova focal PostgreSQL 16 de 20/20 permanece content-addressed e aplicável ao candidato
+  combinado, pois suas entradas de backend, DDL, teste, imagem e configuração não mudaram;
+- `pnpm check` foi repetido no candidato combinado exato e passou: 756 artefatos KB, 160
+  operações/64 clientes, 59 projetos, 966 handlers, RLS 265/2, fronteira SENATRAN sobre 2902
+  arquivos, portal 1314 testes, RAIT 2263 testes com 134 todo e ambos os builds;
+- o worktree permaneceu limpo após o merge e os gates. O candidato está liberado para regravar a
+  evidência CTG-0003 sobre a cadeia atual, publicar a branch e exigir nova CI integral verde.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
