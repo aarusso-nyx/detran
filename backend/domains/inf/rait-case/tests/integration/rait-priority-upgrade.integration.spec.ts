@@ -290,6 +290,26 @@ function normalizedDump(output: string): string {
   return normalized.join('\n');
 }
 
+function normalizedTableData(output: string): string {
+  const lines = output.split('\n');
+  const normalized: string[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    if (!/^COPY .* FROM stdin;$/.test(lines[index])) continue;
+    normalized.push(lines[index]);
+    const rows: string[] = [];
+    while (index + 1 < lines.length && lines[index + 1] !== '\\.') {
+      rows.push(lines[++index]);
+    }
+    if (lines[index + 1] !== '\\.')
+      throw new Error('pg_dump COPY block is incomplete');
+    index += 1;
+    normalized.push(...rows.sort(), '\\.');
+  }
+  if (normalized.length === 0)
+    throw new Error('pg_dump data contains no COPY blocks');
+  return normalized.join('\n');
+}
+
 describe('upgrade data fingerprint', () => {
   it('ignora somente estado de sequência não transacional e conserva bytes das linhas', () => {
     const dump = (row: string, sequence: number) =>
@@ -301,11 +321,11 @@ describe('upgrade data fingerprint', () => {
         '',
       ].join('\n');
 
-    expect(normalizedDump(dump('case-1', 1))).toBe(
-      normalizedDump(dump('case-1', 99)),
+    expect(normalizedTableData(dump('case-1', 1))).toBe(
+      normalizedTableData(dump('case-1', 99)),
     );
-    expect(normalizedDump(dump('case-1', 1))).not.toBe(
-      normalizedDump(dump('case-2', 1)),
+    expect(normalizedTableData(dump('case-1', 1))).not.toBe(
+      normalizedTableData(dump('case-2', 1)),
     );
   });
 });
@@ -324,7 +344,11 @@ async function dump(
   );
   if (result.code !== 0)
     throw new Error(`pg_dump ${kind} failed (credentials withheld)`);
-  return digest(normalizedDump(result.output));
+  return digest(
+    kind === '--data-only'
+      ? normalizedTableData(result.output)
+      : normalizedDump(result.output),
+  );
 }
 
 async function snapshot(
