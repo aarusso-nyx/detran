@@ -430,34 +430,39 @@ rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 al
 
 ## Retomada
 
-**Checkpoint 1 — 2026-09-21, fim da janela 1 (≈68 % do orçamento; as duas tarefas seguintes ultrapassariam
-os 80 %).** Estado:
+**Checkpoint 3 — 2026-09-21, fim da janela 1 estendida (Emenda 1 de `AUTHORIZATION.md`).** Estado:
 
-- **Concluídas**: bootstrap (`4bfb11d4`), prompt-review 1 REVIEW → 2 PASS (`af3f5d87`), TASK-0001 (Architect,
-  Opus; relatório em `reports/TASK-0001.md`; adendas A7, A8, A9), checkpoint 1 do maestro (regeneração única de
-  `BP-DASH-MONITOR-001` → `backend/domains/dashboard/monitor`, `80-dashboard.sql`, `BP-DASH-MONITOR-001.openapi.json`,
-  cliente gerado; `pnpm install` com lockfile; `blueprints:check`, `contracts:check`, `verify:rls-ddl`,
-  `verify:decorators` verdes; `typecheck` do pacote vermelho só por `./handwritten/{index,projectors}.js` — M24;
-  banco `detran_r11` criado, `apply.sh` incremental ×2 e `seed.sh` ×2 OK; 32 tabelas `dashboard.*`).
-- **Em curso**: nenhuma.
-- **Pendentes (CTG-0001)**: TASK-0002 ∥ TASK-0011 (Inspectors, Sonnet/médio; prompts `PC-…` em
-  `compositions.json`, já com PASS do reviewer; TASK-0002 item 5 realinhado por A9 — recalcular `pc_id` antes do
-  disparo) → depois TASK-0010 (Engineer, Opus) ∥ TASK-0003 (Engineer, Sonnet) → checkpoint 2 (gates do grupo,
-  `pnpm check`, `backend:test:ci`) → `delivery-review-CTG-0001` → evidência → merge de `origin/main` → push →
-  PR → CI → merge → `audit observe`. CTG-0002: prompts a compor após o merge (M14), preso a R-0007 CTG-0003.
-- **Último veredito do reviewer**: `prompt-review-2.json` PASS (2026-09-21).
-- **Próximos passos do maestro ao retomar**: `git fetch -q origin && git log --oneline HEAD..origin/main`
-  (integrar por `git merge --no-edit origin/main` só se houver commits novos — o branch ainda **não** foi
-  publicado, logo `git rebase origin/main` é admissível); `source work/rounds/R-0011/env-detran-r11.sh`;
-  recalcular `pc_id` de TASK-0002 (`compositions.json`) e disparar TASK-0002 e TASK-0011 em paralelo com os
-  prompts de `prompts/`; ao receber os relatórios, gravar `reports/TASK-000n.md`, marcar `status`, atualizar
-  `budget.json`; depois TASK-0010 ∥ TASK-0003.
-- **Lições desta janela** (para `waves.md` §Histórico via TASK-0007): (1) grep de **produtores** antes de
-  afirmar que um evento contratado "está em `main`" (OD-D17); (2) `apply.sh --full` não é mais utilizável fora
-  do ensaio de R-0007 — o banco da rodada nasce com `create database` + `apply.sh` incremental; (3) o gerador
-  emite controllers vazios com `operations: []` — critérios "nenhuma rota" devem falar de métodos de rota, não
-  de controllers (A9); (4) a divisão 0002 ∥ 0011 / 0010 ∥ 0003 mantém locks disjuntos a custo de dois
-  prompts a mais — avaliar no fechamento.
+- **CTG-0001 concluído e mesclado**: PR #83 → `main` `e0763c6c` (CI verde: backend-kernel, foundation, evidence-gate,
+  senatran-mock(-tests), boat-documents-real, verified-local-rc); delivery-review 1 REVIEW → 2 PASS; evidência
+  `record/proofs/work/generic/R-0011.jsonl` sequência 1; `audit observe` em `e0763c6c` (EV-569032faa59d0063,
+  commit `acdd3635`). Tarefas 0001, 0002, 0003, 0010, 0011 `completed` (14 iterações restritas por A7…A17 e pelos
+  achados do reviewer/CI). Branch `orchestra/dashboard-backend` publicado, agora = `main` + observação.
+- **CTG-0002 preso** (TASK-0004…0009, 0007): R-0007 CTG-0003 (infração/timers, produtor de
+  `rait.clock.flag-changed`) **não está** em `main` nem em `origin/orchestra/rait-backend` (`a8d60d88`: só
+  correções de CI/teste sobre o CTG-0002). Regra do handoff: aguardar ou empilhar; nada a empilhar hoje.
+- **Alternativa a decidir pelo Owner** (não decidida pelo maestro): abrir o CTG-0002 desde já pela via de M7/A3
+  (relógio próprio do pacote usando só `Calendar`/`Clock` de `@detran/inf-deadlines` como dependência de leitura;
+  detector escrito contra o contrato de `rait.clock.flag-changed` com fixtures, como `pec_deadlines`), deixando
+  a integração ao motor de prazos para quando R-0007 CTG-0003 mesclar. Custo: parte do detector/escalonamento
+  fica sem produtor real até lá (bloco A 2/11 conectados); benefício: deveres, frescor, exportação, relatórios,
+  rotas §2–§5, política `dashboard:*`, SSE e contratos WP-D3 não dependem de R-0007.
+- **Próximos passos ao retomar** (qualquer das vias): `git fetch -q origin && git merge --no-edit origin/main`
+  (branch publicado — nunca rebase); `source work/rounds/R-0011/env-detran-r11.sh`; compor os prompts de
+  TASK-0004 (Inspector, Opus/alto), TASK-0005 (Engineer, Opus/médio), TASK-0006/0008/0009/0007 com Architect explícito
+  (contrato `contracts/CTG-0002.md`: rotas §2–§5 do route contract, política `dashboard:*` presença **e**
+  ausência, camada N3 403, `X-Purpose`, cinco regras de RN-DASH-172, supressão secundária, timers M7, SSE
+  `/v1/dashboard/stream`, blueprint 1.1.0 com `handwrittenControllers` de nome fixo — M24) → prompt-review →
+  disparo. A tarefa de documentação (TASK-0007) registra a troca de família em `waves.md`, OD-D14…D27, o parâmetro
+  `source_pending` (M13) e as lições abaixo.
+- **Lições desta janela** (para `orchestra/README.md` §10 e `waves.md`): (1) grep de produtores antes de declarar
+  upstream em `main` (OD-D17); (2) `apply.sh --full` restrito por R-0007 — banco da rodada por `create database` +
+  incremental; (3) o gerador emite controllers vazios (A9/A10) — critérios "nenhuma rota" falam de métodos;
+  (4) inventário fechado de DDL em `rait-priority-upgrade.integration.spec.ts` é literal (60 → 62): toda rodada
+  com DDL novo o edita — derivar de `apply.sh`; (5) `export *` de vários `*.projection.ts` com `consumedEvents`
+  colide (A13) — reexport nomeado; (6) gate de parâmetros × literais de evento (A14) — declaração `consumedEvents`
+  reconhecida; (7) `ci:backend-kernel:local` exige branch publicado + ambiente RC protegido e, na máquina local,
+  o mock SENATRAN encadeou timeouts no e2e do Portal — o CI é o sinal; (8) a divisão 0002 ∥ 0011 / 0010 ∥ 0003
+  funcionou: 5 workers, zero conflito de escrita, 14 iterações restritas curtas (1–4 min) em vez de redespachos.
 
 ## Leitura
 

@@ -3,9 +3,9 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 920000,
-  "estimated_output_total": 188000,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte).",
+  "estimated_input_total": 935000,
+  "estimated_output_total": 191000,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83).",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -94,6 +94,14 @@
       "input_tokens": 25000,
       "output_tokens": 8000,
       "note": "Inspector TASK-0011 (+8 testes) e Engineer TASK-0003 (verify.mjs) para os itens 7a/7b/10."
+    },
+    {
+      "kind": "iterations",
+      "id": "ci-inventory-fix+merge",
+      "model": "sonnet",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Inspector TASK-0011: inventário fechado 60 → 62; maestro: merge PR #83, audit observe, checkpoint 3."
     }
   ]
 }
