@@ -751,8 +751,8 @@
       "window": 4,
       "estimated_input_tokens": 220000,
       "estimated_output_tokens": 50000,
-      "status": "in_progress",
-      "note": "Engineer replaces the rejected nominal candidate with the complete behavior required by the frozen 951-test contract; all Inspector/config/contract/generated paths remain immutable"
+      "status": "blocked",
+      "note": "Engineer candidate reached all local gates, but extraordinary delivery review cycle 2 found three critical and six high integration/coverage defects; task is exhausted at 2/2 and blocked pending Owner reset"
     },
     {
       "kind": "worker-correction",
@@ -762,6 +762,15 @@
       "estimated_output_tokens": 1500,
       "status": "completed",
       "note": "Inspector corrected only two stale imports to the exact core/bodycam and data/normative allowlisted paths; assertions and the other twenty-one frozen artifacts remained unchanged"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0004a-cycle-2-extraordinary",
+      "window": 4,
+      "estimated_input_tokens": 120000,
+      "estimated_output_tokens": 22000,
+      "status": "blocked",
+      "note": "Owner-authorized same-family Codex review on exact candidate a4886826; FAIL with three critical and six high findings despite 972/972 tests and full pnpm check PASS"
     }
   ]
 }

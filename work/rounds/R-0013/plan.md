@@ -1083,6 +1083,19 @@ Checkpoint 52 (janela 4, correção de paths nos sensores congelados):
   movido pela produção. TASK-0012 permanece `completed` 3/3 e TASK-0013 continua na mesma tentativa
   final 2/2, ainda não aceita pelo maestro.
 
+Checkpoint 53 (janela 4, delivery review CTG-0004a ciclo 2 extraordinário):
+
+- o candidato exato `a48868266854205e86a18fac0a052f4e4872c70a` passou lint, typecheck, build,
+  972/972 testes e `pnpm check` integral, mas o REVIEWER CODEX independente retornou **FAIL** com
+  três achados `critical` e seis `high` de integração e cobertura comportamental;
+- bootstrap/auth não têm caminho operacional e o contexto dos guardas congela o estado inicial;
+  sync diverge do OpenAPI; normativo/impressão omitem headers obrigatórios; páginas,
+  ErrorBoundary/D-05/BOAT, readiness, bodycam/impressão e persistência seguem nominais ou sem wiring;
+- o verde foi rejeitado porque os sensores ainda aceitam doubles e busca textual incompatíveis com
+  os clients/runtime reais. Nenhuma evidência de entrega, push ou PR foi emitida;
+- TASK-0013 fica `blocked` em 2/2. TASK-0012 já está em 3/3; nova sequência Architect → Inspector
+  → Engineer → gates integrais → REVIEW exige reset extraordinário explícito do Owner.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
