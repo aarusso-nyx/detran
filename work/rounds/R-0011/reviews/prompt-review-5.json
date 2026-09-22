@@ -1,0 +1,50 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0011",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/prompts/TASK-0014.md",
+      "line": 68,
+      "claim": "O escopo e a checagem de cobertura omitem C-0002-52…81, mas o contrato §15.2 define C-0002-51…82 como 32 critérios, um por linha da matriz de política.",
+      "fix": "Exigir C-0002-50…100, incluindo cada ID 51…82, e alterar a regex/resultado da linha 102 para verificar os 51 IDs."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/prompts/TASK-0004.md",
+      "line": 97,
+      "claim": "A tarefa cria critérios [int] C-0002-02…49, mas só executa test:unit; nenhum comando valida os cycle-*.integration.spec.ts.",
+      "fix": "Adicionar test:integration com o ambiente R-0011 e resultado esperado explícito: os cycle-* falham somente pela ausência dos módulos do Engineer."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/prompts/TASK-0014.md",
+      "line": 105,
+      "claim": "Os critérios C-0002-50…100 são [e2e app] e parte da tarefa cria dashboard-*.e2e.spec.ts, porém não há comando que execute o tier e2e do app nem os surface-* de integração.",
+      "fix": "Adicionar comandos existentes para test:integration do dashboard-monitor e test:e2e do app filtrado para dashboard-*, ambos com resultado vermelho esperado somente pelos símbolos de superfície ainda ausentes."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/tasks/TASK-0014.json",
+      "line": 26,
+      "claim": "acceptance_commands só contém typecheck e format:check; não representa a matriz de política, os testes de integração nem os e2e do app que a tarefa entrega.",
+      "fix": "Incluir os comandos executáveis dos tiers integration/e2e e a verificação completa dos IDs C-0002-50…100 no contrato de tarefa."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/tasks/TASK-0004.json",
+      "line": 26,
+      "claim": "acceptance_commands só contém typecheck e format:check; não representa os critérios de integração C-0002-02…49.",
+      "fix": "Incluir test:unit, test:integration e a checagem de cobertura C-0002-01…49 com resultados esperados explícitos."
+    }
+  ],
+  "notes": [
+    "A fronteira de escrita entre TASK-0004 e TASK-0014 está disjunta, e ambos declaram Inspector antes dos Engineers."
+  ]
+}

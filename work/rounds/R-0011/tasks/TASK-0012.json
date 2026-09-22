@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "completed",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-b219f5c4760f0b1a",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0012",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Blueprint 1.1.0 (Timer, AccessLog, símbolos fixos M16), escalation_chain_ref e contrato CTG-0002 (rotas, guardas, política, camadas, exportação, timers, SSE, eventos)",
+  "description": "Contrato executável do WP-D2/D3 que os Inspectors (TASK-0004/0014) codificam e os Engineers (TASK-0005/0013) implementam; via M7/A3 (Emenda 2); nenhum código.",
+  "target_modules": [
+    "MOD-bp-dash-monitor",
+    "MOD-ddl-19-dashboard",
+    "MOD-r11-contracts"
+  ],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "priority": 4,
+  "tags": ["wp-d2", "wp-d3"],
+  "acceptance_commands": [
+    [
+      "node",
+      "-e",
+      "JSON.parse(require('fs').readFileSync('docs/framework/blueprints/BP-DASH-MONITOR-001.json','utf8'))"
+    ],
+    ["pnpm", "format:check"],
+    ["pnpm", "verify:lifecycle-vocabulary"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5"
+    },
+    "prompt_composition_id": "PC-b219f5c4760f0b1a",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

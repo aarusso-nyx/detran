@@ -108,6 +108,27 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
       LEGAL/Owner)
 - [ ] portal: **CNH-e/CRLV-e assinados e credenciais institucionais do IdP gov.br real** ficam para R-0014
       WP-P6 (OD-P15, ADR-0018); nesta rodada só IdP simulado nos perfis `test`/`local`
+- [ ] **OD-D81 (R-0007, ensaio de upgrade)**: `rait-priority-upgrade.integration.spec.ts` "V3 isolated priority upgrade" falha de forma intermitente em `main` (`72c15ae9`, `3bb94351`) e passa em outros SHAs com código idêntico — o fingerprint `pg_dump --data-only` muda após um `apply.sh` abortado (conjunto de casos varia: pre/DDL34/DDL20/verify/constraint diferida); suspeita de sequência/`setval` ou carimbo fora da transação. Triado em R-0011 (plan.md §Triagem, 2026-09-22) como `sensor-error` pré-existente; dono: R-0007. (added 2026-09-22)
+- [ ] teat: **`ops/field/shift-readiness.ts` lê `inf.normative_mobile_package`** fora dos limites do gate
+      `verify:domain-boundaries` (R-0011, ADR-0020/M6) — dívida declarada e impressa pelo gate, nunca
+      silenciosa — OD-D15 (dono do TEAT; fonte `plan.md` M6, contrato `CTG-0001.md` §8)
+- [ ] dashboard: **`backend/app/src` (raiz de composição, um deployable) fica fora do gate
+      `verify:domain-boundaries`** nesta rodada — OD-D16 (fonte `plan.md` M6, contrato `CTG-0001.md` §8)
+- [ ] dashboard/rait: **integração do relógio do DASHBOARD ao motor de prazos (`owner='dashboard'`)
+      depende de R-0007 CTG-0003 em `main`**: `dashboard.timer` e `DashboardClockService` são a ponte
+      (mesmo vocabulário `ARMADO/VENCIDO/SATISFEITO/CANCELADO`) — OD-D28 (dono de R-0007/próxima rodada
+      do DASHBOARD; fonte `plan.md` M15/A18, contrato `CTG-0002.md` §16)
+- [ ] pec/teat/boat/portal/senatran-adapter: **cadeias de escalonamento não publicadas**:
+      `dashboard.escalation_chain_ref` nasce com linhas `source_pending` (um nível, `owner_role`) até
+      cada frente publicar a cadeia nomeada em códigos de `roles.ts` — OD-D29 (donos de cada app; fonte
+      `plan.md` M18, contrato `CTG-0002.md` §16)
+- [ ] dashboard: **seed `81-fixtures-dashboard-state.sql` sem as fontes `portal.outbox`/`dashboard` nem
+      um segundo tenant com catálogo `dashboard.*`**: a suíte de ciclo e a de superfície as inserem e
+      removem no `afterAll`; propor linha canônica no seed — OD-D61…D63 (dono do próximo CTG do
+      DASHBOARD; fonte `plan.md` A21/A23, contrato `CTG-0002.md` §16)
+- [ ] Owner: **o DASHBOARD deve ser excluído do atalho de administrador global** (`policy.ts` concede
+      `'*'` a `GLOBAL_ADMIN_ROLES` em toda rota, inclusive as do DASHBOARD) **?** — OD-D76 (fonte
+      `plan.md` A23(a), contrato `CTG-0002.md` §16)
 
 ## Rodada RAIT — time multidisciplinar (2026-08-24)
 
@@ -520,8 +541,8 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **R-0013 `teat-frontends` em curso (Sol/Codex)**: CTG-0001 (reconciliação do corpus, PR #70) e contratos de paridade do
       CTG-0002 (PR #73) em `main`; prompt-review em `FAIL` por dois ciclos, nenhum worker disparado; pendentes as 126 fichas
       (CTG-0002), o provisionamento offline (CTG-0003) e os apps `apps/teat/{mobile,web}` (CTG-0004) (added 2026-09-21)
-- [ ] **Rodadas ainda não abertas**: R-0011 `dashboard-backend` (Sol; CTG-0001 livre, CTG-0002 espera R-0007 CTG-0003),
-      R-0012 `rait-web` (Fable), R-0015 `boat-mobile` (Fable), R-0016 `dashboard-console` (Sol; fichas livres, console espera R-0011) (added 2026-09-21)
+- [x] **R-0011 `dashboard-backend` fechada como PC-0009 (2026-09-22; Fable, troca Sol → Fable, Owner 2026-09-21)** — CTG-0002 mesclado pelo PR #87 (`3bb94351`); resto do histórico: CTG-0001 mesclado em `main` pelo PR #83 (2026-09-21, `e0763c6c`): `BP-DASH-MONITOR-001`, DDL `19-dashboard-lifecycle-vocabulary.sql`/`80-dashboard.sql`, seed dos 42 indicadores, gate `verify:domain-boundaries`; **CTG-0002** (ciclo do alerta, deveres, frescor, relógio próprio via M7/A3 — Emenda 2 de `AUTHORIZATION.md`, exportação, relatórios, auditoria, open-data, SSE, contratos) pronto nesta worktree — PR a abrir (R-0011 CTG-0002). R-0016 `dashboard-console` pode consumir `@detran/api-clients` do DASHBOARD assim que o CTG-0002 mesclar (added 2026-09-22)
+- [ ] **Rodadas ainda não abertas**: R-0012 `rait-web` (Fable), R-0015 `boat-mobile` (Fable), R-0016 `dashboard-console` (Sol; fichas livres, console espera R-0011) (added 2026-09-21)
 - [ ] **Podem abrir em sessões Claude imediatamente (2026-09-21)**:
       **R-0012 `rait-web`** — CTG-0001 (fichas por rota) e CTG-0002 (app): os comandos de case/worklist/sessão e seus contratos já
       estão em `main` (R-0007 CTG-0001/0002); os módulos org/financeiro/integrações renderizam "indisponível nesta versão" até o

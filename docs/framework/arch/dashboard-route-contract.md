@@ -111,17 +111,25 @@ Eventos publicados pelo DASHBOARD: `ALERTA_DETECTADO`, `ALERTA_ESCALONADO`,
 
 ## 7. Contratos de dado pendentes por app
 
-| App      | O que precisa publicar (hoje inexistente, exceto RAIT)                                                                     |
-| -------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `pec`    | eventos do ciclo de junta/recurso, prazos por instância, pendências da Junta Especial                                      |
-| `boat`   | `SINISTRO_FECHADO`, cascata de validação, situação RENAEST, bloqueados pós-terminal (`boat-route-contract.md` §7 já prevê) |
-| `teat`   | idade do lote offline, homologação, pacote normativo, faixas, medidas em curso, `SUSPEITO_CONCORRENCIA`                    |
-| `portal` | volume/tempo médio/satisfação por serviço, LAI e ouvidoria em curso, cobertura do aviso de CNH                             |
-| adapter  | latência e erro por sistema nacional                                                                                       |
-| todos    | evento de ciência (ACK) — até existir, ACK manual                                                                          |
+Atualizado com as propostas de feed de WP-D3 (R-0011 CTG-0002, TASK-0006):
+`docs/framework/contracts/dashboard-feeds/{pec,teat,portal,adapter}.md`, formato
+`{indicador_id, caso_id, estado_anterior, estado_novo, timestamp, base_legal}`, mais
+`pec.deadline.changed` e `source.heartbeat` (OD-D07) como propostas próprias; o evento de ciência
+(ACK) segue rotulado manual até existir produtor (OD-D05).
+
+| App      | O que precisa publicar (hoje inexistente, exceto RAIT)                                                                                                                                                                                                                                  | Proposta WP-D3                                                                                    |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `rait`   | `rait.clock.flag-changed`, `rait.decision.published`, `rait.case.created` — **sem produtor em `main`** (`08fb84e8`), apesar de contratados (OD-D17); IND-DASH-101…105 nascem `connected=false` até R-0007 CTG-0003                                                                      | — (evento já contratado; falta o produtor)                                                        |
+| `pec`    | eventos do ciclo de junta/recurso, prazos por instância, pendências da Junta Especial; `prazo_limite` não sai no formato base (OD-D20) — marcos 50/75/90 de 106/107/306…309 não calculáveis sem ele                                                                                     | `dashboard-feeds/pec.md`: formato base + `pec.deadline.changed`, `prazo_limite` proposto (OD-D20) |
+| `boat`   | `SINISTRO_FECHADO`, cascata de validação, situação RENAEST, bloqueados pós-terminal (`boat-route-contract.md` §7 já prevê) — conectado via `dashboard.crashes` (R-0010)                                                                                                                 | — (já conectado; sem feed WP-D3 próprio)                                                          |
+| `teat`   | idade do lote offline, homologação, pacote normativo, faixas, medidas em curso, `SUSPEITO_CONCORRENCIA`; tokens `measureTypeId`/`termType`, capacidade de faixa (406), `eventType` de par não homologado (407), dispositivo × pacote vencido (405) — OD-D23                             | `dashboard-feeds/teat.md`: formato base + lacunas OD-D23 catalogadas                              |
+| `portal` | volume/tempo médio/satisfação por serviço, LAI e ouvidoria em curso, cobertura do aviso de CNH; payloads de `SOLICITACAO_*`/`MANIFESTACAO_*`/`AVALIACAO_REGISTRADA` não publicados em `docs/framework/schemas/events/`, `serviceKey` LAI e prazos/prorrogação `source_pending` — OD-D21 | `dashboard-feeds/portal.md`: formato base; schemas a publicar a partir dos `events.ts` do Portal  |
+| adapter  | latência e erro por sistema nacional; telemetria do `senatran-adapter` para IND-DASH-403 não é evento — OD-D22                                                                                                                                                                          | `dashboard-feeds/adapter.md`: formato base + telemetria proposta (OD-D22)                         |
+| todos    | evento de ciência (ACK) — até existir, ACK manual (OD-D05)                                                                                                                                                                                                                              | ACK rotulado manual em todos os feeds                                                             |
 
 ## 8. Divergências a corrigir
 
-1. `policy.ts` só conhece `generated-report`, `indicator-config`, `bi-panel` (origem); alertas, deveres, fontes, exportação e trilha não têm política nem papéis `dash-*`.
-2. Origem expõe CRUD completo (inclusive `DELETE`) para os três recursos; aqui `DELETE` só `technical-admin` e `generated-report` não é editável após `completed`.
-3. `bi-panel.visibility_profile` da origem vira camada N0/N1/N2 ([RN-DASH-170]); `config_json` nunca referencia N3.
+1. ~~`policy.ts` só conhece `generated-report`, `indicator-config`, `bi-panel` (origem); alertas, deveres, fontes, exportação e trilha não têm política nem papéis `dash-*`.~~ **Resolvida** (R-0003, PR #32: `dash-operator`/`dash-duty-owner` e o bloco `DASHBOARD_RULES` cobrem todos os recursos deste contrato; provada presença **e** ausência por `dashboard-policy.e2e.spec.ts`, R-0011 CTG-0002, TASK-0014/A23(a)).
+2. Origem expõe CRUD completo (inclusive `DELETE`) para os três recursos; aqui `DELETE` só `technical-admin` e `generated-report` não é editável após `completed`. **Não implementada nesta rodada**: nenhuma rota `DELETE`/`reject` no CTG-0002 (OD-D36, R-0011 contrato §16).
+3. ~~`bi-panel.visibility_profile` da origem vira camada N0/N1/N2 ([RN-DASH-170]); `config_json` nunca referencia N3.~~ **Resolvida** (R-0011 CTG-0001, TASK-0001: `bi_panel.visibility_profile ∈ layer_ref` sem `N3` no modelo).
+4. Ator de `COMPROVADO → ARQUIVADO`: [WF-DASH-002] diz `sistema`; este contrato §3 (`archive`) diz `dash-operator, agency-admin` — o vocabulário do workflow ainda não decidiu a divergência; resolvida só operacionalmente em CTG-0002 §3.2 (`archive` por rota, trilha `user`) — OD-D19(d) (R-0011 CTG-0001 §8 / CTG-0002 §16).

@@ -122,6 +122,13 @@ import { PortalDelegationTargetsModule } from './portal-delegation.providers.js'
 import { BoatDocumentsRuntimeModule } from './boat-documents.js';
 import { PortalNationalReadPortsModule } from './portal-national-read.providers.js';
 import { PortalStreamController } from './portal-stream.controller.js';
+// R-0011 CTG-0002 §11/§13.3 (TASK-0013): SSE do DASHBOARD e wiring do sweeper.
+import { DashboardStreamController } from './dashboard-stream.controller.js';
+import {
+  DASHBOARD_STREAM_POLLER,
+  DashboardStreamService,
+} from './dashboard-stream.service.js';
+import { DashboardSweepModule } from './dashboard-sweep.providers.js';
 import {
   PORTAL_STREAM_POLLER,
   PortalStreamService,
@@ -776,6 +783,11 @@ export class AppModule {
         CitizenServiceModule,
         ProjectionsModule,
         CrashesModule,
+        // R-0011 CTG-0002 §13.3/§14.2 (TASK-0013): relógio, calendário,
+        // discovery e `deps` do sweeper (global) antes de `MonitorModule`, que
+        // os injeta pelos tokens de `cycle/tokens.ts`; reexporta
+        // `OpsParameterService` para o módulo gerado (§1.3.7).
+        DashboardSweepModule,
         MonitorModule,
         RenaestMirrorModule,
         // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
@@ -812,6 +824,8 @@ export class AppModule {
         TeatStreamController,
         // CTG-0002 §9 (TASK-0008): SSE do cidadão.
         PortalStreamController,
+        // R-0011 CTG-0002 §11 (TASK-0013): SSE do DASHBOARD (`dashboard:alert:read`).
+        DashboardStreamController,
         TeatIntegrationsController,
         PecProcessParametersController,
         PecRenachProcessController,
@@ -849,6 +863,13 @@ export class AppModule {
         PortalStreamService,
         {
           provide: PORTAL_STREAM_POLLER,
+          useFactory: () => createDefaultTeatStreamPoller(),
+        },
+        // R-0011 CTG-0002 §11 (M23, TASK-0013): SSE do DASHBOARD e a porta do
+        // seu poller — mesma fábrica do TEAT (única chamadora de `setInterval`).
+        DashboardStreamService,
+        {
+          provide: DASHBOARD_STREAM_POLLER,
           useFactory: () => createDefaultTeatStreamPoller(),
         },
         TeatIntegrationsService,

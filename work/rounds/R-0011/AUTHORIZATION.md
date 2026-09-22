@@ -63,3 +63,13 @@ maestro continues through CTG-0001 (TASK-0002 ∥ 0011, TASK-0010 ∥ 0003, deli
 PR, merge, audit observe) and, when its upstream (R-0007 CTG-0003) allows, CTG-0002 and the round
 close, recording consumption in `budget.json` as before. Every other boundary of this record is
 unchanged.
+
+## Amendment 2 — 2026-09-21 (Owner)
+
+After the merge of CTG-0001 (PR #83, `e0763c6c`), the Owner instructed: **"abrir o CTG-0002 pela via
+M7/A3"** — i.e. develop CTG-0002 now, without waiting for R-0007 CTG-0003 in `main`: the DASHBOARD keeps
+its own clock service using only `Calendar`/`Clock` of `@detran/inf-deadlines` as a read-only dependency
+(never editing `backend/domains/inf/deadlines`), and the detector is written against the published
+contract of `rait.clock.flag-changed` with fixtures (as `pec_deadlines` was). Integration with the deadline
+engine (`owner='dashboard'`) is deferred to a follow-up when R-0007 CTG-0003 merges (OD-D28). Every other
+boundary of this record is unchanged.

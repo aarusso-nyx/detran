@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/dashboard.indicator-config.changed.schema.json",
+  "title": "dashboard.indicator-config.changed",
+  "description": "Publicacao de configuracao de indicador (CTG-0002 Sec.3.3, Sec.12; produtor dashboard/monitor surface/catalog.service.ts publishIndicatorConfig). Sem PATCH nao publica evento -- so o publish.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "const": "dashboard.indicator-config.changed" },
+    "domainEvent": {
+      "const": "IndicatorConfigChanged",
+      "description": "Token unico e literal; presente no route contract Sec.6."
+    },
+    "version": { "const": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "tenantId": { "type": "string", "format": "uuid" },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["user", "system", "timer"] },
+        "id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "correlationId": { "type": "string" },
+    "causationId": { "type": "string" },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "const": "indicator_config" },
+        "id": { "type": "string", "format": "uuid" },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "indicatorConfigId",
+        "indicatorCode",
+        "code",
+        "status",
+        "publishedBy",
+        "publishedAt",
+        "acceptableLatencyMinutes",
+        "hasThreshold",
+        "occurredAt"
+      ],
+      "properties": {
+        "indicatorConfigId": { "type": "string", "format": "uuid" },
+        "indicatorCode": { "type": "string", "pattern": "^IND-DASH-\\d{3}$" },
+        "code": {
+          "type": "string",
+          "description": "dashboard.indicator_config.code (identificador da configuracao dentro do indicador)."
+        },
+        "status": { "const": "published" },
+        "publishedBy": { "type": ["string", "null"], "format": "uuid" },
+        "publishedAt": { "type": ["string", "null"], "format": "date-time" },
+        "acceptableLatencyMinutes": { "type": ["integer", "null"] },
+        "hasThreshold": { "type": "boolean" },
+        "occurredAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

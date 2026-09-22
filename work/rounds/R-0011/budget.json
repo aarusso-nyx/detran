@@ -1,11 +1,11 @@
 {
   "round": "R-0011",
-  "window": 1,
+  "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 920000,
-  "estimated_output_total": 188000,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte).",
+  "estimated_input_total": 2482000,
+  "estimated_output_total": 720500,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3. Rodada fechada como PC-0009 em 2026-09-22.",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -94,6 +94,182 @@
       "input_tokens": 25000,
       "output_tokens": 8000,
       "note": "Inspector TASK-0011 (+8 testes) e Engineer TASK-0003 (verify.mjs) para os itens 7a/7b/10."
+    },
+    {
+      "kind": "iterations",
+      "id": "ci-inventory-fix+merge",
+      "model": "sonnet",
+      "input_tokens": 15000,
+      "output_tokens": 3000,
+      "note": "Inspector TASK-0011: inventário fechado 60 → 62; maestro: merge PR #83, audit observe, checkpoint 3."
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "ctg-0002-plan+prompt-0012",
+      "model": "opus",
+      "input_tokens": 60000,
+      "output_tokens": 20000,
+      "note": "M15…M25, A18, tasks 0012/0013/0014, prompt TASK-0012, prompt-review 3 (FAIL estrutura) → 4 (PASS)."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3+4",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 60000,
+      "output_tokens": 2000,
+      "note": "ciclo 3 FAIL (4 achados de estrutura) → ciclo 4 restrito PASS; brutos 70.280 + 45.640."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0012",
+      "model": "opus",
+      "input_tokens": 115000,
+      "output_tokens": 60000,
+      "note": "Architect CTG-0002: blueprint 1.1.0, escalation_chain_ref, contrato 1.249 linhas / 76 critérios; brutos 458 k, 145 chamadas, 61 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5+6",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 75000,
+      "output_tokens": 2500,
+      "note": "ciclo 5 FAIL (5 achados de estrutura: cobertura 51…82, tiers nos critérios) → ciclo 6 restrito PASS; brutos 85.766 + 68.066."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0014",
+      "model": "opus",
+      "input_tokens": 117000,
+      "output_tokens": 60000,
+      "note": "Inspector superfície: 15 arquivos, 51 critérios (matriz 32 chaves × DETRAN_ROLES), captura SQL, SSE; brutos 467 k, 131 chamadas, 44 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "model": "opus",
+      "input_tokens": 121000,
+      "output_tokens": 60000,
+      "note": "Inspector ciclo: 13 arquivos, 49 critérios (matriz 144 células, sweeper, deveres, frescor, eventos); brutos 486 k, 112 chamadas, 46 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 1000,
+      "note": "ciclo 7 REVIEW (1 high: `--` restante em TASK-0013); brutos 47.069."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "opus",
+      "input_tokens": 145000,
+      "output_tokens": 70000,
+      "note": "Engineer ciclo: 12 arquivos (relógio, sweeper, alerta, deveres, frescor, notificador, eventos, DTOs); brutos 577 k, 103 chamadas, 46 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 1000,
+      "note": "ciclo 8 restrito PASS; brutos 47.665."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0013",
+      "model": "opus",
+      "input_tokens": 167000,
+      "output_tokens": 85000,
+      "note": "Engineer superfície: 17 arquivos + SSE + sweep providers + app.module; brutos 669 k, 217 chamadas, 62 min."
+    },
+    {
+      "kind": "iterations",
+      "id": "A22-restricted",
+      "model": "opus",
+      "input_tokens": 45000,
+      "output_tokens": 10000,
+      "note": "Inspectors TASK-0004 (4 defeitos de spec) e TASK-0002 (module-surface); brutos ≈700 k acumulados dos agentes retomados."
+    },
+    {
+      "kind": "iterations",
+      "id": "A23-restricted",
+      "model": "opus",
+      "input_tokens": 30000,
+      "output_tokens": 8000,
+      "note": "Inspector TASK-0014 (matriz com GLOBAL_ADMIN, allowlist integration.*, fontes da suíte); e2e 1.275 ×2."
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "ctg-0002-prompts-0004..0009+0007",
+      "model": "opus",
+      "input_tokens": 80000,
+      "output_tokens": 30000,
+      "note": "Prompts 0004/0014/0005/0013/0006/0008/0009/0007, adendas A20…A23, checkpoints 4/5; prompt-reviews 5…10."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-9+10",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 70000,
+      "output_tokens": 2000,
+      "note": "ciclo 9 REVIEW (2 high: filtro teat-*/portal-* do app; 1 low: esforço 0007) → ciclo 10 PASS; brutos 69.619 + 76.630."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "sonnet",
+      "input_tokens": 100000,
+      "output_tokens": 40000,
+      "note": "Transcriber: contrato de comandos (43 ops), 6 schemas de evento, README, 4 feeds; brutos 411 k, 150 chamadas, 23 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "model": "sonnet",
+      "input_tokens": 65000,
+      "output_tokens": 20000,
+      "note": "Inspector contratos: 12 testes + fixtures; C-5-16 152 → 195; brutos 262 k."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "model": "sonnet",
+      "input_tokens": 34000,
+      "output_tokens": 8000,
+      "note": "Engineer check-commands.mjs: 3 lacunas; 195 operações; brutos 134 k, 2,5 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007",
+      "model": "sonnet",
+      "input_tokens": 78000,
+      "output_tokens": 35000,
+      "note": "Transcriber docs: build pack (OD-D14…D80), ADR-0020, route contract §7/§8, catálogo de parâmetros + generate, waves.md, README §10, backlog; brutos 313 k, 18 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 55000,
+      "output_tokens": 2000,
+      "note": "ciclo 1 REVIEW (1 high: papel no relatório de TASK-0006) + nota sobre o avanço de main; brutos 103.567."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 1000,
+      "note": "ciclo 2 restrito PASS (papel + integração de main, C-5-16 = 203); brutos 50.482."
+    },
+    {
+      "kind": "maestro-close",
+      "id": "ctg-0002-merge+close",
+      "model": "opus",
+      "input_tokens": 40000,
+      "output_tokens": 12000,
+      "note": "Gates pós-merge, PR #87, CI (1 correção de fixture), merge, audit observe, closure PC-0009, waves/backlog/plan."
     }
   ]
 }

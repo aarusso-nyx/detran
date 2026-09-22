@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/dashboard.source.freshness.schema.json",
+  "title": "dashboard.source.freshness",
+  "description": "Mudanca de estado/ocultacao de uma fonte (CTG-0002 Sec.8, Sec.12; produtor dashboard/monitor cycle/freshness.service.ts). Publicado so quando o estado anunciado ou hidden mudam.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "const": "dashboard.source.freshness" },
+    "domainEvent": {
+      "const": "FONTE_FRESCOR_ALTERADO",
+      "description": "Token unico e literal em freshness.service.ts; proposto (OD-D33) -- ausente do route contract Sec.6, TASK-0007 leva-o."
+    },
+    "version": { "const": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "tenantId": { "type": "string", "format": "uuid" },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["user", "system", "timer"] },
+        "id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "correlationId": { "type": "string" },
+    "causationId": { "type": "string" },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "const": "source" },
+        "id": { "type": "string", "format": "uuid" },
+        "version": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "sourceKey",
+        "app",
+        "fromState",
+        "toState",
+        "hidden",
+        "lastSeenAt",
+        "staleSince",
+        "acceptableLatencyMinutes",
+        "occurredAt"
+      ],
+      "properties": {
+        "sourceId": { "type": "string", "format": "uuid" },
+        "sourceKey": { "type": "string" },
+        "app": { "type": "string" },
+        "fromState": {
+          "type": "string",
+          "enum": [
+            "FRESCO",
+            "ATRASADO",
+            "INDISPONIVEL",
+            "DESATUALIZADO_MARCADO"
+          ],
+          "description": "estado anunciado anterior (freshness_state_ref, CTG-0001 Sec.3.5)."
+        },
+        "toState": {
+          "type": "string",
+          "enum": [
+            "FRESCO",
+            "ATRASADO",
+            "INDISPONIVEL",
+            "DESATUALIZADO_MARCADO"
+          ]
+        },
+        "hidden": { "type": "boolean" },
+        "lastSeenAt": { "type": ["string", "null"], "format": "date-time" },
+        "staleSince": { "type": ["string", "null"], "format": "date-time" },
+        "acceptableLatencyMinutes": { "type": ["integer", "null"] },
+        "occurredAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-// Generated from BP-DASH-MONITOR-001 v1.0.0 sha256:f6f02498282fa6757196ac8b711a05e41a930f7e3980a3b9e96f62a2438e24ab
+// Generated from BP-DASH-MONITOR-001 v1.1.0 sha256:db365ada798a2115de6d57a3153f93d3657948f6562dab9927f4e35f0a8c765a
 import { Module } from '@nestjs/common';
 import { AlertController } from './controllers/alert.controller.js';
 import { AlertService } from './services/alert.service.js';
@@ -60,10 +60,42 @@ import { PortalServiceMetricsRepository } from './repositories/portal-service-me
 import { DutyEvidenceController } from './controllers/duty-evidence.controller.js';
 import { DutyEvidenceService } from './services/duty-evidence.service.js';
 import { DutyEvidenceRepository } from './repositories/duty-evidence.repository.js';
+import { TimerController } from './controllers/timer.controller.js';
+import { TimerService } from './services/timer.service.js';
+import { TimerRepository } from './repositories/timer.repository.js';
+import { AccessLogController } from './controllers/access-log.controller.js';
+import { AccessLogService } from './services/access-log.service.js';
+import { AccessLogRepository } from './repositories/access-log.repository.js';
+import { DashboardAlertsController } from './handwritten/surface/alerts.controller.js';
+import { DashboardDutiesController } from './handwritten/surface/duties.controller.js';
+import { DashboardCatalogController } from './handwritten/surface/catalog.controller.js';
+import { DashboardSourcesController } from './handwritten/surface/sources.controller.js';
+import { DashboardExportsController } from './handwritten/surface/exports.controller.js';
+import { DashboardAuditController } from './handwritten/surface/audit.controller.js';
+import { DashboardOpenDataController } from './handwritten/surface/open-data.controller.js';
 import { DASHBOARD_MONITOR_PROJECTORS } from './handwritten/projectors.js';
+import { DashboardClockService } from './handwritten/cycle/clock.service.js';
+import { DashboardClockSweeper } from './handwritten/cycle/clock.sweeper.js';
+import { DashboardAlertService } from './handwritten/cycle/alert.service.js';
+import { DashboardDutyService } from './handwritten/cycle/duty.service.js';
+import { DashboardFreshnessService } from './handwritten/cycle/freshness.service.js';
+import { DashboardNotifier } from './handwritten/cycle/notifier.js';
+import { DashboardLayerGate } from './handwritten/surface/layer-gate.js';
+import { DashboardExportService } from './handwritten/surface/export.service.js';
+import { DashboardReportService } from './handwritten/surface/report.service.js';
+import { DashboardCatalogService } from './handwritten/surface/catalog.service.js';
+import { DashboardAuditService } from './handwritten/surface/audit.service.js';
+import { DashboardOpenDataService } from './handwritten/surface/open-data.service.js';
 
 @Module({
   controllers: [
+    DashboardAlertsController,
+    DashboardDutiesController,
+    DashboardCatalogController,
+    DashboardSourcesController,
+    DashboardExportsController,
+    DashboardAuditController,
+    DashboardOpenDataController,
     AlertController,
     AlertTrailController,
     DutyController,
@@ -84,6 +116,8 @@ import { DASHBOARD_MONITOR_PROJECTORS } from './handwritten/projectors.js';
     TeatMeasuresController,
     PortalServiceMetricsController,
     DutyEvidenceController,
+    TimerController,
+    AccessLogController,
   ],
   providers: [
     AlertService,
@@ -126,7 +160,23 @@ import { DASHBOARD_MONITOR_PROJECTORS } from './handwritten/projectors.js';
     PortalServiceMetricsRepository,
     DutyEvidenceService,
     DutyEvidenceRepository,
+    TimerService,
+    TimerRepository,
+    AccessLogService,
+    AccessLogRepository,
     DASHBOARD_MONITOR_PROJECTORS,
+    DashboardClockService,
+    DashboardClockSweeper,
+    DashboardAlertService,
+    DashboardDutyService,
+    DashboardFreshnessService,
+    DashboardNotifier,
+    DashboardLayerGate,
+    DashboardExportService,
+    DashboardReportService,
+    DashboardCatalogService,
+    DashboardAuditService,
+    DashboardOpenDataService,
   ],
 })
 export class MonitorModule {}

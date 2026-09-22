@@ -1,7 +1,7 @@
 {
   "schemaVersion": "2.0.0",
   "round_id": "R-0011",
-  "status": "queued",
+  "status": "completed",
   "lifecycle": "supported",
   "target_substrates": ["F2"],
   "target_invariants": [],
@@ -10,25 +10,24 @@
   "max_iterations": 2,
   "branch": "orchestra/dashboard-backend",
   "worktree_id": "WT-dashboard-backend",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-20ecd81d289181b4",
   "created_at": "2026-09-21T00:00:00.000Z",
   "id": "TASK-0005",
   "discipline": "engineer",
   "discipline_specialization": "engineer-backend",
-  "title": "Implementar detector, classificador, notificador, SLA, deveres, frescor, exportação, relatórios, rotas §2–§5 e SSE",
-  "description": "Serviços e comandos manuscritos de dashboard-monitor até os testes de TASK-0004 passarem; política dashboard:* ajustada só no bloco DASHBOARD.",
-  "target_modules": ["MOD-dashboard-handwritten", "MOD-shared-policy"],
+  "title": "Implementar src/handwritten/cycle/**: clock/sweeper (M15), alerta (M18), deveres (M19), frescor (M20), notificador — até os testes de TASK-0004 passarem",
+  "description": "Implementa src/handwritten/cycle/** de @detran/dashboard-monitor (relógio/sweeper M15, alerta M18, deveres M19, frescor M20, notificador) até os testes de TASK-0004 passarem; consome a matriz dashboard:* existente em policy.ts (nunca a altera — M16/M17, Emenda 2).",
+  "target_modules": ["MOD-dashboard-cycle"],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0004",
   "priority": 5,
   "tags": ["wp-d2"],
   "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/dashboard-monitor", "typecheck"],
     ["pnpm", "--filter", "@detran/dashboard-monitor", "test:unit"],
     ["pnpm", "--filter", "@detran/dashboard-monitor", "test:integration"],
-    ["pnpm", "--filter", "@detran/dashboard-monitor", "test:e2e"],
-    ["pnpm", "--filter", "@detran/shared", "test"],
-    ["pnpm", "verify:decorators"],
+    ["pnpm", "verify:domain-boundaries"],
     ["pnpm", "format:check"]
   ],
   "executor": {
@@ -40,7 +39,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5"
     },
-    "prompt_composition_id": "PC-0000000000000000",
+    "prompt_composition_id": "PC-20ecd81d289181b4",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
