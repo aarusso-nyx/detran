@@ -632,7 +632,7 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
       const files = argv
         .filter((arg) => arg.endsWith('.sql'))
         .map((arg) => arg.split('/').at(-1));
-      expect(files).toHaveLength(65);
+      expect(files).toHaveLength(67);
       expect(
         files.filter((name) => name === '21-ops-provisioning.sql'),
       ).toHaveLength(2);

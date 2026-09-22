@@ -123,7 +123,7 @@ beforeAll(async () => {
   app = await NestFactory.create(AppModule.forRoot(), { logger: false });
   await app.init();
   projectors = app.get(PortalProjectors);
-});
+}, 30_000);
 
 afterAll(async () => {
   await app?.close();

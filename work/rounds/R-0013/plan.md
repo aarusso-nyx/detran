@@ -837,6 +837,27 @@ Checkpoint 34 (janela 3, fronteira de subprocesso fechada):
   PIDs distintos e fail-closed real e emitiu `PASS` sem findings. O candidato requer recertificação
   integral, novo evidence record e CI verde antes do merge do PR #82.
 
+Checkpoint 35 (janela 3, integração final de upstream e recertificação):
+
+- `origin/main` avançou até `e0763c6c…` com o backend de dashboard e foi integrado por merge normal
+  `b09f37b9…`; a composição preservou provisioning e dashboard no DDL, scripts de teste e filtros
+  do workspace, sem rebase ou force-push;
+- o contrato fechado de upgrade foi atualizado para os 63 DDLs ordinários e 66 arquivos físicos
+  reais; com a reaplicação deliberada de DDL21 após RLS, a sequência possui exatamente 67
+  argumentos SQL e o rehearsal passou 18/18;
+- um timeout de setup BOAT sob carga foi eliminado com limite local finito de 30 segundos, igual ao
+  orçamento já vigente da integração; a suíte focal passou 6/6 duas vezes e o app integral 19/19,
+  sem retry, skip, captura de falha ou mudança de assertions/cleanup;
+- Reviewer CODEX independente em papel Auditor emitiu novo `PASS` sem findings para ambos os
+  deltas, confirmando inventário/ordem/reaplicação fail-closed e ausência de enfraquecimento;
+- uma passagem foi descartada quando outro worktree recriou o mesmo banco durante o E2E; após a
+  liberação e confirmação de ausência de processos concorrentes, `pnpm ci:backend-full` passou
+  integralmente: provisioning 7/7, 694/694 e 10/10, app E2E 396 com 2 todo, upgrade 18/18 e
+  SENATRAN 33/4/10;
+- `pnpm check` do candidato final passou: 756 artefatos KB, 160 operações/64 clientes, 59 projetos
+  typechecked, 966 handlers, RLS 265/2, portal 1314 testes, RAIT 1807 testes e ambos os builds.
+  O candidato está liberado para evidence record, push e CI remoto do PR #82.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
