@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0012/prompts/TASK-0007.md",
+      "line": 137,
+      "claim": "Exige um `it` executável por método que lança `RaitCommandUnavailableError`, mas M8 determina que os testes dos métodos de comando sejam `it.todo` com R-0007 CTG-0004 e OD citada.",
+      "fix": "Trocar o critério por um `it.todo` por método de comando, citando R-0007 CTG-0004 e a OD aplicável; manter o corpo `throw new RaitCommandUnavailableError(...)` como contrato de implementação."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0012/prompts/TASK-0007.md",
+      "line": 141,
+      "claim": "O critério de ações prova apenas um caso genérico com e sem permissão; não exige grants positivos para todos os papéis canônicos autorizados nem negativas para todos os papéis canônicos omitidos. A lista obrigatória também omite a seção §3 de papéis canônicos.",
+      "fix": "Adicionar `rait-web-frontend.md` §3 à leitura obrigatória e exigir, para cada ação de cada página, matriz explícita: todos os papéis canônicos concedidos positivos e todos os demais negativos, sem analogia."
+    }
+  ],
+  "notes": []
+}
