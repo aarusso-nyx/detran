@@ -10,13 +10,13 @@
   "max_iterations": 2,
   "branch": "orchestra/dashboard-backend",
   "worktree_id": "WT-dashboard-backend",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-1f520607385e64e5",
   "created_at": "2026-09-21T00:00:00.000Z",
   "id": "TASK-0014",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Testes de superfície (M25): política presença/ausência por rota, N3, X-Purpose, If-Match, exportação, relatórios, audit-trail, open-data, kpis, SSE, nenhuma rota altera domínio",
-  "description": "Codifica o contrato CTG-0002 §rotas/§política/§exportação/§SSE em monitor/tests/**/surface-* e backend/app/tests/e2e/dashboard-*.e2e.spec.ts; e2e idempotente em detran_r11.",
+  "description": "Codifica os 51 critérios C-0002-50…100 (inclusive a tabela C-0002-51…82, uma linha por chave de política) do contrato CTG-0002 §rotas/§política/§exportação/§SSE em monitor/tests/**/surface-* e backend/app/tests/e2e/dashboard-*.e2e.spec.ts; e2e idempotente em detran_r11.",
   "target_modules": ["MOD-dashboard-surface-tests", "MOD-app-e2e-dashboard"],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "inspector",
@@ -25,6 +25,22 @@
   "tags": ["wp-d2"],
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/dashboard-monitor", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
+    ["pnpm", "--filter", "@detran/dashboard-monitor", "test:unit"],
+    ["pnpm", "--filter", "@detran/dashboard-monitor", "test:integration"],
+    [
+      "pnpm",
+      "--filter",
+      "@detran/app",
+      "test:e2e",
+      "--",
+      "tests/e2e/dashboard-"
+    ],
+    [
+      "bash",
+      "-c",
+      "grep -oh 'C-0002-\\(50\\|5[1-9]\\|[6-9][0-9]\\|100\\)\\b' backend/domains/dashboard/monitor/tests/unit/surface-*.spec.ts backend/domains/dashboard/monitor/tests/integration/surface-*.integration.spec.ts backend/app/tests/e2e/dashboard-*.e2e.spec.ts | sort -u | wc -l"
+    ],
     ["pnpm", "format:check"]
   ],
   "executor": {
@@ -36,7 +52,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5"
     },
-    "prompt_composition_id": "PC-0000000000000000",
+    "prompt_composition_id": "PC-1f520607385e64e5",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

@@ -530,6 +530,9 @@ rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 al
   {0004 ∥ 0014} → {0005 ∥ 0013} → 0006 → 0008 → 0009 → 0007 (M15…M25). A tabela original (0004 → 0005 monolíticos)
   cai. OD-D28 (integração ao motor de prazos após R-0007 CTG-0003) e OD-D29 (cadeias de escalonamento dos apps
   sem publicação) registradas por TASK-0007.
+- **A19 (2026-09-22, relatório TASK-0012)** — `zod` entra nas `dependencies` de `BP-DASH-MONITOR-001` 1.1.0 (M16 não o
+  listava; os DTOs dos comandos são zod por CODESTYLE §Backend). As 28 OD propostas pelo Architect (OD-D30…D57, contrato
+  §16) trazem cada uma a premissa adotada e não bloqueiam; TASK-0007 as registra.
 - **A6 (2026-09-21)** — CTG-0001 decomposto em 5 tarefas (0001; 0002 ∥ 0011; 0010 ∥ 0003) em vez de 3, para
   manter cada worker dentro de um lock e do orçamento de um Sonnet/Opus médio.
 
@@ -541,6 +544,8 @@ rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 al
   em relação a M16/M25; critério com `git diff`; `grep` sem caminho) — corrigido pelo maestro e reaberto em ciclo
   restrito (prompt-review-4), desvio registrado como em R-0008/R-0009 (§10 do método: FAIL de estrutura ≠ FAIL por
   contradição canônica).
+- 2026-09-22 prompt-review-5 **FAIL por estrutura corrigível** (5 achados: cobertura C-0002-51…82 omitida em TASK-0014;
+  comandos de aceitação sem os tiers integration/e2e) — corrigido pelo maestro; ciclo restrito prompt-review-6.
 
 ## Triagem
 

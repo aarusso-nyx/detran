@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1055000,
-  "estimated_output_total": 213000,
+  "estimated_input_total": 1245000,
+  "estimated_output_total": 275500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3.",
   "entries": [
     {
@@ -118,6 +118,22 @@
       "input_tokens": 60000,
       "output_tokens": 2000,
       "note": "ciclo 3 FAIL (4 achados de estrutura) → ciclo 4 restrito PASS; brutos 70.280 + 45.640."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0012",
+      "model": "opus",
+      "input_tokens": 115000,
+      "output_tokens": 60000,
+      "note": "Architect CTG-0002: blueprint 1.1.0, escalation_chain_ref, contrato 1.249 linhas / 76 critérios; brutos 458 k, 145 chamadas, 61 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5+6",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 75000,
+      "output_tokens": 2500,
+      "note": "ciclo 5 FAIL (5 achados de estrutura: cobertura 51…82, tiers nos critérios) → ciclo 6 restrito PASS; brutos 85.766 + 68.066."
     }
   ]
 }
