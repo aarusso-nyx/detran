@@ -1048,6 +1048,19 @@ Checkpoint 49 (janela 4, Architect extraordinário 3/3):
   TASK-0012 abriu a tentativa extraordinária final 3/3 para substituir sensores nominais por RED
   comportamental. TASK-0013 permanece `queued`.
 
+Checkpoint 50 (janela 4, reference-gap técnico dentro da tentativa extraordinária):
+
+- o Inspector criou 23 REDs diretos contra os stubs, mas parou antes de positivos completos porque
+  §1.1 ainda não fixava tokens/contexto dos guards, operações dos clients, interfaces de store,
+  sync/normativo, dispatcher, ErrorBoundary, printer/bodycam e extensão; isso foi classificado como
+  `reference-gap`, sem consumir nova iteração de TASK-0012;
+- TASK-0010 completou o mesmo handoff 3/3 com §1.2: APIs públicas, fixtures grant/deny, tabela
+  método/verbo/path/headers/retorno dos oito clients, contratos de persistência/sync/normativo,
+  transições, diagnósticos, impressão/bodycam, módulos/i18n e BOAT, todos mapeados à allowlist;
+- caminhos realmente elididos, representação criptográfica e chaves ausentes permanecem
+  `source_pending` e falham fechados. Prettier, KB `756/446` e oráculo 70/576/hash passaram;
+  TASK-0012 retoma a mesma tentativa 3/3 para substituir o RED parcial por provas completas.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do

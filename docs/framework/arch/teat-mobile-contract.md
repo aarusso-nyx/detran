@@ -120,6 +120,309 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
     placeholder TEAT. A fonte não fornece a chave i18n do fallback/indisponibilidade;
     essa chave permanece `source_pending`, mas não autoriza texto literal.
 
+### 1.2 Assinaturas públicas e fixtures de prova
+
+As assinaturas nesta seção pertencem aos arquivos da allowlist §5.1. São a API
+pública mínima que Inspector e Engineer compartilham; os tipos de payload marcados
+`DTO` são os DTOs já nomeados no contrato de rotas, sem cast, `any` ou campo novo.
+
+#### BootstrapStore, contexto e guardas
+
+```ts
+type MobileBootstrapQuery = Readonly<{
+  device_id: string;
+  installation_id?: string;
+  app_version: string;
+  protocol_version?: string;
+}>;
+type BootstrapSnapshot = Readonly<{
+  protocolVersion: string;
+  requestedProtocolVersion: string;
+  snapshot: Readonly<{
+    capturedAt: string;
+    validUntil: string;
+    maxAgeSeconds: number;
+    authority: unknown;
+  }>;
+  context: Readonly<{
+    tenantId: string;
+    trafficAgencyId: string;
+    agent: Readonly<{ id: string; operationalUnitId: string; status: string }>;
+    device: Readonly<{
+      id: string;
+      status: string;
+      homologated: boolean;
+      tamperDetected: boolean;
+      appVersion: string;
+    }>;
+    activeShift?: Readonly<{ id: string; status: string }>;
+    session: Readonly<{ id: string; startedAt: string; exclusive: boolean }>;
+  }>;
+  catalog: Readonly<{
+    operationalUnits: readonly unknown[];
+    teams: readonly unknown[];
+    patrolVehicles: readonly unknown[];
+    operations: readonly unknown[];
+    measurementInstruments: readonly unknown[];
+  }>;
+  normativePackage: Readonly<{
+    id: string;
+    catalogId: string;
+    version: string;
+    manifestHash: string;
+    status: string;
+    publishedAt: string;
+    validUntil: string;
+  }>;
+  numberingReservations: readonly unknown[];
+  readiness: Readonly<{
+    preShiftReady: boolean;
+    offlineReady: boolean;
+    blockers: readonly string[];
+  }>;
+  capabilities: Readonly<{
+    canOpenShift: boolean;
+    canOperateOffline: boolean;
+    canReserveNumbering: boolean;
+  }>;
+}>;
+type ProvisioningReadinessResponse = Readonly<{
+  device_id: string;
+  ready: boolean;
+  remaining_acts: number;
+  remaining_numbering_count: number;
+  blockers: readonly Readonly<{ code: string; resource: string }>[];
+  evaluated_at: string;
+}>;
+
+interface BootstrapStore {
+  snapshot(): BootstrapSnapshot | undefined;
+  refresh(input: MobileBootstrapQuery): Promise<BootstrapSnapshot>;
+  clear(): void;
+}
+
+interface GuardContext {
+  principal: Principal | undefined;
+  tenantId: string | undefined;
+  allowedRoles: readonly DetranRole[];
+  bootstrap: BootstrapSnapshot | undefined;
+  provisioning: ProvisioningReadinessResponse | undefined;
+}
+```
+
+`authGuard` injeta a sessão STYNX e lê `principal`; `tenantGuard` lê `tenantId`;
+`roleGuard` lê `principal.roles` e `allowedRoles`; `readinessGuard` lê
+`bootstrap`, `provisioning`, `blockers` e `validUntil`; `shiftGuard` lê
+`bootstrap.context.activeShift`. Cada `CanMatchFn` recebe `GuardContext` via
+providers/injeção e retorna `boolean | UrlTree`: `true` somente quando sua própria
+prova é positiva; ausência de fixture/estado devolve `false` ou `UrlTree` de
+negação. Nenhum guarda consulta `localStorage`, assume `true` ou recupera estado de
+outro guarda.
+
+Fixtures públicas obrigatórias (funções retornam os tipos acima, não objetos
+parciais/cast): `fixtureAuthenticatedFieldAgent()`, `fixtureNoPrincipal()`,
+`fixtureTenantContext()`, `fixtureNoTenantContext()`, `fixtureRoleDenied()`,
+`fixtureBootstrapReady()`, `fixtureBootstrapBlocked(code)`,
+`fixtureOpenShift()`, `fixtureNoOpenShift()`, `fixtureGrantReady()` e
+`fixtureGrantBlocked(code)`. `fixtureBootstrapReady` possui sessão exclusiva,
+dispositivo autorizado/homologado sem tamper, pacote com `manifestHash`, reserva e
+turno aberto; `fixtureGrantReady` retorna o `ProvisioningReadinessResponse` do
+contrato com `ready: true`, blockers vazios e contagens não negativas. As variantes
+blocked preservam o mesmo shape e inserem um blocker canônico, logo são adequadas
+para prova positiva e negativa sem inventar API.
+
+#### Oito clients de backend unificado
+
+Todos retornam `Promise<T>` e rejeitam com o `StynxError` recebido. `headers` é
+`Readonly<{ 'Idempotency-Key'?: string; 'If-Match'?: string }>`; quando a linha diz
+ambos, ambos são obrigatórios. Caminho `source_pending` significa que o client deve
+expor `unsupported(): Promise<never>` e rejeitar, não construir uma URL por analogia.
+
+| client                  | método público                                                                                                                                     | verbo e path literal                                                                                                                                                                                        | input/headers                                                                                                                                                                                | retorno/erro                                                                                                                                                                                             |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MobileBootstrapClient` | `getBootstrap`, `openShift`, `closeShift`, `handoffSession`                                                                                        | `GET /v1/ops/mobile-bootstrap`; `POST /v1/ops/mobile-bootstrap/shifts`; `POST /v1/ops/mobile-bootstrap/shifts/{id}/close`; `POST /v1/ops/mobile-bootstrap/sessions/handoff`                                 | `MobileBootstrapQuery`; `OpenMobileShiftDto` + `device_id`; `CloseMobileShiftDto`; `{ failed_device_id, reason, new_device_id?, location_json? }`; `Idempotency-Key` em cada POST de comando | `BootstrapSnapshot`; `Shift`; `Shift`; encerramento de sessão; `StynxError`                                                                                                                              |
+| `OpsSnapshotsClient`    | `externalQuery`                                                                                                                                    | `POST /v1/ops/snapshots/external-queries`                                                                                                                                                                   | `{ query_type: vehicle_by_plate\|driver_by_cpf\|driver_by_license, parameters, purpose }`; sem header adicional declarado                                                                    | snapshot congelado `{ snapshot_id, source, queried_at, result, divergence_recorded }`; `TEAT.QUERY_UPSTREAM_UNAVAILABLE` ou `TEAT.QUERY_NOT_FOUND`                                                       |
+| `OfflineSyncClient`     | `submitBatch`, `receiptByIdempotency`, `resolveConflict`                                                                                           | `POST /v1/ops/offline-sync/sync-batches`; `GET /v1/ops/offline-sync/receipts/{tenantId}/by-idempotency/{key}`; `POST /v1/ops/offline-sync/sync-conflicts/{id}/resolve`                                      | `SubmitSyncBatchDto`; ids de path; `ResolveSyncConflictDto`; headers não declarados no contrato                                                                                              | batch/receipts; recibo durável; `resolved\|rejected`; `StynxError`                                                                                                                                       |
+| `AitClient`             | `finalize`, `recordScience`, `recordPrintEvent`, `queueTransmission`, `requestCancel`                                                              | `POST /v1/inf/ait/aits/{id}/finalize`; `POST /v1/inf/ait/aits/{id}/science`; `POST /v1/inf/ait/aits/{id}/print-events`; `POST /v1/inf/ait/aits/{id}/queue-transmission`; `POST /v1/inf/ait/cancel-requests` | DTOs homônimos do contrato; `CreateAitCancelRequestDto`; `Idempotency-Key` para POST de comando                                                                                              | estados/efeitos literais do §3.2; `StynxError`                                                                                                                                                           |
+| `MeasuresClient`        | `startAdministrativeMeasure`, `releaseRetention`, `unsupported`                                                                                    | `POST /v1/inf/measures/administrative-measures/{id}/start`; `POST /v1/inf/measures/retentions/{id}/release`; demais caminhos elididos em §6 são `source_pending`                                            | `StartMeasureCommandDto`; `ReleaseRetentionCommandDto`; `Idempotency-Key` para comando                                                                                                       | `started`; `LIBERADO_*\|REGULARIZADO`; `unsupported(): Promise<never>` rejeita                                                                                                                           |
+| `AlcoholClient`         | `startProcedure`, `unsupported`                                                                                                                    | `POST /v1/inf/alcohol/procedures/{id}/start`; caminhos com `…` em §6 são `source_pending`                                                                                                                   | `StartAlcoholProcedureCommandDto`; `Idempotency-Key` para comando                                                                                                                            | `TRIAGEM`; `unsupported(): Promise<never>` rejeita                                                                                                                                                       |
+| `NormativeClient`       | `syncMetadata`, `packageContent`, `validatePackage`                                                                                                | `GET /v1/inf/normative/mobile-packages/sync-metadata`; `GET /v1/inf/normative/mobile-packages/{id}/content`; `POST /v1/inf/normative/mobile-packages/{id}/validate`                                         | package id; `ValidateMobileNormativePackageCommandDto`; `Idempotency-Key` para comando                                                                                                       | metadata; conteúdo assinado; `VALIDADO_PKG`; `StynxError`                                                                                                                                                |
+| `ProvisioningClient`    | `createKeyChallenge`, `registerDeviceKey`, `issuePackage`, `downloadPackageContent`, `recordReceipt`, `readiness`, `revokeGrant`, `reconcileGrant` | os oito paths e verbos literais de `BP-OPS-PROVISIONING-001.commands.openapi.json`                                                                                                                          | requests do OpenAPI; `If-Match` + `Idempotency-Key` em todos os POST exceto `createKeyChallenge` que exige somente `Idempotency-Key`; GET sem esses headers                                  | responses nomeadas pelo OpenAPI; `TEAT.AUTH_REQUIRED`, `TEAT.FORBIDDEN_ACTION`, `TEAT.IF_MATCH_REQUIRED`, `TEAT.VERSION_CONFLICT`, `TEAT.IDEMPOTENCY_REPLAY`, `TEAT.VALIDATION_FAILED` conforme operação |
+
+Para `ProvisioningClient`, os oito pares método/path são:
+`createKeyChallenge(deviceId)` → `POST /v1/ops/provisioning/devices/{deviceId}/key-challenges`;
+`registerDeviceKey(deviceId)` → `POST /v1/ops/provisioning/devices/{deviceId}/keys`;
+`issuePackage()` → `POST /v1/ops/provisioning/packages`;
+`downloadPackageContent(id)` → `GET /v1/ops/provisioning/packages/{id}/content`;
+`recordReceipt(id)` → `POST /v1/ops/provisioning/packages/{id}/receipts`;
+`readiness(deviceId)` → `GET /v1/ops/provisioning/devices/{deviceId}/readiness`;
+`revokeGrant(id)` → `POST /v1/ops/provisioning/grants/{id}/revoke`; e
+`reconcileGrant(id)` → `POST /v1/ops/provisioning/grants/{id}/reconcile`.
+
+#### LocalActStore, SyncWorker e pacote normativo
+
+```ts
+type QueueReceiptStatus = 'received' | 'applied' | 'conflict' | 'rejected';
+type LocalEntityType =
+  | 'ait'
+  | 'administrative-measure'
+  | 'alcohol-signs-term'
+  | 'ait-cancel-request'
+  | 'ait-cancel-posfinal-request';
+type LocalAct = Readonly<{
+  entityType: LocalEntityType;
+  localEntityId: string;
+  version: number;
+  idempotencyKey: string;
+  payloadHash: string;
+  payloadJson: unknown;
+  createdLocallyAt?: string;
+}>;
+type QueueReceipt = Readonly<{
+  localEntityId: string;
+  idempotencyKey: string;
+  status: QueueReceiptStatus;
+  serverEntityId?: string;
+  errorCode?: string;
+  errorMessage?: string;
+}>;
+
+interface LocalActStore {
+  put(act: LocalAct): Promise<void>;
+  get(localEntityId: string): Promise<LocalAct | undefined>;
+  pending(): Promise<readonly LocalAct[]>;
+  applyReceipts(receipts: readonly QueueReceipt[]): Promise<void>;
+  receiptByIdempotency(key: string): Promise<QueueReceipt | undefined>;
+}
+interface SyncWorker {
+  submitNext(): Promise<readonly QueueReceipt[]>;
+  recoverReceipt(
+    tenantId: string,
+    idempotencyKey: string,
+  ): Promise<QueueReceipt | undefined>;
+}
+type InstalledNormativePackage = Readonly<{
+  id: string;
+  manifestHash: string;
+  validUntil: string;
+  content: unknown;
+}>;
+interface NormativePackageService {
+  install(id: string): Promise<InstalledNormativePackage>;
+  usable(now: string): Promise<InstalledNormativePackage | undefined>;
+  revalidate(now: string): Promise<'usable' | 'warning-expired' | 'blocked'>;
+}
+```
+
+`put` é atômico no store cifrado e não aceita `localEntityId` já persistido com
+payload/hash/idempotência distintos. `submitNext` retorna somente receipts do
+servidor e chama `applyReceipts` antes de concluir; receipt parcial não muda itens
+ausentes. `recoverReceipt` usa o path literal do `OfflineSyncClient`, e retry usa o
+mesmo `device_batch_id`/sequência recuperáveis do item persistido; se esses valores
+não existirem, rejeita. `install` só resolve após conteúdo e `manifestHash`
+conferirem; `usable` devolve `undefined` para ausência/divergência; `revalidate`
+devolve `warning-expired` para expiração H.55 e `blocked` para qualquer outro
+blocker. A representação de bytes/assinatura do envelope é `source_pending` e não
+pode ser simulada como verificada.
+
+#### Dispatch de transição, ErrorBoundary e diagnósticos
+
+```ts
+type Transition = Readonly<{
+  from: string;
+  action: string;
+  to: string;
+  condition: string;
+  type: string;
+  notes: string;
+}>;
+type DispatchResult =
+  | Readonly<{ kind: 'navigated'; to: string }>
+  | Readonly<{ kind: 'back' }>
+  | Readonly<{
+      kind: 'denied';
+      reason:
+        | 'missing-transition'
+        | 'condition-unsatisfied'
+        | 'unregistered-destination';
+    }>;
+interface TransitionDispatcher {
+  dispatchTransition(
+    input: Readonly<{
+      from: string;
+      action: string;
+      conditionSatisfied: boolean;
+    }>,
+  ): Promise<DispatchResult>;
+}
+type DiagnosticEntry = Readonly<{
+  code: string;
+  status?: number;
+  context: Readonly<Record<string, string>>;
+  source: 'route' | 'action';
+  occurredAt: string;
+}>;
+interface MobileErrorBoundary {
+  capture(error: unknown, source: DiagnosticEntry['source']): DiagnosticEntry;
+  diagnostics(): readonly DiagnosticEntry[];
+}
+```
+
+`dispatchTransition` pesquisa a lista hash-validada da seção 4 pelo par exato
+`from`/`action`; condição não vazia exige `conditionSatisfied`. Para destino
+registrado chama `Router.navigateByUrl('/' + to)` e retorna `navigated`; somente
+`to === '__previous__'` chama `Location.back()` e retorna `back`. Não encontrar
+linha/destino/condição devolve `denied` sem chamar Router ou Location. `capture`
+no `FieldShell` mapeia `StynxError` conhecido para o código TEAT recebido, converte
+desconhecido em `TEAT.INTERNAL`, remove valores que não sejam tokens de contexto e
+acrescenta entrada diagnóstica; não lança, não retorna sucesso e não serializa
+payload de ato. A persistência/exportação física de `DiagnosticEntry` é
+`source_pending`; a API em memória é suficiente para provar classificação e
+apresentação sem inventar endpoint.
+
+#### Produção: impressão, bodycam, módulos, i18n e extensão
+
+```ts
+type PrintResult = Readonly<{
+  eventType: string;
+  printerIdentifier?: string;
+  receiptHash?: string;
+  failureReason?: string;
+}>;
+interface MobilePrinterPort {
+  print(aitId: string): Promise<PrintResult>;
+}
+type BodycamState = 'recording' | 'paused-exception' | 'failure';
+interface BodycamIndicator {
+  state(): BodycamState;
+}
+interface TeatI18n {
+  translate(
+    key: string,
+    params?: Readonly<Record<string, string | number>>,
+  ): string;
+}
+interface BoatExtensionPort {
+  installed(): boolean;
+  load(route: string): Promise<unknown>;
+}
+```
+
+`PrinterDialog` chama `MobilePrinterPort.print`, depois
+`AitClient.recordPrintEvent`; êxito e falha conservam o `aitId`/numeração e a
+falha produz `failure_reason`, sem criar outro AIT. `FixturePrinter` não satisfaz
+`MobilePrinterPort` de produção. `BodycamIndicator.state()` sempre retorna um dos
+três estados e não oferece método de ler conteúdo; esse conteúdo só usa a entrega
+de custódia registrada. Cada módulo expõe `Routes` não vazio contendo exatamente
+as linhas de seu grupo do manifesto e cada página expõe componente standalone
+distinto. `TeatI18n.translate` rejeita chave fora dos namespaces autorizados e
+nenhum componente exibe literal. Para D-05, o módulo AIT expõe a rota com
+`featureEnabled: false` e retorna estado disabled sem invocar client. Para BOAT,
+`installed() === false` impede o atalho e `load` não é chamado; navegação direta
+recebe negação/fallback sem placeholder. A chave de texto para esses dois estados é
+`source_pending`, por isso o Inspector prova o estado e a ausência de literal, não
+uma frase ou chave inventada.
+
 ## 2. Manifesto de 70 rotas
 
 `allowedRoles` é o conjunto completo permitido em cada linha; todos os demais
@@ -284,6 +587,15 @@ allowlist, não uma autorização por `features/`.
 O Feature Engineer não recebe `app.component.ts`, configuração, teste, `src/testing/`
 ou qualquer path não listado. Mesmo um arquivo exigido para concluir uma feature
 é negado até ser incluído por alteração arquitetural explícita.
+
+As APIs §1.2 não autorizam arquivo adicional: `BootstrapStore` fica em
+`core/bootstrap.store.ts`; `GuardContext` nos cinco arquivos de guardas;
+`LocalActStore`, `SyncWorker` e `NormativePackageService` nos três paths da linha
+de persistência; `TransitionDispatcher` em `navigation/transitions.ts`;
+`MobileErrorBoundary` em `core/field-shell.component.ts`; `MobilePrinterPort` nos
+shared; `BodycamIndicator` em core; `TeatI18n` em `core/i18n.service.ts`; e
+`BoatExtensionPort` em `features/sinistro/sinistro.routes.ts`. Portanto toda
+classe/interface pública necessária já pertence a path da allowlist.
 
 ## 6. Oráculos obrigatórios para implementação
 
