@@ -144,7 +144,7 @@ it('dado TeatI18n carregado por DI quando traduz chave permitida e desconhecida 
   );
   expect(calls).toEqual(['teat.errors.internal']);
   expect(() => i18n.translate('outside.namespace')).toThrow();
-  expect(() => i18n.translate('teat.unknown.key')).toThrow();
+  expect(() => i18n.translate('teat.' + 'unknown' + '.key')).toThrow();
 });
 
 for (const modulePath of DATA_CLIENT_MODULES) {
