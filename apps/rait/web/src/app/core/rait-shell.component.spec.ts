@@ -17,13 +17,23 @@ import {
 import { expectNoSeriousA11yViolations } from '../../testing/axe.spec-helper';
 // Produção (TASK-0006): ainda não existe.
 import { navigationFor, RaitShellComponent } from './rait-shell.component';
-import {
-  RaitShellSearch,
-  PendingShellSearch,
-  type RaitShellSearchResult,
-} from './shell-search';
+import { RaitShellSearch, type RaitShellSearchResult } from './shell-search';
 import { RaitTitleStrategy } from './title.strategy';
 import { RaitSessionFacade } from './session.facade';
+// R-0012 TASK-0008 (Inspector, CTG-0002b.md §8 C-2B-84/85): substitui o `it` de C-2A-27 que
+// exercitava `PendingShellSearch` — o contrato manda `CaseShellSearch` (`data/shell-search/`,
+// ainda inexistente nesta entrega: TASK-0009) no lugar. `provideHttpClient`/
+// `provideHttpClientTesting` porque `CaseShellSearch` faz uma requisição real via `CaseClient`.
+// `CaseShellSearch` (e tudo que importa `data/list-query.ts`/`data/models`, TASK-0009) é
+// carregado por `import()` DENTRO do `it` — nunca como import estático do arquivo — para que só
+// esse `it` falhe enquanto o módulo não existe; um import estático aqui derrubaria a
+// transformação do arquivo inteiro e quebraria C-2A-25…26/28…30, que continuam verdes hoje
+// (regra "specs do CTG-0002a continuam verdes, exceto o it substituído").
+import { provideHttpClient } from '@angular/common/http';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 
 describe('C-2A-25 — navigationFor × NAVIGATION_FIXTURE', () => {
   Object.entries(NAVIGATION_FIXTURE).forEach(([role, expected]) => {
@@ -123,27 +133,70 @@ describe('C-2A-26 — RaitShellComponent renderizado (rait-analyst)', () => {
 });
 
 describe('C-2A-27 — busca do shell', () => {
-  it('dado PendingShellSearch quando submetido "AM-2026-0001" então nenhuma navegação e banner "unavailable_in_version"', async () => {
-    const fixture = await renderShell({
+  // C-2B-84/85: substitui o `it` que exercitava `PendingShellSearch` — o shell agora recebe
+  // `CaseShellSearch` (produção `data/shell-search/case-shell-search.ts`, TASK-0009), que busca
+  // via `CaseClient` (`GET /v1/inf/rait/cases`). Submeter um protocolo existente navega a
+  // `/casos/<id>`; o comportamento de "unavailable" (banner) deixou de existir — a busca real
+  // devolve `{ kind: 'case' }` ou `{ kind: 'none' }` (C-2A-2x do shell continua verde com o novo
+  // provider).
+  it('dado o shell com CaseShellSearch provido quando o formulário de busca é submetido com um protocolo existente então router navega a /casos/<id>', async () => {
+    // `data/shell-search/case-shell-search.ts` ainda não existe (TASK-0009) — `import()`
+    // dinâmico para que só este `it` falhe (ver comentário no topo do arquivo). O caso 07
+    // (`rait-fixtures.json` "cases": id `00000000-0000-7000-8000-000010000007`, protocol
+    // `RAIT-2026-000007`) é citado aqui como literal, não via `http-fixtures.ts`, porque aquele
+    // arquivo importa `data/list-query.ts` (também TASK-0009) e derrubaria este import dinâmico
+    // junto — nenhum valor inventado: os dois campos vêm da mesma linha da fixture canônica.
+    const CASE_07_ID = '00000000-0000-7000-8000-000010000007';
+    // Especificador montado em runtime (nunca um literal estático no `import(...)`): o plugin
+    // `vite:import-analysis` do Vitest resolve e falha na TRANSFORMAÇÃO de um `import('literal')`
+    // dinâmico do mesmo jeito que um `import` estático — só um especificador não-literal escapa
+    // dessa resolução antecipada e falha (como esperado) apenas quando este `it` executa.
+    const caseShellSearchModulePath = [
+      '..',
+      'data',
+      'shell-search',
+      'case-shell-search',
+    ].join('/');
+    const { CaseShellSearch } = await import(caseShellSearchModulePath);
+
+    const session = createSessionStub({
+      active: true,
       roles: ['rait-analyst'],
-      search: new PendingShellSearch(),
     });
+    TestBed.configureTestingModule({
+      imports: [RaitShellComponent, markerI18nModule([...SHELL_KEYS])],
+      providers: [
+        provideRouter([{ path: '**', children: [] }]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: RaitSessionFacade, useValue: session },
+        { provide: RaitShellSearch, useClass: CaseShellSearch },
+      ],
+    });
+    await initializeMarkerI18n();
+    const fixture = TestBed.createComponent(RaitShellComponent);
+    fixture.detectChanges();
+
     const router = TestBed.inject(Router);
-    const navigateSpy = vi.spyOn(router, 'navigate');
+    const navigateSpy = vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    const httpMock = TestBed.inject(HttpTestingController);
+
     const input: HTMLInputElement = fixture.nativeElement.querySelector(
       'form[role="search"] input',
     );
-    input.value = 'AM-2026-0001';
+    input.value = 'RAIT-2026-000007';
     input.dispatchEvent(new Event('input'));
     fixture.nativeElement
       .querySelector('form[role="search"]')
       .dispatchEvent(new Event('submit'));
-    await fixture.whenStable();
-    fixture.detectChanges();
-    expect(navigateSpy).not.toHaveBeenCalled();
-    expect(fixture.nativeElement.textContent).toContain(
-      buildTestCatalog([...SHELL_KEYS])['rait.states.unavailable_in_version'],
+
+    const req = await vi.waitFor(() =>
+      httpMock.expectOne({ method: 'GET', url: '/v1/inf/rait/cases' }),
     );
+    req.flush([{ id: CASE_07_ID, protocol_number: 'RAIT-2026-000007' }]);
+    await fixture.whenStable();
+    expect(navigateSpy).toHaveBeenCalledWith(['/casos', CASE_07_ID]);
+    httpMock.verify();
   });
 
   it('dado stub resolvendo { kind: "case", caseId: "c1" } quando submetido então navega para /casos/c1', async () => {

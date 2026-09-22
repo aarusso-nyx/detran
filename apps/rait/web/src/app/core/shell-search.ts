@@ -1,8 +1,11 @@
-// Busca do shell por protocolo/AIT (spec §5.1; contrato CTG-0002a §5): abstração injetável.
-// Nesta CTG não há cliente de dados (M8/§13): `PendingShellSearch` resolve sempre
-// `{ kind: 'unavailable' }` — nunca simula um acerto. O CTG-0002b substitui por busca via
-// `CaseClient` (`GET /v1/inf/rait/cases`, `protocol_number`/`ait`).
+// Busca do shell por protocolo (spec §5.1; contrato CTG-0002a §5; CTG-0002b §3.6): abstração
+// injetável cuja implementação é `CaseShellSearch` (`data/shell-search/case-shell-search.ts`,
+// `GET /v1/inf/rait/cases` por `CaseClient`; busca por AIT fora desta CTG — OD-R12-030). A
+// fábrica padrão aponta para ela (o `main.ts` também a registra explicitamente,
+// `{ provide: RaitShellSearch, useClass: CaseShellSearch }`, OD-R12-030 b); os specs do shell
+// substituem por `useValue`.
 import { Injectable, inject } from '@angular/core';
+import { CaseShellSearch } from '../data/shell-search/case-shell-search';
 
 export type RaitShellSearchResult =
   | { readonly kind: 'case'; readonly caseId: string }
@@ -11,16 +14,8 @@ export type RaitShellSearchResult =
 
 @Injectable({
   providedIn: 'root',
-  useFactory: () => inject(PendingShellSearch),
+  useFactory: () => inject(CaseShellSearch),
 })
 export abstract class RaitShellSearch {
   abstract search(query: string): Promise<RaitShellSearchResult>;
-}
-
-@Injectable({ providedIn: 'root' })
-export class PendingShellSearch extends RaitShellSearch {
-  // todo(CTG-0002b): busca via CaseClient; até lá a busca está indisponível nesta versão.
-  async search(_query: string): Promise<RaitShellSearchResult> {
-    return { kind: 'unavailable' };
-  }
 }
