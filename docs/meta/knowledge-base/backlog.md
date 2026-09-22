@@ -538,24 +538,28 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       `main` pelo PR #69; CTG-0003 fechou comandos, consumidores e timers da infração; CTG-0004 fechou organização,
       arrecadação, integrações, SSE, sete contratos canônicos e clientes gerados. A adoção DEVAI/evidência local foi integrada
       antes do fechamento; os consumidores R-0011/R-0012 podem usar as superfícies publicadas.
-- [ ] **R-0013 `teat-frontends` em curso (Sol/Codex)**: CTG-0001 (reconciliação do corpus, PR #70) e contratos de paridade do
-      CTG-0002 (PR #73) em `main`; prompt-review em `FAIL` por dois ciclos, nenhum worker disparado; pendentes as 126 fichas
-      (CTG-0002), o provisionamento offline (CTG-0003) e os apps `apps/teat/{mobile,web}` (CTG-0004) (added 2026-09-21)
-- [x] **R-0011 `dashboard-backend` fechada como PC-0009 (2026-09-22; Fable, troca Sol → Fable, Owner 2026-09-21)** — CTG-0002 mesclado pelo PR #87 (`3bb94351`); resto do histórico: CTG-0001 mesclado em `main` pelo PR #83 (2026-09-21, `e0763c6c`): `BP-DASH-MONITOR-001`, DDL `19-dashboard-lifecycle-vocabulary.sql`/`80-dashboard.sql`, seed dos 42 indicadores, gate `verify:domain-boundaries`; **CTG-0002** (ciclo do alerta, deveres, frescor, relógio próprio via M7/A3 — Emenda 2 de `AUTHORIZATION.md`, exportação, relatórios, auditoria, open-data, SSE, contratos) pronto nesta worktree — PR a abrir (R-0011 CTG-0002). R-0016 `dashboard-console` pode consumir `@detran/api-clients` do DASHBOARD assim que o CTG-0002 mesclar (added 2026-09-22)
-- [ ] **Rodadas ainda não abertas**: R-0015 `boat-mobile` (Fable), R-0016 `dashboard-console` (Sol; fichas livres, console espera R-0011) (added 2026-09-21; R-0012 removida — aberta em 2026-09-21, ver linha própria abaixo)
-- [ ] **Podem abrir em sessões Claude imediatamente (2026-09-21)**:
-      **R-0015 `boat-mobile`** — só CTG-0001 (17 fichas, i18n, transições); a biblioteca mobile e o módulo `sinistros` esperam os
-      apps do TEAT (R-0013 CTG-0004). Alternativa se houver janela Claude sobrando: R-0011 CTG-0001 ou R-0016 CTG-0001 com o prompt
-      regenerado para maestro Fable e reviewer `codex gpt-5.6-terra` (troca de família registrada em `waves.md`) (added 2026-09-21)
-- [ ] **R-0012 `rait-web` em conclusão (Fable, aberta em 2026-09-21)**: CTG-0001 (fichas, PR #79), CTG-0002a (núcleo — guardas,
-      shell, SSE, i18n, PR #81), CTG-0002b-1 (dados e 26 componentes de `shared/`, PR #85), CTG-0002b-2 (50 páginas, rotas por
-      módulo e matriz de autorização, PR #90) mesclados em `main`; CTG-0002c (16 schemas de formulário, `rait-web-forms.md`,
-      regras ESLint locais `rait/*`) com gates verdes nesta worktree (`test` 4434 passed \| 139 todo, `pnpm check` EXIT 0) — PR
-      a abrir; documentação de fechamento (TASK-0013) nesta mesma entrega. Ficou fora: comandos reais (`POST …/commands/*`),
-      `caseAccessGuard` real e o endpoint SSE — `todo` citando R-0007 CTG-0004 (M8); L0 dos módulos `organizacao/{escala,jeton}`,
-      `integracoes/*`, `financeiro/*`, `admin/*`, `auditoria/exportacoes`; `e2e/` (Playwright) não criado, só specs vitest/TestBed.
-      OD-R12-001…054 em `open-decisions-rait.md` §G, nenhuma fechada; fechamento formal (`audit observe`, `closure.json`,
-      `waves.md`, `orchestra/README.md` §10) pendente do maestro (added 2026-09-22)
+- [ ] **R-0013 `teat-frontends` em curso (Sol/Codex)**: em `main` o CTG-0001 (reconciliação do corpus, PR #70), os contratos de
+      paridade do CTG-0002 (PR #73) e o **CTG-0003 provisionamento offline** (PR #82, 2026-09-21, observado EV-1925d89b5640ab91);
+      pendentes as 126 fichas e i18n/transições (CTG-0002), os apps `apps/teat/{mobile,web}` (CTG-0004a/0004b) e a
+      documentação de fechamento (CTG-0005); prompt-review chegou a PASS no ciclo 4 após adendas A2/A3 (updated 2026-09-22)
+- [x] **R-0011 `dashboard-backend` fechada como `PC-0009`** (2026-09-22; Fable, troca Sol → Fable, Owner 2026-09-21): CTG-0001
+      (`BP-DASH-MONITOR-001`, projeções, seeds, gate `verify:domain-boundaries`, PR #83) e CTG-0002 (ciclo do alerta, deveres,
+      frescor, exportação, SSE, contratos, PR #87); fechamento PR #88; handoffs OD-D17/D33/D35/D50/D58 no PR #101 (issues #96…#100)
+- [ ] **Rodada ainda não aberta**: só **R-0015 `boat-mobile`** — trocada para Sol/Codex pelo Owner em 2026-09-21 (plano e prompt
+      regenerados: maestro GPT-5.6 Sol, workers Terra/Luna, reviewer `claude opus`); CTG-0001 (17 fichas, i18n, transições) livre,
+      CTG-0002 (biblioteca mobile e módulo `sinistros`) espera os apps do TEAT (R-0013 CTG-0004) (updated 2026-09-22)
+- [ ] **Estado da campanha em 2026-09-22**: 11 de 14 rodadas fechadas (R-0003…R-0012, R-0014; PC-0001…PC-0011); em curso
+      R-0013 (Codex) e R-0016 (Fable, CTG-0002 no PR #103); não aberta R-0015 (Codex). Nada mais para abrir em Claude além de
+      acompanhar R-0016; o que resta da carteira é Codex: R-0013 CTG-0002/0004/0005 e R-0015. Após as três, a onda de
+      integração (SSE real, impressora, provisionamento em dispositivo, homologação RENAEST/SNE/gov.br) e os handoffs
+      OD-R12-_, OD-D_, OD-P15/16/17 seguem em `§Handoffs` (added 2026-09-22)
+- [x] **R-0012 `rait-web` fechada como `PC-0010`** (2026-09-22; Fable): CTG-0001 (63 fichas IU-RAIT-002…064 e manifesto de rotas,
+      PR #79), CTG-0002a (núcleo: 74 rotas, guardas, shell, SSE, error boundary, i18n + allowlist `rait.*`, PR #81), CTG-0002b-1
+      (8 clientes, 11 facades, 26 componentes, PR #85), CTG-0002b-2 (50 páginas, rotas por módulo, matriz ação × papel, PR #90),
+      CTG-0002c (16 schemas de formulário, gates de transição, regras ESLint locais, docs de fechamento, PR #92); fechamento PR #93,
+      observação PR #95. Ficou fora, com `todo` citando R-0007 CTG-0004 (agora em `main`): comandos reais `POST …/commands/*`,
+      `caseAccessGuard` real, endpoint SSE; L0 de organização/escala e jeton, integrações, financeiro, admin, auditoria/exportações;
+      `e2e/` Playwright não criado. OD-R12-001…054 em `open-decisions-rait.md` §G
 - [ ] **RAIT-WEB OD-R12-005 — `caseAccessGuard` real**: endpoint de verificação de acesso ao caso (pool/unidade/circunscrição) não existe; guarda retorna `true`; dono Architect (R-0007 CTG-0004); fonte `contracts/CTG-0002a.md` §12.
 - [ ] **RAIT-WEB OD-R12-007 — tolerância de heartbeat do SSE**: `HEARTBEAT_STALE_FACTOR = 2` (40 s) sem fonte no contrato §3; dono Architect (R-0007); fonte `contracts/CTG-0002a.md` §12.
 - [ ] **RAIT-WEB OD-R12-018 — listas sem query/envelope**: os 49 `list*` de `BP-INF-RAIT-*` não aceitam `?q=&ordem=&filtro=&pagina=` nem devolvem `{items,total,page,pageSize}`; estreitamento/paginação hoje no cliente; dono Architect (R-0007; ADR-0009); fonte `contracts/CTG-0002b.md` §9.3.
