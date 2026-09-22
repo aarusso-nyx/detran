@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 966000,
-  "estimated_output_total": 174000,
+  "estimated_input_total": 1102000,
+  "estimated_output_total": 224000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte; workers Opus/Sonnet por subagentes nativos).",
   "entries": [
     {
@@ -78,6 +78,14 @@
       "input_tokens": 90000,
       "output_tokens": 3000,
       "note": "prompts de TASK-0004/0005/0006: ciclo 1 FAIL (5 achados: pnpm check e MOD-package-json em TASK-0005; build pack nas listas fechadas); ciclo 2 restrito PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "model": "sonnet/medium",
+      "input_tokens": 136000,
+      "output_tokens": 50000,
+      "note": "545 900 brutos, 174 chamadas, 39 min. 10 fixtures + 64 specs (C-02-01…93); typecheck só TS2307 (módulos de TASK-0005/0006), lint 0."
     }
   ]
 }
