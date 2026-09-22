@@ -983,6 +983,20 @@ Checkpoint 44 (janela 4, contrato de forms autocontido):
 - TASK-0010 está `completed`; TASK-0012 retomou sua tentativa 1/2 agora com fontes suficientes.
   TASK-0013…0018 permanecem `queued`.
 
+Checkpoint 45 (janela 4, RED mobile congelado):
+
+- TASK-0012 materializou oito specs e seis helpers independentes: 70 rotas, matriz cartesiana
+  70×9, hash/igualdade ordenada das 576 transições, 14 schemas com payload positivo e remoção de
+  cada obrigatória, ramos condicionais, axe/a11y, FixturePrinter e superfícies de runtime;
+- o primeiro RED revelou 794/797 falhas, mas a auditoria do maestro rejeitou três lacunas de
+  sensor: `B+S` com sufixo BOAT/disabled, required fields não exercitados e superfícies centrais
+  não verificadas. O Inspector corrigiu sem tocar produção/configuração;
+- RED final: typecheck PASS; 865/868 falhas atribuídas exclusivamente ao comportamento ausente e
+  três oráculos independentes verdes; zero skip/todo. Hashes dos 14 sensores foram capturados no
+  relatório TASK-0012 e ficam congelados;
+- TASK-0012 está `completed`; TASK-0013 abriu a tentativa 1/2 em papel Engineer, proibido de
+  alterar qualquer spec, `src/testing/**`, configuração, lockfile, contrato ou gerado.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
