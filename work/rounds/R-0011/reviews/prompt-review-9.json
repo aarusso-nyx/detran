@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0011",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/prompts/TASK-0006.md",
+      "line": 107,
+      "claim": "O resultado esperado é impossível: além do catálogo DASH ausente, o checker não varre a raiz dashboard e filtra dashboard-stream dentro de backend/app/src; portanto o contrato novo também produz missing-route, não apenas catálogo desconhecido.",
+      "fix": "Declarar explicitamente os missing-route esperados até TASK-0009 e ajustar TASK-0009 para incluir dashboard-stream na varredura do app."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/prompts/TASK-0009.md",
+      "line": 48,
+      "claim": "A mudança prescrita adiciona apenas a raiz dashboard e o catálogo DASH, mas não altera o filtro de backend/app/src que aceita somente arquivos teat-* e portal-*. Assim GET /v1/dashboard/stream permanece ausente e os testes/gate exigidos nas linhas 55–58 não podem ficar verdes.",
+      "fix": "Além das duas inclusões, permitir explicitamente dashboard-stream.controller.ts na varredura de controllers do app; atualizar TASK-0008 para listar essa terceira lacuna."
+    },
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0011/tasks/TASK-0007.json",
+      "line": 35,
+      "claim": "A tarefa transcriber-docs está configurada com esforço medium, embora o plano a classifique Sonnet/baixo e a escada determine esforço baixo para transcrição.",
+      "fix": "Alterar effort para low ou registrar no plano a justificativa para a exceção."
+    }
+  ],
+  "notes": []
+}
