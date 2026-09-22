@@ -1,11 +1,11 @@
 {
   "round": "R-0012",
-  "window": 1,
+  "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 766000,
-  "estimated_output_total": 193000,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte).",
+  "estimated_input_total": 1616000,
+  "estimated_output_total": 381000,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte). Janela 1 encerrada com ≈946 k únicos estimados de entrada.",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -54,6 +54,70 @@
       "input_tokens": 100000,
       "output_tokens": 50000,
       "note": "harness reportou 100 674 brutos (worker interno não contabilizado), 27 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001+2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 120000,
+      "output_tokens": 4000,
+      "note": "ciclo 1 REVIEW (13 front-matters apps:[rait,…]); ciclo 2 restrito PASS."
+    },
+    {
+      "kind": "maestro-closing",
+      "id": "CTG-0001 gates+evidence+PR+merge+observe+checkpoint",
+      "model": "fable",
+      "input_tokens": 60000,
+      "output_tokens": 12000,
+      "note": "janela 1 encerrada por corte de orçamento após o CTG-0001 (ponto natural)."
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "window2-scaffold+prompts-0005/0006",
+      "model": "fable",
+      "input_tokens": 80000,
+      "output_tokens": 20000,
+      "note": "checkpoint de dependências (scaffold, install, check), A4, prompts 0005/0006, prompt-review 3→5."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3+4+5",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 150000,
+      "output_tokens": 4000,
+      "note": "REVIEW (4) → REVIEW (1 resíduo) → PASS; B1."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "sonnet/medium",
+      "input_tokens": 120000,
+      "output_tokens": 60000,
+      "note": "harness reportou 97 717 + 101 612 brutos (2 iterações; worker interno não contabilizado), 54 min + 1 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005-it3",
+      "model": "sonnet/medium",
+      "input_tokens": 45000,
+      "output_tokens": 15000,
+      "note": "harness reportou 175 969 brutos, 8 min (adenda A7)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "opus/medium",
+      "input_tokens": 125000,
+      "output_tokens": 70000,
+      "note": "487 357 brutos, 108 chamadas, 46 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002a",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 150000,
+      "output_tokens": 3000,
+      "note": "PASS com 1 low (relatório da iteração final) — atendido."
     }
   ]
 }

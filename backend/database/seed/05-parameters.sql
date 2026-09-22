@@ -1,4 +1,4 @@
--- Generated from parameter-catalogue.md sha256:5ffb3fdcef239e39928146f58f19d3545c7fa5e189ca7b75f227d5ea265031fc
+-- Generated from parameter-catalogue.md sha256:0a4c7a8ded10fd7c802019db15ded2708a39a50fcd389c73801e24c95d4a3ce5
 -- Applied by backend/database/seed.sh after apply.sh: the tenant context below satisfies auth.enforce_tenant_id().
 select set_config('app.role', 'owner', false);
 select set_config('app.tenant_id', '00000000-0000-7000-8000-00000000a001', false);

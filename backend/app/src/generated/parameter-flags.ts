@@ -1,6 +1,6 @@
-// Generated from parameter-catalogue.md sha256:5ffb3fdcef239e39928146f58f19d3545c7fa5e189ca7b75f227d5ea265031fc
+// Generated from parameter-catalogue.md sha256:0a4c7a8ded10fd7c802019db15ded2708a39a50fcd389c73801e24c95d4a3ce5
 export const PARAMETER_FLAGS_SOURCE_SHA256 =
-  '5ffb3fdcef239e39928146f58f19d3545c7fa5e189ca7b75f227d5ea265031fc';
+  '0a4c7a8ded10fd7c802019db15ded2708a39a50fcd389c73801e24c95d4a3ce5';
 export const PARAMETER_FLAGS = {
   'rait.warning.same_machine': true,
   'session.oral_argument_enabled': false,

@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0016",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0016/prompts/TASK-0002.md",
+      "line": 156,
+      "claim": "A instrução associa o estado residual de D-13 a DT-066/RN-BOAT-131 como condicionantes ainda vigentes. DT-066 condiciona P-08, e M4 decidiu que P-09/D-13 é ficha completa, destravada por OD-D02/DT-029 com supressão secundária.",
+      "fix": "Restringir D-13 a OD-D02/DT-029 e à supressão secundária; tratar DT-066 somente em D-12/P-08 e descrever bloqueio por decisão apenas como estado genérico, sem atribuí-lo a D-13."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0016/prompts/TASK-0003.md",
+      "line": 86,
+      "claim": "Quando RN-DASH-131 não nomear o texto de cada relógio, o prompt manda gravar \"relógio {letra}\" e simultaneamente abrir OD-D16. Esse rótulo não tem fonte canônica e viola a regra de não inventar valores.",
+      "fix": "Mandar omitir a chave dashboard.clocks correspondente e registrar OD-D16-nnn/source_pending até haver rótulo canônico."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0016/prompts/TASK-0001.md",
+      "line": 132,
+      "claim": "O contrato permite chaves extras dashboard.screens.<slug>.<extra> definidas pelas fichas, mas TASK-0003 limita a semente às três chaves por tela e posterga extras; TASK-0002 ainda permite state/field/tab. As tarefas paralelas não têm um contrato fechado para a cobertura ficha ↔ i18n.",
+      "fix": "Fixar no CTG-0001 exatamente title, intro e empty por tela; remover state/field/tab do TASK-0002 ou criar uma adenda de Architect posterior às fichas e anterior à geração da semente."
+    }
+  ],
+  "notes": []
+}
