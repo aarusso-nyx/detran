@@ -84,6 +84,7 @@ async function armedTimer(
 
 beforeAll(async () => {
   await db.connect();
+  await db.ensureSecondTenant();
   await ensureSuiteSources(db, SPEC, NOW, cycleId);
   await db.forceConnected('IND-DASH-101', true);
   services = buildCycle(db, '2026-10-01');

@@ -76,6 +76,7 @@ async function freshnessEvents(sourceId: string, tenantId = FIXTURE_TENANT_ID) {
 
 beforeAll(async () => {
   await db.connect();
+  await db.ensureSecondTenant();
   await db.ensureFreshSuiteSource(
     cycleId(SPEC, 0xf01),
     SUITE_SOURCE_KEYS.portalOutbox,

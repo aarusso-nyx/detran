@@ -47,6 +47,9 @@ import {
   FIXTURE_TENANT_ID,
   FIXTURE_TENANT_TZ,
   ROLES,
+  SECOND_TENANT_ID,
+  SECOND_TENANT_SLUG,
+  SECOND_TENANT_TZ,
   SUITE_SOURCE_KEYS,
   USERS,
   loadCalendar2026,
@@ -125,6 +128,7 @@ export class CycleDb {
   private readonly ownedProjectionEventIds = new Set<string>();
   private readonly ownedOutboxIds = new Set<string>();
   private readonly restores: (() => Promise<void>)[] = [];
+  private createdSecondTenant = false;
 
   constructor() {
     const { Client } = pg;
@@ -150,6 +154,59 @@ export class CycleDb {
     await this.client.query(`select set_config('app.tenant_id', $1, false)`, [
       tenantId,
     ]);
+  }
+
+  /** Cria o segundo tenant da suíte (`SECOND_TENANT_ID`, slug
+   * `r11-cycle-second`) quando não existe; `cleanup()` o remove só se esta
+   * instância o criou. Nunca depende de tenants de outras suítes (CI roda com
+   * banco limpo: só `am-fixtures`). */
+  async ensureSecondTenant(): Promise<void> {
+    const inserted = await this.client.query(
+      `insert into auth.tenants (id, slug, name, short_name, timezone)
+       values ($1, $2, 'Tenant secundário da suíte do ciclo (fixture 0083)', 'CYCLE-0083', $3)
+       on conflict (id) do nothing`,
+      [SECOND_TENANT_ID, SECOND_TENANT_SLUG, SECOND_TENANT_TZ],
+    );
+    this.createdSecondTenant = (inserted.rowCount ?? 0) === 1;
+  }
+
+  /** Apaga tudo o que a suíte gravou no segundo tenant e o próprio tenant
+   * (só quando `ensureSecondTenant` o criou). */
+  private async removeSecondTenant(): Promise<void> {
+    if (!this.createdSecondTenant) return;
+    await this.client.query(`select set_config('app.tenant_id', $1, false)`, [
+      SECOND_TENANT_ID,
+    ]);
+    await this.client.query(
+      `delete from integration.outbox where tenant_id = $1`,
+      [SECOND_TENANT_ID],
+    );
+    for (const table of [
+      'alert_trail',
+      'timer',
+      'alert',
+      'duty_cycle',
+      'source',
+      'access_log',
+      'monitor_projection_applied_event',
+      'prescription_risk',
+      'portal_service_metrics',
+      'duty_evidence',
+      'indicator_config',
+      'transparency_audit',
+    ]) {
+      await this.client.query(
+        `delete from dashboard.${table} where tenant_id = $1`,
+        [SECOND_TENANT_ID],
+      );
+    }
+    await this.client.query(`delete from auth.tenants where id = $1`, [
+      SECOND_TENANT_ID,
+    ]);
+    await this.client.query(`select set_config('app.tenant_id', $1, false)`, [
+      FIXTURE_TENANT_ID,
+    ]);
+    this.createdSecondTenant = false;
   }
 
   /** Executa `work` numa transação real e a REVERTE — para provar que um
@@ -599,6 +656,7 @@ export class CycleDb {
       `delete from dashboard.source where source_key = any($1::text[])`,
       [[...this.ownedSourceKeys]],
     );
+    await this.removeSecondTenant();
   }
 
   async end(): Promise<void> {

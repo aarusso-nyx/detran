@@ -446,6 +446,12 @@ Registro do bootstrap (2026-09-21, `origin/main` = `08fb84e8`, PR #79; `gh pr li
   tiers do kernel passaram no CI. Recomendação ao método: o inventário fechado deveria derivar de `apply.sh` (o
   `prepare-rait-priority-v1-baseline.mjs` já o faz) em vez de um número literal.
 
+- 2026-09-22 PR #87 CI `backend-kernel` — `sensor-error` (fixture): `cycle-freshness`/`cycle-sweeper` usavam um segundo
+  tenant (`…000000000001`, `local-e2e`) presente só no `detran_r11` local (criado por outra suíte do app), inexistente
+  no banco limpo do CI (4 casos: C-0002-37 ×2, 39, 49). A21 premissa 7 já apontava a lacuna. Correção pelo Inspector
+  de TASK-0004: a suíte cria e remove o próprio segundo tenant. Lição: fixtures de teste nunca dependem de linhas que
+  outra suíte cria no banco compartilhado.
+
 ## Adendas (Architect)
 
 - **A1 (2026-09-21)** — `dashboard.crashes` é a projeção de R-0010 (`BP-DASHBOARD-CRASHES-001`); a meta 1

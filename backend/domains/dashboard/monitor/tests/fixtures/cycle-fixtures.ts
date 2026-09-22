@@ -18,10 +18,15 @@ import type { CalendarJson } from '@detran/inf-deadlines';
 
 export const FIXTURE_TENANT_ID = '00000000-0000-7000-8000-00000000a001';
 export const FIXTURE_TENANT_TZ = 'America/Manaus';
-/** Segundo tenant já semeado em `auth.tenants` (C-0002-49, varredura por
- * tenant); nada é criado nele fora do que o `afterAll` do spec apaga. */
-export const SECOND_TENANT_ID = '00000000-0000-7000-8000-000000000001';
-export const SECOND_TENANT_TZ = 'America/Sao_Paulo';
+/** Segundo tenant PRÓPRIO da suíte (C-0002-37 bloco A, C-0002-49 varredura
+ * por tenant): o único tenant semeado por `00-fixtures-core.sql` é
+ * `am-fixtures`; a suíte nunca depende de tenants criados por outras suítes.
+ * `CycleDb.ensureSecondTenant()` o cria no `beforeAll` (`on conflict do
+ * nothing`) e `cleanup()` o remove só se o criou, depois de apagar tudo o que
+ * gravou nele (`dashboard.*`, `integration.outbox`). Id no namespace `0083`. */
+export const SECOND_TENANT_ID = '00000000-0000-7000-8000-000083000002';
+export const SECOND_TENANT_SLUG = 'r11-cycle-second';
+export const SECOND_TENANT_TZ = 'America/Manaus';
 
 /** Usuários de `00-fixtures-core.sql` (papéis lidos de `auth.membership_roles`
  * no `detran_r11`). O ciclo recebe `ctx.actor.roles` já resolvidos pela
