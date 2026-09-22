@@ -1,0 +1,26 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0016",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0016/prompts/TASK-0007.md",
+      "line": 44,
+      "claim": "A ordem da leitura obrigatória põe plano e contratos antes do build pack, contrariando a regra comum de ler o pacote de trabalho no build pack antes dos artefatos por ele citados.",
+      "fix": "Mover `docs/framework/arch/dashboard-build-pack.md` para antes de `plan.md`, contratos, manifesto e relatórios na lista fechada."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0016/prompts/TASK-0007.md",
+      "line": 46,
+      "claim": "O prompt afirma que `reports/*.md` contém oito relatórios, mas o diretório contém 14 arquivos Markdown, incluindo as iterações de TASK-0004, TASK-0005 e TASK-0006. O número informado não tem suporte no artefato apontado.",
+      "fix": "Substituir “os oito” por “todos os relatórios correspondentes às oito tarefas, incluindo relatórios de iteração” ou enumerar os 14 arquivos."
+    }
+  ],
+  "notes": [
+    "Papel, fronteira `MOD-docs`, proibição de git, modelo/esforço e critérios com comandos existentes estão compatíveis com a tarefa."
+  ]
+}

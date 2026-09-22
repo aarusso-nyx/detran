@@ -52,3 +52,16 @@ This record transcribes the instruction through the prompt's declared boundary: 
 PASS, exact-SHA audit observation, and governed round-close. It grants no package publication,
 release, deployment, force-push, or mutation outside this repository. It was written by the maestro
 from the Owner's instruction, not by the Owner; the Owner may revoke or amend it.
+
+## Amendment 1 — 2026-09-21: "prosseguir até a completa finalização"
+
+The Owner (Antonio A. Russo) instructed the maestro, in the session running R-0016, with the
+exact words "prosseguir até a completa finalização" after the CTG-0001 PR (#80) was opened.
+Per §7 above this message replaces the per-window cut: the maestro continues through CTG-0002
+(`apps/dashboard/web`) and CTG-0003 (documentation) to the governed round-close without stopping
+at 80 % of the window. Because `orchestra/dashboard-backend` (R-0011) still has no code, CTG-0002
+is developed on `orchestra/dashboard-console` after the merge of #80, at level L0 for every
+data-bound screen (contracts/CTG-0002.md §6: "indisponível nesta versão", never a silent mock),
+and integrates R-0011 by merge when its contract and seed exist. The boundary of the original
+grant is unchanged (normal push, PR against `main`, merge after green CI and cross-family PASS,
+audit observation, round-close; no force-push, no publication outside this repository).

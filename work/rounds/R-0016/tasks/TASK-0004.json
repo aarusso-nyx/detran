@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0004",
   "round_id": "R-0016",
-  "status": "queued",
+  "status": "completed",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Escrever os testes do console: rota × papel × camada, tela ↔ ficha ↔ rota ↔ i18n, 9 schemas, freshnessInterceptor, célula suprimida, a11y",
@@ -13,15 +13,15 @@
   "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "inspector",
-  "upstream_task_id": "TASK-0003",
+  "upstream_task_id": "TASK-0008",
   "db_isolation": "none",
-  "iteration_count": 0,
-  "max_iterations": 2,
+  "iteration_count": 5,
+  "max_iterations": 5,
   "priority": 3,
   "tags": ["wp-d5", "testes"],
   "branch": "orchestra/dashboard-console",
   "worktree_id": "WT-dashboard-console",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-94b6b6992c98880a",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/dashboard-web", "typecheck"],
     ["pnpm", "--filter", "@detran/dashboard-web", "lint"]
@@ -36,7 +36,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-0000000000000000",
+    "prompt_composition_id": "PC-94b6b6992c98880a",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
