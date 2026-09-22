@@ -91,3 +91,64 @@ it('dada cada ação canônica de sync-conflict quando validada então passa', a
     ).toBe(true);
   }
 });
+
+for (const [modulePath, exportName, invalid] of [
+  [
+    'data/local/ait-vehicle.schema',
+    'aitVehicleSchema',
+    { ...FORM_CONTRACT_FIXTURES[1].validPayload, placa: 'ABC12' },
+  ],
+  [
+    'data/local/ait-driver.schema',
+    'aitDriverSchema',
+    {
+      ...FORM_CONTRACT_FIXTURES[2].validPayload,
+      condutor: '11111111111',
+      identified_by: 'cpf',
+    },
+  ],
+  [
+    'data/local/ait-driver.schema',
+    'aitDriverSchema',
+    {
+      ...FORM_CONTRACT_FIXTURES[2].validPayload,
+      condutor: '00000000000',
+      identified_by: 'cnh',
+    },
+  ],
+  [
+    'data/local/ait-frame.schema',
+    'aitFrameSchema',
+    { ...FORM_CONTRACT_FIXTURES[3].validPayload, requires_equipment: true },
+  ],
+  [
+    'data/local/ait-evidence.schema',
+    'aitEvidenceSchema',
+    { ...FORM_CONTRACT_FIXTURES[5].validPayload, hash: 'not-a-content-hash' },
+  ],
+  [
+    'data/local/ait-evidence.schema',
+    'aitEvidenceSchema',
+    { ...FORM_CONTRACT_FIXTURES[5].validPayload, tipo: '__outside_catalog__' },
+  ],
+  [
+    'data/local/alcohol-device.schema',
+    'alcoholDeviceSchema',
+    { ...FORM_CONTRACT_FIXTURES[9].validPayload, verification_valid: false },
+  ],
+  [
+    'data/local/alcohol-result.schema',
+    'alcoholResultSchema',
+    {
+      ...FORM_CONTRACT_FIXTURES[10].validPayload,
+      medido: 0.35,
+      considerado: 0.04,
+    },
+  ],
+] as const) {
+  it(`dado ${modulePath} com validação técnica inválida quando safeParse executa então fecha antes de qualquer client`, async () => {
+    const runtime = await loadMobileRuntime(modulePath);
+    const schema = runtime[exportName] as ZodSchema;
+    expect(schema.safeParse(invalid).success).toBe(false);
+  });
+}

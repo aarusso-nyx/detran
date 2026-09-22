@@ -11,6 +11,8 @@ export const TEAT_STAFF_ROLES = [
   'integration-operator',
 ] as const;
 
+export type TeatStaffRole = (typeof TEAT_STAFF_ROLES)[number];
+
 export interface TeatRouteFixture {
   readonly path: string;
   readonly uxCode: string;

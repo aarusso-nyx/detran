@@ -1,0 +1,83 @@
+import { expect, it, vi } from 'vitest';
+import {
+  BOAT_ROUTE_PATHS,
+  D05_ROUTE_PATH,
+} from '../testing/route-contract.fixture';
+import * as routesRuntime from './app.routes';
+
+type BoatExtension = {
+  installed: () => boolean;
+  load: (route: string) => Promise<unknown>;
+};
+
+const runtime = routesRuntime as unknown as Record<string, unknown>;
+const resolveBoatRoute = runtime['resolveBoatRoute'] as
+  ((path: string, extension: BoatExtension) => Promise<unknown>) | undefined;
+const resolveDisabledRoute = runtime['resolveDisabledRoute'] as
+  ((path: string) => unknown) | undefined;
+
+for (const path of BOAT_ROUTE_PATHS) {
+  it(`dada extensão BOAT instalada quando resolve ${path} então chama load uma vez e retorna seu componente`, async () => {
+    expect(resolveBoatRoute).toBeTypeOf('function');
+    const component = { route: path };
+    const extension: BoatExtension = {
+      installed: vi.fn().mockReturnValue(true),
+      load: vi.fn().mockResolvedValue(component),
+    };
+    await expect(resolveBoatRoute?.(path, extension)).resolves.toEqual({
+      kind: 'loaded',
+      component,
+    });
+    expect(extension.load).toHaveBeenCalledTimes(1);
+    expect(extension.load).toHaveBeenCalledWith(path);
+  });
+
+  it(`dada extensão BOAT ausente quando resolve ${path} então não carrega e retorna unavailable`, async () => {
+    expect(resolveBoatRoute).toBeTypeOf('function');
+    const extension: BoatExtension = {
+      installed: vi.fn().mockReturnValue(false),
+      load: vi.fn(),
+    };
+    await expect(resolveBoatRoute?.(path, extension)).resolves.toEqual({
+      kind: 'unavailable',
+    });
+    expect(extension.load).not.toHaveBeenCalled();
+  });
+}
+
+it('dado path não-BOAT quando resolve então não consulta nem carrega extensão e retorna unavailable', async () => {
+  expect(resolveBoatRoute).toBeTypeOf('function');
+  const extension: BoatExtension = { installed: vi.fn(), load: vi.fn() };
+  await expect(resolveBoatRoute?.('home', extension)).resolves.toEqual({
+    kind: 'unavailable',
+  });
+  expect(extension.installed).not.toHaveBeenCalled();
+  expect(extension.load).not.toHaveBeenCalled();
+});
+
+it('dada rejeição do adaptador BOAT quando instalado então a rejeição propaga sem placeholder', async () => {
+  expect(resolveBoatRoute).toBeTypeOf('function');
+  const failure = new Error('adapter failed');
+  const extension: BoatExtension = {
+    installed: vi.fn().mockReturnValue(true),
+    load: vi.fn().mockRejectedValue(failure),
+  };
+  await expect(resolveBoatRoute?.(BOAT_ROUTE_PATHS[0], extension)).rejects.toBe(
+    failure,
+  );
+});
+
+it('dado D-05 quando resolve rota disabled então retorna unavailable sem loader/client; outro path é not-disabled', () => {
+  expect(resolveDisabledRoute).toBeTypeOf('function');
+  expect(resolveDisabledRoute?.(`/${D05_ROUTE_PATH}`)).toEqual({
+    kind: 'unavailable',
+  });
+  expect(resolveDisabledRoute?.('/home')).toEqual({ kind: 'not-disabled' });
+  const d05 = (
+    runtime['TEAT_ROUTES'] as readonly {
+      path?: string;
+      loadComponent?: unknown;
+    }[]
+  ).find((route) => route.path === D05_ROUTE_PATH);
+  expect(d05?.loadComponent).toBeUndefined();
+});

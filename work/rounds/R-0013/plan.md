@@ -1061,6 +1061,17 @@ Checkpoint 50 (janela 4, reference-gap técnico dentro da tentativa extraordiná
   `source_pending` e falham fechados. Prettier, KB `756/446` e oráculo 70/576/hash passaram;
   TASK-0012 retoma a mesma tentativa 3/3 para substituir o RED parcial por provas completas.
 
+Checkpoint 51 (janela 4, RED comportamental extraordinário congelado):
+
+- TASK-0012 substituiu sensores nominais por 951 provas: 720 REDs atribuíveis à produção rejeitada
+  e 231 oráculos independentes verdes, com zero skip/todo e lint/typecheck PASS;
+- os REDs cobrem os cinco guards efetivos e RBAC 70×9, 28 operações HTTP, store/sync/normativo,
+  oito módulos e 69 classes de página distintas, i18n, ErrorBoundary, readiness, validações de
+  schemas, impressão/bodycam, dispatcher, 11 rotas BOAT e D-05 fail-closed;
+- todos os 22 hashes finais de specs/helpers estão congelados no relatório Inspector. TASK-0012
+  está `completed` em 3/3; TASK-0013 abriu a tentativa final 2/2 e não pode alterar qualquer
+  sensor/helper, configuração, contrato, lockfile ou gerado.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do

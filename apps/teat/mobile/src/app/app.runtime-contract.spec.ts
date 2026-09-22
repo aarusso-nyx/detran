@@ -56,6 +56,49 @@ it('dada homologação expirada com os demais requisitos presentes quando readin
   expect(result.warnings).toContain('homologation-expired');
 });
 
+it('dado posture completo, grant, reserva, turno e validUntil quando readiness é avaliada então bloqueia cada falha e registra warning-expired sem inventar sucesso', async () => {
+  const runtime = await loadMobileRuntime('core/readiness-gate.service');
+  const evaluate = runtime['evaluateReadiness'] as (
+    input: Record<string, boolean | string>,
+  ) => {
+    readonly blocked: boolean;
+    readonly blockers: readonly string[];
+    readonly warnings: readonly string[];
+    readonly validUntil: string;
+  };
+  const ready = {
+    sessionExclusive: true,
+    deviceAuthorized: true,
+    deviceHomologated: true,
+    deviceTamperDetected: false,
+    normativePackagePresent: true,
+    grantReady: true,
+    numberingReservationPresent: true,
+    shiftOpen: true,
+    validUntil: '2999-01-01T00:00:00Z',
+    homologationExpired: true,
+  };
+  expect(evaluate(ready)).toMatchObject({
+    blocked: false,
+    blockers: [],
+    warnings: expect.arrayContaining(['warning-expired']),
+    validUntil: ready.validUntil,
+  });
+  for (const denied of [
+    'deviceAuthorized',
+    'deviceHomologated',
+    'normativePackagePresent',
+    'grantReady',
+    'numberingReservationPresent',
+    'shiftOpen',
+  ] as const) {
+    expect(evaluate({ ...ready, [denied]: false })).toMatchObject({
+      blocked: true,
+      blockers: expect.any(Array),
+    });
+  }
+});
+
 it('dado FieldShell quando erro normativo é apresentado então expõe ErrorBoundary e a chave i18n TEAT', async () => {
   const runtime = await loadMobileRuntime('core/field-shell.component');
   expect(runtime['FieldShellComponent']).toBeTypeOf('function');

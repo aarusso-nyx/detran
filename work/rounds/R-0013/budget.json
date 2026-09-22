@@ -742,8 +742,17 @@
       "window": 4,
       "estimated_input_tokens": 130000,
       "estimated_output_tokens": 30000,
+      "status": "completed",
+      "note": "Inspector froze 951 behavioral tests: 720 expected production failures and 231 independent passes covering guards, clients, offline runtime, pages/modules/i18n, errors, readiness, forms, printer/bodycam, transitions, BOAT and D-05"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0013-corrective-attempt-2",
+      "window": 4,
+      "estimated_input_tokens": 220000,
+      "estimated_output_tokens": 50000,
       "status": "in_progress",
-      "note": "Inspector replaces nominal false positives with behavioral RED for all thirteen delivery-review findings without touching production or configuration"
+      "note": "Engineer replaces the rejected nominal candidate with the complete behavior required by the frozen 951-test contract; all Inspector/config/contract/generated paths remain immutable"
     }
   ]
 }
