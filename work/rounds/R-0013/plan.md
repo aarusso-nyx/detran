@@ -1022,6 +1022,20 @@ Checkpoint 47 (janela 4, delivery review CTG-0004a ciclo 1):
   TASK-0010 e TASK-0012 já consumiram `2/2`, TASK-0013 fica `blocked` e o CTG escala ao Owner antes
   de qualquer reset extraordinário de limites. Não há autorização para push, PR ou merge do FAIL.
 
+Checkpoint 48 (janela 4, autorização corretiva extraordinária CTG-0004a):
+
+- em 2026-09-22, o Owner autorizou explicitamente o reset extraordinário necessário para eliminar
+  os treze achados `CTG4A-R1…R13` do delivery review ciclo 1;
+- TASK-0010 e TASK-0012 recebem excepcionalmente limite `3/3`; TASK-0013 preserva sua tentativa
+  final `2/2`. A ordem vinculante é Architect → Inspector RED → Engineer GREEN → gates integrais →
+  novo REVIEW independente;
+- o Architect pode corrigir apenas a allowlist e tornar executáveis, sem inventar produto, os
+  contratos já exigidos de guards, clientes, offline/sync/normativo, módulos/telas, i18n,
+  ErrorBoundary, readiness, transições, forms, printer/bodycam, D-05 e BOAT;
+- o Inspector deve substituir os falsos positivos nominais por provas comportamentais que falhem
+  contra o candidato rejeitado. O Engineer não pode tocar sensores. Produção só será commitada após
+  todos os gates e REVIEW PASS.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
