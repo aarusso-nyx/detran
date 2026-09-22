@@ -187,24 +187,27 @@ postState, errorCodes }` transcrito de §6.6/§7/§9 + `rait-error-catalog.md`; 
 
 ## Tarefas
 
-| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                                                   | Depende de                          | CTG       | Entrega                                                                                                                                                                                                                                                              |
-| --------- | -------------------- | ------------------- | -------------- | -------------------------------------------------------------------------------------- | ----------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-route-manifest`, `MOD-r12-contracts-2a`                                       | —                                   | CTG-0002a | `route-manifest.md` (72 rotas: papéis, tela, ficha IU-RAIT-nnn, módulo, kind, UC, jornadas, resolver, nível M13), `contracts/CTG-0002a.md` (core: guardas, session facade, shell, SSE, atalhos, error boundary, i18n `rait.shell/states/a11y`, allowlist, critérios) |
-| TASK-0002 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-A`                                                           | TASK-0001                           | CTG-0001  | fichas **lote A** (painel, fila, casos, conta: IU-RAIT-002…018)                                                                                                                                                                                                      |
-| TASK-0003 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-B`                                                           | TASK-0001                           | CTG-0001  | fichas **lote B** (protocolo, assinatura, autoridade, colegiado: IU-RAIT-019…038)                                                                                                                                                                                    |
-| TASK-0004 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-C`, `MOD-kb-manifest`                                        | TASK-0001                           | CTG-0001  | fichas **lote C** (gestao, organizacao, integracoes, financeiro, arquivo, auditoria, admin: IU-RAIT-039…064) + `artifactIdCount` 675 → 738                                                                                                                           |
-| TASK-0005 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-core`, `MOD-tools-parameters-tests`                                | TASK-0001, merge PR 1, install (M1) | CTG-0002a | specs: rota × papel (72 rotas, presença/ausência, M14), tela ↔ ficha ↔ rota ↔ i18n, chaves i18n (tokens dos contratos e códigos do catálogo → chave, glossário §2.8), guardas, SSE (fallback), error boundary; caso negativo da allowlist `rait.*`                   |
-| TASK-0006 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-core`, `MOD-parameter-catalogue-doc`                                     | TASK-0005                           | CTG-0002a | `main.ts`, `app.routes.ts`, manifesto, `core/`, placeholders das 72 rotas, `i18n/rait.pt-BR.json`, allowlist + `pnpm parameters:generate`, `pnpm check` (M2); testes do Inspector verdes                                                                             |
-| TASK-0007 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2b`                                                                 | TASK-0006 (merge PR 2)              | CTG-0002b | `contracts/CTG-0002b.md`: assinaturas dos 22 componentes §5.2, clientes/facades (M8/M9), páginas por rota e nível (M13), fixtures JSON, critérios                                                                                                                    |
-| TASK-0008 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-shared`                                                            | TASK-0007                           | CTG-0002b | specs dos 22 componentes (estados, a11y, teclado), facades (cache/invalidação, `todo` de comando), clientes (`HttpTestingController`), páginas L1/L2 por rota                                                                                                        |
-| TASK-0009 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-shared`, `MOD-rait-web-data`, `MOD-rait-web-features`, `MOD-packages-ui` | TASK-0008                           | CTG-0002b | `shared/`, `data/`, `features/*` até os testes passarem; `packages/ui` só por adenda                                                                                                                                                                                 |
-| TASK-0010 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2c`, `MOD-rait-web-forms-doc`                                       | TASK-0009 (merge PR 3)              | CTG-0002c | `contracts/CTG-0002c.md` + `docs/framework/arch/rait-web-forms.md`: 16 formulários campo a campo, gates, códigos de erro, regras ESLint (M11/M12)                                                                                                                    |
-| TASK-0011 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-forms`                                                             | TASK-0010                           | CTG-0002c | specs dos 16 schemas (válido/inválido/condicional, gate) + `RuleTester` das duas regras (casos negativos)                                                                                                                                                            |
-| TASK-0012 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-rait-web-forms`, `MOD-rait-web-lint`                                              | TASK-0011                           | CTG-0002c | 16 `*.schema.ts` com cabeçalho de gate, `eslint/local-rules.js`, `eslint.config.js`; testes verdes                                                                                                                                                                   |
-| TASK-0013 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs-rait-arch`                                                                   | TASK-0012                           | CTG-0002c | `rait-build-pack.md` §WP-D/E/F executados (gates reais), `rait-web-frontend.md` §12/§13, `open-decisions-rait.md` §G (OD-R12-*), backlog                                                                                                                             |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                                                                                 | Depende de                          | CTG         | Entrega                                                                                                                                                                                                                                                              |
+| --------- | -------------------- | ------------------- | -------------- | -------------------------------------------------------------------------------------------------------------------- | ----------------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-route-manifest`, `MOD-r12-contracts-2a`                                                                     | —                                   | CTG-0002a   | `route-manifest.md` (72 rotas: papéis, tela, ficha IU-RAIT-nnn, módulo, kind, UC, jornadas, resolver, nível M13), `contracts/CTG-0002a.md` (core: guardas, session facade, shell, SSE, atalhos, error boundary, i18n `rait.shell/states/a11y`, allowlist, critérios) |
+| TASK-0002 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-A`                                                                                         | TASK-0001                           | CTG-0001    | fichas **lote A** (painel, fila, casos, conta: IU-RAIT-002…018)                                                                                                                                                                                                      |
+| TASK-0003 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-B`                                                                                         | TASK-0001                           | CTG-0001    | fichas **lote B** (protocolo, assinatura, autoridade, colegiado: IU-RAIT-019…038)                                                                                                                                                                                    |
+| TASK-0004 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-rait-screens-C`, `MOD-kb-manifest`                                                                      | TASK-0001                           | CTG-0001    | fichas **lote C** (gestao, organizacao, integracoes, financeiro, arquivo, auditoria, admin: IU-RAIT-039…064) + `artifactIdCount` 675 → 738                                                                                                                           |
+| TASK-0005 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-core`, `MOD-tools-parameters-tests`                                                              | TASK-0001, merge PR 1, install (M1) | CTG-0002a   | specs: rota × papel (72 rotas, presença/ausência, M14), tela ↔ ficha ↔ rota ↔ i18n, chaves i18n (tokens dos contratos e códigos do catálogo → chave, glossário §2.8), guardas, SSE (fallback), error boundary; caso negativo da allowlist `rait.*`                   |
+| TASK-0006 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-core`, `MOD-parameter-catalogue-doc`                                                                   | TASK-0005                           | CTG-0002a   | `main.ts`, `app.routes.ts`, manifesto, `core/`, placeholders das 72 rotas, `i18n/rait.pt-BR.json`, allowlist + `pnpm parameters:generate`, `pnpm check` (M2); testes do Inspector verdes                                                                             |
+| TASK-0007 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2b`                                                                                               | TASK-0006 (merge PR 2)              | CTG-0002b   | `contracts/CTG-0002b.md`: assinaturas dos 22 componentes §5.2, clientes/facades (M8/M9), páginas por rota e nível (M13), fixtures JSON, critérios                                                                                                                    |
+| TASK-0008 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-data`, `MOD-rait-web-tests-shared`, `MOD-rait-web-tests-core` (só o `it` de C-2A-27)             | TASK-0007                           | CTG-0002b-1 | specs da camada de dados (clientes com `HttpTestingController`, ETag, facades com cache/invalidação SSE, `it.todo` de comando com OD) e dos 26 componentes de `shared/` (estados, a11y, teclado)                                                                     |
+| TASK-0009 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-data`, `MOD-rait-web-shared`, `MOD-rait-web-core-shell-search`, `MOD-rait-web-i18n`, `MOD-packages-ui` | TASK-0008                           | CTG-0002b-1 | `data/` (modelos, clientes, facades, busca do shell) e `shared/` (26 componentes) até os testes passarem; `packages/ui` só por adenda                                                                                                                                |
+| TASK-0014 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-features`, `MOD-rait-web-tests-core` (só os `it` de C-2A-11/22, C-2B-81/82)                      | TASK-0009 (merge PR 3a)             | CTG-0002b-2 | specs das 50 páginas e das rotas por módulo, matriz de autorização ação × papel (presença/ausência), atualização de C-2A-11/C-2A-22                                                                                                                                  |
+| TASK-0015 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-features`                                                                                              | TASK-0014, TASK-0016                | CTG-0002b-2 | `features/<modulo>/pages/*` (50 páginas) e rotas por módulo até os testes passarem                                                                                                                                                                                   |
+| TASK-0016 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-rait-web-i18n`                                                                                                  | TASK-0009 (merge PR 3a)             | CTG-0002b-2 | chaves i18n das páginas: 44 `confirm.*` (texto das fichas §6) e (P) do contrato §9.2 ausentes, no catálogo do app (A12)                                                                                                                                              |
+| TASK-0010 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2c`, `MOD-rait-web-forms-doc`                                                                     | TASK-0015 (merge PR 3b)             | CTG-0002c   | `contracts/CTG-0002c.md` + `docs/framework/arch/rait-web-forms.md`: 16 formulários campo a campo, gates, códigos de erro, regras ESLint (M11/M12)                                                                                                                    |
+| TASK-0011 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-forms`                                                                                           | TASK-0010                           | CTG-0002c   | specs dos 16 schemas (válido/inválido/condicional, gate) + `RuleTester` das duas regras (casos negativos)                                                                                                                                                            |
+| TASK-0012 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-rait-web-forms`, `MOD-rait-web-lint`                                                                            | TASK-0011                           | CTG-0002c   | 16 `*.schema.ts` com cabeçalho de gate, `eslint/local-rules.js`, `eslint.config.js`; testes verdes                                                                                                                                                                   |
+| TASK-0013 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs-rait-arch`                                                                                                 | TASK-0012                           | CTG-0002c   | `rait-build-pack.md` §WP-D/E/F executados (gates reais), `rait-web-frontend.md` §12/§13, `open-decisions-rait.md` §G (OD-R12-*), backlog                                                                                                                             |
 
-CTG-0001 = 0002/0003/0004 (fichas, PR 1). CTG-0002a = 0001/0005/0006 (PR 2). CTG-0002b =
-0007/0008/0009 (PR 3). CTG-0002c = 0010/0011/0012 + 0013 (PR 4). Paralelismo: 0002/0003/0004
+CTG-0001 = 0002/0003/0004 (fichas, PR 1). CTG-0002a = 0001/0005/0006 (PR 2). CTG-0002b-1 =
+0007/0008/0009 (PR 3a); CTG-0002b-2 = 0007/0016/0014/0015 (PR 3b; A8, A12). CTG-0002c = 0010/0011/0012 + 0013 (PR 4). Paralelismo: 0002/0003/0004
 juntas (fronteiras disjuntas; só 0004 toca o manifesto do KB); o resto é serial por tríade.
 
 **Prompts por fase:** os prompts de TASK-0001…0004 são compostos no bootstrap e passam pela
@@ -287,6 +290,10 @@ merged --limit 20`, `gh pr list --search orchestra/`):
 - Grupos **liberados para merge**: CTG-0001 (fichas) e CTG-0002a/b/c (app) — o upstream R-0007
   CTG-0004 (contratos de comando) só é exigido para ligar os `todo` de comando (M8), não para o
   merge. Nenhum grupo em base empilhada sobre outra frente.
+- **CTG-0002a mesclado**: PR #81 → `026c9fc09d2eb9e1d81b66c1d16c0b5a70ec6923` (2026-09-21; CI 7/7 após
+  integrar `main` com R-0016 PR #80 — conflitos na allowlist i18n, gerados e cadeia resolvidos por
+  merge; evidência regravada como sequence 2); `audit observe` no sha exato. Pré-condição de
+  despacho de TASK-0008/0009 satisfeita.
 - `devai round plan --scaffold` respondeu `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31);
   `devai round status --round R-0012` → `0 task(s)`; tarefas entram por `tasks/*.json`.
 
@@ -299,8 +306,18 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   residual de edição própria, o veredito final foi PASS e o Owner autorizou "prosseguir até a
   completa finalização" (AUTHORIZATION.md, emenda 1). Reportado no relatório final.
 
+- **B2 (desvio registrado, 2026-09-22).** Prompt-review 10 (par CTG-0002b-2) = FAIL por estrutura de
+  fronteira (rubrica 1 e 3: transcrição de i18n atribuída ao Engineer; `shared/**`/`data/**` fora dos
+  `target_modules`), não por contradição canônica. Pelo §10 do método (recomendação 7 de R-0009,
+  praticada em R-0008/R-0009/R-0014) e pela emenda 1 do Owner, o maestro corrige (A12) e repete o
+  ciclo restrito em vez de parar. Reportado no relatório final.
+
 ## Triagem
 
+- CTG-0002b-1, TASK-0009 it. 1 → 33/2307 testes + typecheck vermelhos: `sensor-error` (8 defeitos
+  de spec/fixture: render repetido, afterEach sem provider, regex, flush ausente, evento do kit,
+  marcador i18n, tipo `any`) + 2 divergências spec × contrato (`emptyWhen`, diretiva de permissão) →
+  adenda A10 → iteração restrita do Inspector, depois do Engineer.
 - CTG-0002a, TASK-0006 it. 1 → 6/1807 testes + 2 gates vermelhos: `policy-issue` (specs contradizem
   o contrato ou entre si: C-2A-02/09/24/35/63) e `sensor-error` (C-2A-45 sem shell/waitFor; literais
   de evento no spec do SSE; teste 7 da allowlist duplica linha) → adenda A7 → iteração restrita do
@@ -371,6 +388,69 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   do verificador): compor com `RAIT_STREAM_EVENT_PREFIX` exportado por `core/sse.service.ts`.
   (h) `allowlist-rait.test.mjs` teste 7: a tabela real já contém `rait.screens`; o caso positivo usa a
   tabela real sem inserir linha. Tipos `screen`/`sheet` como `string | null` ratificados.
+
+- **A8 — CTG-0002b em dois pares (Architect/maestro, 2026-09-21; emenda a M7).** O contrato
+  `contracts/CTG-0002b.md` (91 critérios; 50 páginas, 26 componentes, 8 clientes, 11 facades, 64
+  comandos `todo`, matriz 45 × 13) excede uma tarefa de worker (R-0014: pares 3a/3b/3c). O grupo
+  passa a **dois pares com PR próprio**: **CTG-0002b-1** = camada de dados (`data/**`), 26
+  componentes de `shared/`, `core/shell-search.ts` (C-2B-01…60, 84…87 e os gates 88…91 no que
+  lhes cabe) — TASK-0008 Inspector / TASK-0009 Engineer; **CTG-0002b-2** = 50 páginas + rotas por
+  módulo + matriz de autorização por ação × papel + atualização de C-2A-11/C-2A-22 (C-2B-61…83,
+  gates) — TASK-0014 Inspector / TASK-0015 Engineer. TASK-0007 é o Architect dos dois pares.
+  Ratificados os defaults de OD-R12-018…035 do contrato §9.3 (em especial 018: `list*` gerados sem
+  query/envelope → estreitamento e paginação no cliente **sem reordenar**; 024/025: limites do kit
+  sem reimplementar primitivos).
+
+- **A9 — `facade.stub.ts` (Architect/maestro, 2026-09-21).** O contrato CTG-0002b §7 atribui
+  `src/testing/facade.stub.ts` (`readSlotStub`, `listFacadeStub`, `commandRunnerStub`, `stubFacade`,
+  `pageProviders`) ao Inspector, mas o prompt de TASK-0008 (par 1) não o listou; ele é consumido só
+  pelos specs de páginas → passa ao Inspector do par 2 (TASK-0014). Os specs de `shared/` do par 1
+  compõem o gate por papel com `createStynxSessionStub` + `ROLE_PERMISSIONS_FIXTURE` (ratificado).
+
+- **A10 — Reconciliação do par CTG-0002b-1 (Architect/maestro, 2026-09-21; triagem dos 8
+  bloqueios de TASK-0009 it. 1: todos `sensor-error` nos specs/fixtures, nenhum `plant-bug`).**
+  Inspector (iteração restrita): (a) `render()` repetido no mesmo `it` → `TestBed.resetTestingModule()`
+  antes de cada `configureTestingModule` (ou um `it` por estado), assinando outputs antes de
+  re-renderizar (21 `it` de `shared/`); (b) `afterEach` com `HttpTestingController.verify()` só em
+  `describe` que configura o módulo (C-2B-13/14/15/33); (c) regex de `readPolicyCommandRules`
+  aceita `]\s*,?\s*]` (triplas multilinha com vírgula final: `reassign`, `declare`,
+  `acknowledge-alert`) → 60 chaves; (d) C-2B-28/30: flush de `GET cases/<id>` (+ `decisions` no
+  signing) que o contrato §4.3 prescreve; (e) C-2B-29: após `agenda-item.changed` o `refresh()` do
+  bundle refaz as 4 listas — flush delas; (f) C-2B-45: o output do kit é `dismissed`; (g) C-2B-58:
+  com `markerI18nModule` afirma-se o marcador/parâmetro `{seconds}`, não `'15'`; (h)
+  `queue-table.component.spec.ts:123`: `const host: HTMLElement = allowed.nativeElement`; (i)
+  `stynx-session.stub.ts` (fixture do CTG-0002a, acréscimo permitido) ganha `active$:
+Observable<StynxSessionState>` (kit 1.3.1 linha 162) para que `*stynxHasPermission` seja
+  instanciável; (j) C-2B-22/31: o contrato §4.1 prevalece — lista `[]` → `status 'empty'`
+  (`emptyWhen = total === 0`); as 11 asserções passam a `'empty'`. Engineer (iteração restrita):
+  remover `shared/has-permission.directive.ts` e usar `*stynxHasPermission` do kit (M4;
+  `detran-ui-guide.md` §2 — nenhuma diretiva paralela); `ListFacade`/`createListFacade` com
+  `emptyWhen: total === 0`; manter `AuditFacade.createExport(Partial<…>)`, `claimNext(…, ifMatch =
+null)` e as chaves reais de `RAIT_COMMAND_RULES` no `InquiryCard` (OD-R12-026). Extensões
+  registradas: OD-R12-025 (`StynxTableColumn` não reexportado → `shared/table-column.ts`),
+  OD-R12-028 (chaves (P) de cabeçalhos de tabela e "campo obrigatório" até `rait.forms.*`).
+
+- **A11 — Matriz de autorização nos componentes com gate (Architect/maestro, 2026-09-22;
+  delivery-review CTG-0002b-1 ciclo 1).** (a) Para cada ação com `*stynxHasPermission` nos
+  componentes deste par (`CaseHeader`, `InquiryCard`, `DecisionPanel`, `QueueTable`), o spec gera um
+  `it` por papel canônico (13) a partir de `ROLE_PERMISSIONS_FIXTURE`: presença para todo papel
+  concedido, ausência para todo papel omitido (método §4.8/§4.13; nunca um par exemplo). (b)
+  C-2B-44 corrigido: `policy.ts` concede `inf:rait-impediment:declare` a `rait-rapporteur`,
+  `rait-signing-authority` **e `rait-analyst`** — `rait-analyst` não vê `sign`/`return-draft`, mas
+  **vê** `impede`; o `it` "nenhum existe" é substituído pela matriz de (a). Inspector em iteração
+  restrita; Engineer só se algum componente falhar a matriz.
+
+- **A12 — Fronteiras do par CTG-0002b-2 (Architect/maestro, 2026-09-22; prompt-review 10).** (a) A
+  transcrição das chaves i18n das páginas (44 `rait.screens.<slug>.confirm.<x>` com o texto da coluna
+  "Confirmação" da ficha §6 e as demais (P) do contrato §9.2 ainda ausentes do catálogo) é ato de
+  **Architect (transcrição)** — nova **TASK-0016** (`transcriber-docs`, Sonnet/baixo, lock
+  `MOD-rait-web-i18n`), disparada em paralelo ao Inspector TASK-0014 (fronteiras disjuntas); o
+  Engineer TASK-0015 só consome as chaves. (b) TASK-0015 escreve somente em `features/**`
+  (`MOD-rait-web-features`); qualquer ajuste necessário em `shared/**`/`data/**` vira bloqueio no
+  relatório e é tratado pelo maestro por adenda + iteração restrita de um Engineer com esses locks.
+  Retroativamente: as chaves (P) que os Engineers do CTG-0002a/0002b-1 acrescentaram ao catálogo
+  seguindo os contratos §9 permanecem (já mescladas/revisadas), listadas em OD-R12-008/028 para
+  revisão do Owner.
 
 ## Retomada
 

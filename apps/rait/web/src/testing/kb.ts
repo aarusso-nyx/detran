@@ -27,6 +27,84 @@ export const ERROR_CATALOG_PATH = join(
   'docs/framework/arch/rait-error-catalog.md',
 );
 
+// R-0012 TASK-0008 (Inspector). Acréscimos do contrato CTG-0002b.md §7: caminho das fixtures
+// HTTP canônicas (rait-fixtures.md §7 "testes do frontend importam
+// docs/framework/arch/fixtures/rait-fixtures.json") e leitura independente de
+// `RAIT_COMMAND_RULES` (`backend/domains/shared/src/policy.ts`) para C-2B-13. Nada é importado
+// de `policy.ts` em runtime (`policy.fixture.ts` é a transcrição independente); esta função só
+// lê o texto-fonte para provar a transcrição.
+export const FIXTURES_PATH = join(
+  REPO_ROOT,
+  'docs/framework/arch/fixtures/rait-fixtures.json',
+);
+export const POLICY_PATH = join(
+  REPO_ROOT,
+  'backend/domains/shared/src/policy.ts',
+);
+
+export interface PolicyCommandRule {
+  readonly key: string;
+  readonly roles: readonly string[];
+}
+
+/**
+ * Regex sobre o texto de `policy.ts`: extrai o array `RAIT_COMMAND_RULES` (entre a declaração e
+ * o `];` que o fecha) e, de cada tripla `['<recurso>', '<ação>', [...papéis]]` (uma linha ou
+ * quebrada em várias, como em `rait-assignment:reassign`/`rait-impediment:declare`/
+ * `rait-clock:acknowledge-alert`), monta `{ key: 'inf:<recurso>:<ação>', roles }` (`teat('inf',
+ * resource, action)` de `policy.ts`). Nenhuma importação de `policy.ts` em runtime.
+ */
+export function readPolicyCommandRules(): readonly PolicyCommandRule[] {
+  const text = readFileSync(POLICY_PATH, 'utf8');
+  const startMarker =
+    'const RAIT_COMMAND_RULES: Array<[string, string, readonly DetranRole[]]> = [';
+  const start = text.indexOf(startMarker);
+  if (start < 0) {
+    throw new Error(`${POLICY_PATH}: RAIT_COMMAND_RULES não encontrado`);
+  }
+  const bodyStart = start + startMarker.length;
+  const end = text.indexOf('\n];', bodyStart);
+  if (end < 0) {
+    throw new Error(`${POLICY_PATH}: fim de RAIT_COMMAND_RULES não encontrado`);
+  }
+  const body = text.slice(bodyStart, end);
+  // Cada tripla começa por `['<resource>', '<action>',` (aspas simples), podendo quebrar em
+  // várias linhas até o `]` que fecha o array de papéis; não há arrays aninhados dentro dos
+  // papéis, então `[^\]]*` captura o bloco inteiro sem escapar do fechamento certo. As triplas
+  // quebradas em várias linhas (`reassign`, `declare`, `acknowledge-alert`) trazem uma vírgula
+  // final depois do array de papéis e antes do `]` que fecha a tripla — `,?` opcional entre os
+  // dois fechamentos (A10 item c).
+  const triplePattern =
+    /\[\s*'([a-z-]+)'\s*,\s*'([a-z-]+)'\s*,\s*\[([^\]]*)\]\s*,?\s*\]/g;
+  const rules: PolicyCommandRule[] = [];
+  for (const match of body.matchAll(triplePattern)) {
+    const [, resource, action, rolesBlock] = match;
+    const roles = [...rolesBlock.matchAll(/'([A-Za-z-]+)'/g)].map(
+      (roleMatch) => roleMatch[1],
+    );
+    rules.push({ key: `inf:${resource}:${action}`, roles });
+  }
+  return rules;
+}
+
+/**
+ * Tokens `rait.<recurso>:<ação>` citados na seção `## 6. Comandos` da ficha `id` — utilitário do
+ * catálogo (contrato §7) para comparar a cobertura de `RAIT_COMMANDS`/`RAIT_COMMAND_RULES`
+ * contra o que cada ficha pede (relatório de divergência OD-R12-026/027); não tem `it` numerado
+ * dedicado no §8 do contrato (a referência "C-2B-105" do §7 excede os 91 critérios do §8 —
+ * registrada como observação no relatório de entrega, não inventada aqui).
+ */
+export function readSheetCommands(id: string): readonly string[] {
+  const file = join(SCREENS_DIR, `${id}.md`);
+  const text = readFileSync(file, 'utf8');
+  const section = extractSection(text, '6. Comandos');
+  const seen = new Set<string>();
+  for (const match of section.matchAll(/`(rait\.[a-z-]+:[a-z-]+)`/g)) {
+    seen.add(match[1]);
+  }
+  return [...seen];
+}
+
 const SHEET_FILE_PATTERN = /^IU-RAIT-(\d{3})\.md$/;
 
 /** Nomes dos arquivos de ficha em disco, exceto `IU-RAIT-001.md` (inventário, não ficha de rota). */

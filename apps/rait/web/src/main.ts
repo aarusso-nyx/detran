@@ -15,7 +15,9 @@ import { AppComponent } from './app/app.component';
 import { RAIT_ROUTES } from './app/app.routes';
 import { LOGIN_ROUTE } from './app/core/guards/auth.guard';
 import { readRuntimeConfig } from './app/core/runtime-config';
+import { RaitShellSearch } from './app/core/shell-search';
 import { RaitTitleStrategy } from './app/core/title.strategy';
+import { CaseShellSearch } from './app/data/shell-search/case-shell-search';
 
 const runtime = readRuntimeConfig();
 const origin = window.location.origin;
@@ -46,6 +48,8 @@ bootstrapApplication(AppComponent, {
       },
     }),
     { provide: TitleStrategy, useClass: RaitTitleStrategy },
+    // Busca do shell por protocolo via `CaseClient` (contrato CTG-0002b §3.6; OD-R12-030 b).
+    { provide: RaitShellSearch, useClass: CaseShellSearch },
   ],
 }).catch((error: unknown) => {
   console.error(error);
