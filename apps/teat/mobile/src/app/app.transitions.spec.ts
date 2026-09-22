@@ -22,7 +22,6 @@ it('dadas as 576 transições canônicas quando importadas pelo runtime então a
 });
 
 it('dada cada transição canônica quando o destino é concreto então alcança uma rota contratada', async () => {
-  const { matrix } = readCanonicalMobileMatrix();
   const runtime = await loadMobileRuntime('navigation/transitions');
   const transitions = runtime[
     'TEAT_TRANSITIONS'

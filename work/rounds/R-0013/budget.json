@@ -698,7 +698,16 @@
       "estimated_input_tokens": 150000,
       "estimated_output_tokens": 36000,
       "status": "in_progress",
-      "note": "Feature Engineer implements the frozen CTG-0004a mobile contract without changing any Inspector, config, generated or lockfile path"
+      "note": "Feature Engineer implementation reached 868/868 tests, typecheck and build; independent lint exposed one unused local in the frozen Inspector sensor, so acceptance remains in progress pending the role-correct correction and delivery review"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0012-corrective-attempt-2",
+      "window": 4,
+      "estimated_input_tokens": 8000,
+      "estimated_output_tokens": 2000,
+      "status": "completed",
+      "note": "Inspector removed only the unused matrix assignment from app.transitions.spec.ts without changing assertions; lint, typecheck and 868/868 tests passed with zero skip/todo"
     }
   ]
 }

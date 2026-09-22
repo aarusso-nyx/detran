@@ -985,7 +985,7 @@ Checkpoint 44 (janela 4, contrato de forms autocontido):
 
 Checkpoint 45 (janela 4, RED mobile congelado):
 
-- TASK-0012 materializou oito specs e seis helpers independentes: 70 rotas, matriz cartesiana
+- TASK-0012 materializou oito specs e sete helpers independentes: 70 rotas, matriz cartesiana
   70×9, hash/igualdade ordenada das 576 transições, 14 schemas com payload positivo e remoção de
   cada obrigatória, ramos condicionais, axe/a11y, FixturePrinter e superfícies de runtime;
 - o primeiro RED revelou 794/797 falhas, mas a auditoria do maestro rejeitou três lacunas de
@@ -996,6 +996,17 @@ Checkpoint 45 (janela 4, RED mobile congelado):
   relatório TASK-0012 e ficam congelados;
 - TASK-0012 está `completed`; TASK-0013 abriu a tentativa 1/2 em papel Engineer, proibido de
   alterar qualquer spec, `src/testing/**`, configuração, lockfile, contrato ou gerado.
+
+Checkpoint 46 (janela 4, correção higiênica do sensor):
+
+- a implementação da tentativa 1 de TASK-0013 levou os oito arquivos de teste a 868/868 PASS,
+  além de typecheck e build verdes, mas o lint independente revelou uma variável local não usada
+  em `app.transitions.spec.ts`, caminho congelado e fora da autoridade do Engineer;
+- TASK-0012 reabriu sua tentativa final 2/2 somente para remover a atribuição morta, sem tocar
+  produção, configuração ou qualquer asserção. O novo hash do único sensor alterado é
+  `dd6ea3eb3577e49a63a9873e416fb566b1b7bc8acaf0a55621099a3f12f19781`;
+- lint, typecheck e 868/868 testes passaram, com zero skip/todo. TASK-0012 retornou a `completed`;
+  TASK-0013 permanece `in_progress` até auditoria do maestro, `pnpm check` integral e REVIEW.
 
 ## Leitura
 
