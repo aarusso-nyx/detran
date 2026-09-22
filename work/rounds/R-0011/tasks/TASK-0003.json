@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "completed",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-dbae1675099ff15e",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0003",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Generalizar verify:domain-boundaries, ligar a pnpm check, wiring do pacote e seed do catálogo (42 indicadores + deveres)",
+  "description": "Implementa M6 em tools/domain-boundaries/verify.mjs até os testes de TASK-0011 passarem; M10 (app.module, package.json, vitest alias, scripts); 80-fixtures-dashboard-catalog.sql e seed.sh (M8).",
+  "target_modules": [
+    "MOD-tools-boundaries",
+    "MOD-package-json",
+    "MOD-app-module",
+    "MOD-seed-80",
+    "MOD-seed-sh"
+  ],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0011",
+  "priority": 3,
+  "tags": ["wp-d1"],
+  "acceptance_commands": [
+    ["node", "--test", "tools/domain-boundaries/tests/*.test.mjs"],
+    ["pnpm", "verify:domain-boundaries"],
+    ["bash", "backend/database/seed.sh"],
+    ["pnpm", "format:check"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-dbae1675099ff15e",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

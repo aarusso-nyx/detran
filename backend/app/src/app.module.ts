@@ -74,6 +74,7 @@ import { InboxModule } from '@detran/portal-inbox';
 import { CitizenServiceModule } from '@detran/portal-citizen-service';
 import { ProjectionsModule } from '@detran/portal-projections';
 import { CrashesModule } from '@detran/dashboard-crashes';
+import { MonitorModule } from '@detran/dashboard-monitor';
 import { RenaestMirrorModule } from '@detran/integration-renaest-mirror';
 import { AitModule } from '@detran/inf-ait';
 import { AlcoholModule } from '@detran/inf-alcohol';
@@ -677,6 +678,7 @@ export class AppModule {
         CitizenServiceModule,
         ProjectionsModule,
         CrashesModule,
+        MonitorModule,
         RenaestMirrorModule,
         // Infractions scope (TEAT/RAIT): generated CRUD modules plus the
         // handwritten AIT lifecycle commands (WP-T0).
