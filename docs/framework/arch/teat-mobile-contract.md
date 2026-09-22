@@ -44,6 +44,82 @@ o contrato de rota e o contrato de provisionamento fechados nesta rodada.
   A permissão adicional do `field-agent` na folha é inconsistência de fonte
   registrada como `OD-TEAT-MOBILE-SYNC-CONFLICT-ROLE`; ela não amplia RBAC.
 
+### 1.1 Contratos comportamentais fail-closed
+
+Estes são requisitos de execução, não meras existências de arquivo. Cada caso é
+uma prova independente obrigatória ao Inspector; ausência de estado, adapter,
+porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fictício.
+
+1. **Guardas e contexto.** Os cinco `CanMatchFn` efetivos são os únicos guardas:
+   `authGuard` exige principal STYNX autenticado; `tenantGuard`, contexto de tenant;
+   `roleGuard`, o resultado do oráculo da seção 6; `readinessGuard`, um snapshot
+   válido de readiness; e `shiftGuard`, turno aberto. Cada um devolve negação sem
+   estado verificável, inclusive principal ausente, tenant ausente, papel omitido,
+   bootstrap ausente/expirado, blocker presente ou turno não aberto. A sequência
+   nunca é abreviada e `roleGuard` chama o oráculo cartesiano efetivo, não cópia ou
+   helper isolado.
+2. **Adapters de backend.** Os oito clients são adapters tipados sobre `HttpClient`
+   ou cliente gerado para o backend unificado e só constroem rotas `/v1/inf/*` e
+   `/v1/ops/*` do contrato de rotas. Comandos POST preservam `Idempotency-Key`;
+   precondições preservam `If-Match`; resposta, status e código `StynxError` são
+   retornados ao chamador sem `catch` que os converta em sucesso. Nenhum adapter
+   chama sistema nacional, URL nacional, mock nem dados locais como resposta remota.
+3. **Persistência e sincronização.** `LocalActStore` usa
+   `MobileEncryptedStorePort` e persiste por agregado `draft`, `queue`, `evidence`,
+   `reservation`, `package` e `print-receipt`. Toda escrita local recebe versão,
+   `idempotency_key`, `payload_hash` e item `SyncQueueItem`; armazenamento em
+   memória/planilha/`localStorage` simples é proibido. `SyncWorker` lê somente a
+   fila persistida, submete `SubmitSyncBatchDto` com `device_batch_id`,
+   `batch_sequence` e os itens contratuais, grava o recibo por item (`received` →
+   `applied`) e recupera por idempotência. Falha fica no item com código canônico;
+   jamais apaga ato, duplica comando ou bloqueia nova lavratura por si só.
+4. **Pacote normativo.** `NormativePackageService` baixa apenas metadata/conteúdo
+   do backend, valida o conteúdo pelo `manifest_hash` e só torna o pacote utilizável
+   depois de persistido cifradamente. Pacote ausente, hash divergente ou conteúdo
+   não verificável produz blocker; pacote expirado produz warning registrado e não
+   bloqueia (H.55). `validUntil` exige nova avaliação; não há valor default para
+   `source_pending` nem cálculo de prazo legal local.
+5. **Telas, módulos e i18n.** Os oito módulos lazy exportam as rotas de suas
+   linhas do manifesto e cada uma instancia o componente daquela linha, nunca um
+   alias ou placeholder comum. A página consome sua folha fonte, schema e client
+   aplicáveis. Todo texto visível, inclusive fallback, erro e estado indisponível,
+   passa pelo runtime STYNX de i18n com as chaves permitidas da seção 1; texto
+   literal no template ou componente falha. O catálogo é carregado em runtime, não
+   somente copiado para o app.
+6. **FieldShell e falhas.** `FieldShell` é a única ErrorBoundary da aplicação:
+   captura erro de rota/ação, preserva somente código, status e contexto de tokens,
+   classifica `StynxError` pelo catálogo TEAT e mostra a chave canônica de erro. Erro
+   de formulário fica inline; blocker de postura/sessão abre o fluxo de dispositivo;
+   erro de fila fica no `QueueItemCard`; erro desconhecido é `TEAT.INTERNAL`. A
+   ocorrência é registrada no estado diagnóstico local sem segredo ou payload de
+   ato. A boundary não pode relançar silenciosamente, apresentar texto literal nem
+   transformar erro em êxito.
+7. **Readiness.** `ReadinessGateService` deriva `allowed`, `blockers`, `warnings`
+   e `validUntil` da resposta tipada de bootstrap/provisionamento: sessão exclusiva,
+   postura/autorização do dispositivo, homologação, pacote, reserva de numeração e
+   turno. A rota legal só abre se não houver blocker e todos os requisitos do seu
+   destino estiverem presentes; warnings são exibidos e registrados. A decisão de
+   homologação expirada mantém o ato possível, mas não mascara bloqueadores reais.
+8. **Transições.** Além da igualdade content-addressed da seção 4, o executor
+   despacha cada transição pelo par `from`/`action`, exige condição satisfeita e
+   navega ao `to` registrado. Somente `__previous__` chama `Location.back()`;
+   depois de `ait-done`, a ação de retorno não pode reabrir edição do ato. Destino,
+   ação ou condição ausente nega a navegação.
+9. **Forms, impressora e bodycam.** Os 14 schemas executam todas as proibições e
+   validações da seção 3 antes de chamar client; prova negativa deve demonstrar que
+   payload inválido não produz comando. A porta de produção de impressão usa
+   `MobilePrinterPort`, registra sucesso/falha em `print-events` sem duplicar AIT e
+   preserva o mesmo número na reimpressão controlada. `BodycamIndicator` é chrome
+   global em serviço operacional com estados gravando, pausa excepcional e falha;
+   conteúdo de bodycam não é exposto pelo app sem o fluxo de custódia autorizado.
+   `FixturePrinter` e doubles são somente adapters de teste, nunca runtime.
+10. **D-05 e BOAT.** D-05 permanece rota acessível, registrada e disabled: ela
+    mostra estado de indisponibilidade, não carrega feature nem envia comando. Cada
+    `crash-*` é resolvido pela extensão BOAT; sem extensão instalada o atalho não
+    aparece e navegação direta nega/faz fallback explícito, nunca renderiza
+    placeholder TEAT. A fonte não fornece a chave i18n do fallback/indisponibilidade;
+    essa chave permanece `source_pending`, mas não autoriza texto literal.
+
 ## 2. Manifesto de 70 rotas
 
 `allowedRoles` é o conjunto completo permitido em cada linha; todos os demais
@@ -172,11 +248,11 @@ das 576 transições da fonte acima é importada pelo contrato, não uma aproxim
 As raízes abaixo são relativas a `apps/teat/mobile/`. Não existe posse implícita
 por diretório; cada item é o conjunto fechado do respectivo worker.
 
-| tarefa    | papel            | caminhos graváveis exatos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| --------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0011 | Scaffold         | `package.json`, `angular.json`, `eslint.config.js`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.spec.json`, `vitest.config.ts`, `src/test-setup.ts`, `src/main.ts`, `src/index.html`, `src/styles.css`, `src/app/app.component.ts`, `src/app/app.routes.ts`                                                                                                                                                                                                                                                                                                                                            |
-| TASK-0012 | Inspector        | todo e somente `src/**/*.spec.ts` e `src/testing/**`; nunca arquivo de produção                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| TASK-0013 | Feature Engineer | os 70 arquivos de componente enumerados no manifesto; `src/app/app.routes.ts`, `src/app/navigation/transitions.ts`, `src/app/navigation/guards/auth.guard.ts`, `tenant.guard.ts`, `role.guard.ts`, `readiness.guard.ts`, `shift.guard.ts`, `src/app/core/bootstrap.store.ts`, `readiness-gate.service.ts`, `src/app/core/field-shell.component.ts`, `src/app/data/api/mobile-bootstrap.client.ts`, `ops-snapshots.client.ts`, `offline-sync.client.ts`, `ait.client.ts`, `measures.client.ts`, `alcohol.client.ts`, `normative.client.ts`, `provisioning.client.ts`, e os 14 schemas enumerados na seção 3 |
+| tarefa    | papel            | caminhos graváveis exatos                                                                                                                                                                                                                                       |
+| --------- | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0011 | Scaffold         | `package.json`, `angular.json`, `eslint.config.js`, `tsconfig.json`, `tsconfig.app.json`, `tsconfig.spec.json`, `vitest.config.ts`, `src/test-setup.ts`, `src/main.ts`, `src/index.html`, `src/styles.css`, `src/app/app.component.ts`, `src/app/app.routes.ts` |
+| TASK-0012 | Inspector        | todo e somente `src/**/*.spec.ts` e `src/testing/**`; nunca arquivo de produção                                                                                                                                                                                 |
+| TASK-0013 | Feature Engineer | somente cada path da allowlist fechada §5.1                                                                                                                                                                                                                     |
 
 O Inspector pode ler, mas não editar, cada caminho de produção. O Feature Engineer
 pode ler, mas nunca editar, `src/**/*.spec.ts` nem `src/testing/**`. A única posse
@@ -185,6 +261,29 @@ depois de encerrado seu handoff, TASK-0013 recebe a única autoridade para preen
 as rotas. Não há `**` de Scaffold ou Feature e, fora dessa passagem explícita de
 hand-off, os conjuntos não se sobrepõem. `app.component.ts` é somente shell vazio;
 `field-shell.component.ts` é a implementação de runtime do Feature Engineer.
+
+### 5.1 Allowlist fechada de produção — TASK-0013
+
+Todos os paths desta lista são relativos a `apps/teat/mobile/`; nenhum diretório,
+glob ou arquivo implícito é gravável. Os 70 paths de páginas são exatamente a
+coluna `componente` do manifesto, sem o sufixo `#Component`; isso é parte desta
+allowlist, não uma autorização por `features/`.
+
+| superfície                     | paths graváveis exatos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| bootstrap, navegação e guardas | `src/app/app.routes.ts`; `src/app/navigation/transitions.ts`; `src/app/navigation/guards/auth.guard.ts`; `src/app/navigation/guards/tenant.guard.ts`; `src/app/navigation/guards/role.guard.ts`; `src/app/navigation/guards/readiness.guard.ts`; `src/app/navigation/guards/shift.guard.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| core e i18n de runtime         | `src/app/core/bootstrap.store.ts`; `src/app/core/readiness-gate.service.ts`; `src/app/core/field-shell.component.ts`; `src/app/core/i18n.service.ts`; `src/app/core/bodycam-indicator.component.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| persistência, sync e normativo | `src/app/data/local/local-act.store.ts`; `src/app/data/sync/sync.worker.ts`; `src/app/data/normative/normative-package.service.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| oito clients unificados        | `src/app/data/api/mobile-bootstrap.client.ts`; `src/app/data/api/ops-snapshots.client.ts`; `src/app/data/api/offline-sync.client.ts`; `src/app/data/api/ait.client.ts`; `src/app/data/api/measures.client.ts`; `src/app/data/api/alcohol.client.ts`; `src/app/data/api/normative.client.ts`; `src/app/data/api/provisioning.client.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| oito módulos lazy              | `src/app/features/turno/turno.routes.ts`; `src/app/features/consultas/consultas.routes.ts`; `src/app/features/ait/ait.routes.ts`; `src/app/features/medidas/medidas.routes.ts`; `src/app/features/alcoolemia/alcoolemia.routes.ts`; `src/app/features/sinistro/sinistro.routes.ts`; `src/app/features/sincronizacao/sincronizacao.routes.ts`; `src/app/features/complementares/complementares.routes.ts`                                                                                                                                                                                                                                                                                                                                                                       |
+| shared de campo                | `src/app/shared/mobile-page.component.ts`; `src/app/shared/mobile-printer.port.ts`; `src/app/shared/paired-value.component.ts`; `src/app/shared/closed-enum-picker.component.ts`; `src/app/shared/proposed-value-field.component.ts`; `src/app/shared/outcome-selector.component.ts`; `src/app/shared/evidence-capture.component.ts`; `src/app/shared/signature-capture.component.ts`; `src/app/shared/location-field.component.ts`; `src/app/shared/framing-picker.component.ts`; `src/app/shared/validation-panel.component.ts`; `src/app/shared/printer-dialog.component.ts`; `src/app/shared/queue-item-card.component.ts`; `src/app/shared/conflict-resolver.component.ts`; `src/app/shared/device-handoff-form.component.ts`; `src/app/shared/term-preview.component.ts` |
+| catálogo de runtime            | `src/app/i18n/teat.pt-BR.json`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| schemas locais                 | os 14 paths completos da primeira coluna da tabela §3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| páginas                        | os 70 paths completos da coluna `componente` do manifesto §2, sem `#Component`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+
+O Feature Engineer não recebe `app.component.ts`, configuração, teste, `src/testing/`
+ou qualquer path não listado. Mesmo um arquivo exigido para concluir uma feature
+é negado até ser incluído por alteração arquitetural explícita.
 
 ## 6. Oráculos obrigatórios para implementação
 
@@ -199,3 +298,39 @@ hand-off, os conjuntos não se sobrepõem. `app.component.ts` é somente shell v
 4. Readiness vem da resposta de provisionamento/bootstrap; warnings são mostrados
    e registrados, blockers impedem a rota. Nada no app transforma `source_pending`
    em valor, nem muda a decisão de H.39, H.54 ou H.55.
+5. Para cada guarda efetivo, o Inspector prova uma entrada válida que permite e
+   uma entrada ausente/inválida que nega. Para `roleGuard`, a prova executa o
+   oráculo cartesiano da regra 2; um helper não usado pela guarda não satisfaz este
+   oráculo. Para rota `B+S`, a prova mostra que `readinessGuard` precede
+   `shiftGuard`.
+6. Para cada um dos oito adapters, um double de `HttpClient`/cliente gerado prova
+   método, prefixo unificado, headers obrigatórios quando o comando os exige,
+   desserialização tipada e propagação do mesmo `StynxError`. Uma URL fora de
+   `/v1/inf/` ou `/v1/ops/`, sucesso fabricado ou chamada nacional falha.
+7. O oráculo offline reinicia o store entre escrita e leitura e comprova que o ato,
+   versão, hash, idempotência e fila sobrevivem; simula recibo parcial, retry e
+   erro, e prova ausência de duplicidade, apagamento ou bloqueio indevido. Store
+   somente em memória não satisfaz a prova.
+8. O oráculo normativo cobre conteúdo válido, ausente, hash divergente e expirado:
+   somente o primeiro é utilizável; ausente/divergente bloqueiam; expirado emite e
+   registra warning sem bloquear. Também prova reavaliação após `validUntil`.
+9. Para os oito módulos, as provas carregam a rota lazy e comprovam a instância do
+   componente de cada linha do manifesto; a mesma classe/alias/placeholder em duas
+   linhas falha. Cada página com formulário exercita seu schema e a ação/client
+   correspondente; cada texto observado é uma chave do catálogo carregado.
+10. O oráculo da ErrorBoundary lança um `StynxError` conhecido e um erro desconhecido
+    em ação e rota, e comprova classificação, chave i18n, contexto sanitizado e
+    registro diagnóstico; não pode haver throw não tratado, literal visível ou
+    resultado de sucesso.
+11. Para os 14 schemas, há uma prova negativa por validação expressa na seção 3 e
+    prova de que nenhum adapter é chamado ao falhar. `source_pending` não pode ser
+    convertido em validação permissiva nem em valor inventado.
+12. O oráculo de produção de impressão usa uma implementação não-`FixturePrinter`
+    de `MobilePrinterPort` e prova evento de êxito/falha e reimpressão sem novo AIT;
+    o de bodycam prova os três estados de chrome e que conteúdo não autorizado não
+    é renderizado.
+13. D-05 tem prova de rota acessível que mostra indisponibilidade e prova de zero
+    carga/chamada de feature. Cada rota BOAT tem prova com extensão presente e
+    ausente; a segunda não mostra placeholder TEAT e não torna o atalho visível.
+14. Esses oráculos são provas de comportamento das superfícies efetivas, não testes
+    de existência de classe, arquivo, array, metadata ou helper isolado.

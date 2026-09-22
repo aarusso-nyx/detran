@@ -1036,6 +1036,18 @@ Checkpoint 48 (janela 4, autorização corretiva extraordinária CTG-0004a):
   contra o candidato rejeitado. O Engineer não pode tocar sensores. Produção só será commitada após
   todos os gates e REVIEW PASS.
 
+Checkpoint 49 (janela 4, Architect extraordinário 3/3):
+
+- TASK-0010 reconciliou a allowlist fechada com todas as superfícies intencionais de TASK-0013 e
+  tornou expressamente comportamentais os oráculos de guards, adapters, offline/sync/normativo,
+  módulos/telas/i18n, ErrorBoundary, readiness, transições, forms, impressão/bodycam, D-05 e BOAT;
+- a correção não alterou as 70 rotas, a matriz 576/hash, RBAC ou decisões de produto. Lacunas
+  literais de D-01, schemas e chave específica D-05/BOAT continuam `source_pending` e não autorizam
+  fallback permissivo ou texto inventado;
+- Prettier focal, KB `756/446` e oráculo 70/576/hash passaram. TASK-0010 está `completed` em 3/3;
+  TASK-0012 abriu a tentativa extraordinária final 3/3 para substituir sensores nominais por RED
+  comportamental. TASK-0013 permanece `queued`.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
