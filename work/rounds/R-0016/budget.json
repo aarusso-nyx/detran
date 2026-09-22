@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1826000,
-  "estimated_output_total": 396000,
+  "estimated_input_total": 1924000,
+  "estimated_output_total": 405000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte; workers Opus/Sonnet por subagentes nativos).",
   "entries": [
     {
@@ -190,6 +190,22 @@
       "input_tokens": 79000,
       "output_tokens": 26000,
       "note": "315 632 brutos (it. 1) + 111 833 (it. 2), 90 chamadas, 15 min. Build pack, frontends, backlog, waves, método."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 70000,
+      "output_tokens": 2000,
+      "note": "ciclo 1 REVIEW (2 achados: célula de R-0011 desatualizada; supressão de P-09 afirmada como ativa em L0)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-iteration-3",
+      "model": "sonnet/low",
+      "input_tokens": 28000,
+      "output_tokens": 7000,
+      "note": "110 083 brutos, 31 chamadas, 4 min. Os dois achados + as duas ocorrências irmãs de 'PR a abrir'."
     }
   ]
 }

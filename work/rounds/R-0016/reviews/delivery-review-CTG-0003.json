@@ -1,0 +1,26 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0016",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "docs/framework/arch/dashboard-build-pack.md",
+      "line": 22,
+      "claim": "O estado de `backend/domains/dashboard` ainda diz que o CTG-0002 está \"pronto nesta worktree — PR a abrir\", mas a própria entrega registra o CTG-0002 como mesclado em `main` (PC-0009) em `dashboard-frontends.md` §10. A documentação de estado de partida fica contraditória.",
+      "fix": "Atualizar a célula para o estado canônico mesclado de R-0011 CTG-0002 (PR #87, `3bb94351`, PC-0009), preservando os detalhes técnicos já listados."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/framework/arch/dashboard-build-pack.md",
+      "line": 118,
+      "claim": "A entrega afirma que P-09 foi construída com supressão primária e secundária \"ativa\", embora o mesmo WP declare todas as telas em L0 sem clientes/dados reais e o backlog deixe explicitamente para L2 o teste ponta a ponta de supressão secundária. O texto transforma capacidade prevista/testada isoladamente em comportamento entregue.",
+      "fix": "Descrever P-09 como rota L0 real com componente e testes de supressão preparados; reservar a afirmação de supressão ativa sobre dados reais para a frente L2 e seu teste ponta a ponta."
+    }
+  ],
+  "notes": [
+    "Papel, tríade, comandos de aceitação, registro de ODs, fronteira SENATRAN e ausência de edição manual de gerados estão adequadamente documentados."
+  ]
+}
