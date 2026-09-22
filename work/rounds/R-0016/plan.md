@@ -185,6 +185,14 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Triagem
 
+- 2026-09-22 — checkpoint do grupo CTG-0002, `pnpm check`: falhou em `verify:parameter-catalogue`
+  com `apps/dashboard/web/src/app/core/sse/sse.service.spec.ts:141: unknown parameter literal
+rait.case.changed`. **sensor-error** da mesma classe de A7 item 8 (o gate da raiz trata o nome de
+  evento de outro domínio como candidato a chave de parâmetro, porque `rait.` é prefixo de
+  superfície). Correção mecânica do maestro: os dois nomes de evento estrangeiros de C-02-40
+  passam a ser compostos por `join('.')`, com o motivo em comentário — a asserção (nenhum evento
+  emitido) e o dado enviado ao stub são idênticos. `verify:parameter-catalogue` → `OK (… 0 errors)`;
+  os 14 testes de `core/sse` seguem verdes.
 - 2026-09-22 — entrega de TASK-0005: `typecheck` do app, `lint`, `build`, Prettier e i18n byte a
   byte **verdes**; `test` com **133 vermelhos / 1886 verdes**. Triagem por causa (verificada pelo
   maestro, não aceita do relatório): (a) 82 casos (`i18n.spec.ts` 43, `screens.spec.ts` 39) —
