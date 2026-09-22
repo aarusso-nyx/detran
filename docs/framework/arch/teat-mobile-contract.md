@@ -462,6 +462,17 @@ interface BoatExtensionPort {
   load(route: string): Promise<unknown>;
 }
 export const TEAT_BOAT_EXTENSION: InjectionToken<BoatExtensionPort>;
+type BoatRouteResolution =
+  | Readonly<{ kind: 'loaded'; component: unknown }>
+  | Readonly<{ kind: 'unavailable' }>;
+declare function resolveBoatRoute(
+  path: string,
+  extension: BoatExtensionPort,
+): Promise<BoatRouteResolution>;
+type DisabledRouteResolution =
+  Readonly<{ kind: 'unavailable' }> | Readonly<{ kind: 'not-disabled' }>;
+declare function resolveDisabledRoute(path: string): DisabledRouteResolution;
+export const TEAT_ROUTES: Routes;
 ```
 
 `BodycamIndicator` declara `readonly state = input.required<BodycamState>()`.
@@ -481,6 +492,25 @@ nenhum componente exibe literal. Para D-05, o módulo AIT expõe a rota com
 recebe negação/fallback sem placeholder. A chave de texto para esses dois estados é
 `source_pending`, por isso o Inspector prova o estado e a ausência de literal, não
 uma frase ou chave inventada.
+
+`resolveBoatRoute` aceita somente os onze paths `crash-*` do manifesto. Para path
+fora desse conjunto devolve `{ kind: 'unavailable' }` sem chamar `installed` ou
+`load`; para path BOAT com `installed() === false`, devolve o mesmo resultado sem
+chamar `load`; somente para BOAT instalado chama `load(path)` uma vez e devolve
+`{ kind: 'loaded', component }`. Rejeição de `load` propaga como rejeição, nunca
+vira componente TEAT. `resolveDisabledRoute` reconhece somente
+`/ait-speed-measurement`: devolve `{ kind: 'unavailable' }` para ele e
+`{ kind: 'not-disabled' }` para qualquer outro path; não possui dependência de
+client e nunca pode chamá-lo.
+
+`TEAT_ROUTES`, em `app.routes.ts`, usa `resolveDisabledRoute` antes de qualquer
+`loadComponent` de D-05 e, para `unavailable`, termina na boundary de indisponibilidade
+do `FieldShell`, sem importar a feature de velocidade. Cada entrada `crash-*` usa
+`TEAT_BOAT_EXTENSION` em `canMatch` para negar quando `installed()` é falso e usa
+`resolveBoatRoute` como resolvedor/load boundary quando verdadeiro. Assim não há
+placeholder: BOAT só fornece componente carregado e D-05 só fornece estado
+indisponível; a resolução é uma superfície pública diretamente invocável pelo
+Inspector.
 
 ## 2. Manifesto de 70 rotas
 
@@ -701,7 +731,10 @@ classe/interface pública necessária já pertence a path da allowlist.
     o de bodycam prova os três estados de chrome e que conteúdo não autorizado não
     é renderizado.
 13. D-05 tem prova de rota acessível que mostra indisponibilidade e prova de zero
-    carga/chamada de feature. Cada rota BOAT tem prova com extensão presente e
-    ausente; a segunda não mostra placeholder TEAT e não torna o atalho visível.
+    carga/chamada de feature. `resolveDisabledRoute` é exercida com D-05 e um path
+    não-disabled. `resolveBoatRoute` é exercida com path não-BOAT, extensão ausente,
+    extensão presente e rejeição de `load`; só o terceiro chama `load`. Cada rota
+    BOAT tem prova com extensão presente e ausente; a segunda não mostra placeholder
+    TEAT e não torna o atalho visível.
 14. Esses oráculos são provas de comportamento das superfícies efetivas, não testes
     de existência de classe, arquivo, array, metadata ou helper isolado.
