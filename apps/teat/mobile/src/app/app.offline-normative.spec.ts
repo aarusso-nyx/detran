@@ -160,9 +160,7 @@ it('dado bootstrap ausente ou cursor ausente quando SyncWorker submete então fa
 });
 
 interface NormativeSurface {
-  install(
-    id: string,
-  ): Promise<{
+  install(id: string): Promise<{
     id: string;
     manifestHash: string;
     validUntil: string;
