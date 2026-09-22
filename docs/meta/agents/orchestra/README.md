@@ -337,6 +337,57 @@ boundaries`, M6/ADR-0020) como candidatos a chave de parâmetro desconhecida (A1
    preferir relógio próprio do pacote (`Calendar`/`Clock` como dependência de leitura, nunca editar o
    pacote dono) a bloquear a frente inteira; registrar a integração futura como OD explícita (OD-D28).
 
+### R-0012 `rait-web` (Fable 5.1 → maestro Opus 5; reviewer `codex gpt-5.6-terra`; 2026-09-21/22; PRs #79, #81, #85, #90 + CTG-0002c)
+
+**O que custou tempo**
+
+1. **Contrato grande demais para uma tarefa.** O contrato do CTG-0002b (91 critérios, 50 páginas,
+   26 componentes, 8 clientes, 11 facades) excedeu o que um worker entrega com rigor: dividido em
+   dois pares com PR próprio (A8) já depois de escrito. O Inspector do par 2 ainda precisou de três
+   iterações só para cobrir os 15 módulos. Regra prática: um contrato de CTG cabe em ~40 critérios
+   e ~25 arquivos de produção; acima disso, dividir **antes** de escrever os prompts.
+2. **Fixtures de teste que não acompanham o contrato.** Três iterações inteiras (A10, A14, A15)
+   foram gastas em `stubFacade`/`pageProviders` sem os métodos das facades, harness sem
+   `StynxSessionService`, `render()` repetido no mesmo `it` e caminhos errados de leitura de ficha.
+   Vale o Architect fixar no contrato a **assinatura do stub** (não só a da produção) e o Inspector
+   provar o stub contra a interface real num `it` próprio.
+3. **Matriz de autorização por amostra.** O reviewer reprovou duas vezes (A11, A15) matrizes que
+   testavam "um papel permitido e um negado" e confirmações de uma só ação por página. A regra
+   §4.8 é exaustiva: **todo** papel canônico e **toda** ação com confirmação, geradas por laço
+   sobre a fixture de política.
+4. **`main` andando em paralelo.** Quatro merges de `main` na rodada (R-0011, R-0013, R-0016,
+   DEVAI 1.5.4/1.5.5/1.5.6), dois com conflito na allowlist i18n e na cadeia de evidência, e um PR
+   recusado por avanço de `main` entre o CI verde e o merge. A cadeia (`record/proofs/chain.json`)
+   resolve-se sempre aceitando `main` e **regravando** a evidência da rodada.
+5. **Falha intermitente de CI alheia à frente.** `rait-priority-upgrade.integration.spec.ts`
+   (R-0007) falhou em dois PRs só de frontend e passou no rerun; custou ~50 min de espera.
+
+**O que funcionou**
+
+1. **Tarefa de transcrição própria para i18n** (A12, TASK-0016/0017): tirou do Engineer o que o
+   método já reserva ao Architect e tornou o catálogo verificável por um `it` de contagem exata.
+2. **Adendas numeradas como único canal de reconciliação** (A1…A16): 20 iterações restritas sem
+   nenhuma reabertura de tarefa e sem nenhum spec alterado fora de adenda.
+3. **Contrato com assinaturas exatas** (arquivo, símbolo, tipo, `operationId`): o Engineer do
+   CTG-0002c entregou **verde na primeira iteração** (4434 testes) com 100 critérios.
+4. **Pré-condição de despacho explícita no prompt** (SHA do merge do CTG anterior em §Concorrência):
+   evitou que um par começasse a escrever sobre árvore desatualizada.
+
+**Recomendações ao método**
+
+1. **§4** — limite de tamanho por CTG (≈40 critérios / ≈25 arquivos de produção); acima disso o
+   Architect entrega o contrato já dividido em pares.
+2. **§4.13** — o contrato fixa também a **assinatura dos stubs** que o Inspector escreve; um `it`
+   prova o stub contra a interface real.
+3. **§4.8** — a matriz de autorização é sempre gerada por laço sobre a fixture de política (papéis)
+   e sobre a lista de ações com confirmação; amostra é achado `high` na delivery-review.
+4. **§9** — quando `main` avança entre o CI verde e o merge, integrar por merge e **reexecutar o
+   CI** antes de tentar de novo; falha de CI em teste de outra frente, reproduzível como
+   intermitente, é `gh run rerun --failed` (não é triagem da frente).
+5. **`model-ladder.md`** — custo real de R-0012: Opus 330–780 k brutos por tarefa de Engineer;
+   Sonnet 100–830 k por tarefa de Inspector com matriz grande; rodada de 5 CTG e 17 tarefas
+   ≈5,5 M únicos / ≈12 M brutos.
+
 ## Arquivos deste método
 
 | Arquivo                                 | Uso                                                                 |
