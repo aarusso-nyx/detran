@@ -303,7 +303,8 @@ merged --limit 20`, `gh pr list --search orchestra/`):
 - **CTG-0002b-2 — PR #90** (2026-09-22): CI 7/7 após rerun de `backend-kernel` (mesma falha
   intermitente de `rait-priority-upgrade`, R-0007); o merge foi recusado porque `main` avançou
   (DEVAI 1.5.6 PR #91; R-0007 PR #86) — `main` integrado por merge no branch, CI reexecutado;
-  merge e `audit observe` registrados abaixo quando ocorrerem. Pré-condição de despacho de
+  **mesclado** em 2026-09-22 → `4abe570a062d5a688066c795cf8efe90bd5bb386`; `audit observe` no sha
+  exato (EV-1cbd064c9bf1fabc). Pré-condição de despacho de
   TASK-0017/0011 (specs e i18n, sem commits até o merge) considerada satisfeita pelo maestro com
   o PR verde e a integração feita (desvio B5).
 - `devai round plan --scaffold` respondeu `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31);

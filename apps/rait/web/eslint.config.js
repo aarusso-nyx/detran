@@ -1,9 +1,13 @@
-// Lint do app (R-0014 M5; R-0012 M1/M12 — regras locais `rait/*` entram no CTG-0002c): flat config com angular-eslint (ts + template recommended),
-// typescript-eslint recommended e eslint-config-prettier. Padrão que os demais apps copiam.
+// Lint do app (R-0014 M5; R-0012 M1/M12): flat config com angular-eslint (ts + template recommended),
+// typescript-eslint recommended e eslint-config-prettier, mais as regras locais do plugin `rait`
+// (`eslint/local-rules.js`, contrato CTG-0002c §6.3): `rait/no-client-deadline-math` em
+// `src/**/*.ts` exceto `src/testing/**` (o relógio fixo dos stubs) e `rait/no-static-token-i18n-key`
+// em todo `src/**/*.ts` (o verificador de parâmetros varre `src/**`). Padrão que os demais apps copiam.
 import angular from 'angular-eslint';
 import prettier from 'eslint-config-prettier';
 import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
+import raitRules from './eslint/local-rules.js';
 
 export default defineConfig(
   { ignores: ['dist/**', '.angular/**'] },
@@ -36,6 +40,17 @@ export default defineConfig(
         { type: 'attribute', prefix: 'rait', style: 'camelCase' },
       ],
     },
+  },
+  {
+    files: ['src/**/*.ts'],
+    ignores: ['src/testing/**'],
+    plugins: { rait: raitRules },
+    rules: { 'rait/no-client-deadline-math': 'error' },
+  },
+  {
+    files: ['src/**/*.ts'],
+    plugins: { rait: raitRules },
+    rules: { 'rait/no-static-token-i18n-key': 'error' },
   },
   {
     files: ['**/*.spec.ts'],

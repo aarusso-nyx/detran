@@ -542,15 +542,34 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       CTG-0002 (PR #73) em `main`; prompt-review em `FAIL` por dois ciclos, nenhum worker disparado; pendentes as 126 fichas
       (CTG-0002), o provisionamento offline (CTG-0003) e os apps `apps/teat/{mobile,web}` (CTG-0004) (added 2026-09-21)
 - [x] **R-0011 `dashboard-backend` fechada como PC-0009 (2026-09-22; Fable, troca Sol → Fable, Owner 2026-09-21)** — CTG-0002 mesclado pelo PR #87 (`3bb94351`); resto do histórico: CTG-0001 mesclado em `main` pelo PR #83 (2026-09-21, `e0763c6c`): `BP-DASH-MONITOR-001`, DDL `19-dashboard-lifecycle-vocabulary.sql`/`80-dashboard.sql`, seed dos 42 indicadores, gate `verify:domain-boundaries`; **CTG-0002** (ciclo do alerta, deveres, frescor, relógio próprio via M7/A3 — Emenda 2 de `AUTHORIZATION.md`, exportação, relatórios, auditoria, open-data, SSE, contratos) pronto nesta worktree — PR a abrir (R-0011 CTG-0002). R-0016 `dashboard-console` pode consumir `@detran/api-clients` do DASHBOARD assim que o CTG-0002 mesclar (added 2026-09-22)
-- [ ] **Rodadas ainda não abertas**: R-0012 `rait-web` (Fable), R-0015 `boat-mobile` (Fable), R-0016 `dashboard-console` (Sol; fichas livres, console espera R-0011) (added 2026-09-21)
+- [ ] **Rodadas ainda não abertas**: R-0015 `boat-mobile` (Fable), R-0016 `dashboard-console` (Sol; fichas livres, console espera R-0011) (added 2026-09-21; R-0012 removida — aberta em 2026-09-21, ver linha própria abaixo)
 - [ ] **Podem abrir em sessões Claude imediatamente (2026-09-21)**:
-      **R-0012 `rait-web`** — CTG-0001 (fichas por rota) e CTG-0002 (app): os comandos de case/worklist/sessão e seus contratos já
-      estão em `main` (R-0007 CTG-0001/0002); os módulos org/financeiro/integrações renderizam "indisponível nesta versão" até o
-      CTG-0004 de R-0007; copia o scaffold de `apps/portal/web` e acrescenta `rait.*` à allowlist i18n; toma o lock
-      `packages/ui` antes de R-0013 CTG-0004 (que ainda não começou) e R-0013 integra `main` depois.
       **R-0015 `boat-mobile`** — só CTG-0001 (17 fichas, i18n, transições); a biblioteca mobile e o módulo `sinistros` esperam os
       apps do TEAT (R-0013 CTG-0004). Alternativa se houver janela Claude sobrando: R-0011 CTG-0001 ou R-0016 CTG-0001 com o prompt
       regenerado para maestro Fable e reviewer `codex gpt-5.6-terra` (troca de família registrada em `waves.md`) (added 2026-09-21)
+- [ ] **R-0012 `rait-web` em conclusão (Fable, aberta em 2026-09-21)**: CTG-0001 (fichas, PR #79), CTG-0002a (núcleo — guardas,
+      shell, SSE, i18n, PR #81), CTG-0002b-1 (dados e 26 componentes de `shared/`, PR #85), CTG-0002b-2 (50 páginas, rotas por
+      módulo e matriz de autorização, PR #90) mesclados em `main`; CTG-0002c (16 schemas de formulário, `rait-web-forms.md`,
+      regras ESLint locais `rait/*`) com gates verdes nesta worktree (`test` 4434 passed \| 139 todo, `pnpm check` EXIT 0) — PR
+      a abrir; documentação de fechamento (TASK-0013) nesta mesma entrega. Ficou fora: comandos reais (`POST …/commands/*`),
+      `caseAccessGuard` real e o endpoint SSE — `todo` citando R-0007 CTG-0004 (M8); L0 dos módulos `organizacao/{escala,jeton}`,
+      `integracoes/*`, `financeiro/*`, `admin/*`, `auditoria/exportacoes`; `e2e/` (Playwright) não criado, só specs vitest/TestBed.
+      OD-R12-001…054 em `open-decisions-rait.md` §G, nenhuma fechada; fechamento formal (`audit observe`, `closure.json`,
+      `waves.md`, `orchestra/README.md` §10) pendente do maestro (added 2026-09-22)
+- [ ] **RAIT-WEB OD-R12-005 — `caseAccessGuard` real**: endpoint de verificação de acesso ao caso (pool/unidade/circunscrição) não existe; guarda retorna `true`; dono Architect (R-0007 CTG-0004); fonte `contracts/CTG-0002a.md` §12.
+- [ ] **RAIT-WEB OD-R12-007 — tolerância de heartbeat do SSE**: `HEARTBEAT_STALE_FACTOR = 2` (40 s) sem fonte no contrato §3; dono Architect (R-0007); fonte `contracts/CTG-0002a.md` §12.
+- [ ] **RAIT-WEB OD-R12-018 — listas sem query/envelope**: os 49 `list*` de `BP-INF-RAIT-*` não aceitam `?q=&ordem=&filtro=&pagina=` nem devolvem `{items,total,page,pageSize}`; estreitamento/paginação hoje no cliente; dono Architect (R-0007; ADR-0009); fonte `contracts/CTG-0002b.md` §9.3.
+- [ ] **RAIT-WEB OD-R12-022 — dias restantes ausentes**: `RaitClock`/`RaitDeadline` não trazem `days_remaining`; UI só mostra o que o servidor envia; dono Architect (R-0007); fonte `contracts/CTG-0002b.md` §9.3.
+- [ ] **RAIT-WEB OD-R12-023 — storage de documentos sem URL assinada**: `DossierViewer`/`DocumentUploader` sem contrato de upload/download; dono Architect (R-0007; ADR-0018 Decisão 1); fonte `contracts/CTG-0002b.md` §9.3.
+- [ ] **RAIT-WEB OD-R12-031 — resumo do turno sem endpoint agregado**: painel usa contagens de listas (cap 500) em vez de `GET /v1/inf/rait/dashboard/shift`; dono Architect (R-0007); fonte `contracts/CTG-0002b.md` §9.3.
+- [ ] **RAIT-WEB OD-R12-035 — `RaitMinutes.content` sem schema**: ata não renderiza o conteúdo, só metadados/hash; dono Architect (R-0007); fonte `contracts/CTG-0002b.md` §9.3.
+- [ ] **RAIT-WEB OD-R12-037 — vocabulário do canal de intake**: `intake_channel` é string livre no DTO; UI usa `RAIT_COMMUNICATION_CHANNELS`; dono Architect (R-0007); fonte `contracts/CTG-0002c.md` §9.2.
+- [ ] **RAIT-WEB OD-R12-038/041 — campos sem transporte no DTO**: resolução placa+AIT→`ait_id` e `applicant.address` ficam no schema sem envio; dono Architect (R-0007); fonte `contracts/CTG-0002c.md` §9.2.
+- [ ] **RAIT-WEB OD-R12-043 — assinatura PAdES indisponível**: `context.signatureAvailable=false` até o kernel de assinatura existir; dono Architect (R-0007); fonte `contracts/CTG-0002c.md` §9.2.
+- [ ] **RAIT-WEB OD-R12-046 — campos sem transporte (`manualExclusions`, `caseIds`)**: no schema, sem envio; dono Architect (R-0007); fonte `contracts/CTG-0002c.md` §9.2.
+- [ ] **RAIT-WEB OD-R12-048/050 — escala e exportação sem contrato de forma**: `ESCALA_GATE` com `postState: null`; `RaitExport.scope` com forma proposta; dono Architect (R-0007); fonte `contracts/CTG-0002c.md` §9.2.
+- [ ] **RAIT-WEB OD-R12-052 — sem comando para iniciar triagem**: `PROTOCOLADO → TRIAGEM_ADMISSIBILIDADE` sem M8; dono Architect (R-0007); fonte `contracts/CTG-0002c.md` §9.2.
+- [ ] **RAIT-WEB OD-R12-054 — facades sem pool/joins/query por órgão**: `QueueFacade`/`SessionFacade` sem `defesa_previa`, joins de relógios/casos e `load*(orgao)`; `claimNext` sem `pool_id`; ratificado como default até R-0007 CTG-0004; dono Architect (R-0007); fonte `reports/TASK-0015.md`; `plan.md` A14.
 - [x] **WP-T1 ops-agency (R-0005)**: agência, modelos ops, deltas inf e fixtures entregues nos CTG-0001/0002 (PRs #40/#41, 2026-09-14), CTG-0003 (PR #42), documentação final (PR #44) e fechamento `PC-0003` em 2026-09-15; `shift.status`, demais vocabulários source-pending e provisioning (R-0013/WP-T5) permanecem roteados a WP-T2+.
 - [ ] **PORTAL OD-P15 — gov.br real**: credenciais e retorno institucional; dono Architect-backend/Owner; fonte `plan.md` A14 e CTG-0004 §10.
 - [ ] **PORTAL OD-P16 — SNE real**: homologar `SnePort` além do mock; dono Architect-backend; fonte `plan.md` A14 e CTG-0004 §10.
