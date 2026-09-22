@@ -317,6 +317,19 @@ Registro do bootstrap (2026-09-21, `origin/main` = `08fb84e8`, PR #79; `gh pr li
   da ouvidoria) **não** é roteado a esta rodada — permanece no PORTAL; OD-P28 (eventos sem produtor)
   aplicado em M5 (`connected = false` até existir produtor).
 
+- 2026-09-21 checkpoint 2 — `sensor-error` (ambiente): `pnpm ci:backend-kernel:local` (ambiente RC protegido,
+  Docker) terminou com 375 verdes e 7 falhas, todas _timeouts_ de 30 s encadeados em
+  `backend/app/tests/e2e/portal-routes.e2e.spec.ts` (C-0002-75…81) a partir da primeira chamada ao mock SENATRAN;
+  o mesmo spec local no `detran_r11` sem mock dá 9/10 (a única falha é `PORTAL.SNE_UPSTREAM_UNAVAILABLE`, esperada
+  sem mock). O CTG-0001 não toca rotas do Portal (edições aditivas de export em `portal/projections`; `MonitorModule`
+  sem rotas). Sinal autoritativo: job `backend-kernel` do PR #83 (com mock). Sem retrabalho de worker.
+
+- 2026-09-21 PR #83 CI `backend-kernel` — `sensor-error` (inventário fechado): `rait-priority-upgrade.integration.spec.ts`
+  (R-0007, lock `inf/rait-case`) fixa em 60 a lista `ordinary` de `apply.sh`; o CTG-0001 tem 62. Precedente R-0010
+  (`8f02e914`: 57 → 60). Correção pelo Inspector (60 → 62, três linhas), desvio de lock registrado; os demais
+  tiers do kernel passaram no CI. Recomendação ao método: o inventário fechado deveria derivar de `apply.sh` (o
+  `prepare-rait-priority-v1-baseline.mjs` já o faz) em vez de um número literal.
+
 ## Adendas (Architect)
 
 - **A1 (2026-09-21)** — `dashboard.crashes` é a projeção de R-0010 (`BP-DASHBOARD-CRASHES-001`); a meta 1
