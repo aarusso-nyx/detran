@@ -25,9 +25,13 @@ const KNOWN_DEBTS = [
   },
 ];
 
-// CTG-0001.md §7.1.3.
+// CTG-0001.md §7.1.3. The verb is captured (not just grouped) so a read
+// (from/join) can be told apart from a write (into/update/delete-from) —
+// delivery-review-CTG-0001.json item 7a, ADR-0020 §3 "a projection never
+// writes back".
 const SQL_ACCESS_RE =
-  /\b(?:from|join|into|update|delete\s+from)\s+([a-z_]+)\.([a-z_]+)\b/gi;
+  /\b(from|join|into|update|delete\s+from)\s+([a-z_]+)\.([a-z_]+)\b/gi;
+const READ_VERBS = new Set(['from', 'join']);
 
 function isExcludedDir(relParts) {
   if (
@@ -92,7 +96,7 @@ function declaredEvents(source) {
 
 function violationsFor(path, source) {
   const violations = [];
-  const debts = [];
+  const debtHits = [];
   const rel = relative(root, path).replaceAll(sep, '/');
   const owner = ownerSchema(path);
   const isProjection = rel.endsWith('.projection.ts');
@@ -105,7 +109,7 @@ function violationsFor(path, source) {
     violations.push(`${rel}: projection without consumedEvents`);
   }
 
-  for (const [, schema, table] of source.matchAll(SQL_ACCESS_RE)) {
+  for (const [, verb, schema, table] of source.matchAll(SQL_ACCESS_RE)) {
     if (!DOMAIN_SCHEMAS.has(schema) || schema === owner) continue;
     // *_ref: global vocabulary (DDL 1x, no tenant) — always admitted.
     if (table.endsWith('_ref')) continue;
@@ -114,17 +118,22 @@ function violationsFor(path, source) {
         entry.path === rel && entry.schema === schema && entry.table === table,
     );
     if (debt) {
-      debts.push(`known debt ${rel} -> ${schema}.${table} (${debt.od})`);
+      debtHits.push(debt);
       continue;
     }
     // Cross-domain reads are only ever admitted from a *.projection.ts that
-    // declares its consumedEvents (ADR-0020 §Decision 4).
-    if (isProjection && events) continue;
+    // declares its consumedEvents (ADR-0020 §Decision 4) — and only for a
+    // read (from/join). A projection never writes back (ADR-0020 §3;
+    // CTG-0001.md §7.1.5; delivery-review item 7a): into/update/delete-from
+    // stay a violation even inside a projection with consumedEvents.
+    if (isProjection && events && READ_VERBS.has(verb.toLowerCase())) {
+      continue;
+    }
     violations.push(
       `${rel}: cross-domain boundary read/write ${schema}.${table}`,
     );
   }
-  return { violations, debts };
+  return { violations, debtHits };
 }
 
 async function exists(path) {
@@ -148,10 +157,28 @@ const results = await Promise.all(
   files.map(async (path) => violationsFor(path, await readFile(path, 'utf8'))),
 );
 const violations = results.flatMap((result) => result.violations);
-const debts = new Set(results.flatMap((result) => result.debts));
+const debtHits = new Set(results.flatMap((result) => result.debtHits));
 
-for (const debt of debts) {
-  process.stdout.write(`${debt}\n`);
+// CTG-0001.md §7.1.1: the excluded scope is declared, not silent — printed
+// on every execution, not only when the directory happens to exist
+// (delivery-review item 10).
+process.stdout.write('skipped: backend/app/src (OD-D16)\n');
+
+for (const debt of debtHits) {
+  process.stdout.write(
+    `known debt ${debt.path} -> ${debt.schema}.${debt.table} (${debt.od})\n`,
+  );
+}
+
+// CTG-0001.md §7.1.7: a KNOWN_DEBTS entry that no longer corresponds to a
+// real violation — the file lost the read, or the file is gone — warns
+// instead of going silent (delivery-review item 7b).
+for (const entry of KNOWN_DEBTS) {
+  if (!debtHits.has(entry)) {
+    process.stdout.write(
+      `stale debt ${entry.path} -> ${entry.schema}.${entry.table} (${entry.od})\n`,
+    );
+  }
 }
 
 if (violations.length > 0) {

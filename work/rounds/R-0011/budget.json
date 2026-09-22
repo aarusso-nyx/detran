@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 785000,
-  "estimated_output_total": 177000,
+  "estimated_input_total": 840000,
+  "estimated_output_total": 179000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte).",
   "entries": [
     {
@@ -70,6 +70,14 @@
       "input_tokens": 60000,
       "output_tokens": 15000,
       "note": "Iterações restritas: TASK-0002 ×2 (A10/A11, A15/A16), TASK-0003 ×3 (A12, A13, A14), TASK-0011 ×1 (A14 teste), TASK-0010 ×1 (A15); brutos acumulados dos agentes ≈1,2 M."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 55000,
+      "output_tokens": 2000,
+      "note": "ciclo 1 REVIEW: 2 high (gate: escrita cruzada por projeção; stale debt) + 1 low (aviso OD-D16); brutos 102.424."
     }
   ]
 }

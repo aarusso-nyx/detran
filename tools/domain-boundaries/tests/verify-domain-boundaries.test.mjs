@@ -14,6 +14,15 @@
 // não existem sob ela — nenhuma fixture aqui as recria, então cada uma varre a
 // própria árvore sintética inteira (contrato preservado, CTG-0001.md §7 "a
 // varredura real é backend/domains/**").
+//
+// Atualização (iteração restrita — 3 achados de
+// work/rounds/R-0011/reviews/delivery-review-CTG-0001.json sobre
+// tools/domain-boundaries/verify.mjs, itens 7×2 + 10): TASK-0003 já
+// generalizou o script — os casos (a)…(k) acima, antes vermelhos, rodam
+// verdes hoje. Os casos (l)/(m)/(n) abaixo cobrem três lacunas que a
+// delivery-review encontrou na versão generalizada; ficam vermelhos até o
+// Engineer corrigi-las (mesma regra: este arquivo nunca é ajustado para
+// "passar").
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
@@ -154,12 +163,7 @@ test('dado dashboard/monitor/src/handwritten/reader.ts quando lê dashboard.aler
 
 // (j) M6/CTG-0001.md §7.1.1 "backend/app/src (raiz de composição) fica fora
 // nesta rodada (OD-D16, impresso como aviso skipped: backend/app/src
-// (OD-D16))". Passa hoje, mas não pela razão-alvo: o `verify.mjs` de R-0010
-// nem tem `ch` em `DOMAIN_SCHEMAS` (só dashboard/est/inf/integration/portal/
-// rait), então a leitura de `ch.exam` não é candidata a violação em lugar
-// nenhum — o aviso `skipped: backend/app/src (OD-D16)` em si ainda não existe
-// (TASK-0003 o adiciona). Documentado, não escondido (regra 1 do prompt:
-// nenhum valor inventado sem fonte).
+// (OD-D16))".
 test('dado backend/app/src/x.ts (fora de backend/domains) quando lê ch.exam então verify:domain-boundaries aceita — backend/app/src está fora do gate nesta rodada (OD-D16; M6; CTG-0001 §7.1.1)', () => {
   const result = verify('j-app-src-out-of-scope');
   assert.equal(result.status, 0, result.output);
@@ -171,4 +175,91 @@ test('dado uma árvore sem violações (1 arquivo) quando verify:domain-boundari
   const result = verify('k-success-count');
   assert.equal(result.status, 0, result.output);
   assert.match(result.output, /domain boundaries verified \(1 files\)\n$/);
+});
+
+// (n) delivery-review-CTG-0001.json item 10 (severity low, verify.mjs linha
+// 139): "OD-D16 fica apenas em comentário; o gate não imprime o aviso
+// obrigatório skipped: backend/app/src (OD-D16), previsto no CTG-0001
+// §7.1.1." Fix pedido: "Emitir o aviso de escopo excluído em toda execução e
+// afirmá-lo no teste do caso OD-D16." Casos novos (não alteram (j)/(k) acima,
+// que continuam verdes): mesmas fixtures de (j) e (k), aviso adicional.
+// VERMELHO ESPERADO — hoje o script nunca imprime essa linha.
+test('dado backend/app/src/x.ts (mesma árvore do caso j) quando verify:domain-boundaries roda então imprime skipped: backend/app/src (OD-D16) em toda execução (CTG-0001 §7.1.1; delivery-review item 10) — vermelho esperado', () => {
+  const result = verify('j-app-src-out-of-scope');
+  assert.match(result.output, /skipped: backend\/app\/src \(OD-D16\)/);
+});
+
+test('dado uma árvore sem backend/app/src (mesma árvore do caso k) quando verify:domain-boundaries roda então ainda assim imprime skipped: backend/app/src (OD-D16) — o aviso de escopo excluído é declarado, não condicional (CTG-0001 §7.1.1; delivery-review item 10) — vermelho esperado', () => {
+  const result = verify('k-success-count');
+  assert.match(result.output, /skipped: backend\/app\/src \(OD-D16\)/);
+});
+
+// (l) delivery-review-CTG-0001.json item 7 (severity high, verify.mjs linha
+// 120): "O gate permite qualquer acesso SQL cruzado de um arquivo
+// *.projection.ts com consumedEvents, inclusive INSERT/UPDATE/DELETE... Isso
+// contradiz ADR-0020 (\"a projection never writes back\") e CTG-0001 §7.1.5,
+// que admite apenas leituras cruzadas." Fix pedido: "Classificar o verbo SQL
+// capturado; permitir a exceção de projection somente para FROM/JOIN e
+// falhar para INTO/UPDATE/DELETE em schema de outro domínio." VERMELHO
+// ESPERADO nos quatro casos abaixo: hoje `verify.mjs` não distingue o verbo
+// (SQL_ACCESS_RE captura from/join/into/update/delete-from igual, e
+// `violationsFor` só olha `isProjection && events`), então uma escrita
+// cruzada com consumedEvents passa hoje (exit 0) — o alvo é exit 1.
+test('dado x.projection.ts com consumedEvents literal quando faz insert into inf.rait_case então verify:domain-boundaries rejeita — projeção nunca escreve de volta (ADR-0020 §3; CTG-0001 §7.1.5; delivery-review item 7) — vermelho esperado', () => {
+  const result = verify('l1-projection-write-insert');
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /inf\.rait_case/);
+});
+
+test('dado y.projection.ts com consumedEvents literal quando faz update est.crash então verify:domain-boundaries rejeita — projeção nunca escreve de volta (ADR-0020 §3; CTG-0001 §7.1.5; delivery-review item 7) — vermelho esperado', () => {
+  const result = verify('l2-projection-write-update');
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /est\.crash/);
+});
+
+test('dado z.projection.ts com consumedEvents literal quando faz delete from portal.request então verify:domain-boundaries rejeita — projeção nunca escreve de volta (ADR-0020 §3; CTG-0001 §7.1.5; delivery-review item 7) — vermelho esperado', () => {
+  const result = verify('l3-projection-write-delete');
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /portal\.request/);
+});
+
+// A leitura cruzada (`from inf.x`) continua admitida no mesmo arquivo — só a
+// escrita (tabela diferente, inf.notification_log, para a asserção não
+// ambiguar) é rejeitada.
+test('dado w.projection.ts com consumedEvents literal, leitura de inf.rait_case e escrita em inf.notification_log no mesmo arquivo quando verify:domain-boundaries roda então rejeita citando só a escrita — a leitura continua admitida (CTG-0001 §7.1.5; delivery-review item 7) — vermelho esperado', () => {
+  const result = verify('l4-projection-read-and-write');
+  assert.equal(result.status, 1, result.output);
+  assert.match(result.output, /inf\.notification_log/);
+  assert.doesNotMatch(result.output, /inf\.rait_case/);
+});
+
+// (m) delivery-review-CTG-0001.json item 7 (severity high, verify.mjs linha
+// 151): "A lista KNOWN_DEBTS só imprime dívidas encontradas; não detecta nem
+// avisa uma dívida obsoleta. CTG-0001 §7.1.7 exige aviso stale debt quando a
+// entrada deixa de corresponder a violação real." Interpretação de §7.1.7
+// ("entrada que não corresponde mais a uma violação real → aviso, não
+// falha") cobre as duas formas de "não corresponder mais": o arquivo existe
+// mas não tem mais a leitura, e o arquivo nem existe na árvore. VERMELHO
+// ESPERADO nos dois: hoje `verify.mjs` nunca imprime "stale debt" (só imprime
+// dívidas efetivamente encontradas).
+test('dado shift-readiness.ts sem a leitura de inf.normative_mobile_package quando verify:domain-boundaries roda então exit 0 com "stale debt" citando o caminho e OD-D15 (CTG-0001 §7.1.7; delivery-review item 7) — vermelho esperado', () => {
+  const result = verify('m1-stale-debt-no-read');
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /stale debt/);
+  assert.match(
+    result.output,
+    /backend\/domains\/ops\/field\/src\/handwritten\/shift-readiness\.ts/,
+  );
+  assert.match(result.output, /OD-D15/);
+});
+
+test('dado uma árvore onde shift-readiness.ts nem existe quando verify:domain-boundaries roda então exit 0 com "stale debt" citando o caminho e OD-D15 (CTG-0001 §7.1.7; delivery-review item 7) — vermelho esperado', () => {
+  const result = verify('m2-stale-debt-file-missing');
+  assert.equal(result.status, 0, result.output);
+  assert.match(result.output, /stale debt/);
+  assert.match(
+    result.output,
+    /backend\/domains\/ops\/field\/src\/handwritten\/shift-readiness\.ts/,
+  );
+  assert.match(result.output, /OD-D15/);
 });
