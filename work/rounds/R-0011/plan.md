@@ -212,23 +212,139 @@ false` + `source.state = 'INDISPONIVEL'` com `heartbeat_contract` nulo ([WF-DASH
   do merge do CTG-0001 (ou antes, se sobrar orçamento, mas nunca disparados antes do merge — método
   §4.18), sobre `origin/orchestra/rait-backend` se R-0007 CTG-0003 ainda não estiver em `main`.
 
+## Decisões do maestro para o CTG-0002 (Architect, 2026-09-21, Emenda 2) — M15…M25
+
+Fontes: `dashboard-route-contract.md` §1–§8; `dashboard-error-catalog.md`; [WF-DASH-001…003]; [RN-DASH-161/170/171/172];
+[WF-RAIT-002] §4.1/§6; `rait-events-sse-contract.md` §1/§3; `parameter-catalogue.md` §DASHBOARD; H.54; `policy.ts`
+bloco `DASHBOARD_RULES` (R-0003: 27 regras + 5 da origem — **cobre todos os recursos do route contract; o CTG-0002
+não amplia `policy.ts`, só a prova**); padrões em `main`: `backend/app/src/portal-stream.{service,controller}.ts`
+(SSE), `backend/app/src/boat-renaest-job.{service,providers}.ts` (job com `OnModuleInit`/`runDue(now)`),
+`portal/citizen-service/src/handwritten/manifestations.controller.ts` (comando com `If-Match`/`Idempotency-Key`,
+`@Resource/@Action/@Audit`, `DetranError`), `backend/app/tests/e2e/policy-routes.e2e.spec.ts` (presença e ausência).
+
+- **M15 — Via M7/A3 (Emenda 2).** Relógio próprio: `DashboardClockService` (manuscrito, no pacote) usa
+  `Calendar`/`Clock`/`InMemoryCalendar`/`FixedClock` de `@detran/inf-deadlines` **só como dependência de leitura**
+  (`dependencies` + `testAliases` do blueprint; `backend/domains/inf/deadlines` nunca é editado) e
+  `calendar-2026.json`; os timers vêm de `dashboard.timer_ref` (M7/A7) e são armados em entidade própria
+  **`dashboard.timer`** (`owner_kind` ∈ {`alert`,`duty_cycle`,`source`}, `owner_id`, `code`, `started_at`,
+  `due_at`, `status` ∈ {`ARMADO`,`VENCIDO`,`SATISFEITO`,`CANCELADO`}, `fired_at`, `version`). Vencimentos e viradas
+  de período são executados por `DashboardClockSweeper.runDue(now)` (padrão `boat-renaest-job.service.ts`,
+  registrado no `AppModule` pelo Engineer de superfície), idempotente por `(owner_kind, owner_id, code, started_at)`.
+  Integração ao motor de prazos (`owner='dashboard'`) fica para depois de R-0007 CTG-0003 — **OD-D28**.
+- **M16 — Blueprint 1.1.0, edição única (TASK-0012, Architect), regeneração única pelo maestro.** Acrescenta:
+  entidades `Timer` (M15), `AccessLog` (`dashboard.access_log`, [RN-DASH-171]: `user_ref`, `user_role`, `at`,
+  `resource`, `filters_json`, `layer`, `row_count`, `origin`, `purpose` nulo, `export_id` nulo — append-only) e
+  `EscalationStep`? **não**: a cadeia é vocabulário (M18). `handwrittenControllers` com símbolos fixos:
+  `DashboardAlertsController` (§2), `DashboardDutiesController` (§3), `DashboardCatalogController` (indicators,
+  indicator-configs, bi-panels, generated-reports — §4), `DashboardSourcesController`, `DashboardExportsController`,
+  `DashboardAuditController` (audit-trail, comparisons, transparency, kpis), `DashboardOpenDataController`
+  (datasets, `/open-data/{dataset}`). `handwrittenProviders` fixos: `DASHBOARD_MONITOR_PROJECTORS` (existente),
+  `DashboardClockService`, `DashboardClockSweeper`, `DashboardAlertService`, `DashboardDutyService`,
+  `DashboardFreshnessService`, `DashboardNotifier`, `DashboardLayerGate`, `DashboardExportService`,
+  `DashboardReportService`, `DashboardCatalogService`, `DashboardAuditService`, `DashboardOpenDataService`.
+  `handwrittenExports`: `handwritten/index` (existente), `handwritten/cycle/index`, `handwritten/surface/index`
+  (dois índices para dois Engineers, A13 vale em ambos). `dependencies`: + `@detran/inf-deadlines`,
+  `@detran/dashboard-crashes` (leitura de 203/204/310 pela API pública do pacote de R-0010, nunca por
+  `dashboard.crash_*` direto). `api.resources[*].operations` continuam `[]` (tudo manuscrito, como o Portal).
+- **M17 — Rotas = route contract §2–§5, literalmente.** Prefixo `/v1/dashboard`; `@Resource('dashboard:<recurso>')`,
+  `@Action('<ação>')`, `@Audit({ action: 'DASH_<VERBO>', entity: 'dashboard.<tabela>' })` em toda mutação
+  (`verify:decorators`); `If-Match` obrigatório em comandos (428/412, `etagOf`), `Idempotency-Key` em criações
+  (`exports`, `generated-reports`, `transparency/audits`); erros só `DetranError('DASH.<CODE>')` do catálogo;
+  camada por `dashboardLayerFor(roles)`/`dashboardLayerAllows` de `@detran/shared` — **N3 nunca** (403
+  `DASH.LAYER_N3_NEVER`); toda leitura N2 exige `X-Purpose` ∈ `dashboard.purposes_n2` (parâmetro via
+  `@detran/ops-parameter`; ausente → 400 `DASH.PURPOSE_REQUIRED`, fora do catálogo → `DASH.PURPOSE_INVALID`) e grava
+  `access_log` com finalidade; gestor de área em N2 de outro domínio → `DASH.DOMAIN_SCOPE_MISMATCH`. Toda resposta de
+  leitura carrega `meta.freshness { state, asOf, acceptableLatency, source }`; bloco A com `INDISPONIVEL` → valor
+  `null`. Nenhuma rota escreve fora de `dashboard.*` ([RN-DASH-101]; teste "nenhuma rota altera domínio" via gate +
+  captura SQL).
+- **M18 — Ciclo do alerta.** Guarda de transição lê `dashboard.alert_transition_ref` (13 linhas, A8) e valida
+  `track`/ator; comandos `ack` (`channel` ∈ {`origin`,`manual`}; `manual` exige `note` → `DASH.ALERT_ACK_MANUAL_NOTE_REQUIRED`;
+  `onBehalfOf` só `dash-operator`), `treating`, `close` (só `irregularity` e a partir de `VERIFICADO`; extinção →
+  `DASH.ALERT_EXTINCTION_NOT_CLOSABLE`), `root-cause` (`category` ∈ {`transport`,`acceptance`,`payload`}); transições de
+  sistema por `DashboardAlertService`: **detector** — `detect(cell)` chamado pelo runner de replay após cada
+  `applied` das projeções (evento → `DETECTADO`) e pelo sweeper (fallback periódico, que degrada o selo — M20);
+  indicador `INDISPONIVEL`/`DESATUALIZADO_MARCADO` nunca gera `DETECTADO` (`DASH.ALERT_SOURCE_STALE` em comandos);
+  **classificador** determinístico: `track` pelo `block.kind` (`legal-ceiling` → `extinction`), severidade pelo marco
+  (`T-DASH-MARCO-50/75/90` → N1/N2/N3; teto → `CRITICO`); **notificador**: grava `alert_trail` + evento
+  `dashboard.alert.changed` (`domainEvent` `ALERTA_DETECTADO|ALERTA_ESCALONADO|ALERTA_RECONHECIDO|ALERTA_ENCERRADO|INCIDENTE_REGISTRADO`)
+  na outbox com `recipientRole` da cadeia; a **cadeia de escalonamento** é vocabulário
+  `dashboard.escalation_chain_ref` (DDL 19, Architect: `source_app`, `level`, `role`, `source_ref`) transcrita de
+  [WF-RAIT-002] §6 para `rait`; apps sem cadeia publicada → um nível (`owner_role`) marcado `source_pending`
+  (OD-D29); `CRITICO_EXTINCAO` notifica toda a cadeia + `AUDITOR` (H.54, `dashboard.critical_extinction.notify_legal`);
+  SLA de ACK arma `T-DASH-ACK-<sev>` (horas úteis pelo `Calendar`); vencido → `ESCALONADO` → `NOTIFICADO` no nível
+  seguinte (A8); `EM_TRATAMENTO → VERIFICADO` só por evidência de origem (projeção fora da faixa), nunca por
+  comando; `CRITICO_EXTINCAO → INCIDENTE_REGISTRADO` automático com `incident_ref` (espelho de [WF-RAIT-002] §4.1:
+  registro em `alert_trail`, `GET alerts/{id}/incident`).
+- **M19 — Deveres.** Sweeper abre `JANELA_ABERTA` na virada (periodicidade de `duty.deadline_kind`/`timer_ref`:
+  mensal, anual, `data_fixa`), marca `ATRASADO` na data-limite sem avanço e `NAO_CUMPRIDO` quando o período seguinte
+  abre sem cumprimento; deveres sem prazo (204/205/208, [RN-DASH-113]) nunca recebem `deadline_on`
+  (`DASH.DUTY_NO_LEGAL_DEADLINE`); comandos §3 com `DASH.DUTY_*`; `prove` exige `evidence.hash` (`DASH.DUTY_EVIDENCE_REQUIRED`);
+  `DEVER_JANELA_ABERTA|DEVER_ATRASADO|DEVER_COMPROVADO` em `dashboard.duty.changed` (consumido por `duty_evidence`).
+- **M20 — Frescor.** `DashboardFreshnessService` + sweeper: `source.state` por `last_seen_at` × `acceptable_latency_minutes`
+  (nulo → nunca `FRESCO`, `DASH.SOURCE_HEARTBEAT_UNDEFINED`); `ATRASADO` além da latência; `INDISPONIVEL` sem
+  heartbeat por `dashboard.heartbeat_divisor` × latência; blocos B/C/D → `DESATUALIZADO_MARCADO` e `hidden` após
+  `dashboard.stale_hide_multiplier` × latência (H.54); bloco A → oculto (valor `null`); `dashboard.source.freshness`
+  na outbox; `GET sources`.
+- **M21 — Exportação ([RN-DASH-172] cinco regras + [RN-DASH-161]).** `POST exports`: camada herdada (recorte acima
+  da camada → `DASH.EXPORT_LAYER_EXCEEDED`; N3 → `DASH.EXPORT_N3_FORBIDDEN`), formato aberto (`csv`/`json`; outro →
+  `DASH.EXPORT_FORMAT_NOT_OPEN`), N2 exige finalidade, supressão primária (`< dashboard.cell_threshold`) e
+  secundária (segunda menor célula) com aviso `DASH.CELL_SUPPRESSED`, marca d'água (órgão, camada, usuário,
+  data-hora, recorte) no cabeçalho do arquivo e em `export_log.watermark`, `rows > dashboard.export.approval_rows` →
+  202 `pending-approval` (`DASH.EXPORT_VOLUME_APPROVAL_REQUIRED`) e `POST exports/{id}/approve` só `agency-admin`;
+  `EXPORTACAO_REGISTRADA` na outbox; `access_log` reforçado.
+- **M22 — Relatórios, catálogo, painéis (origem, OD-D13).** `generated-reports` request/complete/fail com
+  `file_hash` e marca d'água; `indicator-configs` PATCH/publish (`DASH.INDICATOR_*`; 401/402/403/406 sem limiar →
+  `DASH.INDICATOR_THRESHOLD_NOT_CALIBRATED`; latência fora da faixa do bloco → `DASH.INDICATOR_LATENCY_INVALID`),
+  `bi-panels` (`visibility_profile` ≠ N3), `IndicatorConfigChanged`/`ReportRequested`/`ReportGenerated` na outbox;
+  `transparency/checklist` + `POST transparency/audits` (mensal, `dashboard.transparency.audit_period`); `GET kpis`
+  (cobertura, MTTA, MTTR, % deveres no prazo, frescor médio — calculados das tabelas próprias); `GET comparisons`
+  com supressão de célula e `DASH.RANKING_OF_PERSONS_FORBIDDEN`; `GET audit-trail` (`access_log` + `alert_trail`,
+  sem conteúdo sensível); `datasets`/`open-data` só pré-agregados com supressão ([RN-DASH-151] sete requisitos →
+  `DASH.DATASET_REQUIREMENTS_UNMET`; filtro livre → `DASH.OPEN_DATA_PARAMETERIZED_FORBIDDEN`); P-09 →
+  `DASH.PANEL_BLOCKED_BY_DECISION` até DT-029 (já respondido: limiar 10 — o painel abre com supressão).
+- **M23 — SSE `GET /v1/dashboard/stream`** em `backend/app/src/dashboard-stream.{service,controller}.ts` (padrão
+  `portal-stream`; Engineer de superfície): eventos `alert.changed`, `alert.escalated`, `duty.changed`,
+  `source.freshness`, `integration.health`; política `dashboard:alert:read`; filtro por camada/papel **no SQL**;
+  `Last-Event-ID` com janela de 24 h (204 além), heartbeat 20 s, 5 conexões por usuário (429), payload ≤ 8 KB;
+  fallback de polling 30 s é do cliente (documentado).
+- **M24 — Contratos (WP-D3).** TASK-0006 transcreve `BP-DASH-MONITOR-001.commands.openapi.json` dos controllers
+  (um `operationId` `dashboard<Recurso><Verbo>` por rota; 4xx com `code` do catálogo; exemplos com ids das fixtures),
+  um schema por `type` publicado em `docs/framework/schemas/events/` (`dashboard.alert.changed`, `dashboard.duty.changed`,
+  `dashboard.source.freshness`, `dashboard.export.registered`, `dashboard.report.changed`,
+  `dashboard.indicator-config.changed`) e as quatro propostas `docs/framework/contracts/dashboard-feeds/{pec,teat,portal,adapter}.md`
+  (`{indicador_id, caso_id, estado_anterior, estado_novo, timestamp, base_legal}` + `pec.deadline.changed`,
+  `source.heartbeat`, ACK OD-D05); TASK-0008/0009 estendem `tools/contracts` (raízes `dashboard/*`, catálogo `DASH.`
+  por prefixo, rota ⇔ operação bidirecional); `pnpm contracts:clients` pelo maestro antes de TASK-0008.
+- **M25 — Testes (Inspectors Opus/alto, dois locks).** TASK-0004 (`MOD-dashboard-cycle-tests`:
+  `monitor/tests/{unit,integration,e2e}/cycle-*`): matriz completa de [WF-DASH-001/002/003] (toda transição
+  permitida × negada por estado, trilha e ator), timers/SLA/escalonamento com `FixedClock` (`T-DASH-ACK-*` em horas
+  úteis com `calendar-2026.json`), `CRITICO_EXTINCAO → INCIDENTE_REGISTRADO`, sweeper de deveres (virada, `ATRASADO`,
+  `NAO_CUMPRIDO`), frescor (4 estados, `hidden`, bloco A `null`), notificador/cadeia, eventos publicados.
+  TASK-0014 (`MOD-dashboard-surface-tests`: `monitor/tests/**/surface-*` + `backend/app/tests/e2e/dashboard-*.e2e.spec.ts`):
+  política **presença e ausência** por rota para todos os papéis canônicos (`policy-routes.e2e.spec.ts` como forma),
+  N3 403 sempre, `X-Purpose`, `If-Match`/`Idempotency-Key`, `meta.freshness`, exportação (cinco regras, supressão
+  primária **e** secundária, 202/approve, marca d'água, formatos), relatórios, catálogo/painéis, `audit-trail`,
+  `comparisons`, `datasets`/`open-data`, `kpis`, SSE (`Last-Event-ID`, heartbeat, filtro por camada, 429), "nenhuma
+  rota altera domínio" (captura SQL: só `dashboard.*` e `integration.outbox`), `access_log`; e2e idempotente em
+  `detran_r11` (`afterAll`).
+
 ## Tarefas
 
-| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                                                             | Depende de           | Entrega                                                                                                                                                                                                       |
-| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------------------------------------------------ | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect            | architect-blueprint | Opus / alto    | `MOD-bp-dash-monitor`, `MOD-ddl-19-dashboard`, `MOD-ddl-80`, `MOD-apply-sh`, `MOD-r11-contracts` | —                    | `BP-DASH-MONITOR-001.json`, `19-dashboard-lifecycle-vocabulary.sql`, `apply.sh`; `contracts/CTG-0001.md` (mapa indicador → projeção → eventos → `connected`, assinaturas dos 8 projetores, timers, critérios) |
-| TASK-0002 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-dashboard-monitor-tests`, `MOD-seed-81`                                                     | TASK-0001            | `backend/domains/dashboard/monitor/tests/**` (M9 a–f), fixtures de estado `81-fixtures-dashboard-state.sql`                                                                                                   |
-| TASK-0011 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-tools-boundaries-tests`, `MOD-check-lifecycle-vocabulary`                                   | TASK-0001            | `tools/domain-boundaries/tests/**` (M9 g) e extensão de `tools/check-lifecycle-vocabulary.ts` ao DASHBOARD                                                                                                    |
-| TASK-0003 | Engineer             | engineer-backend    | Sonnet / médio | `MOD-tools-boundaries`, `MOD-package-json`, `MOD-app-module`, `MOD-seed-80`, `MOD-seed-sh`       | TASK-0011            | `verify.mjs` generalizado (M6) e ligado a `pnpm check`; wiring do pacote (M10); `80-fixtures-dashboard-catalog.sql` (42 + deveres) e `seed.sh`                                                                |
-| TASK-0010 | Engineer             | engineer-backend    | Opus / médio   | `MOD-dashboard-monitor-handwritten`                                                              | TASK-0002            | `src/handwritten/**` do pacote: 8 projetores (M5), `projectors.ts`, `index.ts`; testes de TASK-0002 verdes                                                                                                    |
-| TASK-0004 | Inspector            | inspector-tests     | Opus / alto    | `MOD-dashboard-cycle-tests`                                                                      | TASK-0001            | testes do detector/classificador/SLA/escalonamento (e2e), deveres, frescor, exportação (5 regras), relatórios, camada (N3 403), supressão secundária                                                          |
-| TASK-0005 | Engineer             | engineer-backend    | Opus / médio   | `MOD-dashboard-handwritten`, `MOD-shared-policy`                                                 | TASK-0010, TASK-0004 | serviços do ciclo, notificador, exportação, SSE, rotas §2–§5; testes verdes                                                                                                                                   |
-| TASK-0006 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-contracts-commands`, `MOD-schemas`, `MOD-contracts-feeds`                                   | TASK-0005            | contrato de comandos, schema de eventos (`docs/framework/schemas/events/`), quatro propostas de feed; gate completo no checkpoint do maestro                                                                  |
-| TASK-0008 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-contracts-check-tests`                                                                      | TASK-0006            | testes em `tools/contracts/tests` para o catálogo `dashboard` por prefixo (`dashboard-error-catalog.md`) e correspondência bidirecional rota ⇔ operação                                                       |
-| TASK-0009 | Engineer             | engineer-backend    | Sonnet / médio | `MOD-contracts-check`                                                                            | TASK-0008            | `tools/contracts/check-commands.mjs` cobre raízes `dashboard/*` e o catálogo; satisfaz os testes do Inspector                                                                                                 |
-| TASK-0007 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                                                                       | TASK-0009            | build pack (DDL 80, seed em D1), ADR-0020, route contract §7/§8, backlog, `waves.md` (troca de família), parâmetro `source_pending` (M13), OD-D14…D16                                                         |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                                                             | Depende de | Entrega                                                                                                                                                                                                                                    |
+| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------------------------------------------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| TASK-0001 | Architect            | architect-blueprint | Opus / alto    | `MOD-bp-dash-monitor`, `MOD-ddl-19-dashboard`, `MOD-ddl-80`, `MOD-apply-sh`, `MOD-r11-contracts` | —          | `BP-DASH-MONITOR-001.json`, `19-dashboard-lifecycle-vocabulary.sql`, `apply.sh`; `contracts/CTG-0001.md` (mapa indicador → projeção → eventos → `connected`, assinaturas dos 8 projetores, timers, critérios)                              |
+| TASK-0002 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-dashboard-monitor-tests`, `MOD-seed-81`                                                     | TASK-0001  | `backend/domains/dashboard/monitor/tests/**` (M9 a–f), fixtures de estado `81-fixtures-dashboard-state.sql`                                                                                                                                |
+| TASK-0011 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-tools-boundaries-tests`, `MOD-check-lifecycle-vocabulary`                                   | TASK-0001  | `tools/domain-boundaries/tests/**` (M9 g) e extensão de `tools/check-lifecycle-vocabulary.ts` ao DASHBOARD                                                                                                                                 |
+| TASK-0003 | Engineer             | engineer-backend    | Sonnet / médio | `MOD-tools-boundaries`, `MOD-package-json`, `MOD-app-module`, `MOD-seed-80`, `MOD-seed-sh`       | TASK-0011  | `verify.mjs` generalizado (M6) e ligado a `pnpm check`; wiring do pacote (M10); `80-fixtures-dashboard-catalog.sql` (42 + deveres) e `seed.sh`                                                                                             |
+| TASK-0010 | Engineer             | engineer-backend    | Opus / médio   | `MOD-dashboard-monitor-handwritten`                                                              | TASK-0002  | `src/handwritten/**` do pacote: 8 projetores (M5), `projectors.ts`, `index.ts`; testes de TASK-0002 verdes                                                                                                                                 |
+| TASK-0012 | Architect            | architect-blueprint | Opus / alto    | `MOD-bp-dash-monitor`, `MOD-ddl-19-dashboard`, `MOD-r11-contracts`                               | TASK-0001  | blueprint 1.1.0 (M16: `Timer`, `AccessLog`, símbolos fixos), `escalation_chain_ref` (M18), `contracts/CTG-0002.md` (rotas → comandos, guardas, matriz de política presença/ausência, camadas, exportação, timers, SSE, eventos, critérios) |
+| TASK-0004 | Inspector            | inspector-tests     | Opus / alto    | `MOD-dashboard-cycle-tests`                                                                      | TASK-0012  | testes do ciclo (M25): matriz WF-DASH-001/002/003, timers/SLA/escalonamento, sweeper de deveres, frescor, notificador, eventos                                                                                                             |
+| TASK-0014 | Inspector            | inspector-tests     | Opus / alto    | `MOD-dashboard-surface-tests`, `MOD-app-e2e-dashboard`                                           | TASK-0012  | testes de superfície (M25): política presença/ausência, N3, X-Purpose, If-Match, exportação, relatórios, audit-trail, open-data, kpis, SSE, "nenhuma rota altera domínio"                                                                  |
+| TASK-0005 | Engineer             | engineer-backend    | Opus / médio   | `MOD-dashboard-cycle`                                                                            | TASK-0004  | `src/handwritten/cycle/**`: clock/sweeper, alerta, deveres, frescor, notificador; testes de TASK-0004 verdes                                                                                                                               |
+| TASK-0013 | Engineer             | engineer-backend    | Opus / médio   | `MOD-dashboard-surface`, `MOD-app-stream`                                                        | TASK-0014  | `src/handwritten/surface/**` (7 controllers, layer gate, exportação, relatórios, catálogo, auditoria, open-data), SSE no app, sweeper no `AppModule`; testes de TASK-0014 verdes                                                           |
+| TASK-0007 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                                                                       | TASK-0009  | build pack (DDL 80, seed em D1), ADR-0020, route contract §7/§8, backlog, `waves.md` (troca de família), parâmetro `source_pending` (M13), OD-D14…D16                                                                                      |
 
-CTG-0001 = 0001 → {0002 ∥ 0011} → {0010 ∥ 0003} (fronteiras disjuntas; no máximo três em paralelo); CTG-0002 = 0004…0006 + 0008/0009 (TASK-0006 → 0008 → 0009 → 0007). Um PR por CTG.
+CTG-0001 = 0001 → {0002 ∥ 0011} → {0010 ∥ 0003} (**mesclado**, PR #83); CTG-0002 = 0012 → checkpoint (regeneração única, `pnpm install`) → {0004 ∥ 0014} → {0005 ∥ 0013} → 0006 → 0008 → 0009 → 0007 (fronteiras disjuntas; no máximo três em paralelo). Um PR por CTG.
 
 **Checkpoint de dependências:** checkpoint 1 = após TASK-0001 o maestro roda `pnpm blueprints:generate` + `pnpm contracts:openapi` + `pnpm contracts:clients` uma vez, `pnpm install` (pacote `@detran/dashboard-monitor` novo), guarda o lockfile para o commit do grupo e só então libera TASK-0002/0011; checkpoint 2 = após TASK-0003/0010, gates do grupo (§Critérios) e delivery-review; TASK-0004 só depois do merge do CTG-0001; após TASK-0006 roda `pnpm contracts:clients` antes de TASK-0008; o Engineer de TASK-0005 inclui o pacote nos scripts `backend:test:*` da raiz e no alias do vitest do app. Banco da rodada: `detran_r11` em `env-detran-r11.sh`.
 
@@ -410,6 +526,10 @@ rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 al
   célula do relógio B (início de T-JUL-24M); relógio B sem instância conhecida → `ignored: not_relevant`; (c)
   `rait.session.changed` fica em `consumedEvents` de `production` e é `not_relevant` até o CTG-0002 fixar a coluna
   (OD-D27, TASK-0007). O contrato ganha estas linhas por edição do maestro.
+- **A18 (2026-09-21, Emenda 2)** — CTG-0002 aberto pela via M7/A3 por decisão do Owner; decomposto em 0012 →
+  {0004 ∥ 0014} → {0005 ∥ 0013} → 0006 → 0008 → 0009 → 0007 (M15…M25). A tabela original (0004 → 0005 monolíticos)
+  cai. OD-D28 (integração ao motor de prazos após R-0007 CTG-0003) e OD-D29 (cadeias de escalonamento dos apps
+  sem publicação) registradas por TASK-0007.
 - **A6 (2026-09-21)** — CTG-0001 decomposto em 5 tarefas (0001; 0002 ∥ 0011; 0010 ∥ 0003) em vez de 3, para
   manter cada worker dentro de um lock e do orçamento de um Sonnet/Opus médio.
 
