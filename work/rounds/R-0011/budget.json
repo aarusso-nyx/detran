@@ -3,9 +3,9 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2442000,
-  "estimated_output_total": 708500,
-  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3.",
+  "estimated_input_total": 2482000,
+  "estimated_output_total": 720500,
+  "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3. Rodada fechada como PC-0009 em 2026-09-22.",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -262,6 +262,14 @@
       "input_tokens": 30000,
       "output_tokens": 1000,
       "note": "ciclo 2 restrito PASS (papel + integração de main, C-5-16 = 203); brutos 50.482."
+    },
+    {
+      "kind": "maestro-close",
+      "id": "ctg-0002-merge+close",
+      "model": "opus",
+      "input_tokens": 40000,
+      "output_tokens": 12000,
+      "note": "Gates pós-merge, PR #87, CI (1 correção de fixture), merge, audit observe, closure PC-0009, waves/backlog/plan."
     }
   ]
 }
