@@ -16,6 +16,12 @@ export default defineConfig({
       '@detran/ops-parameter': fileURLToPath(
         new URL('../../ops/parameter/src/index.ts', import.meta.url),
       ),
+      '@detran/inf-deadlines': fileURLToPath(
+        new URL('../../inf/deadlines/src/index.ts', import.meta.url),
+      ),
+      '@detran/dashboard-crashes': fileURLToPath(
+        new URL('../crashes/src/index.ts', import.meta.url),
+      ),
     },
   },
   test: {

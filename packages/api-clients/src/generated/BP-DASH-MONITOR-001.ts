@@ -1519,6 +1519,156 @@ export interface components {
       event_schema_version: number;
       aggregate_version: number;
     };
+    /** @description Timer armado pelo relogio proprio do DASHBOARD (plan R-0011 M15, via M7/A3 da Emenda 2 de AUTHORIZATION.md; contrato work/rounds/R-0011/contracts/CTG-0002.md secao 2.1 e secao 13). code e um codigo de dashboard.timer_ref (19-dashboard-lifecycle-vocabulary.sql, M7/A7; o check repete o mesmo conjunto de 14 codigos); owner_kind in {alert, duty_cycle, source} com owner_id = id da linha dona; started_at = marco de contagem; due_at = vencimento calculado pelo DashboardClockService com Calendar/Clock de @detran/inf-deadlines em leitura (horas_uteis pelo calendario; imediato -> due_at = started_at; nulo enquanto o marco nao e calculavel, ex. T-DASH-MARCO-* sem ceiling_on); status in {ARMADO, VENCIDO, SATISFEITO, CANCELADO}; fired_at = instante em que o sweeper venceu o timer (DashboardClockSweeper.runDue(now)). Unico em (tenant_id, owner_kind, owner_id, code, started_at): idempotencia do sweeper e do arm (M15). Integracao ao motor de prazos com owner = dashboard fica para depois de R-0007 CTG-0003 (OD-D28). Nenhum dado pessoal (RN-DASH-170 N3). */
+    Timer: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** @enum {string} */
+      owner_kind: 'alert' | 'duty_cycle' | 'source';
+      /** Format: uuid */
+      owner_id: string;
+      /** @enum {string} */
+      code:
+        | 'T-DASH-ACK-N1'
+        | 'T-DASH-ACK-N2'
+        | 'T-DASH-ACK-N3'
+        | 'T-DASH-ACK-CRITICO'
+        | 'T-DASH-MARCO-50'
+        | 'T-DASH-MARCO-75'
+        | 'T-DASH-MARCO-90'
+        | 'T-DASH-DUTY-201'
+        | 'T-DASH-DUTY-202'
+        | 'T-DASH-DUTY-PNATRANS'
+        | 'T-DASH-DUTY-206'
+        | 'T-DASH-DUTY-207'
+        | 'T-DASH-DUTY-209'
+        | 'T-DASH-PENDING-FLOOR';
+      /** Format: date-time */
+      started_at: string;
+      /** Format: date-time */
+      due_at?: string | null;
+      /**
+       * @default 'ARMADO'
+       * @enum {string}
+       */
+      status: 'ARMADO' | 'VENCIDO' | 'SATISFEITO' | 'CANCELADO';
+      /** Format: date-time */
+      fired_at?: string | null;
+      /** Format: date-time */
+      satisfied_at?: string | null;
+      /** Format: date-time */
+      cancelled_at?: string | null;
+      reason?: string | null;
+      /** @default 1 */
+      version: number;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateTimerDto: {
+      /** @enum {string} */
+      owner_kind: 'alert' | 'duty_cycle' | 'source';
+      /** Format: uuid */
+      owner_id: string;
+      /** @enum {string} */
+      code:
+        | 'T-DASH-ACK-N1'
+        | 'T-DASH-ACK-N2'
+        | 'T-DASH-ACK-N3'
+        | 'T-DASH-ACK-CRITICO'
+        | 'T-DASH-MARCO-50'
+        | 'T-DASH-MARCO-75'
+        | 'T-DASH-MARCO-90'
+        | 'T-DASH-DUTY-201'
+        | 'T-DASH-DUTY-202'
+        | 'T-DASH-DUTY-PNATRANS'
+        | 'T-DASH-DUTY-206'
+        | 'T-DASH-DUTY-207'
+        | 'T-DASH-DUTY-209'
+        | 'T-DASH-PENDING-FLOOR';
+      /** Format: date-time */
+      started_at: string;
+      /** Format: date-time */
+      due_at?: string | null;
+      /**
+       * @default 'ARMADO'
+       * @enum {string}
+       */
+      status: 'ARMADO' | 'VENCIDO' | 'SATISFEITO' | 'CANCELADO';
+      /** Format: date-time */
+      fired_at?: string | null;
+      /** Format: date-time */
+      satisfied_at?: string | null;
+      /** Format: date-time */
+      cancelled_at?: string | null;
+      reason?: string | null;
+      /** @default 1 */
+      version: number;
+    };
+    /** @description Trilha de acesso do proprio DASHBOARD (RN-DASH-171 tabela "Conteudo minimo de cada registro de acesso"; RN-DASH-170 camadas; RN-DASH-172 regra 2 registro reforcado da exportacao; dashboard-route-contract secao 1 regra 4 e GET audit-trail; plan R-0011 M16/M17; contrato CTG-0002 secao 2.2 e secao 5). Append-only: log imutavel e segregado (RN-DASH-171 verificacao 1). Mapeamento dos sete campos: quem = user_ref + user_role (papel efetivo no momento do acesso); quando = at (timestamptz, fonte confiavel = Clock injetado); o que = resource (rota/painel/indicador) + filters_json (filtros e recortes aplicados); granularidade = layer in {N0, N1, N2} (camada efetivamente servida; N3 nunca e servida, RN-DASH-170); volume = row_count; origem = origin (dispositivo/rede, quando disponivel); finalidade = purpose (obrigatoria quando layer = N2, catalogo dashboard.purposes_n2; DASH.PURPOSE_REQUIRED / DASH.PURPOSE_INVALID). export_id liga o acesso ao export_log quando o acesso e uma exportacao. Nunca conteudo de resposta, nunca dado pessoal, placa, numero de processo ou atributo de saude (RN-DASH-170 N3). O acesso a propria trilha (GET audit-trail) tambem e registrado (RN-DASH-171 verificacao 2). */
+    AccessLog: {
+      /**
+       * Format: uuid
+       * @default gen_random_uuid()
+       */
+      id: string;
+      /** Format: uuid */
+      tenant_id: string;
+      /** Format: uuid */
+      user_ref: string;
+      user_role: string;
+      /**
+       * Format: date-time
+       * @default now()
+       */
+      at: string;
+      resource: string;
+      /** @default '{}'::jsonb */
+      filters_json: {
+        [key: string]: unknown;
+      };
+      /** @enum {string} */
+      layer: 'N0' | 'N1' | 'N2';
+      /** @default 0 */
+      row_count: number;
+      origin?: string | null;
+      purpose?: string | null;
+      /** Format: uuid */
+      export_id?: string | null;
+      /** Format: date-time */
+      created_at: string;
+      /** Format: date-time */
+      updated_at?: string | null;
+    };
+    CreateAccessLogDto: {
+      /** Format: uuid */
+      user_ref: string;
+      user_role: string;
+      /**
+       * Format: date-time
+       * @default now()
+       */
+      at: string;
+      resource: string;
+      /** @default '{}'::jsonb */
+      filters_json: {
+        [key: string]: unknown;
+      };
+      /** @enum {string} */
+      layer: 'N0' | 'N1' | 'N2';
+      /** @default 0 */
+      row_count: number;
+      origin?: string | null;
+      purpose?: string | null;
+      /** Format: uuid */
+      export_id?: string | null;
+    };
   };
   responses: never;
   parameters: never;

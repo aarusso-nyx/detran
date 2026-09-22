@@ -264,3 +264,44 @@ ON CONFLICT (code) DO UPDATE SET
   status = EXCLUDED.status,
   decision_ref = EXCLUDED.decision_ref,
   legal_basis = EXCLUDED.legal_basis;
+
+-- Cadeia de escalonamento por app de origem (plan R-0011 M18; CTG-0002 §2.3).
+-- WF-DASH-001 §Transições: "a cadeia é a mesma já definida em cada workflow de
+-- domínio; DASHBOARD não cria uma cadeia paralela". A cadeia `rait` transcreve
+-- WF-RAIT-002 §6 (nível → ator, mapeado a códigos de auth.role_catalog /
+-- roles.ts DETRAN_ROLES). Apps sem cadeia publicada (pec, teat, boat, portal,
+-- senatran-adapter) recebem um único nível marcado source_pending (OD-D29):
+-- role = papel de dono de área de DASH_AREA_MANAGERS (policy.ts) correspondente
+-- ao app, senão dash-operator. status: vigente = transcrito de workflow
+-- aprovado; source_pending = ator sem código de papel ou app sem cadeia.
+-- CRITICO_EXTINCAO notifica toda a cadeia + AUDITOR (H.54,
+-- dashboard.critical_extinction.notify_legal) — regra do notificador, não linha.
+
+CREATE TABLE IF NOT EXISTS dashboard.escalation_chain_ref (
+  source_app varchar(20) NOT NULL CHECK (source_app IN ('rait', 'pec', 'boat', 'teat', 'portal', 'senatran-adapter', 'dashboard', 'institucional', 'benchmark', 'interno', 'todos')),
+  level smallint NOT NULL CHECK (level >= 1),
+  role varchar(40) NOT NULL REFERENCES auth.role_catalog(key),
+  status varchar(20) NOT NULL CHECK (status IN ('vigente', 'source_pending')),
+  source_ref text NOT NULL,
+  note text,
+  PRIMARY KEY (source_app, level)
+);
+
+COMMENT ON TABLE dashboard.escalation_chain_ref IS 'Plan R-0011 M18: cadeia de escalonamento por app de origem, um nível por linha (WF-DASH-001 NOTIFICADO → ESCALONADO → NOTIFICADO no nível seguinte, A8). rait transcrito de WF-RAIT-002 §6; demais apps com um nível source_pending (OD-D29). role = código de auth.role_catalog (roles.ts DETRAN_ROLES).';
+
+INSERT INTO dashboard.escalation_chain_ref (source_app, level, role, status, source_ref, note) VALUES
+  ('rait', 1, 'rait-analyst', 'vigente', 'WF-RAIT-002 §6 — ALERTA_N1 → responsável direto (analista/relator)', 'responsável direto = analista (1º circuito, rait-analyst) ou relator (2º circuito, rait-rapporteur); o notificador entrega ao alert.owner_role/owner_ref quando o alerta os traz, senão a este código (CTG-0002 §6.4)'),
+  ('rait', 2, 'rait-coordinator', 'vigente', 'WF-RAIT-002 §6 — ALERTA_N2 → + coordenador do pool', NULL),
+  ('rait', 3, 'rait-manager', 'vigente', 'WF-RAIT-002 §6 — ALERTA_N3 → + gestor RAIT (força priorização de pauta/fila)', NULL),
+  ('rait', 4, 'rait-chair', 'vigente', 'WF-RAIT-002 §6 — CRITICO → + presidente JARI/CETRAN (pode convocar sessão extraordinária)', NULL),
+  ('rait', 5, 'AUDITOR', 'source_pending', 'WF-RAIT-002 §6 — PRESCRITO_OPERACIONAL → + LEGAL/auditoria (apuração)', 'LEGAL não tem código em auth.role_catalog/roles.ts; auditoria = AUDITOR (H.54: CRITICO_EXTINCAO notifica LEGAL/AUDITOR)'),
+  ('pec', 1, 'GESTOR', 'source_pending', 'OD-D29 — PEC sem cadeia de escalonamento publicada; dono de área DASH_AREA_MANAGERS (policy.ts) do app', NULL),
+  ('teat', 1, 'traffic-authority', 'source_pending', 'OD-D29 — TEAT sem cadeia de escalonamento publicada (WF-TEAT-001 Diretoria de Fiscalização sem código de papel); dono de área DASH_AREA_MANAGERS (policy.ts) do app', NULL),
+  ('boat', 1, 'dash-operator', 'source_pending', 'OD-D29 — BOAT sem cadeia de escalonamento publicada e sem dono de área em DASH_AREA_MANAGERS', NULL),
+  ('portal', 1, 'dash-operator', 'source_pending', 'OD-D29 — PORTAL sem cadeia de escalonamento publicada e sem dono de área em DASH_AREA_MANAGERS', NULL),
+  ('senatran-adapter', 1, 'dash-operator', 'source_pending', 'OD-D29 — senatran-adapter sem cadeia de escalonamento publicada e sem dono de área em DASH_AREA_MANAGERS', NULL)
+ON CONFLICT (source_app, level) DO UPDATE SET
+  role = EXCLUDED.role,
+  status = EXCLUDED.status,
+  source_ref = EXCLUDED.source_ref,
+  note = EXCLUDED.note;
