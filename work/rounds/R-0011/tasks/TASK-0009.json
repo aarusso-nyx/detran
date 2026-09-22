@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "queued",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-0000000000000000",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0009",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Estender tools/contracts/check-commands.mjs às raízes dashboard/* e ao catálogo DASH.*",
+  "description": "Satisfaz os testes de TASK-0008 sem enfraquecer os existentes.",
+  "target_modules": ["MOD-contracts-check"],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0008",
+  "priority": 8,
+  "tags": ["wp-d3"],
+  "acceptance_commands": [
+    ["pnpm", "contracts:test"],
+    ["pnpm", "contracts:check"],
+    ["pnpm", "format:check"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

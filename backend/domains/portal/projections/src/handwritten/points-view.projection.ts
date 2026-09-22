@@ -7,6 +7,8 @@
 // AIT em disputa é OD-P34); `last_12_months_json` na janela
 // `addCalendarMonths(today, -12)`; `by_vehicle_json` acumulado por placa da
 // view; `cached_at` inalterado (leitura RENACH é OD-P21).
+export const consumedEvents = ['inf.infraction.penalty-final'] as const;
+
 import { z } from 'zod';
 import { addCalendarMonths } from '@detran/inf-deadlines';
 

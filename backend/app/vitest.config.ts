@@ -78,6 +78,9 @@ export default defineConfig({
       '@detran/dashboard-crashes': fileURLToPath(
         new URL('../domains/dashboard/crashes/src/index.ts', import.meta.url),
       ),
+      '@detran/dashboard-monitor': fileURLToPath(
+        new URL('../domains/dashboard/monitor/src/index.ts', import.meta.url),
+      ),
       '@detran/inf-ait': fileURLToPath(
         new URL('../domains/inf/ait/src/index.ts', import.meta.url),
       ),

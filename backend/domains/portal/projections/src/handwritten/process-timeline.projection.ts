@@ -9,6 +9,17 @@
 // RESULTADO_DISPONIVEL → AVALIACAO_OFERECIDA (T-AVAL-CONVITE imediato; SQL
 // condicional; version += 2); `rait.inquiry.changed` sem `outcome` abre um
 // prazo de diligência.
+export const consumedEvents = [
+  'rait.case.created',
+  'rait.case.changed',
+  'rait.case.admitted',
+  'rait.case.received',
+  'rait.case.transited',
+  'rait.case.withdrawn',
+  'rait.decision.published',
+  'rait.inquiry.changed',
+] as const;
+
 import { z } from 'zod';
 
 import {

@@ -11,6 +11,13 @@
 // nunca um rótulo inventado. `actions[]` vem da fase (`ACTION_PHASE_MATRIX`)
 // e do catálogo de serviços; `payment_json.methods` dos quatro parâmetros
 // (H.53), nunca literal `false`.
+export const consumedEvents = [
+  'inf.infraction.changed',
+  'inf.notice.dispatched',
+  'inf.notice.acknowledged',
+  'inf.payment.confirmed',
+] as const;
+
 import { Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { cpfHashOf, localDateOf } from '@detran/portal-identity';

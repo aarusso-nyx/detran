@@ -1,0 +1,32 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0011",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/domain-boundaries/verify.mjs",
+      "line": 120,
+      "claim": "O gate permite qualquer acesso SQL cruzado de um arquivo *.projection.ts com consumedEvents, inclusive INSERT/UPDATE/DELETE: a regex captura escrita (linha 29), mas a exceção da linha 122 não distingue leitura. Isso contradiz ADR-0020, que veda projeção escrever de volta, e CTG-0001 §7.1.5, que admite apenas leituras cruzadas.",
+      "fix": "Classificar o verbo SQL capturado; permitir a exceção de projection somente para FROM/JOIN e falhar para INTO/UPDATE/DELETE em schema de outro domínio. Acrescentar fixture e teste negativo de escrita cruzada por *.projection.ts."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/domain-boundaries/verify.mjs",
+      "line": 151,
+      "claim": "A lista KNOWN_DEBTS só imprime dívidas encontradas; não detecta nem avisa uma dívida obsoleta. CTG-0001 §7.1.7 exige aviso stale debt quando a entrada deixa de corresponder a violação real, e os testes cobrem apenas dívida presente e caminho diferente.",
+      "fix": "Rastrear cada entrada de KNOWN_DEBTS correspondente durante a varredura, emitir aviso stale debt para as não correspondidas e adicionar teste para esse caso."
+    },
+    {
+      "severity": "low",
+      "item": 10,
+      "file": "tools/domain-boundaries/verify.mjs",
+      "line": 139,
+      "claim": "OD-D16 fica apenas em comentário; o gate não imprime o aviso obrigatório skipped: backend/app/src (OD-D16), previsto no CTG-0001 §7.1.1.",
+      "fix": "Emitir o aviso de escopo excluído em toda execução e afirmá-lo no teste do caso OD-D16."
+    }
+  ],
+  "notes": []
+}
