@@ -31,18 +31,23 @@ describe('app.scaffold.spec.ts (C-02-80)', () => {
 });
 
 describe('app.scaffold.spec.ts (C-02-81)', () => {
-  it('dado o package.json da raiz quando lido então a linha check termina com a tripla do app e ainda contém a tripla do Portal antes', () => {
+  it('dado o package.json da raiz quando lido então a linha check contém a tripla contígua do dashboard depois da tripla do Portal, e ainda contém a tripla do rait-web (C-02-81)', () => {
     const pkg = JSON.parse(readFileSync(ROOT_PACKAGE_JSON, 'utf8')) as {
       scripts: Record<string, string>;
     };
     const check = pkg.scripts['check'];
-    expect(check).toMatch(
-      /&& pnpm --filter @detran\/dashboard-web lint && pnpm --filter @detran\/dashboard-web test && pnpm --filter @detran\/dashboard-web build$/,
+    expect(check).toContain(
+      '&& pnpm --filter @detran/dashboard-web lint && pnpm --filter @detran/dashboard-web test && pnpm --filter @detran/dashboard-web build',
     );
     expect(check).toContain('@detran/portal-web');
     const dashboardIndex = check.indexOf('@detran/dashboard-web');
     const portalIndex = check.indexOf('@detran/portal-web');
     expect(portalIndex).toBeLessThan(dashboardIndex);
+    // A11: um app novo (rait-web, R-0012, em main) hoje encerra a linha com a sua própria
+    // tripla — exigir a presença dela aqui pega uma remoção acidental por engano.
+    expect(check).toContain(
+      '&& pnpm --filter @detran/rait-web lint && pnpm --filter @detran/rait-web test && pnpm --filter @detran/rait-web build',
+    );
   });
 
   it('dado apps/dashboard/web/package.json quando lido então name/scripts corretos, sem service worker nem biblioteca de gráficos', () => {

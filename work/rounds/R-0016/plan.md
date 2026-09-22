@@ -310,6 +310,40 @@ rait.case.changed`. **sensor-error** da mesma classe de A7 item 8 (o gate da rai
      TASK-0005) ficam registradas em `contracts/CTG-0002.md` §14.1 por TASK-0007 como achados de
      infraestrutura de teste **já corrigidos** nesta iteração.
 
+- **A8 — Dois resíduos da iteração 2 do Inspector (Architect/Engineer, maestro, 2026-09-22).**
+  (a) **C-02-83 e o agregador.** A regra de folha (`só zod e ./form-gate`) vale para os **nove
+  schemas**; `forms/index.ts`, agregador de `FORM_SCHEMAS` exigido por §11, importa os irmãos do
+  próprio diretório e segue sujeito à proibição substantiva (`../core`, `../shared`, `@angular/*`,
+  `rxjs`). (b) **C-02-24 e C-02-75 × comentários de produção.** Os dois vermelhos vinham de
+  comentários, não de código: o cabeçalho de `core/layer-table.ts` citava o pacote compartilhado
+  do backend pelo nome e um JSDoc de `shared/export-dialog.component.ts` citava a chave de
+  parâmetro do limiar de aprovação. As duas linhas foram reescritas preservando o sentido — pelo
+  **Engineer dono** (TASK-0005 it. 3), depois da correção de fronteira de A9.
+- **A9 — Fronteira do maestro em `src/app/**` (Architect, 2026-09-22; delivery-review CTG-0002
+  ciclo 1, achado 1).** O reviewer apontou, com razão, que o maestro escreveu em `src/app/**`
+  (`forms/{form-gate,finalidade-n2.schema,exportar.schema}.ts`; os comentários de
+  `core/layer-table.ts` e `shared/export-dialog.component.ts`; o literal composto em
+  `core/sse/sse.service.spec.ts`), embora `contracts/CTG-0002.md` §14.2 reserve ao maestro apenas
+  o scaffold do §1. **Correção aplicada:** as seis edições foram **revertidas** aos blobs
+  entregues por TASK-0005 (`42b4e6ac`), TASK-0006 (`8ae0926c`) e TASK-0004 it. 2 (`b64fb8bf`) e
+  redespachadas, em iterações restritas, aos donos das fronteiras — TASK-0006 it. 2 (`forms/`),
+  TASK-0005 it. 3 (comentários), TASK-0004 it. 3 (literal do spec de SSE). O §14.2 passa a dizer
+  que **nem correção mecânica** autoriza o maestro a escrever em `src/app/**`: achado de gate ali
+  volta ao dono. Decisões de mérito continuam do Architect; execução, dos workers.
+- **A10 — C-02-83 emendado no contrato (Architect, 2026-09-22; delivery-review CTG-0002 ciclo 1,
+  achado 2).** A ratificação de A8(a) vivia só no plano e o critério em `contracts/CTG-0002.md`
+  §13 mantinha a redação que o agregador não pode satisfazer. O **critério** foi emendado no
+  contrato; o spec do Inspector já o reflete.
+- **A11 — Dois sensores exigindo "termina com" a própria tripla na linha `check` (Architect,
+  2026-09-22).** O merge de `origin/main` trouxe `apps/rait/web/src/app/app.scaffold.spec.ts`
+  (R-0012, fechada como PC-0010), que exige `check.endsWith(<tripla do rait-web>)`; o nosso
+  C-02-81 exigia o mesmo para `dashboard-web`. Decisão: (a) a ordem vigente da linha é
+  **portal → dashboard → rait**, de modo que o sensor mesclado siga verde sem esta rodada editar
+  testes de rodada fechada; (b) **C-02-81 emendado** no contrato para exigir a **presença** da
+  tripla contígua do `dashboard-web` depois da do Portal, nunca o fim da linha; (c) TASK-0007
+  leva ao método (`orchestra/README.md` §10) a recomendação de que o sensor de scaffold de cada
+  app afirme **contenção**, não fim de linha. O spec foi corrigido pelo Inspector (it. 4).
+
 ## Bloqueios
 
 - 2026-09-21 — `prompt-review-1` (codex gpt-5.6-terra): **FAIL por estrutura** (3 achados `high`:
