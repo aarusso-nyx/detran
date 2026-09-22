@@ -782,11 +782,13 @@ test('C-5-15 — dado um decorador de rota com argumento não literal quando che
 
 // R-0009 (plan.md §Triagem): 92 operações do TEAT (R-0008) + 47 do Portal
 // (BP-PORTAL-*.commands.openapi.json, CTG-0002 §2 + stream §9) + 13 do BOAT
-// (BP-EST-CRASH-001.commands.openapi.json) = 152.
-test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=152', async () => {
+// (BP-EST-CRASH-001.commands.openapi.json) = 152; R-0011 (plan.md M24, TASK-0006)
+// soma 43 do DASHBOARD (BP-DASH-MONITOR-001.commands.openapi.json, CTG-0002 §3,
+// sete controllers manuscritos + o stream) = 195.
+test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=195', async () => {
   const result = checkCommands();
   assert.equal(result.ok, true, JSON.stringify(result.problems, null, 2));
-  assert.equal(result.operations, 152);
+  assert.equal(result.operations, 195);
 });
 
 // ---------------------------------------------------------------------------

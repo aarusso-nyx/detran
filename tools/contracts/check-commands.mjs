@@ -34,23 +34,30 @@ export const CONTROLLER_ROOTS = [
   // module source root. `findFilesBelow` deliberately skips generated and
   // legacy controller directories below this root.
   'backend/domains/est/crash/src',
+  // R-0011 (WP-D3, CTG-0002 §14.2): the seven hand-written DASHBOARD surface
+  // controllers live under `handwritten`; the generated `src/controllers/`
+  // directory below this root stays out of the scan (`findFilesBelow` skips
+  // `controllers`/`generated`/`tests`).
+  'backend/domains/dashboard/monitor/src/handwritten',
   'backend/app/src',
 ];
 
 // Error catalogues whose codes a command contract may enumerate (rule 3):
-// TEAT (R-0008), PORTAL (R-0009), and BOAT (R-0010). `catalogPath`
-// (singular) remains the test seam; when it is the default, every catalogue
-// below is read independently by prefix.
+// TEAT (R-0008), PORTAL (R-0009), BOAT (R-0010), and DASHBOARD (R-0011).
+// `catalogPath` (singular) remains the test seam; when it is the default,
+// every catalogue below is read independently by prefix.
 export const ERROR_CATALOG_PATHS = [
   'docs/framework/arch/teat-error-catalog.md',
   'docs/framework/arch/portal-error-catalog.md',
   'docs/framework/arch/boat-error-catalog.md',
+  'docs/framework/arch/dashboard-error-catalog.md',
 ];
 
 const ERROR_CATALOG_PREFIXES = new Map([
   ['teat-error-catalog.md', 'TEAT'],
   ['portal-error-catalog.md', 'PORTAL'],
   ['boat-error-catalog.md', 'BOAT'],
+  ['dashboard-error-catalog.md', 'DASH'],
 ]);
 
 // Único e nomeado (CTG-0005 §2.6, §3.2): `SpeedModule` só monta atrás da
@@ -147,13 +154,15 @@ export function scanControllers(controllerRoots) {
     const isAppSrc =
       toPosix(absoluteRoot) === toPosix(path.resolve(root, 'backend/app/src'));
     for (const file of findFilesBelow(absoluteRoot)) {
-      // App-level composition controllers: TEAT (R-0008) and Portal (R-0009,
-      // `portal-stream.controller.ts`); everything else under backend/app/src
-      // (PEC webhooks, runtime) is documented elsewhere.
+      // App-level composition controllers: TEAT (R-0008), Portal (R-0009,
+      // `portal-stream.controller.ts`) and DASHBOARD (R-0011,
+      // `dashboard-stream.controller.ts`); everything else under
+      // backend/app/src (PEC webhooks, runtime) is documented elsewhere.
       if (
         isAppSrc &&
         !path.basename(file).startsWith('teat-') &&
-        !path.basename(file).startsWith('portal-')
+        !path.basename(file).startsWith('portal-') &&
+        !path.basename(file).startsWith('dashboard-')
       )
         continue;
       if (flagGated.has(toPosix(file))) continue;
@@ -253,6 +262,7 @@ function parseErrorCatalogsByPrefix(paths) {
     ['TEAT', new Set()],
     ['PORTAL', new Set()],
     ['BOAT', new Set()],
+    ['DASH', new Set()],
   ]);
   for (const candidate of paths) {
     if (!fs.existsSync(candidate)) continue;
