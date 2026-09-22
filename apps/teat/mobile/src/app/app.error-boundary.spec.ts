@@ -1,3 +1,5 @@
+import { TestBed } from '@angular/core/testing';
+import { StynxI18nService } from '@stynx-nyx/angular-i18n';
 import { expect, it } from 'vitest';
 import { loadMobileRuntime } from '../testing/runtime-module';
 
@@ -14,15 +16,22 @@ it('dados StynxError conhecido e erro desconhecido em rota/ação quando FieldSh
       })
     | undefined;
   expect(FieldShell).toBeTypeOf('function');
-  const shell = new (
-    FieldShell as new () => {
-      capture: (
-        error: unknown,
-        source: 'route' | 'action',
-      ) => { code: string; context: Record<string, string> };
-      diagnostics: () => readonly unknown[];
-    }
-  )();
+  TestBed.resetTestingModule();
+  const shell = TestBed.configureTestingModule({
+    imports: [FieldShell as never],
+    providers: [
+      {
+        provide: StynxI18nService,
+        useValue: { translate: (key: string) => key },
+      },
+    ],
+  }).createComponent(FieldShell as never).componentInstance as {
+    capture: (
+      error: unknown,
+      source: 'route' | 'action',
+    ) => { code: string; context: Record<string, string> };
+    diagnostics: () => readonly unknown[];
+  };
   expect(() =>
     shell.capture(
       {

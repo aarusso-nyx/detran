@@ -40,8 +40,13 @@ it('dado AppComponent quando renderizado então monta uma única FieldShell, bod
 
 it('dado i18n de produção quando carregado então delega ao runtime STYNX por DI e nenhum componente instancia TeatI18n', () => {
   const service = readMobileProductionSource('core/i18n.service.ts');
-  expect(service).toMatch(/inject\(/);
+  expect(service).toMatch(/@Inject\(StynxI18nService\)/);
   expect(service).toMatch(/stynx/i);
+  expect(service).not.toMatch(
+    /optional:\s*true|@Optional|translate:\s*\(key\)\s*=>\s*key/,
+  );
+  const shell = readMobileProductionSource('core/field-shell.component.ts');
+  expect(shell).not.toMatch(/catch\s*\{\s*return\s*\{\s*translate/);
   const pages = readFileSync(
     resolve(process.cwd(), 'src/app/shared/mobile-page.component.ts'),
     'utf8',
