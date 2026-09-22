@@ -12,6 +12,7 @@ import {
   permissionsForRoles,
   dashboardLayerFor,
   dashboardLayerAllows,
+  type DetranPolicyKey,
 } from './policy.js';
 import { withTenantContext } from './tenant-context.js';
 
@@ -400,6 +401,116 @@ describe('DETRAN unified policy kit', () => {
       ),
     ).rejects.toThrow('active request context');
     expect(tx).not.toHaveBeenCalled();
+  });
+});
+
+describe('R-0013 CTG-0003 — política estrita de provisionamento offline', () => {
+  for (const resource of [
+    'grant-reservation-binding',
+    'provisioning-reconciliation',
+  ]) {
+    it.each(['read', 'create', 'update', 'delete'])(
+      `dado CRUD gerado ops:${resource} quando %s é solicitado então nenhuma identidade ou permissão concede acesso`,
+      (action) => {
+        const key = `ops:${resource}:${action}` as DetranPolicyKey;
+        expect(Object.hasOwn(DETRAN_POLICY_MATRIX, key)).toBe(true);
+        expect(DETRAN_POLICY_MATRIX[key]).toEqual([]);
+        for (const role of [...DETRAN_ROLES, '']) {
+          for (const permissions of [[], ['*'], ['ops:*'], [key]]) {
+            expect(
+              isDetranActionAllowed(
+                { roles: role ? [role] : [], permissions },
+                `ops:${resource}`,
+                action,
+              ),
+              `${key} role=${role} permissions=${permissions.join(',')}`,
+            ).toBe(false);
+          }
+          expect(permissionsForRoles(role ? [role] : [])).not.toContain(key);
+        }
+      },
+    );
+  }
+  const globalOrOmittedRoles = DETRAN_ROLES.filter(
+    (role) =>
+      !['technical-admin', 'agency-admin', 'field-supervisor'].includes(role),
+  );
+  const staticRules = [
+    {
+      action: 'create-key-challenge',
+      allowed: ['technical-admin', 'agency-admin'],
+    },
+    {
+      action: 'issue-provisioning-package',
+      allowed: ['agency-admin', 'field-supervisor'],
+    },
+    { action: 'readiness', allowed: ['agency-admin', 'technical-admin'] },
+    {
+      action: 'revoke-offline-grant',
+      allowed: ['agency-admin', 'technical-admin'],
+    },
+  ] as const;
+  const identityOnlyActions = [
+    'register-device-key',
+    'download-provisioning-package',
+    'record-provisioning-receipt',
+    'reconcile-offline-grant',
+  ] as const;
+
+  it('dado cada comando estático quando cada papel canônico é avaliado então concede somente a matriz A5 sem bypass global ou wildcard', () => {
+    for (const rule of staticRules) {
+      const key = `ops:provisioning:${rule.action}` as DetranPolicyKey;
+      expect(DETRAN_POLICY_MATRIX[key]).toEqual(rule.allowed);
+      for (const role of DETRAN_ROLES) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            'ops:provisioning',
+            rule.action,
+          ),
+          `${key} para ${role}`,
+        ).toBe((rule.allowed as readonly string[]).includes(role));
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: ['*'] },
+            'ops:provisioning',
+            rule.action,
+          ),
+          `${key} não recebe bypass wildcard para ${role}`,
+        ).toBe((rule.allowed as readonly string[]).includes(role));
+      }
+    }
+  });
+
+  it('dado cada operação dependente de vínculo quando papel ou wildcard isolado é apresentado então a política recusa antes da validação dinâmica', () => {
+    for (const action of identityOnlyActions) {
+      const key = `ops:provisioning:${action}` as DetranPolicyKey;
+      expect(DETRAN_POLICY_MATRIX[key]).toEqual([]);
+      for (const role of DETRAN_ROLES) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            'ops:provisioning',
+            action,
+          ),
+          `${key} sem vínculo para ${role}`,
+        ).toBe(false);
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: ['*'] },
+            'ops:provisioning',
+            action,
+          ),
+          `${key} wildcard isolado para ${role}`,
+        ).toBe(false);
+      }
+    }
+  });
+
+  it('dado papéis globais e omitidos quando o conjunto é enumerado então ADMIN, GESTOR_DETRAN e SUPORTE permanecem explicitamente fora da matriz A5', () => {
+    expect(globalOrOmittedRoles).toContain('ADMIN');
+    expect(globalOrOmittedRoles).toContain('GESTOR_DETRAN');
+    expect(globalOrOmittedRoles).toContain('SUPORTE');
   });
 });
 
@@ -2526,4 +2637,65 @@ describe('R-0007 CTG-0001 — matriz exaustiva dos comandos do caso RAIT', () =>
       ),
     ).toBe(true);
   });
+});
+
+describe('R-0007 CTG-0003 — política dos comandos da infração', () => {
+  const rules: Array<[string, string, readonly string[]]> = [
+    ['inf:rait-notice', 'issue', ['rait-secretary', 'rait-signing-authority']],
+    ['inf:rait-infraction', 'indicate-driver', ['rait-secretary']],
+    [
+      'inf:rait-extinction',
+      'declare',
+      ['rait-signing-authority', 'rait-chair'],
+    ],
+    ['inf:rait-appeal', 'authority-decide', ['rait-central-authority']],
+    ['inf:rait-appeal', 'waive', ['rait-central-authority']],
+  ];
+
+  for (const [resource, action, expected] of rules) {
+    it(`dado ${resource}:${action} quando todos os papéis canônicos são avaliados então somente os grants contratuais passam`, () => {
+      for (const role of DETRAN_ROLES) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            resource,
+            action,
+          ),
+          role,
+        ).toBe(expected.includes(role));
+      }
+    });
+  }
+});
+
+describe('R-0007 CTG-0004 — política das superfícies finais', () => {
+  const rules: Array<[string, string, readonly string[]]> = [
+    ['inf:rait-jeton', 'generate', ['rait-secretary']],
+    ['inf:rait-jeton', 'approve', ['rait-chair']],
+    ['inf:rait-export', 'approve', ['DPO']],
+    ['inf:rait-integration', 'read', ['integration-operator', 'AUDITOR']],
+    ['inf:rait-integration', 'retry', ['integration-operator']],
+    [
+      'inf:rait-integration',
+      'reconcile',
+      ['integration-operator', 'rait-manager'],
+    ],
+    ['inf:rait-collection', 'issue', ['rait-finance']],
+    ['inf:rait-payment', 'reconcile', ['rait-finance']],
+    ['inf:rait-refund', 'order', ['rait-finance']],
+    ['inf:rait-debt', 'handoff', ['rait-finance']],
+  ];
+  for (const [resource, action, expected] of rules) {
+    it(`dado ${resource}:${action} quando todos os papéis canônicos são avaliados então não herda administrador genérico`, () => {
+      for (const role of DETRAN_ROLES)
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            resource,
+            action,
+          ),
+          role,
+        ).toBe(expected.includes(role));
+    });
+  }
 });

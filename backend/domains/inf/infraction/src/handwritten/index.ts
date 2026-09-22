@@ -25,3 +25,17 @@ export type {
   InfractionTransition,
   InfractionTriggerKind,
 } from './guards/infraction.transitions.js';
+export {
+  INFRACTION_COMMANDS,
+  InfractionCommandService,
+  triggerForCommand,
+} from './infraction-command.service.js';
+export type {
+  InfractionCommand,
+  InfractionCommandInput,
+  InfractionCommandResult,
+} from './infraction-command.service.js';
+export { InfractionCommandsController } from './infraction-commands.controller.js';
+export { InfractionEventConsumer } from './infraction-event.consumer.js';
+export type { InfractionInboundEvent } from './infraction-event.consumer.js';
+export { InfractionDeadlineSweep } from './infraction-deadline.sweep.js';

@@ -1,6 +1,6 @@
 # Prompt do maestro — orquestra `dashboard-backend` (rodada `R-0011`)
 
-> Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `OpenAI — Codex CLI com GPT-5.6 Sol`
+> Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `Anthropic — Claude Code com Fable 5.1`
 > (Claude Code com Fable 5.1, ou Codex CLI com GPT-5.6 Sol), aberta na worktree `/Volumes/Thiamat II/stech/detran-worktrees/dashboard-backend`.
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;
 > não há contexto anterior a recuperar.
@@ -11,16 +11,16 @@
 - Declare, na primeira linha da sua primeira resposta, o papel constitucional em que atua em cada
   fase: **Architect** ao planejar e revisar, **Engineer** ao commitar código, **Auditor** nunca
   (o reviewer é a outra família). Os workers declaram o papel deles no próprio prompt.
-- Família dos seus workers: **a sua** (`OpenAI — Codex CLI com GPT-5.6 Sol`), por subagentes nativos da sua CLI.
-  Família do reviewer: **a outra** (`claude`), modelo `opus`, sempre
+- Família dos seus workers: **a sua** (`Anthropic — Claude Code com Fable 5.1`), por subagentes nativos da sua CLI.
+  Família do reviewer: **a outra** (`codex`), modelo `gpt-5.6-terra`, sempre
   pela ponte `tools/orchestra/bridge.sh`. Nunca inverta.
-- Orçamento desta janela de 5 h: **frente prevista para 3 janela(s); nesta janela, um planejamento de maestro + até 7 tarefas de worker (Terra/Luna) com revisões — ≈ 800 k tokens de entrada; ao atingir 80 % grave checkpoint**. Contabilize em
+- Orçamento desta janela de 5 h: **frente prevista para 3 janela(s); nesta janela, um planejamento de maestro + até 7 tarefas de worker (Opus/Sonnet) com revisões — ≈ 700 k tokens de entrada; ao atingir 80 % grave checkpoint**. Contabilize em
   `work/rounds/R-0011/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
   (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (modelo, refs, projeções, seed dos 42, gate `verify:domain-boundaries`): nenhum upstream — projeções escritas contra os schemas de eventos já publicados (`docs/framework/schemas/events/`, `rait-events-sse-contract.md`, `teat-route-contract.md` §8, `boat-route-contract.md` §7, `portal-route-contract.md` §10) com fixtures. CTG-0002 (ciclo do alerta, deveres, frescor, exportação, SSE, contratos, e2e de escalonamento): `rait-backend` R-0007 (R-0008 e R-0009 já em `main`). Já em `main` desde R-0008 (reutilizar, nunca recriar): `DetranError` (`backend/domains/shared/src/errors/`), `tools/contracts/check-commands.mjs` em `pnpm contracts:check`, `pnpm contracts:clients` → `@detran/api-clients`, `backend/app/tests/e2e/policy-routes.e2e.spec.ts`. Handoffs de R-0009 a confirmar no bootstrap em `backlog.md` §Handoffs e `portal-build-pack.md` §4: OD-P18 (balcão da ouvidoria) e OD-P28 (eventos sem produtor)**. No bootstrap, registre em `plan.md`
+  **merge de cada grupo acoplado**: **CTG-0001 (modelo, refs, projeções, seed dos 42, gate `verify:domain-boundaries`): nenhum upstream — projeções escritas contra os schemas de eventos já publicados (`docs/framework/schemas/events/`, `rait-events-sse-contract.md`, `teat-route-contract.md` §8, `boat-route-contract.md` §7, `portal-route-contract.md` §10) com fixtures. CTG-0002 (ciclo do alerta, deveres, frescor, exportação, SSE, contratos, e2e de escalonamento): `rait-backend` R-0007 CTG-0003 (infração e timers; CTG-0001/0002 já em `main`, PR #69). Já em `main`: `DetranError`, `check-commands.mjs`, `contracts:clients` (`@detran/api-clients`), `policy-routes.e2e.spec.ts`. Handoffs de R-0009 a confirmar no bootstrap (OD-P18 balcão da ouvidoria; OD-P28 eventos sem produtor). Troca de família decidida pelo Owner em 2026-09-21: maestro Fable 5.1 (Claude Code), workers Opus/Sonnet, reviewer `codex gpt-5.6-terra` — registre a troca em `waves.md` (coluna Maestro e §Histórico) na tarefa de documentação**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
@@ -156,7 +156,7 @@ Monte `reviews/prompt-review-<n>.md` com `docs/meta/agents/orchestra/reviewer-pr
 em modo `prompt-review`, anexando `plan.md` e todos os `prompts/*.md`. Invoque:
 
 ```bash
-tools/orchestra/bridge.sh claude opus work/rounds/R-0011/reviews/prompt-review-1.md work/rounds/R-0011/reviews/prompt-review-1.json /Volumes/Thiamat II/stech/detran-worktrees/dashboard-backend
+tools/orchestra/bridge.sh codex gpt-5.6-terra work/rounds/R-0011/reviews/prompt-review-1.md work/rounds/R-0011/reviews/prompt-review-1.json /Volumes/Thiamat II/stech/detran-worktrees/dashboard-backend
 ```
 
 Leia o veredito. `REVIEW` → corrija os prompts apontados e repita (máximo 2 ciclos). `FAIL` ou

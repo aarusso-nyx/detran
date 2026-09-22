@@ -1,0 +1,103 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0003",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/issue-provisioning-package.command.ts",
+      "line": 11,
+      "claim": "Os sete comandos ignoram a entrada e devolvem respostas constantes; não há comportamento de domínio, validação, persistência, transação, numeração, outbox ou ports criptográficos.",
+      "fix": "Implementar os sete comportamentos reais com validação INV-OFFLINE-001, persistência PostgreSQL tenant-scoped e efeitos atômicos; restringir fixtures criptográficas aos perfis autorizados."
+    },
+    {
+      "id": "F-002",
+      "severity": "high",
+      "file": "backend/domains/shared/src/policy.ts",
+      "line": 1887,
+      "claim": "As listas vazias negam todos os principais antes do controller e não existe etapa dinâmica que autorize os vínculos A5; readiness também omite o agente vinculado e as cinco leituras ficam inacessíveis.",
+      "fix": "Integrar decisão dinâmica de principal, dispositivo e recurso que permita os positivos A5 sem reintroduzir bypass por papel ou wildcard."
+    },
+    {
+      "id": "F-003",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.controller.ts",
+      "line": 93,
+      "claim": "Operações liberadas por papel não validam atribuição de órgão, agência, dispositivo ou recurso; o controller não resolve principal/contexto e os comandos ignoram o body.",
+      "fix": "Resolver os recursos no tenant autenticado e validar todos os vínculos A5 antes de sucesso ou efeito."
+    },
+    {
+      "id": "F-004",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.controller.ts",
+      "line": 174,
+      "claim": "If-Match é comparado à constante 1; os ETags retornados não são reutilizáveis e qualquer recurso aceita o token numérico constante.",
+      "fix": "Comparar atomicamente a versão persistida do agregado e produzir ETag reutilizável conforme ADR-0028."
+    },
+    {
+      "id": "F-005",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.controller.ts",
+      "line": 175,
+      "claim": "Idempotency-Key é apenas verificada como não vazia e descartada; não há persistência, binding ao payload, replay nem conflito 409.",
+      "fix": "Transportar e persistir a chave no mesmo escopo/transação dos efeitos e provar replay, conflito e concorrência após restart."
+    },
+    {
+      "id": "F-006",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.readiness.ts",
+      "line": 6,
+      "claim": "Readiness retorna sempre false e não recebe dispositivo, tenant ou estado persistido.",
+      "fix": "Calcular readiness a partir do dispositivo autorizado e dos estados persistidos, com bloqueadores verificáveis."
+    },
+    {
+      "id": "F-007",
+      "severity": "high",
+      "file": "backend/database/ddl/21-ops-provisioning.sql",
+      "line": 155,
+      "claim": "DDL20 executado depois restabelece UPDATE/DELETE em provisioning_receipt e device_revocation; consulta read-only confirmou os privilégios finais de role_app_backend.",
+      "fix": "Garantir append-only no estado final do apply e provar recusa de UPDATE/DELETE após aplicação e reaplicação."
+    },
+    {
+      "id": "F-008",
+      "severity": "high",
+      "file": "docs/framework/contracts/BP-OPS-PROVISIONING-001.commands.openapi.json",
+      "line": 25,
+      "claim": "As oito respostas de sucesso não têm content/schema; os clientes gerados usam content?: never, inviabilizando challenge, pacote, envelope e readiness.",
+      "fix": "Fechar schemas de resposta e contratos versionados de grant/pacote no blueprint e regenerar contratos/clientes."
+    },
+    {
+      "id": "F-009",
+      "severity": "medium",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.controller.ts",
+      "line": 129,
+      "claim": "Revogação POST não declara HttpCode(200), embora contrato e cliente declarem somente 200.",
+      "fix": "Aplicar 200 e provar status, corpo e ETag exatos."
+    },
+    {
+      "id": "F-010",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.red.spec.ts",
+      "line": 32,
+      "claim": "A matriz P0-P6 não foi implementada: sensores aceitam objetos definidos e qualquer booleano; faltam positivos A5, persistência, INV-OFFLINE-001, 412/409, restart/crash e concorrência real.",
+      "fix": "Inspector deve materializar a matriz vinculante com efeitos concretos, conexões concorrentes distintas e provas de restart antes da nova implementação Engineer."
+    },
+    {
+      "id": "F-011",
+      "severity": "medium",
+      "file": "docs/framework/contracts/BP-OPS-PROVISIONING-001.openapi.json",
+      "line": 430,
+      "claim": "authorized_agents_json e numbering_reservation_ids_json são publicados como object, mas origem, contrato e fixture persistida usam arrays.",
+      "fix": "Corrigir a autoridade de geração para arrays tipados e regenerar entidades, OpenAPI, DTOs e clientes com prova sobre registro persistido."
+    }
+  ],
+  "notes": [
+    "Revisão independente somente leitura sobre HEAD 5a52dbfb975a9f7d570e304dad5d699b5e9b7774 e working tree corrente; nenhum arquivo, Git ou banco foi mutado pelo Reviewer.",
+    "Gates integrais verdes foram considerados, mas não demonstram os comportamentos ausentes.",
+    "RLS/FORCE RLS está ativo nos cinco agregados; isso não compensa comandos desconectados nem privilégios append-only perdidos.",
+    "Não foram atribuídos ao candidato os todos preexistentes nem encontrado novo skip/todo em provisioning.",
+    "Verdict FAIL exige escalada antes de qualquer commit."
+  ]
+}

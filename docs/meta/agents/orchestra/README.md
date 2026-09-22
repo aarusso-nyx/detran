@@ -271,6 +271,126 @@ follow-up qualitativo de cada maestro: o que custou tempo, o que funcionou e o q
 6. Proibir escapes condicionais e manter um app isolado por arquivo de spec.
 7. Registrar variáveis de mock só no shell/CI: `SENATRAN_*_BASE_URL` não entra em `backend/**`.
 
+### R-0011 `dashboard-backend` (Fable 5.1, 2026-09-21 — troca de família Sol → Fable por decisão do Owner; PR #83 CTG-0001, CTG-0002 PR a abrir)
+
+**O que custou tempo**
+
+1. **Grep de produtores antes de declarar upstream em `main`.** O plano §Concorrência registrava
+   `rait.clock.flag-changed` e `rait.decision.published` como publicados pelo PR #69 do RAIT; um
+   grep de produtores em `backend/domains/**/src` em `08fb84e8` mostrou só
+   `rait.case.changed|admitted|received|withdrawn` e `rait.assignment.changed`. Triado como
+   `reference-gap` (OD-D17): IND-DASH-101…105 nasceram `connected=false` sem retrabalho, porque M5 já
+   previa a regra — mas a linha de §Concorrência precisou ser corrigida. Verificar produtores reais
+   antes de escrever "já em `main`" em qualquer plano.
+2. **`apply.sh --full` restrito por R-0007.** O banco da rodada (`detran_r11`) não pôde usar
+   `--full` (R-0007 o restringiu a `detran_r7_ctg1_a2` com uma variável de autorização); resolvido com
+   `create database` uma vez e `apply.sh` incremental de resto.
+3. **O gerador emite controllers vazios mesmo com `operations: []`.** Igual ao pacote `crashes` de
+   R-0010, o `MonitorModule` registra 20 controllers vazios; a asserção original de "nenhum controller
+   registrado" contradizia o gerador (A9/A10). Critérios de "nenhuma rota altera domínio" precisam
+   falar de métodos de rota ausentes, nunca de ausência de classe `*Controller`.
+4. **Inventário fechado de DDL é literal em outro spec.** `rait-priority-upgrade.integration.spec.ts`
+   (lock de R-0007) fixa em um número a lista `ordinary` de `apply.sh`; o CTG-0001 levou essa lista de
+   60 para 62, quebrando o CI até o Inspector corrigir o literal (precedente igual em R-0010: 57→60).
+   Recomendação: o inventário fechado deveria derivar de `apply.sh` (como
+   `prepare-rait-priority-v1-baseline.mjs` já faz), não um número hardcoded.
+5. **`export *` de vários `*.projection.ts` com `consumedEvents` colide.** O `index.ts` de um pacote
+   que reexporta `export *` de módulos que declaram o mesmo identificador `consumedEvents` gera
+   `TS2308` (A13); vale tanto para `portal/projections` quanto para `dashboard/monitor`. Correção: o
+   `index.ts` nunca faz `export *` de um `*.projection.ts` — reexporta por nome, e `consumedEvents`
+   fica export local do módulo (o gate lê o arquivo, não o índice).
+6. **Gate de parâmetros × literais de evento.** `tools/parameters/verify.mjs --check-usage` tratava
+   os literais de `export const consumedEvents = [...] as const` (exigidos pelo gate `verify:domain-
+boundaries`, M6/ADR-0020) como candidatos a chave de parâmetro desconhecida (A14). Correção: a
+   declaração `consumedEvents` literal entra em `isSourceEventDeclaration` — nunca exclusão por
+   diretório nem allowlist de chave.
+7. **`ci:backend-kernel:local` exige branch publicado e ambiente RC protegido.** Na máquina local, sem
+   esse ambiente, o mock SENATRAN encadeou timeouts de 30s no e2e do Portal; o mesmo spec sem mock deu
+   9/10 (a falha esperada). O CI é o sinal autoritativo, não a corrida local.
+
+**O que funcionou**
+
+1. **Divisão ciclo × superfície do CTG-0002** (TASK-0004/0005 sobre o ciclo do alerta/deveres/frescor;
+   TASK-0013/0014 sobre rotas/política/exportação/SSE — M15…M25, A18): fronteiras disjuntas, sem
+   corrida de escrita, no mesmo padrão que a divisão TASK-0002∥0011/TASK-0010∥0003 do CTG-0001.
+2. **Iterações restritas curtas** (1–4 min, 14 no total entre os dois CTG) resolveram os achados de
+   A7…A23 sem redespachar tarefa inteira.
+3. **Adendas numeradas do Architect** (A1…A23) reconciliaram contrato × código × canônico sem parar a
+   frente; o reviewer as aceitou como base de julgamento nos ciclos restritos.
+4. **`AUTHORIZATION.md` como registro de decisão do Owner** (Emenda 1: prosseguir até a finalização do
+   CTG-0001; Emenda 2: abrir o CTG-0002 pela via M7/A3, relógio próprio, sem esperar R-0007 CTG-0003)
+   manteve a frente andando sem bloquear na dependência externa.
+
+**Recomendações ao método**
+
+1. **§4** — todo plano que cita um evento como "já publicado em `main`" deve mostrar o grep de
+   produtores que sustenta a afirmação, não só o nome do PR.
+2. **Gate `verify:domain-boundaries` (ADR-0020)** — dívidas declaradas (`OD-*`) impressas, nunca
+   silenciosas; qualquer rodada que generalize um verificador deve rodá-lo sobre o repositório inteiro
+   antes de ligá-lo a `pnpm check` e corrigir as violações existentes no mesmo PR.
+3. **`tools/domain-boundaries` / `tools/check-lifecycle-vocabulary.ts`** — todo DDL novo de vocabulário
+   (`19-*`) precisa atualizar o inventário fechado do spec de prioridade e o próprio verificador de
+   vocabulário no mesmo PR.
+4. **Blueprints** — manter M24 (o Architect declara `module.handwritten*` com símbolos fixos; o
+   Engineer só cria os arquivos; `typecheck` vermelho entre tarefas do mesmo CTG é esperado).
+5. **Relógio próprio via M7/A3** — quando uma frente depende de um motor de prazos ainda não mesclado,
+   preferir relógio próprio do pacote (`Calendar`/`Clock` como dependência de leitura, nunca editar o
+   pacote dono) a bloquear a frente inteira; registrar a integração futura como OD explícita (OD-D28).
+
+### R-0012 `rait-web` (Fable 5.1 → maestro Opus 5; reviewer `codex gpt-5.6-terra`; 2026-09-21/22; PRs #79, #81, #85, #90 + CTG-0002c)
+
+**O que custou tempo**
+
+1. **Contrato grande demais para uma tarefa.** O contrato do CTG-0002b (91 critérios, 50 páginas,
+   26 componentes, 8 clientes, 11 facades) excedeu o que um worker entrega com rigor: dividido em
+   dois pares com PR próprio (A8) já depois de escrito. O Inspector do par 2 ainda precisou de três
+   iterações só para cobrir os 15 módulos. Regra prática: um contrato de CTG cabe em ~40 critérios
+   e ~25 arquivos de produção; acima disso, dividir **antes** de escrever os prompts.
+2. **Fixtures de teste que não acompanham o contrato.** Três iterações inteiras (A10, A14, A15)
+   foram gastas em `stubFacade`/`pageProviders` sem os métodos das facades, harness sem
+   `StynxSessionService`, `render()` repetido no mesmo `it` e caminhos errados de leitura de ficha.
+   Vale o Architect fixar no contrato a **assinatura do stub** (não só a da produção) e o Inspector
+   provar o stub contra a interface real num `it` próprio.
+3. **Matriz de autorização por amostra.** O reviewer reprovou duas vezes (A11, A15) matrizes que
+   testavam "um papel permitido e um negado" e confirmações de uma só ação por página. A regra
+   §4.8 é exaustiva: **todo** papel canônico e **toda** ação com confirmação, geradas por laço
+   sobre a fixture de política.
+4. **`main` andando em paralelo.** Quatro merges de `main` na rodada (R-0011, R-0013, R-0016,
+   DEVAI 1.5.4/1.5.5/1.5.6), dois com conflito na allowlist i18n e na cadeia de evidência, e um PR
+   recusado por avanço de `main` entre o CI verde e o merge. A cadeia (`record/proofs/chain.json`)
+   resolve-se sempre aceitando `main` e **regravando** a evidência da rodada.
+5. **Falha intermitente de CI alheia à frente.** `rait-priority-upgrade.integration.spec.ts`
+   (R-0007) falhou em **três** PRs desta rodada (#85, #90, #93 — frontend e documentação, que não
+   tocam o backend) e passou em todos os reruns; custou ~90 min de espera. É defeito de
+   isolamento do próprio teste (upgrade de schema em banco compartilhado), não da frente:
+   vale um `OD` ao dono de R-0007 em vez de rerun a cada PR.
+
+**O que funcionou**
+
+1. **Tarefa de transcrição própria para i18n** (A12, TASK-0016/0017): tirou do Engineer o que o
+   método já reserva ao Architect e tornou o catálogo verificável por um `it` de contagem exata.
+2. **Adendas numeradas como único canal de reconciliação** (A1…A16): 20 iterações restritas sem
+   nenhuma reabertura de tarefa e sem nenhum spec alterado fora de adenda.
+3. **Contrato com assinaturas exatas** (arquivo, símbolo, tipo, `operationId`): o Engineer do
+   CTG-0002c entregou **verde na primeira iteração** (4434 testes) com 100 critérios.
+4. **Pré-condição de despacho explícita no prompt** (SHA do merge do CTG anterior em §Concorrência):
+   evitou que um par começasse a escrever sobre árvore desatualizada.
+
+**Recomendações ao método**
+
+1. **§4** — limite de tamanho por CTG (≈40 critérios / ≈25 arquivos de produção); acima disso o
+   Architect entrega o contrato já dividido em pares.
+2. **§4.13** — o contrato fixa também a **assinatura dos stubs** que o Inspector escreve; um `it`
+   prova o stub contra a interface real.
+3. **§4.8** — a matriz de autorização é sempre gerada por laço sobre a fixture de política (papéis)
+   e sobre a lista de ações com confirmação; amostra é achado `high` na delivery-review.
+4. **§9** — quando `main` avança entre o CI verde e o merge, integrar por merge e **reexecutar o
+   CI** antes de tentar de novo; falha de CI em teste de outra frente, reproduzível como
+   intermitente, é `gh run rerun --failed` (não é triagem da frente).
+5. **`model-ladder.md`** — custo real de R-0012: Opus 330–780 k brutos por tarefa de Engineer;
+   Sonnet 100–830 k por tarefa de Inspector com matriz grande; rodada de 5 CTG e 17 tarefas
+   ≈5,5 M únicos / ≈12 M brutos.
+
 ## Arquivos deste método
 
 | Arquivo                                 | Uso                                                                 |

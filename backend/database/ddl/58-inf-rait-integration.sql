@@ -1,4 +1,4 @@
--- Generated from BP-INF-RAIT-INTEGRATION-001 v1.0.0 sha256:ddd770d620f969774d0560bb02a8ebae3a43c42b4340a4092a1a7828963820a5
+-- Generated from BP-INF-RAIT-INTEGRATION-001 v1.0.1 sha256:2d42a37638b7f6930d1b8ac07d6cd13218f965f5c2857948e0afeea8df277caf
 
 -- Regenerable-only DDL for BP-INF-RAIT-INTEGRATION-001; request-path writes use role_app_backend.
 

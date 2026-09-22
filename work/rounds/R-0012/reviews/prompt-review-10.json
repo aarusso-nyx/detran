@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0012/prompts/TASK-0015.md",
+      "line": 60,
+      "claim": "A tarefa constitucionalmente atribuída a Engineer inclui transcrição e acréscimo de chaves ao catálogo i18n; a regra comum da orquestra reserva transcrição de i18n ao Architect (transcriber-docs), sem exceção para este CTG.",
+      "fix": "Retirar `rait.pt-BR.json` da fronteira de TASK-0015 e atribuir as chaves (P)/confirm.* a uma tarefa Architect (transcriber-docs), deixando o Engineer apenas consumir as chaves já transcritas."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0012/prompts/TASK-0015.md",
+      "line": 61,
+      "claim": "O prompt autoriza escrita em `shared/**` e `data/**`, mas TASK-0015 declara somente `MOD-rait-web-features` e `MOD-rait-web-i18n` como target_modules; esses substratos pertencem ao par CTG-0002b-1 e não estão na fronteira deste Engineer.",
+      "fix": "Remover a autorização de alterar `shared/**` e `data/**`; qualquer correção necessária deve virar bloqueio/OD para uma tarefa com os módulos correspondentes declarados."
+    }
+  ],
+  "notes": []
+}

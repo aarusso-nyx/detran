@@ -4,7 +4,7 @@
   "module": {
     "name": "RaitOrg",
     "namespace": "inf",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "ddlFile": "39-inf-rait-org.sql",
     "dependencies": {
       "@detran/inf-rait-worklist": "workspace:*"
@@ -23,6 +23,13 @@
         "target": "../rait-worklist/src/index.ts"
       }
     ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/rait-org-commands.controller",
+        "symbol": "RaitOrgCommandsController"
+      }
+    ],
+    "handwrittenExports": ["handwritten/index"],
     "owners": ["detran-inf"],
     "description": "Organizacao do orgao julgador: calendario de feriados ([WF-RAIT-002] secao 7; UC-RAIT-043 fluxo 1), atos de suspensao de prazo por forca maior (UC-RAIT-022), folha de jeton por periodo (UC-RAIT-036), incidente de prescricao operacional ([WF-RAIT-002] secao 4.1 e 4.2), amostra de qualidade (UC-RAIT-025), plano de capacidade ([WF-RAIT-004] secao 8; UC-RAIT-038) e exportacoes com controle LGPD (UC-RAIT-042). Parametros vivem em ops.parameter (ADR-0021 Decision 6): este blueprint nao define rait_parameter e nenhuma coluna guarda valor de parametro."
   },

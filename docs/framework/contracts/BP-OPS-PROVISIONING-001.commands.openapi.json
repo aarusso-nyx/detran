@@ -1,0 +1,1475 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Provisionamento operacional offline — comandos manuscritos (BP-OPS-PROVISIONING-001)",
+    "version": "1.0.3",
+    "description": "Fronteira DETRAN para provisionamento offline. As rotas de origem /v1/mobile-provisioning/* divergem intencionalmente: o monorepo usa /v1/ops/provisioning/*.",
+    "x-blueprint": "BP-OPS-PROVISIONING-001",
+    "x-commands": true,
+    "x-source": "offline-operational-provisioning.md §§4–11; INV-OFFLINE-001"
+  },
+  "paths": {
+    "/v1/ops/provisioning/devices/{deviceId}/key-challenges": {
+      "post": {
+        "operationId": "opsProvisioningCreateKeyChallenge",
+        "summary": "Cria challenge de enrollment para uma chave não exportável.",
+        "parameters": [
+          { "$ref": "#/components/parameters/DeviceId" },
+          { "$ref": "#/components/parameters/IfMatch" },
+          { "$ref": "#/components/parameters/IdempotencyKey" }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/KeyChallengeRequest"
+        },
+        "responses": {
+          "201": {
+            "description": "Challenge emitido.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyChallengeResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Versão do dispositivo divergiu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VERSION_CONFLICT"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match obrigatório.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IF_MATCH_REQUIRED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Entrada inválida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito de idempotência.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IDEMPOTENCY_REPLAY"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/devices/{deviceId}/keys": {
+      "post": {
+        "operationId": "opsProvisioningRegisterDeviceKey",
+        "summary": "Registra chave pública e evidência de attestation; a chave privada nunca é enviada.",
+        "parameters": [
+          { "$ref": "#/components/parameters/DeviceId" },
+          { "$ref": "#/components/parameters/IfMatch" },
+          { "$ref": "#/components/parameters/IdempotencyKey" }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RegisterDeviceKeyRequest"
+        },
+        "responses": {
+          "201": {
+            "description": "Chave pública registrada.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterDeviceKeyResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "ETag do challenge ou dispositivo divergiu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VERSION_CONFLICT"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match obrigatório.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IF_MATCH_REQUIRED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Entrada inválida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Fingerprint ou idempotência conflita.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IDEMPOTENCY_REPLAY"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Challenge ou attestation recusado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/packages": {
+      "post": {
+        "operationId": "opsProvisioningIssuePackage",
+        "summary": "Emite grant e pacote provisionável dentro da unidade transacional lógica de numeração.",
+        "parameters": [
+          { "$ref": "#/components/parameters/IfMatch" },
+          { "$ref": "#/components/parameters/IdempotencyKey" }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IssueProvisioningPackageRequest"
+        },
+        "responses": {
+          "201": {
+            "description": "Pacote emitido.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IssueProvisioningPackageResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Readiness do dispositivo divergiu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VERSION_CONFLICT"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match obrigatório.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IF_MATCH_REQUIRED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Entrada inválida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito de idempotência ou reserva.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IDEMPOTENCY_REPLAY"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Dispositivo ou política não está pronto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/packages/{id}/content": {
+      "get": {
+        "operationId": "opsProvisioningDownloadPackageContent",
+        "summary": "Baixa o envelope do pacote para o dispositivo vinculado.",
+        "parameters": [{ "$ref": "#/components/parameters/PackageId" }],
+        "responses": {
+          "200": {
+            "description": "Envelope do pacote.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DownloadProvisioningPackageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pacote ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Pacote não utilizável.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/packages/{id}/receipts": {
+      "post": {
+        "operationId": "opsProvisioningRecordReceipt",
+        "summary": "Registra receipt idempotente de exportação, instalação ou ativação.",
+        "parameters": [
+          { "$ref": "#/components/parameters/PackageId" },
+          { "$ref": "#/components/parameters/IfMatch" },
+          { "$ref": "#/components/parameters/IdempotencyKey" }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/ProvisioningReceiptRequest"
+        },
+        "responses": {
+          "201": {
+            "description": "Receipt registrado.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProvisioningReceiptResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Versão do pacote divergiu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VERSION_CONFLICT"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match obrigatório.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IF_MATCH_REQUIRED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Entrada inválida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Idempotência conflita.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IDEMPOTENCY_REPLAY"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Prova do dispositivo recusada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/devices/{deviceId}/readiness": {
+      "get": {
+        "operationId": "opsProvisioningReadiness",
+        "summary": "Avalia se grant, pacote, catálogo, numeração e revogação permitem operação offline.",
+        "parameters": [{ "$ref": "#/components/parameters/DeviceId" }],
+        "responses": {
+          "200": {
+            "description": "Readiness calculada.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProvisioningReadinessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dispositivo ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/grants/{id}/revoke": {
+      "post": {
+        "operationId": "opsProvisioningRevokeGrant",
+        "summary": "Revoga grant ou dispositivo por decisão auditada; não renumera atos formalizados.",
+        "parameters": [
+          { "$ref": "#/components/parameters/GrantId" },
+          { "$ref": "#/components/parameters/IfMatch" },
+          { "$ref": "#/components/parameters/IdempotencyKey" }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RevokeGrantRequest"
+        },
+        "responses": {
+          "200": {
+            "description": "Revogação registrada.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RevokeGrantResponse" }
+              }
+            }
+          },
+          "412": {
+            "description": "Versão do grant divergiu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VERSION_CONFLICT"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match obrigatório.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IF_MATCH_REQUIRED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Entrada inválida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Grant ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Epoch conflita.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IDEMPOTENCY_REPLAY"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/grants/{id}/reconcile": {
+      "post": {
+        "operationId": "opsProvisioningReconcileGrant",
+        "summary": "Reconcilia atos offline, recibos e consumo sem trocar numeração formalizada.",
+        "parameters": [
+          { "$ref": "#/components/parameters/GrantId" },
+          { "$ref": "#/components/parameters/IfMatch" },
+          { "$ref": "#/components/parameters/IdempotencyKey" }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/ReconcileGrantRequest"
+        },
+        "responses": {
+          "200": {
+            "description": "Reconciliação aceita ou encaminhada para análise.",
+            "headers": { "ETag": { "$ref": "#/components/headers/ETag" } },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReconcileGrantResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Versão do grant divergiu.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VERSION_CONFLICT"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "If-Match obrigatório.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IF_MATCH_REQUIRED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Entrada inválida.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.ENUM_INVALID", "TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "enum": ["TEAT.AUTH_REQUIRED"] }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.FORBIDDEN_ACTION"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Grant ausente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.TENANT_MISMATCH"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito de número, hash ou idempotência.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.IDEMPOTENCY_REPLAY"]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Ato offline incompleto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "enum": ["TEAT.VALIDATION_FAILED"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "IfMatch": {
+        "name": "If-Match",
+        "in": "header",
+        "required": true,
+        "schema": { "type": "string", "minLength": 1 }
+      },
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "schema": { "type": "string", "minLength": 1, "maxLength": 160 }
+      },
+      "DeviceId": {
+        "name": "deviceId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "PackageId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      },
+      "GrantId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "format": "uuid" }
+      }
+    },
+    "headers": {
+      "ETag": {
+        "description": "Versão opaca do recurso para a próxima precondição If-Match.",
+        "required": true,
+        "schema": { "type": "string", "minLength": 1 }
+      }
+    },
+    "requestBodies": {
+      "KeyChallengeRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/KeyChallengeRequest" }
+          }
+        }
+      },
+      "RegisterDeviceKeyRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RegisterDeviceKeyRequest"
+            }
+          }
+        }
+      },
+      "IssueProvisioningPackageRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IssueProvisioningPackageRequest"
+            }
+          }
+        }
+      },
+      "ProvisioningReceiptRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ProvisioningReceiptRequest"
+            }
+          }
+        }
+      },
+      "RevokeGrantRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/RevokeGrantRequest" }
+          }
+        }
+      },
+      "ReconcileGrantRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ReconcileGrantRequest" }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "KeyChallengeResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["challenge_id", "device_id", "challenge", "expires_at"],
+        "properties": {
+          "challenge_id": { "type": "string", "format": "uuid" },
+          "device_id": { "type": "string", "format": "uuid" },
+          "challenge": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Opaque challenge; production wire format remains source_pending."
+          },
+          "expires_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "RegisterDeviceKeyResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["device_key_id", "device_id", "key_fingerprint", "status"],
+        "properties": {
+          "device_key_id": { "type": "string", "format": "uuid" },
+          "device_id": { "type": "string", "format": "uuid" },
+          "key_fingerprint": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "status": { "type": "string", "minLength": 1 }
+        }
+      },
+      "IssueProvisioningPackageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "package_id",
+          "grant_id",
+          "device_id",
+          "manifest_digest",
+          "envelope_uri",
+          "expires_at"
+        ],
+        "properties": {
+          "package_id": { "type": "string", "format": "uuid" },
+          "grant_id": { "type": "string", "format": "uuid" },
+          "device_id": { "type": "string", "format": "uuid" },
+          "manifest_digest": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "envelope_uri": { "type": "string", "minLength": 1 },
+          "expires_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DownloadProvisioningPackageResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "package_id",
+          "grant_id",
+          "device_id",
+          "manifest_digest",
+          "envelope_uri",
+          "signature_key_id",
+          "schema_version"
+        ],
+        "properties": {
+          "package_id": { "type": "string", "format": "uuid" },
+          "grant_id": { "type": "string", "format": "uuid" },
+          "device_id": { "type": "string", "format": "uuid" },
+          "manifest_digest": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "envelope_uri": { "type": "string", "minLength": 1 },
+          "signature_key_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "schema_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          }
+        }
+      },
+      "ProvisioningReceiptResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "receipt_id",
+          "package_id",
+          "grant_id",
+          "device_id",
+          "receipt_type",
+          "received_at"
+        ],
+        "properties": {
+          "receipt_id": { "type": "string", "format": "uuid" },
+          "package_id": { "type": "string", "format": "uuid" },
+          "grant_id": { "type": "string", "format": "uuid" },
+          "device_id": { "type": "string", "format": "uuid" },
+          "receipt_type": {
+            "type": "string",
+            "enum": ["exported", "installed", "activated"]
+          },
+          "received_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ProvisioningReadinessResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "device_id",
+          "ready",
+          "remaining_acts",
+          "remaining_numbering_count",
+          "blockers",
+          "evaluated_at"
+        ],
+        "properties": {
+          "device_id": { "type": "string", "format": "uuid" },
+          "ready": { "type": "boolean" },
+          "remaining_acts": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "maximum_acts menos consumos persistidos das reservas vinculadas ao grant."
+          },
+          "remaining_numbering_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Números ainda utilizáveis nas reservas vinculadas, após numbering_consumption persistido."
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["code", "resource"],
+              "properties": {
+                "code": { "type": "string", "minLength": 1 },
+                "resource": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
+          "evaluated_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "RevokeGrantResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["grant_id", "device_id", "revocation_epoch", "revoked_at"],
+        "properties": {
+          "grant_id": { "type": "string", "format": "uuid" },
+          "device_id": { "type": "string", "format": "uuid" },
+          "revocation_epoch": { "type": "integer", "minimum": 0 },
+          "revoked_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ReconcileGrantResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "grant_id",
+          "accepted_count",
+          "rejected_count",
+          "unresolved_count",
+          "reconciliation_digest",
+          "reconciled_at"
+        ],
+        "properties": {
+          "grant_id": { "type": "string", "format": "uuid" },
+          "accepted_count": { "type": "integer", "minimum": 0 },
+          "rejected_count": { "type": "integer", "minimum": 0 },
+          "unresolved_count": { "type": "integer", "minimum": 0 },
+          "reconciliation_digest": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "reconciled_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "KeyChallengeRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["idempotency_key"],
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          }
+        }
+      },
+      "RegisterDeviceKeyRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "idempotency_key",
+          "challenge_id",
+          "challenge_proof",
+          "public_key",
+          "key_fingerprint",
+          "attestation_evidence"
+        ],
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "challenge_id": { "type": "string", "format": "uuid" },
+          "challenge_proof": {
+            "type": "string",
+            "description": "Wire format source_pending."
+          },
+          "public_key": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Public material only; private keys are forbidden."
+          },
+          "key_fingerprint": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "attestation_evidence": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "IssueProvisioningPackageRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "idempotency_key",
+          "device_id",
+          "authorized_agents",
+          "valid_from",
+          "valid_until",
+          "maximum_offline_seconds",
+          "maximum_acts",
+          "policy_version",
+          "normative_package_id",
+          "numbering_reservation_ids"
+        ],
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "device_id": { "type": "string", "format": "uuid" },
+          "authorized_agents": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Destinatários operacionais persistidos no grant; não representa o emissor autenticado, que vem do RequestContext.",
+            "items": { "$ref": "#/components/schemas/AuthorizedAgent" }
+          },
+          "valid_from": { "type": "string", "format": "date-time" },
+          "valid_until": { "type": "string", "format": "date-time" },
+          "maximum_offline_seconds": { "type": "integer", "minimum": 1 },
+          "maximum_acts": { "type": "integer", "minimum": 1 },
+          "policy_version": { "type": "string", "minLength": 1 },
+          "normative_package_id": { "type": "string", "format": "uuid" },
+          "numbering_reservation_ids": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Cada reserva deve ser vinculada no mesmo tenant, órgão e dispositivo a um agent_id dos destinatários persistidos.",
+            "items": { "type": "string", "format": "uuid" }
+          }
+        }
+      },
+      "AuthorizedAgent": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["agent_id", "registration_number", "roles", "permissions"],
+        "properties": {
+          "agent_id": { "type": "string", "format": "uuid" },
+          "registration_number": { "type": "string", "minLength": 1 },
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "enum": ["field-agent", "field-supervisor"]
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "ProvisioningReceiptRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "idempotency_key",
+          "receipt_type",
+          "manifest_digest",
+          "occurred_at"
+        ],
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "receipt_type": {
+            "type": "string",
+            "enum": ["exported", "installed", "activated"]
+          },
+          "manifest_digest": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "occurred_at": { "type": "string", "format": "date-time" },
+          "device_attestation": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "RevokeGrantRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "idempotency_key",
+          "reason_code",
+          "revocation_epoch",
+          "decided_at"
+        ],
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "reason_code": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "revocation_epoch": { "type": "integer", "minimum": 0 },
+          "decided_at": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ReconcileGrantRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["idempotency_key", "acts"],
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "acts": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "#/components/schemas/OfflineOriginatedAct" }
+          }
+        }
+      },
+      "OfflineOriginatedAct": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "idempotency_key",
+          "reserved_numbering_context",
+          "local_content_hash",
+          "device_id",
+          "agent_id",
+          "occurred_at",
+          "location_context",
+          "normative_package_id"
+        ],
+        "properties": {
+          "idempotency_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "reserved_numbering_context": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "local_content_hash": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "device_id": { "type": "string", "format": "uuid" },
+          "agent_id": { "type": "string", "format": "uuid" },
+          "occurred_at": { "type": "string", "format": "date-time" },
+          "location_context": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "normative_package_id": { "type": "string", "format": "uuid" }
+        }
+      }
+    }
+  }
+}

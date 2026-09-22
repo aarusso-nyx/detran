@@ -1,0 +1,423 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "BP-OPS-PROVISIONING-001",
+  "module": {
+    "name": "Provisioning",
+    "namespace": "ops",
+    "version": "1.0.3",
+    "ddlFile": "21-ops-provisioning.sql",
+    "dependencies": {
+      "@detran/ops-core": "workspace:*",
+      "@detran/ops-offline-sync": "workspace:*",
+      "zod": "^4.6.5"
+    },
+    "owners": ["detran-ops"],
+    "description": "Operational offline provisioning from offline-operational-provisioning.md §§1–12 and INV-OFFLINE-001; cryptographic algorithms and wire format remain source_pending until the cross-platform security decision.",
+    "testAliases": [
+      {
+        "package": "@detran/shared",
+        "target": "../../shared/src/index.ts"
+      }
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/provisioning.controller",
+        "symbol": "ProvisioningController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/provisioning.provider",
+        "symbol": "OPS_PROVISIONING_PROVIDER"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/provisioning.contract",
+      "handwritten/provisioning.readiness",
+      "handwritten/create-key-challenge.command",
+      "handwritten/register-device-key.command",
+      "handwritten/issue-provisioning-package.command",
+      "handwritten/download-provisioning-package.command",
+      "handwritten/record-provisioning-receipt.command",
+      "handwritten/revoke-offline-grant.command",
+      "handwritten/reconcile-offline-grant.command",
+      "handwritten/provisioning.controller",
+      "handwritten/provisioning.provider"
+    ]
+  },
+  "api": {
+    "basePath": "/v1/ops/provisioning/",
+    "resources": [
+      {
+        "entity": "DeviceKey",
+        "path": "device-keys",
+        "resource": "device-key",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "OfflineAuthorizationGrant",
+        "path": "grants",
+        "resource": "grant",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "ProvisioningPackage",
+        "path": "packages",
+        "resource": "package",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "ProvisioningReceipt",
+        "path": "receipts",
+        "resource": "receipt",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "DeviceRevocation",
+        "path": "device-revocations",
+        "resource": "device-revocation",
+        "operations": ["list", "get"]
+      },
+      {
+        "entity": "ProvisioningCommandIdempotency",
+        "path": "command-idempotencies",
+        "resource": "command-idempotency",
+        "operations": []
+      },
+      {
+        "entity": "ProvisioningReconciliation",
+        "path": "reconciliations",
+        "resource": "reconciliation",
+        "operations": []
+      },
+      {
+        "entity": "ProvisioningGrantReservationBinding",
+        "path": "grant-reservation-bindings",
+        "resource": "grant-reservation-binding",
+        "operations": []
+      }
+    ]
+  },
+  "database": {
+    "entities": [
+      {
+        "name": "DeviceKey",
+        "table": "device_key",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "key_fingerprint", "type": "varchar(256)" },
+          { "name": "public_key", "type": "text" },
+          { "name": "attestation_evidence_json", "type": "jsonb" },
+          {
+            "name": "key_algorithm",
+            "type": "varchar(80)",
+            "default": "'source_pending'"
+          },
+          {
+            "name": "wire_format",
+            "type": "varchar(80)",
+            "default": "'source_pending'"
+          },
+          {
+            "name": "status",
+            "type": "varchar(40)",
+            "default": "'registered'"
+          },
+          { "name": "version", "type": "bigint", "default": "1" },
+          {
+            "name": "registered_at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          { "name": "revoked_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "device_id", "key_fingerprint"],
+            "unique": true
+          },
+          { "columns": ["tenant_id", "device_id", "status"] }
+        ]
+      },
+      {
+        "name": "OfflineAuthorizationGrant",
+        "table": "offline_authorization_grant",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "device_key_fingerprint", "type": "varchar(256)" },
+          {
+            "name": "authorized_agents_json",
+            "type": "jsonb",
+            "jsonSchema": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "agent_id",
+                  "registration_number",
+                  "roles",
+                  "permissions"
+                ],
+                "properties": {
+                  "agent_id": { "type": "string", "format": "uuid" },
+                  "registration_number": { "type": "string", "minLength": 1 },
+                  "roles": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                      "type": "string",
+                      "enum": ["field-agent", "field-supervisor"]
+                    }
+                  },
+                  "permissions": {
+                    "type": "array",
+                    "items": { "type": "string", "minLength": 1 }
+                  }
+                }
+              }
+            }
+          },
+          { "name": "valid_from", "type": "timestamptz" },
+          { "name": "valid_until", "type": "timestamptz" },
+          { "name": "maximum_offline_seconds", "type": "integer" },
+          { "name": "maximum_acts", "type": "integer" },
+          { "name": "revocation_epoch", "type": "bigint" },
+          { "name": "policy_version", "type": "varchar(160)" },
+          { "name": "normative_package_id", "type": "uuid" },
+          {
+            "name": "numbering_reservation_ids_json",
+            "type": "jsonb",
+            "jsonSchema": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "format": "uuid" }
+            }
+          },
+          { "name": "issued_at", "type": "timestamptz", "default": "now()" },
+          { "name": "issued_by_subject", "type": "varchar(256)" },
+          { "name": "key_id", "type": "varchar(256)" },
+          {
+            "name": "schema_version",
+            "type": "varchar(40)",
+            "default": "'1.0'"
+          },
+          { "name": "manifest_digest", "type": "varchar(128)" },
+          { "name": "status", "type": "varchar(40)", "default": "'issued'" },
+          { "name": "version", "type": "bigint", "default": "1" },
+          { "name": "revoked_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "device_id", "status"] },
+          { "columns": ["tenant_id", "manifest_digest"], "unique": true }
+        ],
+        "checks": [
+          {
+            "name": "ck_ops_offline_authorization_grant_validity",
+            "expression": "valid_from < valid_until"
+          },
+          {
+            "name": "ck_ops_offline_authorization_grant_limits",
+            "expression": "maximum_offline_seconds > 0 and maximum_acts > 0 and revocation_epoch >= 0"
+          }
+        ]
+      },
+      {
+        "name": "ProvisioningPackage",
+        "table": "provisioning_package",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "grant_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          {
+            "name": "schema_version",
+            "type": "varchar(40)",
+            "default": "'1.0'"
+          },
+          { "name": "manifest_digest", "type": "varchar(128)" },
+          { "name": "artifact_digests_json", "type": "jsonb" },
+          { "name": "trust_chain_json", "type": "jsonb" },
+          { "name": "normative_package_id", "type": "uuid" },
+          { "name": "numbering_policy_json", "type": "jsonb" },
+          { "name": "envelope_uri", "type": "text" },
+          { "name": "signature_key_id", "type": "varchar(256)" },
+          {
+            "name": "signature_algorithm",
+            "type": "varchar(80)",
+            "default": "'source_pending'"
+          },
+          {
+            "name": "envelope_algorithm",
+            "type": "varchar(80)",
+            "default": "'source_pending'"
+          },
+          {
+            "name": "wire_format",
+            "type": "varchar(80)",
+            "default": "'source_pending'"
+          },
+          { "name": "status", "type": "varchar(40)", "default": "'issued'" },
+          { "name": "version", "type": "bigint", "default": "1" },
+          { "name": "issued_at", "type": "timestamptz", "default": "now()" },
+          { "name": "expires_at", "type": "timestamptz", "nullable": true }
+        ],
+        "indexes": [
+          { "columns": ["tenant_id", "grant_id"], "unique": true },
+          { "columns": ["tenant_id", "device_id", "status"] },
+          { "columns": ["tenant_id", "manifest_digest"], "unique": true }
+        ]
+      },
+      {
+        "name": "ProvisioningReceipt",
+        "table": "provisioning_receipt",
+        "primaryKey": ["id"],
+        "applicationAppendOnly": true,
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "package_id", "type": "uuid" },
+          { "name": "grant_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "receipt_type", "type": "varchar(40)" },
+          { "name": "idempotency_key", "type": "varchar(160)" },
+          { "name": "manifest_digest", "type": "varchar(128)" },
+          {
+            "name": "device_attestation_json",
+            "type": "jsonb",
+            "nullable": true
+          },
+          { "name": "occurred_at", "type": "timestamptz" },
+          { "name": "received_at", "type": "timestamptz", "default": "now()" }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "package_id", "device_id", "receipt_type"],
+            "unique": true
+          },
+          { "columns": ["tenant_id", "idempotency_key"], "unique": true }
+        ]
+      },
+      {
+        "name": "DeviceRevocation",
+        "table": "device_revocation",
+        "primaryKey": ["id"],
+        "applicationAppendOnly": true,
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "grant_id", "type": "uuid", "nullable": true },
+          { "name": "revocation_epoch", "type": "bigint" },
+          { "name": "reason_code", "type": "varchar(80)" },
+          { "name": "decision_by_subject", "type": "varchar(256)" },
+          { "name": "decided_at", "type": "timestamptz" },
+          { "name": "created_at", "type": "timestamptz", "default": "now()" }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "device_id", "revocation_epoch"],
+            "unique": true
+          },
+          { "columns": ["tenant_id", "grant_id"] }
+        ],
+        "checks": [
+          {
+            "name": "ck_ops_device_revocation_epoch",
+            "expression": "revocation_epoch >= 0"
+          }
+        ]
+      },
+      {
+        "name": "ProvisioningCommandIdempotency",
+        "table": "provisioning_command_idempotency",
+        "primaryKey": ["id"],
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "command_name", "type": "varchar(120)" },
+          { "name": "idempotency_key", "type": "varchar(160)" },
+          { "name": "request_digest", "type": "varchar(128)" },
+          { "name": "response_body_json", "type": "jsonb" },
+          { "name": "response_etag", "type": "varchar(512)" },
+          { "name": "completed_at", "type": "timestamptz", "default": "now()" }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "command_name", "idempotency_key"],
+            "unique": true
+          }
+        ]
+      },
+      {
+        "name": "ProvisioningReconciliation",
+        "table": "provisioning_reconciliation",
+        "primaryKey": ["id"],
+        "applicationAppendOnly": true,
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "grant_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "reconciliation_digest", "type": "varchar(128)" },
+          { "name": "accepted_act_count", "type": "integer", "default": "0" },
+          { "name": "rejected_act_count", "type": "integer", "default": "0" },
+          { "name": "unresolved_act_count", "type": "integer", "default": "0" },
+          { "name": "reconciled_by_subject", "type": "varchar(256)" },
+          { "name": "reconciled_at", "type": "timestamptz", "default": "now()" }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "grant_id", "reconciliation_digest"],
+            "unique": true
+          },
+          { "columns": ["tenant_id", "grant_id", "reconciled_at"] }
+        ],
+        "checks": [
+          {
+            "name": "ck_ops_provisioning_reconciliation_counts",
+            "expression": "accepted_act_count >= 0 and rejected_act_count >= 0 and unresolved_act_count >= 0"
+          }
+        ]
+      },
+      {
+        "name": "ProvisioningGrantReservationBinding",
+        "table": "provisioning_grant_reservation_binding",
+        "primaryKey": ["id"],
+        "applicationAppendOnly": true,
+        "fields": [
+          { "name": "id", "type": "uuid", "default": "gen_random_uuid()" },
+          { "name": "tenant_id", "type": "uuid" },
+          { "name": "grant_id", "type": "uuid" },
+          { "name": "reservation_id", "type": "uuid" },
+          { "name": "traffic_agency_id", "type": "uuid" },
+          { "name": "device_id", "type": "uuid" },
+          { "name": "authorized_agent_id", "type": "uuid" },
+          { "name": "bound_at", "type": "timestamptz", "default": "now()" }
+        ],
+        "indexes": [
+          {
+            "columns": ["tenant_id", "grant_id", "reservation_id"],
+            "unique": true
+          },
+          {
+            "columns": ["tenant_id", "reservation_id"],
+            "unique": true
+          },
+          {
+            "columns": ["tenant_id", "grant_id", "authorized_agent_id"]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "completed",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-5a1f52d06ae9a806",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0008",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Testes de tools/contracts para o catálogo DASH.* e correspondência rota ⇔ operação",
+  "description": "tools/contracts/tests cobre raízes dashboard/*, prefixo DASH. do catálogo de erros e bidirecionalidade rota ⇔ operationId.",
+  "target_modules": ["MOD-contracts-check-tests"],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0006",
+  "priority": 7,
+  "tags": ["wp-d3"],
+  "acceptance_commands": [
+    ["pnpm", "contracts:test"],
+    ["pnpm", "format:check"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-5a1f52d06ae9a806",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

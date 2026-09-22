@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@aarusso-nyx/devai':
-        specifier: 1.5.3
-        version: 1.5.3
+        specifier: 1.5.6
+        version: 1.5.6
       '@types/node':
         specifier: ^24.10.1
         version: 24.13.3
@@ -212,6 +212,94 @@ importers:
         specifier: ^4.1.7
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
 
+  apps/rait/web:
+    dependencies:
+      '@angular/common':
+        specifier: 22.1.6
+        version: 22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core':
+        specifier: 22.1.6
+        version: 22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: 22.1.6
+        version: 22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: 22.1.6
+        version: 22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: 22.1.6
+        version: 22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@detran/api-clients':
+        specifier: workspace:*
+        version: link:../../../packages/api-clients
+      '@detran/ui':
+        specifier: workspace:*
+        version: link:../../../packages/ui
+      '@stynx-nyx/angular':
+        specifier: 1.3.1
+        version: 1.3.1(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/forms@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2))(@angular/router@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2))
+      '@stynx-nyx/angular-auth':
+        specifier: 1.3.1
+        version: 1.3.1(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/forms@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2))(@angular/router@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2))
+      '@stynx-nyx/angular-i18n':
+        specifier: 1.3.1
+        version: 1.3.1(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))
+      '@stynx-nyx/angular-tenancy':
+        specifier: 1.3.1
+        version: 1.3.1(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/forms@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2))
+      '@stynx-nyx/angular-ui':
+        specifier: 1.3.1
+        version: 1.3.1(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/forms@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2))(@angular/router@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(rxjs@7.8.2))
+      rxjs:
+        specifier: ^7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@angular/build':
+        specifier: 22.1.6
+        version: 22.1.6(@angular/compiler-cli@22.1.6(@angular/compiler@22.1.6)(typescript@6.0.3))(@angular/compiler@22.1.6)(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(@angular/platform-browser@22.1.6(@angular/common@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2)))(@angular/service-worker@22.1.6(@angular/core@22.1.6(@angular/compiler@22.1.6)(rxjs@7.8.2))(rxjs@7.8.2))(@types/node@24.13.3)(chokidar@5.0.0)(less@4.9.0)(ng-packagr@22.1.1(@angular/compiler-cli@22.1.6(@angular/compiler@22.1.6)(typescript@6.0.3))(tslib@2.8.1)(typescript@6.0.3))(postcss@8.5.26)(rollup@4.62.5)(tslib@2.8.1)(tsx@4.23.13)(typescript@6.0.3)(vitest@4.1.11)(yaml@2.9.1)
+      '@angular/cli':
+        specifier: 22.1.6
+        version: 22.1.6(@types/node@24.13.3)(chokidar@5.0.0)
+      '@angular/compiler':
+        specifier: 22.1.6
+        version: 22.1.6
+      '@angular/compiler-cli':
+        specifier: 22.1.6
+        version: 22.1.6(@angular/compiler@22.1.6)(typescript@6.0.3)
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      angular-eslint:
+        specifier: 22.5.0
+        version: 22.5.0(chokidar@5.0.0)(eslint@10.9.0)(typescript-eslint@8.70.0(eslint@10.9.0)(typescript@6.0.3))(typescript@6.0.3)
+      axe-core:
+        specifier: 4.13.0
+        version: 4.13.0
+      eslint:
+        specifier: ^10.9.0
+        version: 10.9.0
+      eslint-config-prettier:
+        specifier: ^10.1.8
+        version: 10.1.8(eslint@10.9.0)
+      jsdom:
+        specifier: ^29.0.2
+        version: 29.1.1(@noble/hashes@1.8.0)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      typescript-eslint:
+        specifier: 8.70.0
+        version: 8.70.0(eslint@10.9.0)(typescript@6.0.3)
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
+
   backend/app:
     dependencies:
       '@aws-sdk/client-cognito-identity-provider':
@@ -271,6 +359,9 @@ importers:
       '@detran/dashboard-crashes':
         specifier: workspace:*
         version: link:../domains/dashboard/crashes
+      '@detran/dashboard-monitor':
+        specifier: workspace:*
+        version: link:../domains/dashboard/monitor
       '@detran/est-crash':
         specifier: workspace:*
         version: link:../domains/est/crash
@@ -280,15 +371,33 @@ importers:
       '@detran/inf-alcohol':
         specifier: workspace:*
         version: link:../domains/inf/alcohol
+      '@detran/inf-collection':
+        specifier: workspace:^
+        version: link:../domains/inf/collection
+      '@detran/inf-deadlines':
+        specifier: workspace:^
+        version: link:../domains/inf/deadlines
+      '@detran/inf-infraction':
+        specifier: workspace:^
+        version: link:../domains/inf/infraction
       '@detran/inf-measures':
         specifier: workspace:*
         version: link:../domains/inf/measures
       '@detran/inf-normative':
         specifier: workspace:*
         version: link:../domains/inf/normative
+      '@detran/inf-notification':
+        specifier: workspace:^
+        version: link:../domains/inf/notification
       '@detran/inf-rait-case':
         specifier: workspace:*
         version: link:../domains/inf/rait-case
+      '@detran/inf-rait-integration':
+        specifier: workspace:^
+        version: link:../domains/inf/rait-integration
+      '@detran/inf-rait-org':
+        specifier: workspace:^
+        version: link:../domains/inf/rait-org
       '@detran/inf-rait-session':
         specifier: workspace:*
         version: link:../domains/inf/rait-session
@@ -319,6 +428,9 @@ importers:
       '@detran/ops-parameter':
         specifier: workspace:*
         version: link:../domains/ops/parameter
+      '@detran/ops-provisioning':
+        specifier: workspace:*
+        version: link:../domains/ops/provisioning
       '@detran/ops-snapshots':
         specifier: workspace:*
         version: link:../domains/ops/snapshots
@@ -1003,6 +1115,49 @@ importers:
       '@stynx-nyx/data':
         specifier: 1.3.1
         version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      '@types/pg':
+        specifier: ^8.15.4
+        version: 8.23.1
+      pg:
+        specifier: ^8.20.0
+        version: 8.23.0
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
+
+  backend/domains/dashboard/monitor:
+    dependencies:
+      '@detran/dashboard-crashes':
+        specifier: workspace:*
+        version: link:../crashes
+      '@detran/inf-deadlines':
+        specifier: workspace:*
+        version: link:../../inf/deadlines
+      '@detran/ops-parameter':
+        specifier: workspace:*
+        version: link:../../ops/parameter
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
     devDependencies:
       '@types/node':
         specifier: ^24.10.1
@@ -1759,6 +1914,40 @@ importers:
         specifier: ^4.1.7
         version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
 
+  backend/domains/ops/provisioning:
+    dependencies:
+      '@detran/ops-core':
+        specifier: workspace:*
+        version: link:../core
+      '@detran/ops-offline-sync':
+        specifier: workspace:*
+        version: link:../offline-sync
+      '@detran/shared':
+        specifier: workspace:*
+        version: link:../../shared
+      '@nestjs/common':
+        specifier: ^11.1.28
+        version: 11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/core':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/data':
+        specifier: 1.3.1
+        version: 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.1
+        version: 24.13.3
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+      vitest:
+        specifier: ^4.1.7
+        version: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
+
   backend/domains/ops/snapshots:
     dependencies:
       '@detran/ops-core':
@@ -2255,8 +2444,8 @@ importers:
 
 packages:
 
-  '@aarusso-nyx/devai@1.5.3':
-    resolution: {integrity: sha512-7g1bjm9Dd2Mat3x3pWpN1ZyX007bx4sMkgxOVj9wWOQXP+uf1oRqCX8sE5zsGDmICQ06/gdNHZTPjDdcFZB9MQ==, tarball: https://npm.pkg.github.com/download/@aarusso-nyx/devai/1.5.3/c6729635ec6b919c89dfb96d89821315488ff43c}
+  '@aarusso-nyx/devai@1.5.6':
+    resolution: {integrity: sha512-8hU4Krnuy5mEg98dqAs5za9v9+/5L8KbH/GCftkVLyqmpE1ipQqm0ux/2Ltinx9ZkeaBDdXFhwwjkUy3rwJg4A==, tarball: https://npm.pkg.github.com/download/@aarusso-nyx/devai/1.5.6/6cfa2d77138e41d50b6864eddfc983a35f25de68}
     engines: {node: '>=24.0.0'}
     hasBin: true
 
@@ -4402,18 +4591,12 @@ packages:
     engines: {node: '>=24 <25'}
     peerDependencies:
       '@stynx-nyx/logging': ^1.3.1
-    peerDependenciesMeta:
-      '@stynx-nyx/logging':
-        optional: true
 
   '@stynx-nyx/pdf-a@1.3.1':
     resolution: {integrity: sha512-MO6a14TLwEwwWffOnsaKGXF/7KOJff48KwrVCE+qWjuXO0zDqY10aATgQghagPNSozRsKkdbO4RpSqPpmpCRdw==, tarball: https://npm.pkg.github.com/download/@stynx-nyx/pdf-a/1.3.1/fffcf79457bc0d5b982317f0185bd5d900cd7723}
     engines: {node: '>=24 <25'}
     peerDependencies:
       '@stynx-nyx/logging': ^1.3.1
-    peerDependenciesMeta:
-      '@stynx-nyx/logging':
-        optional: true
 
   '@stynx-nyx/pdf@1.3.1':
     resolution: {integrity: sha512-ZoEFwQVHvSy5/lsGD7vRdKzGG/BrE0cGr7FgOy8AK3lN3DSVQWokbCoMeNbiHlWluIDgjFv6G3+5GiwbGF5oPA==, tarball: https://npm.pkg.github.com/download/@stynx-nyx/pdf/1.3.1/8dd141a8a9ecb9a386b83b93c7bb8410c9b47ef1}
@@ -7116,7 +7299,7 @@ packages:
 
 snapshots:
 
-  '@aarusso-nyx/devai@1.5.3':
+  '@aarusso-nyx/devai@1.5.6':
     dependencies:
       '@types/node': 24.13.3
       ajv: 8.20.0
@@ -7452,7 +7635,7 @@ snapshots:
 
   '@aws-sdk/checksums@3.1000.29':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
       '@smithy/types': 4.17.2
@@ -7550,7 +7733,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-env@3.972.70':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
       '@smithy/types': 4.17.2
@@ -7566,7 +7749,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-http@3.972.72':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
       '@smithy/fetch-http-handler': 5.7.2
@@ -7586,7 +7769,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-ini@3.973.15':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/credential-provider-env': 3.972.70
       '@aws-sdk/credential-provider-http': 3.972.72
       '@aws-sdk/credential-provider-login': 3.972.77
@@ -7618,7 +7801,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-login@3.972.77':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/nested-clients': 3.997.44
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
@@ -7664,7 +7847,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-process@3.972.70':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
       '@smithy/types': 4.17.2
@@ -7680,7 +7863,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-sso@3.973.14':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/nested-clients': 3.997.44
       '@aws-sdk/token-providers': 3.1116.0
       '@aws-sdk/types': 3.974.5
@@ -7700,7 +7883,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-web-identity@3.972.76':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/nested-clients': 3.997.44
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
@@ -7737,7 +7920,7 @@ snapshots:
 
   '@aws-sdk/middleware-sdk-s3@3.972.75':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/signature-v4-multi-region': 3.996.46
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
@@ -7746,7 +7929,7 @@ snapshots:
 
   '@aws-sdk/nested-clients@3.997.44':
     dependencies:
-      '@aws-sdk/core': 3.977.9
+      '@aws-sdk/core': 3.978.0
       '@aws-sdk/signature-v4-multi-region': 3.996.46
       '@aws-sdk/types': 3.974.5
       '@smithy/core': 3.33.3
@@ -9343,12 +9526,11 @@ snapshots:
 
   '@stynx-nyx/pdf-a-vera-docker@1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))':
     dependencies:
-      '@stynx-nyx/pdf-a': 1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))
-    optionalDependencies:
       '@stynx-nyx/logging': 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/pdf-a': 1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))
 
   '@stynx-nyx/pdf-a@1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))':
-    optionalDependencies:
+    dependencies:
       '@stynx-nyx/logging': 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
 
   '@stynx-nyx/pdf@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@stynx-nyx/signature@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)':

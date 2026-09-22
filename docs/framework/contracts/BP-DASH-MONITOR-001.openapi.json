@@ -1,0 +1,3903 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Monitor — BP-DASH-MONITOR-001",
+    "version": "1.1.0",
+    "description": "Estado proprio e projecoes do DASHBOARD (dashboard-build-pack secao WP-D1; ADR-0020 Decisoes 1, 3 e 4; WF-DASH-001 ciclo do alerta, WF-DASH-002 calendario de deveres periodicos, WF-DASH-003 frescor; plan R-0011 M1..M5). O DASHBOARD nao tem base de negocio: le projecoes alimentadas por eventos e mantem so o seu proprio estado (alert, alert_trail, duty, duty_cycle, indicator, indicator_config, bi_panel, generated_report, export_log, source, transparency_audit, dataset). As oito projecoes deste pacote (prescription_risk, production, integration_health, pec_deadlines, teat_measures, portal_service_metrics, duty_evidence, source_freshness -> source) sao projetores manuscritos em src/handwritten/projections/*.projection.ts, idempotentes em event.id via o ledger unico monitor_projection_applied_event, replayaveis da integration.outbox e versionados (event_schema_version, aggregate_version). A projecao dashboard.crashes NAO e redefinida aqui: e BP-DASHBOARD-CRASHES-001 (plan M2), citada por indicator.projection dos IND-DASH-203/204/310. Vocabulario global (alert_state_ref, alert_transition_ref, duty_state_ref, duty_transition_ref, freshness_state_ref, severity_ref, layer_ref, classification_ref, block_ref, timer_ref) em 19-dashboard-lifecycle-vocabulary.sql; os checks deste blueprint repetem os mesmos conjuntos. Nenhum dado pessoal, placa, numero de processo ou atributo de saude em coluna alguma (RN-DASH-170 N3): identificacao de objeto so como object_ref opaco com object_layer. CTG-0002 (module.version 1.1.0, plan M15..M25, contrato work/rounds/R-0011/contracts/CTG-0002.md): entidades timer (relogio proprio, M15) e access_log (RN-DASH-171, append-only); sete controllers manuscritos em src/handwritten/surface/*.controller.ts com as rotas de dashboard-route-contract secao 2..secao 4 literalmente (todo api.resources[].operations continua [] - nada gerado tem rota; politica dashboard:* de policy.ts, camada por dashboardLayerFor, @Audit DASH_<VERBO>); servicos do ciclo em src/handwritten/cycle (relogio, sweeper, alerta, deveres, frescor, notificador) e da superficie em src/handwritten/surface (layer gate, exportacao, relatorios, catalogo, auditoria, dados abertos); tres indices handwritten (index, cycle/index, surface/index) com reexport nomeado (A13). @detran/inf-deadlines entra so como dependencia de leitura (Calendar, Clock, InMemoryCalendar, FixedClock; backend/domains/inf/deadlines nunca e editado, OD-D28); @detran/dashboard-crashes e lido pela API publica do pacote de R-0010 (DashboardCrashesProjection.readInternal) para IND-DASH-203/204/310, nunca por dashboard.crash_* direto; zod para os DTOs dos comandos. SSE GET /v1/dashboard/stream vive em backend/app/src/dashboard-stream.{service,controller}.ts (M23). A cadeia de escalonamento e vocabulario global dashboard.escalation_chain_ref (DDL 19, M18).",
+    "x-blueprint": "BP-DASH-MONITOR-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "Alert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "track": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["extinction", "irregularity"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "DETECTADO",
+              "CLASSIFICADO",
+              "NOTIFICADO",
+              "RECONHECIDO",
+              "EM_TRATAMENTO",
+              "VERIFICADO",
+              "ENCERRADO",
+              "ESCALONADO",
+              "CRITICO_EXTINCAO",
+              "INCIDENTE_REGISTRADO"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["N1", "N2", "N3", "CRITICO"]
+          },
+          "block": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "source_app": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "rait",
+              "pec",
+              "boat",
+              "teat",
+              "portal",
+              "senatran-adapter",
+              "dashboard",
+              "institucional",
+              "benchmark",
+              "interno",
+              "todos"
+            ]
+          },
+          "object_kind": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "object_ref": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "object_layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "owner_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "owner_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "governing_clock": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"],
+            "nullable": true
+          },
+          "next_milestone_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "detected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "classified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "notified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "treating_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "escalated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "critical_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "incident_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ack_channel": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "escalation_level": {
+            "type": "integer",
+            "default": "0"
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "indicator_code",
+          "track",
+          "state",
+          "severity",
+          "block",
+          "source_app",
+          "object_kind",
+          "object_ref",
+          "object_layer",
+          "owner_role",
+          "created_at"
+        ],
+        "description": "Estado proprio do ciclo do alerta (WF-DASH-001 secao Estados e secao Transicoes e gatilhos; dashboard-route-contract secao 2; plan R-0011 M4). track in {extinction, irregularity} (WF-DASH-001 secao Por que duas trilhas); state in dashboard.alert_state_ref; severity in dashboard.severity_ref (matriz de severidade); block in dashboard.block_ref; objeto opaco por camada = object_kind + object_ref + object_layer (RN-DASH-170: N3 nunca entra, so N0..N2); dono = owner_role + owner_ref; governing_clock in {A,B,C,D} nulo (RN-DASH-131, so RAIT); next_milestone_at e ceiling_on sao gravados a partir do app de origem, nunca calculados aqui (RN-DASH-131 verificacao 4; RN-DASH-101). CRITICO_EXTINCAO e INCIDENTE_REGISTRADO so na trilha de extincao (check); bloco B pode gerar alerta de extincao (IND-DASH-202, WF-DASH-002 nota de leitura), por isso nao ha check bloco x trilha. ack_channel in {origin, manual} (dashboard-route-contract secao 2, ack) obrigatorio quando acknowledged_at existe. Nenhum dado pessoal, placa, numero de processo ou atributo de saude em coluna alguma (RN-DASH-170 N3)."
+      },
+      "CreateAlertDto": {
+        "type": "object",
+        "properties": {
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "track": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["extinction", "irregularity"]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "DETECTADO",
+              "CLASSIFICADO",
+              "NOTIFICADO",
+              "RECONHECIDO",
+              "EM_TRATAMENTO",
+              "VERIFICADO",
+              "ENCERRADO",
+              "ESCALONADO",
+              "CRITICO_EXTINCAO",
+              "INCIDENTE_REGISTRADO"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["N1", "N2", "N3", "CRITICO"]
+          },
+          "block": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "source_app": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "rait",
+              "pec",
+              "boat",
+              "teat",
+              "portal",
+              "senatran-adapter",
+              "dashboard",
+              "institucional",
+              "benchmark",
+              "interno",
+              "todos"
+            ]
+          },
+          "object_kind": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "object_ref": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "object_layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "owner_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "owner_ref": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "governing_clock": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"],
+            "nullable": true
+          },
+          "next_milestone_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "detected_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "classified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "notified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acknowledged_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "treating_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "verified_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "escalated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "critical_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "incident_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ack_channel": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "escalation_level": {
+            "type": "integer",
+            "default": "0"
+          },
+          "incident_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "source_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": [
+          "indicator_code",
+          "track",
+          "state",
+          "severity",
+          "block",
+          "source_app",
+          "object_kind",
+          "object_ref",
+          "object_layer",
+          "owner_role"
+        ]
+      },
+      "AlertTrail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alert_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "seq": {
+            "type": "integer"
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "DETECTADO",
+              "CLASSIFICADO",
+              "NOTIFICADO",
+              "RECONHECIDO",
+              "EM_TRATAMENTO",
+              "VERIFICADO",
+              "ENCERRADO",
+              "ESCALONADO",
+              "CRITICO_EXTINCAO",
+              "INCIDENTE_REGISTRADO"
+            ],
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "DETECTADO",
+              "CLASSIFICADO",
+              "NOTIFICADO",
+              "RECONHECIDO",
+              "EM_TRATAMENTO",
+              "VERIFICADO",
+              "ENCERRADO",
+              "ESCALONADO",
+              "CRITICO_EXTINCAO",
+              "INCIDENTE_REGISTRADO"
+            ]
+          },
+          "actor_kind": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["system", "user", "timer"]
+          },
+          "actor_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "root_cause_category": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["transport", "acceptance", "payload"],
+            "nullable": true
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "alert_id",
+          "seq",
+          "to_state",
+          "actor_kind",
+          "created_at"
+        ],
+        "description": "Trilha imutavel do alerta (WF-DASH-001 secao Transicoes e gatilhos; RN-DASH-131 \"trilha imutavel de emissao, entrega e reconhecimento\"; RN-DASH-135; dashboard-route-contract secao 2, root-cause e GET alerts/{id}): uma linha por transicao ou anotacao, seq crescente por alerta, from_state/to_state in dashboard.alert_state_ref (anotacao sem transicao repete o estado), actor_kind in {system, user, timer} (envelope rait-events-sse-contract secao 1), root_cause_category in {transport, acceptance, payload} (dashboard-route-contract secao 2, DASH.ROOT_CAUSE_CATEGORY_INVALID), event_id = evento de origem que causou a transicao. note nunca carrega dado pessoal (RN-DASH-170 N3)."
+      },
+      "CreateAlertTrailDto": {
+        "type": "object",
+        "properties": {
+          "alert_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "seq": {
+            "type": "integer"
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "DETECTADO",
+              "CLASSIFICADO",
+              "NOTIFICADO",
+              "RECONHECIDO",
+              "EM_TRATAMENTO",
+              "VERIFICADO",
+              "ENCERRADO",
+              "ESCALONADO",
+              "CRITICO_EXTINCAO",
+              "INCIDENTE_REGISTRADO"
+            ],
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "DETECTADO",
+              "CLASSIFICADO",
+              "NOTIFICADO",
+              "RECONHECIDO",
+              "EM_TRATAMENTO",
+              "VERIFICADO",
+              "ENCERRADO",
+              "ESCALONADO",
+              "CRITICO_EXTINCAO",
+              "INCIDENTE_REGISTRADO"
+            ]
+          },
+          "actor_kind": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["system", "user", "timer"]
+          },
+          "actor_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "note": {
+            "type": "string",
+            "nullable": true
+          },
+          "root_cause_category": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["transport", "acceptance", "payload"],
+            "nullable": true
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["alert_id", "seq", "to_state", "actor_kind"]
+      },
+      "Duty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "line_no": {
+            "type": "integer",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": "string"
+          },
+          "periodicity": {
+            "type": "string"
+          },
+          "deadline_rule": {
+            "type": "string",
+            "nullable": true
+          },
+          "deadline_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "fixed_day",
+              "monthly",
+              "annual_date",
+              "continuous",
+              "per_event",
+              "undefined",
+              "historical"
+            ]
+          },
+          "consequence": {
+            "type": "string"
+          },
+          "rule_ref": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["estadual", "federal", "historico"]
+          },
+          "owner_role": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'dash-duty-owner'"
+          },
+          "owner_actor": {
+            "type": "string",
+            "nullable": true
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "mvp": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "code",
+          "title",
+          "source_ref",
+          "periodicity",
+          "deadline_kind",
+          "consequence",
+          "rule_ref",
+          "scope",
+          "created_at"
+        ],
+        "description": "Catalogo dos deveres periodicos por tenant: as 15 linhas da tabela-mestra de RN-DASH-120 (1..14 + linha \"+\" Pnatrans, plan R-0011 A4 / OD-D14), com os cinco campos da tabela (RN-DASH-120 verificacao 1: title, source_ref, periodicity, consequence, rule_ref) verbatim. deadline_rule = regra de data-limite verbatim da fonte que a fixa (WF-DASH-002 secao Prazos; dashboard-route-contract secao 3; parameter-catalogue dashboard.duty.*), nula = \"sem prazo definido\" (RN-DASH-113). deadline_kind classifica a regra (CTG-0001 secao 2). scope in {estadual, federal, historico} (RN-DASH-120 conclusao 3). owner_role = dash-duty-owner (H.38, OD-D01); owner_actor verbatim da coluna Dono de APP-DASHBOARD secao Catalogo quando ha indicador, nulo = source_pending. indicator_code liga a linha ao indicador de bloco B/C quando RN-DASH-120 e o catalogo coincidem (CTG-0001 secao 5). mvp = linhas 1, 2, 8, 9, 10, 11, 13 e 14 (RN-DASH-120 verificacao 3)."
+      },
+      "CreateDutyDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "line_no": {
+            "type": "integer",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "source_ref": {
+            "type": "string"
+          },
+          "periodicity": {
+            "type": "string"
+          },
+          "deadline_rule": {
+            "type": "string",
+            "nullable": true
+          },
+          "deadline_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "fixed_day",
+              "monthly",
+              "annual_date",
+              "continuous",
+              "per_event",
+              "undefined",
+              "historical"
+            ]
+          },
+          "consequence": {
+            "type": "string"
+          },
+          "rule_ref": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["estadual", "federal", "historico"]
+          },
+          "owner_role": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'dash-duty-owner'"
+          },
+          "owner_actor": {
+            "type": "string",
+            "nullable": true
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "mvp": {
+            "type": "boolean",
+            "default": "false"
+          }
+        },
+        "required": [
+          "code",
+          "title",
+          "source_ref",
+          "periodicity",
+          "deadline_kind",
+          "consequence",
+          "rule_ref",
+          "scope"
+        ]
+      },
+      "DutyCycle": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "duty_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "period": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "JANELA_ABERTA",
+              "EM_APURACAO",
+              "PREPARADO",
+              "SUBMETIDO_PUBLICADO",
+              "COMPROVADO",
+              "ARQUIVADO",
+              "ATRASADO",
+              "NAO_CUMPRIDO"
+            ]
+          },
+          "deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "prepared_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "proved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archived_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "late_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "unfulfilled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "draft_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "evidence_protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "evidence_capture_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "evidence_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "duty_code", "period", "state", "created_at"],
+        "description": "Instancia do ciclo recorrente de um dever (WF-DASH-002 secao Estados e secao Transicoes e gatilhos; dashboard-route-contract secao 3): uma linha por (duty_code, period); period texto YYYY-MM (mensal), YYYY (anual) ou YYYY-MM-DD (por evento/marco) com check de formato; state in dashboard.duty_state_ref; deadline_on nula = \"sem prazo definido\" (RN-DASH-113; DASH.DUTY_NO_LEGAL_DEADLINE); carimbos por transicao; evidencia = protocol + capture_uri + hash (WF-DASH-002 SUBMETIDO_PUBLICADO -> COMPROVADO; DASH.DUTY_EVIDENCE_REQUIRED, DASH.DUTY_EVIDENCE_HASH_INVALID): COMPROVADO/ARQUIVADO exigem evidence_hash (check); draft_ref = minuta de PREPARADO (dashboard-route-contract secao 3, prepare)."
+      },
+      "CreateDutyCycleDto": {
+        "type": "object",
+        "properties": {
+          "duty_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "period": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "JANELA_ABERTA",
+              "EM_APURACAO",
+              "PREPARADO",
+              "SUBMETIDO_PUBLICADO",
+              "COMPROVADO",
+              "ARQUIVADO",
+              "ATRASADO",
+              "NAO_CUMPRIDO"
+            ]
+          },
+          "deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "prepared_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "proved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "archived_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "late_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "unfulfilled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "draft_ref": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "evidence_protocol": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "evidence_capture_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "evidence_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["duty_code", "period", "state"]
+      },
+      "Indicator": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "block": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "legal-ceiling",
+              "dever-periodico",
+              "sla-operacional",
+              "saude-tecnica"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "source_app": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "rait",
+              "pec",
+              "boat",
+              "teat",
+              "portal",
+              "senatran-adapter",
+              "dashboard",
+              "institucional",
+              "benchmark",
+              "interno",
+              "todos"
+            ]
+          },
+          "source_ref": {
+            "type": "string"
+          },
+          "threshold_rule": {
+            "type": "string"
+          },
+          "owner_actor": {
+            "type": "string"
+          },
+          "expected_action": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["P1", "P2", "P3"],
+            "default": "'P3'"
+          },
+          "latency_band": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "acceptable_latency_minutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "unavailable_strategy": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["hide", "mark"],
+            "nullable": true
+          },
+          "projection": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "dashboard.prescription_risk",
+              "dashboard.production",
+              "dashboard.integration_health",
+              "dashboard.pec_deadlines",
+              "dashboard.teat_measures",
+              "dashboard.portal_service_metrics",
+              "dashboard.duty_evidence",
+              "dashboard.source_freshness",
+              "dashboard.crashes"
+            ],
+            "nullable": true
+          },
+          "connected": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"],
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "code",
+          "block",
+          "kind",
+          "name",
+          "question",
+          "source_app",
+          "source_ref",
+          "threshold_rule",
+          "owner_actor",
+          "expected_action",
+          "latency_band",
+          "created_at"
+        ],
+        "description": "Catalogo dos 42 indicadores por tenant (APP-DASHBOARD secao Catalogo de indicadores, tabelas A..D, verbatim: name, question, source_ref, threshold_rule, owner_actor, expected_action; plan R-0011 M4/M8; dashboard-route-contract secao 4 GET indicators). block in dashboard.block_ref e kind = block_ref.kind (check de coerencia); source_app normaliza o prefixo da coluna Fonte; classification default P3 (RN-DASH-142 verificacao 1: todo indicador nasce P3); latency_band = faixa do bloco (WF-DASH-003 secao Latencia aceitavel, DT-030) e acceptable_latency_minutes nula = source_pending (plan M13); unavailable_strategy nula = default do bloco (WF-DASH-003 secao Duas estrategias: ocultar A, marcar B/C/D), parametrizavel por indicador; projection = nome da projecao (CTG-0001 secao 4.2) ou nula; connected = existe produtor em main dos eventos consumidos (plan M5, OD-P28); clock_code in {A,B,C,D} so para os relogios do RAIT (RN-DASH-131)."
+      },
+      "CreateIndicatorDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "block": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "legal-ceiling",
+              "dever-periodico",
+              "sla-operacional",
+              "saude-tecnica"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "source_app": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "rait",
+              "pec",
+              "boat",
+              "teat",
+              "portal",
+              "senatran-adapter",
+              "dashboard",
+              "institucional",
+              "benchmark",
+              "interno",
+              "todos"
+            ]
+          },
+          "source_ref": {
+            "type": "string"
+          },
+          "threshold_rule": {
+            "type": "string"
+          },
+          "owner_actor": {
+            "type": "string"
+          },
+          "expected_action": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["P1", "P2", "P3"],
+            "default": "'P3'"
+          },
+          "latency_band": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "acceptable_latency_minutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "unavailable_strategy": {
+            "type": "string",
+            "maxLength": 10,
+            "enum": ["hide", "mark"],
+            "nullable": true
+          },
+          "projection": {
+            "type": "string",
+            "maxLength": 60,
+            "enum": [
+              "dashboard.prescription_risk",
+              "dashboard.production",
+              "dashboard.integration_health",
+              "dashboard.pec_deadlines",
+              "dashboard.teat_measures",
+              "dashboard.portal_service_metrics",
+              "dashboard.duty_evidence",
+              "dashboard.source_freshness",
+              "dashboard.crashes"
+            ],
+            "nullable": true
+          },
+          "connected": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"],
+            "nullable": true
+          }
+        },
+        "required": [
+          "code",
+          "block",
+          "kind",
+          "name",
+          "question",
+          "source_app",
+          "source_ref",
+          "threshold_rule",
+          "owner_actor",
+          "expected_action",
+          "latency_band"
+        ]
+      },
+      "IndicatorConfig": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "formula": {
+            "type": "string"
+          },
+          "granularity": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "threshold_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "acceptable_latency_minutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["draft", "published"],
+            "default": "'draft'"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "published_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "indicator_code",
+          "code",
+          "name",
+          "formula",
+          "granularity",
+          "created_at"
+        ],
+        "description": "Configuracao de indicador portada de BP-BI-REPORTING-001 (origem TEAT, entidade IndicatorConfig: code, name, description, formula, granularity, status) sem traffic_agency_id (plan R-0011 M4; OD-D13), ligada ao catalogo por indicator_code. Ciclo rascunho -> vigente (dashboard-route-contract secao 4: PATCH indicator-configs/{id} = draft, POST .../publish = published, evento IndicatorConfigChanged no CTG-0002). threshold_json = limiar calibrado (DASH.INDICATOR_THRESHOLD_NOT_CALIBRATED, DT-030) e acceptable_latency_minutes por painel (DASH.INDICATOR_LATENCY_INVALID; valor exato source_pending, M13)."
+      },
+      "CreateIndicatorConfigDto": {
+        "type": "object",
+        "properties": {
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "formula": {
+            "type": "string"
+          },
+          "granularity": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "threshold_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "acceptable_latency_minutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["draft", "published"],
+            "default": "'draft'"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "published_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["indicator_code", "code", "name", "formula", "granularity"]
+      },
+      "BiPanel": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibility_profile": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "config_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["draft", "published"],
+            "default": "'draft'"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "published_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "name",
+          "visibility_profile",
+          "config_json",
+          "created_at"
+        ],
+        "description": "Painel de BI portado de BP-BI-REPORTING-001 (origem TEAT, entidade BiPanel: name, description, visibility_profile, config_json, status) sem traffic_agency_id (plan R-0011 M4; OD-D13, telas de apoio D-14/D-16). visibility_profile vira camada N0/N1/N2 de RN-DASH-170 e nunca N3 (dashboard-route-contract secao 8.3; config_json nunca referencia N3). Ciclo rascunho -> publicado (dashboard-route-contract secao 4, POST bi-panels/{id}/publish)."
+      },
+      "CreateBiPanelDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "visibility_profile": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "config_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["draft", "published"],
+            "default": "'draft'"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "published_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["name", "visibility_profile", "config_json"]
+      },
+      "GeneratedReport": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "report_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "filters_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["processing", "completed", "failed"],
+            "default": "'processing'"
+          },
+          "file_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "file_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "watermark": {
+            "type": "string",
+            "nullable": true
+          },
+          "failure_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "user_ref",
+          "report_type",
+          "layer",
+          "created_at"
+        ],
+        "description": "Relatorio gerado por job, portado de BP-BI-REPORTING-001 (origem TEAT, entidade GeneratedReport: user_ref, report_type, filters_json, requested_at, completed_at, status, file_uri, file_hash) sem traffic_agency_id (plan R-0011 M4). status in {processing, completed, failed} (dashboard-route-contract secao 4: request/complete/fail; DASH.REPORT_STATE_INVALID); completed exige file_uri e file_hash (DASH.REPORT_FILE_HASH_MISMATCH); layer in N0..N2 e purpose (N2) porque o arquivo herda a camada e leva marca d agua (RN-DASH-172 regras 1..3; watermark preenchida no CTG-0002)."
+      },
+      "CreateGeneratedReportDto": {
+        "type": "object",
+        "properties": {
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "report_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "filters_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["processing", "completed", "failed"],
+            "default": "'processing'"
+          },
+          "file_uri": {
+            "type": "string",
+            "nullable": true
+          },
+          "file_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "watermark": {
+            "type": "string",
+            "nullable": true
+          },
+          "failure_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["user_ref", "report_type", "layer"]
+      },
+      "ExportLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "filters_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "format": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "row_count": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["registered", "pending-approval", "approved", "rejected"],
+            "default": "'registered'"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "approved_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "approved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "watermark": {
+            "type": "string",
+            "nullable": true
+          },
+          "suppressed_cells": {
+            "type": "integer",
+            "default": "0"
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "user_ref",
+          "user_role",
+          "scope",
+          "filters_json",
+          "format",
+          "layer",
+          "row_count",
+          "created_at"
+        ],
+        "description": "Registro de exportacao (RN-DASH-172 cinco regras; RN-DASH-171 conteudo minimo do registro de acesso: quem = user_ref + user_role, quando, o que = scope + filters_json, granularidade = layer, volume = row_count, origem, finalidade = purpose; dashboard-route-contract secao 4 POST exports / approve; plan R-0011 M4). layer in N0..N2 (regra 1 herda a camada; regra 4 veda N3); purpose obrigatoria em N2 (regra 2; DASH.EXPORT_PURPOSE_REQUIRED); watermark (regra 3); status in {registered, pending-approval, approved, rejected} - acima de dashboard.export.approval_rows fica pending-approval e approved exige approved_by nominal (regra 5; DASH.EXPORT_VOLUME_APPROVAL_REQUIRED); suppressed_cells = celulas suprimidas (RN-DASH-161; DASH.CELL_SUPPRESSED)."
+      },
+      "CreateExportLogDto": {
+        "type": "object",
+        "properties": {
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "scope": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "filters_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "format": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "row_count": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["registered", "pending-approval", "approved", "rejected"],
+            "default": "'registered'"
+          },
+          "justification": {
+            "type": "string",
+            "nullable": true
+          },
+          "approved_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "approved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "watermark": {
+            "type": "string",
+            "nullable": true
+          },
+          "suppressed_cells": {
+            "type": "integer",
+            "default": "0"
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "requested_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "user_ref",
+          "user_role",
+          "scope",
+          "filters_json",
+          "format",
+          "layer",
+          "row_count"
+        ]
+      },
+      "Source": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source_key": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "app": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "rait",
+              "pec",
+              "boat",
+              "teat",
+              "portal",
+              "senatran-adapter",
+              "dashboard",
+              "institucional",
+              "benchmark",
+              "interno",
+              "todos"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "FRESCO",
+              "ATRASADO",
+              "INDISPONIVEL",
+              "DESATUALIZADO_MARCADO"
+            ]
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_read_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acceptable_latency_minutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "heartbeat_contract": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "stale_since": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hidden": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "source_key", "app", "state", "created_at"],
+        "description": "Selo de frescor por fonte (WF-DASH-003 secao Estados; dashboard-route-contract secao 4 GET sources; plan R-0011 M4/M5): source_key unica por tenant, app de origem, state in dashboard.freshness_state_ref, last_seen_at = ultimo heartbeat/evento, last_read_at = ultima leitura de fallback, acceptable_latency_minutes nula = source_pending (M13), heartbeat_contract = type do evento de heartbeat (OD-D07: source.heartbeat) - nula = fonte sem contrato, que nunca fica FRESCO (DASH.SOURCE_HEARTBEAT_UNDEFINED; \"fonte desconectada\" = indicator.connected = false + INDISPONIVEL), stale_since obrigatoria em DESATUALIZADO_MARCADO, hidden = estrategia ocultar aplicada (WF-DASH-003 secao Duas estrategias; OD-D06 apos dashboard.stale_hide_multiplier). Atualizada pelo projetor source-freshness (last_event_id) e pelo servico de frescor do CTG-0002."
+      },
+      "CreateSourceDto": {
+        "type": "object",
+        "properties": {
+          "source_key": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "app": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": [
+              "rait",
+              "pec",
+              "boat",
+              "teat",
+              "portal",
+              "senatran-adapter",
+              "dashboard",
+              "institucional",
+              "benchmark",
+              "interno",
+              "todos"
+            ]
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "FRESCO",
+              "ATRASADO",
+              "INDISPONIVEL",
+              "DESATUALIZADO_MARCADO"
+            ]
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_read_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "acceptable_latency_minutes": {
+            "type": "integer",
+            "nullable": true
+          },
+          "heartbeat_contract": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "stale_since": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hidden": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["source_key", "app", "state"]
+      },
+      "TransparencyAudit": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period": {
+            "type": "string",
+            "maxLength": 7
+          },
+          "checklist_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "audited_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "audited_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "period",
+          "checklist_json",
+          "result",
+          "audited_by",
+          "created_at"
+        ],
+        "description": "Ciclo mensal de auditoria da transparencia ativa (IND-DASH-209; APP-DASHBOARD secao Catalogo B; WF-DASH-002 secao Prazos linha 209; dashboard.transparency.audit_period = monthly, DT-030; dashboard-route-contract secao 4 GET transparency/checklist, POST transparency/audits): period YYYY-MM unico por tenant, checklist_json = itens do checklist tecnico de RN-DASH-151 / LAI art. 8 par. 3 (RN-DASH-140), result = resultado textual (vocabulario fechado pendente, CTG-0001 secao 8), audited_by = quem auditou (papel technical-admin/agency-admin)."
+      },
+      "CreateTransparencyAuditDto": {
+        "type": "object",
+        "properties": {
+          "period": {
+            "type": "string",
+            "maxLength": 7
+          },
+          "checklist_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "audited_by": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "audited_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["period", "checklist_json", "result", "audited_by"]
+      },
+      "Dataset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "dataset_key": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "classification": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["P1", "P2", "P3"],
+            "default": "'P3'"
+          },
+          "req_open_format": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_machine_readable": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_data_dictionary": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_periodic_update_history": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_authenticity_integrity": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_searchable": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_accessible": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "license": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "periodicity": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "quality_note": {
+            "type": "string",
+            "nullable": true
+          },
+          "changelog_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "suppression_applied": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "promoted_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "promoted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "promotion_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": ["tenant_id", "dataset_key", "name", "created_at"],
+        "description": "Conjunto de dados publicavel (RN-DASH-151 sete requisitos cumulativos como colunas booleanas req_*; verificacoes 2..6: dicionario, historico, ressalva de qualidade, periodicidade declarada, licenca; RN-DASH-142 verificacoes 1, 4 e 5: nasce P3, promocao a P1/P2 e ato explicito com responsavel, data e fundamento, conjunto derivado versionado; dashboard-route-contract secao 4 GET datasets, GET /open-data/{dataset}; DASH.DATASET_REQUIREMENTS_UNMET). Publicado exige classification in {P1, P2}, os sete requisitos e suppression_applied (RN-DASH-161; DASH.CELL_THRESHOLD_UNDEFINED). changelog_json = historico mantido (requisito 4, verificacao 3)."
+      },
+      "CreateDatasetDto": {
+        "type": "object",
+        "properties": {
+          "dataset_key": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "classification": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["P1", "P2", "P3"],
+            "default": "'P3'"
+          },
+          "req_open_format": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_machine_readable": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_data_dictionary": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_periodic_update_history": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_authenticity_integrity": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_searchable": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "req_accessible": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "license": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "periodicity": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "quality_note": {
+            "type": "string",
+            "nullable": true
+          },
+          "changelog_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'[]'::jsonb"
+          },
+          "suppression_applied": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "promoted_by": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "promoted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "promotion_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["dataset_key", "name"]
+      },
+      "MonitorProjectionAppliedEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projection_name": {
+            "type": "string",
+            "maxLength": 80,
+            "enum": [
+              "dashboard.prescription_risk",
+              "dashboard.production",
+              "dashboard.integration_health",
+              "dashboard.pec_deadlines",
+              "dashboard.teat_measures",
+              "dashboard.portal_service_metrics",
+              "dashboard.duty_evidence",
+              "dashboard.source_freshness"
+            ]
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "projection_name",
+          "event_id",
+          "event_type",
+          "event_schema_version",
+          "aggregate_version",
+          "occurred_at",
+          "created_at"
+        ],
+        "description": "Ledger idempotente unico das oito projecoes deste pacote (ADR-0020 Decisao 1; plan R-0011 M4/M5; padrao de dashboard.crash_projection_applied_event de BP-DASHBOARD-CRASHES-001). A chave (tenant_id, projection_name, event_id) permite replay integral ou incremental sem aceitar o mesmo evento duas vezes; a insercao do ledger e o efeito na tabela de projecao compartilham a mesma transacao sob RLS (CTG-0001 secao 4.3). projection_name in os oito nomes dashboard.<projecao>; event_type = type tecnico ou domainEvent consumido; occurred_at do envelope permite medir o atraso de consumo (IND-DASH-401, CTG-0002)."
+      },
+      "CreateMonitorProjectionAppliedEventDto": {
+        "type": "object",
+        "properties": {
+          "projection_name": {
+            "type": "string",
+            "maxLength": 80,
+            "enum": [
+              "dashboard.prescription_risk",
+              "dashboard.production",
+              "dashboard.integration_health",
+              "dashboard.pec_deadlines",
+              "dashboard.teat_measures",
+              "dashboard.portal_service_metrics",
+              "dashboard.duty_evidence",
+              "dashboard.source_freshness"
+            ]
+          },
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_type": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "applied_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "projection_name",
+          "event_id",
+          "event_type",
+          "event_schema_version",
+          "aggregate_version",
+          "occurred_at"
+        ]
+      },
+      "PrescriptionRisk": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["jari", "cetran"],
+            "nullable": true
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "days_remaining": {
+            "type": "integer",
+            "nullable": true
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "case_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "ceiling_effect": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "ceiling_reached_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "extinct_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "clock_code",
+          "indicator_code",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Projecao dashboard.prescription_risk (ADR-0020 Decisao 2; dashboard-route-contract secao 6; RN-DASH-131; IND-DASH-101..105): uma celula por (case_id, clock_code) - o processo do RAIT e opaco (uuid, camada N2, RN-DASH-170), nunca numero de processo. flag = toFlag de rait.clock.flag-changed (token do RAIT, sem check), days_remaining e ceiling_on gravados do evento, nunca calculados (RN-DASH-131 verificacao 4); instance/case_state/received_on de rait.case.changed e rait.case.received; timer_code/ceiling_effect/extinct_state de inf.timer.expired e inf.infraction.changed (teto atingido, EXTINTO_*); pool_id de rait.assignment.changed. indicator_code derivado de clock_code + instance (CTG-0001 secao 4.1). Idempotente por event.id via monitor_projection_applied_event; event_schema_version e aggregate_version guardadas por linha."
+      },
+      "CreatePrescriptionRiskDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clock_code": {
+            "type": "string",
+            "maxLength": 1,
+            "enum": ["A", "B", "C", "D"]
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "clock_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["jari", "cetran"],
+            "nullable": true
+          },
+          "flag": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "days_remaining": {
+            "type": "integer",
+            "nullable": true
+          },
+          "ceiling_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "case_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "pool_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "timer_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "ceiling_effect": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "ceiling_reached_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "extinct_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "flag_changed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id",
+          "clock_code",
+          "indicator_code",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "Production": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["jari", "cetran", "defesa"],
+            "nullable": true
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "current_state": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "state_changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "decided_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "decision_published_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agenda_outcome": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "transitions": {
+            "type": "integer",
+            "default": "0"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "period_start",
+          "current_state",
+          "state_changed_at",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Projecao dashboard.production (ADR-0020 Decisao 2: tempo por fase, SLA-30, taxa de provimento; dashboard-route-contract secao 6; IND-DASH-304/305): uma celula por caso do RAIT (case_id opaco, N2): instance, current_state/from_state/state_changed_at de rait.case.changed, received_on de rait.case.received, decision_kind/decided_on/decision_published_on de rait.decision.published (sem produtor em main) e rait.minutes.published (RAIT_DECISAO_PUBLICADA por item), session_id/agenda_outcome de rait.session.changed e rait.agenda-item.changed, period_start = mes de state_changed_at para agregacao N0. Nenhum enquadramento (nao publicado) - taxa de provimento por instancia e decision_kind. Idempotente por event.id via monitor_projection_applied_event."
+      },
+      "CreateProductionDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "instance": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["jari", "cetran", "defesa"],
+            "nullable": true
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "current_state": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "state_changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "received_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "decision_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "decided_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "decision_published_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "agenda_outcome": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "transitions": {
+            "type": "integer",
+            "default": "0"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id",
+          "period_start",
+          "current_state",
+          "state_changed_at",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "IntegrationHealth": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "system_key": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "metric_value": {
+            "type": "number",
+            "default": "0"
+          },
+          "sample_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "last_error_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "period_start",
+          "system_key",
+          "metric",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Projecao dashboard.integration_health (ADR-0020 Decisao 2: filas, falhas, recibos por sistema; dashboard-route-contract secao 6; IND-DASH-401..403): uma celula por (period_start dia, system_key, metric) com metric_value e sample_count; hoje alimentada so pelos recibos da sincronizacao offline do TEAT (sync.batch.received: receiptStatus, errorCode) - status da outbox, UPSTREAM_* e telemetria do adapter nao sao eventos publicados (CTG-0001 secao 4.1/4.2, connected = false; OD-D04 fixa so os limiares). Idempotente por event.id via monitor_projection_applied_event."
+      },
+      "CreateIntegrationHealthDto": {
+        "type": "object",
+        "properties": {
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "system_key": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "metric": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "metric_value": {
+            "type": "number",
+            "default": "0"
+          },
+          "sample_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "last_error_code": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "last_seen_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "period_start",
+          "system_key",
+          "metric",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "PecDeadlines": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "case_id",
+          "indicator_code",
+          "to_state",
+          "changed_at",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Projecao dashboard.pec_deadlines (dashboard-route-contract secao 6, nova; IND-DASH-106/107/306..309; RN-PEC-112 via APP-DASHBOARD secao Catalogo): o PEC nao publica eventos - a projecao nasce com consumedEvents do contrato de dado proposto em WP-D3 (dashboard-build-pack secao WP-D3: {indicador_id, caso_id, estado_anterior, estado_novo, timestamp, base_legal}; type proposto pec.deadline.changed) e connected = false (plan M5). Uma celula por (case_id opaco, indicator_code); from_state/to_state sao tokens do PEC (sem check), legal_basis verbatim do feed; due_on so quando o feed a carregar (CTG-0001 secao 8). Idempotente por event.id via monitor_projection_applied_event."
+      },
+      "CreatePecDeadlinesDto": {
+        "type": "object",
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "from_state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "to_state": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "changed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "legal_basis": {
+            "type": "string",
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id",
+          "indicator_code",
+          "to_state",
+          "changed_at",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "TeatMeasures": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "object_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "administrative-measure",
+              "alcohol-procedure",
+              "ait",
+              "evidence",
+              "normative-package",
+              "operational-device",
+              "numbering-reservation"
+            ]
+          },
+          "object_ref": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integrity_ok": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "detail_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "indicator_code",
+          "object_kind",
+          "object_ref",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Projecao dashboard.teat_measures (dashboard-route-contract secao 6, nova; IND-DASH-108..111, 311..314, 404..407; teat-route-contract secao 8; schemas/events do TEAT): uma celula por (indicator_code, object_kind, object_ref) onde object_kind = aggregate.kind do evento (administrative-measure, alcohol-procedure, ait, evidence, normative-package, operational-device) e object_ref = aggregate.id opaco (N2; nunca placa, AIT ou dado de saude - RN-DASH-170). state = toState/currentStatus/eventType do evento (tokens do TEAT, sem check), started_at/ended_at/deadline_at gravados dos campos do evento (TERMO_EMITIDO withdrawalDeadlineAt/ctbDeadlineAt, package.published validUntil), integrity_ok para IND-DASH-404 (custody.event eventType), detail_json com os demais campos primitivos do data. Idempotente por event.id via monitor_projection_applied_event."
+      },
+      "CreateTeatMeasuresDto": {
+        "type": "object",
+        "properties": {
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "object_kind": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "administrative-measure",
+              "alcohol-procedure",
+              "ait",
+              "evidence",
+              "normative-package",
+              "operational-device",
+              "numbering-reservation"
+            ]
+          },
+          "object_ref": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ended_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "deadline_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "integrity_ok": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "detail_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "indicator_code",
+          "object_kind",
+          "object_ref",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "PortalServiceMetrics": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "object_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["request", "manifestation", "evaluation"]
+          },
+          "object_ref": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "service_key": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "extended": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "score": {
+            "type": "number",
+            "nullable": true
+          },
+          "detail_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "indicator_code",
+          "object_kind",
+          "object_ref",
+          "period_start",
+          "opened_at",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Projecao dashboard.portal_service_metrics (dashboard-route-contract secao 6, nova; IND-DASH-206..209, 301..303; portal-route-contract secao 10): uma celula por (indicator_code, object_kind, object_ref) com object_kind in {request, manifestation, evaluation} e object_ref = aggregate.id opaco (N2; nunca CPF ou nome - RN-DASH-170): service_key, state, opened_at/closed_at, due_on e extended vindos do evento quando publicados (campos de data do Portal source_pending, CTG-0001 secao 4.1), score para avaliacoes (AVALIACAO_REGISTRADA), period_start = mes de opened_at para agregacao N0. Idempotente por event.id via monitor_projection_applied_event."
+      },
+      "CreatePortalServiceMetricsDto": {
+        "type": "object",
+        "properties": {
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "object_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["request", "manifestation", "evaluation"]
+          },
+          "object_ref": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "service_key": {
+            "type": "string",
+            "maxLength": 80,
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 60,
+            "nullable": true
+          },
+          "period_start": {
+            "type": "string",
+            "format": "date"
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "due_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "extended": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "score": {
+            "type": "number",
+            "nullable": true
+          },
+          "detail_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "indicator_code",
+          "object_kind",
+          "object_ref",
+          "period_start",
+          "opened_at",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "DutyEvidence": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "duty_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "period": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "JANELA_ABERTA",
+              "EM_APURACAO",
+              "PREPARADO",
+              "SUBMETIDO_PUBLICADO",
+              "COMPROVADO",
+              "ARQUIVADO",
+              "ATRASADO",
+              "NAO_CUMPRIDO"
+            ]
+          },
+          "deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "proved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "late": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "evidence_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "duty_code",
+          "period",
+          "state",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version",
+          "created_at"
+        ],
+        "description": "Projecao dashboard.duty_evidence (dashboard-route-contract secao 6, nova; IND-DASH-201..209; WF-DASH-002): historico agregavel (N0) dos ciclos de dever alimentado pelos eventos proprios do DASHBOARD (DEVER_JANELA_ABERTA, DEVER_ATRASADO, DEVER_COMPROVADO - type proposto dashboard.duty.changed, publicado so a partir do CTG-0002, connected = false no CTG-0001) e por eventos de publicacao quando existirem. Uma celula por (duty_code, period): state, deadline_on, proved_at, late = comprovado depois da data-limite, evidence_hash (nunca a captura). Idempotente por event.id via monitor_projection_applied_event."
+      },
+      "CreateDutyEvidenceDto": {
+        "type": "object",
+        "properties": {
+          "duty_code": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "period": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "indicator_code": {
+            "type": "string",
+            "maxLength": 20,
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "JANELA_ABERTA",
+              "EM_APURACAO",
+              "PREPARADO",
+              "SUBMETIDO_PUBLICADO",
+              "COMPROVADO",
+              "ARQUIVADO",
+              "ATRASADO",
+              "NAO_CUMPRIDO"
+            ]
+          },
+          "deadline_on": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "opened_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "proved_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "late": {
+            "type": "boolean",
+            "default": "false"
+          },
+          "evidence_hash": {
+            "type": "string",
+            "maxLength": 128,
+            "nullable": true
+          },
+          "last_event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "event_schema_version": {
+            "type": "integer"
+          },
+          "aggregate_version": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "duty_code",
+          "period",
+          "state",
+          "last_event_id",
+          "event_schema_version",
+          "aggregate_version"
+        ]
+      },
+      "Timer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "owner_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["alert", "duty_cycle", "source"]
+          },
+          "owner_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "T-DASH-ACK-N1",
+              "T-DASH-ACK-N2",
+              "T-DASH-ACK-N3",
+              "T-DASH-ACK-CRITICO",
+              "T-DASH-MARCO-50",
+              "T-DASH-MARCO-75",
+              "T-DASH-MARCO-90",
+              "T-DASH-DUTY-201",
+              "T-DASH-DUTY-202",
+              "T-DASH-DUTY-PNATRANS",
+              "T-DASH-DUTY-206",
+              "T-DASH-DUTY-207",
+              "T-DASH-DUTY-209",
+              "T-DASH-PENDING-FLOOR"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ARMADO", "VENCIDO", "SATISFEITO", "CANCELADO"],
+            "default": "'ARMADO'"
+          },
+          "fired_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "owner_kind",
+          "owner_id",
+          "code",
+          "started_at",
+          "created_at"
+        ],
+        "description": "Timer armado pelo relogio proprio do DASHBOARD (plan R-0011 M15, via M7/A3 da Emenda 2 de AUTHORIZATION.md; contrato work/rounds/R-0011/contracts/CTG-0002.md secao 2.1 e secao 13). code e um codigo de dashboard.timer_ref (19-dashboard-lifecycle-vocabulary.sql, M7/A7; o check repete o mesmo conjunto de 14 codigos); owner_kind in {alert, duty_cycle, source} com owner_id = id da linha dona; started_at = marco de contagem; due_at = vencimento calculado pelo DashboardClockService com Calendar/Clock de @detran/inf-deadlines em leitura (horas_uteis pelo calendario; imediato -> due_at = started_at; nulo enquanto o marco nao e calculavel, ex. T-DASH-MARCO-* sem ceiling_on); status in {ARMADO, VENCIDO, SATISFEITO, CANCELADO}; fired_at = instante em que o sweeper venceu o timer (DashboardClockSweeper.runDue(now)). Unico em (tenant_id, owner_kind, owner_id, code, started_at): idempotencia do sweeper e do arm (M15). Integracao ao motor de prazos com owner = dashboard fica para depois de R-0007 CTG-0003 (OD-D28). Nenhum dado pessoal (RN-DASH-170 N3)."
+      },
+      "CreateTimerDto": {
+        "type": "object",
+        "properties": {
+          "owner_kind": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["alert", "duty_cycle", "source"]
+          },
+          "owner_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 40,
+            "enum": [
+              "T-DASH-ACK-N1",
+              "T-DASH-ACK-N2",
+              "T-DASH-ACK-N3",
+              "T-DASH-ACK-CRITICO",
+              "T-DASH-MARCO-50",
+              "T-DASH-MARCO-75",
+              "T-DASH-MARCO-90",
+              "T-DASH-DUTY-201",
+              "T-DASH-DUTY-202",
+              "T-DASH-DUTY-PNATRANS",
+              "T-DASH-DUTY-206",
+              "T-DASH-DUTY-207",
+              "T-DASH-DUTY-209",
+              "T-DASH-PENDING-FLOOR"
+            ]
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "due_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 20,
+            "enum": ["ARMADO", "VENCIDO", "SATISFEITO", "CANCELADO"],
+            "default": "'ARMADO'"
+          },
+          "fired_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "satisfied_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelled_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          }
+        },
+        "required": ["owner_kind", "owner_id", "code", "started_at"]
+      },
+      "AccessLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "resource": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "filters_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "row_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "export_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "user_ref",
+          "user_role",
+          "resource",
+          "layer",
+          "created_at"
+        ],
+        "description": "Trilha de acesso do proprio DASHBOARD (RN-DASH-171 tabela \"Conteudo minimo de cada registro de acesso\"; RN-DASH-170 camadas; RN-DASH-172 regra 2 registro reforcado da exportacao; dashboard-route-contract secao 1 regra 4 e GET audit-trail; plan R-0011 M16/M17; contrato CTG-0002 secao 2.2 e secao 5). Append-only: log imutavel e segregado (RN-DASH-171 verificacao 1). Mapeamento dos sete campos: quem = user_ref + user_role (papel efetivo no momento do acesso); quando = at (timestamptz, fonte confiavel = Clock injetado); o que = resource (rota/painel/indicador) + filters_json (filtros e recortes aplicados); granularidade = layer in {N0, N1, N2} (camada efetivamente servida; N3 nunca e servida, RN-DASH-170); volume = row_count; origem = origin (dispositivo/rede, quando disponivel); finalidade = purpose (obrigatoria quando layer = N2, catalogo dashboard.purposes_n2; DASH.PURPOSE_REQUIRED / DASH.PURPOSE_INVALID). export_id liga o acesso ao export_log quando o acesso e uma exportacao. Nunca conteudo de resposta, nunca dado pessoal, placa, numero de processo ou atributo de saude (RN-DASH-170 N3). O acesso a propria trilha (GET audit-trail) tambem e registrado (RN-DASH-171 verificacao 2)."
+      },
+      "CreateAccessLogDto": {
+        "type": "object",
+        "properties": {
+          "user_ref": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_role": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "resource": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "filters_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": "'{}'::jsonb"
+          },
+          "layer": {
+            "type": "string",
+            "maxLength": 2,
+            "enum": ["N0", "N1", "N2"]
+          },
+          "row_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "origin": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 40,
+            "nullable": true
+          },
+          "export_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": ["user_ref", "user_role", "resource", "layer"]
+      }
+    }
+  }
+}

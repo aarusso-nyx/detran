@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0010.md",
+      "line": 143,
+      "claim": "A lista fechada de leitura não inclui `rait-i18n-glossary.md` §2.4 nem `detran-ui-guide.md` §3.7, embora o próprio contrato os torne fontes normativas; também não inclui a fonte da matriz de papéis (`src/testing/policy.fixture.ts` ou `policy.ts`).",
+      "fix": "Incluir essas fontes na lista fechada, com as seções necessárias, antes de exigir placeholders, padrão Reactive Forms e papéis dos gates."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0012/prompts/TASK-0010.md",
+      "line": 121,
+      "claim": "`gates de build/test/check` não identifica comandos existentes nem resultados esperados; portanto os critérios C-2C não são executáveis para esses gates.",
+      "fix": "Substituir por comandos nomeados do `package.json` e resultados explícitos, por exemplo `pnpm --filter @detran/rait-web typecheck|test|build` e `pnpm check` com saída zero."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0012/prompts/TASK-0010.md",
+      "line": 117,
+      "claim": "O critério exige apenas igualdade estrutural de `roles` e remete a `ROLE_PERMISSIONS_FIXTURE` sem fornecê-la; não exige testes positivos e negativos por cada papel canônico. Além disso, `RAIT_COMMANDS` documenta divergências com as chaves de política, tornando ambígua a expressão “para o comando”.",
+      "fix": "Definir no contrato o mapa explícito M8→chave de política, preservando OD-R12-026/027, incluir a fixture como leitura e exigir um caso positivo para cada grant e negativo para cada um dos 13 papéis omitidos."
+    }
+  ],
+  "notes": []
+}

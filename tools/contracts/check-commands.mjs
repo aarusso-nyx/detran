@@ -21,6 +21,7 @@ export const CONTROLLER_ROOTS = [
   'backend/domains/inf/alcohol/src',
   'backend/domains/ops/field/src/handwritten',
   'backend/domains/ops/offline-sync/src/handwritten',
+  'backend/domains/ops/provisioning/src/handwritten',
   'backend/domains/ops/evidence/src/handwritten',
   'backend/domains/ops/snapshots/src/handwritten',
   // R-0009 (WP-P3, CTG-0002 §14 / plan.md A4(e)): the five Portal packages
@@ -34,23 +35,39 @@ export const CONTROLLER_ROOTS = [
   // module source root. `findFilesBelow` deliberately skips generated and
   // legacy controller directories below this root.
   'backend/domains/est/crash/src',
+  // R-0011 (WP-D3, CTG-0002 §14.2): the seven hand-written DASHBOARD surface
+  // controllers live under `handwritten`; the generated `src/controllers/`
+  // directory below this root stays out of the scan (`findFilesBelow` skips
+  // `controllers`/`generated`/`tests`).
+  'backend/domains/dashboard/monitor/src/handwritten',
+  'backend/domains/inf/rait-case/src/handwritten',
+  'backend/domains/inf/rait-worklist/src/handwritten',
+  'backend/domains/inf/rait-session/src/handwritten',
+  'backend/domains/inf/infraction/src/handwritten',
+  'backend/domains/inf/rait-org/src/handwritten',
+  'backend/domains/inf/collection/src/handwritten',
+  'backend/domains/inf/rait-integration/src/handwritten',
   'backend/app/src',
 ];
 
 // Error catalogues whose codes a command contract may enumerate (rule 3):
-// TEAT (R-0008), PORTAL (R-0009), and BOAT (R-0010). `catalogPath`
-// (singular) remains the test seam; when it is the default, every catalogue
-// below is read independently by prefix.
+// TEAT (R-0008), PORTAL (R-0009), BOAT (R-0010), and DASHBOARD (R-0011).
+// `catalogPath` (singular) remains the test seam; when it is the default,
+// every catalogue below is read independently by prefix.
 export const ERROR_CATALOG_PATHS = [
   'docs/framework/arch/teat-error-catalog.md',
   'docs/framework/arch/portal-error-catalog.md',
   'docs/framework/arch/boat-error-catalog.md',
+  'docs/framework/arch/dashboard-error-catalog.md',
+  'docs/framework/arch/rait-error-catalog.md',
 ];
 
 const ERROR_CATALOG_PREFIXES = new Map([
   ['teat-error-catalog.md', 'TEAT'],
   ['portal-error-catalog.md', 'PORTAL'],
   ['boat-error-catalog.md', 'BOAT'],
+  ['dashboard-error-catalog.md', 'DASH'],
+  ['rait-error-catalog.md', 'RAIT'],
 ]);
 
 // Único e nomeado (CTG-0005 §2.6, §3.2): `SpeedModule` só monta atrás da
@@ -147,13 +164,16 @@ export function scanControllers(controllerRoots) {
     const isAppSrc =
       toPosix(absoluteRoot) === toPosix(path.resolve(root, 'backend/app/src'));
     for (const file of findFilesBelow(absoluteRoot)) {
-      // App-level composition controllers: TEAT (R-0008) and Portal (R-0009,
-      // `portal-stream.controller.ts`); everything else under backend/app/src
-      // (PEC webhooks, runtime) is documented elsewhere.
+      // App-level composition controllers: TEAT (R-0008), Portal (R-0009,
+      // `portal-stream.controller.ts`) and DASHBOARD (R-0011,
+      // `dashboard-stream.controller.ts`); everything else under
+      // backend/app/src (PEC webhooks, runtime) is documented elsewhere.
       if (
         isAppSrc &&
         !path.basename(file).startsWith('teat-') &&
-        !path.basename(file).startsWith('portal-')
+        !path.basename(file).startsWith('portal-') &&
+        !path.basename(file).startsWith('dashboard-') &&
+        !path.basename(file).startsWith('rait-')
       )
         continue;
       if (flagGated.has(toPosix(file))) continue;
@@ -233,7 +253,7 @@ export function parseErrorCatalog(catalogPath, prefix = undefined) {
   const codes = new Set();
   const expression = prefix
     ? new RegExp(`${prefix}\\.[A-Z0-9_]+`, 'gu')
-    : /(?:TEAT|PORTAL|BOAT)\.[A-Z0-9_]+/gu;
+    : /(?:TEAT|PORTAL|BOAT|DASH|RAIT)\.[A-Z0-9_]+/gu;
   for (const match of text.matchAll(expression)) codes.add(match[0]);
   return codes;
 }
@@ -253,6 +273,8 @@ function parseErrorCatalogsByPrefix(paths) {
     ['TEAT', new Set()],
     ['PORTAL', new Set()],
     ['BOAT', new Set()],
+    ['DASH', new Set()],
+    ['RAIT', new Set()],
   ]);
   for (const candidate of paths) {
     if (!fs.existsSync(candidate)) continue;
@@ -265,7 +287,7 @@ function parseErrorCatalogsByPrefix(paths) {
 
 function parseSingleCatalogByPrefix(catalogPath) {
   return new Map(
-    ['TEAT', 'PORTAL', 'BOAT'].map((prefix) => [
+    ['TEAT', 'PORTAL', 'BOAT', 'DASH', 'RAIT'].map((prefix) => [
       prefix,
       parseErrorCatalog(catalogPath, prefix),
     ]),

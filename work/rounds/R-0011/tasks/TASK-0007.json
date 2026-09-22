@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "round_id": "R-0011",
+  "status": "completed",
+  "lifecycle": "supported",
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "branch": "orchestra/dashboard-backend",
+  "worktree_id": "WT-dashboard-backend",
+  "prompt_composition_id": "PC-f048e87d2cc0cae2",
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "id": "TASK-0007",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Documentação: build pack WP-D1…D3, ADR-0020, route contract §7/§8, backlog, waves.md (troca de família), parâmetro source_pending, OD-D14…D16",
+  "description": "Transcreve o executado; registra a troca Sol → Fable em waves.md; adiciona dashboard.source.acceptable_latency_minutes como source_pending com pnpm parameters:generate.",
+  "target_modules": ["MOD-docs"],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0009",
+  "priority": 9,
+  "tags": ["docs"],
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "verify:parameter-catalogue"],
+    ["pnpm", "format:check"]
+  ],
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-f048e87d2cc0cae2",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

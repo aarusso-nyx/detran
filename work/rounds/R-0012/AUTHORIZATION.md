@@ -44,3 +44,11 @@ This record transcribes the instruction through the prompt's declared boundary: 
 exact-SHA audit observation, and governed round-close. It grants no package publication, release,
 deployment, force-push, or mutation outside this repository. It was written by the maestro from
 the Owner's instruction, not by the Owner; the Owner may revoke or amend it.
+
+## Amendment 1 (Owner, 2026-09-21)
+
+After the window-1 checkpoint (CTG-0001 merged as PR #79), the Owner sent
+"prosseguir até a completa finalização": the per-window budget cut of the
+opening instruction (item 6) is replaced by continuation in the same session
+until the round is closed (CTG-0002a/b/c, TASK-0013, `round close`). All other
+conditions stand; `budget.json` keeps recording per task and per reviewer call.

@@ -1,0 +1,16 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0011",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/prompts/TASK-0013.md",
+      "line": 107,
+      "claim": "O comando e2e usa `--` antes do padrão. A20 fixa explicitamente a forma sem `--`; com `--`, o Vitest recebe o padrão de forma incompatível e pode executar a suíte inteira, como já registrado no relatório do Inspector.",
+      "fix": "Substituir por `source work/rounds/R-0011/env-detran-r11.sh && pnpm --filter @detran/app test:e2e tests/e2e/dashboard-`."
+    }
+  ],
+  "notes": []
+}

@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-ORG-001 v1.0.0 sha256:4f035821c870a58065e91330193c1d2d97076255109085c6a40e5b30690a8ba5
+// Generated from BP-INF-RAIT-ORG-001 v1.0.1 sha256:7ece9578325dfb4c1a393f1ce7805146a621d5e7b4b843176533126efd74d55d
 import { Module } from '@nestjs/common';
 import { RaitHolidayController } from './controllers/rait-holiday.controller.js';
 import { RaitHolidayService } from './services/rait-holiday.service.js';
@@ -24,9 +24,11 @@ import { RaitCapacityPlanRepository } from './repositories/rait-capacity-plan.re
 import { RaitExportController } from './controllers/rait-export.controller.js';
 import { RaitExportService } from './services/rait-export.service.js';
 import { RaitExportRepository } from './repositories/rait-export.repository.js';
+import { RaitOrgCommandsController } from './handwritten/rait-org-commands.controller.js';
 
 @Module({
   controllers: [
+    RaitOrgCommandsController,
     RaitHolidayController,
     RaitSuspensionActController,
     RaitJetonSheetController,

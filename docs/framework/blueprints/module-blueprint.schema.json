@@ -157,6 +157,9 @@
               },
               "retention": {
                 "type": "string"
+              },
+              "jsonSchema": {
+                "$ref": "#/$defs/jsonFieldSchema"
               }
             }
           }
@@ -168,6 +171,46 @@
           "type": "array"
         }
       }
+    },
+    "jsonFieldSchema": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "enum": ["array", "object", "string", "integer", "number", "boolean"]
+        },
+        "items": {
+          "$ref": "#/$defs/jsonFieldSchema"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/jsonFieldSchema"
+          }
+        },
+        "required": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "additionalProperties": { "type": "boolean" },
+        "format": { "type": "string" },
+        "enum": { "type": "array" },
+        "minItems": { "type": "integer", "minimum": 0 },
+        "minLength": { "type": "integer", "minimum": 0 },
+        "maxLength": { "type": "integer", "minimum": 0 },
+        "minimum": { "type": "number" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "array" } } },
+          "then": { "required": ["items"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "object" } } },
+          "then": { "required": ["properties"] }
+        }
+      ]
     }
   }
 }

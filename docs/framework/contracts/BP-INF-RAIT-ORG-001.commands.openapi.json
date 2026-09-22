@@ -1,0 +1,41 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RAIT Organisation commands",
+    "version": "1.0.0",
+    "x-blueprint": "BP-INF-RAIT-ORG-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/inf/rait/suspension-acts": {
+      "post": {
+        "operationId": "raitSuspensionActCreate",
+        "responses": { "201": { "description": "Ato criado" } }
+      }
+    },
+    "/v1/inf/rait/jeton-sheets": {
+      "post": {
+        "operationId": "raitJetonSheetCreate",
+        "responses": { "201": { "description": "Folha gerada" } }
+      }
+    },
+    "/v1/inf/rait/jeton-sheets/{id}/approve": {
+      "post": {
+        "operationId": "raitJetonSheetApprove",
+        "responses": { "200": { "description": "Folha aprovada" } }
+      }
+    },
+    "/v1/inf/rait/exports": {
+      "post": {
+        "operationId": "raitExportCreate",
+        "responses": { "201": { "description": "Exportação criada" } }
+      }
+    },
+    "/v1/inf/rait/exports/{id}/approve": {
+      "post": {
+        "operationId": "raitExportApprove",
+        "responses": { "200": { "description": "Exportação aprovada" } }
+      }
+    }
+  }
+}

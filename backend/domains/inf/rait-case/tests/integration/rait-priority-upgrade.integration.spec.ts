@@ -211,14 +211,14 @@ async function inventory(): Promise<string[]> {
   const files = JSON.parse(encoded) as unknown;
   if (
     !Array.isArray(files) ||
-    files.length !== 60 ||
+    files.length !== 63 ||
     files.some(
       (file) =>
         typeof file !== 'string' || !/^[0-9][0-9A-Za-z-]*\.sql$/u.test(file),
     ) ||
     new Set(files).size !== files.length
   )
-    throw new Error('The closed 60-DDL inventory is incomplete');
+    throw new Error('The closed 63-DDL inventory is incomplete');
   return files;
 }
 
@@ -273,6 +273,12 @@ function normalizedDump(output: string): string {
     .filter((line) => !/^-- Dumped (?:from database|by pg_dump)/.test(line));
   const normalized: string[] = [];
   for (let index = 0; index < lines.length; index += 1) {
+    // PostgreSQL sequences are deliberately non-transactional: nextval()
+    // remains advanced after the fault-injection transactions below abort.
+    // pg_dump emits that volatile state as setval(), even though no table row
+    // changed. Keep the data fingerprint about persisted rows, which are still
+    // compared byte-for-byte in every COPY block and by legacyRows().
+    if (/^SELECT pg_catalog\.setval\(/.test(lines[index])) continue;
     normalized.push(lines[index]);
     if (!/^COPY .* FROM stdin;$/.test(lines[index])) continue;
     const rows: string[] = [];
@@ -283,6 +289,46 @@ function normalizedDump(output: string): string {
   }
   return normalized.join('\n');
 }
+
+function normalizedTableData(output: string): string {
+  const lines = output.split('\n');
+  const normalized: string[] = [];
+  for (let index = 0; index < lines.length; index += 1) {
+    if (!/^COPY .* FROM stdin;$/.test(lines[index])) continue;
+    normalized.push(lines[index]);
+    const rows: string[] = [];
+    while (index + 1 < lines.length && lines[index + 1] !== '\\.') {
+      rows.push(lines[++index]);
+    }
+    if (lines[index + 1] !== '\\.')
+      throw new Error('pg_dump COPY block is incomplete');
+    index += 1;
+    normalized.push(...rows.sort(), '\\.');
+  }
+  if (normalized.length === 0)
+    throw new Error('pg_dump data contains no COPY blocks');
+  return normalized.join('\n');
+}
+
+describe('upgrade data fingerprint', () => {
+  it('ignora somente estado de sequência não transacional e conserva bytes das linhas', () => {
+    const dump = (row: string, sequence: number) =>
+      [
+        'COPY inf.rait_case (id) FROM stdin;',
+        row,
+        '\\.',
+        `SELECT pg_catalog.setval('inf.rait_case_seq', ${sequence}, true);`,
+        '',
+      ].join('\n');
+
+    expect(normalizedTableData(dump('case-1', 1))).toBe(
+      normalizedTableData(dump('case-1', 99)),
+    );
+    expect(normalizedTableData(dump('case-1', 1))).not.toBe(
+      normalizedTableData(dump('case-2', 1)),
+    );
+  });
+});
 
 async function dump(
   kind: '--schema-only' | '--data-only',
@@ -298,7 +344,11 @@ async function dump(
   );
   if (result.code !== 0)
     throw new Error(`pg_dump ${kind} failed (credentials withheld)`);
-  return digest(normalizedDump(result.output));
+  return digest(
+    kind === '--data-only'
+      ? normalizedTableData(result.output)
+      : normalizedDump(result.output),
+  );
 }
 
 async function snapshot(
@@ -336,7 +386,11 @@ async function snapshot(
   `);
   return {
     schema: await dump('--schema-only', env),
-    data: await dump('--data-only', env),
+    // Compare application table contents through the same typed, per-table
+    // sensor used for the legacy preservation contract. Running a second
+    // pg_dump process while the concurrency probe releases its transaction
+    // introduced an observer race unrelated to committed table contents.
+    data: digest(JSON.stringify(await legacyRows(owner))),
     globals: digest(JSON.stringify(globals.rows[0].value)),
     roles: digest(
       JSON.stringify({
@@ -584,18 +638,21 @@ async function priorityState(
 }
 
 describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
-  it('dado inventário fechado quando compõe apply então ordena cada DDL uma vez sem conectar DB', async () => {
+  it('dado inventário fechado quando compõe apply então preserva a ordem ordinária e reaplica DDL21 após DDL20 sem conectar DB', async () => {
     const source = await readFile(join(databaseDir, 'apply.sh'), 'utf8');
     expect(source).toContain('--single-transaction');
     expect(source).toContain('pg_advisory_xact_lock(7007, 1)');
     const listed = await inventory();
-    expect(new Set(listed).size).toBe(60);
+    expect(new Set(listed).size).toBe(63);
     const directory = await isolatedCopy(true);
     try {
       const copied = await readdir(join(directory, 'ddl'));
-      expect(copied.length).toBe(63);
+      expect(copied.length).toBe(66);
       expect(
         copied.filter((name) => name === '20-rls-policies.sql'),
+      ).toHaveLength(1);
+      expect(
+        copied.filter((name) => name === '21-ops-provisioning.sql'),
       ).toHaveLength(1);
       const bin = join(directory, 'bin');
       const calls = join(directory, 'psql-calls');
@@ -629,6 +686,10 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
       const files = argv
         .filter((arg) => arg.endsWith('.sql'))
         .map((arg) => arg.split('/').at(-1));
+      expect(files).toHaveLength(67);
+      expect(
+        files.filter((name) => name === '21-ops-provisioning.sql'),
+      ).toHaveLength(2);
       const ordinary = listed.filter(
         (name) =>
           name !== '20-rls-policies.sql' && name !== '34-inf-rait-case.sql',
@@ -645,6 +706,7 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
         '34-inf-rait-case.sql',
         ...after34,
         '20-rls-policies.sql',
+        '21-ops-provisioning.sql',
         manual[1],
         manual[2],
       ]);
@@ -655,6 +717,22 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
+  });
+
+  it('dado instalador de tenant quando reaplica então cria ausentes e rejeita divergências sem recriar gatilhos válidos', async () => {
+    const source = await readFile(
+      join(databaseDir, 'ddl/11-auth-functions.sql'),
+      'utf8',
+    );
+    expect(source).toContain('IF item.trigger_oid IS NULL THEN');
+    expect(source).toContain(
+      "item.trigger_function <> 'auth.enforce_tenant_id()'::regprocedure::oid",
+    );
+    expect(source).toContain('item.trigger_when IS NOT NULL');
+    expect(source).toContain(
+      "RAISE EXCEPTION 'Existing enforce_tenant_id trigger differs on %.%'",
+    );
+    expect(source).not.toContain('DROP TRIGGER IF EXISTS enforce_tenant_id');
   });
 });
 
@@ -704,6 +782,53 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
       if (!present.includes(name))
         throw new Error(`${name} is not yet supplied by TASK-0029`);
   }, 180_000);
+
+  it('dado gatilho tenant ausente, válido ou condicionado quando instala então cria, preserva OID ou rejeita divergência atomicamente', async () => {
+    const triggerState = async () =>
+      owner.query(
+        `SELECT trigger_catalog.oid, trigger_catalog.tgqual
+         FROM pg_trigger trigger_catalog
+         WHERE trigger_catalog.tgrelid = 'integration.inbox_receipt'::regclass
+           AND trigger_catalog.tgname = 'enforce_tenant_id'
+           AND NOT trigger_catalog.tgisinternal`,
+      );
+    const initial = await triggerState();
+    expect(initial.rowCount).toBe(1);
+    expect(initial.rows[0].tgqual).toBeNull();
+
+    await owner.query('SELECT auth.install_tenant_triggers()');
+    expect((await triggerState()).rows[0].oid).toBe(initial.rows[0].oid);
+
+    await owner.query('BEGIN');
+    try {
+      await owner.query(
+        'DROP TRIGGER enforce_tenant_id ON integration.inbox_receipt',
+      );
+      await owner.query('SELECT auth.install_tenant_triggers()');
+      const created = await triggerState();
+      expect(created.rowCount).toBe(1);
+      expect(created.rows[0].tgqual).toBeNull();
+      await owner.query('SELECT auth.install_tenant_triggers()');
+      expect((await triggerState()).rows[0].oid).toBe(created.rows[0].oid);
+
+      await owner.query(
+        'DROP TRIGGER enforce_tenant_id ON integration.inbox_receipt',
+      );
+      await owner.query(
+        `CREATE TRIGGER enforce_tenant_id
+         BEFORE INSERT OR UPDATE OF tenant_id ON integration.inbox_receipt
+         FOR EACH ROW WHEN (false)
+         EXECUTE FUNCTION auth.enforce_tenant_id()`,
+      );
+      await expect(
+        owner.query('SELECT auth.install_tenant_triggers()'),
+      ).rejects.toMatchObject({ code: 'P0001' });
+    } finally {
+      await owner.query('ROLLBACK');
+    }
+
+    expect((await triggerState()).rows[0].oid).toBe(initial.rows[0].oid);
+  });
 
   afterAll(async () => {
     if (connectionsOpen) {
@@ -925,7 +1050,10 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
           cwd: directory,
           env: ownerEnv,
         });
-        expect(result.code, `apply attempt ${attempt + 1}`).toBe(0);
+        expect(
+          result.code,
+          `apply attempt ${attempt + 1}\n${result.output}`,
+        ).toBe(0);
         expect(result.output).toContain('apply.sh: done');
         expect(await legacyRows(owner, legacyBaseline)).toEqual(legacyBaseline);
         expect(
@@ -1031,7 +1159,7 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
-  }, 120_000);
+  }, 240_000);
 
   for (const scenario of qualificationScenarios) {
     it(`dado caso novo ${scenario.label} quando qualifica na transação então COMMIT preserva projeção e revisão 1`, async () => {

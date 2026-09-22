@@ -1,0 +1,19 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0003",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "backend/database/ddl/11-auth-functions.sql",
+      "claim": "A validação idempotente inicial não consultava pg_trigger.tgqual e aceitaria um enforce_tenant_id com WHEN (false), preservando um gatilho que nunca executaria o enforcement complementar.",
+      "fix": "Rejeitar qualquer tgqual não nulo e acrescentar prova PostgreSQL comportamental de criação quando ausente, preservação de OID válido e rejeição atômica da variante condicionada."
+    }
+  ],
+  "notes": [
+    "A estratégia de não recriar gatilhos válidos elimina aquisição acumulada de locks sem enfraquecer RLS, mas a equivalência precisava incluir a condição WHEN.",
+    "tgtype=23, função, habilitação, argumentos e tgattr estavam corretos; o único achado bloqueante foi tgqual ausente.",
+    "Revisão somente leitura por Reviewer CODEX no papel Auditor, conforme exceção expressamente autorizada pelo Owner."
+  ]
+}

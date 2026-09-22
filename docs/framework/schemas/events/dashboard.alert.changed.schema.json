@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/dashboard.alert.changed.schema.json",
+  "title": "dashboard.alert.changed",
+  "description": "Ciclo do alerta do DASHBOARD (CTG-0002 Sec.6, Sec.12; produtor dashboard/monitor cycle/alert.service.ts e cycle/notifier.ts, envelope via cycle/events.ts envelopeOf). Publicado na integration.outbox na mesma transacao do efeito.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "uuid do envelope (randomUUID, cycle/events.ts envelopeOf)."
+    },
+    "type": {
+      "const": "dashboard.alert.changed"
+    },
+    "domainEvent": {
+      "type": "string",
+      "enum": [
+        "ALERTA_DETECTADO",
+        "ALERTA_CLASSIFICADO",
+        "ALERTA_NOTIFICADO",
+        "ALERTA_ESCALONADO",
+        "ALERTA_RECONHECIDO",
+        "ALERTA_EM_TRATAMENTO",
+        "ALERTA_VERIFICADO",
+        "ALERTA_ENCERRADO",
+        "ALERTA_CRITICO_EXTINCAO",
+        "INCIDENTE_REGISTRADO"
+      ],
+      "description": "CTG-0002 Sec.12: ALERTA_DETECTADO, ALERTA_ESCALONADO, ALERTA_RECONHECIDO, ALERTA_ENCERRADO e INCIDENTE_REGISTRADO estao no route contract Sec.6; os demais (ALERTA_CLASSIFICADO, ALERTA_NOTIFICADO, ALERTA_EM_TRATAMENTO, ALERTA_VERIFICADO, ALERTA_CRITICO_EXTINCAO) sao tokens propostos, toState-derivados, x-source-pending (OD-D33) ate o Owner os levar ao route contract Sec.6 (TASK-0007)."
+    },
+    "version": {
+      "const": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tenantId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["user", "system", "timer"] },
+        "id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "requestId do comando (ctx.requestId); ausente quando o ator e system/timer sem requisicao HTTP (envelopeOf omite chaves undefined)."
+    },
+    "causationId": {
+      "type": "string",
+      "description": "alert.source_event_id (evento da celula que originou o alerta), quando houver; envelopeOf omite se null/undefined."
+    },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "const": "alert" },
+        "id": { "type": "string", "format": "uuid" },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "version pos-transicao de dashboard.alert (appendAlertTrail)."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "alertEventData (cycle/notifier.ts) + recipientRole/recipientLevel/chainStatus quando o notificador grava (notify/notifyCriticalExtinction). Nunca nome, placa, no de processo ou atributo de saude; objectRef e o uuid opaco da origem (o SSE redige fora de N2, nao a outbox).",
+      "required": [
+        "alertId",
+        "indicatorCode",
+        "track",
+        "fromState",
+        "toState",
+        "severity",
+        "block",
+        "sourceApp",
+        "objectKind",
+        "objectLayer",
+        "objectRef",
+        "ownerRole",
+        "escalationLevel",
+        "occurredAt"
+      ],
+      "properties": {
+        "alertId": { "type": "string", "format": "uuid" },
+        "indicatorCode": { "type": "string", "pattern": "^IND-DASH-\\d{3}$" },
+        "track": { "type": "string", "enum": ["extinction", "irregularity"] },
+        "fromState": {
+          "type": ["string", "null"],
+          "description": "null na criacao do alerta (ALERTA_DETECTADO)."
+        },
+        "toState": { "type": "string" },
+        "severity": { "type": "string" },
+        "block": { "type": "string", "enum": ["A", "B", "C", "D"] },
+        "sourceApp": { "type": "string" },
+        "objectKind": { "type": "string" },
+        "objectLayer": { "type": "string", "enum": ["N0", "N1", "N2"] },
+        "objectRef": {
+          "type": "string",
+          "description": "uuid opaco da origem; o consumidor do SSE (fora de N2) redige este campo -- a outbox guarda sempre o valor."
+        },
+        "ownerRole": { "type": "string" },
+        "escalationLevel": { "type": "integer", "minimum": 0 },
+        "ackChannel": {
+          "type": "string",
+          "enum": ["origin", "manual"],
+          "description": "so em ALERTA_RECONHECIDO (ausente nos demais -- envelopeOf omite undefined)."
+        },
+        "incidentRef": { "type": "string" },
+        "nextMilestoneAt": { "type": "string", "format": "date-time" },
+        "ceilingOn": { "type": "string", "format": "date" },
+        "sourceEventId": { "type": "string" },
+        "recipientRole": {
+          "type": "string",
+          "description": "so em ALERTA_NOTIFICADO/ALERTA_ESCALONADO (DashboardNotifier.notify/notifyCriticalExtinction)."
+        },
+        "recipientLevel": { "type": "integer", "minimum": 1 },
+        "chainStatus": {
+          "type": "string",
+          "enum": ["vigente", "source_pending", "h54"],
+          "description": "'h54' so na notificacao ao AUDITOR em CRITICO_EXTINCAO (dashboard.critical_extinction.notify_legal, H.54)."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1432 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Provisioning — BP-OPS-PROVISIONING-001",
+    "version": "1.0.3",
+    "description": "Operational offline provisioning from offline-operational-provisioning.md §§1–12 and INV-OFFLINE-001; cryptographic algorithms and wire format remain source_pending until the cross-platform security decision.",
+    "x-blueprint": "BP-OPS-PROVISIONING-001",
+    "x-generated": "tools/contracts/generate-openapi.mjs — do not hand-edit"
+  },
+  "paths": {
+    "/v1/ops/provisioning/device-keys": {
+      "get": {
+        "tags": ["device-key"],
+        "operationId": "listDeviceKey",
+        "summary": "List DeviceKey (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceKey"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/device-keys/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["device-key"],
+        "operationId": "getDeviceKey",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceKey"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/grants": {
+      "get": {
+        "tags": ["grant"],
+        "operationId": "listOfflineAuthorizationGrant",
+        "summary": "List OfflineAuthorizationGrant (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfflineAuthorizationGrant"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/grants/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["grant"],
+        "operationId": "getOfflineAuthorizationGrant",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfflineAuthorizationGrant"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/packages": {
+      "get": {
+        "tags": ["package"],
+        "operationId": "listProvisioningPackage",
+        "summary": "List ProvisioningPackage (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProvisioningPackage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/packages/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["package"],
+        "operationId": "getProvisioningPackage",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProvisioningPackage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/receipts": {
+      "get": {
+        "tags": ["receipt"],
+        "operationId": "listProvisioningReceipt",
+        "summary": "List ProvisioningReceipt (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProvisioningReceipt"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/receipts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["receipt"],
+        "operationId": "getProvisioningReceipt",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProvisioningReceipt"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/device-revocations": {
+      "get": {
+        "tags": ["device-revocation"],
+        "operationId": "listDeviceRevocation",
+        "summary": "List DeviceRevocation (most recent first, capped at 500)",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceRevocation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ops/provisioning/device-revocations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["device-revocation"],
+        "operationId": "getDeviceRevocation",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeviceRevocation"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DeviceKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key_fingerprint": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "public_key": {
+            "type": "string"
+          },
+          "attestation_evidence_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "key_algorithm": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "wire_format": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'registered'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "registered_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "device_id",
+          "key_fingerprint",
+          "public_key",
+          "attestation_evidence_json",
+          "created_at"
+        ]
+      },
+      "CreateDeviceKeyDto": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "key_fingerprint": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "public_key": {
+            "type": "string"
+          },
+          "attestation_evidence_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "key_algorithm": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "wire_format": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'registered'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "registered_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "device_id",
+          "key_fingerprint",
+          "public_key",
+          "attestation_evidence_json"
+        ]
+      },
+      "OfflineAuthorizationGrant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_key_fingerprint": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "authorized_agents_json": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "agent_id",
+                "registration_number",
+                "roles",
+                "permissions"
+              ],
+              "properties": {
+                "agent_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "registration_number": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "enum": ["field-agent", "field-supervisor"]
+                  }
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maximum_offline_seconds": {
+            "type": "integer"
+          },
+          "maximum_acts": {
+            "type": "integer"
+          },
+          "revocation_epoch": {
+            "type": "integer"
+          },
+          "policy_version": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "normative_package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "numbering_reservation_ids_json": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "issued_by_subject": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "key_id": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "schema_version": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'1.0'"
+          },
+          "manifest_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'issued'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "traffic_agency_id",
+          "device_id",
+          "device_key_fingerprint",
+          "authorized_agents_json",
+          "valid_from",
+          "valid_until",
+          "maximum_offline_seconds",
+          "maximum_acts",
+          "revocation_epoch",
+          "policy_version",
+          "normative_package_id",
+          "numbering_reservation_ids_json",
+          "issued_by_subject",
+          "key_id",
+          "manifest_digest",
+          "created_at"
+        ]
+      },
+      "CreateOfflineAuthorizationGrantDto": {
+        "type": "object",
+        "properties": {
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_key_fingerprint": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "authorized_agents_json": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "agent_id",
+                "registration_number",
+                "roles",
+                "permissions"
+              ],
+              "properties": {
+                "agent_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "registration_number": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "roles": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "type": "string",
+                    "enum": ["field-agent", "field-supervisor"]
+                  }
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maximum_offline_seconds": {
+            "type": "integer"
+          },
+          "maximum_acts": {
+            "type": "integer"
+          },
+          "revocation_epoch": {
+            "type": "integer"
+          },
+          "policy_version": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "normative_package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "numbering_reservation_ids_json": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "issued_by_subject": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "key_id": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "schema_version": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'1.0'"
+          },
+          "manifest_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'issued'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "revoked_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "traffic_agency_id",
+          "device_id",
+          "device_key_fingerprint",
+          "authorized_agents_json",
+          "valid_from",
+          "valid_until",
+          "maximum_offline_seconds",
+          "maximum_acts",
+          "revocation_epoch",
+          "policy_version",
+          "normative_package_id",
+          "numbering_reservation_ids_json",
+          "issued_by_subject",
+          "key_id",
+          "manifest_digest"
+        ]
+      },
+      "ProvisioningPackage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schema_version": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'1.0'"
+          },
+          "manifest_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "artifact_digests_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "trust_chain_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "normative_package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "numbering_policy_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "envelope_uri": {
+            "type": "string"
+          },
+          "signature_key_id": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "signature_algorithm": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "envelope_algorithm": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "wire_format": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'issued'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "grant_id",
+          "device_id",
+          "manifest_digest",
+          "artifact_digests_json",
+          "trust_chain_json",
+          "normative_package_id",
+          "numbering_policy_json",
+          "envelope_uri",
+          "signature_key_id",
+          "created_at"
+        ]
+      },
+      "CreateProvisioningPackageDto": {
+        "type": "object",
+        "properties": {
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schema_version": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'1.0'"
+          },
+          "manifest_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "artifact_digests_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "trust_chain_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "normative_package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "numbering_policy_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "envelope_uri": {
+            "type": "string"
+          },
+          "signature_key_id": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "signature_algorithm": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "envelope_algorithm": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "wire_format": {
+            "type": "string",
+            "maxLength": 80,
+            "default": "'source_pending'"
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 40,
+            "default": "'issued'"
+          },
+          "version": {
+            "type": "integer",
+            "default": "1"
+          },
+          "issued_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "grant_id",
+          "device_id",
+          "manifest_digest",
+          "artifact_digests_json",
+          "trust_chain_json",
+          "normative_package_id",
+          "numbering_policy_json",
+          "envelope_uri",
+          "signature_key_id"
+        ]
+      },
+      "ProvisioningReceipt": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "receipt_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "manifest_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "device_attestation_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "package_id",
+          "grant_id",
+          "device_id",
+          "receipt_type",
+          "idempotency_key",
+          "manifest_digest",
+          "occurred_at",
+          "created_at"
+        ]
+      },
+      "CreateProvisioningReceiptDto": {
+        "type": "object",
+        "properties": {
+          "package_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "receipt_type": {
+            "type": "string",
+            "maxLength": 40
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "manifest_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "device_attestation_json": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "received_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "package_id",
+          "grant_id",
+          "device_id",
+          "receipt_type",
+          "idempotency_key",
+          "manifest_digest",
+          "occurred_at"
+        ]
+      },
+      "DeviceRevocation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "grant_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "revocation_epoch": {
+            "type": "integer"
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "decision_by_subject": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "device_id",
+          "revocation_epoch",
+          "reason_code",
+          "decision_by_subject",
+          "decided_at"
+        ]
+      },
+      "CreateDeviceRevocationDto": {
+        "type": "object",
+        "properties": {
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "grant_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "revocation_epoch": {
+            "type": "integer"
+          },
+          "reason_code": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "decision_by_subject": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "device_id",
+          "revocation_epoch",
+          "reason_code",
+          "decision_by_subject",
+          "decided_at"
+        ]
+      },
+      "ProvisioningCommandIdempotency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "command_name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "request_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "response_body_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "response_etag": {
+            "type": "string",
+            "maxLength": 512
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "command_name",
+          "idempotency_key",
+          "request_digest",
+          "response_body_json",
+          "response_etag",
+          "created_at"
+        ]
+      },
+      "CreateProvisioningCommandIdempotencyDto": {
+        "type": "object",
+        "properties": {
+          "command_name": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "request_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "response_body_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "response_etag": {
+            "type": "string",
+            "maxLength": 512
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "command_name",
+          "idempotency_key",
+          "request_digest",
+          "response_body_json",
+          "response_etag"
+        ]
+      },
+      "ProvisioningReconciliation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reconciliation_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "accepted_act_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "rejected_act_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "unresolved_act_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "reconciled_by_subject": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "reconciled_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "grant_id",
+          "device_id",
+          "reconciliation_digest",
+          "reconciled_by_subject",
+          "created_at"
+        ]
+      },
+      "CreateProvisioningReconciliationDto": {
+        "type": "object",
+        "properties": {
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reconciliation_digest": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "accepted_act_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "rejected_act_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "unresolved_act_count": {
+            "type": "integer",
+            "default": "0"
+          },
+          "reconciled_by_subject": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "reconciled_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "grant_id",
+          "device_id",
+          "reconciliation_digest",
+          "reconciled_by_subject"
+        ]
+      },
+      "ProvisioningGrantReservationBinding": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          "tenant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "authorized_agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bound_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "grant_id",
+          "reservation_id",
+          "traffic_agency_id",
+          "device_id",
+          "authorized_agent_id",
+          "created_at"
+        ]
+      },
+      "CreateProvisioningGrantReservationBindingDto": {
+        "type": "object",
+        "properties": {
+          "grant_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "traffic_agency_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "device_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "authorized_agent_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bound_at": {
+            "type": "string",
+            "format": "date-time",
+            "default": "now()"
+          }
+        },
+        "required": [
+          "grant_id",
+          "reservation_id",
+          "traffic_agency_id",
+          "device_id",
+          "authorized_agent_id"
+        ]
+      }
+    }
+  }
+}

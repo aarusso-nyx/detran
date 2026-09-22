@@ -1,0 +1,20 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0012",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0012/reports/TASK-0006.md",
+      "line": 5,
+      "claim": "O único relatório do Engineer registra 1801/1807 testes e gates vermelhos; não há relatório da iteração restrita nem saída persistida dos gates finais verdes mencionados pelo maestro.",
+      "fix": "Acrescentar uma seção de iteração final ao relatório com os comandos executados e seus resultados verdes (incluindo `test`, `verify:parameter-catalogue`, `parameters:test` e `pnpm check`)."
+    }
+  ],
+  "notes": [
+    "A matriz cobre presença, ausência de cada papel canônico omitido e anônimo; as rotas auxiliares são tratadas separadamente.",
+    "Não encontrei chamada ou configuração SENATRAN fora de `packages/senatran-adapter` nos arquivos entregues.",
+    "A reprodução local do `test` foi bloqueada pelo sandbox somente porque o Vite precisa escrever `.vite-temp`; `typecheck` e `lint` concluíram verdes."
+  ]
+}

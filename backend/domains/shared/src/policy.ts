@@ -942,6 +942,36 @@ const OPS_SNAPSHOT_SURFACE_ROLES: readonly DetranRole[] = [
 ];
 
 const OPS_SURFACE_RULES: Array<[string, string, readonly DetranRole[]]> = [
+  // R-0013 CTG-0003 (ADR-0028; Authorization Amendment 1): provisioning
+  // commands are statutory and never inherit the administrative wildcard.
+  ['provisioning', 'create-key-challenge', ['technical-admin', 'agency-admin']],
+  ['provisioning', 'register-device-key', []],
+  [
+    'provisioning',
+    'issue-provisioning-package',
+    ['agency-admin', 'field-supervisor'],
+  ],
+  ['provisioning', 'download-provisioning-package', []],
+  ['provisioning', 'record-provisioning-receipt', []],
+  ['provisioning', 'readiness', ['agency-admin', 'technical-admin']],
+  ['provisioning', 'revoke-offline-grant', ['agency-admin', 'technical-admin']],
+  ['provisioning', 'reconcile-offline-grant', []],
+  // Reconciliation evidence is append-only through its domain command only.
+  ['provisioning-reconciliation', 'read', []],
+  ['provisioning-reconciliation', 'create', []],
+  ['provisioning-reconciliation', 'update', []],
+  ['provisioning-reconciliation', 'delete', []],
+  ['grant-reservation-binding', 'read', []],
+  ['grant-reservation-binding', 'create', []],
+  ['grant-reservation-binding', 'update', []],
+  ['grant-reservation-binding', 'delete', []],
+  // A5 reads remain identity/agency bound at command level.  An empty static
+  // set deliberately rejects role and wildcard shortcuts before that binding.
+  ['device-key', 'read', []],
+  ['grant', 'read', []],
+  ['package', 'read', []],
+  ['receipt', 'read', []],
+  ['device-revocation', 'read', []],
   ['parameter', 'read', ['agency-admin']],
   // CTG-0002 §8 (M18, TASK-0005) — superfícies do route contract §4.3 que
   // ainda não tinham regra. Sem regra, a guarda falha fechado e a rota some
@@ -1489,14 +1519,19 @@ const RAIT_COMMAND_RULES: Array<[string, string, readonly DetranRole[]]> = [
     ],
   ],
   ['rait-extinction', 'declare', ['rait-signing-authority', 'rait-chair']],
+  ['rait-notice', 'issue', ['rait-secretary', 'rait-signing-authority']],
+  ['rait-infraction', 'indicate-driver', ['rait-secretary']],
   ['rait-suspension-act', 'create', ['rait-signing-authority', 'rait-chair']],
   ['rait-parameter', 'update', ['agency-admin']],
   ['rait-export', 'create', ['AUDITOR']],
+  ['rait-export', 'approve', ['DPO']],
   ['rait-quality-sample', 'review', ['rait-coordinator']],
   ['rait-capacity-plan', 'publish', ['rait-coordinator', 'rait-manager']],
   ['rait-incident', 'open', ['rait-manager', 'rait-coordinator', 'rait-chair']],
   ['rait-integration', 'retry', ['integration-operator']],
+  ['rait-integration', 'read', ['integration-operator', 'AUDITOR']],
   ['rait-integration', 'reconcile', ['integration-operator', 'rait-manager']],
+  ['rait-stream', 'read', RAIT_READ_ROLES],
   ['rait-collection', 'issue', ['rait-finance']],
   ['rait-refund', 'order', ['rait-finance']],
   ['rait-debt', 'handoff', ['rait-finance']],
@@ -1772,9 +1807,68 @@ const RAIT_STRICT_COMMAND_RULES = new Map<
   ['inf:rait-minutes:generate', ['rait-secretary']],
   ['inf:rait-minutes:sign', ['rait-chair', 'rait-rapporteur']],
   ['inf:rait-minutes:publish', ['rait-secretary']],
+  ['inf:rait-notice:issue', ['rait-secretary', 'rait-signing-authority']],
+  ['inf:rait-infraction:indicate-driver', ['rait-secretary']],
+  ['inf:rait-extinction:declare', ['rait-signing-authority', 'rait-chair']],
+  ['inf:rait-appeal:authority-decide', ['rait-central-authority']],
+  ['inf:rait-appeal:waive', ['rait-central-authority']],
+  ['inf:rait-jeton:generate', ['rait-secretary']],
+  ['inf:rait-jeton:approve', ['rait-chair']],
+  ['inf:rait-export:approve', ['DPO']],
+  ['inf:rait-integration:read', ['integration-operator', 'AUDITOR']],
+  ['inf:rait-integration:retry', ['integration-operator']],
+  ['inf:rait-integration:reconcile', ['integration-operator', 'rait-manager']],
+  ['inf:rait-collection:issue', ['rait-finance']],
+  ['inf:rait-payment:reconcile', ['rait-finance']],
+  ['inf:rait-refund:order', ['rait-finance']],
+  ['inf:rait-debt:handoff', ['rait-finance']],
+  ['inf:rait-stream:read', RAIT_READ_ROLES],
 ]);
 const RAIT_DISABLED_POLICY_KEYS = new Set<DetranPolicyKey>([
   'inf:rait-oral-argument:create',
+]);
+
+/**
+ * A5 makes the provisioning surface a strict policy island.  Static command
+ * roles remain only its first authorization layer; identity-bound commands
+ * deliberately have no role grant and are completed by the command's bound
+ * principal/device validation.  This must run before permissions and global
+ * administrator shortcuts.
+ */
+const OPS_PROVISIONING_STRICT_RULES = new Map<
+  DetranPolicyKey,
+  readonly DetranRole[]
+>([
+  [
+    'ops:provisioning:create-key-challenge',
+    ['technical-admin', 'agency-admin'],
+  ],
+  ['ops:provisioning:register-device-key', []],
+  [
+    'ops:provisioning:issue-provisioning-package',
+    ['agency-admin', 'field-supervisor'],
+  ],
+  ['ops:provisioning:download-provisioning-package', []],
+  ['ops:provisioning:record-provisioning-receipt', []],
+  ['ops:provisioning:readiness', ['agency-admin', 'technical-admin']],
+  [
+    'ops:provisioning:revoke-offline-grant',
+    ['agency-admin', 'technical-admin'],
+  ],
+  ['ops:provisioning:reconcile-offline-grant', []],
+  ['ops:provisioning-reconciliation:read', []],
+  ['ops:provisioning-reconciliation:create', []],
+  ['ops:provisioning-reconciliation:update', []],
+  ['ops:provisioning-reconciliation:delete', []],
+  ['ops:grant-reservation-binding:read', []],
+  ['ops:grant-reservation-binding:create', []],
+  ['ops:grant-reservation-binding:update', []],
+  ['ops:grant-reservation-binding:delete', []],
+  ['ops:device-key:read', []],
+  ['ops:grant:read', []],
+  ['ops:package:read', []],
+  ['ops:receipt:read', []],
+  ['ops:device-revocation:read', []],
 ]);
 
 export function policyKey(resource: string, action: string): DetranPolicyKey {
@@ -1827,6 +1921,11 @@ export function isDetranActionAllowed(
   if (strictRaitRoles) {
     const roles = canonicalRoles(principal.roles);
     return strictRaitRoles.some((role) => roles.includes(role));
+  }
+  const strictProvisioningRoles = OPS_PROVISIONING_STRICT_RULES.get(key);
+  if (strictProvisioningRoles) {
+    const roles = canonicalRoles(principal.roles);
+    return strictProvisioningRoles.some((role) => roles.includes(role));
   }
   if (
     principal.permissions.includes('*') ||

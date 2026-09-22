@@ -1,0 +1,19 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0011",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0011/reports/TASK-0006.md",
+      "line": 6,
+      "claim": "O relatório declara o executor como \"Architect (transcrição) / Engineer\", embora TASK-0006 seja uma transcrição documental e o método reserva transcrição de docs/i18n ao Architect.",
+      "fix": "Corrigir a declaração do papel no relatório (incluindo o cabeçalho da linha 1) para somente \"Architect (transcrição)\"; manter Engineer fora desta entrega."
+    }
+  ],
+  "notes": [
+    "A tríade do CTG-0002 está ordenada nas tarefas; os testes de política cobrem os 36 papéis canônicos por linha, com a exceção de administradores globais explicitamente registrada em A23/OD-D76.",
+    "O diff anexado contra o origin/main atual inclui divergência posterior ao merge-base e0763c6c; a entrega CTG-0002 propriamente dita não introduz as remoções de RAIT nem de ops/provisioning."
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://detran.example.invalid/schemas/events/dashboard.export.registered.schema.json",
+  "title": "dashboard.export.registered",
+  "description": "Registro/aprovacao de exportacao (CTG-0002 Sec.9, Sec.12; produtor dashboard/monitor surface/export.service.ts emit()). Publicado nas tres transicoes de status: registered, pending-approval e approved -- mesmo domainEvent para as tres (data.status distingue).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "domainEvent",
+    "version",
+    "occurredAt",
+    "tenantId",
+    "actor",
+    "aggregate",
+    "data"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "const": "dashboard.export.registered" },
+    "domainEvent": {
+      "const": "EXPORTACAO_REGISTRADA",
+      "description": "Token unico e literal; presente no route contract Sec.6."
+    },
+    "version": { "const": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "tenantId": { "type": "string", "format": "uuid" },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["user", "system", "timer"] },
+        "id": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "correlationId": { "type": "string" },
+    "causationId": { "type": "string" },
+    "aggregate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "const": "export_log" },
+        "id": { "type": "string", "format": "uuid" },
+        "version": {
+          "const": 1,
+          "description": "export_log nao tem coluna version (CTG-0001 Sec.2.9); envelope grava 1 sempre (CTG-0002 Sec.12)."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exportId",
+        "userRef",
+        "userRole",
+        "scope",
+        "format",
+        "layer",
+        "purpose",
+        "rowCount",
+        "suppressedCells",
+        "status",
+        "approvedBy",
+        "occurredAt"
+      ],
+      "properties": {
+        "exportId": { "type": "string", "format": "uuid" },
+        "userRef": { "type": "string" },
+        "userRole": { "type": "string" },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "alerts",
+            "duties",
+            "indicators",
+            "sources",
+            "comparisons",
+            "kpis",
+            "audit-trail"
+          ]
+        },
+        "format": { "type": "string" },
+        "layer": { "type": "string", "enum": ["N0", "N1", "N2"] },
+        "purpose": { "type": ["string", "null"] },
+        "rowCount": { "type": "integer", "minimum": 0 },
+        "suppressedCells": { "type": "integer", "minimum": 0 },
+        "status": {
+          "type": "string",
+          "enum": ["registered", "pending-approval", "approved"]
+        },
+        "approvedBy": { "type": ["string", "null"] },
+        "occurredAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

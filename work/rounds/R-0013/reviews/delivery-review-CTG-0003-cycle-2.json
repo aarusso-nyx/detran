@@ -1,0 +1,56 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0003",
+  "cycle": 2,
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "id": "F-012",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.engine.ts",
+      "line": 766,
+      "claim": "Download entrega pacote revogado, expirado ou em schema incompatível e não implementa o 410 contratado.",
+      "fix": "Validar usabilidade persistida de pacote e grant antes da entrega e cobrir 410, expiração, revogação e versão."
+    },
+    {
+      "id": "F-013",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.engine.ts",
+      "line": 167,
+      "claim": "Readiness ignora numbering_consumption e maximum_acts, podendo manter ready=true após esgotamento.",
+      "fix": "Calcular saldo e orçamento restantes, incorporá-los ao ETag e provar consumo parcial e esgotamento."
+    },
+    {
+      "id": "F-014",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.provider.ts",
+      "line": 65,
+      "claim": "normativeUsable não valida órgão nem catálogo dependente, permitindo pacote de outro órgão ou catálogo inutilizável.",
+      "fix": "Resolver pacote e catálogo no tenant, confrontar órgão e validar toda a dependência normativa."
+    },
+    {
+      "id": "F-015",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.provider.ts",
+      "line": 43,
+      "claim": "Enrollment inicial depende de numbering_reservation preexistente; dispositivo novo recebe subject vazio e não consegue registrar chave.",
+      "fix": "Resolver binding autenticado de enrollment sem reserva prévia e provar challenge/register com provider real."
+    },
+    {
+      "id": "F-016",
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.engine.ts",
+      "line": 307,
+      "claim": "Issue permite renovação após grant expirado sem evidência de reconciliação anterior.",
+      "fix": "Modelar condição persistida de reconciliação e provar renovação negada/permitida, inclusive caso sem atos."
+    }
+  ],
+  "notes": [
+    "Review somente leitura, sem Git, instalação, escrita em arquivo ou mutação de banco.",
+    "F-002, F-004, F-005, F-007, F-008, F-009 e F-011 anteriores foram corrigidos; F-001/F-003/F-006 permanecem com resíduos discriminados.",
+    "Sensores melhoraram substancialmente, mas não cobrem os cinco bloqueios; adapters substituídos não demonstram o provider runtime.",
+    "Append-only, idempotência namespaced, ETag, schemas, arrays, CI wiring e fronteira SENATRAN foram confirmados.",
+    "Gates verdes não substituem o FAIL substantivo."
+  ]
+}

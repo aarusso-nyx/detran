@@ -780,13 +780,16 @@ test('C-5-15 — dado um decorador de rota com argumento não literal quando che
   }
 });
 
-// R-0009 (plan.md §Triagem): 92 operações do TEAT (R-0008) + 47 do Portal
-// (BP-PORTAL-*.commands.openapi.json, CTG-0002 §2 + stream §9) + 13 do BOAT
-// (BP-EST-CRASH-001.commands.openapi.json) = 152.
-test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=152', async () => {
+// R-0013: 100 operações do TEAT (R-0008 + BP-OPS-PROVISIONING-001) + 47 do
+// Portal (BP-PORTAL-*.commands.openapi.json, CTG-0002 §2 + stream §9) + 13
+// do BOAT (BP-EST-CRASH-001.commands.openapi.json) = 160; R-0011 (plan.md M24,
+// TASK-0006) soma 43 do DASHBOARD (BP-DASH-MONITOR-001.commands.openapi.json,
+// CTG-0002 §3, sete controllers manuscritos + o stream) = 203; R-0007
+// CTG-0003/0004 acrescentam 53 operações RAIT/infraction/collection = 256.
+test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=256', async () => {
   const result = checkCommands();
   assert.equal(result.ok, true, JSON.stringify(result.problems, null, 2));
-  assert.equal(result.operations, 152);
+  assert.equal(result.operations, 256);
 });
 
 // ---------------------------------------------------------------------------
@@ -1005,18 +1008,18 @@ test('C-2-17 — dado controlador BOAT sem operação correspondente quando chec
   }
 });
 
-test('C-2-16 — dado o conjunto de contratos reais quando coletar operações então as 92 operações TEAT permanecem presentes', async () => {
+test('C-2-16 — dado o conjunto de contratos reais quando coletar operações então as 100 operações TEAT permanecem presentes', async () => {
   const { operations, problems } = collectOperations(
     join(root, 'docs/framework/contracts'),
     join(root, 'docs/framework/blueprints'),
   );
   assert.deepEqual(problems, []);
   const teatOperations = operations.filter((entry) =>
-    /\/BP-(?:INF|OPS)-/.test(entry.file),
+    /\/BP-(?:INF-(?:AIT|ALCOHOL|MEASURES|NORMATIVE)|OPS-)/.test(entry.file),
   );
-  assert.equal(teatOperations.length, 92);
+  assert.equal(teatOperations.length, 100);
   assert.equal(
     new Set(teatOperations.map((entry) => entry.operationId)).size,
-    92,
+    100,
   );
 });

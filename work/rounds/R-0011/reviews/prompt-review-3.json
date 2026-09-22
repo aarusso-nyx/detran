@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0011",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0011/tasks/TASK-0005.json",
+      "line": 19,
+      "claim": "A descrição manda ajustar `policy dashboard:*`, contrariando M16/M17 e a Emenda 2: a matriz já cobre o contrato e `policy.ts` não é ampliado.",
+      "fix": "Remover a cláusula de ajuste de política; limitar TASK-0005 ao ciclo que consome a matriz existente transcrita pelo CTG-0002."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0011/tasks/TASK-0004.json",
+      "line": 19,
+      "claim": "TASK-0004, que roda em paralelo com TASK-0014, inclui exportação, N3, X-Purpose, relatórios e SSE — escopo reservado ao lock e à entrega de superfície de TASK-0014.",
+      "fix": "Restringir a descrição de TASK-0004 aos testes do ciclo M25; manter todos os testes de rota/superfície exclusivamente em TASK-0014."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0011/prompts/TASK-0012.md",
+      "line": 181,
+      "claim": "O critério exige `git diff`, mas o mesmo prompt proíbe expressamente qualquer execução de `git`.",
+      "fix": "Substituir por uma verificação sem git, ou retirar essa asserção e deixar a comparação de delta para o maestro."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0011/prompts/TASK-0012.md",
+      "line": 186,
+      "claim": "O segundo critério usa `grep -c \"DASH\\.\" …`, que não é um comando executável nem identifica o arquivo a verificar; portanto não oferece critério verificável.",
+      "fix": "Indicar o caminho explícito de `CTG-0002.md` no segundo `grep` e o resultado esperado completo."
+    }
+  ],
+  "notes": []
+}

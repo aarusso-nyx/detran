@@ -6,6 +6,8 @@
 // plan R-0009 M16): só a tabela + projetor esqueleto — um evento de agregado
 // `crash` grava `last_event_id` na linha existente; sem linha → `not_consumed`
 // (nada gravado). O produtor real (est/crash, R-0010) fixa o `data`.
+export const consumedEvents = ['SINISTRO_*'] as const;
+
 import type { PortalSqlTransaction } from '@detran/portal-identity';
 
 import {
