@@ -1,0 +1,34 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0003",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.provider.ts",
+      "line": 57,
+      "claim": "Enrollment conflates the authenticated responsible issuer with operational recipient agents, rejects a valid agency-admin without agent_id and does not compare reservation.agent_id.",
+      "fix": "Separate enrollment responsibility from grant recipients and validate persisted tenant, agency, device and reservation ownership bindings."
+    },
+    {
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.engine.ts",
+      "line": 1001,
+      "claim": "Download does not compare package.manifest_digest with grant.manifest_digest and can return an internally consistent package bound to a different grant digest.",
+      "fix": "Compare persisted package and grant digests and return the contracted 410 on divergence."
+    },
+    {
+      "severity": "high",
+      "file": "backend/domains/ops/provisioning/src/handwritten/provisioning.engine.ts",
+      "line": 266,
+      "claim": "Renewal checks only grants[0], allowing a newer active grant to hide an older terminal unreconciled obligation.",
+      "fix": "Require reconciliation of every terminal obligation or an explicit replacement relation that cannot discard an earlier obligation."
+    }
+  ],
+  "notes": [
+    "Independent read-only review; no Git, installation, edits, sibling access or database mutation.",
+    "The five cycle-2 findings were materially corrected, but the three residual high findings remain blocking.",
+    "RLS, FORCE RLS, append-only privileges, deny-all generated CRUD, idempotency, outbox, 428/412, revoke 200 and typed contracts were independently rechecked."
+  ]
+}

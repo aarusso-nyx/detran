@@ -14,9 +14,25 @@ for rait_argument in "$@"; do
     *) echo "unknown flag: $rait_argument" >&2; exit 2 ;;
   esac
 done
-if [[ "$rait_full" = 1 && ( "$rait_db_name" != detran_r7_ctg1_a2 || "${DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED:-}" != 1 ) ]]; then
-  echo "--full requires explicit disposable detran_r7_ctg1_a2 rehearsal authorization" >&2
-  exit 2
+if [[ "$rait_full" = 1 ]]; then
+  case "$rait_db_name" in
+    detran_r7_ctg1_a2)
+      [[ "${DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED:-}" = 1 ]] || {
+        echo "--full requires explicit disposable detran_r7_ctg1_a2 rehearsal authorization" >&2
+        exit 2
+      }
+      ;;
+    detran_r13)
+      [[ "${DETRAN_R13_FULL_AUTHORIZED:-}" = 1 ]] || {
+        echo "--full requires explicit disposable detran_r13 rehearsal authorization" >&2
+        exit 2
+      }
+      ;;
+    *)
+      echo "--full is not authorized for database: $rait_db_name" >&2
+      exit 2
+      ;;
+  esac
 fi
 rait_directory="$(cd "$(dirname "$0")" && pwd)"
 # Closed inventory and lexical SQL inspection precede every connection.
@@ -26,7 +42,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const dir = process.argv[1];
 const full = process.argv[2] === '1';
-const ordinary = ["00-extensions.sql","01-schemas.sql","02-auth.sql","03-audit.sql","04-integration-storage.sql","05-role-catalog.sql","10-postgis-functions.sql","11-auth-functions.sql","12-audit-functions.sql","13-ops-agency.sql","13-ops-field-operations.sql","14-inf-lifecycle-vocabulary.sql","15-ops-parameter.sql","16-ops-snapshots.sql","17-ops-evidence.sql","18-ops-offline-sync.sql","19-dashboard-lifecycle-vocabulary.sql","19-est-lifecycle-vocabulary.sql","19-portal-platform.sql","20-rls-policies.sql","30-inf-normative.sql","30-ops-example.sql","31-inf-ait.sql","32-inf-measures.sql","33-inf-alcohol.sql","34-inf-rait-case.sql","35-inf-rait-worklist.sql","36-inf-rait-session.sql","37-inf-speed.sql","38-inf-infraction.sql","39-inf-rait-org.sql","40-ch-clinical-network.sql","41-ch-patients.sql","42-ch-encounters.sql","43-ch-exams.sql","44-ch-reports.sql","45-ch-biometrics.sql","46-ch-scheduling.sql","47-ch-restrictions.sql","48-ch-retention.sql","49-ch-process-blocks.sql","50-ch-telehealth.sql","51-ch-billing.sql","52-ch-clinical-controls.sql","53-ch-inconsistencies.sql","54-ch-operational-controls.sql","55-ch-juntas.sql","56-ch-toxicology.sql","57-inf-collection.sql","58-inf-rait-integration.sql","59-inf-notification.sql","60-portal-complaints.sql","61-portal-identity.sql","62-portal-requests.sql","63-portal-inbox.sql","64-portal-citizen-service.sql","65-portal-projections.sql","70-est-crash.sql","71-dashboard-crashes.sql","72-integration-renaest-mirror.sql","75-boat-renaest-job.sql","80-dashboard.sql"];
+const ordinary = ["00-extensions.sql","01-schemas.sql","02-auth.sql","03-audit.sql","04-integration-storage.sql","05-role-catalog.sql","10-postgis-functions.sql","11-auth-functions.sql","12-audit-functions.sql","13-ops-agency.sql","13-ops-field-operations.sql","14-inf-lifecycle-vocabulary.sql","15-ops-parameter.sql","16-ops-snapshots.sql","17-ops-evidence.sql","18-ops-offline-sync.sql","19-dashboard-lifecycle-vocabulary.sql","19-est-lifecycle-vocabulary.sql","19-portal-platform.sql","20-rls-policies.sql","21-ops-provisioning.sql","30-inf-normative.sql","30-ops-example.sql","31-inf-ait.sql","32-inf-measures.sql","33-inf-alcohol.sql","34-inf-rait-case.sql","35-inf-rait-worklist.sql","36-inf-rait-session.sql","37-inf-speed.sql","38-inf-infraction.sql","39-inf-rait-org.sql","40-ch-clinical-network.sql","41-ch-patients.sql","42-ch-encounters.sql","43-ch-exams.sql","44-ch-reports.sql","45-ch-biometrics.sql","46-ch-scheduling.sql","47-ch-restrictions.sql","48-ch-retention.sql","49-ch-process-blocks.sql","50-ch-telehealth.sql","51-ch-billing.sql","52-ch-clinical-controls.sql","53-ch-inconsistencies.sql","54-ch-operational-controls.sql","55-ch-juntas.sql","56-ch-toxicology.sql","57-inf-collection.sql","58-inf-rait-integration.sql","59-inf-notification.sql","60-portal-complaints.sql","61-portal-identity.sql","62-portal-requests.sql","63-portal-inbox.sql","64-portal-citizen-service.sql","65-portal-projections.sql","70-est-crash.sql","71-dashboard-crashes.sql","72-integration-renaest-mirror.sql","75-boat-renaest-job.sql","80-dashboard.sql"];
 const manual = ['19-rait-priority-pre.sql','19-rait-priority-enforce.sql','19-rait-priority-verify.sql'];
 const expected = [...ordinary,...manual].sort();
 const present = fs.readdirSync(path.join(dir,'ddl')).filter(n=>n.endsWith('.sql')).sort();
@@ -110,6 +126,10 @@ while IFS= read -r rait_path; do
   rait_arguments+=(-f "$rait_path")
 done < <(find "$rait_directory/ddl" -maxdepth 1 -type f -name '*.sql' | LC_ALL=C sort)
 rait_arguments+=(-f "$rait_directory/ddl/20-rls-policies.sql"
+  # DDL20 grants its broad baseline after the ordered inventory. Reapply this
+  # generated DDL so its applicationAppendOnly revocations are the final,
+  # idempotent privilege state both on first application and on reapplication.
+  -f "$rait_directory/ddl/21-ops-provisioning.sql"
   -f "$rait_directory/ddl/19-rait-priority-enforce.sql"
   -f "$rait_directory/ddl/19-rait-priority-verify.sql")
 "${rait_psql[@]}" "${rait_arguments[@]}"

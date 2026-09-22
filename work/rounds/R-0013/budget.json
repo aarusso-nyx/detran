@@ -1,11 +1,11 @@
 {
   "schemaVersion": "1.0.0",
   "round_id": "R-0013",
-  "window": 2,
+  "window": 3,
   "budget_input_tokens": 800000,
   "checkpoint_threshold_pct": 80,
-  "previous_window_input_tokens": 755000,
-  "previous_window_output_tokens": 134000,
+  "previous_window_input_tokens": 798000,
+  "previous_window_output_tokens": 144000,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -285,6 +285,339 @@
       "estimated_output_tokens": 6000,
       "status": "completed",
       "note": "Owner-authorized final extraordinary review; Codex Astra, max effort; verdict PASS with no findings"
+    },
+    {
+      "kind": "auditor",
+      "id": "audit-observe-CTG-0002-merge",
+      "window": 2,
+      "estimated_input_tokens": 8000,
+      "estimated_output_tokens": 2000,
+      "status": "completed",
+      "note": "Independent Codex Auditor at exact merge SHA 3da2b61e; event EV-b2cdee5c709b0b18 completed, non-promoting YELLOW due to sensor gaps"
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "window-3-CTG-0003-preflight",
+      "window": 3,
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 5000,
+      "status": "completed",
+      "note": "Renewed exact Git/source identities and prompt hashes; opened CTG-0003 with ADR-0028, DDL 21 and BP-OPS-PROVISIONING-001 still free"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007",
+      "window": 3,
+      "estimated_input_tokens": 110000,
+      "estimated_output_tokens": 20000,
+      "status": "completed",
+      "note": "Architect blueprint; GPT-5.6 Terra high; accepted after exact eight missing-route RED, direct blueprints:check PASS and frozen install checkpoint"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5-a4-codex-exception",
+      "window": 3,
+      "estimated_input_tokens": 25000,
+      "estimated_output_tokens": 5000,
+      "status": "completed",
+      "note": "Owner-authorized same-family exception; GPT-6 Astra high; verdict FAIL because CONTROLLER_ROOTS lacked provisioning"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-6-a4-codex-exception",
+      "window": 3,
+      "estimated_input_tokens": 18000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "note": "Owner-authorized same-family exception; GPT-6 Astra high; focused rereview PASS with no findings"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "window": 3,
+      "estimated_input_tokens": 100000,
+      "estimated_output_tokens": 18000,
+      "status": "blocked",
+      "note": "Inspector stopped before writes: five fail-closed gaps, including missing Owner authority for the exact endpoint-to-principal matrix"
+    },
+    {
+      "kind": "architect-audit",
+      "id": "CTG-0003-authority-audit-a5",
+      "window": 3,
+      "estimated_input_tokens": 30000,
+      "estimated_output_tokens": 7000,
+      "status": "completed",
+      "note": "Independent GPT-6 Astra high read-only audit; three mechanical gaps, one stage-policy contradiction and one product-authority blocker confirmed"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7-a5-codex-exception",
+      "window": 3,
+      "estimated_input_tokens": 35000,
+      "estimated_output_tokens": 7000,
+      "status": "completed",
+      "note": "Owner-authorized same-family exception; GPT-6 Astra high; REVIEW with three focal prompt-boundary findings"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8-a5-codex-exception",
+      "window": 3,
+      "estimated_input_tokens": 18000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "note": "Owner-authorized same-family exception; GPT-6 Astra high; focused rereview PASS with no findings"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "CTG-0003-A5-architect-correction",
+      "window": 3,
+      "estimated_input_tokens": 55000,
+      "estimated_output_tokens": 10000,
+      "status": "completed",
+      "note": "Architect correction accepted: generators/typecheck green, three unauthorized reset cases fail closed, exact eight missing-route remain"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "CTG-0003-A5-engineer-scaffold",
+      "window": 3,
+      "estimated_input_tokens": 35000,
+      "estimated_output_tokens": 7000,
+      "status": "completed",
+      "note": "Engineer eleven-file scaffold accepted: typecheck green, no decorators/DB/policy/tests, exact eight missing-route preserved"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-attempt-2",
+      "window": 3,
+      "estimated_input_tokens": 100000,
+      "estimated_output_tokens": 18000,
+      "status": "completed",
+      "note": "Inspector accepted: DB reset/seeds and integration green; exact sentinel/policy/404 REDs; contracts only C-5-16 RED with eight missing-route"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-9-a5-counts-codex-exception",
+      "window": 3,
+      "estimated_input_tokens": 10000,
+      "estimated_output_tokens": 2500,
+      "status": "completed",
+      "note": "Owner-authorized same-family exception; GPT-6 Astra high; REVIEW because preserved C-5-16 remains staged RED until TASK-0009"
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-10-a5-codex-exception",
+      "window": 3,
+      "estimated_input_tokens": 12000,
+      "estimated_output_tokens": 3000,
+      "status": "completed",
+      "note": "Owner-authorized same-family exception; GPT-6 Astra high; PASS, C-5-16 preserved and moved to TASK-0009 green gate"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "window": 3,
+      "estimated_input_tokens": 150000,
+      "estimated_output_tokens": 26000,
+      "status": "completed",
+      "note": "Engineer backend; implementation and one delimited policy correction completed; scoped tests, backend:test:ci and pnpm check green"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0008-post-green-sensors",
+      "window": 3,
+      "estimated_input_tokens": 12000,
+      "estimated_output_tokens": 3000,
+      "status": "completed",
+      "note": "Inspector-only maintenance: DDL inventory 60/63 to 61/64 plus typed policy-test keys; no expectation weakened"
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003-codex-exception",
+      "window": 3,
+      "estimated_input_tokens": 60000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "note": "Owner-authorized same-family exception; GPT-6 Astra high; FAIL with nine high and two medium findings; CTG escalated before commit"
+    },
+    {
+      "kind": "maestro-replanning",
+      "id": "CTG-0003-delivery-review-cycle-1-reopen",
+      "window": 3,
+      "estimated_input_tokens": 18000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "note": "Owner-authorized Amendment 2; reopened one bounded Architect to Inspector to Engineer correction cycle for F-001 through F-011"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0007-corrective-attempt-2",
+      "window": 3,
+      "estimated_input_tokens": 65000,
+      "estimated_output_tokens": 12000,
+      "status": "completed",
+      "note": "Architect correction accepted after maestro completed canonical generation and blueprints:check; typed response schemas/JSON arrays, final append-only privileges and implementable domain semantics"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0008-corrective-attempt-3",
+      "window": 3,
+      "estimated_input_tokens": 110000,
+      "estimated_output_tokens": 20000,
+      "status": "completed",
+      "note": "Inspector escalation accepted in the same iteration: executable P0-P6 matrix, 602 integration cases, real restart process, crash/rollback, A5 and readiness coverage"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0009-corrective-attempt-3",
+      "window": 3,
+      "estimated_input_tokens": 160000,
+      "estimated_output_tokens": 28000,
+      "status": "completed",
+      "note": "Engineer/Astra completed persisted provisioning, dynamic A5, ETag/idempotency/readiness, transaction/outbox and root CI wiring; focal and integral gates PASS"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-2-extraordinary",
+      "window": 3,
+      "estimated_input_tokens": 70000,
+      "estimated_output_tokens": 14000,
+      "status": "completed",
+      "note": "Owner-authorized same-family extraordinary rereview; FAIL with five residual high findings; CTG escalated at task limit 3/3"
+    },
+    {
+      "kind": "maestro-replanning",
+      "id": "CTG-0003-delivery-review-cycle-2-reopen",
+      "window": 3,
+      "estimated_input_tokens": 18000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "note": "Owner-authorized Amendment 3; reset exhausted limit and reopened one bounded Architect to Inspector to Engineer cycle for F-012 through F-016"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0007-corrective-attempt-3",
+      "window": 3,
+      "estimated_input_tokens": 50000,
+      "estimated_output_tokens": 10000,
+      "status": "completed",
+      "note": "Architect correction accepted: blueprint 1.0.2, append-only reconciliation, closed usability/budget/normative/enrollment/renewal invariants; canonical generation and checks PASS"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0008-corrective-attempt-4",
+      "window": 3,
+      "estimated_input_tokens": 80000,
+      "estimated_output_tokens": 16000,
+      "status": "completed",
+      "note": "Inspector accepted: 50 new frozen tests, real provider seams, 46 expected RED and no fixture/import/config failures; five sensor hashes verified"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0009-corrective-attempt-4",
+      "window": 3,
+      "estimated_input_tokens": 110000,
+      "estimated_output_tokens": 22000,
+      "status": "completed",
+      "note": "Engineer accepted: F-012 through F-016 green, 661 integration, 10 domain e2e, 14 HTTP, fail-closed generated CRUD policy correction; protected hashes preserved"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-3-extraordinary",
+      "window": 3,
+      "estimated_input_tokens": 70000,
+      "estimated_output_tokens": 14000,
+      "status": "completed",
+      "note": "Owner-authorized same-family extraordinary review; FAIL with three high residual findings; CTG escalated at reset limit 4/4"
+    },
+    {
+      "kind": "maestro-replanning",
+      "id": "CTG-0003-delivery-review-cycle-3-reopen",
+      "window": 3,
+      "estimated_input_tokens": 18000,
+      "estimated_output_tokens": 4000,
+      "status": "completed",
+      "note": "Owner-authorized Amendment 4; final bounded cycle for the three cycle-3 blocking findings"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0007-corrective-attempt-4",
+      "window": 3,
+      "estimated_input_tokens": 40000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "note": "Architect correction accepted after restoring prior authority: terminal_at uses the later known boundary and reconciled_at must be strictly greater; issuer-recipient, digest and all-history closures preserved"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0008-corrective-attempt-5",
+      "window": 3,
+      "estimated_input_tokens": 65000,
+      "estimated_output_tokens": 14000,
+      "status": "completed",
+      "note": "Inspector accepted: 33 new Amendment 4 integration proofs, 26 behavior-only REDs, four deny-all policy REDs, 661 prior integration tests preserved and fourteen sensor hashes verified"
+    },
+    {
+      "kind": "worker-correction",
+      "id": "TASK-0009-corrective-attempt-5",
+      "window": 3,
+      "estimated_input_tokens": 95000,
+      "estimated_output_tokens": 20000,
+      "status": "completed",
+      "note": "Engineer accepted: all Amendment 4 sensors green, 694 integration, 10 domain e2e, 19 HTTP/policy, shared 415; stable-snapshot pnpm check and backend:test:ci including upgrade 18/18 PASS"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-4-final-extraordinary",
+      "window": 3,
+      "estimated_input_tokens": 80000,
+      "estimated_output_tokens": 16000,
+      "status": "completed",
+      "note": "Owner-authorized same-family final extraordinary review PASS with zero findings; independent reproduction passed 20/20 functional scenarios, 65 policy negatives, contracts and read-only PostgreSQL invariants; F-001 through F-016 rechecked"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-5-ci-isolation-final",
+      "window": 3,
+      "estimated_input_tokens": 12000,
+      "estimated_output_tokens": 3000,
+      "status": "completed",
+      "note": "Owner-authorized same-family focal review PASS with zero findings; 47 canonical outputs reproduced in memory and clean-checkout test alias confirmed without production or test weakening"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-6-fresh-process-final",
+      "window": 3,
+      "estimated_input_tokens": 12000,
+      "estimated_output_tokens": 3000,
+      "status": "completed",
+      "note": "Owner-authorized same-family final focal review PASS with zero findings; subprocess source resolution, distinct process identity, fail-closed behavior and unchanged replay assertions independently verified"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-7-upstream-integration-final",
+      "window": 3,
+      "estimated_input_tokens": 10000,
+      "estimated_output_tokens": 2500,
+      "status": "completed",
+      "note": "Owner-authorized same-family final integration review PASS with zero findings; exact 67-file apply cardinality and local finite BOAT setup timeout verified without weakening assertions or cleanup"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-8-trigger-locks",
+      "window": 3,
+      "estimated_input_tokens": 8000,
+      "estimated_output_tokens": 2000,
+      "status": "completed",
+      "note": "Owner-authorized same-family review FAIL with one high finding: trigger equivalence omitted tgqual and could accept WHEN false"
+    },
+    {
+      "kind": "delivery-reviewer",
+      "id": "delivery-review-CTG-0003-cycle-9-trigger-locks-final",
+      "window": 3,
+      "estimated_input_tokens": 8000,
+      "estimated_output_tokens": 2000,
+      "status": "completed",
+      "note": "Owner-authorized same-family final review PASS with zero findings after tgqual validation and behavioral PostgreSQL proof"
     }
   ]
 }

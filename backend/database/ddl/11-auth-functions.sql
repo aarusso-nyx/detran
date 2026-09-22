@@ -68,11 +68,34 @@ DECLARE
   item record;
 BEGIN
   FOR item IN
-    SELECT column_info.table_schema, column_info.table_name
+    SELECT
+      column_info.table_schema,
+      column_info.table_name,
+      tenant_column.attnum AS tenant_attnum,
+      tenant_trigger.oid AS trigger_oid,
+      tenant_trigger.tgfoid AS trigger_function,
+      tenant_trigger.tgtype AS trigger_type,
+      tenant_trigger.tgenabled AS trigger_enabled,
+      tenant_trigger.tgnargs AS trigger_arguments,
+      tenant_trigger.tgattr::smallint[] AS trigger_columns,
+      tenant_trigger.tgqual AS trigger_when
     FROM information_schema.columns column_info
     JOIN information_schema.tables table_info
       ON table_info.table_schema = column_info.table_schema
      AND table_info.table_name = column_info.table_name
+    JOIN pg_namespace table_namespace
+      ON table_namespace.nspname = column_info.table_schema
+    JOIN pg_class tenant_table
+      ON tenant_table.relnamespace = table_namespace.oid
+     AND tenant_table.relname = column_info.table_name
+    JOIN pg_attribute tenant_column
+      ON tenant_column.attrelid = tenant_table.oid
+     AND tenant_column.attname = 'tenant_id'
+     AND NOT tenant_column.attisdropped
+    LEFT JOIN pg_trigger tenant_trigger
+      ON tenant_trigger.tgrelid = tenant_table.oid
+     AND tenant_trigger.tgname = 'enforce_tenant_id'
+     AND NOT tenant_trigger.tgisinternal
     WHERE column_info.column_name = 'tenant_id'
       AND table_info.table_type = 'BASE TABLE'
       AND column_info.table_schema IN ('auth', 'audit', 'storage', 'integration', 'inf', 'est', 'ch', 'ops', 'portal')
@@ -81,14 +104,24 @@ BEGIN
         FROM pg_inherits inheritance
         WHERE inheritance.inhrelid = format('%I.%I', column_info.table_schema, column_info.table_name)::regclass
       )
-    GROUP BY column_info.table_schema, column_info.table_name
   LOOP
-    EXECUTE format('DROP TRIGGER IF EXISTS enforce_tenant_id ON %I.%I', item.table_schema, item.table_name);
-    EXECUTE format(
-      'CREATE TRIGGER enforce_tenant_id BEFORE INSERT OR UPDATE OF tenant_id ON %I.%I FOR EACH ROW EXECUTE FUNCTION auth.enforce_tenant_id()',
-      item.table_schema,
-      item.table_name
-    );
+    IF item.trigger_oid IS NULL THEN
+      EXECUTE format(
+        'CREATE TRIGGER enforce_tenant_id BEFORE INSERT OR UPDATE OF tenant_id ON %I.%I FOR EACH ROW EXECUTE FUNCTION auth.enforce_tenant_id()',
+        item.table_schema,
+        item.table_name
+      );
+    ELSIF item.trigger_function <> 'auth.enforce_tenant_id()'::regprocedure::oid
+       OR item.trigger_type <> 23
+       OR item.trigger_enabled <> 'O'
+       OR item.trigger_arguments <> 0
+       OR cardinality(item.trigger_columns) <> 1
+       OR NOT item.tenant_attnum = ANY(item.trigger_columns)
+       OR item.trigger_when IS NOT NULL THEN
+      RAISE EXCEPTION 'Existing enforce_tenant_id trigger differs on %.%',
+        item.table_schema,
+        item.table_name;
+    END IF;
   END LOOP;
 END
 $$;
