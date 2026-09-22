@@ -185,6 +185,19 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Triagem
 
+- 2026-09-22 — CI do PR #103, `foundation` (`pnpm check`): `apps/dashboard/web typecheck:
+src/app/app.routes.ts(95,14): error TS2307: Cannot find module './features/reports/reports.routes'`.
+  Causa: **`.gitignore` linha 10 (`reports/`)** — pensada para saídas de ferramenta e para
+  `work/rounds/*/reports/` — também casava com `apps/dashboard/web/src/app/features/reports/`, de
+  modo que o módulo inteiro das telas D-16/D-17 (5 arquivos: rotas, duas páginas e dois specs)
+  **nunca entrou em commit algum**. Os gates locais passavam porque os arquivos existem em disco;
+  só o CI, que parte de um checkout limpo, viu a falta. Triagem: **plant-bug do maestro** (fui eu
+  quem rodou `git add` do grupo, e o `add` silenciosamente ignorou o diretório — o mesmo padrão já
+  havia exigido `git add -f` para `work/rounds/R-0016/reports/`, sinal que não interpretei).
+  Correção: o padrão ganhou negação explícita (`!apps/*/*/src/app/features/reports/**`) com o
+  motivo em comentário, e os 5 arquivos entraram no commit. Lição para o método (TASK-0007):
+  depois de `git add` de um grupo, comparar `find <dir> -type f` com `git ls-files <dir>` antes do
+  push — um `add` que ignora diretório não falha.
 - 2026-09-22 — checkpoint do grupo CTG-0002, `pnpm check`: falhou em `verify:parameter-catalogue`
   com `apps/dashboard/web/src/app/core/sse/sse.service.spec.ts:141: unknown parameter literal
 rait.case.changed`. **sensor-error** da mesma classe de A7 item 8 (o gate da raiz trata o nome de
