@@ -555,6 +555,33 @@ submit/prove/archive` do dever, `PrepareDutyDto.deadlineOn`) são as de `tests/s
   `dashboard.*` (OD-D63); (9) sem trilha de dever — asserção sobre o evento; token de `ARQUIVADO` em OD-D33; (12) o
   detector considera alerta **terminal** já registrado para a mesma chave (um alerta por ciclo após dois `runDue`);
   (13) `topic` da outbox = `type` técnico. Prompt de TASK-0005 remete ao harness.
+- **A22 (2026-09-22, relatório TASK-0005)** — (a) C-0001-06 (CTG-0001 §6, A9/A10) dizia "`src/handwritten/` não contém
+  `*.controller.ts`": era verdade no CTG-0001 e contradiz M16/§14.2 no CTG-0002 (sete controllers manuscritos por
+  desenho). A sub-asserção cai; `module-surface.spec.ts` passa a afirmar que os controllers **gerados** não têm método
+  de rota e que todo controller manuscrito vive em `surface/**` (Inspector de TASK-0002, iteração restrita). (b) Os
+  quatro defeitos de spec apontados pelo Engineer (helper `?? L` em C-36; default de `ifMatch` em C-09; `String(Date)`
+  do driver `pg` em C-10/26/27 — comparar `localDateOf(row)`; limpeza da outbox em C-43) são corrigidos pelo Inspector
+  de TASK-0004 em iteração restrita — nunca pelo Engineer. (c) As premissas OD-P1…P12 do Engineer (timer armado após a
+  data-limite → `ATRASADO` na mesma transação; `stale_since` como selo; 404 = `DASH.TENANT_MISMATCH`; `owner_role` na
+  criação; só `INCIDENTE_REGISTRADO` bloqueia recorrência — refina A21(12); cadeia desconhecida ≠ esgotada; tokens
+  `DEVER_<estado>`; linha H.54 `level: null`; `last_read_at` no passo 4; `DASHBOARD_TIMER_DEFINITIONS`; assinaturas
+  aditivas de §14.1; `TETO` com alerta aberto → reclassificação) são aceitas como leitura do contrato e registradas
+  por TASK-0007 como OD-D64…D75.
+- **A23 (2026-09-22, relatório TASK-0013)** — (a) `policy.ts` concede `'*'` a `GLOBAL_ADMIN_ROLES` (`ADMIN`,
+  `GESTOR_DETRAN`, `SUPORTE`, `technical-admin`) por regra de plataforma (`isDetranActionAllowed`, kernel #1); o
+  contrato §4.2 transcreveu só `DASHBOARD_RULES` e os listou como negados. Precedente: `policy-routes.e2e.spec.ts`
+  (R-0008 CTG-0001 §7) trata `GLOBAL_ADMIN_ROLE_GRANTS` como concedidos em toda chave. Decisão: a matriz de
+  `dashboard-policy.e2e.spec.ts` adota a mesma convenção (os quatro papéis são permitidos por plataforma em toda rota;
+  as camadas continuam a barrar N3 e a exigir finalidade em N2 — [RN-DASH-170] é satisfeita pelas camadas, não pela
+  política); `policy.ts` não muda (M17). **OD-D76** ao Owner: o DASHBOARD deve ser excluído do atalho de administrador
+  global? (b) A20 (d) corrigida: as escritas de plataforma admitidas em C-0002-93 são `integration.idempotency_keys`
+  (`@Idempotent()`) e `integration.rate_limit_windows` (`RateLimit` de `@Action`) — `core.idempotency_keys` não existe
+  nesta versão do STYNX; `audit.write(...)` continua admitida. (c) OD-D61: as fontes `portal.outbox` e `dashboard`
+  ausentes no seed 81 são inseridas **pela suíte de superfície** (`dashboard-e2e.support.ts`) e removidas no
+  `afterAll`, como a suíte do ciclo já faz (A21 4) — o seed 81 não muda neste CTG; TASK-0007 registra a linha
+  canônica proposta. (d) Premissas P1…P4 do Engineer (segunda instância dos serviços do ciclo no app por falta de
+  `exports` no módulo gerado; `aggregate.version = 2` no `approve`; recorte `indicators` da exportação; discovery do
+  sweep por `integration-operator` e desligado no perfil `test`) aceitas e registradas (OD-D77…D80).
 - **A6 (2026-09-21)** — CTG-0001 decomposto em 5 tarefas (0001; 0002 ∥ 0011; 0010 ∥ 0003) em vez de 3, para
   manter cada worker dentro de um lock e do orçamento de um Sonnet/Opus médio.
 

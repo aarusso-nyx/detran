@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1513000,
-  "estimated_output_total": 396500,
+  "estimated_input_total": 1930000,
+  "estimated_output_total": 570500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3.",
   "entries": [
     {
@@ -158,6 +158,46 @@
       "input_tokens": 30000,
       "output_tokens": 1000,
       "note": "ciclo 7 REVIEW (1 high: `--` restante em TASK-0013); brutos 47.069."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "opus",
+      "input_tokens": 145000,
+      "output_tokens": 70000,
+      "note": "Engineer ciclo: 12 arquivos (relógio, sweeper, alerta, deveres, frescor, notificador, eventos, DTOs); brutos 577 k, 103 chamadas, 46 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 1000,
+      "note": "ciclo 8 restrito PASS; brutos 47.665."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0013",
+      "model": "opus",
+      "input_tokens": 167000,
+      "output_tokens": 85000,
+      "note": "Engineer superfície: 17 arquivos + SSE + sweep providers + app.module; brutos 669 k, 217 chamadas, 62 min."
+    },
+    {
+      "kind": "iterations",
+      "id": "A22-restricted",
+      "model": "opus",
+      "input_tokens": 45000,
+      "output_tokens": 10000,
+      "note": "Inspectors TASK-0004 (4 defeitos de spec) e TASK-0002 (module-surface); brutos ≈700 k acumulados dos agentes retomados."
+    },
+    {
+      "kind": "iterations",
+      "id": "A23-restricted",
+      "model": "opus",
+      "input_tokens": 30000,
+      "output_tokens": 8000,
+      "note": "Inspector TASK-0014 (matriz com GLOBAL_ADMIN, allowlist integration.*, fontes da suíte); e2e 1.275 ×2."
     }
   ]
 }
