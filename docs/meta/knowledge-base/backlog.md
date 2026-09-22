@@ -534,10 +534,10 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [x] **R-0014 `portal-pwa` fechada como `PC-0007`** (PRs #60…#67, 2026-09-17/19): primeiro app do repositório (`apps/portal/web`,
       padrão de scaffold), allowlist de namespaces i18n (OD-P46), 27 fichas, PWA, WP-P6 no mock; workers/reviewer Codex por
       autorização do Owner (B3); handoffs OD-P15/16/17/19/88 e delegações reais para R-0007
-- [ ] **R-0007 `rait-backend` em curso (Sol)**: CTG-0001 (`DetranError`, case) e CTG-0002 (worklist/sessão) em `main` pelo PR #69
-      (2026-09-20); **pendentes CTG-0003** (infração, consumidores, motor de timers — libera R-0011 CTG-0002 e a delegação de
-      indicação no Portal) **e CTG-0004** (org, financeiro, integrações, SSE — libera a delegação de pagamento); branch
-      `orchestra/rait-backend` publicado. No mesmo worktree, adoção de DEVAI 1.5.x (PR #74 mesclado; PR #75 aberto) (added 2026-09-21)
+- [x] **R-0007 `rait-backend` fechada (2026-09-22)**: CTG-0001 (`DetranError`, case) e CTG-0002 (worklist/sessão) entraram em
+      `main` pelo PR #69; CTG-0003 fechou comandos, consumidores e timers da infração; CTG-0004 fechou organização,
+      arrecadação, integrações, SSE, sete contratos canônicos e clientes gerados. A adoção DEVAI/evidência local foi integrada
+      antes do fechamento; os consumidores R-0011/R-0012 podem usar as superfícies publicadas.
 - [ ] **R-0013 `teat-frontends` em curso (Sol/Codex)**: CTG-0001 (reconciliação do corpus, PR #70) e contratos de paridade do
       CTG-0002 (PR #73) em `main`; prompt-review em `FAIL` por dois ciclos, nenhum worker disparado; pendentes as 126 fichas
       (CTG-0002), o provisionamento offline (CTG-0003) e os apps `apps/teat/{mobile,web}` (CTG-0004) (added 2026-09-21)

@@ -83,6 +83,11 @@ import { NormativeModule } from '@detran/inf-normative';
 import { RaitCaseModule } from '@detran/inf-rait-case';
 import { RaitSessionModule } from '@detran/inf-rait-session';
 import { RaitWorklistModule } from '@detran/inf-rait-worklist';
+import { InfractionModule } from '@detran/inf-infraction';
+import { NotificationModule } from '@detran/inf-notification';
+import { RaitOrgModule } from '@detran/inf-rait-org';
+import { CollectionModule } from '@detran/inf-collection';
+import { RaitIntegrationModule } from '@detran/inf-rait-integration';
 import { SpeedModule } from '@detran/inf-speed';
 import { CrashModule } from '@detran/est-crash';
 import { AgencyModule } from '@detran/ops-agency';
@@ -143,6 +148,11 @@ import {
   TEAT_STREAM_POLLER,
   TeatStreamService,
 } from './teat-stream.service.js';
+import { RaitStreamController } from './handwritten/rait/rait-stream.controller.js';
+import {
+  RAIT_STREAM_POLLER,
+  RaitStreamService,
+} from './handwritten/rait/rait-stream.service.js';
 import { TeatIntegrationsController } from './teat-integrations.controller.js';
 import { TeatIntegrationsService } from './teat-integrations.service.js';
 import {
@@ -807,6 +817,11 @@ export class AppModule {
         RaitCaseModule,
         RaitWorklistModule,
         RaitSessionModule,
+        InfractionModule,
+        NotificationModule,
+        RaitOrgModule,
+        CollectionModule,
+        RaitIntegrationModule,
         AgencyModule,
         FieldModule,
         SnapshotsModule,
@@ -826,6 +841,7 @@ export class AppModule {
         PortalStreamController,
         // R-0011 CTG-0002 §11 (TASK-0013): SSE do DASHBOARD (`dashboard:alert:read`).
         DashboardStreamController,
+        RaitStreamController,
         TeatIntegrationsController,
         PecProcessParametersController,
         PecRenachProcessController,
@@ -870,6 +886,11 @@ export class AppModule {
         DashboardStreamService,
         {
           provide: DASHBOARD_STREAM_POLLER,
+          useFactory: () => createDefaultTeatStreamPoller(),
+        },
+        RaitStreamService,
+        {
+          provide: RAIT_STREAM_POLLER,
           useFactory: () => createDefaultTeatStreamPoller(),
         },
         TeatIntegrationsService,

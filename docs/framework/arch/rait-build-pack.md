@@ -86,6 +86,10 @@ Executado em R-0006 (CTG-0001: PR #39; CTG-0002: PR pendente); ficou fora: proje
 
 ### WP-B — Rotas faltantes no backend (Engineer; Architect revisa guardas)
 
+**Fechado em R-0007 (CTG-0003/CTG-0004, 2026-09-22):** os cinco comandos da
+infração, consumidores/timers, superfícies de organização/arrecadação/integração
+e o stream SSE foram incorporados ao runtime e à matriz canônica de política.
+
 Entregável **B**. Ler: `rait-web-frontend.md` §7 (33 ações) e §11, `rait-error-catalog.md`,
 `RAIT_COMMAND_RULES` em `policy.ts`, `WF-RAIT-001` (transições do caso), `WF-RAIT-003`,
 `WF-INF-003` §2 (`infraction_transition_ref`). Produzir, em `src/handwritten/` de cada módulo:
@@ -106,6 +110,11 @@ testes unit + integration (tiers do vitest gerado). Gate: `verify:decorators`, `
 `backend:test:ci`, matriz de política cobre 100% dos pares recurso/ação (`policy.spec.ts`).
 
 ### WP-C — Formato de todos os payloads (Engineer, Sonnet-friendly)
+
+**Fechado em R-0007 (CTG-0004, 2026-09-22):** os sete inventários canônicos
+`*.commands.openapi.json` cobrem 53 operações RAIT/infração/arrecadação, são
+verificados bidirecionalmente contra os controllers e geram clientes de forma
+determinística. O corpus completo do repositório soma 256 operações de comando.
 
 Entregável **C**. Ler: contratos OpenAPI gerados, §0 "Convenções de payload", `rait-error-catalog.md`
 §1, comandos de WP-B, formulários da especificação §9. Produzir

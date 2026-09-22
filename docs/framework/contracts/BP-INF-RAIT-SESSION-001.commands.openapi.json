@@ -1,0 +1,85 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RAIT Session commands",
+    "version": "1.0.0",
+    "x-blueprint": "BP-INF-RAIT-SESSION-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/inf/rait/sessions/{id}/commands/close-agenda": {
+      "post": {
+        "operationId": "raitSessionCloseAgenda",
+        "responses": { "200": { "description": "Pauta fechada" } }
+      }
+    },
+    "/v1/inf/rait/sessions/{id}/commands/open": {
+      "post": {
+        "operationId": "raitSessionOpen",
+        "responses": { "200": { "description": "Sessão aberta" } }
+      }
+    },
+    "/v1/inf/rait/sessions/{id}/commands/adjourn": {
+      "post": {
+        "operationId": "raitSessionAdjourn",
+        "responses": { "200": { "description": "Sessão adiada" } }
+      }
+    },
+    "/v1/inf/rait/sessions/{id}/commands/convene-extraordinary": {
+      "post": {
+        "operationId": "raitSessionConveneExtraordinary",
+        "responses": {
+          "200": { "description": "Sessão extraordinária convocada" }
+        }
+      }
+    },
+    "/v1/inf/rait/agenda-items/{id}/commands/read": {
+      "post": {
+        "operationId": "raitAgendaItemRead",
+        "responses": { "200": { "description": "Relatoria lida" } }
+      }
+    },
+    "/v1/inf/rait/agenda-items/{id}/commands/view": {
+      "post": {
+        "operationId": "raitAgendaItemView",
+        "responses": { "200": { "description": "Vista registrada" } }
+      }
+    },
+    "/v1/inf/rait/agenda-items/{id}/commands/withdraw": {
+      "post": {
+        "operationId": "raitAgendaItemWithdraw",
+        "responses": { "200": { "description": "Item retirado" } }
+      }
+    },
+    "/v1/inf/rait/votes": {
+      "post": {
+        "operationId": "raitVoteCreate",
+        "responses": { "200": { "description": "Voto registrado" } }
+      }
+    },
+    "/v1/inf/rait/agenda-items/{id}/commands/proclaim": {
+      "post": {
+        "operationId": "raitAgendaItemProclaim",
+        "responses": { "200": { "description": "Resultado proclamado" } }
+      }
+    },
+    "/v1/inf/rait/minutes": {
+      "post": {
+        "operationId": "raitMinutesCreate",
+        "responses": { "200": { "description": "Ata preparada" } }
+      }
+    },
+    "/v1/inf/rait/minutes/{id}/commands/sign": {
+      "post": {
+        "operationId": "raitMinutesSign",
+        "responses": { "200": { "description": "Ata assinada" } }
+      }
+    },
+    "/v1/inf/rait/minutes/{id}/commands/publish": {
+      "post": {
+        "operationId": "raitMinutesPublish",
+        "responses": { "200": { "description": "Ata publicada" } }
+      }
+    }
+  }
+}

@@ -71,11 +71,15 @@ export const RAIT_COMMAND_KEYS_FIXTURE: readonly string[] = [
   'inf:rait-suspension-act:create',
   'inf:rait-parameter:update',
   'inf:rait-export:create',
+  'inf:rait-export:approve',
   'inf:rait-quality-sample:review',
   'inf:rait-capacity-plan:publish',
   'inf:rait-incident:open',
   'inf:rait-integration:retry',
+  'inf:rait-integration:read',
   'inf:rait-integration:reconcile',
+  'inf:rait-notice:issue',
+  'inf:rait-infraction:indicate-driver',
   'inf:rait-collection:issue',
   'inf:rait-refund:order',
   'inf:rait-debt:handoff',
@@ -84,7 +88,7 @@ export const RAIT_COMMAND_KEYS_FIXTURE: readonly string[] = [
   'inf:rait-archive:apply-retention',
 ];
 
-/** Papel → chaves concedidas (mesmas 60 linhas de `RAIT_COMMAND_RULES`, agrupadas por papel). */
+/** Papel RAIT da UI → chaves concedidas; papéis externos ao manifesto, como DPO, ficam fora. */
 export const ROLE_PERMISSIONS_FIXTURE: Readonly<
   Record<RaitRoleCode, readonly string[]>
 > = {
@@ -125,6 +129,8 @@ export const ROLE_PERMISSIONS_FIXTURE: Readonly<
     'inf:rait-minutes:publish',
     'inf:rait-archive:seal',
     'inf:rait-archive:apply-retention',
+    'inf:rait-notice:issue',
+    'inf:rait-infraction:indicate-driver',
   ],
   'rait-signing-authority': [
     'inf:rait-decision:sign',
@@ -132,6 +138,7 @@ export const ROLE_PERMISSIONS_FIXTURE: Readonly<
     'inf:rait-impediment:declare',
     'inf:rait-extinction:declare',
     'inf:rait-suspension-act:create',
+    'inf:rait-notice:issue',
   ],
   'rait-central-authority': [
     'inf:rait-appeal:authority-decide',
@@ -185,8 +192,9 @@ export const ROLE_PERMISSIONS_FIXTURE: Readonly<
   ],
   'integration-operator': [
     'inf:rait-integration:retry',
+    'inf:rait-integration:read',
     'inf:rait-integration:reconcile',
   ],
-  AUDITOR: ['inf:rait-export:create'],
+  AUDITOR: ['inf:rait-export:create', 'inf:rait-integration:read'],
   'agency-admin': ['inf:rait-parameter:update'],
 };

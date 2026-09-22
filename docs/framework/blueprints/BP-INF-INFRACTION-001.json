@@ -4,7 +4,7 @@
   "module": {
     "name": "Infraction",
     "namespace": "inf",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "ddlFile": "38-inf-infraction.sql",
     "dependencies": {
       "@detran/inf-ait": "workspace:*",
@@ -29,7 +29,33 @@
         "target": "../deadlines/src/index.ts"
       }
     ],
-    "handwrittenExports": ["handwritten/index"],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/infraction-commands.controller",
+        "symbol": "InfractionCommandsController"
+      }
+    ],
+    "handwrittenProviders": [
+      {
+        "target": "handwritten/infraction-command.service",
+        "symbol": "InfractionCommandService"
+      },
+      {
+        "target": "handwritten/infraction-event.consumer",
+        "symbol": "InfractionEventConsumer"
+      },
+      {
+        "target": "handwritten/infraction-deadline.sweep",
+        "symbol": "InfractionDeadlineSweep"
+      }
+    ],
+    "handwrittenExports": [
+      "handwritten/index",
+      "handwritten/infraction-commands.controller",
+      "handwritten/infraction-command.service",
+      "handwritten/infraction-event.consumer",
+      "handwritten/infraction-deadline.sweep"
+    ],
     "owners": ["detran-inf"],
     "description": "Agregado da infracao (ADR-0016 Decision 1; [WF-INF-003] secoes 1-6): unico escritor de state/substate, sujeito passivo, efeito suspensivo, pagamento, pontuacao e motivo de encerramento, dos relogios legais (secao 3) e da trilha de eventos (secao 6). O vocabulario canonico (15 estados, 12 sub-estados, 46 transicoes, 18 timers) vive em 14-inf-lifecycle-vocabulary.sql e e referenciado por FK."
   },
