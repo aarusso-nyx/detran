@@ -961,6 +961,28 @@ Checkpoint 42 (janela 4, scaffold mobile e lockfile):
 - TASK-0011 está `completed` e seu scaffold/lockfile foi congelado antes do RED. TASK-0012 abriu a
   tentativa 1/2 em papel Inspector; TASK-0013…0018 permanecem `queued`.
 
+Checkpoint 43 (janela 4, reference-gap antes do RED):
+
+- o Inspector detectou antes de qualquer escrita que o contrato §3 enumerava 14 schemas, mas
+  remetia seus campos/gates a `teat-frontends` §8, fonte deliberadamente ausente da lista fechada
+  de TASK-0012; criar sensores assim exigiria inventar ou ler fora da autoridade;
+- triagem: `reference-gap`. TASK-0012 retornou a `queued` sem consumir tentativa e sem alterar
+  arquivo; TASK-0010 reabriu a tentativa final 2/2 somente para tornar os 14 contratos de
+  formulário autocontidos;
+- a correção Architect não pode mudar as 70 rotas, RBAC, D-05/BOAT, hash/matriz 576, ownership nem
+  qualquer decisão de produto. TASK-0013…0018 permanecem `queued`.
+
+Checkpoint 44 (janela 4, contrato de forms autocontido):
+
+- TASK-0010 tentativa 2/2 transcreveu no contrato os campos obrigatórios/opcionais, validações de
+  forma e gates/comandos dos 14 schemas; lacunas reais ficaram `source_pending` literais;
+- o maestro corrigiu uma interpretação permissiva: justificativa de `ait-frame` é obrigatória
+  somente em `caso_3` e proibida/ausente fora desse ramo, nunca opcional geral;
+- Prettier, KB, o oráculo de 14 linhas autocontidas e `git diff --check` passaram; as 70 rotas,
+  RBAC, D-05/BOAT, matriz/hash 576 e ownership permaneceram inalterados;
+- TASK-0010 está `completed`; TASK-0012 retomou sua tentativa 1/2 agora com fontes suficientes.
+  TASK-0013…0018 permanecem `queued`.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do

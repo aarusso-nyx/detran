@@ -128,15 +128,30 @@ produção do Feature Engineer.
 ## 3. Form schemas e renderização
 
 O schema local é Zod, serializa apenas o payload aceito pelo cliente respectivo e
-não adiciona regra de negócio. Arquivos de produção: `data/local/open-shift.schema.ts`,
-`ait-vehicle.schema.ts`, `ait-driver.schema.ts`, `ait-frame.schema.ts`,
-`ait-location.schema.ts`, `ait-evidence.schema.ts`, `ait-signature.schema.ts`,
-`ait-review.schema.ts`, `ait-cancel-request.schema.ts`, `alcohol-device.schema.ts`,
-`alcohol-result.schema.ts`, `alcohol-refusal.schema.ts`, `measure-term.schema.ts` e
-`sync-conflict.schema.ts`. Seus campos e gates são exatamente os da tabela §8 de
-`ARCH-TEAT-FRONTENDS`; nenhum schema possui campo de tenant, prazo legal, decisão
-de mérito ou papel sintetizado. `ait-review` requer ação explícita; pares
+não adiciona regra de negócio. Nenhum schema possui campo de tenant, prazo legal,
+decisão de mérito ou papel sintetizado. `ait-review` requer ação explícita; pares
 medido/considerado e recusa/impossibilidade permanecem estruturalmente distintos.
+
+| arquivo/schema                            | campos obrigatórios                                                                       | campos opcionais | validação de forma                                                                                                                 | gate, transição e comando                                                                    |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `data/local/open-shift.schema.ts`         | unidade, equipe, viatura, localização                                                     | operação         | todos os valores vêm do catálogo do bootstrap                                                                                      | `canOpenShift` → `POST mobile-bootstrap/shifts` → `Shift.open`                               |
+| `data/local/ait-vehicle.schema.ts`        | placa (proposta/consulta), confirmação visual, divergência                                | `source_pending` | placa Mercosul/antiga; `visually_confirmed_by_agent`                                                                               | `source_pending`                                                                             |
+| `data/local/ait-driver.schema.ts`         | condutor (consulta ou manual), `identified_by`, abordagem                                 | `source_pending` | CPF/CNH válidos quando informados                                                                                                  | `source_pending`                                                                             |
+| `data/local/ait-frame.schema.ts`          | enquadramento; justificativa obrigatória somente quando `approach_class = caso_3`         | `source_pending` | justificativa proibida/ausente fora de `caso_3`; `required_fields` do enquadramento; `requires_equipment` bloqueia sem instrumento | `source_pending`                                                                             |
+| `data/local/ait-location.schema.ts`       | local, UF, município, GPS ou edição manual marcada                                        | `source_pending` | precisão informada                                                                                                                 | `source_pending`                                                                             |
+| `data/local/ait-evidence.schema.ts`       | tipo do catálogo, hash                                                                    | `source_pending` | mandatory por enquadramento, por exemplo placa em velocidade (`RN-TEAT-139`)                                                       | `source_pending`                                                                             |
+| `data/local/ait-signature.schema.ts`      | resultado ∈ {assinado, recusa, impossibilidade}; motivo por ramo                          | testemunha       | motivo obrigatório em recusa/impossibilidade                                                                                       | `source_pending`                                                                             |
+| `data/local/ait-review.schema.ts`         | todas as validações bloqueantes verdes, número reservado, pacote válido                   | `source_pending` | `ValidationPanel` sem bloqueante                                                                                                   | `RASCUNHO_OFFLINE` → **ação explícita** → `FINALIZADO_LOCAL` → `ENFILEIRADO`                 |
+| `data/local/ait-cancel-request.schema.ts` | justificativa, destinatário (`traffic-authority` \| `diretoria-fiscalizacao`), base legal | `source_pending` | `origin_status` capturado                                                                                                          | qualquer pós-finalização → item `ait-cancel-posfinal-request` → `SOLICITADO_CANCEL_POSFINAL` |
+| `data/local/alcohol-device.schema.ts`     | etilômetro do catálogo com verificação vigente                                            | `source_pending` | bloqueia sem certificado (`RN-TEAT-135`)                                                                                           | `TRIAGEM` → `ETILOMETRO_OFERECIDO`                                                           |
+| `data/local/alcohol-result.schema.ts`     | medido, considerado (derivado da tabela), horário                                         | `source_pending` | par; faixa 0,05/0,34 exibida                                                                                                       | `TESTE_REALIZADO` → resultado                                                                |
+| `data/local/alcohol-refusal.schema.ts`    | recusa × impossibilidade, descrição, testemunha                                           | `source_pending` | ramos exclusivos                                                                                                                   | recusa → `RECUSA_REGISTRADA`; impossibilidade → `OUTRO_MEIO_PROVA`                           |
+| `data/local/measure-term.schema.ts`       | sete campos do caput, quatro do art. 14 §1º, prazos de retirada (dois, OD-T05)            | `source_pending` | assinatura: assinado/recusa/impossibilidade                                                                                        | `REMOVIDO`/`RETIDO` → termo emitido → `measure-done`                                         |
+| `data/local/sync-conflict.schema.ts`      | ação ∈ {`manual_review`, `accept_server`, `reject`, `retry_after_correction`}, descrição  | `source_pending` | `source_pending`                                                                                                                   | `open` → `POST sync-conflicts/{id}/resolve` → `resolved`/`rejected`                          |
+
+`source_pending` é literal: a fonte fechada não fornece detalhe adicional, e o
+Feature Engineer não pode preenchê-lo por inferência. A tabela acima é a fonte
+autossuficiente de implementação para esses 14 schemas.
 
 ## 4. Importação fechada das 576 transições
 
