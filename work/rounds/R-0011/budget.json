@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1930000,
-  "estimated_output_total": 570500,
+  "estimated_input_total": 2080000,
+  "estimated_output_total": 602500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3.",
   "entries": [
     {
@@ -198,6 +198,22 @@
       "input_tokens": 30000,
       "output_tokens": 8000,
       "note": "Inspector TASK-0014 (matriz com GLOBAL_ADMIN, allowlist integration.*, fontes da suíte); e2e 1.275 ×2."
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "ctg-0002-prompts-0004..0009+0007",
+      "model": "opus",
+      "input_tokens": 80000,
+      "output_tokens": 30000,
+      "note": "Prompts 0004/0014/0005/0013/0006/0008/0009/0007, adendas A20…A23, checkpoints 4/5; prompt-reviews 5…10."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-9+10",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 70000,
+      "output_tokens": 2000,
+      "note": "ciclo 9 REVIEW (2 high: filtro teat-*/portal-* do app; 1 low: esforço 0007) → ciclo 10 PASS; brutos 69.619 + 76.630."
     }
   ]
 }
