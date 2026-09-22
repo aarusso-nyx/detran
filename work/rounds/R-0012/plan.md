@@ -339,6 +339,12 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   avanço de `main`; reexecução do CI em curso), porque escrevem só arquivos novos/JSON sem commit
   até o merge. O `audit observe` do merge do CTG-0002b-2 é feito quando ocorrer.
 
+- **B6 (registro, 2026-09-22).** `tests/integration/rait-priority-upgrade.integration.spec.ts`
+  (R-0007) falhou de forma intermitente no `backend-kernel` dos PRs #85, #90 e #93 — todos sem
+  tocar `backend/**` — e passou em todos os reruns (`gh run rerun --failed`, §9.4: falha de
+  infraestrutura, não triagem da frente). Recomendação ao dono de R-0007 registrada em
+  `orchestra/README.md` §10 (isolamento do upgrade de schema em banco compartilhado).
+
 ## Triagem
 
 - CTG-0002b-2, TASK-0015 it. 1 → 393/3712 testes vermelhos: `sensor-error` ×7 (stub de facade sem
