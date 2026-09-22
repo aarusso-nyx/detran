@@ -858,6 +858,20 @@ Checkpoint 35 (janela 3, integração final de upstream e recertificação):
   typechecked, 966 handlers, RLS 265/2, portal 1314 testes, RAIT 1807 testes e ambos os builds.
   O candidato está liberado para evidence record, push e CI remoto do PR #82.
 
+Checkpoint 36 (janela 3, adoção DEVAI 1.5.4 antes da publicação):
+
+- antes do push, `origin/main` avançou até `b527d9ef…` exclusivamente com a adoção governada do
+  DEVAI 1.5.4 e foi integrado por merge normal `088a0c23…`; nenhum arquivo de produto, backend,
+  DDL, teste ou blueprint foi alterado por esse upstream;
+- `pnpm install --frozen-lockfile` substituiu somente DEVAI 1.5.3 por 1.5.4; doctor confirmou
+  versões pinned/running 1.5.4, policy materialization atual e cadeia válida;
+- `pnpm check` foi repetido no candidato exato 1.5.4 e passou integralmente com 756 artefatos KB,
+  160 operações/64 clientes, 59 projetos typechecked, 966 handlers, RLS 265/2, portal 1314,
+  RAIT 1807 e ambos os builds;
+- como o upstream não tocou qualquer superfície do kernel backend já certificado em isolamento,
+  o `pnpm ci:backend-full` verde do checkpoint 35 permanece aplicável; a evidência será regravada
+  pelo DEVAI 1.5.4 antes do push.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
