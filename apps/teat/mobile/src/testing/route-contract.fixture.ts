@@ -449,7 +449,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-start.page.ts#CrashStartPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashStartBoundaryComponent',
   },
   {
     path: 'crash-location',
@@ -458,7 +458,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-location.page.ts#CrashLocationPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashLocationBoundaryComponent',
   },
   {
     path: 'crash-conditions',
@@ -467,7 +467,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-conditions.page.ts#CrashConditionsPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashConditionsBoundaryComponent',
   },
   {
     path: 'crash-vehicles',
@@ -476,7 +476,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-vehicles.page.ts#CrashVehiclesPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashVehiclesBoundaryComponent',
   },
   {
     path: 'crash-people',
@@ -485,7 +485,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-people.page.ts#CrashPeoplePageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashPeopleBoundaryComponent',
   },
   {
     path: 'crash-victims',
@@ -494,7 +494,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-victims.page.ts#CrashVictimsPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashVictimsBoundaryComponent',
   },
   {
     path: 'crash-dynamics',
@@ -503,7 +503,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-dynamics.page.ts#CrashDynamicsPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashDynamicsBoundaryComponent',
   },
   {
     path: 'crash-sketch',
@@ -512,7 +512,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-sketch.page.ts#CrashSketchPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashSketchBoundaryComponent',
   },
   {
     path: 'crash-evidence',
@@ -521,7 +521,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-evidence.page.ts#CrashEvidencePageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashEvidenceBoundaryComponent',
   },
   {
     path: 'crash-ait-links',
@@ -530,7 +530,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-ait-links.page.ts#CrashAitLinksPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashAitLinksBoundaryComponent',
   },
   {
     path: 'crash-review',
@@ -539,7 +539,7 @@ export const TEAT_ROUTE_FIXTURE = [
     guards: 'B+S, BOAT',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component:
-      'features/sinistro/pages/crash-review.page.ts#CrashReviewPageComponent',
+      'features/sinistro/sinistro.routes.ts#CrashReviewBoundaryComponent',
   },
   {
     path: 'sync',
