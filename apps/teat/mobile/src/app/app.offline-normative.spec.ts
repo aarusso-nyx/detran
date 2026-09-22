@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { expect, it, vi } from 'vitest';
 import { loadMobileRuntime } from '../testing/runtime-module';
 
@@ -128,9 +129,24 @@ it('dados conteúdo válido, ausente, hash divergente e expirado quando Normativ
       now: string,
     ) => Promise<'usable' | 'warning-expired' | 'blocked'>;
   };
+  const content = { normative_rules: ['RN-TEAT-139'] };
+  const manifestHash = createHash('sha256')
+    .update(JSON.stringify(content))
+    .digest('hex');
+  const validUntil = '2999-01-01T00:00:00Z';
   const service = new Service(
     {},
-    { packageContent: vi.fn(), validatePackage: vi.fn() },
+    {
+      packageContent: vi.fn().mockResolvedValue({
+        content,
+        manifestHash,
+        validUntil,
+      }),
+      validatePackage: vi.fn().mockResolvedValue({
+        manifestHash,
+        validUntil,
+      }),
+    },
     {},
     {},
   );
