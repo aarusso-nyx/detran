@@ -8,6 +8,11 @@ dist/
 build/
 coverage/
 reports/
+# Código de aplicação chamado `reports` é rastreado: o padrão acima existe para saídas de
+# ferramenta e para os relatórios de worker de `work/rounds/*/reports/` (R-0016: o módulo
+# `features/reports` do console — telas D-16/D-17 — ficou fora de um commit por causa dele).
+!apps/*/*/src/app/features/reports/
+!apps/*/*/src/app/features/reports/**
 tmp/
 .turbo/
 .vite/
