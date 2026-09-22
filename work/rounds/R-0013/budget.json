@@ -1,11 +1,11 @@
 {
   "schemaVersion": "1.0.0",
   "round_id": "R-0013",
-  "window": 3,
+  "window": 4,
   "budget_input_tokens": 800000,
   "checkpoint_threshold_pct": 80,
-  "previous_window_input_tokens": 798000,
-  "previous_window_output_tokens": 144000,
+  "previous_window_input_tokens": 1913000,
+  "previous_window_output_tokens": 373500,
   "entries": [
     {
       "kind": "maestro-planning",
@@ -636,6 +636,24 @@
       "estimated_output_tokens": 1500,
       "status": "completed",
       "note": "PR 82 merged with seven green checks; observation and generic evidence sequence 12 pushed on the preserved continuity branch"
+    },
+    {
+      "kind": "maestro-preflight",
+      "id": "window-4-CTG-0004a-preflight",
+      "window": 4,
+      "estimated_input_tokens": 45000,
+      "estimated_output_tokens": 8000,
+      "status": "completed",
+      "note": "Merged origin/main 7cce33a through 2a21087e, accepted the canonical main evidence chain, installed frozen DEVAI 1.5.5 dependencies, verified task and prompt identity, and passed the complete pnpm check baseline"
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010-attempt-1",
+      "window": 4,
+      "estimated_input_tokens": 85000,
+      "estimated_output_tokens": 18000,
+      "status": "in_progress",
+      "note": "Architect contract worker for the exact 70-route, 70-sheet and 576-transition mobile surface"
     }
   ]
 }

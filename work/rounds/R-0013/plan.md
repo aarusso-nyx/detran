@@ -919,6 +919,22 @@ Checkpoint 39 (janela 3, merge e observação governada de CTG-0003):
   CTG-0004a/CTG-0004b/CTG-0005; a cadeia final permaneceu válida em `109bca0c…` e a identidade
   local/remota da branch foi confirmada em `0be1fee9…`. CTG-0003 está completamente encerrada.
 
+Checkpoint 40 (janela 4, preflight CTG-0004a):
+
+- o Owner autorizou CTG-0004a e os grupos subsequentes; a janela 4 foi aberta com orçamento novo
+  de 800.000 tokens de entrada e a exceção vigente de Reviewer da família CODEX;
+- `origin/main` avançou até `7cce33a7…` com o fechamento R-0011/dashboard e DEVAI 1.5.5; o upstream
+  foi integrado por merge normal `2a21087e…`, com conflito somente em `record/proofs/chain.json`,
+  resolvido pela versão canônica de `main` conforme a regra da orquestra;
+- `pnpm install --frozen-lockfile`, DEVAI doctor tier 3 e o baseline `pnpm check` passaram; o gate
+  confirmou 756 artefatos KB, 203 operações/65 clientes, 59 projetos, 1009 handlers, RLS 267/2,
+  portal 1314 testes, RAIT 2263 testes e ambos os builds;
+- o primeiro `pnpm check` foi descartado antes dos gates por formatação pendente nos dois JSONs
+  pós-merge de CTG-0003; Prettier foi aplicado somente nesses arquivos e a repetição integral passou;
+- TASK-0009 permanece `completed`; composição TASK-0010 confere no hash
+  `4cec35ce8ad3aa18efa16c067d87cee040244c2c601c61dad523fae32ba026b8`; TASK-0010 abriu a
+  tentativa 1/2 em papel Architect, enquanto TASK-0011…TASK-0018 permanecem `queued`.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
