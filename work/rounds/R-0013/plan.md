@@ -1,6 +1,6 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** CTG-0001 mesclado; CTG-0002 delivery review final `PASS`, em hard gates/integração.
+**Status:** CTG-0001 e CTG-0002 mesclados e observados; CTG-0003 é a próxima fronteira.
 Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
 **Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
 (matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
@@ -81,7 +81,8 @@ checkpoint de instalação/lockfile posterior a TASK-0007. Banco da rodada:
   parâmetros e namespaces `teat.*` declarados; somente os três gerados documentados mudam;
 - provisionamento: comandos separados `test:unit`, `test:integration`, `test:e2e`; `contracts:test`,
   shared policy, RLS, decorators, reset + dois seeds idempotentes em `detran_r13`; toda a matriz
-  P0–P6, não apenas quatro rejeitos;
+  P0–P6, não apenas quatro rejeitos; `contracts:check` admite exatamente oito `missing-route` após
+  o Architect, como RED da fronteira manuscrita, e deve ficar integralmente verde no Engineer;
 - mobile: comandos separados `lint`, `typecheck`, `test`, `build`; 70/70 rotas/fichas, 576/576
   transições e produto cartesiano de papéis permitidos/omitidos;
 - web: comandos separados `lint`, `typecheck`, `test`, `build`; 60/60 rotas, 56/56 fichas e
@@ -162,6 +163,58 @@ a cadeia de 18 tarefas, papéis e CTGs aceitos pelo reviewer permanecem inaltera
 
 Relatórios `prompt-review-1…3` são evidência histórica imutável e preservam as referências antigas.
 
+## Adenda estrutural A4 — fronteira executável do RED contratual em CTG-0003
+
+Autorizada pelo Owner ao determinar a execução completa de CTG-0003 e limitada à contradição
+operacional descoberta durante TASK-0007. Nenhuma autoridade de produto, requisito, papel, artefato
+ou dependência do grafo de 18 tarefas é acrescentada ou alterada.
+
+1. TASK-0007, em papel Architect, continua responsável por ADR-0028, blueprint, DDL, schemas,
+   contratos OpenAPI e clientes gerados, mas não pode criar ou montar `src/handwritten/**`.
+2. Como `contracts:check` também verifica o mounting das rotas manuscritas, o estado aceito ao fim
+   de TASK-0007 é um RED estritamente delimitado a exatamente oito achados `missing-route`, um por
+   comando de provisionamento; todo schema, código de erro e demais verificação contratual deve estar
+   verde. O maestro reproduz e registra essa fronteira antes de liberar TASK-0008.
+3. TASK-0008 preserva esse limite como Inspector: escreve exclusivamente as provas e fixtures que
+   devem falhar pela ausência da implementação, sem preencher a lacuna de produção.
+4. TASK-0009, em papel Engineer, implementa e monta exatamente as oito rotas manuscritas. Só nessa
+   etapa acrescenta exatamente `backend/domains/ops/provisioning/src/handwritten` a
+   `CONTROLLER_ROOTS` em `tools/contracts/check-commands.mjs`, sem alterar nenhuma raiz ou lógica
+   existente, e `pnpm contracts:check` passa a ser gate verde obrigatório, além dos testes do pacote,
+   shared, decorators, backend e suíte completa.
+
+Esta adenda substitui apenas a expectativa impossível de `contracts:check` verde em TASK-0007; todas
+as demais cláusulas da A1–A3 e o review 4 permanecem vigentes.
+
+## Adenda estrutural A5 — autoridade de provisionamento e barreira compilável do Inspector
+
+Autorizada pelo Owner em 2026-09-21 após o bloqueio fail-closed de TASK-0008. A5 fecha somente as
+cinco lacunas auditadas; não escolhe criptografia, formato wire ou requisito fora do CTG-0003.
+
+1. A matriz de autorização estrita é a registrada em `AUTHORIZATION.md` Amendment 1. Nas operações
+   baseadas em papel, as chaves `ops:provisioning:*` são avaliadas antes de permissões `*`, wildcards
+   e bypasses administrativos: `ADMIN`, `GESTOR_DETRAN`, `SUPORTE` e qualquer papel omitido não
+   concedem acesso. Nas operações baseadas em identidade, a autorização decorre exclusivamente do
+   principal/dispositivo autenticado e de seu vínculo; portar papel omitido não concede bypass nem
+   invalida sozinho um vínculo válido. Sujeito/dispositivo/tenant/órgão continuam camadas obrigatórias.
+2. O Architect corrige ADR/contrato e ambiente: os seis POST exigem `If-Match` e
+   `Idempotency-Key`, retornam 428/412 com códigos canônicos e ETag de sucesso; GETs não exigem esses
+   headers. `apply.sh` recebe DDL 21 no inventário e um ramo fechado exclusivo para `detran_r13`
+   mediante `DETRAN_R13_FULL_AUTHORIZED=1`, preservando integralmente o rehearsal R7.
+3. Um checkpoint corretivo Engineer, anterior ao Inspector, cria somente os onze módulos
+   handwritten fixados pelo blueprint. Eles exportam tipos, token, controller sem decorators/rotas
+   e comandos que falham explicitamente como não implementados. Isso torna typecheck verde sem
+   implementar comportamento nem eliminar os oito `missing-route`.
+4. O Inspector acrescenta fixture 29 e somente sua referência imediatamente após fixture 28 nas
+   listas `fresh` e `legacy-upgrade` de `seed.sh`; preserva validação fechada e transação única.
+   Testes compilam: comandos diretos ficam RED pelo sentinel `not implemented`; e2e HTTP fica RED
+   somente porque as oito rotas ainda não foram montadas. Import/configuração/fixture devem estar verdes.
+5. O Engineer de TASK-0009 substitui o scaffold pela implementação, monta as oito rotas, aplica a
+   matriz estrita e os vínculos dinâmicos, e leva typecheck, testes e `contracts:check` a verde.
+
+Ordem vinculante corrigida: Architect correction → review A5 → Engineer scaffold → Inspector RED →
+Engineer GREEN. O scaffold é checkpoint corretivo do CTG, não amplia o grafo funcional de 18 tarefas.
+
 ## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
 
 - Transcrição de fichas, contratos, i18n e docs é ato de **Architect** (`transcriber-docs`); tarefas assim aparecem como "Architect (transcr.)".
@@ -223,6 +276,36 @@ resets Sep 21 at 4am (America/Sao_Paulo)`. Nenhum worker foi liberado, porque §
 
 ## Triagem
 
+- `TASK-0007/attempt-1` — `policy-issue`: o contrato original exigia `contracts:check` verde do
+  Architect, mas o checker requer oito controllers manuscritos que o mesmo prompt proíbe e reserva
+  à TASK-0009, depois do Inspector RED. Adenda A4 move o gate verde para TASK-0009 e limita o RED
+  de TASK-0007 a exatamente oito `missing-route`; schemas/códigos continuam obrigatoriamente verdes.
+- `prompt-review-5/A4-F001` — `policy-issue`: o checker não varre imports do AppModule e sua lista
+  estática não continha o novo módulo. A4/TASK-0009 passam a autorizar somente a inclusão da raiz
+  handwritten de provisioning em `CONTROLLER_ROOTS`; lógica e raízes anteriores ficam congeladas.
+- `TASK-0008/attempt-1` — `reference-gap`: seed 29 não integra as listas fechadas de `seed.sh`;
+  correção mecânica deve incluí-lo em `fresh` e `legacy-upgrade`, preservando a transação única.
+- `TASK-0008/attempt-1` — `environment-blocker`: `apply.sh` não conhece DDL 21 e autoriza `--full`
+  apenas para o rehearsal histórico R7. A futura A5 deve acrescentar o DDL ao inventário e um ramo
+  fail-closed exclusivo para `detran_r13`, com flag explícita própria da rodada.
+- `TASK-0008/attempt-1` — `policy-issue`: o critério de typecheck verde contradiz o RED de imports
+  handwritten já previsto em M24. Nenhum erro de import será aceito como prova comportamental; a
+  fronteira de scaffolding/Inspector/Engineer precisa ser corrigida e revisada na A5.
+- `TASK-0008/attempt-1` — `source-gap`: workflow, invariante, ADR e issue 71 não fecham os oito
+  conjuntos de atores canônicos nem os vínculos dinâmicos de autorização. Inspector interrompido
+  antes de escrever testes; é necessária decisão mínima do Owner, sem grants por analogia.
+- `TASK-0008/attempt-1` — `contract-gap`: o contrato de comandos omite `If-Match`,
+  `Idempotency-Key`, 428/412 e ETag exigidos por CODESTYLE/prompt. Retorna ao Architect antes do
+  contrato ser congelado para o Inspector.
+- `TASK-0008/attempt-2` — `reference-gap`: as oito operações novas tornam obsoletas somente as
+  contagens 152/92 do teste real do gate. Inspector recebe autoridade focal para 160/100; nenhuma
+  fixture, comportamento ou outra assertion do teste existente pode mudar.
+- `prompt-review-9/A5-COUNTS-F001` — `policy-issue`: C-5-16 prova o repositório real integral e
+  permanece RED enquanto as oito rotas não estão montadas. A assertion fica intacta; TASK-0008
+  aceita exclusivamente esse RED e TASK-0009 recebe `contracts:test` verde explícito.
+  O worker também declarou um `git rev-parse/status` somente leitura antes de ler a proibição e
+  iniciou uma geração redundante; não houve mutação Git, e o processo redundante foi encerrado por
+  PID exato antes de continuar.
 - `delivery-review-CTG-0002/cycle-4-final-extraordinary` — **PASS**, sem findings. F-008/F-009
   fechados; 51 contratos TEAT semanticamente distintos, cinco fronteiras BOAT uniformes corretas,
   126/126 hashes e regressões/gates confirmados por Auditor Codex Astra/max.
@@ -365,6 +448,461 @@ Checkpoint 3 (janela 2, correção final CTG-0002):
   ultrapassar 80%, mas a autorização explícita vigente limita e libera somente esta última
   correção/revisão, gates, commit/evidência e integração do CTG-0002;
 - nenhuma publicação do conteúdo CTG-0002 ocorreu; branch remota permanece em `b72d1e8a`.
+
+Checkpoint 4 (janela 2, fechamento CTG-0002):
+
+- quarto delivery review extraordinário independente retornou `PASS`, sem findings; F-008 e F-009
+  foram confirmados fechados no candidato final;
+- conteúdo commitado em `e2565bde774e794ca7ad7186159d65154accc184`; evidência de entrega
+  R-0013 `generic sequence 3` em `deeb3b076c4d62a2ef3d30c2e6735907d03dbacd`;
+- `pnpm check` passou antes e depois da sincronização; `devai:doctor`, `git diff --check` e cadeia
+  passaram; `origin/main` não avançou durante a integração;
+- PR #73 teve seis checks remotos verdes e foi mesclado como
+  `3da2b61ee8e418e634a7364417175a1e86a8c9e0`;
+- Auditor independente observou o merge no HEAD exato: evento `EV-b2cdee5c709b0b18`, status
+  `completed`, diagnóstico conservador `YELLOW` por 43 lacunas de sensores e
+  `readiness_promoting=false`; isso não reabre o delivery review;
+- artefatos de observação preservados em `c9148c53f875c5ba3e48ba6f54d1393b730758e8` e registrados
+  como R-0013 `generic sequence 4` em `992ec77befbac30e5bc7f9ec9664caad3b8bcaaf`;
+  chain head `eae4e44dd145eea6c970dfc0b39b91e48751e6321a472ac8f89dd744b5b11c72`;
+- branch de continuidade publicada em `992ec77b`; CTG-0002 está completamente fechado e CTG-0003
+  permanece pendente, sem implementação iniciada nesta iteração.
+
+Checkpoint 5 (janela 3, preflight CTG-0003):
+
+- Owner autorizou a execução completa do CTG-0003; janela 3 aberta com orçamento novo de 800.000
+  tokens de entrada e 30.000 estimados no preflight;
+- branch/worktree limpos e publicados em `5a52dbfb975a9f7d570e304dad5d699b5e9b7774`; `origin/main`
+  permanece no merge do CTG-0002, `3da2b61ee8e418e634a7364417175a1e86a8c9e0`; nenhum PR aberto;
+- origem TEAT somente leitura permanece limpa em `8880f4294c24ff7bd4bf5e0afecfc44faa86ffab`,
+  remote `aarusso-nyx/detran-teat`; workflow e INV-OFFLINE-001 conservam hashes
+  `a35546ab…` e `b55a91e0…`, e os seis hashes do preflight conferem;
+- TASK-0007…0009 e seus `prompt_composition_id` conferem byte a byte com `compositions.json`;
+  `prompt-review-4=PASS` permanece aplicável porque prompts e fontes vinculantes não mudaram;
+- ADR-0028, DDL `21-ops-provisioning.sql` e `BP-OPS-PROVISIONING-001` continuam livres; Postgres
+  local aceita conexões e o ambiente isolado `detran_r13` está presente;
+- TASK-0007 marcada `in_progress`; TASK-0008/0009 permanecem `queued` e só avançam na cadeia
+  Architect → Inspector RED → Engineer GREEN.
+
+Checkpoint 6 (janela 3, barreira Architect de CTG-0003):
+
+- TASK-0007 materializou ADR-0028, BP-OPS-PROVISIONING-001, DDL 21, pacote gerado, contrato de oito
+  comandos e clientes; nenhuma produção handwritten ou teste foi escrita;
+- a contradição de gate foi registrada como `policy-issue` e corrigida pela Adenda A4. O primeiro
+  review extraordinário encontrou A4-F001 na raiz estática do checker; a correção focal recebeu
+  `prompt-review-6-a4=PASS`, sem achados;
+- `blueprints:check` reproduzido pelo maestro terminou com exit 0; RLS e api-clients typecheck
+  passaram; `contracts:check` contém somente os oito `missing-route` autorizados e nenhum outro
+  achado;
+- o novo workspace foi serializado pelo maestro no lockfile; nova execução
+  `pnpm install --frozen-lockfile` passou com 58 projetos;
+- TASK-0007 concluída; seus incidentes processuais sem mutação ficaram registrados. TASK-0008 foi
+  liberada em `in_progress`; TASK-0009 permanece `queued`.
+
+Checkpoint 7 (janela 3, bloqueio fail-closed de TASK-0008):
+
+- Inspector iniciou sem escrever artefatos de teste e foi interrompido ao encontrar cinco lacunas
+  estruturais; uma consulta Git somente leitura indevida foi registrada, sem mutação;
+- auditoria Architect independente confirmou: seed 29 fora da lista fechada; reset R13 e DDL 21
+  ausentes da autorização/inventário de `apply.sh`; typecheck verde inexequível antes dos 11 módulos
+  handwritten; headers concorrentes ausentes do contrato; matriz completa de atores inexistente;
+- os quatro primeiros pontos têm correção estrutural/técnica delimitável por A5. A matriz de atores
+  é autoridade de produto e não pode ser inferida de rótulos conceituais, de beneficiários do grant
+  nem dos bypasses globais atuais;
+- TASK-0008 está `blocked`, TASK-0009 continua `queued`, nenhum teste/fixture/policy/handwritten foi
+  escrito e nenhum banco foi resetado. A execução retoma após decisão mínima do Owner e novo review.
+
+Checkpoint 8 (janela 3, autorização da A5):
+
+- Owner aprovou a matriz conservadora completa e o subpasso de scaffolding técnico; decisão
+  registrada em `AUTHORIZATION.md` Amendment 1 e Adenda A5;
+- TASK-0008 permanece `blocked` até o review A5 e os checkpoints Architect/scaffold passarem;
+- correções ainda não executadas neste checkpoint; nenhuma alegação de aceite antecipado.
+
+Checkpoint 9 (janela 3, correção Architect A5):
+
+- seis POST agora exigem `If-Match`/`Idempotency-Key`, expõem ETag e declaram 428/412/409
+  canônicos; GETs permanecem sem command headers; ADR documenta o token real comparado;
+- DDL 21 integra o inventário fechado; R7 foi preservado e R13 exige sua flag exclusiva. Banco
+  arbitrário, R13 sem flag e R7 sem flag falharam fechados com exit 2;
+- generators e api-clients typecheck passaram; `contracts:check` permanece RED somente pelos oito
+  `missing-route`, sem achado adicional;
+- checkpoint Architect aceito. Scaffold Engineer iniciado; TASK-0008 continua bloqueada.
+
+Checkpoint 10 (janela 3, scaffold A5 aceito):
+
+- exatamente os onze módulos handwritten fixados pelo blueprint foram criados; nenhum decorator,
+  rota, DB, policy, teste ou comportamento real foi introduzido;
+- typecheck do pacote passou; `contracts:check` permaneceu RED somente pelos oito `missing-route`,
+  verificado pelo maestro por contagem e ausência de qualquer categoria adicional;
+- consulta Git somente leitura indevida do worker foi registrada, sem mutação;
+- TASK-0008 reaberta em attempt 2 sob A5; TASK-0009 permanece `queued`.
+
+Checkpoint 11 (janela 3, Inspector RED aceito):
+
+- reset R13 e dois seeds fresh passaram com fixture 29; segunda aplicação foi idempotente;
+- provisioning typecheck e integração 2/2 passaram; unit 8/8 e package e2e 1/1 falham somente pelo
+  sentinel; shared policy falha somente pelas duas provas A5; app e2e 6/6 falha somente por 404 das
+  rotas não montadas;
+- `contracts:test` tem 42/43 verdes: único RED C-5-16, contendo exatamente os oito
+  `missing-route`; novas provas de headers/ETag/INV-OFFLINE-001 passam;
+- hashes dos dez arquivos congelados foram capturados no relatório TASK-0008. TASK-0008 concluída;
+  TASK-0009 iniciada e não pode alterar teste, fixture, seed, blueprint, DDL, contrato ou gerado.
+
+Checkpoint 12 (janela 3, Engineer GREEN e gates integrais):
+
+- TASK-0009 materializou as oito rotas, precondições HTTP, ETag, matriz A5 estrita, wiring do app
+  e raiz estática do checker; todos os sentinelas RED foram removidos e os gates dirigidos ficaram
+  verdes;
+- `backend:test:ci` revelou cinco chaves GET ausentes na matriz. A correção Engineer ficou restrita
+  a `policy.ts`, adicionando as cinco leituras à ilha estrita com lista estática vazia e sem bypass;
+  o sensor bidirecional passou 5/5;
+- o gate de upgrade revelou a cardinalidade histórica de 60/63 DDLs. O Inspector atualizou somente
+  o sensor para 61 ordinários/64 totais e fixou `21-ops-provisioning.sql` exatamente uma vez;
+  a prova dirigida passou 18/18;
+- `pnpm check` revelou duas indexações template não estreitadas em `policy.spec.ts`; o Inspector
+  aplicou somente `DetranPolicyKey`, sem alterar casos/expectativas; shared typecheck e 407 testes
+  passaram;
+- gates finais do mesmo candidato: `pnpm backend:test:ci` exit 0; `pnpm check` exit 0;
+  `pnpm devai:doctor`, evidence verify, `git diff --check` e 18/18 composições PASS;
+- TASK-0009 concluída na iteração 2/2. O candidato segue sem commit e aguarda delivery-review
+  independente; nenhuma publicação, PR ou merge é inferida antes do PASS.
+
+Checkpoint 13 (janela 3, delivery-review CTG-0003):
+
+- Reviewer Codex/Astra high, sob exceção Owner vigente, revisou o candidato integral somente
+  leitura e devolveu `FAIL`: nove achados high e dois medium;
+- bloqueadores: sete comandos stub sem persistência/ports; positivos dinâmicos A5 inexistentes;
+  vínculos de agência/dispositivo/recurso ausentes; If-Match/ETag e idempotência decorativos;
+  readiness sempre false; DDL20 reabre UPDATE/DELETE nas tabelas append-only; respostas sem schema;
+  status de revogação divergente; matriz P0-P6 não materializada; dois JSON arrays tipados como
+  object;
+- o Reviewer confirmou em consulta read-only que `role_app_backend` possui UPDATE e DELETE finais
+  em `ops.provisioning_receipt` e `ops.device_revocation`; RLS/FORCE permanece ativo, mas não fecha
+  a violação append-only;
+- TASK-0009 atingiu 2/2 e foi marcada `escalated`; nenhum commit, evidência, push, PR ou merge foi
+  executado. Pela regra do maestro, nova decomposição/ciclo requer autorização Owner explícita.
+
+Checkpoint 14 (janela 3, autorização corretiva CTG-0003):
+
+- Owner autorizou explicitamente reabrir o CTG-0003, ampliar em uma iteração os limites de
+  TASK-0008/TASK-0009 e executar novo ciclo Architect → Inspector → Engineer para F-001…F-011;
+- Amendment 2 fixa o escopo: contratos/respostas, arrays JSON, append-only final, autorização
+  dinâmica, persistência/transação/outbox, ETag/idempotência/readiness, status HTTP e provas P0–P6;
+- TASK-0007 está `in_progress` na iteração 2; TASK-0008/TASK-0009 estão `queued` até suas barreiras.
+
+Checkpoint 15 (janela 3, Architect corretivo aceito):
+
+- ADR-0028 e BP v1.0.1 agora especificam bindings dinâmicos, versão/ETag persistidos, idempotência
+  tenant-scoped por hash canônico, transação/outbox e readiness determinístico;
+- os oito sucessos do command contract têm schemas tipados; JSON arrays permanecem SQL `jsonb`,
+  com `jsonSchema` validado e propagado por geradores para OpenAPI/TypeScript;
+- `apply.sh` reaplica DDL 21 após DDL 20, preservando os REVOKEs append-only no estado final;
+- o maestro concluiu `blueprints:generate` e `blueprints:check`; contratos/clients sync,
+  `contracts:check` 160 operações, RLS 243/2 e api-clients typecheck passaram;
+- TASK-0007 foi concluída na iteração 2; TASK-0008 abriu a iteração 3 para congelar provas P0–P6.
+
+Checkpoint 16 (janela 3, Inspector corretivo aceito):
+
+- a primeira entrega da iteração 3 foi devolvida duas vezes por manter lacunas conhecidas; uma
+  escalada Inspector/Astra concluiu a mesma iteração sem ampliar escopo;
+- 602 casos de integração exercitam A5 exaustiva, persistência P0–P6, INV-OFFLINE-001, transação
+  domínio/numeração/outbox, quatro crash points, conexões PostgreSQL distintas, replay em novo
+  processo Node, conflito 409 e readiness ready/expired/revoked/incomplete/not-found;
+- contratos 46/46 e shared 407/407 passam; 596 integrações, 10 e2e de domínio, 7 unitários e cinco
+  HTTP permanecem RED exclusivamente pelos stubs/semântica de produção ausente;
+- reset fechado final e seed dupla deixaram `detran_r13` limpa; privilégios finais append-only são
+  SELECT/INSERT true e UPDATE/DELETE false; onze hashes de sensores foram congelados;
+- TASK-0008 concluída na iteração 3; TASK-0009 abriu a iteração 3 e não pode alterar nenhum sensor.
+
+Checkpoint 17 (janela 3, Engineer corretivo e gates integrais):
+
+- sete comandos reais substituíram os stubs com SQL tenant-scoped, bindings A5 sob lock,
+  transação domínio/numeração/outbox, idempotência persistida e readiness por estado real;
+- outbox usa `${commandName}:${rawKey}` enquanto o registro de idempotência preserva chave bruta
+  scoped por comando; replay em novo processo, conflito e mesma chave entre comandos passam;
+- challenge aceita exclusivamente ETag recuperável de readiness, persiste versão monotônica e
+  rejeita literal `1`, token stale e corrida concorrente; revogação responde 200;
+- package.json raiz inclui provisioning uma vez em cada tier backend; 7 unit, 611 integration,
+  10 e2e de domínio e 14 HTTP passam, com hashes Inspector preservados;
+- `pnpm backend:test:ci` final exit 0 e `pnpm check` final exit 0; upgrade 18/18; DEVAI doctor,
+  evidence head `eae4e44d…`, composições, `git diff --check` e RLS 243/2 passam;
+- privilégios finais em receipt/revocation são SELECT/INSERT true e UPDATE/DELETE false;
+  TASK-0009 concluída na iteração 3. Review extraordinário independente iniciado sem commit.
+
+Checkpoint 18 (janela 3, review extraordinário ciclo 2):
+
+- Reviewer Codex/Astra high, somente leitura, confirmou as correções de autorização, ETag,
+  idempotência, append-only, contratos, arrays, CI wiring e a melhora substancial dos sensores;
+- verdict `FAIL` com cinco findings high: download sem 410/usabilidade; readiness sem saldo de
+  numeração/`maximum_acts`; dependência normativa sem órgão/catálogo; enrollment inicial dependente
+  de reserva anterior; renovação sem reconciliação prévia;
+- TASK-0009 voltou a `escalated` no limite 3/3. Nenhum commit, evidência, push, PR ou merge foi
+  executado; novo ciclo requer autorização Owner explícita e nova decomposição.
+
+Checkpoint 19 (janela 3, autorização corretiva residual CTG-0003):
+
+- Owner autorizou explicitamente o Amendment 3, reabrindo um ciclo extraordinário bounded para
+  F-012…F-016 e resetando o limite esgotado 3/3;
+- TASK-0007 abriu a iteração 3/3; TASK-0008 e TASK-0009 permanecem queued para suas iterações 4/4;
+- escopo fechado: download 410/usabilidade, saldo de numeração e `maximum_acts`, vínculo normativo
+  agência/catálogo, enrollment inicial sem reserva prévia e renovação após reconciliação;
+- novo delivery-review independente está autorizado somente após Architect → Inspector → Engineer
+  e gates integrais verdes; nenhuma autoridade adicional de publicação ou release foi concedida.
+
+Checkpoint 20 (janela 3, Architect residual aceito):
+
+- BP-OPS-PROVISIONING-001 v1.0.2 e ADR-0028 fecharam F-012…F-016 em regras implementáveis;
+- novo `ops.provisioning_reconciliation` é append-only, RLS e obrigatório para renovar grant após
+  fronteira terminal, inclusive com zero atos; pendências bloqueiam renovação;
+- readiness/ETag agora incluem saldos de atos e numeração; dependência normativa inclui tenant,
+  órgão e catálogo; enrollment inicial deriva RequestContext sem depender de reserva;
+- geração canônica produziu DDL/contratos/clientes; `blueprints:check`, `contracts:check`, typecheck
+  do cliente e `git diff --check` passaram;
+- TASK-0007 concluiu 3/3 e TASK-0008 abriu 4/4 para congelar os sensores residuais.
+
+Checkpoint 21 (janela 3, Inspector residual aceito):
+
+- 50 novas provas cobrem F-012…F-016 com provider real, persistência, RLS e append-only;
+- reset isolado e dois seeds passaram; unit 7/7, contracts 46/46 e shared 407/407 permanecem verdes;
+- estado RED esperado: integration 531 PASS/130 RED, e2e domínio 2 PASS/8 RED e HTTP 13 PASS/1 RED;
+  46/50 novos sensores estão RED exclusivamente por comportamento de produção ausente;
+- cinco hashes SHA-256 finais foram verificados pelo maestro; nenhuma prova foi removida ou
+  afrouxada e as expectativas antigas receberam apenas os campos novos obrigatórios;
+- TASK-0008 concluiu 4/4 e TASK-0009 abriu 4/4, proibido de alterar os sensores congelados.
+
+Checkpoint 22 (janela 3, Engineer residual e gates integrais):
+
+- F-012…F-016 foram implementados em três arquivos handwritten; download/usabilidade, saldos e
+  ETag, normativa completa, enrollment sem reserva e reconciliação terminal estão verdes;
+- testes finais: unit 7/7, integration 661/661, e2e domínio 10/10 e HTTP 14/14; os 12 hashes
+  protegidos permanecem íntegros após um refreeze mecânico aditivo do expected antigo;
+- o gate integral revelou quatro chaves CRUD do novo agregado gerado; `policy.ts` as adicionou à
+  ilha estrita com listas vazias, preservando o comando autenticado como única escrita; shared
+  407/407 e policy-routes 5/5 passaram;
+- `backend:test:ci` completo passou até upgrade 18/18 com o env exato do workflow e mock :3001;
+  `pnpm check` terminou exit 0;
+- TASK-0009 concluiu 4/4. O candidato permanece sem commit e abre review extraordinário
+  independente; nenhuma publicação, PR ou merge é inferida antes do veredito.
+
+Checkpoint 23 (janela 3, review extraordinário ciclo 3):
+
+- Reviewer Codex/Astra high, somente leitura, confirmou as correções centrais de F-012…F-016,
+  RLS/append-only, deny-all CRUD, idempotência, transação, ETag e contratos;
+- verdict `FAIL` com três findings high: enrollment confunde responsável/emissor com agentes
+  destinatários e não confronta titularidade da reserva; download não compara digest do pacote com
+  o grant; renovação verifica apenas o grant mais recente e pode ocultar obrigações terminais
+  anteriores sem reconciliação;
+- TASK-0009 voltou a `escalated` no limite resetado 4/4. Nenhum commit, evidence record, push, PR ou
+  merge foi executado; outra decomposição exige autorização Owner explícita.
+
+Checkpoint 24 (janela 3, autorização final CTG-0003):
+
+- Owner autorizou explicitamente o Amendment 4 e exigiu efetividade para fechamento completo do
+  CTG-0003 nesta iteração final;
+- TASK-0007 abriu 4/4; TASK-0008 e TASK-0009 ficam queued para 5/5;
+- escopo fechado: separar emissor/responsável de destinatários e titularidade de reservas; validar
+  digest pacote↔grant no download; e impedir que grant novo oculte qualquer obrigação terminal
+  histórica não reconciliada;
+- o ciclo mantém Architect → Inspector → Engineer, gates integrais e review independente; nenhuma
+  autoridade de commit/publicação é inferida antes do `PASS`.
+
+Checkpoint 25 (janela 3, Architect final aceito):
+
+- BP-OPS-PROVISIONING-001 v1.0.3 e ADR-0028 separam o emissor/responsável dos agentes
+  destinatários; agency-admin pode emitir sem `agent_id`, enquanto cada reserva deve coincidir em
+  tenant, agência, dispositivo e agente destinatário autorizado;
+- `ops.provisioning_grant_reservation_binding` persiste a prova exata grant↔reserva↔destinatário,
+  com RLS e privilégios append-only (SELECT/INSERT, sem UPDATE/DELETE);
+- download exige igualdade exata entre `package.manifest_digest` e `grant.manifest_digest`, com
+  divergência terminal 410; renovação examina todos os grants terminais do dispositivo, cada qual
+  reconciliado depois de sua própria fronteira terminal e sem pendências;
+- geração canônica, `blueprints:check`, `contracts:check`, typecheck do cliente, RLS DDL e
+  `git diff --check` passaram; TASK-0007 concluiu 4/4 e TASK-0008 abriu 5/5 para sensores finais.
+
+Checkpoint 26 (janela 3, barreira Inspector e devolução ao Architect):
+
+- antes de qualquer escrita, o Inspector detectou que a redação v1.0.3 conflitava com sensores
+  vinculantes do Amendment 3 ao aceitar reconciliação exatamente na fronteira e usar o menor
+  limite entre expiração e revogação posteriormente conhecida;
+- nenhum sensor foi refrozen: permanece vinculante exigir reconciliação estritamente posterior à
+  fronteira terminal e, quando `revoked_at` for posterior a `valid_until`, negar prova intermediária;
+- TASK-0007 voltou a `in_progress` na mesma iteração 4/4 para corrigir ADR/BP e regenerar;
+  TASK-0008 voltou a `queued` 4/5, sem consumir sua tentativa final.
+
+Checkpoint 27 (janela 3, semântica terminal restaurada):
+
+- ADR-0028 agora fixa `terminal_at = valid_until` sem revogação e, quando revogado,
+  `greatest(valid_until, revoked_at)`; `reconciled_at` deve ser estritamente maior;
+- os sensores anteriores permanecem intactos: prova no instante terminal e prova entre expiração
+  e revogação posteriormente conhecida continuam insuficientes;
+- formatação, JSON e `git diff --check` passaram; BP/contratos/generated não mudaram desde os
+  gates canônicos verdes do checkpoint 25;
+- TASK-0007 concluiu 4/4 e TASK-0008 retomou 5/5, agora sem contradição normativa.
+
+Checkpoint 28 (janela 3, Inspector final aceito):
+
+- 33 provas Amendment 4 com provider real e PostgreSQL cobrem emissor sem `agent_id`, destinatários
+  distintos, quatro dimensões da reserva, binding persistido, digest pacote↔grant e todo o histórico
+  terminal; oito provas de política congelam deny-all para binding e reconciliation;
+- nenhum expected anterior mudou; 661 integrações anteriores, 7 unit, 10 e2e de domínio, 14 HTTP,
+  46 contratos e typecheck passaram;
+- estado RED limpo: integração 668 PASS/26 RED e shared 411 PASS/4 RED, exclusivamente por
+  comportamento de produção ausente; nenhum ruído de fixture/import/DDL/config;
+- os 14 hashes protegidos foram verificados pelo maestro; TASK-0008 concluiu 5/5 e TASK-0009 abriu
+  5/5, proibido de modificar qualquer sensor congelado.
+
+Checkpoint 29 (janela 3, Engineer final e gates integrais):
+
+- produção separa emissor dos destinatários, persiste bindings atômicos, usa-os em
+  readiness/receipt/reconcile, confronta digest package↔grant em todas as decisões de usabilidade e
+  percorre todos os grants terminais sob lock determinístico;
+- quatro chaves CRUD do binding estão na ilha estrita deny-all; oito tombstones sem endpoint entram
+  somente na allowlist exata do sentido regra→rota, preservando integralmente rota→regra;
+- gates focais: unit 7/7, integration 694/694, e2e domínio 10/10, HTTP+policy 19/19, shared
+  415/415, contratos 46/46, 160 operações/63 clientes e 966 decorators;
+- `pnpm check` do snapshot estável e `pnpm backend:test:ci` com env exato passaram, inclusive
+  upgrade 18/18; DEVAI doctor, evidence chain, composições e `git diff --check` passaram;
+- privilégios de revocation, receipt, reconciliation e grant-reservation-binding são SELECT/INSERT
+  true e UPDATE/DELETE false; TASK-0009 concluiu 5/5 e abre review extraordinário independente.
+
+Checkpoint 30 (janela 3, review extraordinário final CTG-0003):
+
+- Reviewer CODEX independente, no papel Auditor e somente leitura, emitiu `PASS` sem findings
+  `high` ou `medium` para o candidato integral de CTG-0003;
+- reprodução independente passou 20/20 cenários funcionais dos três bloqueios do ciclo 3, incluindo
+  emissor sem `agent_id`, múltiplos recipients, quatro dimensões de ownership, binding downstream,
+  divergência de digest nos três caminhos e todo o histórico terminal com fronteira estrita;
+- 65 negativas de policy confirmaram deny-all sem bypass; contratos 6/6, 160 operações, 42
+  cabeçalhos gerados e consulta PostgreSQL read-only de RLS/FORCE RLS/append-only passaram;
+- F-001…F-016 foram reavaliados sem regressão bloqueante. CTG-0003 está tecnicamente liberado para
+  commit e evidence record pela sequência vinculante do Maestro; os limites `source_pending` e a
+  autoridade de publicação permanecem inalterados.
+
+Checkpoint 31 (janela 3, integração de `origin/main` e recertificação):
+
+- os commits funcional `b8aa4ddc…` e de evidência inicial `793487ef…` foram criados; antes do PR,
+  `origin/main` havia avançado até `08fb84e8…` e foi integrado por merge normal `dcc35cb1…`, sem
+  rebase nem force-push;
+- o único conflito foi `record/proofs/chain.json`; a versão de `main` foi aceita integralmente e a
+  evidência de CTG-0003 será regravada sobre a cadeia corrente, sem merge manual de hashes;
+- `pnpm install --frozen-lockfile` adotou DEVAI 1.5.3 da base integrada sem alterar o lockfile;
+  `pnpm check` passou com 738 artefatos KB, 160 operações/63 clientes, 57 projetos typechecked,
+  966 handlers, RLS 245/2, PEC 611 specs e portal 1314 testes;
+- `pnpm backend:test:ci` passou no ambiente exato do workflow: provisioning integration 694/694,
+  provisioning e2e 10/10 e upgrade 18/18, além de todos os demais tiers do backend;
+- o merge de upstream não alterou os arquivos centrais revisados de CTG-0003; o `PASS` final segue
+  aplicável e o candidato está pronto para regravação de evidência, push e PR.
+
+Checkpoint 32 (janela 3, correção de isolamento em checkout limpo):
+
+- PR #82 abriu no SHA `a0e3897f…`; `evidence-gate`, `boat-documents-real`, `senatran-mock` e
+  `senatran-mock-tests` passaram, mas o fallback remoto de `backend-kernel` expôs um erro de
+  resolução antes dos testes de provisioning;
+- causa raiz: o novo `vitest.config.ts` tinha `alias` vazio e o checkout local possuía `dist` de
+  shared, mascarando a ausência de build desse pacote no runner limpo; a lógica de produto não
+  chegou a executar e nenhum sensor falhou;
+- correção mínima: alias canônico `@detran/shared` → `../../shared/src/index.ts`, igual aos demais
+  domínios; nenhum teste, expectativa, comando ou código de produção foi alterado;
+- reprodução sem `backend/domains/shared/dist` passou o unitário de provisioning 7/7, provando que
+  a correção remove a dependência ambiental. O candidato exige novo `pnpm check`, evidence record
+  no SHA corrigido e CI integral antes do merge.
+
+Checkpoint 33 (janela 3, blocker de CI eliminado e recertificado):
+
+- `testAliases` foi incorporado ao blueprint canônico e 47 outputs foram regenerados; o único
+  delta semântico gerado é o alias `@detran/shared` → `../../shared/src/index.ts`, enquanto os
+  demais arquivos mudam somente o header do hash do blueprint;
+- sem `backend/domains/shared/dist`, provisioning unit passou 7/7; `blueprints:check`, contratos
+  160/63, tipos focais e `pnpm check` integral passaram, inclusive 57 projetos, RLS 245/2,
+  966 handlers, PEC 611 e portal 1314;
+- `pnpm ci:backend-full` no ambiente do workflow passou integralmente: provisioning 7/7 unit,
+  694/694 integration, 10/10 e2e, upgrade 18/18 e adapter SENATRAN 33/4/10;
+- Reviewer CODEX independente em papel Auditor reproduziu os 47 outputs em memória e emitiu PASS
+  focal sem achados bloqueantes ou não bloqueantes; o PASS integral do ciclo 4 permanece válido;
+- o candidato está liberado para commit corretivo, regravação DEVAI, atualização do PR #82 e nova
+  execução integral dos required checks antes do merge.
+
+Checkpoint 34 (janela 3, fronteira de subprocesso fechada):
+
+- o CI do SHA `e3446678…` passou cinco jobs, mas o fallback remoto revelou que o teste de runtime
+  novo executava `tsx` fora do alias do Vitest e ainda resolvia `@detran/shared` para `dist` ausente;
+  a falha real era mascarada pelo parser de sourcemap do Vitest;
+- a reprodução local removeu fisicamente `backend/domains/shared/dist` e obteve o mesmo erro; um
+  `tsconfig.fresh-process.json` exclusivo passou a resolver shared para fonte, mantendo processo,
+  conexão PostgreSQL, resposta/ETag, snapshot e sentinelas de efeitos independentes;
+- sem `shared/dist`, o teste focal passou 1/1 e a integração completa passou 694/694;
+  `blueprints:check` também passou, provando ausência de divergência no gerado canônico;
+- Reviewer CODEX independente em papel Auditor reproduziu resolução somente por fonte, confirmou
+  PIDs distintos e fail-closed real e emitiu `PASS` sem findings. O candidato requer recertificação
+  integral, novo evidence record e CI verde antes do merge do PR #82.
+
+Checkpoint 35 (janela 3, integração final de upstream e recertificação):
+
+- `origin/main` avançou até `e0763c6c…` com o backend de dashboard e foi integrado por merge normal
+  `b09f37b9…`; a composição preservou provisioning e dashboard no DDL, scripts de teste e filtros
+  do workspace, sem rebase ou force-push;
+- o contrato fechado de upgrade foi atualizado para os 63 DDLs ordinários e 66 arquivos físicos
+  reais; com a reaplicação deliberada de DDL21 após RLS, a sequência possui exatamente 67
+  argumentos SQL e o rehearsal passou 18/18;
+- um timeout de setup BOAT sob carga foi eliminado com limite local finito de 30 segundos, igual ao
+  orçamento já vigente da integração; a suíte focal passou 6/6 duas vezes e o app integral 19/19,
+  sem retry, skip, captura de falha ou mudança de assertions/cleanup;
+- Reviewer CODEX independente em papel Auditor emitiu novo `PASS` sem findings para ambos os
+  deltas, confirmando inventário/ordem/reaplicação fail-closed e ausência de enfraquecimento;
+- uma passagem foi descartada quando outro worktree recriou o mesmo banco durante o E2E; após a
+  liberação e confirmação de ausência de processos concorrentes, `pnpm ci:backend-full` passou
+  integralmente: provisioning 7/7, 694/694 e 10/10, app E2E 396 com 2 todo, upgrade 18/18 e
+  SENATRAN 33/4/10;
+- `pnpm check` do candidato final passou: 756 artefatos KB, 160 operações/64 clientes, 59 projetos
+  typechecked, 966 handlers, RLS 265/2, portal 1314 testes, RAIT 1807 testes e ambos os builds.
+  O candidato está liberado para evidence record, push e CI remoto do PR #82.
+
+Checkpoint 36 (janela 3, adoção DEVAI 1.5.4 antes da publicação):
+
+- antes do push, `origin/main` avançou até `b527d9ef…` exclusivamente com a adoção governada do
+  DEVAI 1.5.4 e foi integrado por merge normal `088a0c23…`; nenhum arquivo de produto, backend,
+  DDL, teste ou blueprint foi alterado por esse upstream;
+- `pnpm install --frozen-lockfile` substituiu somente DEVAI 1.5.3 por 1.5.4; doctor confirmou
+  versões pinned/running 1.5.4, policy materialization atual e cadeia válida;
+- `pnpm check` foi repetido no candidato exato 1.5.4 e passou integralmente com 756 artefatos KB,
+  160 operações/64 clientes, 59 projetos typechecked, 966 handlers, RLS 265/2, portal 1314,
+  RAIT 1807 e ambos os builds;
+- como o upstream não tocou qualquer superfície do kernel backend já certificado em isolamento,
+  o `pnpm ci:backend-full` verde do checkpoint 35 permanece aplicável; a evidência será regravada
+  pelo DEVAI 1.5.4 antes do push.
+
+Checkpoint 37 (janela 3, exaustão de locks eliminada na raiz):
+
+- o fallback remoto do SHA `b0234b70…` passou cinco jobs, mas o PostgreSQL 16 falhou na primeira
+  reaplicação idempotente com `out of shared memory` e recomendação de elevar
+  `max_locks_per_transaction`; a mesma falha foi reproduzida no digest PostGIS fixado pelo CI;
+- causa raiz: cada um dos DDLs de tenant chamava `auth.install_tenant_triggers()`, que removia e
+  recriava todos os gatilhos já existentes dentro da mesma transação atômica, acumulando locks;
+- a correção cria somente gatilhos ausentes e valida fail-closed os existentes por função,
+  eventos/momento/nível, habilitação, argumentos, coluna `tenant_id` e ausência de `WHEN`, sem
+  elevar limites do runner, dividir a transação ou enfraquecer RLS;
+- o review extraordinário ciclo 8 encontrou que `tgqual` ainda não era verificado; após a prova
+  comportamental de `WHEN (false)`, criação ausente e preservação de OID, o ciclo 9 emitiu `PASS`
+  sem findings;
+- o ensaio focal final passou 20/20 em PostgreSQL 18 e no digest PostgreSQL 16 do CI; neste último,
+  caiu de aproximadamente 500 segundos com falha para 320 segundos com sucesso;
+- `pnpm check` do diff final passou integralmente: 756 artefatos KB, 160 operações/64 clientes,
+  59 projetos, 966 handlers, RLS 265/2, portal 1314, RAIT 1807 e ambos os builds. O candidato está
+  liberado para commit, novo evidence record e nova execução remota integral antes do merge.
+
+Checkpoint 38 (janela 3, integração RAIT web e recertificação combinada):
+
+- antes da regravação de evidência, `origin/main` avançou até `72c15ae9…` com a entrega RAIT web
+  da PR #85 e foi integrado por merge normal `b9466b0a…`, sem tocar backend, DDL ou o rehearsal de
+  upgrade; o único conflito foi a cadeia DEVAI, aceita integralmente a partir de `main`;
+- a prova focal PostgreSQL 16 de 20/20 permanece content-addressed e aplicável ao candidato
+  combinado, pois suas entradas de backend, DDL, teste, imagem e configuração não mudaram;
+- `pnpm check` foi repetido no candidato combinado exato e passou: 756 artefatos KB, 160
+  operações/64 clientes, 59 projetos, 966 handlers, RLS 265/2, fronteira SENATRAN sobre 2902
+  arquivos, portal 1314 testes, RAIT 2263 testes com 134 todo e ambos os builds;
+- o worktree permaneceu limpo após o merge e os gates. O candidato está liberado para regravar a
+  evidência CTG-0003 sobre a cadeia atual, publicar a branch e exigir nova CI integral verde.
 
 ## Leitura
 

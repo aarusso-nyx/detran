@@ -1,4 +1,4 @@
--- Generated from BP-DASH-MONITOR-001 v1.0.0 sha256:f6f02498282fa6757196ac8b711a05e41a930f7e3980a3b9e96f62a2438e24ab
+-- Generated from BP-DASH-MONITOR-001 v1.1.0 sha256:db365ada798a2115de6d57a3153f93d3657948f6562dab9927f4e35f0a8c765a
 
 -- Regenerable-only DDL for BP-DASH-MONITOR-001; request-path writes use role_app_backend.
 
@@ -609,6 +609,65 @@ create index if not exists ix_dashboard_duty_evidence_state on dashboard.duty_ev
 create index if not exists ix_duty_evidence_tenant_id on dashboard.duty_evidence (tenant_id);
 create index if not exists ix_duty_evidence_last_event_id on dashboard.duty_evidence (last_event_id);
 
+create table if not exists dashboard.timer (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  owner_kind varchar(20) not null,
+  owner_id uuid not null,
+  code varchar(40) not null,
+  started_at timestamptz not null,
+  due_at timestamptz,
+  status varchar(20) default 'ARMADO' not null,
+  fired_at timestamptz,
+  satisfied_at timestamptz,
+  cancelled_at timestamptz,
+  reason varchar(120),
+  version integer default 1 not null,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_timer primary key (id),
+  constraint ck_dashboard_timer_owner_kind check (owner_kind in ('alert','duty_cycle','source')),
+  constraint ck_dashboard_timer_code check (code in ('T-DASH-ACK-N1','T-DASH-ACK-N2','T-DASH-ACK-N3','T-DASH-ACK-CRITICO','T-DASH-MARCO-50','T-DASH-MARCO-75','T-DASH-MARCO-90','T-DASH-DUTY-201','T-DASH-DUTY-202','T-DASH-DUTY-PNATRANS','T-DASH-DUTY-206','T-DASH-DUTY-207','T-DASH-DUTY-209','T-DASH-PENDING-FLOOR')),
+  constraint ck_dashboard_timer_status check (status in ('ARMADO','VENCIDO','SATISFEITO','CANCELADO')),
+  constraint ck_dashboard_timer_due_after_start check (due_at is null or due_at >= started_at),
+  constraint ck_dashboard_timer_fired check ((status = 'VENCIDO') = (fired_at is not null)),
+  constraint ck_dashboard_timer_satisfied check ((status = 'SATISFEITO') = (satisfied_at is not null)),
+  constraint ck_dashboard_timer_cancelled check ((status = 'CANCELADO') = (cancelled_at is not null)),
+  constraint ck_dashboard_timer_version_positive check (version > 0)
+);
+create unique index if not exists ux_dashboard_timer_arm on dashboard.timer (tenant_id, owner_kind, owner_id, code, started_at);
+create index if not exists ix_dashboard_timer_due on dashboard.timer (tenant_id, status, due_at);
+create index if not exists ix_dashboard_timer_owner on dashboard.timer (tenant_id, owner_kind, owner_id, status);
+create index if not exists ix_timer_tenant_id on dashboard.timer (tenant_id);
+create index if not exists ix_timer_owner_id on dashboard.timer (owner_id);
+
+create table if not exists dashboard.access_log (
+  id uuid default gen_random_uuid() not null,
+  tenant_id uuid not null,
+  user_ref uuid not null,
+  user_role varchar(40) not null,
+  at timestamptz default now() not null,
+  resource varchar(120) not null,
+  filters_json jsonb default '{}'::jsonb not null,
+  layer varchar(2) not null,
+  row_count integer default 0 not null,
+  origin varchar(120),
+  purpose varchar(40),
+  export_id uuid,
+  created_at timestamptz default now() not null,
+  updated_at timestamptz,
+  constraint pk_access_log primary key (id),
+  constraint ck_dashboard_access_log_layer check (layer in ('N0','N1','N2')),
+  constraint ck_dashboard_access_log_purpose_n2 check (layer <> 'N2' or purpose is not null),
+  constraint ck_dashboard_access_log_row_count check (row_count >= 0)
+);
+create index if not exists ix_dashboard_access_log_at on dashboard.access_log (tenant_id, at);
+create index if not exists ix_dashboard_access_log_user on dashboard.access_log (tenant_id, user_ref, at);
+create index if not exists ix_dashboard_access_log_resource on dashboard.access_log (tenant_id, resource, at);
+create index if not exists ix_dashboard_access_log_export on dashboard.access_log (tenant_id, export_id);
+create index if not exists ix_access_log_tenant_id on dashboard.access_log (tenant_id);
+create index if not exists ix_access_log_export_id on dashboard.access_log (export_id);
+
 select auth.create_rls_policy('dashboard', 'alert');
 
 select auth.create_rls_policy('dashboard', 'alert_trail');
@@ -649,6 +708,10 @@ select auth.create_rls_policy('dashboard', 'portal_service_metrics');
 
 select auth.create_rls_policy('dashboard', 'duty_evidence');
 
+select auth.create_rls_policy('dashboard', 'timer');
+
+select auth.create_rls_policy('dashboard', 'access_log');
+
 select auth.install_tenant_triggers();
 
 grant usage on schema dashboard to role_app_backend;
@@ -656,5 +719,7 @@ grant usage on schema dashboard to role_app_backend;
 grant select, insert, update, delete on all tables in schema dashboard to role_app_backend;
 
 revoke update, delete on table dashboard.alert_trail from role_app_backend;
+
+revoke update, delete on table dashboard.access_log from role_app_backend;
 
 grant usage, select on all sequences in schema dashboard to role_app_backend;

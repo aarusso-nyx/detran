@@ -135,7 +135,22 @@ function inScope(key: string): boolean {
  * allowlist do sentido 2 para não regredir se o gerador voltar a emitir
  * `update` (o texto do contrato já previa essa forma).
  */
-const SENTIDO_2_ALLOWLIST = new Set(['ops:evidence-access-request:update']);
+const SENTIDO_2_ALLOWLIST = new Set([
+  'ops:evidence-access-request:update',
+  // R-0013 CTG-0003, ADR-0028: tombstones fail-closed dos agregados
+  // append-only, cujos controllers gerados têm operations=[] e nenhum
+  // endpoint. Exceções somente por chave exata no sentido 2 (regra → rota);
+  // o sentido 1 (rota → regra) permanece integral, sem excluir prefixos
+  // ou recursos e sem permitir qualquer rota montada sem regra.
+  'ops:provisioning-reconciliation:read',
+  'ops:provisioning-reconciliation:create',
+  'ops:provisioning-reconciliation:update',
+  'ops:provisioning-reconciliation:delete',
+  'ops:grant-reservation-binding:read',
+  'ops:grant-reservation-binding:create',
+  'ops:grant-reservation-binding:update',
+  'ops:grant-reservation-binding:delete',
+]);
 
 /** Chaves cuja remoção já foi pedida em CTG-0002 §8 / CTG-0003 §7 (C-0004-49). */
 const REMOVED_KEYS = [

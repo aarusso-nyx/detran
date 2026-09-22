@@ -1,0 +1,28 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0013",
+  "amendment": "A4",
+  "verdict": "FAIL",
+  "reviewer": {
+    "family": "codex",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "authorization": "Owner exception for this session"
+  },
+  "findings": [
+    {
+      "id": "A4-F001",
+      "severity": "high",
+      "category": "execution-boundary",
+      "file": "work/rounds/R-0013/prompts/TASK-0009.md",
+      "line": 71,
+      "title": "O gate transferido ao Engineer continua inexequível na fronteira autorizada",
+      "detail": "O checker usa CONTROLLER_ROOTS estático e não descobre a nova raiz por imports do AppModule; TASK-0009 não tinha autoridade para registrar o diretório.",
+      "required_correction": "Autorizar a inclusão mínima da raiz handwritten de provisioning em CONTROLLER_ROOTS, preservando todas as raízes e verificações existentes."
+    }
+  ],
+  "notes": [
+    "A execução somente leitura confirmou 160 operações e exatamente oito missing-route, sem achados adicionais.",
+    "TASK-0008 permaneceu inalterada e as demais fronteiras aceitas no prompt-review-4 foram preservadas."
+  ]
+}

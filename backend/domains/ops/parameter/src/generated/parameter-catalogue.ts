@@ -1,6 +1,6 @@
-// Generated from parameter-catalogue.md sha256:0a4c7a8ded10fd7c802019db15ded2708a39a50fcd389c73801e24c95d4a3ce5
+// Generated from parameter-catalogue.md sha256:cd179d640914fd77e44f6716d82655789eef5953ac8174410ba25b46d2b42c35
 export const PARAMETER_CATALOGUE_SOURCE_SHA256 =
-  '0a4c7a8ded10fd7c802019db15ded2708a39a50fcd389c73801e24c95d4a3ce5';
+  'cd179d640914fd77e44f6716d82655789eef5953ac8174410ba25b46d2b42c35';
 export const PARAMETER_CATALOGUE = [
   {
     key: 'rait.wip.limit',
@@ -1120,13 +1120,13 @@ export const PARAMETER_CATALOGUE = [
   {
     key: 'dashboard.cell_threshold',
     value_type: 'int',
-    value_json: '10 (supressão primária + secundária)',
+    value_json: 10,
     status: 'vigente',
     source_pending: false,
     legal_readonly: false,
     decision_ref: 'OD-D02',
     decision_tokens: ['OD-D02', 'DT-029'],
-    consumer: 'P-06, P-09, exportações',
+    consumer: 'P-06, P-09, exportações (supressão primária e secundária)',
     surface: 'dashboard',
     provenance: {
       line: 115,
@@ -1135,7 +1135,8 @@ export const PARAMETER_CATALOGUE = [
   {
     key: 'dashboard.ack_sla',
     value_type: 'json',
-    value_json: 'N1 24h úteis, N2 8h, N3 2h, CRÍTICO imediato',
+    value_json:
+      '{"N1":"24h_uteis","N2":"8h_uteis","N3":"2h_uteis","CRITICO":"imediato"}',
     status: 'vigente',
     source_pending: false,
     legal_readonly: false,
@@ -1150,13 +1151,13 @@ export const PARAMETER_CATALOGUE = [
   {
     key: 'dashboard.stale_hide_multiplier',
     value_type: 'num',
-    value_json: '3 × latência aceitável',
+    value_json: 3,
     status: 'vigente',
     source_pending: false,
     legal_readonly: false,
     decision_ref: 'H.54',
     decision_tokens: ['OD-D06', 'H.54'],
-    consumer: 'selo de frescor',
+    consumer: 'selo de frescor (× latência aceitável)',
     surface: 'dashboard',
     provenance: {
       line: 117,
@@ -1180,13 +1181,14 @@ export const PARAMETER_CATALOGUE = [
   {
     key: 'dashboard.purposes_n2',
     value_type: 'json',
-    value_json: '6 finalidades',
+    value_json:
+      '["supervisao","auditoria","apuracao","resposta-ao-titular","estatistica","suporte"]',
     status: 'vigente',
     source_pending: false,
     legal_readonly: false,
     decision_ref: 'H.54',
     decision_tokens: ['OD-D08', 'H.54'],
-    consumer: 'LayerGate',
+    consumer: 'LayerGate (forma normalizada por OD-D30)',
     surface: 'dashboard',
     provenance: {
       line: 119,
@@ -1355,6 +1357,21 @@ export const PARAMETER_CATALOGUE = [
     surface: 'dashboard',
     provenance: {
       line: 130,
+    },
+  },
+  {
+    key: 'dashboard.source.acceptable_latency_minutes',
+    value_type: 'int',
+    value_json: null,
+    status: 'proposta',
+    source_pending: true,
+    legal_readonly: false,
+    decision_ref: 'DT-030',
+    decision_tokens: ['DT-030'],
+    consumer: 'source (faixas por OD-D34)',
+    surface: 'dashboard',
+    provenance: {
+      line: 131,
     },
   },
 ] as const;

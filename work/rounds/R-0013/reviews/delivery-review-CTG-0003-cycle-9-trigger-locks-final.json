@@ -1,0 +1,14 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0003",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "O achado do ciclo 8 foi resolvido: tgqual é projetado e qualquer condição WHEN não nula é rejeitada.",
+    "A equivalência verifica função, eventos, momento, nível, habilitação, ausência de argumentos, tenant_id como única coluna de UPDATE e ausência de condição.",
+    "A prova PostgreSQL comportamental preserva o OID válido, cria o gatilho ausente, preserva seu novo OID e rejeita com P0001 a variante WHEN (false); o rollback restaura e confirma o OID original.",
+    "Não houve enfraquecimento de RLS, mudança em auth.enforce_tenant_id(), retry, skip ou relaxamento de assertions.",
+    "git diff --check passou. Revisão somente leitura por Reviewer CODEX no papel Auditor, conforme exceção expressamente autorizada pelo Owner."
+  ]
+}

@@ -211,14 +211,14 @@ async function inventory(): Promise<string[]> {
   const files = JSON.parse(encoded) as unknown;
   if (
     !Array.isArray(files) ||
-    files.length !== 62 ||
+    files.length !== 63 ||
     files.some(
       (file) =>
         typeof file !== 'string' || !/^[0-9][0-9A-Za-z-]*\.sql$/u.test(file),
     ) ||
     new Set(files).size !== files.length
   )
-    throw new Error('The closed 62-DDL inventory is incomplete');
+    throw new Error('The closed 63-DDL inventory is incomplete');
   return files;
 }
 
@@ -584,18 +584,21 @@ async function priorityState(
 }
 
 describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
-  it('dado inventário fechado quando compõe apply então ordena cada DDL uma vez sem conectar DB', async () => {
+  it('dado inventário fechado quando compõe apply então preserva a ordem ordinária e reaplica DDL21 após DDL20 sem conectar DB', async () => {
     const source = await readFile(join(databaseDir, 'apply.sh'), 'utf8');
     expect(source).toContain('--single-transaction');
     expect(source).toContain('pg_advisory_xact_lock(7007, 1)');
     const listed = await inventory();
-    expect(new Set(listed).size).toBe(62);
+    expect(new Set(listed).size).toBe(63);
     const directory = await isolatedCopy(true);
     try {
       const copied = await readdir(join(directory, 'ddl'));
-      expect(copied.length).toBe(65);
+      expect(copied.length).toBe(66);
       expect(
         copied.filter((name) => name === '20-rls-policies.sql'),
+      ).toHaveLength(1);
+      expect(
+        copied.filter((name) => name === '21-ops-provisioning.sql'),
       ).toHaveLength(1);
       const bin = join(directory, 'bin');
       const calls = join(directory, 'psql-calls');
@@ -629,6 +632,10 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
       const files = argv
         .filter((arg) => arg.endsWith('.sql'))
         .map((arg) => arg.split('/').at(-1));
+      expect(files).toHaveLength(67);
+      expect(
+        files.filter((name) => name === '21-ops-provisioning.sql'),
+      ).toHaveLength(2);
       const ordinary = listed.filter(
         (name) =>
           name !== '20-rls-policies.sql' && name !== '34-inf-rait-case.sql',
@@ -645,6 +652,7 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
         '34-inf-rait-case.sql',
         ...after34,
         '20-rls-policies.sql',
+        '21-ops-provisioning.sql',
         manual[1],
         manual[2],
       ]);
@@ -655,6 +663,22 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
+  });
+
+  it('dado instalador de tenant quando reaplica então cria ausentes e rejeita divergências sem recriar gatilhos válidos', async () => {
+    const source = await readFile(
+      join(databaseDir, 'ddl/11-auth-functions.sql'),
+      'utf8',
+    );
+    expect(source).toContain('IF item.trigger_oid IS NULL THEN');
+    expect(source).toContain(
+      "item.trigger_function <> 'auth.enforce_tenant_id()'::regprocedure::oid",
+    );
+    expect(source).toContain('item.trigger_when IS NOT NULL');
+    expect(source).toContain(
+      "RAISE EXCEPTION 'Existing enforce_tenant_id trigger differs on %.%'",
+    );
+    expect(source).not.toContain('DROP TRIGGER IF EXISTS enforce_tenant_id');
   });
 });
 
@@ -704,6 +728,53 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
       if (!present.includes(name))
         throw new Error(`${name} is not yet supplied by TASK-0029`);
   }, 180_000);
+
+  it('dado gatilho tenant ausente, válido ou condicionado quando instala então cria, preserva OID ou rejeita divergência atomicamente', async () => {
+    const triggerState = async () =>
+      owner.query(
+        `SELECT trigger_catalog.oid, trigger_catalog.tgqual
+         FROM pg_trigger trigger_catalog
+         WHERE trigger_catalog.tgrelid = 'integration.inbox_receipt'::regclass
+           AND trigger_catalog.tgname = 'enforce_tenant_id'
+           AND NOT trigger_catalog.tgisinternal`,
+      );
+    const initial = await triggerState();
+    expect(initial.rowCount).toBe(1);
+    expect(initial.rows[0].tgqual).toBeNull();
+
+    await owner.query('SELECT auth.install_tenant_triggers()');
+    expect((await triggerState()).rows[0].oid).toBe(initial.rows[0].oid);
+
+    await owner.query('BEGIN');
+    try {
+      await owner.query(
+        'DROP TRIGGER enforce_tenant_id ON integration.inbox_receipt',
+      );
+      await owner.query('SELECT auth.install_tenant_triggers()');
+      const created = await triggerState();
+      expect(created.rowCount).toBe(1);
+      expect(created.rows[0].tgqual).toBeNull();
+      await owner.query('SELECT auth.install_tenant_triggers()');
+      expect((await triggerState()).rows[0].oid).toBe(created.rows[0].oid);
+
+      await owner.query(
+        'DROP TRIGGER enforce_tenant_id ON integration.inbox_receipt',
+      );
+      await owner.query(
+        `CREATE TRIGGER enforce_tenant_id
+         BEFORE INSERT OR UPDATE OF tenant_id ON integration.inbox_receipt
+         FOR EACH ROW WHEN (false)
+         EXECUTE FUNCTION auth.enforce_tenant_id()`,
+      );
+      await expect(
+        owner.query('SELECT auth.install_tenant_triggers()'),
+      ).rejects.toMatchObject({ code: 'P0001' });
+    } finally {
+      await owner.query('ROLLBACK');
+    }
+
+    expect((await triggerState()).rows[0].oid).toBe(initial.rows[0].oid);
+  });
 
   afterAll(async () => {
     if (connectionsOpen) {
@@ -925,7 +996,10 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
           cwd: directory,
           env: ownerEnv,
         });
-        expect(result.code, `apply attempt ${attempt + 1}`).toBe(0);
+        expect(
+          result.code,
+          `apply attempt ${attempt + 1}\n${result.output}`,
+        ).toBe(0);
         expect(result.output).toContain('apply.sh: done');
         expect(await legacyRows(owner, legacyBaseline)).toEqual(legacyBaseline);
         expect(

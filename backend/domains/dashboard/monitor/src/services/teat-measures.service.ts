@@ -1,4 +1,4 @@
-// Generated from BP-DASH-MONITOR-001 v1.0.0 sha256:f6f02498282fa6757196ac8b711a05e41a930f7e3980a3b9e96f62a2438e24ab
+// Generated from BP-DASH-MONITOR-001 v1.1.0 sha256:db365ada798a2115de6d57a3153f93d3657948f6562dab9927f4e35f0a8c765a
 import { Injectable } from '@nestjs/common';
 import { TeatMeasuresRepository } from '../repositories/teat-measures.repository.js';
 import type { TeatMeasures } from '../entities/teat-measures.entity.js';

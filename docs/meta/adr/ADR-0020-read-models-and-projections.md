@@ -5,6 +5,8 @@
 Accepted on 2026-09-13 by Owner decision (steering G.37), on the Architect's proposal of the same date. Completes ADR-0016…0019
 and the events contract (`rait-events-sse-contract.md`).
 
+Implementação: PR #83 (R-0011 CTG-0001 — `verify:domain-boundaries`, projeções DASHBOARD).
+
 ## Context
 
 PORTAL, DASHBOARD, the RAIT console (radar, integrations panel, production) and the

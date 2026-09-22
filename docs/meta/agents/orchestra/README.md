@@ -271,6 +271,72 @@ follow-up qualitativo de cada maestro: o que custou tempo, o que funcionou e o q
 6. Proibir escapes condicionais e manter um app isolado por arquivo de spec.
 7. Registrar variáveis de mock só no shell/CI: `SENATRAN_*_BASE_URL` não entra em `backend/**`.
 
+### R-0011 `dashboard-backend` (Fable 5.1, 2026-09-21 — troca de família Sol → Fable por decisão do Owner; PR #83 CTG-0001, CTG-0002 PR a abrir)
+
+**O que custou tempo**
+
+1. **Grep de produtores antes de declarar upstream em `main`.** O plano §Concorrência registrava
+   `rait.clock.flag-changed` e `rait.decision.published` como publicados pelo PR #69 do RAIT; um
+   grep de produtores em `backend/domains/**/src` em `08fb84e8` mostrou só
+   `rait.case.changed|admitted|received|withdrawn` e `rait.assignment.changed`. Triado como
+   `reference-gap` (OD-D17): IND-DASH-101…105 nasceram `connected=false` sem retrabalho, porque M5 já
+   previa a regra — mas a linha de §Concorrência precisou ser corrigida. Verificar produtores reais
+   antes de escrever "já em `main`" em qualquer plano.
+2. **`apply.sh --full` restrito por R-0007.** O banco da rodada (`detran_r11`) não pôde usar
+   `--full` (R-0007 o restringiu a `detran_r7_ctg1_a2` com uma variável de autorização); resolvido com
+   `create database` uma vez e `apply.sh` incremental de resto.
+3. **O gerador emite controllers vazios mesmo com `operations: []`.** Igual ao pacote `crashes` de
+   R-0010, o `MonitorModule` registra 20 controllers vazios; a asserção original de "nenhum controller
+   registrado" contradizia o gerador (A9/A10). Critérios de "nenhuma rota altera domínio" precisam
+   falar de métodos de rota ausentes, nunca de ausência de classe `*Controller`.
+4. **Inventário fechado de DDL é literal em outro spec.** `rait-priority-upgrade.integration.spec.ts`
+   (lock de R-0007) fixa em um número a lista `ordinary` de `apply.sh`; o CTG-0001 levou essa lista de
+   60 para 62, quebrando o CI até o Inspector corrigir o literal (precedente igual em R-0010: 57→60).
+   Recomendação: o inventário fechado deveria derivar de `apply.sh` (como
+   `prepare-rait-priority-v1-baseline.mjs` já faz), não um número hardcoded.
+5. **`export *` de vários `*.projection.ts` com `consumedEvents` colide.** O `index.ts` de um pacote
+   que reexporta `export *` de módulos que declaram o mesmo identificador `consumedEvents` gera
+   `TS2308` (A13); vale tanto para `portal/projections` quanto para `dashboard/monitor`. Correção: o
+   `index.ts` nunca faz `export *` de um `*.projection.ts` — reexporta por nome, e `consumedEvents`
+   fica export local do módulo (o gate lê o arquivo, não o índice).
+6. **Gate de parâmetros × literais de evento.** `tools/parameters/verify.mjs --check-usage` tratava
+   os literais de `export const consumedEvents = [...] as const` (exigidos pelo gate `verify:domain-
+boundaries`, M6/ADR-0020) como candidatos a chave de parâmetro desconhecida (A14). Correção: a
+   declaração `consumedEvents` literal entra em `isSourceEventDeclaration` — nunca exclusão por
+   diretório nem allowlist de chave.
+7. **`ci:backend-kernel:local` exige branch publicado e ambiente RC protegido.** Na máquina local, sem
+   esse ambiente, o mock SENATRAN encadeou timeouts de 30s no e2e do Portal; o mesmo spec sem mock deu
+   9/10 (a falha esperada). O CI é o sinal autoritativo, não a corrida local.
+
+**O que funcionou**
+
+1. **Divisão ciclo × superfície do CTG-0002** (TASK-0004/0005 sobre o ciclo do alerta/deveres/frescor;
+   TASK-0013/0014 sobre rotas/política/exportação/SSE — M15…M25, A18): fronteiras disjuntas, sem
+   corrida de escrita, no mesmo padrão que a divisão TASK-0002∥0011/TASK-0010∥0003 do CTG-0001.
+2. **Iterações restritas curtas** (1–4 min, 14 no total entre os dois CTG) resolveram os achados de
+   A7…A23 sem redespachar tarefa inteira.
+3. **Adendas numeradas do Architect** (A1…A23) reconciliaram contrato × código × canônico sem parar a
+   frente; o reviewer as aceitou como base de julgamento nos ciclos restritos.
+4. **`AUTHORIZATION.md` como registro de decisão do Owner** (Emenda 1: prosseguir até a finalização do
+   CTG-0001; Emenda 2: abrir o CTG-0002 pela via M7/A3, relógio próprio, sem esperar R-0007 CTG-0003)
+   manteve a frente andando sem bloquear na dependência externa.
+
+**Recomendações ao método**
+
+1. **§4** — todo plano que cita um evento como "já publicado em `main`" deve mostrar o grep de
+   produtores que sustenta a afirmação, não só o nome do PR.
+2. **Gate `verify:domain-boundaries` (ADR-0020)** — dívidas declaradas (`OD-*`) impressas, nunca
+   silenciosas; qualquer rodada que generalize um verificador deve rodá-lo sobre o repositório inteiro
+   antes de ligá-lo a `pnpm check` e corrigir as violações existentes no mesmo PR.
+3. **`tools/domain-boundaries` / `tools/check-lifecycle-vocabulary.ts`** — todo DDL novo de vocabulário
+   (`19-*`) precisa atualizar o inventário fechado do spec de prioridade e o próprio verificador de
+   vocabulário no mesmo PR.
+4. **Blueprints** — manter M24 (o Architect declara `module.handwritten*` com símbolos fixos; o
+   Engineer só cria os arquivos; `typecheck` vermelho entre tarefas do mesmo CTG é esperado).
+5. **Relógio próprio via M7/A3** — quando uma frente depende de um motor de prazos ainda não mesclado,
+   preferir relógio próprio do pacote (`Calendar`/`Clock` como dependência de leitura, nunca editar o
+   pacote dono) a bloquear a frente inteira; registrar a integração futura como OD explícita (OD-D28).
+
 ## Arquivos deste método
 
 | Arquivo                                 | Uso                                                                 |

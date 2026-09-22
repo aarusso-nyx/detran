@@ -4,11 +4,14 @@
   "module": {
     "name": "Monitor",
     "namespace": "dashboard",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "ddlFile": "80-dashboard.sql",
     "dependencies": {
       "@detran/ops-parameter": "workspace:*",
-      "@detran/shared": "workspace:*"
+      "@detran/shared": "workspace:*",
+      "@detran/inf-deadlines": "workspace:*",
+      "@detran/dashboard-crashes": "workspace:*",
+      "zod": "^4.6.5"
     },
     "devDependencies": {
       "@types/pg": "^8.15.4",
@@ -22,17 +25,107 @@
       {
         "package": "@detran/ops-parameter",
         "target": "../../ops/parameter/src/index.ts"
+      },
+      {
+        "package": "@detran/inf-deadlines",
+        "target": "../../inf/deadlines/src/index.ts"
+      },
+      {
+        "package": "@detran/dashboard-crashes",
+        "target": "../crashes/src/index.ts"
       }
     ],
     "handwrittenProviders": [
       {
         "target": "handwritten/projectors",
         "symbol": "DASHBOARD_MONITOR_PROJECTORS"
+      },
+      {
+        "target": "handwritten/cycle/clock.service",
+        "symbol": "DashboardClockService"
+      },
+      {
+        "target": "handwritten/cycle/clock.sweeper",
+        "symbol": "DashboardClockSweeper"
+      },
+      {
+        "target": "handwritten/cycle/alert.service",
+        "symbol": "DashboardAlertService"
+      },
+      {
+        "target": "handwritten/cycle/duty.service",
+        "symbol": "DashboardDutyService"
+      },
+      {
+        "target": "handwritten/cycle/freshness.service",
+        "symbol": "DashboardFreshnessService"
+      },
+      {
+        "target": "handwritten/cycle/notifier",
+        "symbol": "DashboardNotifier"
+      },
+      {
+        "target": "handwritten/surface/layer-gate",
+        "symbol": "DashboardLayerGate"
+      },
+      {
+        "target": "handwritten/surface/export.service",
+        "symbol": "DashboardExportService"
+      },
+      {
+        "target": "handwritten/surface/report.service",
+        "symbol": "DashboardReportService"
+      },
+      {
+        "target": "handwritten/surface/catalog.service",
+        "symbol": "DashboardCatalogService"
+      },
+      {
+        "target": "handwritten/surface/audit.service",
+        "symbol": "DashboardAuditService"
+      },
+      {
+        "target": "handwritten/surface/open-data.service",
+        "symbol": "DashboardOpenDataService"
       }
     ],
-    "handwrittenExports": ["handwritten/index"],
+    "handwrittenExports": [
+      "handwritten/index",
+      "handwritten/cycle/index",
+      "handwritten/surface/index"
+    ],
     "owners": ["detran-dashboard"],
-    "description": "Estado proprio e projecoes do DASHBOARD (dashboard-build-pack secao WP-D1; ADR-0020 Decisoes 1, 3 e 4; WF-DASH-001 ciclo do alerta, WF-DASH-002 calendario de deveres periodicos, WF-DASH-003 frescor; plan R-0011 M1..M5). O DASHBOARD nao tem base de negocio: le projecoes alimentadas por eventos e mantem so o seu proprio estado (alert, alert_trail, duty, duty_cycle, indicator, indicator_config, bi_panel, generated_report, export_log, source, transparency_audit, dataset). As oito projecoes deste pacote (prescription_risk, production, integration_health, pec_deadlines, teat_measures, portal_service_metrics, duty_evidence, source_freshness -> source) sao projetores manuscritos em src/handwritten/projections/*.projection.ts, idempotentes em event.id via o ledger unico monitor_projection_applied_event, replayaveis da integration.outbox e versionados (event_schema_version, aggregate_version). A projecao dashboard.crashes NAO e redefinida aqui: e BP-DASHBOARD-CRASHES-001 (plan M2), citada por indicator.projection dos IND-DASH-203/204/310. Vocabulario global (alert_state_ref, alert_transition_ref, duty_state_ref, duty_transition_ref, freshness_state_ref, severity_ref, layer_ref, classification_ref, block_ref, timer_ref) em 19-dashboard-lifecycle-vocabulary.sql; os checks deste blueprint repetem os mesmos conjuntos. Nenhum dado pessoal, placa, numero de processo ou atributo de saude em coluna alguma (RN-DASH-170 N3): identificacao de objeto so como object_ref opaco com object_layer. Nenhuma rota no CTG-0001 (todo operations = []); rotas, politica e @Audit chegam no CTG-0002 (module.version 1.1.0)."
+    "description": "Estado proprio e projecoes do DASHBOARD (dashboard-build-pack secao WP-D1; ADR-0020 Decisoes 1, 3 e 4; WF-DASH-001 ciclo do alerta, WF-DASH-002 calendario de deveres periodicos, WF-DASH-003 frescor; plan R-0011 M1..M5). O DASHBOARD nao tem base de negocio: le projecoes alimentadas por eventos e mantem so o seu proprio estado (alert, alert_trail, duty, duty_cycle, indicator, indicator_config, bi_panel, generated_report, export_log, source, transparency_audit, dataset). As oito projecoes deste pacote (prescription_risk, production, integration_health, pec_deadlines, teat_measures, portal_service_metrics, duty_evidence, source_freshness -> source) sao projetores manuscritos em src/handwritten/projections/*.projection.ts, idempotentes em event.id via o ledger unico monitor_projection_applied_event, replayaveis da integration.outbox e versionados (event_schema_version, aggregate_version). A projecao dashboard.crashes NAO e redefinida aqui: e BP-DASHBOARD-CRASHES-001 (plan M2), citada por indicator.projection dos IND-DASH-203/204/310. Vocabulario global (alert_state_ref, alert_transition_ref, duty_state_ref, duty_transition_ref, freshness_state_ref, severity_ref, layer_ref, classification_ref, block_ref, timer_ref) em 19-dashboard-lifecycle-vocabulary.sql; os checks deste blueprint repetem os mesmos conjuntos. Nenhum dado pessoal, placa, numero de processo ou atributo de saude em coluna alguma (RN-DASH-170 N3): identificacao de objeto so como object_ref opaco com object_layer. CTG-0002 (module.version 1.1.0, plan M15..M25, contrato work/rounds/R-0011/contracts/CTG-0002.md): entidades timer (relogio proprio, M15) e access_log (RN-DASH-171, append-only); sete controllers manuscritos em src/handwritten/surface/*.controller.ts com as rotas de dashboard-route-contract secao 2..secao 4 literalmente (todo api.resources[].operations continua [] - nada gerado tem rota; politica dashboard:* de policy.ts, camada por dashboardLayerFor, @Audit DASH_<VERBO>); servicos do ciclo em src/handwritten/cycle (relogio, sweeper, alerta, deveres, frescor, notificador) e da superficie em src/handwritten/surface (layer gate, exportacao, relatorios, catalogo, auditoria, dados abertos); tres indices handwritten (index, cycle/index, surface/index) com reexport nomeado (A13). @detran/inf-deadlines entra so como dependencia de leitura (Calendar, Clock, InMemoryCalendar, FixedClock; backend/domains/inf/deadlines nunca e editado, OD-D28); @detran/dashboard-crashes e lido pela API publica do pacote de R-0010 (DashboardCrashesProjection.readInternal) para IND-DASH-203/204/310, nunca por dashboard.crash_* direto; zod para os DTOs dos comandos. SSE GET /v1/dashboard/stream vive em backend/app/src/dashboard-stream.{service,controller}.ts (M23). A cadeia de escalonamento e vocabulario global dashboard.escalation_chain_ref (DDL 19, M18).",
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/surface/alerts.controller",
+        "symbol": "DashboardAlertsController"
+      },
+      {
+        "target": "handwritten/surface/duties.controller",
+        "symbol": "DashboardDutiesController"
+      },
+      {
+        "target": "handwritten/surface/catalog.controller",
+        "symbol": "DashboardCatalogController"
+      },
+      {
+        "target": "handwritten/surface/sources.controller",
+        "symbol": "DashboardSourcesController"
+      },
+      {
+        "target": "handwritten/surface/exports.controller",
+        "symbol": "DashboardExportsController"
+      },
+      {
+        "target": "handwritten/surface/audit.controller",
+        "symbol": "DashboardAuditController"
+      },
+      {
+        "target": "handwritten/surface/open-data.controller",
+        "symbol": "DashboardOpenDataController"
+      }
+    ]
   },
   "database": {
     "entities": [
@@ -2277,6 +2370,225 @@
             "expression": "event_schema_version > 0 and aggregate_version > 0"
           }
         ]
+      },
+      {
+        "name": "Timer",
+        "table": "timer",
+        "primaryKey": ["id"],
+        "description": "Timer armado pelo relogio proprio do DASHBOARD (plan R-0011 M15, via M7/A3 da Emenda 2 de AUTHORIZATION.md; contrato work/rounds/R-0011/contracts/CTG-0002.md secao 2.1 e secao 13). code e um codigo de dashboard.timer_ref (19-dashboard-lifecycle-vocabulary.sql, M7/A7; o check repete o mesmo conjunto de 14 codigos); owner_kind in {alert, duty_cycle, source} com owner_id = id da linha dona; started_at = marco de contagem; due_at = vencimento calculado pelo DashboardClockService com Calendar/Clock de @detran/inf-deadlines em leitura (horas_uteis pelo calendario; imediato -> due_at = started_at; nulo enquanto o marco nao e calculavel, ex. T-DASH-MARCO-* sem ceiling_on); status in {ARMADO, VENCIDO, SATISFEITO, CANCELADO}; fired_at = instante em que o sweeper venceu o timer (DashboardClockSweeper.runDue(now)). Unico em (tenant_id, owner_kind, owner_id, code, started_at): idempotencia do sweeper e do arm (M15). Integracao ao motor de prazos com owner = dashboard fica para depois de R-0007 CTG-0003 (OD-D28). Nenhum dado pessoal (RN-DASH-170 N3).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "owner_kind",
+            "type": "varchar(20)"
+          },
+          {
+            "name": "owner_id",
+            "type": "uuid"
+          },
+          {
+            "name": "code",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "started_at",
+            "type": "timestamptz"
+          },
+          {
+            "name": "due_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "status",
+            "type": "varchar(20)",
+            "default": "'ARMADO'"
+          },
+          {
+            "name": "fired_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "satisfied_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "cancelled_at",
+            "type": "timestamptz",
+            "nullable": true
+          },
+          {
+            "name": "reason",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "version",
+            "type": "integer",
+            "default": "1"
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ux_dashboard_timer_arm",
+            "columns": [
+              "tenant_id",
+              "owner_kind",
+              "owner_id",
+              "code",
+              "started_at"
+            ],
+            "unique": true
+          },
+          {
+            "name": "ix_dashboard_timer_due",
+            "columns": ["tenant_id", "status", "due_at"]
+          },
+          {
+            "name": "ix_dashboard_timer_owner",
+            "columns": ["tenant_id", "owner_kind", "owner_id", "status"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_timer_owner_kind",
+            "expression": "owner_kind in ('alert','duty_cycle','source')"
+          },
+          {
+            "name": "ck_dashboard_timer_code",
+            "expression": "code in ('T-DASH-ACK-N1','T-DASH-ACK-N2','T-DASH-ACK-N3','T-DASH-ACK-CRITICO','T-DASH-MARCO-50','T-DASH-MARCO-75','T-DASH-MARCO-90','T-DASH-DUTY-201','T-DASH-DUTY-202','T-DASH-DUTY-PNATRANS','T-DASH-DUTY-206','T-DASH-DUTY-207','T-DASH-DUTY-209','T-DASH-PENDING-FLOOR')"
+          },
+          {
+            "name": "ck_dashboard_timer_status",
+            "expression": "status in ('ARMADO','VENCIDO','SATISFEITO','CANCELADO')"
+          },
+          {
+            "name": "ck_dashboard_timer_due_after_start",
+            "expression": "due_at is null or due_at >= started_at"
+          },
+          {
+            "name": "ck_dashboard_timer_fired",
+            "expression": "(status = 'VENCIDO') = (fired_at is not null)"
+          },
+          {
+            "name": "ck_dashboard_timer_satisfied",
+            "expression": "(status = 'SATISFEITO') = (satisfied_at is not null)"
+          },
+          {
+            "name": "ck_dashboard_timer_cancelled",
+            "expression": "(status = 'CANCELADO') = (cancelled_at is not null)"
+          },
+          {
+            "name": "ck_dashboard_timer_version_positive",
+            "expression": "version > 0"
+          }
+        ]
+      },
+      {
+        "name": "AccessLog",
+        "table": "access_log",
+        "primaryKey": ["id"],
+        "applicationAppendOnly": true,
+        "description": "Trilha de acesso do proprio DASHBOARD (RN-DASH-171 tabela \"Conteudo minimo de cada registro de acesso\"; RN-DASH-170 camadas; RN-DASH-172 regra 2 registro reforcado da exportacao; dashboard-route-contract secao 1 regra 4 e GET audit-trail; plan R-0011 M16/M17; contrato CTG-0002 secao 2.2 e secao 5). Append-only: log imutavel e segregado (RN-DASH-171 verificacao 1). Mapeamento dos sete campos: quem = user_ref + user_role (papel efetivo no momento do acesso); quando = at (timestamptz, fonte confiavel = Clock injetado); o que = resource (rota/painel/indicador) + filters_json (filtros e recortes aplicados); granularidade = layer in {N0, N1, N2} (camada efetivamente servida; N3 nunca e servida, RN-DASH-170); volume = row_count; origem = origin (dispositivo/rede, quando disponivel); finalidade = purpose (obrigatoria quando layer = N2, catalogo dashboard.purposes_n2; DASH.PURPOSE_REQUIRED / DASH.PURPOSE_INVALID). export_id liga o acesso ao export_log quando o acesso e uma exportacao. Nunca conteudo de resposta, nunca dado pessoal, placa, numero de processo ou atributo de saude (RN-DASH-170 N3). O acesso a propria trilha (GET audit-trail) tambem e registrado (RN-DASH-171 verificacao 2).",
+        "fields": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "default": "gen_random_uuid()"
+          },
+          {
+            "name": "tenant_id",
+            "type": "uuid"
+          },
+          {
+            "name": "user_ref",
+            "type": "uuid"
+          },
+          {
+            "name": "user_role",
+            "type": "varchar(40)"
+          },
+          {
+            "name": "at",
+            "type": "timestamptz",
+            "default": "now()"
+          },
+          {
+            "name": "resource",
+            "type": "varchar(120)"
+          },
+          {
+            "name": "filters_json",
+            "type": "jsonb",
+            "default": "'{}'::jsonb"
+          },
+          {
+            "name": "layer",
+            "type": "varchar(2)"
+          },
+          {
+            "name": "row_count",
+            "type": "integer",
+            "default": "0"
+          },
+          {
+            "name": "origin",
+            "type": "varchar(120)",
+            "nullable": true
+          },
+          {
+            "name": "purpose",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "export_id",
+            "type": "uuid",
+            "nullable": true
+          }
+        ],
+        "indexes": [
+          {
+            "name": "ix_dashboard_access_log_at",
+            "columns": ["tenant_id", "at"]
+          },
+          {
+            "name": "ix_dashboard_access_log_user",
+            "columns": ["tenant_id", "user_ref", "at"]
+          },
+          {
+            "name": "ix_dashboard_access_log_resource",
+            "columns": ["tenant_id", "resource", "at"]
+          },
+          {
+            "name": "ix_dashboard_access_log_export",
+            "columns": ["tenant_id", "export_id"]
+          }
+        ],
+        "checks": [
+          {
+            "name": "ck_dashboard_access_log_layer",
+            "expression": "layer in ('N0','N1','N2')"
+          },
+          {
+            "name": "ck_dashboard_access_log_purpose_n2",
+            "expression": "layer <> 'N2' or purpose is not null"
+          },
+          {
+            "name": "ck_dashboard_access_log_row_count",
+            "expression": "row_count >= 0"
+          }
+        ]
       }
     ]
   },
@@ -2401,6 +2713,18 @@
         "entity": "DutyEvidence",
         "path": "duty-evidence",
         "resource": "duty-evidence",
+        "operations": []
+      },
+      {
+        "entity": "Timer",
+        "path": "timers",
+        "resource": "timer",
+        "operations": []
+      },
+      {
+        "entity": "AccessLog",
+        "path": "access-logs",
+        "resource": "access-log",
         "operations": []
       }
     ]
