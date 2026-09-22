@@ -1,6 +1,6 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** CTG-0001 e CTG-0002 mesclados e observados; CTG-0003 é a próxima fronteira.
+**Status:** CTG-0001, CTG-0002 e CTG-0003 mesclados e observados; CTG-0004a é a próxima fronteira.
 Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
 **Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
 (matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
@@ -915,9 +915,9 @@ Checkpoint 39 (janela 3, merge e observação governada de CTG-0003):
 - a avaliação conservadora YELLOW, com 43 células UNKNOWN por lacunas de sensores e
   `readiness_promoting=false`, descreve somente a introspecção pós-merge e não reabre o delivery
   review ciclo 9 PASS nem os gates verdes do candidato;
-- a observação e seu evidence record serão publicados na branch preservada para continuidade de
-  CTG-0004a/CTG-0004b/CTG-0005. CTG-0003 fica completamente encerrada após a verificação final da
-  cadeia e o push desses dois commits pós-merge.
+- a observação e seu evidence record foram publicados na branch preservada para continuidade de
+  CTG-0004a/CTG-0004b/CTG-0005; a cadeia final permaneceu válida em `109bca0c…` e a identidade
+  local/remota da branch foi confirmada em `0be1fee9…`. CTG-0003 está completamente encerrada.
 
 ## Leitura
 
