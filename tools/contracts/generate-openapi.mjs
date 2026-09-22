@@ -26,6 +26,11 @@ function tsType(type) {
   return { type: 'string' };
 }
 
+function schemaForField(field) {
+  if (field.jsonSchema) return JSON.parse(JSON.stringify(field.jsonSchema));
+  return tsType(field.type);
+}
+
 // `state in ('A','B')` in a check constraint is the field's closed value set.
 function enumsFrom(entity) {
   const found = new Map();
@@ -63,7 +68,7 @@ function schemaFor(entity, { create }) {
   const properties = {};
   const required = [];
   for (const field of fields) {
-    const base = tsType(field.type);
+    const base = schemaForField(field);
     const values = enums.get(field.name);
     const property = values ? { ...base, enum: values } : { ...base };
     if (field.nullable) property.nullable = true;

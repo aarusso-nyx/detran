@@ -50,7 +50,33 @@ function pascal(value) {
     .map((part) => part[0].toUpperCase() + part.slice(1))
     .join('');
 }
-function tsType(type) {
+function jsonSchemaTsType(schema) {
+  switch (schema.type) {
+    case 'array': {
+      const item = jsonSchemaTsType(schema.items);
+      return `${item.includes(' | ') ? `(${item})` : item}[]`;
+    }
+    case 'object': {
+      const entries = Object.entries(schema.properties ?? {});
+      if (!entries.length) return 'Record<string, unknown>';
+      const required = new Set(schema.required ?? []);
+      return `{ ${entries.map(([name, property]) => `${name}${required.has(name) ? '' : '?'}: ${jsonSchemaTsType(property)};`).join(' ')} }`;
+    }
+    case 'string':
+      return 'string';
+    case 'integer':
+    case 'number':
+      return 'number';
+    case 'boolean':
+      return 'boolean';
+    default:
+      return 'unknown';
+  }
+}
+function tsType(field) {
+  if (typeof field !== 'string' && field.jsonSchema)
+    return jsonSchemaTsType(field.jsonSchema);
+  const type = typeof field === 'string' ? field : field.type;
   if (
     type === 'uuid' ||
     type === 'text' ||
@@ -184,7 +210,7 @@ function dto(bp, sha, entity) {
         f.name,
       ),
   );
-  return `${header(bp, sha)}\nexport interface Create${entity.name}Dto {\n${fields.map((f) => `  ${f.name}${f.nullable || f.default !== undefined ? '?' : ''}: ${tsType(f.type)}${f.nullable ? ' | null' : ''};`).join('\n')}\n}`;
+  return `${header(bp, sha)}\nexport interface Create${entity.name}Dto {\n${fields.map((f) => `  ${f.name}${f.nullable || f.default !== undefined ? '?' : ''}: ${tsType(f)}${f.nullable ? ' | null' : ''};`).join('\n')}\n}`;
 }
 function entity(bp, sha, item) {
   return `${header(bp, sha)}\nexport interface ${item.name} {\n${entityFields(
@@ -192,7 +218,7 @@ function entity(bp, sha, item) {
   )
     .map(
       (f) =>
-        `  ${f.name}${f.nullable ? '?' : ''}: ${tsType(f.type)}${f.nullable ? ' | null' : ''};`,
+        `  ${f.name}${f.nullable ? '?' : ''}: ${tsType(f)}${f.nullable ? ' | null' : ''};`,
     )
     .join('\n')}\n}`;
 }

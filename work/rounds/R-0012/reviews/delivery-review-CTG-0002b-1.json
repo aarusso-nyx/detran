@@ -1,0 +1,26 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0012/contracts/CTG-0002b.md",
+      "line": 996,
+      "claim": "O contrato exige um teste negativo por cada papel canônico omitido, mas os gates dos componentes só exercitam um permitido e um negado por ação; por exemplo, CaseHeader testa analyst/secretary, InquiryCard analyst/secretary, DecisionPanel signing-authority/analyst e QueueTable analyst/rapporteur. Os demais papéis não são cobertos.",
+      "fix": "Adicionar casos parametrizados sobre os 13 papéis de ROLE_PERMISSIONS_FIXTURE para cada ação exibida neste par, com presença para todos os grants e ausência para todos os omitidos."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "apps/rait/web/src/app/shared/decision-panel.component.spec.ts",
+      "line": 51,
+      "claim": "O critério declara que rait-analyst não vê nenhum botão, mas policy.ts concede inf:rait-impediment:declare a rait-analyst e o componente aplica essa permissão ao botão impede. O spec só verifica ausência de sign, deixando a contradição sem teste.",
+      "fix": "Corrigir C-2B-44 e o spec: rait-analyst deve não ver sign/return-draft e deve ver impede; testar também rapporteur e os demais papéis conforme a matriz canônica."
+    }
+  ],
+  "notes": [
+    "A repetição local de pnpm --filter @detran/rait-web test não pôde iniciar no ambiente somente-leitura porque o Vite tentou criar apps/rait/web/node_modules/.vite-temp; isso não contradiz o log de gate anexado."
+  ]
+}

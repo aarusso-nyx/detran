@@ -7,3 +7,4 @@ export STYNX_APP_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/det
 export STYNX_READER_DATABASE_URL='postgresql://postgres:postgres@localhost:5432/detran_r13?options=-c%20role%3Drole_app_backend'
 export DB_NAME=detran_r13
 export DB_PASSWORD=postgres
+export DETRAN_R13_FULL_AUTHORIZED=1

@@ -46,6 +46,8 @@ export type * as BpOpsField001 from './generated/BP-OPS-FIELD-001.js';
 export type * as BpOpsOfflineSync001Commands from './generated/BP-OPS-OFFLINE-SYNC-001.commands.js';
 export type * as BpOpsOfflineSync001 from './generated/BP-OPS-OFFLINE-SYNC-001.js';
 export type * as BpOpsParameter001 from './generated/BP-OPS-PARAMETER-001.js';
+export type * as BpOpsProvisioning001Commands from './generated/BP-OPS-PROVISIONING-001.commands.js';
+export type * as BpOpsProvisioning001 from './generated/BP-OPS-PROVISIONING-001.js';
 export type * as BpOpsSnapshots001Commands from './generated/BP-OPS-SNAPSHOTS-001.commands.js';
 export type * as BpOpsSnapshots001 from './generated/BP-OPS-SNAPSHOTS-001.js';
 export type * as BpPortalCitizenService001Commands from './generated/BP-PORTAL-CITIZEN-SERVICE-001.commands.js';

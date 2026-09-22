@@ -21,6 +21,7 @@ export const CONTROLLER_ROOTS = [
   'backend/domains/inf/alcohol/src',
   'backend/domains/ops/field/src/handwritten',
   'backend/domains/ops/offline-sync/src/handwritten',
+  'backend/domains/ops/provisioning/src/handwritten',
   'backend/domains/ops/evidence/src/handwritten',
   'backend/domains/ops/snapshots/src/handwritten',
   // R-0009 (WP-P3, CTG-0002 §14 / plan.md A4(e)): the five Portal packages
