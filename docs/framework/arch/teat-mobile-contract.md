@@ -26,6 +26,12 @@ o contrato de rota e o contrato de provisionamento fechados nesta rodada.
   `teat.states`, `teat.errors`, `teat.screens`, `teat.forms`, `teat.legal`,
   `teat.sync`, `teat.readiness`, `teat.navigation`, `teat.a11y` e
   `teat.provisioning` do catálogo `i18n/teat.pt-BR.json` (OD-P46).
+- O bootstrap raiz usa `provideDetranAuthenticatedApp`, `provideHttpClient` e
+  `provideRouter`; a sessão, tenancy e i18n são as implementações STYNX 1.3.1,
+  não providers locais equivalentes. Configuração OIDC/tenant ausente ou inválida,
+  sessão inativa, claims sem papéis canônicos ou bootstrap remoto ausente negam o
+  fluxo. Um único `BootstrapStore` root-scoped atende toda a aplicação; providers
+  por rota que recriem ou esvaziem esse estado são proibidos.
 - Ordem imutável de guardas: `authGuard`, `tenantGuard`, `roleGuard`,
   `readinessGuard` quando a rota exige bootstrap, depois `shiftGuard` quando
   exige turno. `readinessGuard` verifica sessão exclusiva e postura/homologação
@@ -55,7 +61,11 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    `roleGuard`, o resultado do oráculo da seção 6; `readinessGuard`, um snapshot
    válido de readiness; e `shiftGuard`, turno aberto. Cada um devolve negação sem
    estado verificável, inclusive principal ausente, tenant ausente, papel omitido,
-   bootstrap ausente/expirado, blocker presente ou turno não aberto. A sequência
+   bootstrap ausente/expirado, blocker presente ou turno não aberto. Os papéis e
+   o tenant vêm exclusivamente da sessão STYNX autenticada: papéis são a união
+   canônica das claims `cognito:groups` e `roles`, e o tenant é o contexto resolvido
+   pelo provider STYNX de tenancy. O bootstrap operacional não inventa papel,
+   principal ou tenant, e `[]` não é substituto de claims ausentes. A sequência
    nunca é abreviada e `roleGuard` chama o oráculo cartesiano efetivo, não cópia ou
    helper isolado.
 2. **Adapters de backend.** Os oito clients são adapters tipados sobre `HttpClient`
@@ -69,23 +79,31 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    `reservation`, `package` e `print-receipt`. Toda escrita local recebe versão,
    `idempotency_key`, `payload_hash` e item `SyncQueueItem`; armazenamento em
    memória/planilha/`localStorage` simples é proibido. `SyncWorker` lê somente a
-   fila persistida, submete `SubmitSyncBatchDto` com `device_batch_id`,
+   fila e o cursor persistidos, submete `SubmitSyncBatchDto` com `device_batch_id`,
    `batch_sequence` e os itens contratuais, grava o recibo por item (`received` →
    `applied`) e recupera por idempotência. Falha fica no item com código canônico;
-   jamais apaga ato, duplica comando ou bloqueia nova lavratura por si só.
+   jamais apaga ato, duplica comando ou bloqueia nova lavratura por si só. O
+   construtor de produção aceita somente `MobileEncryptedStorePort`; adapter
+   legado, porta key-value simples, cursor opcional ou fallback de receipt/cursor
+   em memória são proibidos.
 4. **Pacote normativo.** `NormativePackageService` baixa apenas metadata/conteúdo
    do backend, valida o conteúdo pelo `manifest_hash` e só torna o pacote utilizável
    depois de persistido cifradamente. Pacote ausente, hash divergente ou conteúdo
    não verificável produz blocker; pacote expirado produz warning registrado e não
    bloqueia (H.55). `validUntil` exige nova avaliação; não há valor default para
    `source_pending` nem cálculo de prazo legal local.
-5. **Telas, módulos e i18n.** Os oito módulos lazy exportam as rotas de suas
-   linhas do manifesto e cada uma instancia o componente daquela linha, nunca um
-   alias ou placeholder comum. A página consome sua folha fonte, schema e client
-   aplicáveis. Todo texto visível, inclusive fallback, erro e estado indisponível,
+5. **Telas, módulos e i18n.** Os oito módulos lazy possuem e exportam suas próprias
+   rotas, sem importar, filtrar ou fechar ciclo com `app.routes.ts`; a raiz os
+   importa somente por `loadChildren`. Cada rota instancia o componente daquela
+   linha, nunca um alias ou placeholder comum. Cada uma das 59 páginas TEAT
+   não-BOAT executa sua leitura/ação aplicável através do schema e client do
+   contrato; metadata genérica, título e status sem integração executável não
+   constituem página. As onze entradas BOAT são boundaries, não páginas TEAT.
+   Todo texto visível, inclusive fallback, erro e estado indisponível,
    passa pelo runtime STYNX de i18n com as chaves permitidas da seção 1; texto
    literal no template ou componente falha. O catálogo é carregado em runtime, não
-   somente copiado para o app.
+   somente copiado para o app. `TeatI18n` é injetado e delega ao runtime STYNX;
+   `new TeatI18n()`, catálogo local como runtime ou objeto tradutor ad hoc falham.
 6. **FieldShell e falhas.** `FieldShell` é a única ErrorBoundary da aplicação:
    captura erro de rota/ação, preserva somente código, status e contexto de tokens,
    classifica `StynxError` pelo catálogo TEAT e mostra a chave canônica de erro. Erro
@@ -100,10 +118,17 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    turno. A rota legal só abre se não houver blocker e todos os requisitos do seu
    destino estiverem presentes; warnings são exibidos e registrados. A decisão de
    homologação expirada mantém o ato possível, mas não mascara bloqueadores reais.
+   A entrada é o tipo fechado da resposta bootstrap/provisionamento, nunca
+   `Record<string, boolean | string>`; campo obrigatório ausente ou malformado
+   bloqueia. Todo warning retornado é persistido no diagnóstico antes de permitir.
 8. **Transições.** Além da igualdade content-addressed da seção 4, o executor
    despacha cada transição pelo par `from`/`action`, exige condição satisfeita e
    navega ao `to` registrado. Somente `__previous__` chama `Location.back()`;
-   depois de `ait-done`, a ação de retorno não pode reabrir edição do ato. Destino,
+   depois de `ait-done`, a ação de retorno não pode reabrir edição do ato. Como a
+   fonte não define um destino seguro substituto, esse caso `__previous__` só usa
+   histórico quando o executor prova que o destino anterior não é tela editável;
+   sem essa prova, nega fail-closed e sinaliza `source_pending`, sem alterar a matriz.
+   Destino,
    ação ou condição ausente nega a navegação.
 9. **Forms, impressora e bodycam.** Os 14 schemas executam todas as proibições e
    validações da seção 3 antes de chamar client; prova negativa deve demonstrar que
@@ -194,11 +219,25 @@ type ProvisioningReadinessResponse = Readonly<{
   blockers: readonly Readonly<{ code: string; resource: string }>[];
   evaluated_at: string;
 }>;
+type ReadinessInput = Readonly<{
+  bootstrap: BootstrapSnapshot | undefined;
+  provisioning: ProvisioningReadinessResponse | undefined;
+  now: string;
+}>;
+type ReadinessResult = Readonly<{
+  allowed: boolean;
+  blockers: readonly string[];
+  warnings: readonly string[];
+  validUntil?: string;
+}>;
 
 interface BootstrapStore {
   snapshot(): BootstrapSnapshot | undefined;
   refresh(input: MobileBootstrapQuery): Promise<BootstrapSnapshot>;
   clear(): void;
+}
+interface ReadinessGateService {
+  evaluate(input: ReadinessInput): ReadinessResult;
 }
 
 interface GuardContext {
@@ -221,6 +260,16 @@ export const TEAT_GUARD_CONTEXT: InjectionToken<GuardContext>;
 de fixture/estado devolve `false` ou `UrlTree` de negação. Nenhum guarda consulta
 `localStorage`, assume `true` ou recupera estado de outro guarda.
 
+Em produção, a factory root de `TEAT_GUARD_CONTEXT` injeta
+`StynxSessionService` e o singleton `BootstrapStore`. `principal` existe somente
+quando `StynxSessionService.active()` é verdadeiro; seus `roles` são a interseção
+ordenada da união `state().claims['cognito:groups']` +
+`state().claims['roles']` com `TEAT_STAFF_ROLES`. `tenantId` vem do contexto de
+tenancy STYNX configurado no bootstrap e precisa coincidir com
+`bootstrap.context.tenantId`; ausência ou divergência devolve contexto negado.
+`bootstrap.context.agent.id` identifica o agente operacional, mas não cria
+principal nem papel. A factory não tem defaults de identidade.
+
 Fixtures públicas obrigatórias (funções retornam os tipos acima, não objetos
 parciais/cast): `fixtureAuthenticatedFieldAgent()`, `fixtureNoPrincipal()`,
 `fixtureTenantContext()`, `fixtureNoTenantContext()`, `fixtureRoleDenied()`,
@@ -239,12 +288,35 @@ O Inspector instala cada fixture exclusivamente pelo provider Angular
 fornece esses mesmos tokens por factory de runtime; não existe token, flag ou ramo
 `TEST_*` em produção.
 
+#### Bootstrap raiz STYNX
+
+`src/main.ts` executa `bootstrapApplication(AppComponent, ...)` com, no mínimo,
+`provideHttpClient()`, `provideRouter(TEAT_ROUTES)` e
+`provideDetranAuthenticatedApp(...)`. O provider autenticado configura
+`sessionMode: 'bearer'`, OIDC, tenancy e `loadCatalog` dinâmico de
+`i18n/teat.pt-BR.json`. `AppComponent` monta um único `FieldShell`, o
+`BodycamIndicator` no chrome operacional e o `RouterOutlet`; os estados acessíveis
+de D-05/BOAT e o alerta da ErrorBoundary vivem nesse shell, sem texto literal.
+
+`core/runtime-config.ts` lê `tenantId`, `oidcAuthority` e `clientId` de
+`window.__DETRAN_RUNTIME_CONFIG__`, sem segredo, seguindo o bootstrap DETRAN
+autenticado existente. A fonte fechada não fornece valores TEAT desses campos nem
+um redirect OIDC adicional: os valores permanecem `source_pending`; vazio, tipo
+inválido ou origem ausente falham fechado antes de iniciar sessão. O contrato não
+autoriza valor default, endpoint ou credencial inventados.
+
 #### Oito clients de backend unificado
 
-Todos retornam `Promise<T>` e rejeitam com o `StynxError` recebido. `headers` é
-`Readonly<{ 'Idempotency-Key'?: string; 'If-Match'?: string }>`; quando a linha diz
-ambos, ambos são obrigatórios. Caminho `source_pending` significa que o client deve
-expor `unsupported(): Promise<never>` e rejeitar, não construir uma URL por analogia.
+Todos retornam `Promise<T>` e rejeitam com o `StynxError` recebido. Cada comando
+recebe do chamador um argumento `headers` distinto do DTO:
+`CommandHeaders = Readonly<{ 'Idempotency-Key': string }>` ou
+`ConditionalCommandHeaders = Readonly<{ 'Idempotency-Key': string;
+'If-Match': string }>`; quando a linha diz ambos, o segundo tipo é obrigatório.
+Chave vazia, header omitido, constante compartilhada, default, UUID gerado pelo
+client ou extração oportunista do body rejeitam antes do HTTP. O adapter preserva
+literalmente os valores fornecidos pelo chamador. Caminho `source_pending` significa
+que o client deve expor `unsupported(): Promise<never>` e rejeitar, não construir
+uma URL por analogia.
 Cada um dos oito clients é classe exportada com construtor exato
 `constructor(private readonly http: HttpClient)`; todo método faz a chamada
 observável de `HttpClient` e retorna `firstValueFrom(...)`, nunca `Observable`,
@@ -277,6 +349,14 @@ declare class ProvisioningClient {
 }
 ```
 
+As assinaturas dos comandos marcados abaixo terminam obrigatoriamente em
+`headers: CommandHeaders`, salvo os cinco comandos condicionais de provisioning,
+que terminam em `headers: ConditionalCommandHeaders`. Isso se aplica a
+`openShift`, `closeShift`, `handoffSession`; aos cinco métodos de `AitClient`; aos
+dois comandos de `MeasuresClient`; `startProcedure`; e `validatePackage`.
+Argumentos de path e DTO permanecem antes de `headers`. Reads não recebem esses
+headers, e operação cuja fonte não os declarou não os ganha por analogia.
+
 | client                  | método público                                                                                                                                     | verbo e path literal                                                                                                                                                                                        | input/headers                                                                                                                                                                                | retorno/erro                                                                                                                                                                                             |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MobileBootstrapClient` | `getBootstrap`, `openShift`, `closeShift`, `handoffSession`                                                                                        | `GET /v1/ops/mobile-bootstrap`; `POST /v1/ops/mobile-bootstrap/shifts`; `POST /v1/ops/mobile-bootstrap/shifts/{id}/close`; `POST /v1/ops/mobile-bootstrap/sessions/handoff`                                 | `MobileBootstrapQuery`; `OpenMobileShiftDto` + `device_id`; `CloseMobileShiftDto`; `{ failed_device_id, reason, new_device_id?, location_json? }`; `Idempotency-Key` em cada POST de comando | `BootstrapSnapshot`; `Shift`; `Shift`; encerramento de sessão; `StynxError`                                                                                                                              |
@@ -289,14 +369,20 @@ declare class ProvisioningClient {
 | `ProvisioningClient`    | `createKeyChallenge`, `registerDeviceKey`, `issuePackage`, `downloadPackageContent`, `recordReceipt`, `readiness`, `revokeGrant`, `reconcileGrant` | os oito paths e verbos literais de `BP-OPS-PROVISIONING-001.commands.openapi.json`                                                                                                                          | requests do OpenAPI; `If-Match` + `Idempotency-Key` em todos os POST exceto `createKeyChallenge` que exige somente `Idempotency-Key`; GET sem esses headers                                  | responses nomeadas pelo OpenAPI; `TEAT.AUTH_REQUIRED`, `TEAT.FORBIDDEN_ACTION`, `TEAT.IF_MATCH_REQUIRED`, `TEAT.VERSION_CONFLICT`, `TEAT.IDEMPOTENCY_REPLAY`, `TEAT.VALIDATION_FAILED` conforme operação |
 
 Para `ProvisioningClient`, os oito pares método/path são:
-`createKeyChallenge(deviceId)` → `POST /v1/ops/provisioning/devices/{deviceId}/key-challenges`;
-`registerDeviceKey(deviceId)` → `POST /v1/ops/provisioning/devices/{deviceId}/keys`;
-`issuePackage()` → `POST /v1/ops/provisioning/packages`;
+`createKeyChallenge(deviceId, request, commandHeaders)` →
+`POST /v1/ops/provisioning/devices/{deviceId}/key-challenges`;
+`registerDeviceKey(deviceId, request, conditionalHeaders)` →
+`POST /v1/ops/provisioning/devices/{deviceId}/keys`;
+`issuePackage(request, conditionalHeaders)` → `POST /v1/ops/provisioning/packages`;
 `downloadPackageContent(id)` → `GET /v1/ops/provisioning/packages/{id}/content`;
-`recordReceipt(id)` → `POST /v1/ops/provisioning/packages/{id}/receipts`;
+`recordReceipt(id, request, conditionalHeaders)` →
+`POST /v1/ops/provisioning/packages/{id}/receipts`;
 `readiness(deviceId)` → `GET /v1/ops/provisioning/devices/{deviceId}/readiness`;
-`revokeGrant(id)` → `POST /v1/ops/provisioning/grants/{id}/revoke`; e
-`reconcileGrant(id)` → `POST /v1/ops/provisioning/grants/{id}/reconcile`.
+`revokeGrant(id, request, conditionalHeaders)` →
+`POST /v1/ops/provisioning/grants/{id}/revoke`; e
+`reconcileGrant(id, request, conditionalHeaders)` →
+`POST /v1/ops/provisioning/grants/{id}/reconcile`. Os nomes `request` remetem aos
+schemas OpenAPI fechados; não autorizam body vazio ou campo inventado.
 
 #### LocalActStore, SyncWorker e pacote normativo
 
@@ -325,6 +411,10 @@ type QueueReceipt = Readonly<{
   errorCode?: string;
   errorMessage?: string;
 }>;
+type SyncCursor = Readonly<{
+  deviceBatchId: string;
+  batchSequence: number;
+}>;
 
 declare class LocalActStore {
   constructor(store: MobileEncryptedStorePort);
@@ -333,6 +423,8 @@ declare class LocalActStore {
   pending(): Promise<readonly LocalAct[]>;
   applyReceipts(receipts: readonly QueueReceipt[]): Promise<void>;
   receiptByIdempotency(key: string): Promise<QueueReceipt | undefined>;
+  cursor(): Promise<SyncCursor | undefined>;
+  saveCursor(cursor: SyncCursor): Promise<void>;
 }
 declare class SyncWorker {
   constructor(
@@ -368,9 +460,12 @@ declare class NormativePackageService {
 `put` é atômico no store cifrado e não aceita `localEntityId` já persistido com
 payload/hash/idempotência distintos. `submitNext` retorna somente receipts do
 servidor e chama `applyReceipts` antes de concluir; receipt parcial não muda itens
-ausentes. `recoverReceipt` usa o path literal do `OfflineSyncClient`, e retry usa o
-mesmo `device_batch_id`/sequência recuperáveis do item persistido; se esses valores
-não existirem, rejeita. `install` só resolve após conteúdo e `manifestHash`
+ausentes. `cursor`, `saveCursor`, `applyReceipts` e `receiptByIdempotency` são
+operações obrigatórias e duráveis do `MobileEncryptedStorePort`; não podem ser
+opcionais nem substituídas por `Map` do processo. `recoverReceipt` usa o path literal
+do `OfflineSyncClient`, persiste a resposta antes de devolvê-la, e retry usa o mesmo
+`device_batch_id`/sequência do cursor persistido; se esses valores não existirem,
+rejeita. `install` só resolve após conteúdo e `manifestHash`
 conferirem; `usable` devolve `undefined` para ausência/divergência; `revalidate`
 devolve `warning-expired` para expiração H.55 e `blocked` para qualquer outro
 blocker. A representação de bytes/assinatura do envelope é `source_pending` e não
@@ -395,8 +490,13 @@ type DispatchResult =
       reason:
         | 'missing-transition'
         | 'condition-unsatisfied'
-        | 'unregistered-destination';
+        | 'unregistered-destination'
+        | 'unsafe-previous';
     }>;
+interface NavigationHistory {
+  previousScreen(): string | undefined;
+  isEditableActScreen(screenId: string): boolean;
+}
 declare function dispatchTransition(
   input: Readonly<{
     from: string;
@@ -405,6 +505,7 @@ declare function dispatchTransition(
   }>,
   router: Router,
   location: Location,
+  history: NavigationHistory,
 ): Promise<DispatchResult>;
 type DiagnosticEntry = Readonly<{
   code: string;
@@ -422,7 +523,12 @@ declare class FieldShell {
 `dispatchTransition` pesquisa a lista hash-validada da seção 4 pelo par exato
 `from`/`action`; condição não vazia exige `conditionSatisfied`. Para destino
 registrado chama `Router.navigateByUrl('/' + to)` e retorna `navigated`; somente
-`to === '__previous__'` chama `Location.back()` e retorna `back`. Não encontrar
+`to === '__previous__'` chama `Location.back()` e retorna `back`. Quando `from` é
+`ait-done`, porém, o executor consulta `NavigationHistory`: se o anterior estiver
+ausente ou `isEditableActScreen(previous) === true`, retorna
+`{ kind: 'denied', reason: 'unsafe-previous' }` sem navegar. A fonte não define
+um destino substituto; ele permanece `source_pending` e não pode ser inventado.
+Não encontrar
 linha/destino/condição devolve `denied` sem chamar Router ou Location. `capture`
 no `FieldShell` mapeia `StynxError` conhecido para o código TEAT recebido, converte
 desconhecido em `TEAT.INTERNAL`, remove valores que não sejam tokens de contexto e
@@ -503,9 +609,12 @@ vira componente TEAT. `resolveDisabledRoute` reconhece somente
 `{ kind: 'not-disabled' }` para qualquer outro path; não possui dependência de
 client e nunca pode chamá-lo.
 
-`TEAT_ROUTES`, em `app.routes.ts`, usa `resolveDisabledRoute` antes de qualquer
-`loadComponent` de D-05 e, para `unavailable`, termina na boundary de indisponibilidade
-do `FieldShell`, sem importar a feature de velocidade. Cada entrada `crash-*` usa
+`TEAT_ROUTES`, em `app.routes.ts`, possui somente os oito mounts lazy por
+`loadChildren`; cada módulo é dono de suas entradas concretas, guardas e
+`loadComponent`, sem importar `TEAT_ROUTES`. O módulo AIT usa
+`resolveDisabledRoute` antes de qualquer carga de D-05 e, para `unavailable`,
+termina na boundary acessível de indisponibilidade do `FieldShell`, sem importar
+feature de velocidade. Cada entrada `crash-*` do módulo sinistro usa
 `TEAT_BOAT_EXTENSION` em `canMatch` para negar quando `installed()` é falso e usa
 `resolveBoatRoute` como resolvedor/load boundary quando verdadeiro. Assim não há
 placeholder: BOAT só fornece componente carregado e D-05 só fornece estado
@@ -570,17 +679,17 @@ produção do Feature Engineer.
 | `/alcohol-forward`       | `UX-MOB-055`     | `IU-TEAT-alcohol-forward.md`       | B+S           | `field-agent`, `field-supervisor` | `features/alcoolemia/pages/alcohol-forward.page.ts#AlcoholForwardPageComponent`           |
 | `/alcohol-links`         | `UX-MOB-056`     | `IU-TEAT-alcohol-links.md`         | B+S           | `field-agent`, `field-supervisor` | `features/alcoolemia/pages/alcohol-links.page.ts#AlcoholLinksPageComponent`               |
 | `/alcohol-term`          | `UX-MOB-057`     | `IU-TEAT-alcohol-term.md`          | B+S           | `field-agent`, `field-supervisor` | `features/alcoolemia/pages/alcohol-term.page.ts#AlcoholTermPageComponent`                 |
-| `/crash-start`           | `UX-MOB-060`     | `IU-TEAT-crash-start.md`           | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-start.page.ts#CrashStartPageComponent`                     |
-| `/crash-location`        | `UX-MOB-061`     | `IU-TEAT-crash-location.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-location.page.ts#CrashLocationPageComponent`               |
-| `/crash-conditions`      | `UX-MOB-062`     | `IU-TEAT-crash-conditions.md`      | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-conditions.page.ts#CrashConditionsPageComponent`           |
-| `/crash-vehicles`        | `UX-MOB-063`     | `IU-TEAT-crash-vehicles.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-vehicles.page.ts#CrashVehiclesPageComponent`               |
-| `/crash-people`          | `UX-MOB-064`     | `IU-TEAT-crash-people.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-people.page.ts#CrashPeoplePageComponent`                   |
-| `/crash-victims`         | `UX-MOB-065`     | `IU-TEAT-crash-victims.md`         | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-victims.page.ts#CrashVictimsPageComponent`                 |
-| `/crash-dynamics`        | `UX-MOB-066`     | `IU-TEAT-crash-dynamics.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-dynamics.page.ts#CrashDynamicsPageComponent`               |
-| `/crash-sketch`          | `UX-MOB-067`     | `IU-TEAT-crash-sketch.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-sketch.page.ts#CrashSketchPageComponent`                   |
-| `/crash-evidence`        | `UX-MOB-068`     | `IU-TEAT-crash-evidence.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-evidence.page.ts#CrashEvidencePageComponent`               |
-| `/crash-ait-links`       | `UX-MOB-069`     | `IU-TEAT-crash-ait-links.md`       | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-ait-links.page.ts#CrashAitLinksPageComponent`              |
-| `/crash-review`          | `UX-MOB-070`     | `IU-TEAT-crash-review.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/pages/crash-review.page.ts#CrashReviewPageComponent`                   |
+| `/crash-start`           | `UX-MOB-060`     | `IU-TEAT-crash-start.md`           | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashStartBoundaryComponent`                        |
+| `/crash-location`        | `UX-MOB-061`     | `IU-TEAT-crash-location.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashLocationBoundaryComponent`                     |
+| `/crash-conditions`      | `UX-MOB-062`     | `IU-TEAT-crash-conditions.md`      | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashConditionsBoundaryComponent`                   |
+| `/crash-vehicles`        | `UX-MOB-063`     | `IU-TEAT-crash-vehicles.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashVehiclesBoundaryComponent`                     |
+| `/crash-people`          | `UX-MOB-064`     | `IU-TEAT-crash-people.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashPeopleBoundaryComponent`                       |
+| `/crash-victims`         | `UX-MOB-065`     | `IU-TEAT-crash-victims.md`         | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashVictimsBoundaryComponent`                      |
+| `/crash-dynamics`        | `UX-MOB-066`     | `IU-TEAT-crash-dynamics.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashDynamicsBoundaryComponent`                     |
+| `/crash-sketch`          | `UX-MOB-067`     | `IU-TEAT-crash-sketch.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashSketchBoundaryComponent`                       |
+| `/crash-evidence`        | `UX-MOB-068`     | `IU-TEAT-crash-evidence.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashEvidenceBoundaryComponent`                     |
+| `/crash-ait-links`       | `UX-MOB-069`     | `IU-TEAT-crash-ait-links.md`       | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashAitLinksBoundaryComponent`                     |
+| `/crash-review`          | `UX-MOB-070`     | `IU-TEAT-crash-review.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashReviewBoundaryComponent`                       |
 | `/sync`                  | `UX-MOB-080`     | `IU-TEAT-sync.md`                  | B+S           | `field-agent`, `field-supervisor` | `features/sincronizacao/pages/sync.page.ts#SyncPageComponent`                             |
 | `/sync-item`             | `UX-MOB-081`     | `IU-TEAT-sync-item.md`             | B+S           | `field-agent`, `field-supervisor` | `features/sincronizacao/pages/sync-item.page.ts#SyncItemPageComponent`                    |
 | `/sync-conflict`         | `UX-MOB-082`     | `IU-TEAT-sync-conflict.md`         | B+S           | `field-supervisor`                | `features/sincronizacao/pages/sync-conflict.page.ts#SyncConflictPageComponent`            |
@@ -632,8 +741,11 @@ mesma ordem, preservando em cada objeto `from`, `action`, `to`, `condition`, `ty
 e `notes`. Não é permitido resumir, deduplicar, normalizar ou inventar transição.
 O import falha se o hash divergir, se `transitions.length !== 576`, se alguma chave
 não estiver presente ou se `from`/`to` não corresponderem ao manifesto; `to` igual a
-`__previous__` é o único destino virtual e usa `Location.back()`. Assim, cada uma
-das 576 transições da fonte acima é importada pelo contrato, não uma aproximação.
+`__previous__` é o único destino virtual e usa `Location.back()`, exceto quando
+`from === 'ait-done'`: nesse caso aplica obrigatoriamente a prova de histórico da
+§1.2 e nega fail-closed se o destino anterior estiver ausente ou puder reabrir
+edição. Assim, cada uma das 576 transições da fonte acima é importada pelo
+contrato, não uma aproximação.
 
 ## 5. Posse de caminhos: TASK-0011 a TASK-0013
 
@@ -647,23 +759,26 @@ por diretório; cada item é o conjunto fechado do respectivo worker.
 | TASK-0013 | Feature Engineer | somente cada path da allowlist fechada §5.1                                                                                                                                                                                                                     |
 
 O Inspector pode ler, mas não editar, cada caminho de produção. O Feature Engineer
-pode ler, mas nunca editar, `src/**/*.spec.ts` nem `src/testing/**`. A única posse
-sequencial, não concorrente, é `src/app/app.routes.ts`: TASK-0011 cria o shell vazio;
-depois de encerrado seu handoff, TASK-0013 recebe a única autoridade para preencher
-as rotas. Não há `**` de Scaffold ou Feature e, fora dessa passagem explícita de
-hand-off, os conjuntos não se sobrepõem. `app.component.ts` é somente shell vazio;
-`field-shell.component.ts` é a implementação de runtime do Feature Engineer.
+pode ler, mas nunca editar, `src/**/*.spec.ts` nem `src/testing/**`. A posse
+sequencial, não concorrente, abrange `src/main.ts`, `src/app/app.component.ts` e
+`src/app/app.routes.ts`: TASK-0011 cria o scaffold e, depois de encerrado seu
+handoff, TASK-0013 recebe a autoridade exclusiva para completar bootstrap, shell e
+mounts lazy. Não há `**` de Scaffold ou Feature e, fora dessa passagem explícita,
+os conjuntos não se sobrepõem. `field-shell.component.ts` continua a implementação
+de ErrorBoundary/runtime montada por `app.component.ts`.
 
 ### 5.1 Allowlist fechada de produção — TASK-0013
 
 Todos os paths desta lista são relativos a `apps/teat/mobile/`; nenhum diretório,
-glob ou arquivo implícito é gravável. Os 70 paths de páginas são exatamente a
-coluna `componente` do manifesto, sem o sufixo `#Component`; isso é parte desta
-allowlist, não uma autorização por `features/`.
+glob ou arquivo implícito é gravável. A coluna `componente` do manifesto contém
+70 entradas: 59 paths de páginas TEAT distintas e onze classes boundary no único
+path `features/sinistro/sinistro.routes.ts`. Não existe
+`features/sinistro/pages/*.page.ts`; os nomes de classe após `#` não criam paths
+adicionais. Isso é parte desta allowlist, não autorização por `features/`.
 
 | superfície                     | paths graváveis exatos                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| bootstrap, navegação e guardas | `src/app/app.routes.ts`; `src/app/navigation/transitions.ts`; `src/app/navigation/guards/auth.guard.ts`; `src/app/navigation/guards/tenant.guard.ts`; `src/app/navigation/guards/role.guard.ts`; `src/app/navigation/guards/readiness.guard.ts`; `src/app/navigation/guards/shift.guard.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| bootstrap, navegação e guardas | `src/main.ts`; `src/app/app.component.ts`; `src/app/app.routes.ts`; `src/app/core/runtime-config.ts`; `src/app/navigation/transitions.ts`; `src/app/navigation/guards/auth.guard.ts`; `src/app/navigation/guards/tenant.guard.ts`; `src/app/navigation/guards/role.guard.ts`; `src/app/navigation/guards/readiness.guard.ts`; `src/app/navigation/guards/shift.guard.ts`                                                                                                                                                                                                                                                                                                                                                                                                       |
 | core e i18n de runtime         | `src/app/core/bootstrap.store.ts`; `src/app/core/readiness-gate.service.ts`; `src/app/core/field-shell.component.ts`; `src/app/core/i18n.service.ts`; `src/app/core/bodycam-indicator.component.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | persistência, sync e normativo | `src/app/data/local/local-act.store.ts`; `src/app/data/sync/sync.worker.ts`; `src/app/data/normative/normative-package.service.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | oito clients unificados        | `src/app/data/api/mobile-bootstrap.client.ts`; `src/app/data/api/ops-snapshots.client.ts`; `src/app/data/api/offline-sync.client.ts`; `src/app/data/api/ait.client.ts`; `src/app/data/api/measures.client.ts`; `src/app/data/api/alcohol.client.ts`; `src/app/data/api/normative.client.ts`; `src/app/data/api/provisioning.client.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -671,9 +786,11 @@ allowlist, não uma autorização por `features/`.
 | shared de campo                | `src/app/shared/mobile-page.component.ts`; `src/app/shared/mobile-printer.port.ts`; `src/app/shared/paired-value.component.ts`; `src/app/shared/closed-enum-picker.component.ts`; `src/app/shared/proposed-value-field.component.ts`; `src/app/shared/outcome-selector.component.ts`; `src/app/shared/evidence-capture.component.ts`; `src/app/shared/signature-capture.component.ts`; `src/app/shared/location-field.component.ts`; `src/app/shared/framing-picker.component.ts`; `src/app/shared/validation-panel.component.ts`; `src/app/shared/printer-dialog.component.ts`; `src/app/shared/queue-item-card.component.ts`; `src/app/shared/conflict-resolver.component.ts`; `src/app/shared/device-handoff-form.component.ts`; `src/app/shared/term-preview.component.ts` |
 | catálogo de runtime            | `src/app/i18n/teat.pt-BR.json`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | schemas locais                 | os 14 paths completos da primeira coluna da tabela §3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| páginas                        | os 70 paths completos da coluna `componente` do manifesto §2, sem `#Component`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| páginas TEAT                   | os 59 paths completos não-BOAT da coluna `componente` do manifesto §2, sem `#Component`; as onze classes BOAT pertencem ao path já listado `src/app/features/sinistro/sinistro.routes.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 
-O Feature Engineer não recebe `app.component.ts`, configuração, teste, `src/testing/`
+O handoff do Scaffold para o Feature Engineer transfere explicitamente
+`src/main.ts`, `src/app/app.component.ts` e `src/app/app.routes.ts`; nenhuma outra
+configuração é recebida. O Feature Engineer não recebe teste, `src/testing/`
 ou qualquer path não listado. Mesmo um arquivo exigido para concluir uma feature
 é negado até ser incluído por alteração arquitetural explícita.
 
