@@ -1,10 +1,15 @@
 import { expect, it, vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+import type { CanMatchFn, Route, UrlSegment } from '@angular/router';
 import {
   BOAT_ROUTE_PATHS,
   D05_ROUTE_PATH,
 } from '../testing/route-contract.fixture';
 import * as routesRuntime from './app.routes';
 import { loadConcreteRoutes } from '../testing/concrete-routes';
+import { fixtureBootstrapReady } from '../testing/guard-fixtures';
+import { TEAT_GUARD_CONTEXT } from './core/bootstrap.store';
+import { TEAT_BOAT_EXTENSION } from './navigation/guards/readiness.guard';
 
 type BoatExtension = {
   installed: () => boolean;
@@ -88,11 +93,32 @@ it('dadas rotas BOAT quando registradas então navegação direta usa canMatch d
   const routes = await loadConcreteRoutes();
   for (const path of BOAT_ROUTE_PATHS) {
     const route = routes.find((candidate) => candidate.path === path);
-    expect(
-      route?.canMatch?.some(
-        (guard) => typeof guard === 'function' && /boat/i.test(guard.name),
-      ),
-    ).toBe(true);
+    const guard = route?.canMatch?.find(
+      (candidate) =>
+        typeof candidate === 'function' && candidate.name === 'readinessGuard',
+    ) as CanMatchFn | undefined;
+    expect(guard).toBeTypeOf('function');
+    const invoke = (installed: boolean) => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [
+          { provide: TEAT_GUARD_CONTEXT, useValue: fixtureBootstrapReady() },
+          {
+            provide: TEAT_BOAT_EXTENSION,
+            useValue: { installed: () => installed, load: vi.fn() },
+          },
+        ],
+      });
+      return TestBed.runInInjectionContext(() =>
+        guard?.(
+          route as Route,
+          [] as UrlSegment[],
+          {} as Parameters<CanMatchFn>[2],
+        ),
+      );
+    };
+    expect(invoke(false)).not.toBe(true);
+    expect(invoke(true)).toBe(true);
     expect(route?.data).toMatchObject({
       boatExtension: true,
       state: 'unavailable',
