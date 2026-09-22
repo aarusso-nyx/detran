@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { expect, it, vi } from 'vitest';
 import { loadMobileRuntime } from '../testing/runtime-module';
@@ -58,13 +59,21 @@ it('dada porta de impressão de produção quando PrinterDialog imprime, falha e
 for (const state of ['recording', 'paused-exception', 'failure'] as const) {
   it(`dado bodycam em ${state} quando o chrome é renderizado então exibe somente o estado autorizado e nunca conteúdo`, async () => {
     const runtime = await loadBodycamRuntime();
-    const Component =
+    const BodycamComponent =
       runtime['BodycamIndicator'] ?? runtime['BodycamIndicatorComponent'];
-    expect(Component).toBeTypeOf('function');
+    expect(BodycamComponent).toBeTypeOf('function');
+    const Host = Component({
+      standalone: true,
+      imports: [BodycamComponent as never],
+      template: '<teat-bodycam-indicator [state]="state" />',
+    })(
+      class {
+        readonly state = state;
+      },
+    );
     const fixture = TestBed.configureTestingModule({
-      imports: [Component as never],
-    }).createComponent(Component as never);
-    fixture.componentRef.setInput('state', state);
+      imports: [Host as never],
+    }).createComponent(Host as never);
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain(state);
     expect(fixture.nativeElement.textContent).not.toMatch(
