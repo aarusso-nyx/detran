@@ -1,6 +1,7 @@
 # R-0016 — frente `dashboard-console` (WP-D4, WP-D5 do DASHBOARD: fichas, formulários, i18n e console)
 
-**Status:** planejado em 2026-09-14 pelo Architect; **aberta em 2026-09-21** pelo maestro Fable 5.1
+**Status:** **fechada em 2026-09-22 como PC-0012** (merges 6a50f026 e 973e78c3; `audit observe`
+EV-ded786c48daa2c5f e EV-7b245d9fa41ab30a). Planejada em 2026-09-14 pelo Architect; aberta em 2026-09-21 pelo maestro Fable 5.1
 (`AUTHORIZATION.md`; prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via
 `tools/orchestra/bridge.sh codex` (troca de família decidida pelo Owner em 2026-09-21). Base
 `origin/main` 08fb84e8 (PR #79). Worktree
