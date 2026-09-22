@@ -1,10 +1,23 @@
 import { expect, it } from 'vitest';
+import { vi } from 'vitest';
 import { loadMobileRuntime } from '../testing/runtime-module';
+import { fixtureBootstrapReady } from '../testing/guard-fixtures';
 import { TEAT_ROUTES } from './app.routes';
 
-it('dado cada rota quando os guardas são registrados então preservam auth, tenant, papel, readiness e turno nesta ordem', () => {
-  expect(TEAT_ROUTES).toHaveLength(70);
-  for (const route of TEAT_ROUTES) {
+async function concreteRoutes() {
+  return (
+    await Promise.all(
+      TEAT_ROUTES.map(
+        async (mount) => (await mount.loadChildren?.()) as typeof TEAT_ROUTES,
+      ),
+    )
+  ).flat();
+}
+
+it('dado cada rota concreta quando os guardas são registrados então preservam auth, tenant, papel, readiness e turno nesta ordem', async () => {
+  const routes = await concreteRoutes();
+  expect(routes).toHaveLength(70);
+  for (const route of routes) {
     const guardPlan = String(route.data?.['guardPlan'] ?? '')
       .split(',')[0]
       .trim();
@@ -22,81 +35,64 @@ it('dado cada rota quando os guardas são registrados então preservam auth, ten
   }
 });
 
-it('dado readiness sem sessão exclusiva ou pacote normativo quando avaliada então bloqueia a rota', async () => {
+it('dado readiness tipado com campo obrigatório ausente ou sessão não exclusiva quando avaliado então bloqueia fail-closed', async () => {
   const runtime = await loadMobileRuntime('core/readiness-gate.service');
-  const evaluateReadiness = runtime['evaluateReadiness'];
-  expect(evaluateReadiness).toBeTypeOf('function');
-  const evaluate = evaluateReadiness as (input: Record<string, boolean>) => {
-    readonly blocked: boolean;
+  const Gate = runtime['ReadinessGateService'] as new (diagnostics: {
+    record(code: string): void;
+  }) => {
+    evaluate(input: unknown): {
+      readonly allowed: boolean;
+      readonly blocked?: boolean;
+      readonly blockers: readonly string[];
+      readonly warnings: readonly string[];
+      readonly validUntil?: string;
+    };
   };
-  expect(
-    evaluate({ sessionExclusive: false, normativePackagePresent: true })
-      .blocked,
-  ).toBe(true);
-  expect(
-    evaluate({ sessionExclusive: true, normativePackagePresent: false })
-      .blocked,
-  ).toBe(true);
-});
-
-it('dada homologação expirada com os demais requisitos presentes quando readiness é avaliada então avisa e registra sem bloquear', async () => {
-  const runtime = await loadMobileRuntime('core/readiness-gate.service');
-  const evaluate = runtime['evaluateReadiness'] as (
-    input: Record<string, boolean>,
-  ) => {
-    readonly blocked: boolean;
-    readonly warnings: readonly string[];
-  };
-  const result = evaluate({
-    sessionExclusive: true,
-    normativePackagePresent: true,
-    homologationExpired: true,
-  });
-  expect(result.blocked).toBe(false);
-  expect(result.warnings).toContain('homologation-expired');
-});
-
-it('dado posture completo, grant, reserva, turno e validUntil quando readiness é avaliada então bloqueia cada falha e registra warning-expired sem inventar sucesso', async () => {
-  const runtime = await loadMobileRuntime('core/readiness-gate.service');
-  const evaluate = runtime['evaluateReadiness'] as (
-    input: Record<string, boolean | string>,
-  ) => {
-    readonly blocked: boolean;
-    readonly blockers: readonly string[];
-    readonly warnings: readonly string[];
-    readonly validUntil: string;
-  };
+  const record = vi.fn();
+  const gate = new Gate({ record });
+  const context = fixtureBootstrapReady();
   const ready = {
-    sessionExclusive: true,
-    deviceAuthorized: true,
-    deviceHomologated: true,
-    deviceTamperDetected: false,
-    normativePackagePresent: true,
-    grantReady: true,
-    numberingReservationPresent: true,
-    shiftOpen: true,
-    validUntil: '2999-01-01T00:00:00Z',
-    homologationExpired: true,
+    bootstrap: context.bootstrap,
+    provisioning: context.provisioning,
+    now: '2026-09-22T00:00:00Z',
   };
-  expect(evaluate(ready)).toMatchObject({
-    blocked: false,
+  expect(gate.evaluate(ready)).toMatchObject({
+    allowed: true,
     blockers: [],
-    warnings: expect.arrayContaining(['warning-expired']),
-    validUntil: ready.validUntil,
+    warnings: [],
   });
-  for (const denied of [
-    'deviceAuthorized',
-    'deviceHomologated',
-    'normativePackagePresent',
-    'grantReady',
-    'numberingReservationPresent',
-    'shiftOpen',
-  ] as const) {
-    expect(evaluate({ ...ready, [denied]: false })).toMatchObject({
-      blocked: true,
-      blockers: expect.any(Array),
-    });
-  }
+  expect(gate.evaluate({ ...ready, bootstrap: undefined }).allowed).toBe(false);
+  expect(gate.evaluate({ ...ready, provisioning: undefined }).allowed).toBe(
+    false,
+  );
+  expect(
+    gate.evaluate({
+      ...ready,
+      bootstrap: context.bootstrap && {
+        ...context.bootstrap,
+        context: {
+          ...context.bootstrap.context,
+          session: { ...context.bootstrap.context.session, exclusive: false },
+        },
+      },
+    }).allowed,
+  ).toBe(false);
+
+  const expired = gate.evaluate({
+    ...ready,
+    bootstrap: context.bootstrap && {
+      ...context.bootstrap,
+      normativePackage: {
+        ...context.bootstrap.normativePackage,
+        validUntil: '2026-09-21T00:00:00Z',
+      },
+    },
+  });
+  expect(expired).toMatchObject({
+    allowed: true,
+    warnings: expect.arrayContaining(['warning-expired']),
+  });
+  expect(record).toHaveBeenCalledWith('warning-expired');
 });
 
 it('dado FieldShell quando erro normativo é apresentado então expõe ErrorBoundary e a chave i18n TEAT', async () => {

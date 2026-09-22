@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import type { Type } from '@angular/core';
 import { expect, it } from 'vitest';
-import { TEAT_ROUTES } from './app.routes';
 import {
   BOAT_ROUTE_PATHS,
   D05_ROUTE_PATH,
@@ -9,11 +8,12 @@ import {
 } from '../testing/route-contract.fixture';
 import { expectTeatA11yState } from '../testing/a11y-state.spec-helper';
 import { readMobileProductionSource } from '../testing/mobile-source';
+import { loadConcreteRoutes } from '../testing/concrete-routes';
 
 for (const expected of TEAT_ROUTE_FIXTURE) {
   if (expected.path === D05_ROUTE_PATH) {
-    it('dada D-05 indisponível quando renderizada então anuncia a indisponibilidade sem carregar a feature', () => {
-      const route = TEAT_ROUTES.find(
+    it('dada D-05 indisponível quando renderizada então anuncia a indisponibilidade sem carregar a feature', async () => {
+      const route = (await loadConcreteRoutes()).find(
         (candidate) => candidate.path === expected.path,
       );
       expect(route?.data).toMatchObject({
@@ -23,19 +23,21 @@ for (const expected of TEAT_ROUTE_FIXTURE) {
       expect(route?.loadComponent).toBeUndefined();
     });
   } else if (BOAT_ROUTE_PATHS.includes(expected.path)) {
-    it(`dada /${expected.path} BOAT sem extensão local quando verificada então preserva loader boundary e não importa placeholder`, () => {
-      const route = TEAT_ROUTES.find(
+    it(`dada /${expected.path} BOAT sem extensão local quando verificada então preserva loader boundary e não importa placeholder`, async () => {
+      const route = (await loadConcreteRoutes()).find(
         (candidate) => candidate.path === expected.path,
       );
       expect(route?.data).toMatchObject({ boatExtension: true });
       expect(route?.loadComponent).toBeTypeOf('function');
-      const source = readMobileProductionSource('app.routes.ts');
+      const source = readMobileProductionSource(
+        'features/sinistro/sinistro.routes.ts',
+      );
       expect(source).not.toContain('./features/sinistro/pages/');
       expect(source).not.toMatch(/<[^>]*>\s*TEAT\s*<\//);
     });
   } else {
     it(`dada /${expected.path} quando renderizada então mantém invariantes a11y e axe`, async () => {
-      const route = TEAT_ROUTES.find(
+      const route = (await loadConcreteRoutes()).find(
         (candidate) => candidate.path === expected.path,
       );
       expect(

@@ -31,6 +31,22 @@ const DATA_CLIENT_MODULES = [
   'data/api/provisioning.client',
 ] as const;
 
+const REQUIRED_SHARED_COMPONENTS = [
+  ['shared/paired-value.component', 'PairedValue'],
+  ['shared/closed-enum-picker.component', 'ClosedEnumPicker'],
+  ['shared/proposed-value-field.component', 'ProposedValueField'],
+  ['shared/outcome-selector.component', 'OutcomeSelector'],
+  ['shared/evidence-capture.component', 'EvidenceCapture'],
+  ['shared/signature-capture.component', 'SignatureCapture'],
+  ['shared/location-field.component', 'LocationField'],
+  ['shared/framing-picker.component', 'FramingPicker'],
+  ['shared/validation-panel.component', 'ValidationPanel'],
+  ['shared/queue-item-card.component', 'QueueItemCard'],
+  ['shared/conflict-resolver.component', 'ConflictResolver'],
+  ['shared/device-handoff-form.component', 'DeviceHandoffForm'],
+  ['shared/term-preview.component', 'TermPreview'],
+] as const;
+
 const FEATURE_BY_MODULE = {
   'features/turno/turno.routes': 'turno',
   'features/consultas/consultas.routes': 'consultas',
@@ -54,36 +70,59 @@ for (const modulePath of LAZY_FEATURE_MODULES) {
     expect(routes).toBeDefined();
     expect(routes).toHaveLength(expected.length);
     expect(routes?.map((route) => route.path)).toEqual(expected);
+    const source = readMobileProductionSource(`${modulePath}.ts`);
+    expect(source).not.toContain("from '../../app.routes");
+    expect(source).not.toContain('TEAT_ROUTES');
   });
 }
 
-it('dadas as 69 rotas habilitadas quando seus loaders resolvem então cada uma entrega uma classe de página distinta, não alias/placeholder', async () => {
-  const enabled = TEAT_ROUTE_FIXTURE.filter(
-    (route) => route.path !== D05_ROUTE_PATH,
-  );
-  expect(enabled).toHaveLength(69);
-  const resolved = await Promise.all(
-    enabled.map(async (expected) => {
-      const route = TEAT_ROUTES.find(
-        (candidate) => candidate.path === expected.path,
-      );
-      expect(route?.loadComponent).toBeTypeOf('function');
-      return route?.loadComponent?.();
-    }),
-  );
-  expect(resolved.every((component) => typeof component === 'function')).toBe(
+it('dada raiz do router quando carregada então contém somente oito mounts loadChildren reais', () => {
+  expect(TEAT_ROUTES).toHaveLength(8);
+  expect(
+    TEAT_ROUTES.every((route) => typeof route.loadChildren === 'function'),
+  ).toBe(true);
+  expect(TEAT_ROUTES.every((route) => route.loadComponent === undefined)).toBe(
     true,
   );
-  expect(new Set(resolved).size).toBe(69);
-  expect(
-    resolved.map((component) => (component as { name: string }).name),
-  ).not.toContain('MobilePageComponent');
 });
 
-it('dado TeatI18n carregado quando traduz chave permitida e desconhecida então renderiza a primeira e rejeita namespace/chave fora do catálogo', async () => {
+it('dadas 58 páginas TEAT habilitadas, D-05 disabled e 11 boundaries BOAT quando módulos resolvem então páginas executam integração própria', async () => {
+  const boat = TEAT_ROUTE_FIXTURE.filter((route) =>
+    route.path.startsWith('crash-'),
+  );
+  const pages = TEAT_ROUTE_FIXTURE.filter(
+    (route) =>
+      !route.path.startsWith('crash-') && route.path !== D05_ROUTE_PATH,
+  );
+  expect(boat).toHaveLength(11);
+  expect(pages).toHaveLength(58);
+  expect(
+    TEAT_ROUTE_FIXTURE.filter((route) => !route.path.startsWith('crash-')),
+  ).toHaveLength(59);
+  for (const expected of pages) {
+    const [modulePath] = expected.component.split('#');
+    const source = readMobileProductionSource(modulePath);
+    expect(source).not.toMatch(/new\s+TeatI18n\s*\(/);
+    expect(source).toMatch(/inject\(/);
+    expect(source).toMatch(/(?:Client|Schema|schema)/);
+    expect(source).toMatch(/(?:load|submit|execute|perform|save)\s*[=(]/);
+  }
+  for (const expected of boat) {
+    expect(expected.component).toMatch(
+      /sinistro\.routes\.ts#Crash.*BoundaryComponent$/,
+    );
+  }
+});
+
+it('dado TeatI18n carregado por DI quando traduz chave permitida e desconhecida então delega ao runtime e rejeita namespace/chave fora do catálogo', async () => {
   const runtime = await loadMobileRuntime('core/i18n.service');
   const I18n = runtime['TeatI18n'] as
-    | (new () => {
+    | (new (runtime: {
+        translate(
+          key: string,
+          params?: Readonly<Record<string, string | number>>,
+        ): string;
+      }) => {
         translate: (
           key: string,
           params?: Record<string, string | number>,
@@ -91,15 +130,19 @@ it('dado TeatI18n carregado quando traduz chave permitida e desconhecida então 
       })
     | undefined;
   expect(I18n).toBeTypeOf('function');
+  const calls: string[] = [];
   const i18n = new (
-    I18n as new () => {
+    I18n as new (runtime: { translate(key: string): string }) => {
       translate: (
         key: string,
         params?: Record<string, string | number>,
       ) => string;
     }
-  )();
-  expect(i18n.translate('teat.errors.internal')).toEqual(expect.any(String));
+  )({ translate: (key) => (calls.push(key), `runtime:${key}`) });
+  expect(i18n.translate('teat.errors.internal')).toBe(
+    'runtime:teat.errors.internal',
+  );
+  expect(calls).toEqual(['teat.errors.internal']);
   expect(() => i18n.translate('outside.namespace')).toThrow();
   expect(() => i18n.translate('teat.unknown.key')).toThrow();
 });
@@ -110,6 +153,16 @@ for (const modulePath of DATA_CLIENT_MODULES) {
     expect(
       Object.values(runtime).some((value) => typeof value === 'function'),
     ).toBe(true);
+  });
+}
+
+for (const [modulePath, exportName] of REQUIRED_SHARED_COMPONENTS) {
+  it(`dado o componente compartilhado ${exportName} quando carregado então existe como componente próprio, não metadata genérica`, async () => {
+    const runtime = await loadMobileRuntime(modulePath);
+    expect(runtime[exportName]).toBeTypeOf('function');
+    expect(readMobileProductionSource(`${modulePath}.ts`)).not.toContain(
+      'mobilePageContract',
+    );
   });
 }
 

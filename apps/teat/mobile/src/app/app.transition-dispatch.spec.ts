@@ -76,3 +76,44 @@ it('dadas as transições hash-validadas quando dispatchTransition navega, volta
   ).resolves.toEqual({ kind: 'back' });
   expect(location.back).toHaveBeenCalledTimes(1);
 });
+
+it('dado ait-done com __previous__ quando histórico é ausente ou editável então nega; somente histórico seguro volta', async () => {
+  const runtime = await loadMobileRuntime('navigation/transitions');
+  const dispatch = runtime['dispatchTransition'] as (
+    input: { from: string; action: string; conditionSatisfied: boolean },
+    router: { navigateByUrl(url: string): Promise<boolean> },
+    location: { back(): void },
+    history: {
+      previousScreen(): string | undefined;
+      isEditableActScreen(screen: string): boolean;
+    },
+  ) => Promise<unknown>;
+  const router = { navigateByUrl: vi.fn().mockResolvedValue(true) };
+  const location = { back: vi.fn() };
+  const input = {
+    from: 'ait-done',
+    action: 'Voltar',
+    conditionSatisfied: true,
+  };
+  await expect(
+    dispatch(input, router, location, {
+      previousScreen: () => undefined,
+      isEditableActScreen: () => false,
+    }),
+  ).resolves.toEqual({ kind: 'denied', reason: 'unsafe-previous' });
+  await expect(
+    dispatch(input, router, location, {
+      previousScreen: () => 'ait-review',
+      isEditableActScreen: (screen) => screen === 'ait-review',
+    }),
+  ).resolves.toEqual({ kind: 'denied', reason: 'unsafe-previous' });
+  expect(location.back).not.toHaveBeenCalled();
+
+  await expect(
+    dispatch(input, router, location, {
+      previousScreen: () => 'home',
+      isEditableActScreen: () => false,
+    }),
+  ).resolves.toEqual({ kind: 'back' });
+  expect(location.back).toHaveBeenCalledTimes(1);
+});

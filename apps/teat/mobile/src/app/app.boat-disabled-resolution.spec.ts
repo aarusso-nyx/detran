@@ -4,6 +4,7 @@ import {
   D05_ROUTE_PATH,
 } from '../testing/route-contract.fixture';
 import * as routesRuntime from './app.routes';
+import { loadConcreteRoutes } from '../testing/concrete-routes';
 
 type BoatExtension = {
   installed: () => boolean;
@@ -67,17 +68,34 @@ it('dada rejeição do adaptador BOAT quando instalado então a rejeição propa
   );
 });
 
-it('dado D-05 quando resolve rota disabled então retorna unavailable sem loader/client; outro path é not-disabled', () => {
+it('dado D-05 quando resolve rota disabled então retorna unavailable sem loader/client; outro path é not-disabled', async () => {
   expect(resolveDisabledRoute).toBeTypeOf('function');
   expect(resolveDisabledRoute?.(`/${D05_ROUTE_PATH}`)).toEqual({
     kind: 'unavailable',
   });
   expect(resolveDisabledRoute?.('/home')).toEqual({ kind: 'not-disabled' });
-  const d05 = (
-    runtime['TEAT_ROUTES'] as readonly {
-      path?: string;
-      loadComponent?: unknown;
-    }[]
-  ).find((route) => route.path === D05_ROUTE_PATH);
+  const d05 = (await loadConcreteRoutes()).find(
+    (route) => route.path === D05_ROUTE_PATH,
+  );
   expect(d05?.loadComponent).toBeUndefined();
+  expect(d05?.data).toMatchObject({
+    featureEnabled: false,
+    state: 'unavailable',
+  });
+});
+
+it('dadas rotas BOAT quando registradas então navegação direta usa canMatch de extensão e fallback acessível, sem placeholder TEAT', async () => {
+  const routes = await loadConcreteRoutes();
+  for (const path of BOAT_ROUTE_PATHS) {
+    const route = routes.find((candidate) => candidate.path === path);
+    expect(
+      route?.canMatch?.some(
+        (guard) => typeof guard === 'function' && /boat/i.test(guard.name),
+      ),
+    ).toBe(true);
+    expect(route?.data).toMatchObject({
+      boatExtension: true,
+      state: 'unavailable',
+    });
+  }
 });

@@ -9,8 +9,14 @@ interface AdapterOperation {
   readonly verb: 'GET' | 'POST';
   readonly path: string;
   readonly args: readonly unknown[];
-  readonly command?: boolean;
+  readonly expectedHeaders?: Readonly<Record<string, string>>;
 }
+
+const IDEMPOTENT = { 'Idempotency-Key': 'caller-key-A' } as const;
+const CONDITIONAL = {
+  'Idempotency-Key': 'caller-key-A',
+  'If-Match': '"version-7"',
+} as const;
 
 const OPERATIONS: readonly AdapterOperation[] = [
   {
@@ -27,8 +33,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'openShift',
     verb: 'POST',
     path: '/v1/ops/mobile-bootstrap/shifts',
-    args: [{}, 'device-001'],
-    command: true,
+    args: [{}, 'device-001', IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/mobile-bootstrap.client',
@@ -36,8 +42,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'closeShift',
     verb: 'POST',
     path: '/v1/ops/mobile-bootstrap/shifts/shift-001/close',
-    args: ['shift-001', {}],
-    command: true,
+    args: ['shift-001', {}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/mobile-bootstrap.client',
@@ -45,8 +51,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'handoffSession',
     verb: 'POST',
     path: '/v1/ops/mobile-bootstrap/sessions/handoff',
-    args: [{}],
-    command: true,
+    args: [{}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/ops-snapshots.client',
@@ -93,8 +99,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method,
     verb: 'POST' as const,
     path: `/v1/inf/ait/aits/ait-001/${method === 'recordScience' ? 'science' : method === 'recordPrintEvent' ? 'print-events' : method === 'queueTransmission' ? 'queue-transmission' : 'finalize'}`,
-    args: ['ait-001', {}],
-    command: true,
+    args: ['ait-001', {}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   })),
   {
     modulePath: 'data/api/ait.client',
@@ -102,8 +108,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'requestCancel',
     verb: 'POST',
     path: '/v1/inf/ait/cancel-requests',
-    args: [{}],
-    command: true,
+    args: [{}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/measures.client',
@@ -111,8 +117,17 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'startAdministrativeMeasure',
     verb: 'POST',
     path: '/v1/inf/measures/administrative-measures/measure-001/start',
-    args: ['measure-001', {}],
-    command: true,
+    args: ['measure-001', {}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
+  },
+  {
+    modulePath: 'data/api/measures.client',
+    exportName: 'MeasuresClient',
+    method: 'releaseRetention',
+    verb: 'POST',
+    path: '/v1/inf/measures/retentions/retention-001/release',
+    args: ['retention-001', {}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/alcohol.client',
@@ -120,8 +135,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'startProcedure',
     verb: 'POST',
     path: '/v1/inf/alcohol/procedures/procedure-001/start',
-    args: ['procedure-001', {}],
-    command: true,
+    args: ['procedure-001', {}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/normative.client',
@@ -145,8 +160,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'validatePackage',
     verb: 'POST',
     path: '/v1/inf/normative/mobile-packages/pkg-001/validate',
-    args: ['pkg-001', {}],
-    command: true,
+    args: ['pkg-001', {}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/provisioning.client',
@@ -154,8 +169,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'createKeyChallenge',
     verb: 'POST',
     path: '/v1/ops/provisioning/devices/device-001/key-challenges',
-    args: ['device-001'],
-    command: true,
+    args: ['device-001', {}, IDEMPOTENT],
+    expectedHeaders: IDEMPOTENT,
   },
   {
     modulePath: 'data/api/provisioning.client',
@@ -163,8 +178,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'registerDeviceKey',
     verb: 'POST',
     path: '/v1/ops/provisioning/devices/device-001/keys',
-    args: ['device-001', {}],
-    command: true,
+    args: ['device-001', {}, CONDITIONAL],
+    expectedHeaders: CONDITIONAL,
   },
   {
     modulePath: 'data/api/provisioning.client',
@@ -172,8 +187,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'issuePackage',
     verb: 'POST',
     path: '/v1/ops/provisioning/packages',
-    args: [{}],
-    command: true,
+    args: [{}, CONDITIONAL],
+    expectedHeaders: CONDITIONAL,
   },
   {
     modulePath: 'data/api/provisioning.client',
@@ -189,8 +204,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'recordReceipt',
     verb: 'POST',
     path: '/v1/ops/provisioning/packages/pkg-001/receipts',
-    args: ['pkg-001', {}],
-    command: true,
+    args: ['pkg-001', {}, CONDITIONAL],
+    expectedHeaders: CONDITIONAL,
   },
   {
     modulePath: 'data/api/provisioning.client',
@@ -206,8 +221,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'revokeGrant',
     verb: 'POST',
     path: '/v1/ops/provisioning/grants/grant-001/revoke',
-    args: ['grant-001', {}],
-    command: true,
+    args: ['grant-001', {}, CONDITIONAL],
+    expectedHeaders: CONDITIONAL,
   },
   {
     modulePath: 'data/api/provisioning.client',
@@ -215,8 +230,8 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method: 'reconcileGrant',
     verb: 'POST',
     path: '/v1/ops/provisioning/grants/grant-001/reconcile',
-    args: ['grant-001', {}],
-    command: true,
+    args: ['grant-001', {}, CONDITIONAL],
+    expectedHeaders: CONDITIONAL,
   },
 ];
 
@@ -240,9 +255,9 @@ for (const operation of OPERATIONS) {
     expect(http.calls).toContainEqual(
       expect.objectContaining({ method: operation.verb, path: operation.path }),
     );
-    if (operation.command) {
+    if (operation.expectedHeaders) {
       expect(http.calls[0]?.options).toEqual(
-        expect.objectContaining({ headers: expect.anything() }),
+        expect.objectContaining({ headers: operation.expectedHeaders }),
       );
     }
     const error = { status: 409, code: 'TEAT.VERSION_CONFLICT' };
@@ -256,6 +271,27 @@ for (const operation of OPERATIONS) {
     await expect(rejected(...operation.args)).rejects.toBe(error);
   });
 }
+
+it('dados dois Idempotency-Key distintos do caller quando o mesmo comando é executado então o adapter preserva cada valor sem constante/default', async () => {
+  const runtime = await loadMobileRuntime('data/api/ait.client');
+  const Constructor = runtime['AitClient'] as new (
+    http: FaithfulHttpClientDouble,
+  ) => {
+    finalize(
+      id: string,
+      dto: unknown,
+      headers: Readonly<Record<string, string>>,
+    ): Promise<unknown>;
+  };
+  const http = new FaithfulHttpClientDouble();
+  const client = new Constructor(http);
+  await client.finalize('ait-001', {}, { 'Idempotency-Key': 'caller-key-A' });
+  await client.finalize('ait-002', {}, { 'Idempotency-Key': 'caller-key-B' });
+  expect(http.calls.map((call) => call.options?.['headers'])).toEqual([
+    { 'Idempotency-Key': 'caller-key-A' },
+    { 'Idempotency-Key': 'caller-key-B' },
+  ]);
+});
 
 for (const [modulePath, exportName] of [
   ['data/api/measures.client', 'MeasuresClient'],
