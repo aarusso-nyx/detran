@@ -2,7 +2,12 @@
 // (gerado de BP-DASH-MONITOR-001) existir; o acompanhamento do pedido (OD-D16-010) também
 // depende de R-0011. O status do relatório não tem chave na semente: vai em `<code data-status>`
 // (OD-D16-012). Mesma página serve a rota-filha `/relatorios/:id` (ficha única).
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { StynxIntlDatePipe, StynxTranslatePipe } from '@detran/ui';
 import { DashCanDirective } from '../../../core/can.directive';
 import { createCommandNotice } from '../../../core/command-notice';

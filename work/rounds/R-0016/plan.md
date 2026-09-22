@@ -198,6 +198,14 @@ src/app/app.routes.ts(95,14): error TS2307: Cannot find module './features/repor
   motivo em comentário, e os 5 arquivos entraram no commit. Lição para o método (TASK-0007):
   depois de `git add` de um grupo, comparar `find <dir> -type f` com `git ls-files <dir>` antes do
   push — um `add` que ignora diretório não falha.
+- 2026-09-22 — CI do PR #103, segunda execução, `foundation`: `format:check` acusou 3 arquivos de
+  `features/reports/`. Causa **derivada da anterior**: o Prettier 3 usa o `.gitignore` como
+  `--ignore-path`, de modo que o diretório ignorado também era invisível ao `pnpm format:check` —
+  os três arquivos nunca haviam sido formatados nem verificados, local ou em CI. Triagem:
+  `sensor-error` do próprio ecossistema de ignore, não defeito de worker. Correção pelos donos das
+  fronteiras (A9): TASK-0005 it. 4 (a página) e TASK-0004 it. 5 (os dois specs), só `prettier
+--write`. Lição para o método (TASK-0007): um padrão de `.gitignore` esconde arquivos **do git e
+  do Prettier** ao mesmo tempo.
 - 2026-09-22 — checkpoint do grupo CTG-0002, `pnpm check`: falhou em `verify:parameter-catalogue`
   com `apps/dashboard/web/src/app/core/sse/sse.service.spec.ts:141: unknown parameter literal
 rait.case.changed`. **sensor-error** da mesma classe de A7 item 8 (o gate da raiz trata o nome de

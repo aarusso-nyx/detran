@@ -4,7 +4,10 @@ import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import { expectA11yStateInvariants } from '../../../../testing/a11y-state.spec-helper.js';
 import { readAppCatalog, readSheet } from '../../../../testing/kb.js';
-import { createDashboardRouterHarness, screenElement } from '../../../../testing/router-harness.js';
+import {
+  createDashboardRouterHarness,
+  screenElement,
+} from '../../../../testing/router-harness.js';
 import { sessionForRoles } from '../../../../testing/stynx-session.stub.js';
 import type { ExportRecordView } from '../../../shared/models.js';
 import { ExportRegistryPageComponent } from './exportacoes.page.js';
@@ -55,8 +58,13 @@ describe('features/reports/pages/exportacoes.page.ts (D-17)', () => {
   });
 
   it('dado o tipo do input state então a variante blocked_by_decision não é assignável (C-02-68)', () => {
-    type StateType = ReturnType<InstanceType<typeof ExportRegistryPageComponent>['state']>;
-    expectTypeOf<{ kind: 'blocked_by_decision'; decision: string }>().not.toMatchTypeOf<StateType>();
+    type StateType = ReturnType<
+      InstanceType<typeof ExportRegistryPageComponent>['state']
+    >;
+    expectTypeOf<{
+      kind: 'blocked_by_decision';
+      decision: string;
+    }>().not.toMatchTypeOf<StateType>();
   });
 
   it('dado ready com pendingApproval true então export_volume_approval_required com data-pending true (C-02-69)', async () => {
@@ -74,20 +82,28 @@ describe('features/reports/pages/exportacoes.page.ts (D-17)', () => {
 
   it('dado o controle export:approve então presente para agency-admin (positivo na matriz de comando) (C-02-72)', async () => {
     const positive = await renderReady('agency-admin');
-    expect(positive.querySelector('[data-command="dashboard:export:approve"]')).not.toBeNull();
+    expect(
+      positive.querySelector('[data-command="dashboard:export:approve"]'),
+    ).not.toBeNull();
   });
 
   it('dado o controle export:approve então ausente para AUDITOR (tem acesso à rota mas não à matriz de comando) (C-02-72)', async () => {
     const negative = await renderReady('AUDITOR');
-    expect(negative.querySelector('[data-command="dashboard:export:approve"]')).toBeNull();
+    expect(
+      negative.querySelector('[data-command="dashboard:export:approve"]'),
+    ).toBeNull();
   });
 
   it('dado o controle approve presente quando clicado então dash-error-banner unavailable_in_version com o command (C-02-73)', async () => {
     const element = await renderReady();
-    const button = element.querySelector('[data-command="dashboard:export:approve"]') as HTMLButtonElement;
+    const button = element.querySelector(
+      '[data-command="dashboard:export:approve"]',
+    ) as HTMLButtonElement;
     button.click();
     expect(
-      element.querySelector('dash-error-banner[data-command="dashboard:export:approve"]'),
+      element.querySelector(
+        'dash-error-banner[data-command="dashboard:export:approve"]',
+      ),
     ).not.toBeNull();
   });
 });

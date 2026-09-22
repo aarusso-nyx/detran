@@ -58,8 +58,13 @@ describe('features/reports/pages/relatorios.page.ts (D-16)', () => {
   });
 
   it('dado o tipo do input state então a variante blocked_by_decision não é assignável (C-02-68)', () => {
-    type StateType = ReturnType<InstanceType<typeof GeneratedReportsPageComponent>['state']>;
-    expectTypeOf<{ kind: 'blocked_by_decision'; decision: string }>().not.toMatchTypeOf<StateType>();
+    type StateType = ReturnType<
+      InstanceType<typeof GeneratedReportsPageComponent>['state']
+    >;
+    expectTypeOf<{
+      kind: 'blocked_by_decision';
+      decision: string;
+    }>().not.toMatchTypeOf<StateType>();
   });
 
   it('dado ready então os componentes da ficha estão no DOM e o status vem em <code data-status> (C-02-69, OD-D16-012)', async () => {
@@ -68,7 +73,9 @@ describe('features/reports/pages/relatorios.page.ts (D-16)', () => {
     for (const component of sheet.components) {
       expect(element.querySelector(kebab(component)), component).not.toBeNull();
     }
-    expect(element.querySelector('code[data-status]')?.textContent).toContain('processing');
+    expect(element.querySelector('code[data-status]')?.textContent).toContain(
+      'processing',
+    );
   });
 
   it('dado a rota filha /:id então a mesma página renderiza (§B)', async () => {
@@ -78,17 +85,27 @@ describe('features/reports/pages/relatorios.page.ts (D-16)', () => {
 
   it('dado o controle generated-report:request então presente para bi-analyst (positivo na matriz de comando) (C-02-72)', async () => {
     const positive = await renderReady(PATH, 'bi-analyst');
-    expect(positive.querySelector('[data-command="dashboard:generated-report:request"]')).not.toBeNull();
+    expect(
+      positive.querySelector(
+        '[data-command="dashboard:generated-report:request"]',
+      ),
+    ).not.toBeNull();
   });
 
   it('dado o controle generated-report:request então ausente para AUDITOR (tem acesso à rota mas não à matriz de comando) (C-02-72)', async () => {
     const negative = await renderReady(PATH, 'AUDITOR');
-    expect(negative.querySelector('[data-command="dashboard:generated-report:request"]')).toBeNull();
+    expect(
+      negative.querySelector(
+        '[data-command="dashboard:generated-report:request"]',
+      ),
+    ).toBeNull();
   });
 
   it('dado o controle export:create então presente para bi-analyst (C-02-72)', async () => {
     const element = await renderReady();
-    expect(element.querySelector('[data-command="dashboard:export:create"]')).not.toBeNull();
+    expect(
+      element.querySelector('[data-command="dashboard:export:create"]'),
+    ).not.toBeNull();
   });
 
   it('dado o controle request presente quando clicado então dash-error-banner unavailable_in_version com o command (C-02-73)', async () => {
