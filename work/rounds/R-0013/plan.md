@@ -794,6 +794,35 @@ Checkpoint 31 (janela 3, integração de `origin/main` e recertificação):
 - o merge de upstream não alterou os arquivos centrais revisados de CTG-0003; o `PASS` final segue
   aplicável e o candidato está pronto para regravação de evidência, push e PR.
 
+Checkpoint 32 (janela 3, correção de isolamento em checkout limpo):
+
+- PR #82 abriu no SHA `a0e3897f…`; `evidence-gate`, `boat-documents-real`, `senatran-mock` e
+  `senatran-mock-tests` passaram, mas o fallback remoto de `backend-kernel` expôs um erro de
+  resolução antes dos testes de provisioning;
+- causa raiz: o novo `vitest.config.ts` tinha `alias` vazio e o checkout local possuía `dist` de
+  shared, mascarando a ausência de build desse pacote no runner limpo; a lógica de produto não
+  chegou a executar e nenhum sensor falhou;
+- correção mínima: alias canônico `@detran/shared` → `../../shared/src/index.ts`, igual aos demais
+  domínios; nenhum teste, expectativa, comando ou código de produção foi alterado;
+- reprodução sem `backend/domains/shared/dist` passou o unitário de provisioning 7/7, provando que
+  a correção remove a dependência ambiental. O candidato exige novo `pnpm check`, evidence record
+  no SHA corrigido e CI integral antes do merge.
+
+Checkpoint 33 (janela 3, blocker de CI eliminado e recertificado):
+
+- `testAliases` foi incorporado ao blueprint canônico e 47 outputs foram regenerados; o único
+  delta semântico gerado é o alias `@detran/shared` → `../../shared/src/index.ts`, enquanto os
+  demais arquivos mudam somente o header do hash do blueprint;
+- sem `backend/domains/shared/dist`, provisioning unit passou 7/7; `blueprints:check`, contratos
+  160/63, tipos focais e `pnpm check` integral passaram, inclusive 57 projetos, RLS 245/2,
+  966 handlers, PEC 611 e portal 1314;
+- `pnpm ci:backend-full` no ambiente do workflow passou integralmente: provisioning 7/7 unit,
+  694/694 integration, 10/10 e2e, upgrade 18/18 e adapter SENATRAN 33/4/10;
+- Reviewer CODEX independente em papel Auditor reproduziu os 47 outputs em memória e emitiu PASS
+  focal sem achados bloqueantes ou não bloqueantes; o PASS integral do ciclo 4 permanece válido;
+- o candidato está liberado para commit corretivo, regravação DEVAI, atualização do PR #82 e nova
+  execução integral dos required checks antes do merge.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
