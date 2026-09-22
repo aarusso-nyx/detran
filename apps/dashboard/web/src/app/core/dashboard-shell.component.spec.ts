@@ -16,6 +16,7 @@ import { DashboardTitleStrategy } from './title.strategy.js';
 import { SseService } from './sse/sse.service.js';
 import {
   buildTestCatalog,
+  initializeMarkerI18n,
   markerI18nModule,
 } from '../../testing/i18n-test-catalog.js';
 import { DETRAN_ROLES_FIXTURE } from '../../testing/roles.fixture.js';
@@ -25,6 +26,7 @@ import {
 } from '../../testing/route-manifest.fixture.js';
 import { layerAllowsFixture } from '../../testing/layer-table.fixture.js';
 import {
+  createStynxSessionStub,
   permissionsForRolesFixture,
   sessionForRoles,
 } from '../../testing/stynx-session.stub.js';
@@ -67,6 +69,8 @@ const KEYS = [
   'dashboard.a11y.live_region',
   'dashboard.common.action.logout',
   'dashboard.states.unavailable',
+  // C-02-31: título de uma rota do manifesto usado no cenário do DashboardTitleStrategy.
+  'dashboard.screens.triagem.title',
   ...TOP_LEVEL.map(
     (entry) => `dashboard.shell.title.${entry.slug.replace(/-/g, '_')}`,
   ),
@@ -104,6 +108,7 @@ async function renderShell(
       { provide: SseService, useValue: fakeSse(sseOverrides) },
     ],
   });
+  await initializeMarkerI18n();
   const fixture = TestBed.createComponent(DashboardShellComponent);
   fixture.detectChanges();
   await fixture.whenStable();
@@ -211,12 +216,15 @@ describe('core/dashboard-shell.component.ts', () => {
       providers: [
         provideRouter([]),
         {
+          // `sessionForRoles` sempre ativa a sessão (A7(7)); o cenário aqui é justamente
+          // sessão inativa, então usamos o stub bruto sem activate.
           provide: StynxSessionService,
-          useValue: sessionForRoles([]),
+          useValue: createStynxSessionStub({ active: false }),
         },
         { provide: SseService, useValue: fakeSse() },
       ],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(DashboardShellComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -226,7 +234,7 @@ describe('core/dashboard-shell.component.ts', () => {
     expect(logout).toBeUndefined();
   });
 
-  it('dado SseService status polling quando o shell renderiza então aria-live contém dashboard.states.unavailable; status live então vazia (C-02-30)', async () => {
+  it('dado SseService status polling quando o shell renderiza então aria-live contém dashboard.states.unavailable (C-02-30)', async () => {
     const catalog = buildTestCatalog([...KEYS]);
     const polling = await renderShell(['dash-operator'], {
       polling: true,
@@ -238,7 +246,10 @@ describe('core/dashboard-shell.component.ts', () => {
     expect(liveRegion?.textContent).toContain(
       catalog['dashboard.states.unavailable'],
     );
+  });
 
+  it('dado SseService status live quando o shell renderiza então aria-live vazia (C-02-30)', async () => {
+    const catalog = buildTestCatalog([...KEYS]);
     const live = await renderShell(['dash-operator'], {
       polling: false,
       status: 'live',
@@ -265,6 +276,7 @@ describe('core/dashboard-shell.component.ts', () => {
         { provide: TitleStrategy, useClass: DashboardTitleStrategy },
       ],
     });
+    await initializeMarkerI18n();
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/com-titulo');
     expect(document.title).toBe(

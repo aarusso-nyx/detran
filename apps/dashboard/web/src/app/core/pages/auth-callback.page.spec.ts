@@ -9,7 +9,15 @@ import {
   createDashboardRouterHarness,
   screenElement,
 } from '../../../testing/router-harness.js';
-import { createStynxSessionStub } from '../../../testing/stynx-session.stub.js';
+import {
+  createStynxSessionStub,
+  permissionsForRolesFixture,
+} from '../../../testing/stynx-session.stub.js';
+
+// D-01 (`/monitoramento`, route-manifest.md §A #1): policy `dashboard:alert:read`, camada N1,
+// `dash-operator` entre os papéis — usado para a sessão chegar à raiz sem cair no
+// permissionGuard/layerGuard depois que o authGuard deixa de bloquear (A7(7)).
+const HOME_ROLE = 'dash-operator';
 
 const KEYS = [
   'dashboard.shell.title.auth_callback',
@@ -19,7 +27,11 @@ const KEYS = [
 
 describe('core/pages/auth-callback.page.ts', () => {
   it('dado a URL ?code=abc&state=xyz quando iniciada então completeLogin chamado uma vez e router navega para /monitoramento (C-02-26)', async () => {
-    const stub = createStynxSessionStub({ active: false });
+    const stub = createStynxSessionStub({
+      active: false,
+      permissions: permissionsForRolesFixture([HOME_ROLE]),
+      claims: { 'cognito:groups': [HOME_ROLE] },
+    });
     const { navigate, currentUrl } = await createDashboardRouterHarness([
       markerI18nModule([...KEYS]),
       { provide: StynxSessionService, useValue: stub },

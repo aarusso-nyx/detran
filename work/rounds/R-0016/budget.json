@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1354000,
-  "estimated_output_total": 304000,
+  "estimated_input_total": 1458000,
+  "estimated_output_total": 342000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte; workers Opus/Sonnet por subagentes nativos).",
   "entries": [
     {
@@ -110,6 +110,14 @@
       "input_tokens": 173000,
       "output_tokens": 62000,
       "note": "690 804 brutos, 169 chamadas, 56 min (tentativa 2). App completo L0: 86 arquivos de produção; typecheck/lint/build/i18n verdes; 133 specs vermelhos por infraestrutura de teste e contradições (A7)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004-iteration-2",
+      "model": "sonnet/medium",
+      "input_tokens": 104000,
+      "output_tokens": 38000,
+      "note": "415 872 brutos, 217 chamadas, 32 min. 133 → 2 vermelhos; os 2 últimos resolvidos pelo maestro (A8). Suíte final 2042/2042."
     }
   ]
 }

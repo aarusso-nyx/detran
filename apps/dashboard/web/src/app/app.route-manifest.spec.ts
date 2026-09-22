@@ -15,6 +15,7 @@ import {
   screenSlugOf,
   titleKeyOf,
   type DashboardModule,
+  type DashboardPanel,
 } from './app.route-manifest.js';
 import {
   DASHBOARD_ROUTE_MANIFEST_FIXTURE,
@@ -130,7 +131,7 @@ describe('app.route-manifest.ts', () => {
 
     const screens = DASHBOARD_ROUTE_MANIFEST.map(
       (entry) => entry.screen,
-    ).filter((screen): screen is string => screen !== null);
+    ).filter((screen): screen is DashboardPanel => screen !== null);
     expect(new Set(screens).size).toBe(screens.length);
     expect([...screens].sort()).toEqual([
       'P-01',

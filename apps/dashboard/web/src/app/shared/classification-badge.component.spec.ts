@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type { Classification } from '../shared/models.js';
 
@@ -35,6 +36,7 @@ describe('shared/classification-badge.component.ts (C-02-65)', () => {
       TestBed.configureTestingModule({
         imports: [markerI18nModule(KEYS), HostComponent],
       });
+      await initializeMarkerI18n();
       const fixture = TestBed.createComponent(HostComponent);
       fixture.componentInstance.classification.set(classification);
       fixture.detectChanges();
@@ -48,11 +50,12 @@ describe('shared/classification-badge.component.ts (C-02-65)', () => {
     },
   );
 
-  it('dado null então classification_missing e data-classification missing', () => {
+  it('dado null então classification_missing e data-classification missing', async () => {
     const catalog = buildTestCatalog(KEYS);
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.classification.set(null);
     fixture.detectChanges();

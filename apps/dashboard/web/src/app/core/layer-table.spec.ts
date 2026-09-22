@@ -1,6 +1,6 @@
 // R-0016 TASK-0004 (Inspector). CTG-0002.md §13 "core/layer-table.spec.ts" (C-02-23..24).
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   DASHBOARD_LAYER_BY_ROLE,
@@ -13,7 +13,7 @@ import {
   layerForFixture,
 } from '../../testing/layer-table.fixture.js';
 import { DETRAN_ROLES_FIXTURE } from '../../testing/roles.fixture.js';
-import { listAppSourceFiles } from '../../testing/kb.js';
+import { APP_SRC_ROOT, listAppSourceFiles } from '../../testing/kb.js';
 
 describe('core/layer-table.ts', () => {
   it('dado DASHBOARD_LAYER_BY_ROLE quando comparado a LAYER_BY_ROLE_FIXTURE então 14 entradas iguais, nenhuma a mais (C-02-23)', () => {
@@ -60,7 +60,9 @@ describe('core/layer-table.ts', () => {
   });
 
   it("dado o texto de core/layer-table.ts quando lido então contém 'transcrição de policy.ts' e 'OD-D16-006' e não contém 'backend/' nem '@detran/shared' (C-02-24)", () => {
-    const path = fileURLToPath(new URL('./layer-table.ts', import.meta.url));
+    // A7(6): lido pelo caminho de `kb.ts` (`join` sobre `APP_SRC_ROOT`) — o transform JIT do
+    // vitest não resolve `fileURLToPath(new URL(...))` neste arquivo.
+    const path = join(APP_SRC_ROOT, 'app/core/layer-table.ts');
     const text = readFileSync(path, 'utf8');
     expect(text).toContain('transcrição de policy.ts');
     expect(text).toContain('OD-D16-006');

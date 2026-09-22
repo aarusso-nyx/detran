@@ -80,11 +80,14 @@ describe('features/integrations/pages/integracoes-system.page.ts (D-07)', () => 
     }
   });
 
-  it('dado o controle annotate então presente para technical-admin (positivo) e ausente para dash-operator (negativo na matriz) (C-02-72)', async () => {
+  it('dado o controle annotate então presente para technical-admin (positivo na matriz) (C-02-72)', async () => {
     const positive = await renderReady('technical-admin');
     expect(
       positive.querySelector('[data-command="dashboard:alert:annotate"]'),
     ).not.toBeNull();
+  });
+
+  it('dado o controle annotate então ausente para dash-operator (negativo na matriz) (C-02-72)', async () => {
     const negative = await renderReady('dash-operator');
     expect(
       negative.querySelector('[data-command="dashboard:alert:annotate"]'),

@@ -63,13 +63,19 @@ describe('features/crashes/pages/sinistros.page.ts (D-13)', () => {
 
   it('dado a variante blocked_by_decision (admitida, ficha §5 residual) então renderiza estado bloqueado, nunca decision DT-029/DT-066 atribuída em L0 (C-02-68)', async () => {
     const catalog = readAppCatalog();
+    const decision = 'OD-D02';
     const element = await render({
       kind: 'blocked_by_decision',
-      decision: 'OD-D02',
+      decision,
     });
     expect(element.getAttribute('data-state')).toBe('blocked_by_decision');
+    // A7(5): compara a chave já com o {decision} renderizado (substituído), nunca o texto cru
+    // da semente com o placeholder por substituir.
     expect(element.textContent).toContain(
-      catalog['dashboard.states.blocked_by_decision'],
+      catalog['dashboard.states.blocked_by_decision'].replace(
+        '{decision}',
+        decision,
+      ),
     );
     expect(element.textContent).not.toContain('DT-029');
     expect(element.textContent).not.toContain('DT-066');

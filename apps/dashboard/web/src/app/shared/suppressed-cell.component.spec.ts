@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 
 const KEYS = [
@@ -34,6 +35,7 @@ describe('shared/suppressed-cell.component.ts (C-02-60)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -47,11 +49,12 @@ describe('shared/suppressed-cell.component.ts (C-02-60)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado threshold null então cell_threshold_undefined', () => {
+  it('dado threshold null então cell_threshold_undefined', async () => {
     const catalog = buildTestCatalog(KEYS);
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.threshold.set(null);
     fixture.detectChanges();
@@ -61,10 +64,11 @@ describe('shared/suppressed-cell.component.ts (C-02-60)', () => {
     );
   });
 
-  it('dado footnoteId f1 então aria-describedby f1', () => {
+  it('dado footnoteId f1 então aria-describedby f1', async () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.footnoteId.set('f1');
     fixture.detectChanges();

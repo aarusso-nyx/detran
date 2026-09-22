@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type { FreshnessMeta } from '../core/freshness.store.js';
 
@@ -32,10 +33,11 @@ class HostComponent {
   readonly block = signal<'A' | 'B' | 'C' | 'D'>('A');
 }
 
-function render() {
+async function render() {
   TestBed.configureTestingModule({
     imports: [markerI18nModule([...KEYS]), HostComponent],
   });
+  await initializeMarkerI18n();
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
   return fixture;
@@ -46,7 +48,7 @@ const AS_OF = '2026-09-21T10:00:00-04:00';
 describe('shared/freshness-seal.component.ts (C-02-50)', () => {
   it('dado freshness null quando renderizado então 42 ausente e dashboard.states.unavailable, data-value-hidden true', async () => {
     const catalog = buildTestCatalog([...KEYS]);
-    const fixture = render();
+    const fixture = await render();
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.textContent).not.toContain('42');
@@ -58,9 +60,9 @@ describe('shared/freshness-seal.component.ts (C-02-50)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado INDISPONIVEL + block A quando renderizado então 42 ausente + freshness.indisponivel + states.unavailable', () => {
+  it('dado INDISPONIVEL + block A quando renderizado então 42 ausente + freshness.indisponivel + states.unavailable', async () => {
     const catalog = buildTestCatalog([...KEYS]);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.freshness.set({
       state: 'INDISPONIVEL',
       asOf: null,
@@ -81,9 +83,9 @@ describe('shared/freshness-seal.component.ts (C-02-50)', () => {
 
   it.each(['B', 'C', 'D'] as const)(
     'dado INDISPONIVEL + block %s quando renderizado então 42 presente + freshness.indisponivel, data-value-hidden false',
-    (block) => {
+    async (block) => {
       const catalog = buildTestCatalog([...KEYS]);
-      const fixture = render();
+      const fixture = await render();
       fixture.componentInstance.freshness.set({
         state: 'INDISPONIVEL',
         asOf: null,
@@ -102,9 +104,9 @@ describe('shared/freshness-seal.component.ts (C-02-50)', () => {
     },
   );
 
-  it('dado DESATUALIZADO_MARCADO + block A quando renderizado então 42 ausente + states.stale com as_of', () => {
+  it('dado DESATUALIZADO_MARCADO + block A quando renderizado então 42 ausente + states.stale com as_of', async () => {
     const catalog = buildTestCatalog([...KEYS]);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.freshness.set({
       state: 'DESATUALIZADO_MARCADO',
       asOf: AS_OF,
@@ -118,9 +120,9 @@ describe('shared/freshness-seal.component.ts (C-02-50)', () => {
     expect(element.textContent).toContain(catalog['dashboard.states.stale']);
   });
 
-  it('dado DESATUALIZADO_MARCADO + block B quando renderizado então 42 presente + states.stale', () => {
+  it('dado DESATUALIZADO_MARCADO + block B quando renderizado então 42 presente + states.stale', async () => {
     const catalog = buildTestCatalog([...KEYS]);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.freshness.set({
       state: 'DESATUALIZADO_MARCADO',
       asOf: AS_OF,
@@ -134,9 +136,9 @@ describe('shared/freshness-seal.component.ts (C-02-50)', () => {
     expect(element.textContent).toContain(catalog['dashboard.states.stale']);
   });
 
-  it('dado ATRASADO quando renderizado então 42 + freshness.atrasado + common.as_of', () => {
+  it('dado ATRASADO quando renderizado então 42 + freshness.atrasado + common.as_of', async () => {
     const catalog = buildTestCatalog([...KEYS]);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.freshness.set({
       state: 'ATRASADO',
       asOf: AS_OF,
@@ -154,9 +156,9 @@ describe('shared/freshness-seal.component.ts (C-02-50)', () => {
     expect(time?.getAttribute('datetime')).toBe(AS_OF);
   });
 
-  it('dado FRESCO quando renderizado então 42 + freshness.fresco + common.as_of; data-freshness = state', () => {
+  it('dado FRESCO quando renderizado então 42 + freshness.fresco + common.as_of; data-freshness = state', async () => {
     const catalog = buildTestCatalog([...KEYS]);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.freshness.set({
       state: 'FRESCO',
       asOf: AS_OF,

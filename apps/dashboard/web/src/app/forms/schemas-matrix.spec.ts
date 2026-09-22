@@ -14,6 +14,15 @@ import type {
   PurposeDeclaration,
 } from '../shared/models.js';
 
+/** Remove `readonly` em profundidade (nunca `?`) — só para neutralizar a mutabilidade
+ * cosmética entre `z.infer` (nunca readonly) e os view-models (`readonly` por convenção)
+ * na comparação estrutural abaixo; campo/tipo/opcionalidade continuam checados exatamente. */
+type DeepWritable<T> = T extends readonly (infer U)[]
+  ? DeepWritable<U>[]
+  : T extends object
+    ? { -readonly [K in keyof T]: DeepWritable<T[K]> }
+    : T;
+
 const FORM_SLUGS = [
   'ack-alerta',
   'encerrar-alerta',
@@ -95,8 +104,20 @@ describe('forms/schemas-matrix.spec.ts (C-02-93)', () => {
   });
 
   it('dado expectTypeOf então z.infer dos schemas equivale aos view-models de shared/models.ts', () => {
-    expectTypeOf<FinalidadeN2Body>().toEqualTypeOf<PurposeDeclaration>();
-    expectTypeOf<ExportarBody>().toEqualTypeOf<ExportRequest>();
-    expectTypeOf<DutyEvidenceBody>().toEqualTypeOf<DutyEvidence>();
+    // `z.infer` nunca marca campos como `readonly` (zod não anota mutabilidade); os
+    // view-models de `shared/models.ts` são `readonly` por convenção (CODESTYLE §Frontend).
+    // `toEqualTypeOf` (vitest 4/expect-type) é sensível a essa diferença cosmética — sem
+    // afrouxar a checagem de campo/tipo/opcionalidade, comparamos as duas pontas já sem
+    // `readonly` (em profundidade, dos dois lados) com o parâmetro de tipo (forma exigida
+    // pelo vitest 4: `expectTypeOf<T>()`, nunca passando um valor).
+    expectTypeOf<DeepWritable<FinalidadeN2Body>>().toEqualTypeOf<
+      DeepWritable<PurposeDeclaration>
+    >();
+    expectTypeOf<DeepWritable<ExportarBody>>().toEqualTypeOf<
+      DeepWritable<ExportRequest>
+    >();
+    expectTypeOf<DeepWritable<DutyEvidenceBody>>().toEqualTypeOf<
+      DeepWritable<DutyEvidence>
+    >();
   });
 });

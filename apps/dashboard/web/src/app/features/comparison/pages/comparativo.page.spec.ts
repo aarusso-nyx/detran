@@ -103,11 +103,14 @@ describe('features/comparison/pages/comparativo.page.ts (D-10)', () => {
     }
   });
 
-  it('dado o controle export:create então presente para agency-admin e ausente para AUDITOR (fora de EXPORT_ROLES) (C-02-72)', async () => {
+  it('dado o controle export:create então presente para agency-admin (positivo em DASH_EXPORT_ROLES) (C-02-72)', async () => {
     const positive = await renderReady('agency-admin');
     expect(
       positive.querySelector('[data-command="dashboard:export:create"]'),
     ).not.toBeNull();
+  });
+
+  it('dado o controle export:create então ausente para AUDITOR (fora de DASH_EXPORT_ROLES) (C-02-72)', async () => {
     const negative = await renderReady('AUDITOR');
     expect(
       negative.querySelector('[data-command="dashboard:export:create"]'),

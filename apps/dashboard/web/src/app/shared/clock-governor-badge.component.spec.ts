@@ -8,6 +8,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import { listAppSourceFiles } from '../../testing/kb.js';
 import type { ClockCode } from '../shared/models.js';
@@ -32,6 +33,7 @@ describe('shared/clock-governor-badge.component.ts (C-02-54)', () => {
       TestBed.configureTestingModule({
         imports: [markerI18nModule(KEYS), HostComponent],
       });
+      await initializeMarkerI18n();
       const fixture = TestBed.createComponent(HostComponent);
       fixture.componentInstance.clock.set(clock);
       fixture.detectChanges();

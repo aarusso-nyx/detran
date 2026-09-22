@@ -32,14 +32,18 @@ const FAKE_ROUTE = {} as never;
 const FAKE_STATE = (url: string) => ({ url }) as never;
 
 describe('core/guards.spec.ts', () => {
-  it('dado authGuard quando sessão inativa então router.parseUrl(LOGIN_ROUTE); ativa então true (C-02-19)', () => {
+  // A7(9): um harness (`setUp`) por `it` — A18 vale por teste, não só por arquivo. Cada caso
+  // que antes reconfigurava o TestBed dentro do mesmo `it` virou um `it` próprio.
+  it('dado authGuard quando sessão inativa então router.parseUrl(LOGIN_ROUTE) (C-02-19)', () => {
     setUp(createStynxSessionStub({ active: false }));
     const router = TestBed.inject(Router);
     const inactiveResult = TestBed.runInInjectionContext(() =>
       authGuard(FAKE_ROUTE, FAKE_STATE('/monitoramento')),
     );
     expect(inactiveResult).toEqual(router.parseUrl(LOGIN_ROUTE));
+  });
 
+  it('dado authGuard quando sessão ativa então true (C-02-19)', () => {
     setUp(createStynxSessionStub({ active: true }));
     const activeResult = TestBed.runInInjectionContext(() =>
       authGuard(FAKE_ROUTE, FAKE_STATE('/monitoramento')),
@@ -47,13 +51,12 @@ describe('core/guards.spec.ts', () => {
     expect(activeResult).toBe(true);
   });
 
-  it("dado permissionGuard('dashboard:alert:read') quando permissions batem então true; [] então UrlTree /sem-permissao com de=; permissionGuard(null) então UrlTree sempre (C-02-20)", () => {
-    for (const permissions of [
-      ['dashboard:alert:read'],
-      ['*'],
-      ['dashboard:alert:*'],
-    ]) {
-      setUp(createStynxSessionStub({ active: true, permissions }));
+  it.each(['dashboard:alert:read', '*', 'dashboard:alert:*'])(
+    "dado permissionGuard('dashboard:alert:read') quando permissions [%s] então true (C-02-20)",
+    (permission) => {
+      setUp(
+        createStynxSessionStub({ active: true, permissions: [permission] }),
+      );
       const result = TestBed.runInInjectionContext(() =>
         permissionGuard('dashboard:alert:read')(
           FAKE_ROUTE,
@@ -61,8 +64,10 @@ describe('core/guards.spec.ts', () => {
         ),
       );
       expect(result).toBe(true);
-    }
+    },
+  );
 
+  it("dado permissionGuard('dashboard:alert:read') quando permissions [] então UrlTree /sem-permissao com de= (C-02-20)", () => {
     setUp(createStynxSessionStub({ active: true, permissions: [] }));
     const router = TestBed.inject(Router);
     const denied = TestBed.runInInjectionContext(() =>
@@ -76,7 +81,9 @@ describe('core/guards.spec.ts', () => {
         queryParams: { de: '/monitoramento/x' },
       }),
     );
+  });
 
+  it('dado permissionGuard(null) então UrlTree sempre, mesmo com permissions [*] (C-02-20)', () => {
     setUp(createStynxSessionStub({ active: true, permissions: ['*'] }));
     const nullPolicy = TestBed.runInInjectionContext(() =>
       permissionGuard(null)(FAKE_ROUTE, FAKE_STATE('/monitoramento/x')),
@@ -84,7 +91,7 @@ describe('core/guards.spec.ts', () => {
     expect(nullPolicy.toString()).toContain('sem-permissao');
   });
 
-  it("dado layerGuard('N1') quando roles [dash-operator] então true; [rait-analyst] então UrlTree; layerGuard('N2') com [technical-admin] então UrlTree (passe não alcança camada); layerGuard(null) então UrlTree; layerGuard não lê permissions (C-02-21, C-01-07)", () => {
+  it("dado layerGuard('N1') quando roles [dash-operator] então true (C-02-21, C-01-07)", () => {
     setUp(
       createStynxSessionStub({
         active: true,
@@ -95,7 +102,9 @@ describe('core/guards.spec.ts', () => {
       layerGuard('N1')(FAKE_ROUTE, FAKE_STATE('/monitoramento/x')),
     );
     expect(allowed).toBe(true);
+  });
 
+  it("dado layerGuard('N1') quando roles [rait-analyst] então UrlTree (C-02-21, C-01-07)", () => {
     setUp(
       createStynxSessionStub({
         active: true,
@@ -106,7 +115,9 @@ describe('core/guards.spec.ts', () => {
       layerGuard('N1')(FAKE_ROUTE, FAKE_STATE('/monitoramento/x')),
     ) as UrlTree;
     expect(denied.toString()).toContain('sem-permissao');
+  });
 
+  it("dado layerGuard('N2') com [technical-admin] então UrlTree (passe não alcança camada) (C-02-21, C-01-07)", () => {
     setUp(
       createStynxSessionStub({
         active: true,
@@ -117,7 +128,9 @@ describe('core/guards.spec.ts', () => {
       layerGuard('N2')(FAKE_ROUTE, FAKE_STATE('/monitoramento/x')),
     ) as UrlTree;
     expect(deniedByLayer.toString()).toContain('sem-permissao');
+  });
 
+  it('dado layerGuard(null) então UrlTree (C-02-21, C-01-07)', () => {
     setUp(
       createStynxSessionStub({ active: true, permissions: ['*'], claims: {} }),
     );
@@ -125,8 +138,9 @@ describe('core/guards.spec.ts', () => {
       layerGuard(null)(FAKE_ROUTE, FAKE_STATE('/monitoramento/x')),
     ) as UrlTree;
     expect(nullAccess.toString()).toContain('sem-permissao');
+  });
 
-    // permissions ['*'] mas roles [] em 'N1': layerGuard nunca lê permissions.
+  it('dado permissions [*] mas roles [] então UrlTree em N1 (layerGuard nunca lê permissions) (C-02-21, C-01-07)', () => {
     setUp(
       createStynxSessionStub({
         active: true,

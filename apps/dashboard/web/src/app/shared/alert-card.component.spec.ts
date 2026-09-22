@@ -6,6 +6,7 @@ import { AlertCardComponent } from './alert-card.component.js';
 import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.js';
 import {
   buildTestCatalog,
+  initializeMarkerI18n,
   markerI18nModule,
 } from '../../testing/i18n-test-catalog.js';
 import type { AlertView } from '../shared/models.js';
@@ -72,10 +73,11 @@ class HostComponent {
   readonly opened = signal(false);
 }
 
-function render() {
+async function render() {
   TestBed.configureTestingModule({
     imports: [markerI18nModule(KEYS), HostComponent],
   });
+  await initializeMarkerI18n();
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
   return fixture;
@@ -84,7 +86,7 @@ function render() {
 describe('shared/alert-card.component.ts (C-02-52)', () => {
   it('dado purposeDeclared false então AM-1 ausente e botão dashboard.layers.n2 emite openObject', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     expect(element.textContent).not.toContain('AM-1');
     const button = [...element.querySelectorAll('button')].find((btn) =>
@@ -97,9 +99,9 @@ describe('shared/alert-card.component.ts (C-02-52)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado purposeDeclared true então AM-1 presente e os demais dados/filhos batem', () => {
+  it('dado purposeDeclared true então AM-1 presente e os demais dados/filhos batem', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.purposeDeclared.set(true);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -129,9 +131,9 @@ describe('shared/alert-card.component.ts (C-02-52)', () => {
     expect(element.querySelector('dash-classification-badge')).not.toBeNull();
   });
 
-  it('dado track extincao (CRITICO_EXTINCAO) então data-track extincao, see_incident_inquiry presente e encerrar_alerta.submit ausente', () => {
+  it('dado track extincao (CRITICO_EXTINCAO) então data-track extincao, see_incident_inquiry presente e encerrar_alerta.submit ausente', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.alert.set(
       baseAlert({
         severity: 'CRITICO_EXTINCAO',

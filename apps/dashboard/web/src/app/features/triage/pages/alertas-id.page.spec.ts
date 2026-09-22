@@ -103,10 +103,13 @@ describe('features/triage/pages/alertas-id.page.ts (D-02)', () => {
     expectTypeOf<{ kind: 'empty' }>().not.toMatchTypeOf<StateType>();
   });
 
-  it('dado ready sem purposeDeclared então AM-1 ausente e dash-layer-gate presente; após declared então AM-1 aparece (C-02-70, C-01-09)', async () => {
+  it('dado ready sem purposeDeclared então AM-1 ausente e dash-layer-gate presente (C-02-70, C-01-09)', async () => {
     const element = await renderReady(ROLE, false);
     expect(element.textContent).not.toContain('AM-1');
     expect(element.querySelector('dash-layer-gate')).not.toBeNull();
+  });
+
+  it('dado ready com purposeDeclared então AM-1 aparece (C-02-70, C-01-09)', async () => {
     const withDeclared = await renderReady(ROLE, true);
     expect(withDeclared.textContent).toContain('AM-1');
   });
@@ -119,11 +122,14 @@ describe('features/triage/pages/alertas-id.page.ts (D-02)', () => {
     }
   });
 
-  it('dado o controle ack então presente para dash-operator (positivo na matriz de comando) e ausente para AUDITOR (tem acesso à rota mas não ao comando, C-02-72)', async () => {
+  it('dado o controle ack então presente para dash-operator (positivo na matriz de comando) (C-02-72)', async () => {
     const positiveAck = await renderReady('dash-operator');
     expect(
       positiveAck.querySelector('[data-command="dashboard:alert:ack"]'),
     ).not.toBeNull();
+  });
+
+  it('dado o controle ack então ausente para AUDITOR (tem acesso à rota mas não ao comando) (C-02-72)', async () => {
     const negativeAck = await renderReady('AUDITOR');
     expect(
       negativeAck.querySelector('[data-command="dashboard:alert:ack"]'),

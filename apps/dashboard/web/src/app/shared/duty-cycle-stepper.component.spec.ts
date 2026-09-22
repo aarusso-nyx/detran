@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import { DUTY_STATES, type DutyCycleView } from '../shared/models.js';
 
@@ -51,6 +52,7 @@ describe('shared/duty-cycle-stepper.component.ts (C-02-57)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -68,11 +70,12 @@ describe('shared/duty-cycle-stepper.component.ts (C-02-57)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado transição com evidence hash então <code> com o hash e rótulo forms.avancar_ciclo.hash', () => {
+  it('dado transição com evidence hash então <code> com o hash e rótulo forms.avancar_ciclo.hash', async () => {
     const catalog = buildTestCatalog(KEYS);
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.cycle.set({
       ...CYCLE,

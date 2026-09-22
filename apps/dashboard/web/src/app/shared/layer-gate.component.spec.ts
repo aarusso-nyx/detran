@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import { PURPOSE_TOKENS, type PurposeDeclaration } from '../shared/models.js';
 
@@ -39,10 +40,11 @@ class HostComponent {
   readonly cancelled = signal(false);
 }
 
-function render() {
+async function render() {
   TestBed.configureTestingModule({
     imports: [markerI18nModule(KEYS), HostComponent],
   });
+  await initializeMarkerI18n();
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
   return fixture;
@@ -51,7 +53,7 @@ function render() {
 describe('shared/layer-gate.component.ts (C-02-61)', () => {
   it('dado open true então dialog com título, 6 opções na ordem de PURPOSE_TOKENS, input reference, botões, foco no select', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const dialog = element.querySelector('dialog[role="dialog"][aria-modal]');
     expect(dialog).not.toBeNull();
@@ -86,8 +88,8 @@ describe('shared/layer-gate.component.ts (C-02-61)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado submit com purpose auditoria e reference AM-1 então declared emite { purpose, reference }', () => {
-    const fixture = render();
+  it('dado submit com purpose auditoria e reference AM-1 então declared emite { purpose, reference }', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const select = element.querySelector('select') as HTMLSelectElement;
     select.value = 'auditoria';
@@ -109,8 +111,8 @@ describe('shared/layer-gate.component.ts (C-02-61)', () => {
     });
   });
 
-  it('dado reference vazia então não emite', () => {
-    const fixture = render();
+  it('dado reference vazia então não emite', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const submit = [...element.querySelectorAll('button')].find(
       (btn) => btn.type === 'submit' || btn.form,
@@ -120,8 +122,8 @@ describe('shared/layer-gate.component.ts (C-02-61)', () => {
     expect(fixture.componentInstance.declared()).toBeNull();
   });
 
-  it('dado Esc então cancelled', () => {
-    const fixture = render();
+  it('dado Esc então cancelled', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     element
       .querySelector('dialog')
@@ -132,8 +134,8 @@ describe('shared/layer-gate.component.ts (C-02-61)', () => {
     expect(fixture.componentInstance.cancelled()).toBe(true);
   });
 
-  it('dado open false então nada renderizado', () => {
-    const fixture = render();
+  it('dado open false então nada renderizado', async () => {
+    const fixture = await render();
     fixture.componentInstance.open.set(false);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;

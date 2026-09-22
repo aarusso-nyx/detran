@@ -17,7 +17,10 @@ import {
   listAppSourceFiles,
 } from '../../testing/kb.js';
 import { readFileSync } from 'node:fs';
-import { markerI18nModule } from '../../testing/i18n-test-catalog.js';
+import {
+  markerI18nModule,
+  initializeMarkerI18n,
+} from '../../testing/i18n-test-catalog.js';
 
 function httpError(status: number, body: unknown): HttpErrorResponse {
   return new HttpErrorResponse({ status, error: body });
@@ -227,7 +230,7 @@ describe('único classificador (A12(a)) (C-02-48)', () => {
 });
 
 describe('DashErrorBannerComponent (C-02-49)', () => {
-  it('dado error kind forbidden então role=alert, data-kind/data-code, texto = stateKey + messageKey', () => {
+  it('dado error kind forbidden então role=alert, data-kind/data-code, texto = stateKey + messageKey', async () => {
     const keys = [
       'dashboard.states.forbidden',
       'dashboard.errors.layer_forbidden',
@@ -235,6 +238,7 @@ describe('DashErrorBannerComponent (C-02-49)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(keys), DashErrorBannerComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(DashErrorBannerComponent);
     fixture.componentRef.setInput(
       'error',
@@ -249,13 +253,14 @@ describe('DashErrorBannerComponent (C-02-49)', () => {
     ).toBe('forbidden');
   });
 
-  it('dado error kind unavailable_in_version então role=status (C-02-49)', () => {
+  it('dado error kind unavailable_in_version então role=status (C-02-49)', async () => {
     TestBed.configureTestingModule({
       imports: [
         markerI18nModule(['dashboard.states.unavailable_in_version']),
         DashErrorBannerComponent,
       ],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(DashErrorBannerComponent);
     fixture.componentRef.setInput(
       'error',
@@ -268,7 +273,7 @@ describe('DashErrorBannerComponent (C-02-49)', () => {
     expect(element.querySelector('[role="status"]')).not.toBeNull();
   });
 
-  it('dado blocked_by_decision com decision DT-066 então texto contém DT-066; requestId visível (C-02-49)', () => {
+  it('dado blocked_by_decision com decision DT-066 então texto contém DT-066; requestId visível (C-02-49)', async () => {
     const keys = [
       'dashboard.states.blocked_by_decision',
       'dashboard.errors.panel_blocked_by_decision',
@@ -276,6 +281,7 @@ describe('DashErrorBannerComponent (C-02-49)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(keys), DashErrorBannerComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(DashErrorBannerComponent);
     fixture.componentRef.setInput(
       'error',

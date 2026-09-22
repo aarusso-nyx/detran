@@ -79,12 +79,13 @@ describe('features/duties/pages/deveres-id-ciclos-period.page.ts (D-09)', () => 
     );
   });
 
+  // A7(4): `policy.ts` 1578 dá `archive` a `['dash-operator', 'agency-admin']` — `dash-duty-owner`
+  // é negativo em `archive` (seu positivo é só start|prepare|submit|prove).
   it.each([
     'dashboard:duty-cycle:start',
     'dashboard:duty-cycle:prepare',
     'dashboard:duty-cycle:submit',
     'dashboard:duty-cycle:prove',
-    'dashboard:duty-cycle:archive',
   ])(
     'dado o controle %s então presente para dash-duty-owner (positivo) independente do estado (C-02-72)',
     async (command) => {
@@ -94,6 +95,20 @@ describe('features/duties/pages/deveres-id-ciclos-period.page.ts (D-09)', () => 
       ).not.toBeNull();
     },
   );
+
+  it('dado o controle dashboard:duty-cycle:archive então presente para dash-operator (positivo na matriz de comando) (C-02-72, A7(4))', async () => {
+    const element = await renderReady('dash-operator');
+    expect(
+      element.querySelector('[data-command="dashboard:duty-cycle:archive"]'),
+    ).not.toBeNull();
+  });
+
+  it('dado o controle dashboard:duty-cycle:archive então ausente para dash-duty-owner (negativo na matriz de comando) (C-02-72, A7(4))', async () => {
+    const element = await renderReady(ROLE);
+    expect(
+      element.querySelector('[data-command="dashboard:duty-cycle:archive"]'),
+    ).toBeNull();
+  });
 
   it('dado o controle start ausente para AUDITOR (negativo na matriz de comando) (C-02-72)', async () => {
     const element = await renderReady('AUDITOR');

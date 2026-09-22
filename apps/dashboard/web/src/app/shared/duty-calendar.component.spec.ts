@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type { DutyView } from '../shared/models.js';
 
@@ -94,6 +95,7 @@ describe('shared/duty-calendar.component.ts (C-02-56)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -135,10 +137,11 @@ describe('shared/duty-calendar.component.ts (C-02-56)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado clique num item então select emite o DutyView', () => {
+  it('dado clique num item então select emite o DutyView', async () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;

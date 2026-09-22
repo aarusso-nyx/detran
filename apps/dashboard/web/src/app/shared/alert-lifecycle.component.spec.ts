@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import { ALERT_STATES, type AlertLifecycleView } from '../shared/models.js';
 
@@ -59,6 +60,7 @@ describe('shared/alert-lifecycle.component.ts (C-02-53)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -79,10 +81,11 @@ describe('shared/alert-lifecycle.component.ts (C-02-53)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado track extincao então host data-track e os passos CRITICO_EXTINCAO/INCIDENTE_REGISTRADO com data-track', () => {
+  it('dado track extincao então host data-track e os passos CRITICO_EXTINCAO/INCIDENTE_REGISTRADO com data-track', async () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.lifecycle.set({
       current: 'CRITICO_EXTINCAO',

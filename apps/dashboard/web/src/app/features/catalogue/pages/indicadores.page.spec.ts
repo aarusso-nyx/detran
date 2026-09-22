@@ -93,13 +93,16 @@ describe('features/catalogue/pages/indicadores.page.ts (D-14)', () => {
     expect(element).not.toBeNull();
   });
 
-  it('dado o controle indicator-config:update então presente para bi-analyst e ausente para AUDITOR (tem acesso à rota mas não à matriz de comando) (C-02-72)', async () => {
+  it('dado o controle indicator-config:update então presente para bi-analyst (positivo na matriz de comando) (C-02-72)', async () => {
     const positive = await renderReady(PATH, 'bi-analyst');
     expect(
       positive.querySelector(
         '[data-command="dashboard:indicator-config:update"]',
       ),
     ).not.toBeNull();
+  });
+
+  it('dado o controle indicator-config:update então ausente para AUDITOR (tem acesso à rota mas não à matriz de comando) (C-02-72)', async () => {
     const negative = await renderReady(PATH, 'AUDITOR');
     expect(
       negative.querySelector(

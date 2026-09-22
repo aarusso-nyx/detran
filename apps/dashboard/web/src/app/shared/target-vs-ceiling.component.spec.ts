@@ -12,6 +12,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type {
   LegalCeilingView,
@@ -70,10 +71,11 @@ class HostComponent {
   readonly containerCeiling = signal<LegalCeilingView | null>(CEILING);
 }
 
-function render() {
+async function render() {
   TestBed.configureTestingModule({
     imports: [markerI18nModule(KEYS), HostComponent],
   });
+  await initializeMarkerI18n();
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
   return fixture;
@@ -82,7 +84,7 @@ function render() {
 describe('shared/target-vs-ceiling.component.ts (C-02-55)', () => {
   it('dado OperationalTargetComponent e LegalCeilingComponent quando renderizados então elementos distintos, cada valor no próprio seal', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const target = element.querySelector(
       'dash-operational-target[data-kind="target"]',
@@ -105,8 +107,8 @@ describe('shared/target-vs-ceiling.component.ts (C-02-55)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado TargetVsCeilingComponent com ambos então exatamente dois filhos distintos, nunca os dois valores no mesmo elemento', () => {
-    const fixture = render();
+  it('dado TargetVsCeilingComponent com ambos então exatamente dois filhos distintos, nunca os dois valores no mesmo elemento', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const container = element.querySelector(
       'dash-target-vs-ceiling',
@@ -122,8 +124,8 @@ describe('shared/target-vs-ceiling.component.ts (C-02-55)', () => {
     }
   });
 
-  it('dado ceiling null então só o target', () => {
-    const fixture = render();
+  it('dado ceiling null então só o target', async () => {
+    const fixture = await render();
     fixture.componentInstance.containerCeiling.set(null);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;

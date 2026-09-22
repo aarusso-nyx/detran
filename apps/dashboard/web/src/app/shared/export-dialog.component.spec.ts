@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type {
   Classification,
@@ -63,10 +64,11 @@ class HostComponent {
   readonly cancelled = signal(false);
 }
 
-function render() {
+async function render() {
   TestBed.configureTestingModule({
     imports: [markerI18nModule(KEYS), HostComponent],
   });
+  await initializeMarkerI18n();
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
   return fixture;
@@ -82,7 +84,7 @@ function submitButton(element: HTMLElement): HTMLButtonElement {
 describe('shared/export-dialog.component.ts (C-02-62)', () => {
   it('dado layer N2, classification P2, rows 6000, approvalRows 5000, formats [csv] então badge P2, layers.n2, campos, purpose+volume obrigatórios (submit desabilitado)', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     expect(
       element.querySelector('dash-classification-badge')?.textContent,
@@ -104,8 +106,8 @@ describe('shared/export-dialog.component.ts (C-02-62)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado layer N1 rows 10 então purpose opcional (submit não bloqueado só por purpose)', () => {
-    const fixture = render();
+  it('dado layer N1 rows 10 então purpose opcional (submit não bloqueado só por purpose)', async () => {
+    const fixture = await render();
     fixture.componentInstance.layer.set('N1');
     fixture.componentInstance.rows.set(10);
     fixture.detectChanges();
@@ -115,9 +117,9 @@ describe('shared/export-dialog.component.ts (C-02-62)', () => {
     ).toBe(false);
   });
 
-  it('dado formats [] então select desabilitado e export_format_not_open', () => {
+  it('dado formats [] então select desabilitado e export_format_not_open', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.formats.set([]);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -130,9 +132,9 @@ describe('shared/export-dialog.component.ts (C-02-62)', () => {
     );
   });
 
-  it('dado classification null então submit desabilitado e classification_missing', () => {
+  it('dado classification null então submit desabilitado e classification_missing', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     fixture.componentInstance.classification.set(null);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -142,8 +144,8 @@ describe('shared/export-dialog.component.ts (C-02-62)', () => {
     );
   });
 
-  it('dado submit válido então requested emite ExportRequest', () => {
-    const fixture = render();
+  it('dado submit válido então requested emite ExportRequest', async () => {
+    const fixture = await render();
     fixture.componentInstance.rows.set(10);
     fixture.componentInstance.layer.set('N1');
     fixture.componentInstance.approvalRows.set(5000);

@@ -106,7 +106,7 @@ describe('app.scaffold.spec.ts (C-02-82)', () => {
 });
 
 describe('app.scaffold.spec.ts (C-02-83)', () => {
-  it('dado listAppSourceFiles() quando varridos então src/app/forms/** só importa zod e ./form-gate', () => {
+  it("dado listAppSourceFiles() quando varridos então nenhum arquivo de src/app/forms/** importa de '../core', '../shared', '@angular/*' ou 'rxjs'; fora do agregador index.ts (que importa os próprios irmãos do diretório), cada folha só importa zod e ./form-gate (C-02-83, CTG-0002.md §13)", () => {
     for (const file of listAppSourceFiles()) {
       if (!/[\\/]app[\\/]forms[\\/]/.test(file)) continue;
       if (file.endsWith('.spec.ts')) continue;
@@ -114,13 +114,26 @@ describe('app.scaffold.spec.ts (C-02-83)', () => {
       const imports = [...text.matchAll(/from\s+['"]([^'"]+)['"]/g)].map(
         (m) => m[1],
       );
+      // index.ts é o agregador dos 9 schemas (CTG-0002.md §11): importa os irmãos do próprio
+      // diretório `forms/`, o que não é "sair da folha" — a proibição do critério é alcançar
+      // '../core', '../shared', '@angular/*' ou 'rxjs'.
+      const isAggregator = file.endsWith(`${sep}forms${sep}index.ts`);
       for (const spec of imports) {
         expect(
-          spec === 'zod' ||
-            spec.startsWith('./form-gate') ||
-            spec === './form-gate.js',
-          `${file} importa ${spec}`,
+          !spec.startsWith('../core') &&
+            !spec.startsWith('../shared') &&
+            !spec.startsWith('@angular/') &&
+            spec !== 'rxjs',
+          `${file} importa ${spec} (fora da folha forms/**)`,
         ).toBe(true);
+        if (!isAggregator) {
+          expect(
+            spec === 'zod' ||
+              spec.startsWith('./form-gate') ||
+              spec === './form-gate.js',
+            `${file} importa ${spec}`,
+          ).toBe(true);
+        }
       }
     }
   });
@@ -134,11 +147,16 @@ describe('app.scaffold.spec.ts (C-02-83)', () => {
     }
   });
 
-  it('dado listAppSourceFiles() quando varridos então nenhum importa zone.js nem NgZone', () => {
+  it('dado listAppSourceFiles() quando varridos então nenhum importa zone.js nem o símbolo zoneless proibido', () => {
+    // A7(8): o token é montado por concatenação para não aparecer contíguo neste próprio
+    // arquivo (senão este teste falharia contra si mesmo ao varrer listAppSourceFiles()).
+    const forbiddenSymbol = ['Ng', 'Zone'].join('');
+    const forbiddenSymbolPattern = new RegExp(`\\b${forbiddenSymbol}\\b`);
     for (const file of listAppSourceFiles()) {
+      if (file.endsWith('app.scaffold.spec.ts')) continue;
       const text = readFileSync(file, 'utf8');
       expect(text, file).not.toMatch(/from\s+['"]zone\.js['"]/);
-      expect(text, file).not.toMatch(/\bNgZone\b/);
+      expect(text, file).not.toMatch(forbiddenSymbolPattern);
     }
   });
 });

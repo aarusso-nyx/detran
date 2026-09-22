@@ -74,10 +74,13 @@ describe('features/audit/pages/auditoria.page.ts (D-11)', () => {
     }>().not.toMatchTypeOf<StateType>();
   });
 
-  it('dado ready sem purposeDeclared então o conteúdo fica oculto e o gate aberto; após declared então aparece (C-02-70, C-01-09, "LayerGate na entrada")', async () => {
+  it('dado ready sem purposeDeclared então o conteúdo fica oculto e o gate aberto (C-02-70, C-01-09, "LayerGate na entrada")', async () => {
     const withoutDeclared = await renderReady(ROLE, false);
     expect(withoutDeclared.textContent).not.toContain('a1');
     expect(withoutDeclared.querySelector('dash-layer-gate')).not.toBeNull();
+  });
+
+  it('dado ready com purposeDeclared então o conteúdo aparece (C-02-70, C-01-09, "LayerGate na entrada")', async () => {
     const withDeclared = await renderReady(ROLE, true);
     expect(withDeclared.textContent).toContain('a1');
   });
@@ -96,11 +99,24 @@ describe('features/audit/pages/auditoria.page.ts (D-11)', () => {
     }
   });
 
-  it('dado o controle export:create então presente para AUDITOR e ausente para DPO (tem acesso à rota mas está fora de EXPORT_ROLES) (C-02-72)', async () => {
-    const positive = await renderReady('AUDITOR', true);
+  // A7(3): `DASH_EXPORT_ROLES` (`policy.ts` 1532-1540) não inclui `AUDITOR` — o controle é
+  // ausente para AUDITOR (e para DPO) em D-11; o positivo real é um papel de
+  // `DASH_EXPORT_ROLES`, aqui `agency-admin`.
+  it('dado o controle export:create então presente para agency-admin (positivo em DASH_EXPORT_ROLES) (C-02-72, A7(3))', async () => {
+    const positive = await renderReady('agency-admin', true);
     expect(
       positive.querySelector('[data-command="dashboard:export:create"]'),
     ).not.toBeNull();
+  });
+
+  it('dado o controle export:create então ausente para AUDITOR (tem acesso à rota mas está fora de DASH_EXPORT_ROLES) (C-02-72, A7(3))', async () => {
+    const negative = await renderReady('AUDITOR', true);
+    expect(
+      negative.querySelector('[data-command="dashboard:export:create"]'),
+    ).toBeNull();
+  });
+
+  it('dado o controle export:create então ausente para DPO (tem acesso à rota mas está fora de DASH_EXPORT_ROLES) (C-02-72, A7(3))', async () => {
     const negative = await renderReady('DPO', true);
     expect(
       negative.querySelector('[data-command="dashboard:export:create"]'),
@@ -109,7 +125,10 @@ describe('features/audit/pages/auditoria.page.ts (D-11)', () => {
 
   it('dado o controle export:create presente quando clicado então nenhuma requisição HTTP (L0) (C-02-73)', async () => {
     const { harness, navigate, httpMock } = await createDashboardRouterHarness([
-      { provide: StynxSessionService, useValue: sessionForRoles([ROLE]) },
+      {
+        provide: StynxSessionService,
+        useValue: sessionForRoles(['agency-admin']),
+      },
     ]);
     await navigate(PATH);
     const component = harness.routeDebugElement?.componentInstance as {

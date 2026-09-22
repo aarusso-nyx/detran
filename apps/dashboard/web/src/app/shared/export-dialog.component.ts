@@ -152,7 +152,7 @@ export class ExportDialogComponent {
   readonly scope = input.required<string>();
   readonly filters = input.required<Readonly<Record<string, string>>>();
   readonly rows = input.required<number | null>();
-  /** `dashboard.export.approval_rows` vem do backend; `null` em L0. */
+  /** Limiar de aprovação nominal do catálogo de parâmetros (OD-D09); vem do backend, `null` em L0. */
   readonly approvalRows = input.required<number | null>();
   /** Lista de formatos abertos de R-0011 (`source_pending`); `[]` em L0. */
   readonly formats = input.required<readonly string[]>();

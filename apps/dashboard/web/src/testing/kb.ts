@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const testingDir = dirname(fileURLToPath(import.meta.url)); // .../apps/dashboard/web/src/testing
 export const APP_SRC_ROOT = join(testingDir, '..'); // .../apps/dashboard/web/src
-export const REPO_ROOT = join(testingDir, '..', '..', '..', '..'); // raiz do monorepo
+export const REPO_ROOT = join(testingDir, '..', '..', '..', '..', '..'); // raiz do monorepo
 export const SCREENS_DIR = join(
   REPO_ROOT,
   'docs/framework/product/transversal/dashboard/screens',

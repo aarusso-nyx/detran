@@ -87,7 +87,10 @@ describe('i18n.spec.ts (C-02-75)', () => {
     }
   });
 
-  it('dado listAppSourceFiles() quando varridos então nenhum literal dashboard.severity.shape nem dashboard.clocks.a/.d', () => {
+  // A7(8): o título não cita os literais contíguos (senão este próprio arquivo, ao ser
+  // varrido por severity-chip.component.spec.ts/clock-governor-badge.component.spec.ts,
+  // falharia contra si mesmo); os literais em si só existem montados por concatenação abaixo.
+  it('dado listAppSourceFiles() quando varridos então nenhum literal de forma de severidade (A4) nem das letras A/D de relógio (OD-D16-007)', () => {
     const forbidden = [
       ['dashboard', 'severity', 'shape'].join('.'),
       ['dashboard', 'clocks', 'a'].join('.'),

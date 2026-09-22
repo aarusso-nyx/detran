@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import { readFileSync } from 'node:fs';
 import { listAppSourceFiles } from '../../testing/kb.js';
@@ -50,6 +51,7 @@ describe('shared/severity-chip.component.ts (C-02-51)', () => {
       TestBed.configureTestingModule({
         imports: [markerI18nModule(KEYS), HostComponent],
       });
+      await initializeMarkerI18n();
       const fixture = TestBed.createComponent(HostComponent);
       fixture.componentInstance.severity.set(level);
       fixture.detectChanges();

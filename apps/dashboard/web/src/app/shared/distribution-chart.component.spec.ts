@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type { DistributionSeries } from '../shared/models.js';
 
@@ -63,6 +64,7 @@ describe('shared/distribution-chart.component.ts (C-02-59)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -84,10 +86,11 @@ describe('shared/distribution-chart.component.ts (C-02-59)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado uma barra com value null não suprimida então selo INDISPONIVEL', () => {
+  it('dado uma barra com value null não suprimida então selo INDISPONIVEL', async () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.series.set({
       ...SERIES,

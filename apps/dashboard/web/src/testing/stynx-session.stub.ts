@@ -43,11 +43,21 @@ export function createStynxSessionStub(
   initial: Partial<StynxSessionStateStub> = {},
 ): StynxSessionServiceStub {
   const merged: StynxSessionStateStub = { ...DEFAULT_STATE, ...initial };
+  const active = signal(merged.active);
+  const state = signal(merged);
+  // A7(7): `completeLogin` ativa a sessão (como o serviço real faz ao trocar o código pelo
+  // token) — sem isso, a navegação pós-callback para `/monitoramento` cai no `authGuard`.
+  const activate = (): void => {
+    active.set(true);
+    state.set({ ...state(), active: true });
+  };
   return {
-    active: signal(merged.active),
-    state: signal(merged),
+    active,
+    state,
     login: vi.fn(),
-    completeLogin: vi.fn(async () => undefined),
+    completeLogin: vi.fn(async () => {
+      activate();
+    }),
     logout: vi.fn(async () => undefined),
     hasAllPermissions: vi.fn(
       (...keys: readonly string[]) =>

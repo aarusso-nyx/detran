@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type { OriginApp } from '../shared/models.js';
 
@@ -29,6 +30,7 @@ describe('shared/deep-link-button.component.ts (C-02-64)', () => {
     TestBed.configureTestingModule({
       imports: [markerI18nModule(KEYS), HostComponent],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(HostComponent);
     fixture.detectChanges();
     const element = fixture.nativeElement as HTMLElement;
@@ -46,10 +48,11 @@ describe('shared/deep-link-button.component.ts (C-02-64)', () => {
 
   it.each(['/monitoramento/x', '/x'])(
     'dado href relativo ao console (%s) então nenhum <a> e data-invalid true',
-    (href) => {
+    async (href) => {
       TestBed.configureTestingModule({
         imports: [markerI18nModule(KEYS), HostComponent],
       });
+      await initializeMarkerI18n();
       const fixture = TestBed.createComponent(HostComponent);
       fixture.componentInstance.href.set(href);
       fixture.detectChanges();

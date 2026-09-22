@@ -83,10 +83,13 @@ describe('features/radar/pages/radar-rait.page.ts (D-03)', () => {
     }>().not.toMatchTypeOf<StateType>();
   });
 
-  it('dado ready sem purposeDeclared então AM-1 ausente e dash-layer-gate presente; após declared então aparece (C-02-70, C-01-09)', async () => {
+  it('dado ready sem purposeDeclared então AM-1 ausente e dash-layer-gate presente (C-02-70, C-01-09)', async () => {
     const element = await renderReady(false);
     expect(element.textContent).not.toContain('AM-1');
     expect(element.querySelector('dash-layer-gate')).not.toBeNull();
+  });
+
+  it('dado ready com purposeDeclared então AM-1 aparece (C-02-70, C-01-09)', async () => {
     const withDeclared = await renderReady(true);
     expect(withDeclared.textContent).toContain('AM-1');
   });

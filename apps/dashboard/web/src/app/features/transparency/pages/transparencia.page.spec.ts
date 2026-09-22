@@ -77,8 +77,13 @@ describe('features/transparency/pages/transparencia.page.ts (D-12)', () => {
     const catalog = readAppCatalog();
     const element = await renderReady();
     const blocked = element.querySelector('[data-blocked]') as HTMLElement;
+    // A7(5): compara a chave já com o {decision} renderizado (substituído), nunca o texto cru
+    // da semente com o placeholder por substituir.
     expect(blocked.textContent).toContain(
-      catalog['dashboard.states.blocked_by_decision'],
+      catalog['dashboard.states.blocked_by_decision'].replace(
+        '{decision}',
+        'DT-066',
+      ),
     );
     expect(blocked.textContent).toContain('DT-066');
     const active = [
@@ -95,7 +100,16 @@ describe('features/transparency/pages/transparencia.page.ts (D-12)', () => {
     }
   });
 
-  it('dado o controle transparency-audit:audit então presente para technical-admin e ausente para AUDITOR (tem acesso à rota mas não à matriz de comando) (C-02-72)', async () => {
+  it('dado o controle transparency-audit:audit então presente para technical-admin (positivo na matriz de comando) (C-02-72)', async () => {
+    const positive = await renderReady();
+    expect(
+      positive.querySelector(
+        '[data-command="dashboard:transparency-audit:audit"]',
+      ),
+    ).not.toBeNull();
+  });
+
+  it('dado o controle transparency-audit:audit então ausente para AUDITOR (tem acesso à rota mas não à matriz de comando) (C-02-72)', async () => {
     const { harness, navigate } = await createDashboardRouterHarness([
       { provide: StynxSessionService, useValue: sessionForRoles(['AUDITOR']) },
     ]);
@@ -111,12 +125,6 @@ describe('features/transparency/pages/transparencia.page.ts (D-12)', () => {
         '[data-command="dashboard:transparency-audit:audit"]',
       ),
     ).toBeNull();
-    const positive = await renderReady();
-    expect(
-      positive.querySelector(
-        '[data-command="dashboard:transparency-audit:audit"]',
-      ),
-    ).not.toBeNull();
   });
 
   it('dado o controle audit presente quando clicado então dash-error-banner unavailable_in_version com o command (C-02-73)', async () => {

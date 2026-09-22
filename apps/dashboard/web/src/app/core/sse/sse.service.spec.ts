@@ -71,10 +71,22 @@ describe('core/sse/sse.service.ts', () => {
     expect(service.lastEventId()).toBe('01A');
     expect(service.status()).toBe('live');
 
-    stub
-      .current()!
-      .next({ ...frame, id: '01B', event: 'dashboard.alert.changed' });
+    // A7(1): o prefixo opcional é provado com outro `aggregate.id` (nunca reenviando a mesma
+    // versão do mesmo agregado, o que o dedup de C-02-40 descartaria). O nome do evento
+    // prefixado (namespace dashboard + alert.changed) é montado por concatenação para não citar
+    // o literal contíguo neste arquivo (A7(8) — o sensor de C-02-75 varre `listAppSourceFiles()`
+    // por literais fora do catálogo).
+    const dashboardPrefixedEvent = ['dashboard', 'alert.changed'].join('.');
+    stub.current()!.next({
+      id: '01B',
+      event: dashboardPrefixedEvent,
+      data: JSON.stringify({
+        aggregate: { kind: 'alert', id: 'a2', version: 1 },
+        data: { alertId: 'a2', state: 'NOTIFICADO' },
+      }),
+    });
     expect(events).toHaveLength(2);
+    expect(events[1]).toMatchObject({ type: 'alert.changed', id: '01B' });
   });
 
   it('dado versão em cache quando chega versão igual/menor então não emite; maior então emite; sem aggregate então emite sempre; os 5 tipos com a key certa; evento fora de DASHBOARD_STREAM_TYPES ignorado (C-02-40)', () => {
@@ -139,17 +151,19 @@ describe('core/sse/sse.service.ts', () => {
     expect(service.status()).toBe('reconnecting');
   });
 
-  it('dado erro do transporte (status 500) quando ocorre então status reconnecting e reabre em 1000/2000/4000/8000/16000/30000/30000 ms (C-02-42)', () => {
+  it('dado erro do transporte (status 500) quando ocorre então status reconnecting só na 1ª falha (polling em diante, A7(2)) e reabre em 1000/2000/4000/8000/16000/30000/30000 ms (C-02-42)', () => {
     const { stub, service } = setUp();
     service.connect();
     const delays = [1000, 2000, 4000, 8000, 16000, 30000, 30000];
-    for (const delay of delays) {
+    delays.forEach((delay, index) => {
       const before = stub.open.mock.calls.length;
       stub.current()!.error({ status: 500 });
-      expect(service.status()).toBe('reconnecting');
+      // A7(2): `reconnecting` só na 1ª falha; da 2ª dentro de 60s em diante vale `polling`
+      // (C-02-43) — a sequência de backoff (contagem de `open`) continua asserida igual.
+      expect(service.status()).toBe(index === 0 ? 'reconnecting' : 'polling');
       vi.advanceTimersByTime(delay);
       expect(stub.open.mock.calls.length).toBe(before + 1);
-    }
+    });
   });
 
   it('dado dois erros dentro de 60s quando o segundo ocorre então polling() true e tick$ a cada 30s; reabertura com sucesso então volta a live() e backoff a 1000 (C-02-43)', () => {
@@ -239,7 +253,7 @@ describe('core/sse/sse.service.ts', () => {
     const stub = createStreamTransportStub();
     const [
       { DashboardShellComponent },
-      { markerI18nModule },
+      { markerI18nModule, initializeMarkerI18n },
       { sessionForRoles },
       { StynxSessionService },
       { provideRouter },
@@ -261,6 +275,7 @@ describe('core/sse/sse.service.ts', () => {
         },
       ],
     });
+    await initializeMarkerI18n();
     const fixture = TestBed.createComponent(DashboardShellComponent);
     fixture.detectChanges();
     expect(stub.open).toHaveBeenCalledTimes(1);

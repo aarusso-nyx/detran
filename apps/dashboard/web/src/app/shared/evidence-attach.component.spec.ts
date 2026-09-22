@@ -7,6 +7,7 @@ import { expectA11yStateInvariants } from '../../testing/a11y-state.spec-helper.
 import {
   buildTestCatalog,
   markerI18nModule,
+  initializeMarkerI18n,
 } from '../../testing/i18n-test-catalog.js';
 import type { DutyEvidence } from '../shared/models.js';
 
@@ -29,10 +30,11 @@ class HostComponent {
   readonly emitted: DutyEvidence[] = [];
 }
 
-function render() {
+async function render() {
   TestBed.configureTestingModule({
     imports: [markerI18nModule(KEYS), HostComponent],
   });
+  await initializeMarkerI18n();
   const fixture = TestBed.createComponent(HostComponent);
   fixture.detectChanges();
   return fixture;
@@ -52,7 +54,7 @@ function setValue(input: HTMLInputElement, value: string): void {
 describe('shared/evidence-attach.component.ts (C-02-58)', () => {
   it('dado nenhum campo preenchido então botão desabilitado e duty_evidence_required visível', async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     expect(submitButton(element).disabled).toBe(true);
     expect(element.textContent).toContain(
@@ -61,8 +63,8 @@ describe('shared/evidence-attach.component.ts (C-02-58)', () => {
     await expectA11yStateInvariants(element, catalog, { component: true });
   });
 
-  it('dado só protocol preenchido então habilitado e evidence emite { protocol }', () => {
-    const fixture = render();
+  it('dado só protocol preenchido então habilitado e evidence emite { protocol }', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const protocolInput = element.querySelector(
       'input[name="protocol"]',
@@ -77,8 +79,8 @@ describe('shared/evidence-attach.component.ts (C-02-58)', () => {
     });
   });
 
-  it('dado só captureUri preenchido então evidence emite { captureUri }', () => {
-    const fixture = render();
+  it('dado só captureUri preenchido então evidence emite { captureUri }', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const input = element.querySelector(
       'input[name="captureUri"]',
@@ -92,8 +94,8 @@ describe('shared/evidence-attach.component.ts (C-02-58)', () => {
     });
   });
 
-  it('dado hash válido (64 hex) então evidence emite { hash }', () => {
-    const fixture = render();
+  it('dado hash válido (64 hex) então evidence emite { hash }', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const input = element.querySelector(
       'input[name="hash"]',
@@ -108,9 +110,9 @@ describe('shared/evidence-attach.component.ts (C-02-58)', () => {
     });
   });
 
-  it("dado hash 'abc' então desabilitado com duty_evidence_hash_invalid e aria-describedby", () => {
+  it("dado hash 'abc' então desabilitado com duty_evidence_hash_invalid e aria-describedby", async () => {
     const catalog = buildTestCatalog(KEYS);
-    const fixture = render();
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     const input = element.querySelector(
       'input[name="hash"]',
@@ -124,8 +126,8 @@ describe('shared/evidence-attach.component.ts (C-02-58)', () => {
     expect(input.getAttribute('aria-describedby')).toBeTruthy();
   });
 
-  it('dado os três campos preenchidos então evidence emite os três', () => {
-    const fixture = render();
+  it('dado os três campos preenchidos então evidence emite os três', async () => {
+    const fixture = await render();
     const element = fixture.nativeElement as HTMLElement;
     setValue(
       element.querySelector('input[name="protocol"]') as HTMLInputElement,
