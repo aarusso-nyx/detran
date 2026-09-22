@@ -185,6 +185,10 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Triagem
 
+- 2026-09-22 — TASK-0005 (Engineer, app), tentativa 1: abortada por **API 529 Overloaded** durante
+  a leitura dos specs; `git status` confirma que nada foi escrito em `src/app/**` fora de `forms/`
+  (TASK-0006). Triagem: falha de infraestrutura, não `plant-bug` nem `sensor-error` — redespacho
+  idêntico (mesmo prompt, mesmo `PC-`), sem consumir iteração do §6.
 - 2026-09-21 — `delivery-review-CTG-0001` ciclo 1: **FAIL** (4 achados `high`): (1) D-09 `prove`
   "evidência completa" contradiz [UC-DASH-003] AC-DASH-003-1 ("protocolo, captura ou hash") —
   `reference-gap` de transcrição: a fonte do prompt (`dashboard-frontends.md` §7) diverge do
