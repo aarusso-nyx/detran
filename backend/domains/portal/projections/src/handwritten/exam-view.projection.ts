@@ -4,6 +4,8 @@
 // plan R-0009 M16): só a tabela + projetor esqueleto — um evento de agregado
 // `exam` grava `last_event_id` na linha existente; sem linha → `not_consumed`
 // (nada gravado). O produtor real (PEC/ch) fixa o `data`.
+export const consumedEvents = ['ch.exam.*'] as const;
+
 import { touchSkeletonRow } from './crash-view.projection.js';
 import {
   PROJECTION_SENTINEL_EVENT_ID,
