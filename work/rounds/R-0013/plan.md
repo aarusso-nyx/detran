@@ -1008,6 +1008,20 @@ Checkpoint 46 (janela 4, correção higiênica do sensor):
 - lint, typecheck e 868/868 testes passaram, com zero skip/todo. TASK-0012 retornou a `completed`;
   TASK-0013 permanece `in_progress` até auditoria do maestro, `pnpm check` integral e REVIEW.
 
+Checkpoint 47 (janela 4, delivery review CTG-0004a ciclo 1):
+
+- o REVIEWER CODEX independente reproduziu 868/868 testes, mas retornou **FAIL** com treze achados
+  `high`: guardas permissivos; oito clientes vazios; store/sync/normativo sem comportamento; 70
+  aliases de um placeholder e oito módulos vazios; i18n sem integração; FieldShell sem
+  ErrorBoundary; readiness parcial; matriz sem validação/dispatcher; schemas permissivos;
+  impressão/bodycam apenas nominais; D-05/BOAT apenas metadados; sensores falso-positivos; e
+  divergência entre a allowlist exata do contrato e o prompt;
+- o candidato de produção permanece deliberadamente sem commit. Gates verdes não substituem os
+  comportamentos ausentes, e `pnpm check` integral não foi consumido sobre candidato rejeitado;
+- a correção exige nova ordem Architect → Inspector → Engineer → gates integrais → REVIEW. Como
+  TASK-0010 e TASK-0012 já consumiram `2/2`, TASK-0013 fica `blocked` e o CTG escala ao Owner antes
+  de qualquer reset extraordinário de limites. Não há autorização para push, PR ou merge do FAIL.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do

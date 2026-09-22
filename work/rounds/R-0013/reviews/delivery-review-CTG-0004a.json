@@ -1,0 +1,133 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0004a",
+  "role": "Auditor/Reviewer",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "id": "CTG4A-R1",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/navigation/guards/auth.guard.ts",
+      "line": 2,
+      "claim": "Os cinco guardas Angular efetivos são no-op e retornam true; o helper cartesiano não é chamado pelo roleGuard.",
+      "impact": "Bypass completo de autenticação, tenant, RBAC, readiness e turno.",
+      "fix": "Implementar cada CanMatchFn fail-closed com estado real e testar os guardas efetivos."
+    },
+    {
+      "id": "CTG4A-R2",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/data/api/ait.client.ts",
+      "line": 1,
+      "claim": "Os oito clientes de dados são classes vazias e não usam HttpClient nem clientes gerados.",
+      "impact": "Nenhum fluxo de bootstrap, snapshot, sync, AIT, medidas, alcoolemia, normativo ou provisionamento opera.",
+      "fix": "Implementar adapters tipados sobre backend unificado e provar requests, responses e erros."
+    },
+    {
+      "id": "CTG4A-R3",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/data/sync/sync.worker.ts",
+      "line": 1,
+      "claim": "LocalActStore é volátil, SyncWorker é no-op e NormativePackageService sempre retorna false.",
+      "impact": "O núcleo offline não persiste atos, sincroniza ou valida pacote normativo.",
+      "fix": "Implementar armazenamento durável, fila/estados/retry idempotente e pacote verificado."
+    },
+    {
+      "id": "CTG4A-R4",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/features/turno/pages/auth-login.page.ts",
+      "line": 1,
+      "claim": "As 70 páginas são aliases do mesmo placeholder e os oito módulos exportam arrays vazios.",
+      "impact": "As experiências, jornadas, formulários e comandos contratados não existem.",
+      "fix": "Construir componentes e rotas funcionais por módulo e testar comportamento específico por tela."
+    },
+    {
+      "id": "CTG4A-R5",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/shared/mobile-page.component.ts",
+      "line": 5,
+      "claim": "O catálogo i18n é copiado mas não usado; a UI contém textos literais.",
+      "impact": "Localização e textos canônicos das 70 telas não são entregues.",
+      "fix": "Integrar runtime i18n STYNX e renderizar somente chaves canônicas."
+    },
+    {
+      "id": "CTG4A-R6",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/core/field-shell.component.ts",
+      "line": 2,
+      "claim": "FieldShell não implementa ErrorBoundary, classificação, apresentação ou registro de erro.",
+      "impact": "Falhas podem escapar sem estado acessível ou mensagem canônica.",
+      "fix": "Implementar ErrorBoundary único no shell com classificação, i18n, registro e testes reais."
+    },
+    {
+      "id": "CTG4A-R7",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/core/readiness-gate.service.ts",
+      "line": 5,
+      "claim": "Readiness cobre somente dois booleanos e não integra postura, homologação, reserva, bootstrap ou registro de warnings.",
+      "impact": "Rotas legais podem abrir sem requisitos contratuais.",
+      "fix": "Derivar readiness de bootstrap/provisioning tipados e integrar ao guarda fail-closed."
+    },
+    {
+      "id": "CTG4A-R8",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/navigation/transitions.ts",
+      "line": 1,
+      "claim": "As 576 transições são apenas reexportadas, sem validação content-addressed ou executor com Location.back.",
+      "impact": "A matriz não é comportamento executável nem falha fechada contra corrupção.",
+      "fix": "Validar hash/cardinalidade/chaves/destinos e implementar despacho incluindo __previous__."
+    },
+    {
+      "id": "CTG4A-R9",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/data/local/ait-frame.schema.ts",
+      "line": 2,
+      "claim": "Vários schemas validam apenas presença/tipo e omitem as validações de forma fechadas no contrato.",
+      "impact": "Payloads inválidos podem avançar.",
+      "fix": "Implementar somente as validações expressas no contrato e provas negativas independentes."
+    },
+    {
+      "id": "CTG4A-R10",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/shared/mobile-printer.port.ts",
+      "line": 1,
+      "claim": "Impressão e bodycam não têm comportamento de produção; o teste exercita somente FixturePrinter.",
+      "impact": "As superfícies existem apenas nominalmente.",
+      "fix": "Implementar adapters/estado de produção e testar a porta real com doubles externos."
+    },
+    {
+      "id": "CTG4A-R11",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/app.routes.ts",
+      "line": 933,
+      "claim": "D-05 e BOAT existem apenas como metadados; D-05 não exibe indisponibilidade e BOAT carrega placeholder.",
+      "impact": "O comportamento explícito de extensão e indisponibilidade não é entregue.",
+      "fix": "Implementar estado D-05 acessível e boundary BOAT com fallback explícito."
+    },
+    {
+      "id": "CTG4A-R12",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/app.mobile-runtime-surfaces.spec.ts",
+      "line": 29,
+      "claim": "A suíte aceita arrays/classes vazios, existência nominal, helper isolado e o mesmo placeholder como 70 telas.",
+      "impact": "868/868 PASS é falso positivo para CTG-0004a.",
+      "fix": "Reabrir Inspector e substituir sensores nominais por provas funcionais das superfícies reais."
+    },
+    {
+      "id": "CTG4A-R13",
+      "severity": "high",
+      "file": "docs/framework/arch/teat-mobile-contract.md",
+      "line": 172,
+      "claim": "A allowlist exata omite superfícies exigidas e criadas, divergindo do prompt TASK-0013.",
+      "impact": "A autoridade de escrita da entrega não pode ser certificada.",
+      "fix": "Reabrir Architect para enumerar os caminhos intencionais antes de refazer Inspector e Engineer."
+    }
+  ],
+  "notes": [
+    "O Reviewer reproduziu 868/868 testes passando e confirmou que a suíte atual aceita os stubs.",
+    "O catálogo i18n copiado é semanticamente idêntico ao canônico; o defeito é ausência de integração.",
+    "Não foi encontrado acesso SENATRAN direto nem cálculo de prazo legal.",
+    "Nenhum arquivo foi alterado pelo Reviewer.",
+    "FAIL exige escalada porque Architect e Inspector já consumiram 2/2 iterações."
+  ]
+}
