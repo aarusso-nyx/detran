@@ -198,15 +198,16 @@ postState, errorCodes }` transcrito de §6.6/§7/§9 + `rait-error-catalog.md`; 
 | TASK-0007 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2b`                                                                                               | TASK-0006 (merge PR 2)              | CTG-0002b   | `contracts/CTG-0002b.md`: assinaturas dos 22 componentes §5.2, clientes/facades (M8/M9), páginas por rota e nível (M13), fixtures JSON, critérios                                                                                                                    |
 | TASK-0008 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-data`, `MOD-rait-web-tests-shared`, `MOD-rait-web-tests-core` (só o `it` de C-2A-27)             | TASK-0007                           | CTG-0002b-1 | specs da camada de dados (clientes com `HttpTestingController`, ETag, facades com cache/invalidação SSE, `it.todo` de comando com OD) e dos 26 componentes de `shared/` (estados, a11y, teclado)                                                                     |
 | TASK-0009 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-data`, `MOD-rait-web-shared`, `MOD-rait-web-core-shell-search`, `MOD-rait-web-i18n`, `MOD-packages-ui` | TASK-0008                           | CTG-0002b-1 | `data/` (modelos, clientes, facades, busca do shell) e `shared/` (26 componentes) até os testes passarem; `packages/ui` só por adenda                                                                                                                                |
-| TASK-0014 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-features`                                                                                        | TASK-0009 (merge PR 3a)             | CTG-0002b-2 | specs das 50 páginas e das rotas por módulo, matriz de autorização ação × papel (presença/ausência), atualização de C-2A-11/C-2A-22                                                                                                                                  |
-| TASK-0015 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-features`                                                                                              | TASK-0014                           | CTG-0002b-2 | `features/<modulo>/pages/*` (50 páginas) e rotas por módulo até os testes passarem                                                                                                                                                                                   |
+| TASK-0014 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-features`, `MOD-rait-web-tests-core` (só os `it` de C-2A-11/22, C-2B-81/82)                      | TASK-0009 (merge PR 3a)             | CTG-0002b-2 | specs das 50 páginas e das rotas por módulo, matriz de autorização ação × papel (presença/ausência), atualização de C-2A-11/C-2A-22                                                                                                                                  |
+| TASK-0015 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-features`                                                                                              | TASK-0014, TASK-0016                | CTG-0002b-2 | `features/<modulo>/pages/*` (50 páginas) e rotas por módulo até os testes passarem                                                                                                                                                                                   |
+| TASK-0016 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-rait-web-i18n`                                                                                                  | TASK-0009 (merge PR 3a)             | CTG-0002b-2 | chaves i18n das páginas: 44 `confirm.*` (texto das fichas §6) e (P) do contrato §9.2 ausentes, no catálogo do app (A12)                                                                                                                                              |
 | TASK-0010 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2c`, `MOD-rait-web-forms-doc`                                                                     | TASK-0015 (merge PR 3b)             | CTG-0002c   | `contracts/CTG-0002c.md` + `docs/framework/arch/rait-web-forms.md`: 16 formulários campo a campo, gates, códigos de erro, regras ESLint (M11/M12)                                                                                                                    |
 | TASK-0011 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-forms`                                                                                           | TASK-0010                           | CTG-0002c   | specs dos 16 schemas (válido/inválido/condicional, gate) + `RuleTester` das duas regras (casos negativos)                                                                                                                                                            |
 | TASK-0012 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-rait-web-forms`, `MOD-rait-web-lint`                                                                            | TASK-0011                           | CTG-0002c   | 16 `*.schema.ts` com cabeçalho de gate, `eslint/local-rules.js`, `eslint.config.js`; testes verdes                                                                                                                                                                   |
 | TASK-0013 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs-rait-arch`                                                                                                 | TASK-0012                           | CTG-0002c   | `rait-build-pack.md` §WP-D/E/F executados (gates reais), `rait-web-frontend.md` §12/§13, `open-decisions-rait.md` §G (OD-R12-*), backlog                                                                                                                             |
 
 CTG-0001 = 0002/0003/0004 (fichas, PR 1). CTG-0002a = 0001/0005/0006 (PR 2). CTG-0002b-1 =
-0007/0008/0009 (PR 3a); CTG-0002b-2 = 0007/0014/0015 (PR 3b; A8). CTG-0002c = 0010/0011/0012 + 0013 (PR 4). Paralelismo: 0002/0003/0004
+0007/0008/0009 (PR 3a); CTG-0002b-2 = 0007/0016/0014/0015 (PR 3b; A8, A12). CTG-0002c = 0010/0011/0012 + 0013 (PR 4). Paralelismo: 0002/0003/0004
 juntas (fronteiras disjuntas; só 0004 toca o manifesto do KB); o resto é serial por tríade.
 
 **Prompts por fase:** os prompts de TASK-0001…0004 são compostos no bootstrap e passam pela
@@ -304,6 +305,12 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   prompt §5 manda parar no terceiro ciclo e reportar; o maestro prosseguiu porque o achado era
   residual de edição própria, o veredito final foi PASS e o Owner autorizou "prosseguir até a
   completa finalização" (AUTHORIZATION.md, emenda 1). Reportado no relatório final.
+
+- **B2 (desvio registrado, 2026-09-22).** Prompt-review 10 (par CTG-0002b-2) = FAIL por estrutura de
+  fronteira (rubrica 1 e 3: transcrição de i18n atribuída ao Engineer; `shared/**`/`data/**` fora dos
+  `target_modules`), não por contradição canônica. Pelo §10 do método (recomendação 7 de R-0009,
+  praticada em R-0008/R-0009/R-0014) e pela emenda 1 do Owner, o maestro corrige (A12) e repete o
+  ciclo restrito em vez de parar. Reportado no relatório final.
 
 ## Triagem
 
@@ -432,6 +439,18 @@ null)` e as chaves reais de `RAIT_COMMAND_RULES` no `InquiryCard` (OD-R12-026). 
   `rait-signing-authority` **e `rait-analyst`** — `rait-analyst` não vê `sign`/`return-draft`, mas
   **vê** `impede`; o `it` "nenhum existe" é substituído pela matriz de (a). Inspector em iteração
   restrita; Engineer só se algum componente falhar a matriz.
+
+- **A12 — Fronteiras do par CTG-0002b-2 (Architect/maestro, 2026-09-22; prompt-review 10).** (a) A
+  transcrição das chaves i18n das páginas (44 `rait.screens.<slug>.confirm.<x>` com o texto da coluna
+  "Confirmação" da ficha §6 e as demais (P) do contrato §9.2 ainda ausentes do catálogo) é ato de
+  **Architect (transcrição)** — nova **TASK-0016** (`transcriber-docs`, Sonnet/baixo, lock
+  `MOD-rait-web-i18n`), disparada em paralelo ao Inspector TASK-0014 (fronteiras disjuntas); o
+  Engineer TASK-0015 só consome as chaves. (b) TASK-0015 escreve somente em `features/**`
+  (`MOD-rait-web-features`); qualquer ajuste necessário em `shared/**`/`data/**` vira bloqueio no
+  relatório e é tratado pelo maestro por adenda + iteração restrita de um Engineer com esses locks.
+  Retroativamente: as chaves (P) que os Engineers do CTG-0002a/0002b-1 acrescentaram ao catálogo
+  seguindo os contratos §9 permanecem (já mescladas/revisadas), listadas em OD-R12-008/028 para
+  revisão do Owner.
 
 ## Retomada
 
