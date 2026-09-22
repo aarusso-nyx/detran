@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1181000,
-  "estimated_output_total": 242000,
+  "estimated_input_total": 1354000,
+  "estimated_output_total": 304000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte; workers Opus/Sonnet por subagentes nativos).",
   "entries": [
     {
@@ -102,6 +102,14 @@
       "input_tokens": 30000,
       "output_tokens": 2000,
       "note": "abortado por API 529 (Overloaded) durante a leitura dos specs; nenhum arquivo escrito. Redespachado (tentativa 2)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "opus/medium",
+      "input_tokens": 173000,
+      "output_tokens": 62000,
+      "note": "690 804 brutos, 169 chamadas, 56 min (tentativa 2). App completo L0: 86 arquivos de produção; typecheck/lint/build/i18n verdes; 133 specs vermelhos por infraestrutura de teste e contradições (A7)."
     }
   ]
 }
