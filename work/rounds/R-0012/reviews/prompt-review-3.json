@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0005.md",
+      "line": 35,
+      "claim": "A lista fechada de leitura não inclui `docs/framework/arch/rait-build-pack.md` (WP-F e mapa entregável → definições), embora as Regras comuns exijam ler o pacote de trabalho antes dos artefatos citados.",
+      "fix": "Adicionar a seção WP-F e o mapa entregável → definições do `rait-build-pack.md` à leitura obrigatória, na ordem exigida."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0006.md",
+      "line": 33,
+      "claim": "A lista fechada de leitura omite `docs/framework/arch/rait-build-pack.md` (WP-F e mapa entregável → definições), obrigatório pelas Regras comuns antes dos artefatos do pacote.",
+      "fix": "Adicionar a seção WP-F e o mapa entregável → definições do `rait-build-pack.md` à leitura obrigatória, na ordem exigida."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0006.md",
+      "line": 46,
+      "claim": "O prompt manda ler apenas §§1, 2 e 4 do catálogo de erros, mas exige implementar `RAIT_ERROR_CODES` com os 132 códigos; a lista canônica e ordenada desses códigos está no §3 e não foi transcrita integralmente no contrato.",
+      "fix": "Incluir `docs/framework/arch/rait-error-catalog.md` §3 inteiro na leitura obrigatória."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0012/tasks/TASK-0006.json",
+      "line": 14,
+      "claim": "`target_modules` declara `MOD-package-json`, mas o prompt veda editar o `package.json` da raiz e informa que o checkpoint do maestro já estendeu `pnpm check`.",
+      "fix": "Remover `MOD-package-json` de `target_modules`, ou reabrir explicitamente essa fronteira se ela ainda for necessária."
+    }
+  ],
+  "notes": []
+}
