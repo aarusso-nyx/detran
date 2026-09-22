@@ -949,6 +949,18 @@ Checkpoint 41 (janela 4, contrato mobile congelado):
   passaram. TASK-0010 está `completed`; TASK-0011 abriu a tentativa 1/2 e TASK-0012…0018 ficam
   `queued`.
 
+Checkpoint 42 (janela 4, scaffold mobile e lockfile):
+
+- TASK-0011 criou somente o scaffold Angular 22 standalone/OnPush/zoneless; `app.routes.ts`
+  permanece array vazio e nenhum teste ou comportamento de produto foi criado;
+- o maestro rejeitou antes do install a ausência de `angularJitApplicationTransform` e das
+  dependências cuja declaração pertence exclusivamente ao scaffold; o worker corrigiu o Vitest e
+  declarou forms, API clients, UI, STYNX 1.3.1, mobile-runtime, Zod e axe sem implementar feature;
+- `pnpm install` reconheceu 61 projetos e atualizou `pnpm-lock.yaml`; lint, typecheck e build do
+  pacote passaram, e o oráculo focal confirmou array de rotas vazio e zero specs de produto;
+- TASK-0011 está `completed` e seu scaffold/lockfile foi congelado antes do RED. TASK-0012 abriu a
+  tentativa 1/2 em papel Inspector; TASK-0013…0018 permanecem `queued`.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do

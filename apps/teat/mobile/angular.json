@@ -1,0 +1,44 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": { "analytics": false, "cache": { "enabled": false } },
+  "newProjectRoot": "projects",
+  "projects": {
+    "teat-mobile": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "teat",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "index": "src/index.html",
+            "tsConfig": "tsconfig.app.json",
+            "outputPath": "dist",
+            "polyfills": [],
+            "inlineStyleLanguage": "css",
+            "styles": ["src/styles.css"],
+            "assets": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractLicenses": true
+            },
+            "development": {
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "extractLicenses": false
+            }
+          },
+          "defaultConfiguration": "production"
+        }
+      }
+    }
+  }
+}
