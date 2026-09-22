@@ -318,6 +318,158 @@ describe('C-2A-54 — tokens dos enums gerados compostos por tokenKey existem no
   });
 });
 
+// R-0012 TASK-0014 (Inspector). CTG-0002b.md §8 C-2B-82 / §9.2: as chaves (P) que o Engineer
+// acrescenta ao catálogo do app para o CTG-0002b (namespaces já allowlistados `rait.common`,
+// `rait.screens`; nenhum namespace novo) devem existir com texto não vazio; a semente continua
+// intacta (glossário §2.2 — mesma verificação de C-2A-51, repetida aqui como C-2B-82 [negativo]).
+const NEW_COMMON_KEYS = [
+  'rait.common.clock',
+  'rait.common.ceilingOn',
+  'rait.common.clockAbsent',
+  'rait.common.suspensiveEffect',
+  'rait.common.originRequester',
+  'rait.common.originOfficial',
+  'rait.common.digitised',
+  'rait.common.documentKind',
+  'rait.common.file',
+  'rait.common.attach',
+  'rait.common.yes',
+  'rait.common.no',
+  'rait.common.addressee',
+  'rait.common.addressee_requerente',
+  'rait.common.addressee_orgao_autuador',
+  'rait.common.subject',
+  'rait.common.dueOn',
+  'rait.common.extensions',
+  'rait.common.inquiry_respondida',
+  'rait.common.inquiry_expirada',
+  'rait.common.facts',
+  'rait.common.grounds',
+  'rait.common.ruling',
+  'rait.common.author',
+  'rait.common.draft_rascunho',
+  'rait.common.draft_submetida',
+  'rait.common.draft_devolvida',
+  'rait.common.draft_assinada',
+  'rait.common.signatureUnavailable',
+  'rait.common.registeredAt',
+  'rait.common.quorum',
+  'rait.common.chairPresent',
+  'rait.common.chairAbsent',
+  'rait.common.parity',
+  'rait.common.priority',
+  'rait.common.activeRow',
+  'rait.common.seed',
+  'rait.common.batch_semanal',
+  'rait.common.batch_extraordinario',
+  'rait.common.accepted',
+  'rait.common.declined',
+  'rait.common.decline_impedimento',
+  'rait.common.decline_suspeicao',
+  'rait.common.impediment_impedimento',
+  'rait.common.impediment_suspeicao',
+  'rait.common.basis',
+  'rait.common.wipLimit',
+  'rait.common.absence_ferias',
+  'rait.common.absence_licenca',
+  'rait.common.absence_curso',
+  'rait.common.absence_sessao_externa',
+  'rait.common.transition',
+  'rait.common.actor',
+  'rait.common.retry',
+  'rait.common.list_capped',
+  'rait.common.extraordinary',
+  'rait.common.viewDueOn',
+  'rait.common.party_requerente',
+  'rait.common.party_procurador',
+  'rait.common.party_autoridade',
+  'rait.common.strategy_pull',
+  'rait.common.strategy_round_robin',
+  'rait.common.strategy_load_balanced',
+  'rait.screens.gestao-producao.kpi.loaded',
+  'rait.screens.gestao-capacidade.kpi.loaded',
+] as const;
+
+/** §9.2: 45 chaves `rait.screens.<slug>.confirm.<x>` (texto da coluna "Confirmação" da ficha
+ * §6); acrescentadas ao catálogo por TASK-0016 em paralelo a esta tarefa. */
+const CONFIRM_KEYS = [
+  'rait.screens.fila-defesa.confirm.claim-next',
+  'rait.screens.casos-id-triagem.confirm.admit',
+  'rait.screens.casos-id-triagem.confirm.reject',
+  'rait.screens.casos-id-diligencias.confirm.open',
+  'rait.screens.casos-id-diligencias.confirm.extend',
+  'rait.screens.casos-id-minuta.confirm.submit',
+  'rait.screens.casos-id-decisao.confirm.accept',
+  'rait.screens.casos-id-decisao.confirm.reject',
+  'rait.screens.casos-id-decisao.confirm.return-draft',
+  'rait.screens.casos-id-decisao.confirm.declare-impediment',
+  'rait.screens.casos-id-impedimentos.confirm.declare',
+  'rait.screens.protocolo-novo.confirm.protocol',
+  'rait.screens.protocolo-pendencias.confirm.resolve',
+  'rait.screens.protocolo-remessas.confirm.remit',
+  'rait.screens.protocolo-remessas.confirm.receive',
+  'rait.screens.protocolo-redirecionamentos.confirm.redirect',
+  'rait.screens.protocolo-desistencias.confirm.withdraw',
+  'rait.screens.assinatura-caseId.confirm.sign',
+  'rait.screens.assinatura-caseId.confirm.return_draft',
+  'rait.screens.assinatura-caseId.confirm.declare_impediment',
+  'rait.screens.autoridade-provimentos.confirm.appeal',
+  'rait.screens.autoridade-provimentos.confirm.waive',
+  'rait.screens.colegiado-orgao-distribuicao.confirm.open',
+  'rait.screens.colegiado-orgao-distribuicao.confirm.draw',
+  'rait.screens.colegiado-orgao-distribuicao.confirm.approve',
+  'rait.screens.colegiado-orgao-distribuicao-loteId.confirm.approve',
+  'rait.screens.colegiado-orgao-relatoria.confirm.accept',
+  'rait.screens.colegiado-orgao-relatoria.confirm.impede',
+  'rait.screens.colegiado-orgao-relatoria-caseId-voto.confirm.register',
+  'rait.screens.colegiado-orgao-pauta.confirm.close',
+  'rait.screens.colegiado-orgao-sessoes-id.confirm.open',
+  'rait.screens.colegiado-orgao-sessoes-id.confirm.adjourn',
+  'rait.screens.colegiado-orgao-sessoes-id.confirm.vote',
+  'rait.screens.colegiado-orgao-sessoes-id.confirm.casting_vote',
+  'rait.screens.colegiado-orgao-sessoes-id.confirm.view_request',
+  'rait.screens.colegiado-orgao-sessoes-id.confirm.proclaim',
+  'rait.screens.colegiado-orgao-sessoes-id-banca.confirm.confirm',
+  'rait.screens.colegiado-orgao-sessoes-id-banca.confirm.summon_substitute',
+  'rait.screens.colegiado-orgao-sessoes-id-ata.confirm.generate',
+  'rait.screens.colegiado-orgao-sessoes-id-ata.confirm.sign',
+  'rait.screens.colegiado-orgao-sessoes-id-ata.confirm.publish',
+  'rait.screens.colegiado-orgao-vistas.confirm.register_view_vote',
+  'rait.screens.colegiado-orgao-extraordinaria.confirm.convene',
+  'rait.screens.gestao-radar-caseId.confirm.reassign',
+  'rait.screens.gestao-incidentes.confirm.declare-extinction',
+] as const;
+
+describe('C-2B-82 — chaves (P) do §9.2 existem com texto não vazio', () => {
+  it('dado a lista de chaves (P) quando lida então nenhum namespace novo (só rait.common/rait.screens)', () => {
+    for (const key of [...NEW_COMMON_KEYS, ...CONFIRM_KEYS]) {
+      expect(
+        key.startsWith('rait.common.') || key.startsWith('rait.screens.'),
+      ).toBe(true);
+    }
+  });
+
+  [...NEW_COMMON_KEYS, ...CONFIRM_KEYS].forEach((key) => {
+    it(`dado a chave ${key} quando lida em readAppCatalog() então existe com texto não vazio`, () => {
+      const app = readAppCatalog();
+      expect(Object.prototype.hasOwnProperty.call(app, key), key).toBe(true);
+      expect((app[key] ?? '').length, key).toBeGreaterThan(0);
+    });
+  });
+});
+
+describe('C-2B-82 — semente intacta (glossário §2.2) [negativo]', () => {
+  it('dado readSeedCatalog() quando comparado a readAppCatalog() então nenhuma chave da semente foi renomeada ou removida', () => {
+    const seed = readSeedCatalog();
+    const app = readAppCatalog();
+    for (const [key, value] of Object.entries(seed)) {
+      expect(app[key], `chave da semente ausente ou alterada: ${key}`).toBe(
+        value,
+      );
+    }
+  });
+});
+
 describe('C-2A-55 — nenhum literal estático dos 9 namespaces de token', () => {
   const forbidden =
     /['"`]rait\.(caseState|sessionState|infractionState|infractionSubstate|riskFlag|memberStatus|orgState|closureMotive|timer)\./;

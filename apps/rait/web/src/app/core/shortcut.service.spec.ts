@@ -3,9 +3,12 @@
 // esses arquivos de produção ainda não existem (TASK-0006).
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { describe, expect, it, vi } from 'vitest';
+import { ROLE_PERMISSIONS_FIXTURE } from '../../testing/policy.fixture';
 import { createSessionStub } from '../../testing/session.stub';
 import { createRaitRouterHarness } from '../../testing/router-harness';
+import { createStynxSessionStub } from '../../testing/stynx-session.stub';
 // Produção (TASK-0006): ainda não existe.
 import { ShortcutService } from './shortcut.service';
 import { RaitSessionFacade } from './session.facade';
@@ -204,6 +207,14 @@ describe('C-2A-45 — atalhos registrados pelo shell', () => {
       providers: [
         provideRouter(RAIT_ROUTES),
         { provide: RaitSessionFacade, useValue: session },
+        {
+          provide: StynxSessionService,
+          useValue: createStynxSessionStub({
+            active: true,
+            permissions: [...ROLE_PERMISSIONS_FIXTURE['rait-analyst']],
+            claims: { roles: ['rait-analyst'] },
+          }),
+        },
       ],
     });
     const fixture = TestBed.createComponent(RaitShellComponent);

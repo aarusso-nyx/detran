@@ -200,14 +200,17 @@ describe('C-2A-10 — FEATURE_MOUNTS e ownsFirstSegment', () => {
   });
 });
 
-describe('C-2A-11 — página sem componente real renderiza o placeholder', () => {
+describe('C-2A-11 / C-2B-63 — página L0 (sem página real nesta rodada) renderiza o placeholder', () => {
+  // Atualização de C-2A-11 (CTG-0002b.md §8, "Atualização de C-2A-11"): com o CTG-0002b, as
+  // rotas L1/L2 passam a ter página real (C-2B-61/62) — o placeholder só continua para as 13
+  // rotas L0 do manifesto (M13). É o mesmo `it`, restrito por `level === 'L0'`.
   const placeholderEntries = RAIT_ROUTE_MANIFEST_FIXTURE.filter(
-    (entry) =>
-      entry.kind === 'page' &&
-      entry.path !== '' &&
-      entry.path !== 'sem-permissao' &&
-      entry.path !== 'auth/callback',
+    (entry) => entry.kind === 'page' && entry.level === 'L0',
   );
+
+  it('dado o manifesto quando filtradas as rotas L0 então são 13', () => {
+    expect(placeholderEntries).toHaveLength(13);
+  });
 
   placeholderEntries.forEach((entry) => {
     it(`dado a rota "${entry.path}" ativada com o papel mínimo quando renderizada então rait-placeholder-page com data-screen="${entry.screen ?? ''}"`, async () => {
