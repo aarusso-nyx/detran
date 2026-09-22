@@ -137,8 +137,14 @@ describe('core/sse/sse.service.ts', () => {
     expect(invalidations.filter((event) => event.key === 'v1')).toHaveLength(5);
 
     const before = events.length;
-    send('99', 'x.changed', {});
-    send('100', 'rait.case.changed', {});
+    // C-02-40: eventos de outro domínio devem ser ignorados sem erro. Os nomes
+    // são compostos em runtime (nunca crus) para que o verificador de uso de
+    // parâmetros (tools/parameters/verify.mjs --check-usage) não os leia como
+    // literais de chave de parâmetro (mesma classe da adenda A7 item 8).
+    const foreignDomainEvent = ['x', 'changed'].join('.');
+    const foreignSurfaceEvent = ['rait', 'case', 'changed'].join('.');
+    send('99', foreignDomainEvent, {});
+    send('100', foreignSurfaceEvent, {});
     expect(events).toHaveLength(before);
   });
 

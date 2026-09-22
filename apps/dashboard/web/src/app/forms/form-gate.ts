@@ -47,3 +47,20 @@ export interface FormGate {
 
 /** sha-256 hex = 64 dígitos hex (OD-D16-011); usado por `DASH.DUTY_EVIDENCE_HASH_INVALID`. */
 export const SHA256_HEX = /^[0-9a-fA-F]{64}$/;
+
+// OD-D16-008: os 6 tokens, mesma ordem de `shared/models.ts` `PURPOSE_TOKENS` — duplicado
+// literalmente (fronteiras disjuntas de §14.2); igualdade provada pelo Inspector em
+// `schemas-matrix.spec.ts` (C-02-93). Vivem em `form-gate.ts` (a folha comum) porque
+// `exportar.schema.ts` e `finalidade-n2.schema.ts` precisam do mesmo token e nenhum schema
+// pode importar outro (§14.2 regra 1, C-02-83); `finalidade-n2.schema.ts` os reexporta, pois
+// o contrato §11 e o critério C-02-88 os endereçam por `finalidade-n2`.
+export const PURPOSE_TOKENS = [
+  'supervisao',
+  'auditoria',
+  'apuracao',
+  'resposta_ao_titular',
+  'estatistica',
+  'suporte',
+] as const;
+
+export type PurposeToken = (typeof PURPOSE_TOKENS)[number];
