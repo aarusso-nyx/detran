@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1924000,
-  "estimated_output_total": 405000,
+  "estimated_input_total": 1989000,
+  "estimated_output_total": 411500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte; workers Opus/Sonnet por subagentes nativos).",
   "entries": [
     {
@@ -206,6 +206,22 @@
       "input_tokens": 28000,
       "output_tokens": 7000,
       "note": "110 083 brutos, 31 chamadas, 4 min. Os dois achados + as duas ocorrências irmãs de 'PR a abrir'."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 45000,
+      "output_tokens": 1500,
+      "note": "ciclo 2 REVIEW (1 achado: 'critérios de supressão provados' excedia o que os specs provam)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007-iteration-4",
+      "model": "sonnet/low",
+      "input_tokens": 20000,
+      "output_tokens": 5000,
+      "note": "79 343 brutos, 14 chamadas, 3,4 min. Redação de P-09 restrita à apresentação provada."
     }
   ]
 }

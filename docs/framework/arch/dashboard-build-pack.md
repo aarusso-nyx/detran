@@ -117,10 +117,12 @@ Executado com estas diferenças em relação ao texto abaixo: as 18 telas sobem 
 CTG-0002; nenhum `<feature>.client.ts`, nenhum `HttpClient` em `features/`; páginas renderizam
 `dashboard.states.unavailable_in_version`); **P-09 (D-13) não é placeholder** (ao contrário do texto
 original deste WP): é rota real (`/monitoramento/sinistros`) com o componente de célula suprimida
-(`SuppressedCell`) e os critérios de supressão transcritos na ficha `IU-DASH-D-13`, **preparados e
-provados em teste de componente**; a supressão primária **e** secundária sobre dado real, com o
-teste ponta a ponta, pertence à subida a **L2** (facades e `<feature>.client.ts` sobre os clientes
-gerados de `BP-DASH-MONITOR-001`, dados reais nas 18 telas), já registrada como frente em
+(`SuppressedCell`) e a apresentação acessível da célula já marcada como suprimida na ficha
+`IU-DASH-D-13` — texto com o limiar, `data-suppressed`, nunca `0` nem `—` isolados, nota de rodapé
+por `aria-describedby` — **provados em teste de componente**; a supressão primária **e**
+secundária propriamente dita — quais células são suprimidas, sobre dado real — e seu teste ponta a
+ponta pertencem à subida a **L2** (facades e `<feature>.client.ts` sobre os clientes gerados de
+`BP-DASH-MONITOR-001`, dados reais nas 18 telas), já registrada como frente em
 `docs/meta/knowledge-base/backlog.md`. A decisão OD-D02/DT-029 (`dashboard.cell_threshold=10`) é o
 que destravou a tela. Gráficos: nenhuma biblioteca — SVG inline nos componentes
 de `shared/` (`DistributionChart`; M8 do plano da rodada), não uma decisão em aberto. Gates reais
