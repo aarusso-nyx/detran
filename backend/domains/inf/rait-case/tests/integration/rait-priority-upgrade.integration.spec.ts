@@ -273,6 +273,12 @@ function normalizedDump(output: string): string {
     .filter((line) => !/^-- Dumped (?:from database|by pg_dump)/.test(line));
   const normalized: string[] = [];
   for (let index = 0; index < lines.length; index += 1) {
+    // PostgreSQL sequences are deliberately non-transactional: nextval()
+    // remains advanced after the fault-injection transactions below abort.
+    // pg_dump emits that volatile state as setval(), even though no table row
+    // changed. Keep the data fingerprint about persisted rows, which are still
+    // compared byte-for-byte in every COPY block and by legacyRows().
+    if (/^SELECT pg_catalog\.setval\(/.test(lines[index])) continue;
     normalized.push(lines[index]);
     if (!/^COPY .* FROM stdin;$/.test(lines[index])) continue;
     const rows: string[] = [];
@@ -283,6 +289,26 @@ function normalizedDump(output: string): string {
   }
   return normalized.join('\n');
 }
+
+describe('upgrade data fingerprint', () => {
+  it('ignora somente estado de sequência não transacional e conserva bytes das linhas', () => {
+    const dump = (row: string, sequence: number) =>
+      [
+        'COPY inf.rait_case (id) FROM stdin;',
+        row,
+        '\\.',
+        `SELECT pg_catalog.setval('inf.rait_case_seq', ${sequence}, true);`,
+        '',
+      ].join('\n');
+
+    expect(normalizedDump(dump('case-1', 1))).toBe(
+      normalizedDump(dump('case-1', 99)),
+    );
+    expect(normalizedDump(dump('case-1', 1))).not.toBe(
+      normalizedDump(dump('case-2', 1)),
+    );
+  });
+});
 
 async function dump(
   kind: '--schema-only' | '--data-only',
