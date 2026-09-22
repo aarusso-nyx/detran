@@ -3,11 +3,14 @@
   "round": "R-0013",
   "coupled_task_group": "CTG-0003",
   "role": "engineer",
-  "commits": ["b8aa4ddcd95c1037cb75a45dd65c09d087dc3ca7"],
+  "commits": [
+    "b8aa4ddcd95c1037cb75a45dd65c09d087dc3ca7",
+    "45ce9638c619cf10ddfb9947035e37eeb53c9f3c"
+  ],
   "artifacts": [
     {
       "path": "docs/framework/blueprints/BP-OPS-PROVISIONING-001.json",
-      "sha256": "d69b89cb05b138c5417b6cfe4784273f1d068fede6dd643403a21e5c314f4ac6"
+      "sha256": "a000d19d0e307a2303ca60295e3ffcc514801b018c0d3b79821c19c2fcda1b35"
     },
     {
       "path": "docs/meta/adr/ADR-0028-provisionamento-operacional-offline.md",
@@ -15,7 +18,7 @@
     },
     {
       "path": "backend/database/ddl/21-ops-provisioning.sql",
-      "sha256": "b94dfae5bd49d6671c407422c98cce771bfafcc297731266daacae0c123f5fe4"
+      "sha256": "99fc04d578697571f6b32f009ccdcb12d77865465ec2c5d13aa1b2c23408d584"
     },
     {
       "path": "backend/domains/ops/provisioning/src/handwritten/provisioning.engine.ts",
@@ -50,12 +53,20 @@
       "sha256": "2a33171cf099b357374509af145bc14bf130ff6af78c3990bdfd363258ba3862"
     },
     {
+      "path": "work/rounds/R-0013/reviews/delivery-review-CTG-0003-cycle-5-ci-isolation-final.json",
+      "sha256": "54c71b6e76923ddb8ecd95b83bddc0a0187ee2f9d93af20fccff3a676e79643c"
+    },
+    {
+      "path": "work/rounds/R-0013/reviews/delivery-review-CTG-0003-cycle-5-ci-isolation-final.md",
+      "sha256": "17367b3637f7715faae12c3c53beb9694e32eaa4b1b5caf7cd8379218f1b4a05"
+    },
+    {
       "path": "work/rounds/R-0013/plan.md",
-      "sha256": "f698efcaaf3e0311ad269d2aa393c9a5941a9a603e3cc7bca81584b3a9a2c75e"
+      "sha256": "690d2b9ff2a62860f9b265ec53f8e6473135584844f5b23c39efef156dacda83"
     },
     {
       "path": "work/rounds/R-0013/budget.json",
-      "sha256": "94189353779199b07a100c46ae3a66ff953288852f86b0dc115d1b9ca953ac18"
+      "sha256": "e164ed98c19d62c488bad987bcfafa1144a7be4b7d01dcad7678bfdf017c4d34"
     },
     {
       "path": "work/rounds/R-0013/tasks/TASK-0007.json",
@@ -74,12 +85,12 @@
     {
       "name": "pnpm check",
       "result": "pass",
-      "note": "Post-origin/main-merge candidate passed formatting, orchestration, knowledge-base 738, blueprint, contracts 160 operations/63 clients, 57 project typechecks, generated consistency, RLS 245/2, 966 handlers, PEC 611 specs, UI, portal 1314 tests and architecture gates"
+      "note": "Exact post-origin/main-merge candidate passed formatting, orchestration, knowledge-base 756, blueprint, contracts 160 operations/63 clients, 58 project typechecks, generated consistency, RLS 245/2, 966 handlers, PEC 611 specs, UI, portal 1314 tests, RAIT web 1807 tests and both frontend builds"
     },
     {
       "name": "pnpm backend:test:ci",
       "result": "pass",
-      "note": "Exact CI environment passed unit, 694 provisioning integration cases, 10 provisioning domain e2e cases, HTTP/policy suites and upgrade 18/18"
+      "note": "CI-equivalent backend kernel before the final unrelated upstream merge passed unit, 694 provisioning integration cases, 10 provisioning domain e2e cases, HTTP/policy suites, upgrade 18/18 and SENATRAN adapter 33/4/10; post-merge clean-resolution unit repeated 7/7"
     },
     {
       "name": "focal provisioning and shared-policy gates",
@@ -89,7 +100,7 @@
     {
       "name": "pnpm devai:doctor and evidence verify",
       "result": "pass",
-      "note": "Stable pre-merge candidate passed with DEVAI 1.4.5; origin/main integration adopted the governed DEVAI 1.5.3 dependency and its current valid chain head 95f0986ce3ff5211770e88e0ba7f3ed25d88b26916d3119ce61b08e627220d25 for the final record"
+      "note": "Exact candidate passed with governed DEVAI 1.5.3; doctor and evidence verification confirmed the current valid chain head 4df66693bcb7b9c4fb8a302bca0e93cccc2342dcbafce3d4e63568007412bc1a for the final record"
     },
     {
       "name": "git diff --check",
@@ -99,6 +110,11 @@
       "name": "delivery-review cycle 4 final extraordinary (same-family CODEX)",
       "result": "pass",
       "note": "Owner-authorized independent review; zero findings; 20/20 blocker reproductions, 65 policy negatives and F-001 through F-016 regression audit passed"
+    },
+    {
+      "name": "delivery-review cycle 5 clean-checkout isolation (same-family CODEX)",
+      "result": "pass",
+      "note": "Owner-authorized independent focal review; zero findings; 47 canonical outputs reproduced in memory, prior blueprint hash reconstructed and no production or test weakening"
     }
   ],
   "tasks": ["TASK-0007", "TASK-0008", "TASK-0009"],
