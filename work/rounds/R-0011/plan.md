@@ -535,7 +535,12 @@ rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 al
 
 ## Bloqueios
 
-(nenhum)
+(nenhum bloqueio aberto)
+
+- 2026-09-21 prompt-review-3 **FAIL por estrutura corrigível** (4 achados: descrições de TASK-0004/0005 desatualizadas
+  em relação a M16/M25; critério com `git diff`; `grep` sem caminho) — corrigido pelo maestro e reaberto em ciclo
+  restrito (prompt-review-4), desvio registrado como em R-0008/R-0009 (§10 do método: FAIL de estrutura ≠ FAIL por
+  contradição canônica).
 
 ## Triagem
 
