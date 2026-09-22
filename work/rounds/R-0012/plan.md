@@ -300,10 +300,12 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   teste de R-0007 que este PR não toca e que passa em `main` —; integrado `main` com R-0011 CTG-0001
   PR #83 e DEVAI 1.5.4 PR #84; evidência sequence 3); `audit observe` no sha exato
   (EV-a04b28c82c5b9527). Pré-condição de despacho de TASK-0014/0015/0016 satisfeita.
-- **CTG-0002b-2 mesclado**: PR #90 → `19b374614a1c5a18879394454a14e0b49a1e99e5` (2026-09-22; CI 7/7 após rerun de
-  `backend-kernel` — mesma falha intermitente de `rait-priority-upgrade` de R-0007 —; `main`
-  integrado com R-0013 PR #82, R-0011 PRs #87/#88, DEVAI 1.5.5 PR #89; evidência sequence 4);
-  `audit observe` no sha exato. Pré-condição de despacho de TASK-0017/0011/0012 satisfeita.
+- **CTG-0002b-2 — PR #90** (2026-09-22): CI 7/7 após rerun de `backend-kernel` (mesma falha
+  intermitente de `rait-priority-upgrade`, R-0007); o merge foi recusado porque `main` avançou
+  (DEVAI 1.5.6 PR #91; R-0007 PR #86) — `main` integrado por merge no branch, CI reexecutado;
+  merge e `audit observe` registrados abaixo quando ocorrerem. Pré-condição de despacho de
+  TASK-0017/0011 (specs e i18n, sem commits até o merge) considerada satisfeita pelo maestro com
+  o PR verde e a integração feita (desvio B5).
 - `devai round plan --scaffold` respondeu `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31);
   `devai round status --round R-0012` → `0 task(s)`; tarefas entram por `tasks/*.json`.
 
@@ -330,6 +332,11 @@ merged --limit 20`, `gh pr list --search orchestra/`):
 - **B4 (desvio registrado, 2026-09-22).** Delivery-review do CTG-0002b-2 chegou ao terceiro ciclo
   (1 REVIEW → 2 REVIEW residual → 3): o ciclo 2 apontou uma única ação (`claim-next`) que a
   iteração 5 do Inspector não desdobrou em três `it`. Mesma justificativa de B1/B3 (emenda 1 do Owner).
+
+- **B5 (desvio registrado, 2026-09-22).** TASK-0017/0011 (CTG-0002c: transcrição i18n e specs)
+  foram disparadas com o PR #90 aprovado e verde mas ainda não mesclado (merge recusado por
+  avanço de `main`; reexecução do CI em curso), porque escrevem só arquivos novos/JSON sem commit
+  até o merge. O `audit observe` do merge do CTG-0002b-2 é feito quando ocorrer.
 
 ## Triagem
 
