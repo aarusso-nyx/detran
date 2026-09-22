@@ -110,24 +110,25 @@ registro em `open-decisions-rait.md`, nos §4 dos build packs ou em `open-issues
 
 ## DASHBOARD (`dashboard.*`)
 
-| Chave                                        | Tipo | Default                                      | Status   | pend.   | legal | Decisão       | Consumidor                             |
-| -------------------------------------------- | ---- | -------------------------------------------- | -------- | ------- | ----- | ------------- | -------------------------------------- |
-| `dashboard.cell_threshold`                   | int  | 10 (supressão primária + secundária)         | vigente  | não     | não   | OD-D02/DT-029 | P-06, P-09, exportações                |
-| `dashboard.ack_sla`                          | json | N1 24h úteis, N2 8h, N3 2h, CRÍTICO imediato | vigente  | não     | não   | DT-030        | escalonamento                          |
-| `dashboard.stale_hide_multiplier`            | num  | 3 × latência aceitável                       | vigente  | não     | não   | OD-D06, H.54  | selo de frescor                        |
-| `dashboard.heartbeat_divisor`                | num  | 2                                            | vigente  | não     | não   | OD-D07, H.54  | `source_freshness`                     |
-| `dashboard.purposes_n2`                      | json | 6 finalidades                                | vigente  | não     | não   | OD-D08, H.54  | `LayerGate`                            |
-| `dashboard.export.approval_rows`             | int  | 5000                                         | vigente  | não     | não   | OD-D09, H.54  | `DASH.EXPORT_VOLUME_APPROVAL_REQUIRED` |
-| `dashboard.duty.IND-202.deadline`            | rule | último dia do mês                            | proposta | **sim** | não   | OD-D10        | calendário de deveres                  |
-| `dashboard.duty.annual_deadline`             | rule | 31/12 + preparação jan–fev                   | vigente  | não     | não   | DT-030        | IND-206/207                            |
-| `dashboard.transparency.audit_period`        | enum | monthly                                      | vigente  | não     | não   | DT-030        | IND-209                                |
-| `dashboard.pending_age_floor_days`           | int  | 60                                           | vigente  | não     | não   | DT-030        | IND-309/314                            |
-| `dashboard.sre.outbox_lag_minutes`           | int  | 15                                           | vigente  | não     | não   | OD-D04, H.54  | IND-401 (technical-admin)              |
-| `dashboard.sre.offline_batch_age_hours`      | int  | 24                                           | vigente  | não     | não   | OD-D04, H.54  | IND-402                                |
-| `dashboard.sre.adapter_p95_ms`               | int  | 2000                                         | vigente  | não     | não   | OD-D04, H.54  | IND-403                                |
-| `dashboard.sre.adapter_error_pct`            | %    | 5                                            | vigente  | não     | não   | OD-D04, H.54  | IND-403                                |
-| `dashboard.critical_extinction.notify_legal` | F    | true                                         | vigente  | não     | não   | OD-D11, H.54  | `CRITICO_EXTINCAO`                     |
-| `dashboard.origin_resources_enabled`         | F    | true                                         | vigente  | não     | não   | OD-D13, H.54  | D-14/D-16                              |
+| Chave                                         | Tipo | Default                                                                               | Status   | pend.   | legal | Decisão       | Consumidor                                                |
+| --------------------------------------------- | ---- | ------------------------------------------------------------------------------------- | -------- | ------- | ----- | ------------- | --------------------------------------------------------- |
+| `dashboard.cell_threshold`                    | int  | 10                                                                                    | vigente  | não     | não   | OD-D02/DT-029 | P-06, P-09, exportações (supressão primária e secundária) |
+| `dashboard.ack_sla`                           | json | `{"N1":"24h_uteis","N2":"8h_uteis","N3":"2h_uteis","CRITICO":"imediato"}`             | vigente  | não     | não   | DT-030        | escalonamento                                             |
+| `dashboard.stale_hide_multiplier`             | num  | 3                                                                                     | vigente  | não     | não   | OD-D06, H.54  | selo de frescor (× latência aceitável)                    |
+| `dashboard.heartbeat_divisor`                 | num  | 2                                                                                     | vigente  | não     | não   | OD-D07, H.54  | `source_freshness`                                        |
+| `dashboard.purposes_n2`                       | json | `["supervisao","auditoria","apuracao","resposta-ao-titular","estatistica","suporte"]` | vigente  | não     | não   | OD-D08, H.54  | `LayerGate` (forma normalizada por OD-D30)                |
+| `dashboard.export.approval_rows`              | int  | 5000                                                                                  | vigente  | não     | não   | OD-D09, H.54  | `DASH.EXPORT_VOLUME_APPROVAL_REQUIRED`                    |
+| `dashboard.duty.IND-202.deadline`             | rule | último dia do mês                                                                     | proposta | **sim** | não   | OD-D10        | calendário de deveres                                     |
+| `dashboard.duty.annual_deadline`              | rule | 31/12 + preparação jan–fev                                                            | vigente  | não     | não   | DT-030        | IND-206/207                                               |
+| `dashboard.transparency.audit_period`         | enum | monthly                                                                               | vigente  | não     | não   | DT-030        | IND-209                                                   |
+| `dashboard.pending_age_floor_days`            | int  | 60                                                                                    | vigente  | não     | não   | DT-030        | IND-309/314                                               |
+| `dashboard.sre.outbox_lag_minutes`            | int  | 15                                                                                    | vigente  | não     | não   | OD-D04, H.54  | IND-401 (technical-admin)                                 |
+| `dashboard.sre.offline_batch_age_hours`       | int  | 24                                                                                    | vigente  | não     | não   | OD-D04, H.54  | IND-402                                                   |
+| `dashboard.sre.adapter_p95_ms`                | int  | 2000                                                                                  | vigente  | não     | não   | OD-D04, H.54  | IND-403                                                   |
+| `dashboard.sre.adapter_error_pct`             | %    | 5                                                                                     | vigente  | não     | não   | OD-D04, H.54  | IND-403                                                   |
+| `dashboard.critical_extinction.notify_legal`  | F    | true                                                                                  | vigente  | não     | não   | OD-D11, H.54  | `CRITICO_EXTINCAO`                                        |
+| `dashboard.origin_resources_enabled`          | F    | true                                                                                  | vigente  | não     | não   | OD-D13, H.54  | D-14/D-16                                                 |
+| `dashboard.source.acceptable_latency_minutes` | int  | —                                                                                     | proposta | **sim** | não   | DT-030        | `source` (faixas por OD-D34)                              |
 
 ## Namespaces i18n (allowlist do verificador)
 
