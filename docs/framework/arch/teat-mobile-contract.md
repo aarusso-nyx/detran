@@ -208,16 +208,18 @@ interface GuardContext {
   bootstrap: BootstrapSnapshot | undefined;
   provisioning: ProvisioningReadinessResponse | undefined;
 }
+export const TEAT_GUARD_CONTEXT: InjectionToken<GuardContext>;
 ```
 
 `authGuard` injeta a sessão STYNX e lê `principal`; `tenantGuard` lê `tenantId`;
 `roleGuard` lê `principal.roles` e `allowedRoles`; `readinessGuard` lê
 `bootstrap`, `provisioning`, `blockers` e `validUntil`; `shiftGuard` lê
-`bootstrap.context.activeShift`. Cada `CanMatchFn` recebe `GuardContext` via
-providers/injeção e retorna `boolean | UrlTree`: `true` somente quando sua própria
-prova é positiva; ausência de fixture/estado devolve `false` ou `UrlTree` de
-negação. Nenhum guarda consulta `localStorage`, assume `true` ou recupera estado de
-outro guarda.
+`bootstrap.context.activeShift`. `TEAT_GUARD_CONTEXT` é exportado por
+`core/bootstrap.store.ts` como `InjectionToken<GuardContext>` e cada um dos cinco
+`CanMatchFn` o lê com `inject(TEAT_GUARD_CONTEXT)`. Cada guarda retorna
+`boolean | UrlTree`: `true` somente quando sua própria prova é positiva; ausência
+de fixture/estado devolve `false` ou `UrlTree` de negação. Nenhum guarda consulta
+`localStorage`, assume `true` ou recupera estado de outro guarda.
 
 Fixtures públicas obrigatórias (funções retornam os tipos acima, não objetos
 parciais/cast): `fixtureAuthenticatedFieldAgent()`, `fixtureNoPrincipal()`,
@@ -231,12 +233,49 @@ contrato com `ready: true`, blockers vazios e contagens não negativas. As varia
 blocked preservam o mesmo shape e inserem um blocker canônico, logo são adequadas
 para prova positiva e negativa sem inventar API.
 
+O Inspector instala cada fixture exclusivamente pelo provider Angular
+`{ provide: TEAT_GUARD_CONTEXT, useValue: fixture...() }`; testes BOAT usam
+`{ provide: TEAT_BOAT_EXTENSION, useValue: fixtureBoatExtension(...) }`. Produção
+fornece esses mesmos tokens por factory de runtime; não existe token, flag ou ramo
+`TEST_*` em produção.
+
 #### Oito clients de backend unificado
 
 Todos retornam `Promise<T>` e rejeitam com o `StynxError` recebido. `headers` é
 `Readonly<{ 'Idempotency-Key'?: string; 'If-Match'?: string }>`; quando a linha diz
 ambos, ambos são obrigatórios. Caminho `source_pending` significa que o client deve
 expor `unsupported(): Promise<never>` e rejeitar, não construir uma URL por analogia.
+Cada um dos oito clients é classe exportada com construtor exato
+`constructor(private readonly http: HttpClient)`; todo método faz a chamada
+observável de `HttpClient` e retorna `firstValueFrom(...)`, nunca `Observable`,
+stub ou resultado síncrono.
+
+```ts
+declare class MobileBootstrapClient {
+  constructor(http: HttpClient);
+}
+declare class OpsSnapshotsClient {
+  constructor(http: HttpClient);
+}
+declare class OfflineSyncClient {
+  constructor(http: HttpClient);
+}
+declare class AitClient {
+  constructor(http: HttpClient);
+}
+declare class MeasuresClient {
+  constructor(http: HttpClient);
+}
+declare class AlcoholClient {
+  constructor(http: HttpClient);
+}
+declare class NormativeClient {
+  constructor(http: HttpClient);
+}
+declare class ProvisioningClient {
+  constructor(http: HttpClient);
+}
+```
 
 | client                  | método público                                                                                                                                     | verbo e path literal                                                                                                                                                                                        | input/headers                                                                                                                                                                                | retorno/erro                                                                                                                                                                                             |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -287,14 +326,20 @@ type QueueReceipt = Readonly<{
   errorMessage?: string;
 }>;
 
-interface LocalActStore {
+declare class LocalActStore {
+  constructor(store: MobileEncryptedStorePort);
   put(act: LocalAct): Promise<void>;
   get(localEntityId: string): Promise<LocalAct | undefined>;
   pending(): Promise<readonly LocalAct[]>;
   applyReceipts(receipts: readonly QueueReceipt[]): Promise<void>;
   receiptByIdempotency(key: string): Promise<QueueReceipt | undefined>;
 }
-interface SyncWorker {
+declare class SyncWorker {
+  constructor(
+    store: LocalActStore,
+    client: OfflineSyncClient,
+    bootstrap: BootstrapStore,
+  );
   submitNext(): Promise<readonly QueueReceipt[]>;
   recoverReceipt(
     tenantId: string,
@@ -307,7 +352,13 @@ type InstalledNormativePackage = Readonly<{
   validUntil: string;
   content: unknown;
 }>;
-interface NormativePackageService {
+declare class NormativePackageService {
+  constructor(
+    store: MobileEncryptedStorePort,
+    client: NormativeClient,
+    provisioning: ProvisioningClient,
+    bootstrap: BootstrapStore,
+  );
   install(id: string): Promise<InstalledNormativePackage>;
   usable(now: string): Promise<InstalledNormativePackage | undefined>;
   revalidate(now: string): Promise<'usable' | 'warning-expired' | 'blocked'>;
@@ -346,15 +397,15 @@ type DispatchResult =
         | 'condition-unsatisfied'
         | 'unregistered-destination';
     }>;
-interface TransitionDispatcher {
-  dispatchTransition(
-    input: Readonly<{
-      from: string;
-      action: string;
-      conditionSatisfied: boolean;
-    }>,
-  ): Promise<DispatchResult>;
-}
+declare function dispatchTransition(
+  input: Readonly<{
+    from: string;
+    action: string;
+    conditionSatisfied: boolean;
+  }>,
+  router: Router,
+  location: Location,
+): Promise<DispatchResult>;
 type DiagnosticEntry = Readonly<{
   code: string;
   status?: number;
@@ -362,7 +413,7 @@ type DiagnosticEntry = Readonly<{
   source: 'route' | 'action';
   occurredAt: string;
 }>;
-interface MobileErrorBoundary {
+declare class FieldShell {
   capture(error: unknown, source: DiagnosticEntry['source']): DiagnosticEntry;
   diagnostics(): readonly DiagnosticEntry[];
 }
@@ -389,12 +440,16 @@ type PrintResult = Readonly<{
   receiptHash?: string;
   failureReason?: string;
 }>;
-interface MobilePrinterPort {
+abstract class MobilePrinterPort {
+  abstract print(aitId: string): Promise<PrintResult>;
+}
+declare class PrinterDialog {
+  constructor(printer: MobilePrinterPort, ait: AitClient);
   print(aitId: string): Promise<PrintResult>;
 }
 type BodycamState = 'recording' | 'paused-exception' | 'failure';
-interface BodycamIndicator {
-  state(): BodycamState;
+declare class BodycamIndicator {
+  readonly state: InputSignal<BodycamState>;
 }
 interface TeatI18n {
   translate(
@@ -406,13 +461,17 @@ interface BoatExtensionPort {
   installed(): boolean;
   load(route: string): Promise<unknown>;
 }
+export const TEAT_BOAT_EXTENSION: InjectionToken<BoatExtensionPort>;
 ```
 
+`BodycamIndicator` declara `readonly state = input.required<BodycamState>()`.
 `PrinterDialog` chama `MobilePrinterPort.print`, depois
 `AitClient.recordPrintEvent`; êxito e falha conservam o `aitId`/numeração e a
 falha produz `failure_reason`, sem criar outro AIT. `FixturePrinter` não satisfaz
-`MobilePrinterPort` de produção. `BodycamIndicator.state()` sempre retorna um dos
-três estados e não oferece método de ler conteúdo; esse conteúdo só usa a entrega
+`MobilePrinterPort` de produção: um double de Inspector a estende por subclass e
+retorna `PrintResult` sem token/hook de produção. O input `state` de
+`BodycamIndicator` sempre recebe um dos três estados e não oferece método de ler
+conteúdo; esse conteúdo só usa a entrega
 de custódia registrada. Cada módulo expõe `Routes` não vazio contendo exatamente
 as linhas de seu grupo do manifesto e cada página expõe componente standalone
 distinto. `TeatI18n.translate` rejeita chave fora dos namespaces autorizados e
@@ -591,8 +650,8 @@ ou qualquer path não listado. Mesmo um arquivo exigido para concluir uma featur
 As APIs §1.2 não autorizam arquivo adicional: `BootstrapStore` fica em
 `core/bootstrap.store.ts`; `GuardContext` nos cinco arquivos de guardas;
 `LocalActStore`, `SyncWorker` e `NormativePackageService` nos três paths da linha
-de persistência; `TransitionDispatcher` em `navigation/transitions.ts`;
-`MobileErrorBoundary` em `core/field-shell.component.ts`; `MobilePrinterPort` nos
+de persistência; `dispatchTransition` em `navigation/transitions.ts`; `FieldShell`
+em `core/field-shell.component.ts`; `MobilePrinterPort` nos
 shared; `BodycamIndicator` em core; `TeatI18n` em `core/i18n.service.ts`; e
 `BoatExtensionPort` em `features/sinistro/sinistro.routes.ts`. Portanto toda
 classe/interface pública necessária já pertence a path da allowlist.
