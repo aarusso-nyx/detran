@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1616000,
-  "estimated_output_total": 381000,
+  "estimated_input_total": 1826000,
+  "estimated_output_total": 443000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte). Janela 1 encerrada com ≈946 k únicos estimados de entrada.",
   "entries": [
     {
@@ -118,6 +118,22 @@
       "input_tokens": 150000,
       "output_tokens": 3000,
       "note": "PASS com 1 low (relatório da iteração final) — atendido."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-6+7",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 80000,
+      "output_tokens": 2000,
+      "note": "REVIEW (2: M8 it.todo; matriz por ação × papel) → PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007",
+      "model": "opus/high",
+      "input_tokens": 130000,
+      "output_tokens": 60000,
+      "note": "509 184 brutos, 100 chamadas, 42 min."
     }
   ]
 }

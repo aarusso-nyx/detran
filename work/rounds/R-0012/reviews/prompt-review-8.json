@@ -1,0 +1,40 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0012/tasks/TASK-0008.json",
+      "line": 11,
+      "claim": "A tarefa autoriza alterar `core/rait-shell.component.spec.ts`, mas seus `target_modules` não incluem `MOD-rait-web-tests-core`, o lock declarado para specs de core.",
+      "fix": "Adicionar `MOD-rait-web-tests-core` aos `target_modules` de TASK-0008 e à tabela de tarefas do plano."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0012/tasks/TASK-0009.json",
+      "line": 11,
+      "claim": "Os locks cobrem somente data/shared/packages-ui, embora o prompt autorize escrita em `core/shell-search.ts`, `main.ts` e `i18n/rait.pt-BR.json`; a fronteira declarada não cobre todos os módulos tocados.",
+      "fix": "Declarar locks explícitos para core e i18n, ou restringir o prompt aos módulos já declarados; refletir a mesma fronteira no plano."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0012/tasks/TASK-0008.json",
+      "line": 25,
+      "claim": "O único acceptance command é `typecheck`, sem resultado esperado, enquanto o prompt exige specs que podem falhar por símbolos inexistentes e o contrato reserva C-2B-91 para a entrega final do Engineer.",
+      "fix": "Substituir por critérios de Inspector verificáveis: arquivos/mapa de critérios, lint/format e execução de teste com falhas somente pelos símbolos listados; deixar `typecheck/test/build` verdes como aceitação de TASK-0009."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "work/rounds/R-0012/prompts/TASK-0008.md",
+      "line": 20,
+      "claim": "O prompt afirma que CTG-0002a já está em `main`, mas o plano ainda o registra pendente e o material do maestro condiciona o disparo deste par ao merge de PR #81.",
+      "fix": "Trocar a afirmação por uma pré-condição de despacho: o maestro só dispara TASK-0008/TASK-0009 após registrar o SHA do merge de CTG-0002a; aplicar a mesma correção em TASK-0009 linhas 18-20."
+    }
+  ],
+  "notes": []
+}

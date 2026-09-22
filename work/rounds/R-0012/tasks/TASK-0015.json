@@ -1,25 +1,19 @@
 {
   "schemaVersion": "2.0.0",
-  "id": "TASK-0009",
+  "id": "TASK-0015",
   "round_id": "R-0012",
   "status": "queued",
   "discipline": "engineer",
   "discipline_specialization": "engineer-frontend",
-  "title": "Implementar data/ e shared/ de apps/rait/web (CTG-0002b-1) até os testes passarem",
-  "description": "Modelos, 8 clientes, ETag store, list-query, 11 facades + suporte, busca do shell, 26 componentes de shared/; packages/ui só por adenda.",
+  "title": "Implementar features/<modulo>/pages/* e rotas por módulo (CTG-0002b-2) até os testes passarem",
+  "description": "50 páginas por nível M13 sobre facades e componentes do CTG-0002b-1, rotas por módulo, CaseLayoutPage; comandos todo M8.",
   "lifecycle": "supported",
-  "target_modules": [
-    "MOD-rait-web-data",
-    "MOD-rait-web-shared",
-    "MOD-rait-web-core-shell-search",
-    "MOD-rait-web-i18n",
-    "MOD-packages-ui"
-  ],
+  "target_modules": ["MOD-rait-web-features"],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0002b-1",
+  "coupled_task_group": "CTG-0002b-2",
   "coupled_pipeline_position": "engineer",
-  "upstream_task_id": "TASK-0008",
+  "upstream_task_id": "TASK-0014",
   "db_isolation": "none",
   "iteration_count": 0,
   "max_iterations": 2,
@@ -27,7 +21,7 @@
   "tags": ["wp-f", "engineer"],
   "branch": "orchestra/rait-web",
   "worktree_id": "WT-rait-web",
-  "prompt_composition_id": "PC-08e701d33a123eb5",
+  "prompt_composition_id": "PC-0000000000000000",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/rait-web", "lint"],
     ["pnpm", "--filter", "@detran/rait-web", "typecheck"],
@@ -45,7 +39,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5"
     },
-    "prompt_composition_id": "PC-08e701d33a123eb5",
+    "prompt_composition_id": "PC-0000000000000000",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

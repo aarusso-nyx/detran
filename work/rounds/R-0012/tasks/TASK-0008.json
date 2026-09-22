@@ -5,13 +5,17 @@
   "status": "queued",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
-  "title": "Codificar os critérios do CTG-0002b: componentes, facades, clientes e páginas",
-  "description": "Specs TestBed dos 22 componentes (estados, a11y, teclado), facades (cache/invalidação por SSE, it.todo dos comandos com OD), clientes com HttpTestingController e páginas L1/L2 por rota.",
+  "title": "Codificar os critérios do CTG-0002b-1: camada de dados, facades e 26 componentes compartilhados",
+  "description": "Specs com HttpTestingController dos 8 clientes (98 GET, ETag), facades (cache, invalidação SSE, it.todo dos 64 comandos com OD), 26 componentes de shared/ (estados, a11y, teclado), busca do shell; contracts/CTG-0002b.md C-2B-01…60, 84…87. Aceitação do Inspector: lint e format:check verdes; test executa com falhas somente por símbolos ainda não implementados (listados no relatório); typecheck/test/build verdes são aceitação de TASK-0009.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-rait-web-tests-shared"],
+  "target_modules": [
+    "MOD-rait-web-tests-data",
+    "MOD-rait-web-tests-shared",
+    "MOD-rait-web-tests-core"
+  ],
   "target_substrates": ["F2"],
   "target_invariants": [],
-  "coupled_task_group": "CTG-0002b",
+  "coupled_task_group": "CTG-0002b-1",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0007",
   "db_isolation": "none",
@@ -21,9 +25,11 @@
   "tags": ["wp-f", "inspector"],
   "branch": "orchestra/rait-web",
   "worktree_id": "WT-rait-web",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-6ddec01ca481fb29",
   "acceptance_commands": [
-    ["pnpm", "--filter", "@detran/rait-web", "typecheck"]
+    ["pnpm", "--filter", "@detran/rait-web", "lint"],
+    ["pnpm", "format:check"],
+    ["pnpm", "--filter", "@detran/rait-web", "test"]
   ],
   "created_at": "2026-09-21T00:00:00.000Z",
   "executor": {
@@ -35,7 +41,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-0000000000000000",
+    "prompt_composition_id": "PC-6ddec01ca481fb29",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
