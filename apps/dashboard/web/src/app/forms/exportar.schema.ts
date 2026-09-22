@@ -3,7 +3,7 @@
 // a lista; o servidor decide (`DASH.EXPORT_FORMAT_NOT_OPEN`).
 import { z } from 'zod';
 import type { FormGate } from './form-gate.js';
-import { PURPOSE_TOKENS } from './form-gate.js';
+import { PURPOSE_TOKENS } from './finalidade-n2.schema.js';
 
 export const ExportarSchema = z.strictObject({
   scope: z.string().min(1),

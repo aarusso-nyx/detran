@@ -137,11 +137,8 @@ describe('core/sse/sse.service.ts', () => {
     expect(invalidations.filter((event) => event.key === 'v1')).toHaveLength(5);
 
     const before = events.length;
-    // Eventos de outro domínio são ignorados (C-02-40). Os nomes são compostos por `join`
-    // porque o gate `verify:parameter-catalogue` trata o literal `rait.case.changed` como
-    // candidato a chave de parâmetro (mesma razão dos demais sensores, `plan.md` A7 item 8).
-    send('99', ['x', 'changed'].join('.'), {});
-    send('100', ['rait', 'case', 'changed'].join('.'), {});
+    send('99', 'x.changed', {});
+    send('100', 'rait.case.changed', {});
     expect(events).toHaveLength(before);
   });
 

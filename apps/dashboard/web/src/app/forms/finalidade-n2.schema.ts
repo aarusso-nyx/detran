@@ -2,13 +2,20 @@
 // comando: registra a consulta pelo cabeçalho `X-Purpose` ([RN-DASH-171]).
 import { z } from 'zod';
 import type { FormGate } from './form-gate.js';
-import { PURPOSE_TOKENS } from './form-gate.js';
 
-// OD-D16-008: os tokens vivem em `./form-gate` (folha comum a este schema e a
-// `exportar.schema.ts`); reexportados aqui porque o contrato §11 e C-02-88 os endereçam por
-// `finalidade-n2`.
-export { PURPOSE_TOKENS };
-export type { PurposeToken } from './form-gate.js';
+// OD-D16-008: os 6 tokens, mesma ordem de `shared/models.ts` `PURPOSE_TOKENS` — duplicado
+// literalmente (fronteiras disjuntas de §14.2); igualdade provada pelo Inspector em
+// `schemas-matrix.spec.ts` (C-02-93).
+export const PURPOSE_TOKENS = [
+  'supervisao',
+  'auditoria',
+  'apuracao',
+  'resposta_ao_titular',
+  'estatistica',
+  'suporte',
+] as const;
+
+export type PurposeToken = (typeof PURPOSE_TOKENS)[number];
 
 export const FinalidadeN2Schema = z.strictObject({
   purpose: z.enum(PURPOSE_TOKENS),

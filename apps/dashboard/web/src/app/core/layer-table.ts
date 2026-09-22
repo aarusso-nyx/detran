@@ -1,7 +1,7 @@
 // Camadas de acesso do console — transcrição de policy.ts (linhas 1866-1921: `DASHBOARD_LAYER_RANK`,
 // `DASHBOARD_LAYER_BY_ROLE`, `dashboardLayerFor`, `dashboardLayerAllows`) e de roles.ts
 // (`canonicalRole`), enquanto OD-D16-006 não decide de onde o app lê a camada do usuário
-// (subpath export do pacote compartilhado do backend ou claim/endpoint de R-0011). Este arquivo é removido no
+// (subpath export de @detran/shared ou claim/endpoint de R-0011). Este arquivo é removido no
 // mesmo PR que fechar a OD-D16-006; o backend permanece a autoridade (`DASH.LAYER_FORBIDDEN`).
 import type { DashboardRoleCode } from '../app.route-manifest';
 
