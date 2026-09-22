@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2357000,
-  "estimated_output_total": 705500,
+  "estimated_input_total": 2442000,
+  "estimated_output_total": 708500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3.",
   "entries": [
     {
@@ -246,6 +246,22 @@
       "input_tokens": 78000,
       "output_tokens": 35000,
       "note": "Transcriber docs: build pack (OD-D14…D80), ADR-0020, route contract §7/§8, catálogo de parâmetros + generate, waves.md, README §10, backlog; brutos 313 k, 18 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 55000,
+      "output_tokens": 2000,
+      "note": "ciclo 1 REVIEW (1 high: papel no relatório de TASK-0006) + nota sobre o avanço de main; brutos 103.567."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 1000,
+      "note": "ciclo 2 restrito PASS (papel + integração de main, C-5-16 = 203); brutos 50.482."
     }
   ]
 }
