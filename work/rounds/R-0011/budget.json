@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 475000,
-  "estimated_output_total": 67000,
+  "estimated_input_total": 785000,
+  "estimated_output_total": 177000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte).",
   "entries": [
     {
@@ -30,6 +30,46 @@
       "input_tokens": 105000,
       "output_tokens": 30000,
       "note": "Architect: blueprint 20 entidades, DDL 19, apply.sh, contrato CTG-0001.md (1.386 linhas); brutos 404 k + 9 k (iteração A8), 86 chamadas de ferramenta, 47 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0011",
+      "model": "sonnet",
+      "input_tokens": 50000,
+      "output_tokens": 15000,
+      "note": "Inspector: 17 testes do gate (16 fixtures) + bloco DASHBOARD em check-lifecycle-vocabulary.ts; brutos 202 k, 54 chamadas, 11 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "model": "sonnet",
+      "input_tokens": 35000,
+      "output_tokens": 25000,
+      "note": "Inspector: 4 specs de integração, 9 unit, harness, fixtures de evento, seed 81; brutos 125 k, 26 min; + iteração restrita A10/A11."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "model": "sonnet",
+      "input_tokens": 75000,
+      "output_tokens": 20000,
+      "note": "Engineer: verify.mjs M6 (17/17), pnpm check, wiring, seed 80 (42+15), seed.sh; brutos 291 k, 88 chamadas, 15 min; + iteração restrita A12 (portal consumedEvents)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010",
+      "model": "opus",
+      "input_tokens": 90000,
+      "output_tokens": 35000,
+      "note": "Engineer: contrato TS + 8 projetores + projectors/index; unit 93/93, integração 107/107; brutos 353 k, 85 chamadas, 27 min."
+    },
+    {
+      "kind": "iterations",
+      "id": "A10…A16-restricted",
+      "model": "sonnet/opus",
+      "input_tokens": 60000,
+      "output_tokens": 15000,
+      "note": "Iterações restritas: TASK-0002 ×2 (A10/A11, A15/A16), TASK-0003 ×3 (A12, A13, A14), TASK-0011 ×1 (A14 teste), TASK-0010 ×1 (A15); brutos acumulados dos agentes ≈1,2 M."
     }
   ]
 }

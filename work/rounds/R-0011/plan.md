@@ -351,6 +351,52 @@ rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 al
   o gerador (`sensor-error` do contrato). Redação nova em `contracts/CTG-0001.md` §6 e no prompt de TASK-0002
   item 5: nenhum controller com método de rota, `operations` todos `[]`, sem `*Controller` exportado, sem
   `*.controller.ts` manuscrito, OpenAPI gerado sem operações.
+- **A10 (2026-09-21, relatório TASK-0002)** — o `src/index.ts` gerado re-exporta os 20 controllers vazios por
+  `export * from './controllers/<nome>.controller.js'` (igual a `crashes`); a sub-asserção de C-0001-06 "`src/index.ts`
+  não exporta símbolo terminado em `Controller`" contradiz o gerador e **cai**. C-0001-06 fica: nenhum controller com
+  método de rota, `operations` todos `[]`, OpenAPI sem `paths`, sem `*.controller.ts` manuscrito, sem
+  `commands.openapi.json`.
+- **A11 (2026-09-21, relatório TASK-0002 → OD-D26)** — `contracts/CTG-0001.md` §5.3 fixava `owner_role = 'ouvidor'`
+  nos alertas da trilha `irregularity` (IND-DASH-301); `ouvidor` não é código de `05-role-catalog.sql`. H.38 (OD-D01):
+  "ouvidor e financeiro recebem `dash-duty-owner`". Decisão: `owner_role = 'dash-duty-owner'` nessas fixtures;
+  OD-D26 fecha por esta adenda (TASK-0007 registra). `owner_role` continua texto com código de papel do catálogo.
+- **A12 (2026-09-21, relatório TASK-0003)** — o gate generalizado (M6; contrato §7.1.6: toda `*.projection.ts`
+  declara `consumedEvents` literal, mesmo sem leitura cruzada — ADR-0020 §2 "projector … declaring its source
+  events") expõe as cinco projeções do PORTAL (R-0009, `backend/domains/portal/projections/src/handwritten/
+{crash-view,exam-view,points-view,process-timeline,infraction-view}.projection.ts`), que declaram os eventos só
+  no cabeçalho `// Source events:` (e `PROCESS_TIMELINE_DOMAIN_EVENTS` num caso). Decisão: manter a regra e
+  **corrigir no mesmo PR** (plano §Riscos: "nunca lista de exceções silenciosa"): cada arquivo ganha
+  `export const consumedEvents = [...] as const` **transcrito do próprio cabeçalho** (tipos técnicos `type`, sem
+  mudar comportamento); `infraction-view` continua a única a ler `inf.*` (já autorizada por R-0009 A5(a)).
+  Desvio de lock registrado (edição aditiva em `portal/projections`, sem rodada ativa no PORTAL backend);
+  `pnpm --filter @detran/portal-projections test:unit|test:integration` provam a ausência de regressão.
+- **A13 (2026-09-21, iteração A12 de TASK-0003)** — vários `*.projection.ts` exportando o mesmo identificador
+  `consumedEvents` colidem em `index.ts` via `export *` (TS2308). Regra: o `index.ts` de um pacote **nunca** faz
+  `export *` de um arquivo `*.projection.ts`; reexporta por nome (`export { X, Y } from './x.projection.js'`) tudo o
+  que já exportava **exceto** `consumedEvents`, que fica export local do módulo (o gate lê o arquivo, não o índice).
+  Vale para `portal/projections/src/handwritten/index.ts` (A12) e para `dashboard/monitor/src/handwritten/index.ts`
+  (TASK-0010; o contrato §4.3 dizia "export * dos oito arquivos" — substituído por esta adenda).
+- **A14 (2026-09-21, relatório TASK-0010)** — `tools/parameters/verify.mjs --check-usage` (R-0004/R-0009 A7) trata
+  os literais `rait.*`, `sync.*`, `dashboard.*` de `export const consumedEvents = [...] as const` como candidatos a
+  chave de parâmetro; o gate M6 exige exatamente esse literal (12 flags em `dashboard/monitor`, 14 em
+  `portal/projections`). Decisão: a declaração `consumedEvents` literal entra em `isSourceEventDeclaration`
+  (mesmo tratamento já dado à propriedade `sourceEvents`) — não é exclusão por diretório nem allowlist de chave
+  (método §4.17). Inspector (TASK-0011, iteração) escreve o caso em `tools/parameters/tests/verify-usage.test.mjs`
+  antes; Engineer (TASK-0003, iteração) implementa. Desvio de lock registrado (`tools/parameters`, rodada fechada).
+- **A15 (2026-09-21, relatório TASK-0010)** — o harness do Inspector (`tests/support/projectors-harness.ts`,
+  `FakeDashboardTx.splitTopLevel`) não separa predicados por `and`, o que forçou os projetores a filtrar
+  `tenant_id` em memória. Decisão: Inspector corrige o harness (iteração de TASK-0002); Engineer devolve
+  `tenant_id = $1 and <chave>` ao SQL de leitura dos projetores (iteração de TASK-0010). RLS continua a última linha.
+- **A16 (2026-09-21, relatório TASK-0010)** — `SOURCE_FRESHNESS_EVENT.data.sourceKey = 'rait.outbox'` colide com a
+  linha semeada `…81000401`; o `afterAll` do replay apaga a linha do seed e `seeds.integration.spec.ts` fica vermelho
+  na segunda execução consecutiva (método §4.16, idempotência). Decisão: a suíte de replay usa `source_key` próprio
+  (namespace `0082…`) e limpa por `source_key`; nenhuma fixture de evento toca linha do seed 81.
+- **A17 (2026-09-21, relatório TASK-0010)** — confirmações do Architect ao contrato §4.3/§4.1: (a) `stale_version`
+  decidido pelo ledger e **só entre eventos do mesmo `event_type`** (agregados distintos numa mesma célula não se
+  comparam; `dashboard.source` não tem `aggregate_version`); (b) `rait.case.received` (`body` ∈ jari|cetran) cria a
+  célula do relógio B (início de T-JUL-24M); relógio B sem instância conhecida → `ignored: not_relevant`; (c)
+  `rait.session.changed` fica em `consumedEvents` de `production` e é `not_relevant` até o CTG-0002 fixar a coluna
+  (OD-D27, TASK-0007). O contrato ganha estas linhas por edição do maestro.
 - **A6 (2026-09-21)** — CTG-0001 decomposto em 5 tarefas (0001; 0002 ∥ 0011; 0010 ∥ 0003) em vez de 3, para
   manter cada worker dentro de um lock e do orçamento de um Sonnet/Opus médio.
 

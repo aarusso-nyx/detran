@@ -1,16 +1,16 @@
 {
   "schemaVersion": "2.0.0",
   "round_id": "R-0011",
-  "status": "queued",
+  "status": "completed",
   "lifecycle": "supported",
   "target_substrates": ["F2"],
   "target_invariants": [],
   "db_isolation": "database",
-  "iteration_count": 0,
+  "iteration_count": 2,
   "max_iterations": 2,
   "branch": "orchestra/dashboard-backend",
   "worktree_id": "WT-dashboard-backend",
-  "prompt_composition_id": "PC-47fa7ec2eedff4bb",
+  "prompt_composition_id": "PC-dbae1675099ff15e",
   "created_at": "2026-09-21T00:00:00.000Z",
   "id": "TASK-0003",
   "discipline": "engineer",
@@ -30,7 +30,7 @@
   "priority": 3,
   "tags": ["wp-d1"],
   "acceptance_commands": [
-    ["node", "--test", "tools/domain-boundaries/tests/"],
+    ["node", "--test", "tools/domain-boundaries/tests/*.test.mjs"],
     ["pnpm", "verify:domain-boundaries"],
     ["bash", "backend/database/seed.sh"],
     ["pnpm", "format:check"]
@@ -44,7 +44,7 @@
       "mode": "exact",
       "registry_id": "claude-sonnet-5"
     },
-    "prompt_composition_id": "PC-47fa7ec2eedff4bb",
+    "prompt_composition_id": "PC-dbae1675099ff15e",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
