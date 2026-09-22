@@ -386,7 +386,11 @@ async function snapshot(
   `);
   return {
     schema: await dump('--schema-only', env),
-    data: await dump('--data-only', env),
+    // Compare application table contents through the same typed, per-table
+    // sensor used for the legacy preservation contract. Running a second
+    // pg_dump process while the concurrency probe releases its transaction
+    // introduced an observer race unrelated to committed table contents.
+    data: digest(JSON.stringify(await legacyRows(owner))),
     globals: digest(JSON.stringify(globals.rows[0].value)),
     roles: digest(
       JSON.stringify({
