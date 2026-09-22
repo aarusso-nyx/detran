@@ -664,6 +664,22 @@ describe('CTG-0001-C4-OD V3 pre-SQL static apply contract', () => {
       await rm(directory, { recursive: true, force: true });
     }
   });
+
+  it('dado instalador de tenant quando reaplica então cria ausentes e rejeita divergências sem recriar gatilhos válidos', async () => {
+    const source = await readFile(
+      join(databaseDir, 'ddl/11-auth-functions.sql'),
+      'utf8',
+    );
+    expect(source).toContain('IF item.trigger_oid IS NULL THEN');
+    expect(source).toContain(
+      "item.trigger_function <> 'auth.enforce_tenant_id()'::regprocedure::oid",
+    );
+    expect(source).toContain('item.trigger_when IS NOT NULL');
+    expect(source).toContain(
+      "RAISE EXCEPTION 'Existing enforce_tenant_id trigger differs on %.%'",
+    );
+    expect(source).not.toContain('DROP TRIGGER IF EXISTS enforce_tenant_id');
+  });
 });
 
 describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
@@ -712,6 +728,53 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
       if (!present.includes(name))
         throw new Error(`${name} is not yet supplied by TASK-0029`);
   }, 180_000);
+
+  it('dado gatilho tenant ausente, válido ou condicionado quando instala então cria, preserva OID ou rejeita divergência atomicamente', async () => {
+    const triggerState = async () =>
+      owner.query(
+        `SELECT trigger_catalog.oid, trigger_catalog.tgqual
+         FROM pg_trigger trigger_catalog
+         WHERE trigger_catalog.tgrelid = 'integration.inbox_receipt'::regclass
+           AND trigger_catalog.tgname = 'enforce_tenant_id'
+           AND NOT trigger_catalog.tgisinternal`,
+      );
+    const initial = await triggerState();
+    expect(initial.rowCount).toBe(1);
+    expect(initial.rows[0].tgqual).toBeNull();
+
+    await owner.query('SELECT auth.install_tenant_triggers()');
+    expect((await triggerState()).rows[0].oid).toBe(initial.rows[0].oid);
+
+    await owner.query('BEGIN');
+    try {
+      await owner.query(
+        'DROP TRIGGER enforce_tenant_id ON integration.inbox_receipt',
+      );
+      await owner.query('SELECT auth.install_tenant_triggers()');
+      const created = await triggerState();
+      expect(created.rowCount).toBe(1);
+      expect(created.rows[0].tgqual).toBeNull();
+      await owner.query('SELECT auth.install_tenant_triggers()');
+      expect((await triggerState()).rows[0].oid).toBe(created.rows[0].oid);
+
+      await owner.query(
+        'DROP TRIGGER enforce_tenant_id ON integration.inbox_receipt',
+      );
+      await owner.query(
+        `CREATE TRIGGER enforce_tenant_id
+         BEFORE INSERT OR UPDATE OF tenant_id ON integration.inbox_receipt
+         FOR EACH ROW WHEN (false)
+         EXECUTE FUNCTION auth.enforce_tenant_id()`,
+      );
+      await expect(
+        owner.query('SELECT auth.install_tenant_triggers()'),
+      ).rejects.toMatchObject({ code: 'P0001' });
+    } finally {
+      await owner.query('ROLLBACK');
+    }
+
+    expect((await triggerState()).rows[0].oid).toBe(initial.rows[0].oid);
+  });
 
   afterAll(async () => {
     if (connectionsOpen) {
@@ -933,7 +996,10 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
           cwd: directory,
           env: ownerEnv,
         });
-        expect(result.code, `apply attempt ${attempt + 1}`).toBe(0);
+        expect(
+          result.code,
+          `apply attempt ${attempt + 1}\n${result.output}`,
+        ).toBe(0);
         expect(result.output).toContain('apply.sh: done');
         expect(await legacyRows(owner, legacyBaseline)).toEqual(legacyBaseline);
         expect(

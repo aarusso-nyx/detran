@@ -872,6 +872,25 @@ Checkpoint 36 (janela 3, adoção DEVAI 1.5.4 antes da publicação):
   o `pnpm ci:backend-full` verde do checkpoint 35 permanece aplicável; a evidência será regravada
   pelo DEVAI 1.5.4 antes do push.
 
+Checkpoint 37 (janela 3, exaustão de locks eliminada na raiz):
+
+- o fallback remoto do SHA `b0234b70…` passou cinco jobs, mas o PostgreSQL 16 falhou na primeira
+  reaplicação idempotente com `out of shared memory` e recomendação de elevar
+  `max_locks_per_transaction`; a mesma falha foi reproduzida no digest PostGIS fixado pelo CI;
+- causa raiz: cada um dos DDLs de tenant chamava `auth.install_tenant_triggers()`, que removia e
+  recriava todos os gatilhos já existentes dentro da mesma transação atômica, acumulando locks;
+- a correção cria somente gatilhos ausentes e valida fail-closed os existentes por função,
+  eventos/momento/nível, habilitação, argumentos, coluna `tenant_id` e ausência de `WHEN`, sem
+  elevar limites do runner, dividir a transação ou enfraquecer RLS;
+- o review extraordinário ciclo 8 encontrou que `tgqual` ainda não era verificado; após a prova
+  comportamental de `WHEN (false)`, criação ausente e preservação de OID, o ciclo 9 emitiu `PASS`
+  sem findings;
+- o ensaio focal final passou 20/20 em PostgreSQL 18 e no digest PostgreSQL 16 do CI; neste último,
+  caiu de aproximadamente 500 segundos com falha para 320 segundos com sucesso;
+- `pnpm check` do diff final passou integralmente: 756 artefatos KB, 160 operações/64 clientes,
+  59 projetos, 966 handlers, RLS 265/2, portal 1314, RAIT 1807 e ambos os builds. O candidato está
+  liberado para commit, novo evidence record e nova execução remota integral antes do merge.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
