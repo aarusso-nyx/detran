@@ -300,6 +300,10 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   teste de R-0007 que este PR não toca e que passa em `main` —; integrado `main` com R-0011 CTG-0001
   PR #83 e DEVAI 1.5.4 PR #84; evidência sequence 3); `audit observe` no sha exato
   (EV-a04b28c82c5b9527). Pré-condição de despacho de TASK-0014/0015/0016 satisfeita.
+- **CTG-0002b-2 mesclado**: PR #90 → `19b374614a1c5a18879394454a14e0b49a1e99e5` (2026-09-22; CI 7/7 após rerun de
+  `backend-kernel` — mesma falha intermitente de `rait-priority-upgrade` de R-0007 —; `main`
+  integrado com R-0013 PR #82, R-0011 PRs #87/#88, DEVAI 1.5.5 PR #89; evidência sequence 4);
+  `audit observe` no sha exato. Pré-condição de despacho de TASK-0017/0011/0012 satisfeita.
 - `devai round plan --scaffold` respondeu `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31);
   `devai round status --round R-0012` → `0 task(s)`; tarefas entram por `tasks/*.json`.
 
