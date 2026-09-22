@@ -125,6 +125,16 @@ ações e comandos, estados de carregamento/vazio/erro (códigos do catálogo), 
 suprimidos por papel), critérios de aceitação ligados aos `AC-RAIT-*`. Gate: `pnpm docs:kb:check`
 (tokens canônicos, brackets resolvem), revisão do Owner (status `reviewed`).
 
+Executado em R-0012 (CTG-0001: PR #79; TASK-0002/0003/0004): 63 fichas
+`docs/framework/product/domains/inf/rait/screens/IU-RAIT-002.md`…`IU-RAIT-064.md`, uma por rota com
+página da §4 (`/casos/:id` incluída, como layout T-04); baseline do KB `artifactIdCount` 675 → 738 no
+mesmo commit; status `draft`. Ficou fora: as 11 rotas sem página própria (raízes de grupo/redirect e
+as auxiliares `/sem-permissao`, `/auth/callback`, A2) não geram ficha (M6); seis questões levantadas
+pelas fichas foram renumeradas pelo maestro para `OD-R12-012…017` (persistência de rascunho de
+intake, ações sem linha na §7, comandos sem nome canônico) — ver
+`docs/meta/knowledge-base/open-decisions-rait.md` §G. Gate real: `pnpm docs:kb:check`,
+`pnpm docs:kb:publish-check`; revisão do Owner ainda pendente (status permanece `draft`).
+
 ### WP-E — Formulários, campos, validações e gates de transição (Engineer)
 
 Entregável **E**. Ler: especificação §9 (16 formulários), `rait-error-catalog.md` (mapeamento erro
@@ -136,6 +146,18 @@ pré-condições, comando, pós-estado) como tabela no cabeçalho do arquivo e e
 `docs/framework/arch/rait-web-forms.md` (consolidado). Gate: testes unitários dos schemas; nenhum
 prazo legal calculado no cliente (`RN-RAIT-005`, lint rule).
 
+Executado em R-0012 (CTG-0002c: PR do CTG-0002c, a abrir; TASK-0010 Architect, TASK-0011 Inspector,
+TASK-0012 Engineer): 16 `apps/rait/web/src/app/forms/<formulario>.schema.ts` (zod, decisão M11) com
+`FormGate` no cabeçalho e `docs/framework/arch/rait-web-forms.md` consolidado; regra ESLint local
+`rait/no-client-deadline-math` ([RN-RAIT-005]) e `rait/no-static-token-i18n-key` (A1) em
+`apps/rait/web/eslint/local-rules.js`, ligadas em `eslint.config.js` e provadas por `RuleTester`
+(vitest) nos casos negativos. Gate real: `pnpm --filter @detran/rait-web lint|typecheck|test|build`
+(TASK-0012: `test` → 4434 passed | 139 todo (4573); `pnpm check` EXIT 0). Ficou fora: ligação
+schema → página e DTO de comando real (`R-0007 CTG-0004`); formulários "mínimos" sem nome no M11
+(redirecionamento, extraordinária, banca, vista, provimentos, `ImpedimentDialog`) continuam sem
+schema (`OD-R12-036`); tokens de contrato ainda sem lista em `data/models/tokens.ts`
+(`OD-R12-045`).
+
 ### WP-F — Hierarquia de componentes/rotas e mapeamento nos módulos (Engineer)
 
 Entregável **F**. Ler: especificação §2, §4, §5, §12; diagramas D1-D5, D7. Produzir o esqueleto
@@ -144,8 +166,32 @@ exata da §4 (títulos, `canMatch` por papel, resolvers), uma pasta por módulo 
 `shared/` com os 22 componentes de domínio (assinatura de inputs/outputs da §5.2), `data/api/*`
 clientes gerados, `core/` (shell, SSE, atalhos, error boundary), `i18n/pt-BR.json` com
 `rait.errors.*` do catálogo; páginas de módulos pendentes renderizam "indisponível nesta versão".
-Gate: `ng build` sem warnings de rota; teste de roteamento cobre cada rota da §4 com o papel
-mínimo; `pnpm --filter @detran/rait-web test`.
+Gate: `pnpm --filter @detran/rait-web build` sem warnings de rota; teste de roteamento cobre cada
+rota da §4 com o papel mínimo; `pnpm --filter @detran/rait-web test` (os dois scripts, citados como
+"inexistentes" em `docs/meta/agents/orchestra/README.md` §9 antes desta rodada, existem desde o
+checkpoint de dependências do CTG-0002a).
+
+Executado em R-0012 (CTG-0002a: PR #81, TASK-0001/0005/0006 — núcleo; CTG-0002b-1: PR #85,
+TASK-0007/0008/0009 — camada de dados e 26 componentes de `shared/`; CTG-0002b-2: PR #90,
+TASK-0007/0014/0015/0016 — 50 páginas, rotas por módulo e matriz de autorização): pacote
+`@detran/rait-web` (scripts `build` = `ng build`, `test` = `vitest run --config vitest.config.ts`,
+`lint` = `eslint .`, `typecheck` = `tsc --noEmit` dos dois tsconfig, M1), `app.routes.ts` +
+`app.route-manifest.ts` com as 72 rotas da §4 (+2 auxiliares, A2) e o nível M13 por rota, `core/`
+(shell, guardas, `session.facade`, `sse.service` com fallback por polling de 15 s, atalhos, error
+boundary), `data/{api,models,facades}` sobre os clientes CRUD gerados, `shared/` com os 22
+componentes de domínio da §5.2 (+4 de apoio), `i18n/rait.pt-BR.json` (semente + namespaces novos,
+M5), páginas L0/L1/L2 por rota (M13); `pnpm check` estendido com
+`pnpm --filter @detran/rait-web lint && … test && … build` (M2). Gate real:
+`pnpm --filter @detran/rait-web lint|typecheck|test|build`; `pnpm verify:parameter-catalogue`;
+`pnpm check` (TASK-0006: 1807 passed; TASK-0009: 2172 passed | 134 todo; TASK-0012, gate final do
+app completo: 4434 passed | 139 todo (4573); EXIT 0 nas três entregas). Ficou fora: métodos de
+comando reais das facades (`POST …/commands/*`) — `throw RaitCommandUnavailableError` com
+`it.todo` citando `R-0007 CTG-0004` (M8); `caseAccessGuard` real (`OD-R12-005`); endpoint SSE real
+(banner `rait.states.stream_unavailable` + polling); componentes inteligentes inline nas páginas
+(não fazem parte de nenhum nível M13); composição de duas facades em `EventTimeline`/`DeadlineChip`
+em remessas/desistências/lote/ata (pendente de stub, TASK-0015); L0 dos módulos pendentes
+(`organizacao/{escala,jeton}`, `integracoes/*`, `financeiro/*`, `admin/*`,
+`auditoria/exportacoes`) — placeholder "indisponível nesta versão" (§11), sem arquivo de página.
 
 ## 2. Ordem e paralelismo sugeridos
 
