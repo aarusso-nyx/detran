@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0004",
+  "round_id": "R-0015",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codificar a exceção i18n boat.* como testes fail-closed",
+  "description": "Escrever testes do parser que aceitam boat.* somente em namespaces i18n, preservam parâmetros BOAT em est.* e rejeitam parâmetros boat.* e outros prefixos desconhecidos.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-parameter-catalogue-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 3,
+  "max_iterations": 3,
+  "priority": 3,
+  "tags": ["wp-b4", "wp-b5", "ctg-0001"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-e6e371712d18a92d",
+  "acceptance_commands": [
+    ["node", "--test", "tools/parameters/tests/allowlist-boat.test.mjs"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-e6e371712d18a92d",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

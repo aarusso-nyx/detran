@@ -178,6 +178,7 @@ if (process.argv.includes('--check-usage')) {
     'portal',
     'privacy',
     'est',
+    'boat',
     'dashboard',
   ];
   let usageErrors = 0;

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0015",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar a tabela tipada de transições BOAT",
+  "description": "Implementar transitions.ts com as 149 transições canônicas, sem duplicar internas, e as transições aditivas S-10 para S-12 para S-11 até os testes do Inspector passarem.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-transitions"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "none",
+  "iteration_count": 1,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-b4", "wp-b5", "ctg-0001"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-909b975dd5ccfbf4",
+  "acceptance_commands": [
+    ["pnpm", "test:boat-transitions"],
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:check"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-909b975dd5ccfbf4",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

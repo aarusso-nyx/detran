@@ -20,9 +20,12 @@ const HEADERS = [
   'Consumidor',
 ];
 const NAMESPACE_HEADERS = ['Namespace', 'App', 'Catálogo', 'Decisão'];
-const NAMESPACE_PREFIXES = Object.values(TABLES).flatMap(([, prefixes]) =>
-  prefixes.map((prefix) => prefix.slice(0, -1)),
-);
+const NAMESPACE_PREFIXES = [
+  ...Object.values(TABLES).flatMap(([, prefixes]) =>
+    prefixes.map((prefix) => prefix.slice(0, -1)),
+  ),
+  'boat',
+];
 const NAMESPACE_PATTERN = new RegExp(
   `^(?:${NAMESPACE_PREFIXES.join('|')})\\.[a-z][a-z0-9_]*$`,
 );

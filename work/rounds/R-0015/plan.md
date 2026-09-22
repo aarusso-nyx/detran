@@ -1,8 +1,17 @@
 # R-0015 — frente `boat-mobile` (WP-B4, WP-B5 do BOAT: fichas, formulários, i18n, biblioteca de sinistro mobile e módulo web)
 
-**Status:** planejado em 2026-09-14 pelo Architect; aguarda abertura por um maestro GPT-5.6 Sol
-(prompt em `prompts/00-maestro.md`). Reviewer: Opus 5 via `tools/orchestra/bridge.sh claude` (troca de família decidida pelo Owner em 2026-09-21).
-**Concorrência:** abre já; merge por grupo acoplado — CTG-0001 (17 fichas, i18n, transições): nenhum upstream. CTG-0002 (biblioteca mobile, módulo `sinistros` web, formulários): `boat-backend` R-0010 já em `main` (PC-0008); falta `teat-frontends` R-0013 CTG-0004 (shell de campo e `apps/teat/web`), ainda não iniciado — empilhar em `orchestra/teat-frontends` quando os apps existirem ou aguardar.
+**Status:** aberto em 2026-09-22 pelo maestro GPT-5.6 Sol, papel Architect nesta fase
+(`prompts/00-maestro.md`). Workers: GPT-5.6 Terra/Luna por subagentes nativos. Reviewer: `claude
+opus` via `tools/orchestra/bridge.sh claude` (troca Fable → Sol decidida pelo Owner em 2026-09-21
+e formalizada em `AUTHORIZATION.md`).
+**Entrada:** branch `orchestra/boat-mobile`, HEAD e `origin/main`
+`77ad8d64a7a896068341dfe509bd665da5065432`, árvore limpa antes da autorização; DEVAI 1.5.6.
+**Concorrência:** CTG-0001 (17 fichas, i18n, transições) está livre. CTG-0002 (biblioteca mobile,
+módulo `sinistros` web, formulários) tem R-0010/PC-0008 em `main`, mas continua bloqueado pela
+entrega não publicada de R-0013 CTG-0004. O worktree de R-0013 contém trabalho local não
+publicado e é estritamente fora da fronteira desta rodada. Após o merge de CTG-0001, empilhar em
+`orchestra/teat-frontends` somente quando o upstream existir remotamente; caso contrário, gravar
+checkpoint.
 **Janelas previstas:** 3.
 
 ## Metas
@@ -12,8 +21,9 @@
    a regra de acesso a vítimas (perfil + finalidade + auditoria) e os textos fixos ("sinistro" nunca
    "acidente"; "fotografar a cena, não o sofrimento"; "registro nacional definitivo, sem correção").
    Baseline do KB sobe em 17.
-2. **Formulários, transições e i18n**: `apps/boat/mobile/src/lib/forms/*.schema.ts` (14 formulários,
-   `boat-frontends.md` §8); `transitions.ts` com as 149 transições + S-12; `i18n/boat.pt-BR.json`
+2. **Formulários, transições e i18n**: `apps/boat/mobile/src/lib/forms/*.schema.ts` (14 formulários
+   por tela em 15 linhas de gate, pois W-04 ocupa duas linhas em `boat-frontends.md` §8);
+   `transitions.ts` com as 149 transições + S-12; `i18n/boat.pt-BR.json`
    (estados, regimes 176/177/178 em linguagem simples, catálogos de condição — valores do protótipo
    `source_pending` H.42 —, erros).
 3. **Biblioteca mobile** (WP-B5): `apps/boat/mobile` (`@detran/boat-mobile`) como biblioteca de
@@ -27,23 +37,33 @@
 
 ## Tarefas
 
-| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                    | Depende de | Entrega                                                                                                                                                                            |
-| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TASK-0001 | Architect            | architect-blueprint | Terra / alto   | `MOD-boat-mobile-arch`                                  | —          | decisões (forma de biblioteca carregada pelo shell, portas nativas, editor de croqui), lista tela → ficha → rota, critérios                                                        |
-| TASK-0002 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-boat-screens`, `MOD-kb-manifest`           | TASK-0001  | 17 fichas; manifesto                                                                                                                                                               |
-| TASK-0003 | Engineer             | engineer-frontend   | Luna / baixo   | `MOD-boat-i18n-transitions`                             | TASK-0001  | `i18n/boat.pt-BR.json`, `transitions.ts` (149 + S-12)                                                                                                                              |
-| TASK-0004 | Inspector            | inspector-tests     | Luna / médio   | `MOD-boat-mobile-tests`, `MOD-teat-web-sinistros-tests` | TASK-0003  | testes: roteamento e transições, `victimAccessGuard` (perfil + finalidade), 14 schemas, TestBed dos compartilhados, portas nativas com fixtures; teste tela ↔ ficha ↔ rota (17/17) |
-| TASK-0005 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-boat-mobile-lib`, `MOD-package-json`               | TASK-0004  | biblioteca `@detran/boat-mobile` (12 telas, componentes, guardas, croqui, portas); `pnpm check` estendido; testes verdes                                                           |
-| TASK-0006 | Engineer             | engineer-frontend   | Luna / médio   | `MOD-teat-web-sinistros`, `MOD-boat-mobile-forms`       | TASK-0005  | módulo `sinistros` (5 telas) em `apps/teat/web`; 14 schemas com gates; testes verdes                                                                                               |
-| TASK-0007 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                              | TASK-0006  | build pack, `boat-frontends.md`, backlog                                                                                                                                           |
+| Tarefa    | Papel                | Perfil              | Modelo/esforço | Lock                                                    | Depende de                          | Entrega                                                                                                                                      |
+| --------- | -------------------- | ------------------- | -------------- | ------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect            | architect-blueprint | Terra / alto   | `MOD-boat-mobile-arch`, `MOD-parameter-catalogue-doc`   | —                                   | manifesto tela → ficha → rota, contrato CTG-0001/CTG-0002, decisões e allowlist `boat.*`; nenhum código de feature                           |
+| TASK-0002 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-product-boat-screens`, `MOD-kb-manifest`           | TASK-0001                           | 17 fichas; `artifactIdCount` +17 no mesmo conjunto de entrega                                                                                |
+| TASK-0003 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-boat-i18n`                                         | TASK-0001                           | `docs/framework/arch/i18n/boat.pt-BR.json`, somente chaves fechadas pelo contrato                                                            |
+| TASK-0004 | Inspector            | inspector-tests     | Luna / médio   | `MOD-parameter-catalogue-tests`                         | TASK-0001                           | testes fail-closed para namespace/chave i18n `boat.*`, sem ampliar prefixos de parâmetros                                                    |
+| TASK-0005 | Engineer             | engineer-frontend   | Terra / baixo  | `MOD-tools-parameters`                                  | TASK-0004                           | implementar `boat.*` no parser de namespaces e no verificador de uso i18n; parâmetros BOAT permanecem `est.*`                                |
+| TASK-0006 | Inspector            | inspector-tests     | Luna / médio   | `MOD-boat-transition-tests`, `MOD-package-json`         | TASK-0002 + TASK-0003               | testes node:test+tsx e typecheck da união de 149, S-12 e cobertura 17/17; script integrado a `pnpm check`                                    |
+| TASK-0007 | Engineer             | engineer-frontend   | Terra / médio  | `MOD-boat-transitions`                                  | TASK-0006                           | `apps/boat/mobile/src/lib/navigation/transitions.ts`: as 149 linhas canônicas + as transições S-10 → S-12 → S-11; testes do Inspector verdes |
+| TASK-0008 | Inspector            | inspector-tests     | Luna / alto    | `MOD-boat-mobile-tests`, `MOD-teat-web-sinistros-tests` | CTG-0001 + upstream R-0013 CTG-0004 | testes de `victimAccessGuard`, 14 schemas, compartilhados, portas nativas, rotas mobile/web e a11y                                           |
+| TASK-0009 | Engineer             | engineer-frontend   | Terra / alto   | `MOD-boat-mobile-lib`, `MOD-package-json`               | TASK-0008                           | biblioteca `@detran/boat-mobile`, 12 telas, guardas, croqui e portas nativas; integração no shell do TEAT                                    |
+| TASK-0010 | Engineer             | engineer-frontend   | Luna / alto    | `MOD-teat-web-sinistros`, `MOD-boat-mobile-forms`       | TASK-0008                           | módulo `sinistros` com 5 telas; 14 schemas por tela cobrindo as 15 linhas de gate da §8                                                      |
+| TASK-0011 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-docs`                                              | TASK-0009 + TASK-0010               | build pack/frontends/backlog e `waves.md`: coluna Maestro = Sol e histórico da troca Fable → Sol decidida em 2026-09-21                      |
 
-CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
+CTG-0001 = TASK-0001…TASK-0007. CTG-0002 = TASK-0008…TASK-0011. Um PR por CTG. O limite
+operacional é sete workers ativos por janela; nesta janela, apenas os sete do CTG-0001 podem ser
+despachados.
 
-**Checkpoint de dependências:** após TASK-0005 criar `apps/boat/mobile/package.json`, o maestro roda `pnpm install`, guarda o lockfile, estende `pnpm check` e libera TASK-0004/0006 contra a biblioteca.
+**Checkpoint de dependências:** o maestro não cria nem integra o pacote antes de R-0013 CTG-0004.
+Quando o upstream estiver publicado, cria uma base empilhada a partir de
+`orchestra/teat-frontends`, copia o scaffold de `apps/portal/web`, roda `pnpm install`, guarda o
+lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` por merge explícito.
 
 ## Critérios de aceitação (comandos → resultado)
 
-- `node tools/docs/kb/check.mjs` → baseline + 17 / 446, atualizado no mesmo commit; `pnpm docs:kb:publish-check` → OK.
+- `node tools/docs/kb/check.mjs` → `baselines.artifactIdCount` 756 → 773,
+  `baselines.canonicalWorkflowTokenCount` permanece 446 e nenhum finding; `pnpm docs:kb:publish-check` → OK.
 - `pnpm --filter @detran/boat-mobile typecheck|test|build|lint` → verdes; `pnpm --filter @detran/teat-mobile build`
   carrega a biblioteca (teste de integração do shell); `pnpm --filter @detran/teat-web test|build` → verdes com o módulo `sinistros`.
 - teste tela ↔ ficha ↔ rota: 17/17; transições: 149 + S-12 verdes; a11y de campo (axe) sem `serious`/`critical`.
@@ -56,8 +76,8 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
 | fichas      | [IU-BOAT-001]; `boat-frontends.md` §4–§7; matriz `crash-*` da origem; [JRN-BOAT-001…005]; `portal-frontends.md` T-18/T-19 |
 | formulários | `boat-frontends.md` §8; [RN-BOAT-*]; `boat-error-catalog.md`; [WF-BOAT-001…003]                                           |
 | hierarquia  | `boat-frontends.md` §1–§3, §9–§10; `teat-frontends.md` §10 (shell de campo)                                               |
-| LGPD        | steering H.44/H.45; `lgpd-assessment.md`; S-06/W-05                                                                       |
-| catálogos   | steering H.42 (`est.crash_condition_ref`, `source_pending`)                                                               |
+| LGPD        | `open-issues.md` DT-047/DT-049; `lgpd-assessment.md`; S-06/W-05                                                           |
+| catálogos   | `owner-ballots/ballot-03-boat-catalogos.md` H.42 (`est.crash_condition_ref`, `source_pending`)                            |
 
 ## Riscos
 
@@ -66,6 +86,9 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
 - Vítimas: tela liberada para produção por H.44, mas retenção e finalidade vêm do backend (R-0010);
   nada de acesso sem `purpose`.
 - Nativos (câmera, GPS, assinatura, atestação): portas com fixtures; hardware real fora da rodada.
+- Em CTG-0001, `apps/boat/mobile` ainda não é pacote do workspace. O script do Inspector executa
+  `tsc --noEmit` com tsconfig próprio e depois `node:test` via `tsx`; lint/build completos só se
+  tornam gates em CTG-0002, depois do scaffold autorizado.
 
 ## Lições aplicadas (método §4.8–§4.18, `waves.md` §Histórico)
 
@@ -79,14 +102,88 @@ CTG-0001 = 0002/0003; CTG-0002 = 0004…0006. Um PR por CTG.
 - Chaves i18n não são parâmetros (OD-P46): allowlist já existe; acrescentar as linhas `boat.<namespace>` antes de `i18n/boat.pt-BR.json` entrar em código; placeholders `{x}`.
 - Testes de roteamento cobrem papéis com e sem acesso (presença e ausência), não só o papel mínimo.
 
+## Decisões do maestro — abertura 2026-09-22
+
+- **M1 — identidade:** a rodada parte do SHA exato
+  `77ad8d64a7a896068341dfe509bd665da5065432`, igual a `origin/main` na abertura. Nenhuma evidência
+  de outro checkout vale para esta worktree.
+- **M2 — famílias:** maestro GPT-5.6 Sol; workers Terra/Luna; reviewer `claude opus`. O reviewer é
+  de outra família e não atua como worker.
+- **M3 — contagem canônica:** a fonte é
+  `docs/framework/product/domains/inf/teat/ux-parity/mobile-matrix.json`. O grupo `sinistros` tem
+  11 telas existentes; há 94 transições cuja origem é `crash-*`, 78 cujo destino é `crash-*`, 23
+  internas e **149 na união** `origem ∪ destino`, sem duplicar as internas.
+- **M4 — S-12:** `crash-damages` é a 12ª tela mobile nova e entra no assistente entre
+  `crash-ait-links` (S-10) e `crash-review` (S-11). As transições novas são aditivas e ficam fora
+  da contagem das 149 transcritas da matriz.
+- **M5 — autoridade:** campos, enums, textos e gates vêm apenas das fontes fechadas do corpus.
+  Ausência ou contradição vira `OD-R15-nnn` proposta; worker não decide nem preenche por analogia.
+- **M6 — artefatos do KB:** cada uma das 17 fichas incrementa `artifactIdCount` no mesmo commit do
+  CTG-0001; não há atualização desacoplada do manifesto.
+- **M7 — isolamento:** o worktree de R-0013 e todos os siblings são somente leitura. A existência
+  de diretórios `apps/teat/*` em `main` não prova que CTG-0004 foi entregue.
+- **M8 — disciplina de teste:** somente Inspector escreve ou altera testes. Não se aceitam
+  asserções por conjuntos de status, escapes condicionais, `skip`, relaxamento de expectativa ou
+  teste escrito pelo implementador.
+- **M9 — review:** a ponte pode devolver JSON em cercas Markdown ou ecoar veredito anterior; o
+  maestro extrai e valida o último objeto que contém `mode` e `verdict`. Ciclos após o primeiro
+  ficam restritos aos achados anteriores.
+- **M10 — publicação:** CTG-0001 e CTG-0002 têm PRs separados. A rodada não avança ao CTG-0002
+  enquanto o upstream requerido não estiver publicado e estável; o estado correto nesse caso é
+  checkpoint, não implementação especulativa.
+- **M11 — prefixo i18n BOAT:** a autorização do Owner exige namespaces `boat.*`. O contrato atual
+  permite somente `est.*`; TASK-0001 registra `boat.` como exceção i18n da superfície BOAT,
+  TASK-0004 prova o comportamento fail-closed e TASK-0005 altera o parser. As chaves de parâmetros
+  BOAT permanecem `est.*`; a extensão não autoriza parâmetros `boat.*`.
+- **M12 — vermelho esperado:** entre TASK-0001 e TASK-0005, `verify:parameter-catalogue` e a suíte
+  integral `parameters:test` falham apenas porque o catálogo já contém `boat.*` e parser/verifier
+  ainda não. TASK-0004 roda isoladamente o novo teste vermelho. TASK-0005 fecha parser, verifier,
+  gerados e suíte integral; qualquer falha diferente é bloqueio.
+- **M13 — formulários:** `boat-frontends.md` §8 possui 15 linhas de gate para 14 formulários por
+  tela; W-04 ocupa duas linhas (fechar/transmitir e retificar). A implementação preserva ambas as
+  linhas sem inventar um 15º formulário.
+
+## Adendas numeradas de correção
+
+- **A1 — TASK-0001, delivery-review ciclo 1:** a fonte fechada
+  `docs/framework/product/domains/inf/teat/ux-parity/web-matrix.json` fixa W-01 como
+  `screenId: crashes-list` (UX-WEB-060), identidade repetida em
+  `docs/framework/product/domains/inf/teat/screens/IU-TEAT-crashes-list.md`. Portanto,
+  `OD-R15-001` está encerrada por fonte e foi removida das propostas; somente `OD-R15-002`
+  (papéis W-01) e `OD-R15-003` (screenId W-05) continuam propostas. O catálogo i18n do CTG-0001
+  permanece em `docs/framework/arch/i18n/boat.pt-BR.json`; eventual mudança para a árvore do app
+  pertence ao CTG-0002. O contrato de 114 chaves exige literal pt-BR não vazio nas 101 entradas
+  com texto fechado. `OD-R15-004` registra as 13 lacunas exatas — quatro grupos de condição de
+  H.42 e nove erros genéricos da §6 — com o marcador único `source_pending:OD-R15-004`, que é
+  proposta rastreável e não tradução; nenhuma outra chave usa marcador ou string vazia. O
+  `pnpm check` integral do candidato anterior a esta adenda terminou com exit 0 em 2026-09-22;
+  este registro não afirma novo veredito do reviewer.
+
 ## Concorrência
 
-(preenchido pelo maestro no bootstrap: upstreams já em `main`, grupos liberados para merge, grupos
-em base empilhada e sobre qual branch)
+- `R-0010`/BOAT backend: em `main` como PC-0008; satisfaz parte do CTG-0002.
+- `R-0013`/TEAT frontends: CTG-0001 e CTG-0003 em `main`; CTG-0004 ainda não está publicado. O
+  branch remoto `orchestra/teat-frontends` não contém a entrega local em curso.
+- `R-0016`: em curso e também altera `docs/meta/knowledge-base/import-manifest.json`; por isso o
+  merge de `origin/main` é obrigatório imediatamente antes do PR de cada CTG.
+- Liberado agora: CTG-0001 sobre `orchestra/boat-mobile`.
+- Bloqueado agora: CTG-0002. Base futura: `orchestra/teat-frontends` depois que R-0013 publicar
+  CTG-0004; se não ocorrer nesta janela, checkpoint após CTG-0001.
 
 ## Bloqueios
 
-(nenhum)
+- CTG-0002 — `R-0013 CTG-0004` ainda não publicado; não despachar TASK-0008…TASK-0011.
+
+## Triagem
+
+- `sensor-error` — a checagem focada pós-review passou `05-parameters.sql` diretamente ao
+  Prettier, que não possui parser SQL neste repositório. O arquivo é gerado e foi validado por
+  `parameters:generate`/`verify:parameter-catalogue`; a repetição correta exclui o SQL da chamada
+  direta e mantém `pnpm format:check` como gate integral.
+- `sensor-error` — a primeira invocação do delivery-review ciclo 2 codificou o objeto JSON inteiro
+  em base64; a ponte recusou a saída e não criou JSON normalizado nem `.bridge.json`. O maestro
+  decodificou somente para recuperar o residual anterior de S-02, o Architect corrigiu a ordem e a
+  repetição continua sendo o mesmo ciclo 2 restrito.
 
 ## Retomada
 
@@ -94,4 +191,14 @@ em base empilhada e sobre qual branch)
 
 ## Leitura
 
-(preenchido pelo maestro)
+- `AGENTS.md`; `CODESTYLE.md`; `README.md`; `law/constitution.md`; `.devai/config/project.json`.
+- `docs/meta/agents/README.md` (inclusive §4 itens 13–18 e §10), `model-ladder.md`,
+  `orchestra/README.md`, `orchestra/waves.md` e os cinco manuais de perfil usados nesta rodada.
+- `work/rounds/R-0015/prompts/00-maestro.md` e este plano, integralmente.
+- `docs/framework/arch/boat-build-pack.md`, `boat-frontends.md`, `boat-route-contract.md`,
+  `boat-error-catalog.md`, `teat-frontends.md`, `portal-frontends.md`,
+  `parameter-catalogue.md` e `decision-closure-plan.md`.
+- `docs/framework/product/domains/est/boat/screens/IU-BOAT-001.md`; JRN-BOAT-001…005;
+  RN-BOAT-001…004 e RN-BOAT-101…132.
+- As 13 fichas `IU-TEAT-crash-*`; a matriz mobile canônica completa; steering §H; scaffold
+  `apps/portal/web`; e os artefatos de R-0016 usados apenas como forma de orquestração.
