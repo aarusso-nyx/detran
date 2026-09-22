@@ -307,6 +307,10 @@ merged --limit 20`, `gh pr list --search orchestra/`):
 
 ## Triagem
 
+- CTG-0002b-1, TASK-0009 it. 1 → 33/2307 testes + typecheck vermelhos: `sensor-error` (8 defeitos
+  de spec/fixture: render repetido, afterEach sem provider, regex, flush ausente, evento do kit,
+  marcador i18n, tipo `any`) + 2 divergências spec × contrato (`emptyWhen`, diretiva de permissão) →
+  adenda A10 → iteração restrita do Inspector, depois do Engineer.
 - CTG-0002a, TASK-0006 it. 1 → 6/1807 testes + 2 gates vermelhos: `policy-issue` (specs contradizem
   o contrato ou entre si: C-2A-02/09/24/35/63) e `sensor-error` (C-2A-45 sem shell/waitFor; literais
   de evento no spec do SSE; teste 7 da allowlist duplica linha) → adenda A7 → iteração restrita do
@@ -389,6 +393,45 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   Ratificados os defaults de OD-R12-018…035 do contrato §9.3 (em especial 018: `list*` gerados sem
   query/envelope → estreitamento e paginação no cliente **sem reordenar**; 024/025: limites do kit
   sem reimplementar primitivos).
+
+- **A9 — `facade.stub.ts` (Architect/maestro, 2026-09-21).** O contrato CTG-0002b §7 atribui
+  `src/testing/facade.stub.ts` (`readSlotStub`, `listFacadeStub`, `commandRunnerStub`, `stubFacade`,
+  `pageProviders`) ao Inspector, mas o prompt de TASK-0008 (par 1) não o listou; ele é consumido só
+  pelos specs de páginas → passa ao Inspector do par 2 (TASK-0014). Os specs de `shared/` do par 1
+  compõem o gate por papel com `createStynxSessionStub` + `ROLE_PERMISSIONS_FIXTURE` (ratificado).
+
+- **A10 — Reconciliação do par CTG-0002b-1 (Architect/maestro, 2026-09-21; triagem dos 8
+  bloqueios de TASK-0009 it. 1: todos `sensor-error` nos specs/fixtures, nenhum `plant-bug`).**
+  Inspector (iteração restrita): (a) `render()` repetido no mesmo `it` → `TestBed.resetTestingModule()`
+  antes de cada `configureTestingModule` (ou um `it` por estado), assinando outputs antes de
+  re-renderizar (21 `it` de `shared/`); (b) `afterEach` com `HttpTestingController.verify()` só em
+  `describe` que configura o módulo (C-2B-13/14/15/33); (c) regex de `readPolicyCommandRules`
+  aceita `]\s*,?\s*]` (triplas multilinha com vírgula final: `reassign`, `declare`,
+  `acknowledge-alert`) → 60 chaves; (d) C-2B-28/30: flush de `GET cases/<id>` (+ `decisions` no
+  signing) que o contrato §4.3 prescreve; (e) C-2B-29: após `agenda-item.changed` o `refresh()` do
+  bundle refaz as 4 listas — flush delas; (f) C-2B-45: o output do kit é `dismissed`; (g) C-2B-58:
+  com `markerI18nModule` afirma-se o marcador/parâmetro `{seconds}`, não `'15'`; (h)
+  `queue-table.component.spec.ts:123`: `const host: HTMLElement = allowed.nativeElement`; (i)
+  `stynx-session.stub.ts` (fixture do CTG-0002a, acréscimo permitido) ganha `active$:
+Observable<StynxSessionState>` (kit 1.3.1 linha 162) para que `*stynxHasPermission` seja
+  instanciável; (j) C-2B-22/31: o contrato §4.1 prevalece — lista `[]` → `status 'empty'`
+  (`emptyWhen = total === 0`); as 11 asserções passam a `'empty'`. Engineer (iteração restrita):
+  remover `shared/has-permission.directive.ts` e usar `*stynxHasPermission` do kit (M4;
+  `detran-ui-guide.md` §2 — nenhuma diretiva paralela); `ListFacade`/`createListFacade` com
+  `emptyWhen: total === 0`; manter `AuditFacade.createExport(Partial<…>)`, `claimNext(…, ifMatch =
+null)` e as chaves reais de `RAIT_COMMAND_RULES` no `InquiryCard` (OD-R12-026). Extensões
+  registradas: OD-R12-025 (`StynxTableColumn` não reexportado → `shared/table-column.ts`),
+  OD-R12-028 (chaves (P) de cabeçalhos de tabela e "campo obrigatório" até `rait.forms.*`).
+
+- **A11 — Matriz de autorização nos componentes com gate (Architect/maestro, 2026-09-22;
+  delivery-review CTG-0002b-1 ciclo 1).** (a) Para cada ação com `*stynxHasPermission` nos
+  componentes deste par (`CaseHeader`, `InquiryCard`, `DecisionPanel`, `QueueTable`), o spec gera um
+  `it` por papel canônico (13) a partir de `ROLE_PERMISSIONS_FIXTURE`: presença para todo papel
+  concedido, ausência para todo papel omitido (método §4.8/§4.13; nunca um par exemplo). (b)
+  C-2B-44 corrigido: `policy.ts` concede `inf:rait-impediment:declare` a `rait-rapporteur`,
+  `rait-signing-authority` **e `rait-analyst`** — `rait-analyst` não vê `sign`/`return-draft`, mas
+  **vê** `impede`; o `it` "nenhum existe" é substituído pela matriz de (a). Inspector em iteração
+  restrita; Engineer só se algum componente falhar a matriz.
 
 ## Retomada
 

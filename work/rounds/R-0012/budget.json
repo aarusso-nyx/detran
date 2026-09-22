@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1826000,
-  "estimated_output_total": 443000,
+  "estimated_input_total": 2756000,
+  "estimated_output_total": 753000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte). Janela 1 encerrada com ≈946 k únicos estimados de entrada.",
   "entries": [
     {
@@ -134,6 +134,54 @@
       "input_tokens": 130000,
       "output_tokens": 60000,
       "note": "509 184 brutos, 100 chamadas, 42 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8+9",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 90000,
+      "output_tokens": 3000,
+      "note": "REVIEW (4: locks, aceitação do Inspector, pré-condição) → PASS."
+    },
+    {
+      "kind": "maestro",
+      "id": "merge-main-R-0016+PR81",
+      "model": "fable",
+      "input_tokens": 40000,
+      "output_tokens": 8000,
+      "note": "resolução de conflitos (allowlist, gerados, cadeia), regravação da evidência, pnpm check pós-merge, merge/observe."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "model": "sonnet/medium",
+      "input_tokens": 150000,
+      "output_tokens": 90000,
+      "note": "≈190 k brutos reportados (harness; agente interno não contabilizado), 63 min; 53 specs + 3 fixtures."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "model": "opus/medium",
+      "input_tokens": 340000,
+      "output_tokens": 160000,
+      "note": "680 460 + 693 563 brutos (2 iterações), 167+10 chamadas, 66+17 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-it2+3",
+      "model": "sonnet/medium",
+      "input_tokens": 90000,
+      "output_tokens": 45000,
+      "note": "≈ 260 k brutos reportados (harness), A10 + A11."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002b-1+2",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 220000,
+      "output_tokens": 4000,
+      "note": "REVIEW (matriz de papéis, C-2B-44) → A11 → PASS."
     }
   ]
 }
