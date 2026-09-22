@@ -6,7 +6,9 @@
 // entrega: `app.routes.ts`/`core/*` de produção ainda não existem.
 import { Router } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
+import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { describe, expect, it } from 'vitest';
+import { ROLE_PERMISSIONS_FIXTURE } from '../testing/policy.fixture';
 import {
   RAIT_ROUTE_MANIFEST_FIXTURE,
   ROLE_HOME_FIXTURE,
@@ -22,6 +24,7 @@ import {
   FIXED_ENTITY_ID,
 } from '../testing/router-harness';
 import { createSessionStub } from '../testing/session.stub';
+import { createStynxSessionStub } from '../testing/stynx-session.stub';
 
 const MATRIX_ROWS = RAIT_ROUTE_MANIFEST_FIXTURE.filter(
   (entry) => entry.path !== 'sem-permissao' && entry.path !== 'auth/callback',
@@ -71,6 +74,14 @@ MATRIX_ROWS.forEach((entry) => {
     const { RaitSessionFacade } = await import('./core/session.facade');
     const harness = await createRaitRouterHarness([
       { provide: RaitSessionFacade, useValue: session },
+      {
+        provide: StynxSessionService,
+        useValue: createStynxSessionStub({
+          active: true,
+          permissions: [...ROLE_PERMISSIONS_FIXTURE[role]],
+          claims: { roles: [role] },
+        }),
+      },
     ]);
     const url = `/${substituteRouteParams(entry.path)}`;
     await harness.navigateByUrl(url);

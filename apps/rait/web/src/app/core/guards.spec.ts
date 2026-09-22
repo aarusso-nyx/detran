@@ -23,6 +23,7 @@ import {
   GROUP_REDIRECT_FIXTURE,
   type RaitRoleCode,
 } from '../../testing/route-manifest.fixture';
+import { ROLE_PERMISSIONS_FIXTURE } from '../../testing/policy.fixture';
 import { createSessionStub } from '../../testing/session.stub';
 import { createStynxSessionStub } from '../../testing/stynx-session.stub';
 import {
@@ -41,6 +42,32 @@ import {
   StynxRaitSessionFacade,
 } from './session.facade';
 import { roleHomeFor, ROLE_HOME } from './role-home';
+
+/**
+ * Providers de `StynxSessionService` (`*stynxHasPermission`, usada pelas páginas reais de
+ * TASK-0015) para os `it`s de C-2A-23/24 que navegam até destinos concedidos — sem isso, a
+ * página no destino final lança `NullInjectorError` ao injetar `StynxSessionService`. Permissões
+ * são a união das de cada papel de `roles` (fixture); `role as RaitRoleCode` porque `Object.
+ * entries`/negativos como `'DPO'` alargam o tipo para `string` (`'DPO'` não tem linha na
+ * fixture — `?? []`).
+ */
+function stynxProviderFor(roles: readonly string[]) {
+  const permissions = [
+    ...new Set(
+      roles.flatMap(
+        (role) => ROLE_PERMISSIONS_FIXTURE[role as RaitRoleCode] ?? [],
+      ),
+    ),
+  ];
+  return {
+    provide: StynxSessionService,
+    useValue: createStynxSessionStub({
+      active: true,
+      permissions,
+      claims: { roles: [...roles] },
+    }),
+  };
+}
 
 function runCanActivate(
   guard: CanActivateFn,
@@ -271,7 +298,7 @@ describe('C-2A-22 — aba inicial de /casos/:id por papel (RAIT_ROLE_PRECEDENCE)
   ];
 
   cases.forEach(({ roles, tab }) => {
-    it(`dado /casos/${FIXED_ENTITY_ID} com sessão ${JSON.stringify(roles)} quando navegada então .../${tab}`, async () => {
+    it(`dado /casos/${FIXED_ENTITY_ID} com sessão ${JSON.stringify(roles)} quando navegada então .../${tab} com <rait-case-layout-page> como host do outlet (CTG-0002b, C-2B-64)`, async () => {
       const session = createSessionStub({ active: true, roles });
       const harness = await createRaitRouterHarness([
         { provide: RaitSessionFacade, useValue: session },
@@ -279,6 +306,15 @@ describe('C-2A-22 — aba inicial de /casos/:id por papel (RAIT_ROLE_PRECEDENCE)
       await harness.navigateByUrl(`/casos/${FIXED_ENTITY_ID}`);
       const router = TestBed.inject(Router);
       expect(router.url).toBe(`/casos/${FIXED_ENTITY_ID}/${tab}`);
+      // Seletor pela convenção comum de página do contrato §6 (`rait-<kebab>-page`), sem
+      // importar `CaseLayoutPageComponent` (TASK-0015, ainda inexistente): um import — estático
+      // ou dinâmico com especificador literal — de um módulo ausente quebra a transformação do
+      // arquivo inteiro no Vite/Vitest (falha observada), não só este `it`; a checagem por tag
+      // evita essa classe de falha e continua provando o mesmo fato (host do outlet).
+      const host = harness.fixture.nativeElement.querySelector(
+        'rait-case-layout-page',
+      );
+      expect(host).not.toBeNull();
     });
   });
 
@@ -302,6 +338,7 @@ describe('C-2A-23 — roleHomeFor / roleHomeRedirectGuard', () => {
       const session = createSessionStub({ active: true, roles: [role] });
       const harness = await createRaitRouterHarness([
         { provide: RaitSessionFacade, useValue: session },
+        stynxProviderFor([role]),
       ]);
       await harness.navigateByUrl('/');
       const router = TestBed.inject(Router);
@@ -326,6 +363,7 @@ describe('C-2A-23 — roleHomeFor / roleHomeRedirectGuard', () => {
     });
     const harness = await createRaitRouterHarness([
       { provide: RaitSessionFacade, useValue: session },
+      stynxProviderFor(['rait-finance', 'rait-manager']),
     ]);
     await harness.navigateByUrl('/');
     const router = TestBed.inject(Router);
@@ -336,6 +374,7 @@ describe('C-2A-23 — roleHomeFor / roleHomeRedirectGuard', () => {
     const session = createSessionStub({ active: true, roles: ['DPO'] });
     const harness = await createRaitRouterHarness([
       { provide: RaitSessionFacade, useValue: session },
+      stynxProviderFor(['DPO']),
     ]);
     await harness.navigateByUrl('/');
     const router = TestBed.inject(Router);
@@ -356,6 +395,7 @@ describe('C-2A-24 — groupRedirectGuard × GROUP_REDIRECT_FIXTURE', () => {
       const session = createSessionStub({ active: true, roles: [role] });
       const harness = await createRaitRouterHarness([
         { provide: RaitSessionFacade, useValue: session },
+        stynxProviderFor([role]),
       ]);
       const requestedUrl = `/${substituteRouteParams(path)}`;
       await harness.navigateByUrl(requestedUrl);

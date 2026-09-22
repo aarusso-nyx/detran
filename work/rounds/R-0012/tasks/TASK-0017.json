@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0017",
+  "round_id": "R-0012",
+  "status": "in_progress",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever as 152 chaves rait.forms.* do contrato CTG-0002c §7 no catálogo do app",
+  "description": "Acréscimo ao catálogo src/app/i18n/rait.pt-BR.json das 152 chaves rait.forms.* (rótulos e mensagens de forma dos 16 formulários) com o texto do contrato §7; sem aspas externas (A13); nunca renomear. Ato de Architect (transcrição), A12.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-rait-web-i18n"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002c",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 4,
+  "tags": ["wp-e", "transcricao"],
+  "branch": "orchestra/rait-web",
+  "worktree_id": "WT-rait-web",
+  "prompt_composition_id": "PC-5a53bcd04b4add68",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "--filter", "@detran/rait-web", "test"]
+  ],
+  "created_at": "2026-09-21T00:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-5a53bcd04b4add68",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

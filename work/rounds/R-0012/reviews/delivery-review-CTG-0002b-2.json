@@ -1,0 +1,16 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "apps/rait/web/src/app/features/assinatura/pages/signing-decision.page.spec.ts",
+      "line": 110,
+      "claim": "C-2B-71 exige teste de cada ação jurídica, incluindo dismiss sem chamada; este spec testa somente sign/confirm. return-draft e declare-impediment, presentes na página, não são exercitados, e o dismiss tampouco é verificado.",
+      "fix": "Adicionar casos C-2B-71 para todas as ações confirmáveis das 45 chaves: mensagem correta, confirm chama exatamente uma vez e dismiss não chama a facade."
+    }
+  ],
+  "notes": []
+}

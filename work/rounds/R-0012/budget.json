@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2756000,
-  "estimated_output_total": 753000,
+  "estimated_input_total": 5141000,
+  "estimated_output_total": 1509000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte). Janela 1 encerrada com ≈946 k únicos estimados de entrada.",
   "entries": [
     {
@@ -182,6 +182,118 @@
       "input_tokens": 220000,
       "output_tokens": 4000,
       "note": "REVIEW (matriz de papéis, C-2B-44) → A11 → PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-10+11",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 90000,
+      "output_tokens": 3000,
+      "note": "FAIL estrutura (B2: i18n → transcriber; locks) → PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-12+13+14",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 120000,
+      "output_tokens": 4000,
+      "note": "REVIEW → REVIEW (edição não aplicada, B3) → PASS."
+    },
+    {
+      "kind": "maestro",
+      "id": "pair2+2c prompts, merge R-0011, PR85",
+      "model": "fable",
+      "input_tokens": 90000,
+      "output_tokens": 25000,
+      "note": "prompts 0014/0015/0016/0010, A12, evidência seq 3, PR #85."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010",
+      "model": "opus/high",
+      "input_tokens": 100000,
+      "output_tokens": 55000,
+      "note": "405 476 brutos, 103 chamadas, 62 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0016",
+      "model": "sonnet/low",
+      "input_tokens": 70000,
+      "output_tokens": 20000,
+      "note": "265 854 + 271 060 brutos (2 iterações), 13 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0014",
+      "model": "sonnet/medium",
+      "input_tokens": 540000,
+      "output_tokens": 270000,
+      "note": "595 589 + 726 823 + 825 479 brutos (3 iterações), 171 min; 67 specs."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-15+16",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 80000,
+      "output_tokens": 2000,
+      "note": "REVIEW (modelos Opus para 0011/0012) → PASS."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0015",
+      "model": "opus/medium",
+      "input_tokens": 390000,
+      "output_tokens": 190000,
+      "note": "773 941 + 774 311 brutos (2 iterações), 233+2 chamadas, 97 min; 50 páginas."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0014-it4",
+      "model": "sonnet/medium",
+      "input_tokens": 50000,
+      "output_tokens": 25000,
+      "note": "194 113 brutos, 39 min (A14)."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0014-it5+6",
+      "model": "sonnet/medium",
+      "input_tokens": 300000,
+      "output_tokens": 120000,
+      "note": "630 396 + 637 021 brutos (A15, A16), 59 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0014-it7",
+      "model": "sonnet/medium",
+      "input_tokens": 15000,
+      "output_tokens": 5000,
+      "note": "647 794 brutos acumulados; claim-next em 3 it."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002b-2 ×3",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 360000,
+      "output_tokens": 5000,
+      "note": "REVIEW (C-2B-71 45 ações) → REVIEW (claim-next residual, B4) → PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-17+18",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 60000,
+      "output_tokens": 2000,
+      "note": "REVIEW (3) → PASS; TASK-0013."
+    },
+    {
+      "kind": "maestro",
+      "id": "pair2 close + 2c prompts + PR90",
+      "model": "fable",
+      "input_tokens": 120000,
+      "output_tokens": 30000,
+      "note": "A13–A16, B4, delivery-review ×3, merge main ×2, evidência seq 4, PR #90, prompts 0011/0012/0013/0017."
     }
   ]
 }
