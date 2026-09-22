@@ -7,6 +7,7 @@
 // (`prescription_risk`) limpas por `last_event_id`.
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { localDateOf } from '../../src/handwritten/cycle/index.js';
 import type { DetectionCell } from '../../src/handwritten/cycle/index.js';
 import {
   ALERT_VIEW_KEYS,
@@ -429,7 +430,7 @@ describe('C-0002-45/46 — leituras do ciclo: getIncident e getView (§6.6, §6.
       governingClock: 'A',
       sourceEventId: null,
     });
-    expect(String(incident.ceilingOn)).toContain('2026-08-31');
+    expect(localDateOf(incident.ceilingOn as never)).toBe('2026-08-31');
     expect(incident.registeredAt).not.toBeNull();
     expect(Array.isArray(incident.notified)).toBe(true);
     expect(Array.isArray(incident.rootCauses)).toBe(true);

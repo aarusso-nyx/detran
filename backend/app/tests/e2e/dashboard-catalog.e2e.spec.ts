@@ -15,6 +15,7 @@ import {
   insertIndicatorConfig,
   newClient,
   outboxRows,
+  insertSuiteSources,
   resetDashboardE2eRows,
   restoreEnv,
 } from './dashboard-e2e.support.js';
@@ -52,6 +53,7 @@ beforeAll(async () => {
   await client.connect();
   since = await dbNow(client);
   await resetDashboardE2eRows(client, since);
+  await insertSuiteSources(client);
   // IND-DASH-401 (bloco D, saúde técnica): sem `levels` (não calibrada) e
   // calibrada com `kind: target` (§6.3).
   configNoLevelsId = await insertIndicatorConfig(client, '21', 'IND-DASH-401', {

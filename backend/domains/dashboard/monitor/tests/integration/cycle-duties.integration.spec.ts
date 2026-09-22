@@ -16,6 +16,7 @@
 // publicado (não há tabela de trilha de dever no DDL 80).
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
+import { localDateOf } from '../../src/handwritten/cycle/index.js';
 import { DASHBOARD_MONITOR_PROJECTOR_LIST } from '../../src/handwritten/projectors.js';
 import type { DashboardProjectionContext } from '../../src/handwritten/projection-contract.js';
 import {
@@ -259,12 +260,12 @@ describe('C-0002-26/27 — virada de período (§7.1, §7.2)', () => {
 
     const duty01 = (await db.dutyCycleByPair('DUTY-01', '2026-10'))!;
     expect(duty01.state).toBe('JANELA_ABERTA');
-    expect(String(duty01.deadline_on)).toContain('2026-11-20');
+    expect(localDateOf(duty01.deadline_on as never)).toBe('2026-11-20');
     expect(new Date(duty01.opened_at as string).toISOString()).toBe(
       now.toISOString(),
     );
     const duty02 = (await db.dutyCycleByPair('DUTY-02', '2026-10'))!;
-    expect(String(duty02.deadline_on)).toContain('2026-10-31');
+    expect(localDateOf(duty02.deadline_on as never)).toBe('2026-10-31');
     const duty04 = (await db.dutyCycleByPair('DUTY-04', '2026-10'))!;
     expect(duty04.deadline_on).toBeNull();
 
@@ -347,7 +348,7 @@ describe('C-0002-26/27 — virada de período (§7.1, §7.2)', () => {
     expect(await db.timers(duty05.id as string)).toHaveLength(0);
 
     const pnatrans = (await db.dutyCycleByPair('DUTY-PNATRANS', '2026'))!;
-    expect(String(pnatrans.deadline_on)).toContain('2026-04-30');
+    expect(localDateOf(pnatrans.deadline_on as never)).toBe('2026-04-30');
     const tp = await db.timers(pnatrans.id as string);
     expect(tp).toHaveLength(1);
     expect(tp[0]).toMatchObject({
@@ -365,14 +366,14 @@ describe('C-0002-26/27 — virada de período (§7.1, §7.2)', () => {
       state: 'PREPARADO',
       version: 1,
     });
-    expect(String(duty07.deadline_on)).toContain('2026-12-31');
+    expect(localDateOf(duty07.deadline_on as never)).toBe('2026-12-31');
     const duty10 = (await db.dutyCycle(SEED_DUTY_CYCLES.submetidoPublicado))!;
     expect(duty10).toMatchObject({
       duty_code: 'DUTY-10',
       period: '2026',
       version: 1,
     });
-    expect(String(duty10.deadline_on)).toContain('2026-12-31');
+    expect(localDateOf(duty10.deadline_on as never)).toBe('2026-12-31');
 
     const noCycle = await db.client.query<{ n: string }>(
       `select count(*)::text as n from dashboard.duty_cycle where tenant_id = $1 and duty_code = any($2::text[])`,

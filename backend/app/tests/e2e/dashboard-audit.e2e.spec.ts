@@ -19,6 +19,7 @@ import {
   insertPrescriptionRiskCells,
   newClient,
   numericParameter,
+  insertSuiteSources,
   resetDashboardE2eRows,
   restoreEnv,
 } from './dashboard-e2e.support.js';
@@ -45,6 +46,7 @@ beforeAll(async () => {
   await client.connect();
   since = await dbNow(client);
   await resetDashboardE2eRows(client, since);
+  await insertSuiteSources(client);
   cellThreshold = numericParameter(
     (await dashboardParameter(client, 'cell_threshold')).value,
   );

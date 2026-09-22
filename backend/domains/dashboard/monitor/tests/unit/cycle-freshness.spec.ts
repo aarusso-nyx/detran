@@ -26,7 +26,10 @@ function input(
 ) {
   return {
     lastSeenAt,
-    acceptableLatencyMinutes: overrides.acceptableLatencyMinutes ?? L,
+    acceptableLatencyMinutes:
+      overrides.acceptableLatencyMinutes === undefined
+        ? L
+        : overrides.acceptableLatencyMinutes,
     heartbeatContract:
       overrides.heartbeatContract === undefined
         ? HEARTBEAT

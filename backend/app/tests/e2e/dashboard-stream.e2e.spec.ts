@@ -26,6 +26,7 @@ import {
   insertOutboxRow,
   newClient,
   openStream,
+  insertSuiteSources,
   resetDashboardE2eRows,
   restoreEnv,
   type OpenStream,
@@ -149,6 +150,7 @@ beforeAll(async () => {
   await client.connect();
   since = await dbNow(client);
   await resetDashboardE2eRows(client, since);
+  await insertSuiteSources(client);
   const dashboardStream = (await importModule(
     '../../src/dashboard-stream.service.js',
   )) as { DASHBOARD_STREAM_POLLER: symbol };

@@ -306,6 +306,7 @@ describe('C-0002-43 — publish grava o envelope completo na outbox (§12)', () 
       spyTx,
       envelopeFor(EVENT_TYPES.sourceFreshness, aggregateId, 1) as never,
     );
+    await db.outboxFor(aggregateId); // registra a linha para o afterAll (§4.16, A16)
     const writes = statements.filter((sql) =>
       /^\s*(insert|update|delete)/i.test(sql),
     );

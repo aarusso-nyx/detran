@@ -3,7 +3,11 @@ import type { INestApplication } from '@nestjs/common';
 import type http from 'node:http';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { DETRAN_ROLES } from '@detran/shared';
+import {
+  DETRAN_ROLES,
+  dashboardLayerFor,
+  type DashboardLayer,
+} from '@detran/shared';
 
 import {
   LOCAL,
@@ -18,6 +22,7 @@ import {
   insertIndicatorConfig,
   newClient,
   openStream,
+  insertSuiteSources,
   resetDashboardE2eRows,
   restoreEnv,
   DATASET_KEYS,
@@ -56,12 +61,16 @@ const REPORT_ID = LOCAL.generatedReport('01');
 interface Probe {
   method: 'get' | 'post' | 'patch';
   path: string;
-  /** Status exato esperado para TODO papel permitido (nunca 403). */
+  /** Status exato esperado para todo papel permitido com a camada mínima (nunca 403 de política). */
   status: number;
   /** `body.code` esperado quando o status é um 4xx de pré-condição. */
   code?: string;
   body?: Record<string, unknown>;
   stream?: boolean;
+  /** Camada mínima da rota/recorte (§5.2); abaixo dela o gate responde 403 `DASH.LAYER_FORBIDDEN`. */
+  minLayer?: DashboardLayer;
+  /** Código do 403 de camada quando não é `DASH.LAYER_FORBIDDEN` (ex. `DASH.EXPORT_LAYER_EXCEEDED`, §9.1). */
+  belowLayerCode?: string;
 }
 
 interface PolicyRow {
@@ -129,6 +138,49 @@ const N0_ALLOWED = [
 const N0_DENIED = ['CANDIDATO', 'CIDADAO'] as const;
 
 const IF_MATCH_REQUIRED = { status: 428, code: 'DASH.IF_MATCH_REQUIRED' };
+
+/**
+ * A23 (a) (plan R-0011; precedente `policy-routes.e2e.spec.ts`, R-0008 CTG-0001
+ * §7): `policy.ts` concede `'*'` a `GLOBAL_ADMIN_ROLES` por regra de plataforma
+ * (`isDetranActionAllowed`), acima de `DASHBOARD_RULES`. As listas de §4.2
+ * ficam transcritas como estão (`allowed`/`denied` de cada linha — a
+ * cobertura `allowed ∪ denied = DETRAN_ROLES` é provada sobre elas); a
+ * expectativa efetiva trata estes quatro papéis como permitidos em toda chave.
+ * As camadas continuam a barrar N3 e a exigir finalidade (§5) — abaixo da
+ * camada mínima da sonda (§5.2) o status é 403 `DASH.LAYER_FORBIDDEN` do
+ * `DashboardLayerGate`, nunca o 403 de política (OD-D76 ao Owner).
+ */
+const GLOBAL_ADMIN_ROLE_GRANTS = [
+  'ADMIN',
+  'GESTOR_DETRAN',
+  'SUPORTE',
+  'technical-admin',
+] as const;
+const LAYER_RANK: Record<DashboardLayer, number> = { N0: 0, N1: 1, N2: 2 };
+
+function isPermitted(row: PolicyRow, role: string): boolean {
+  return (
+    row.allowed.includes(role) ||
+    (GLOBAL_ADMIN_ROLE_GRANTS as readonly string[]).includes(role)
+  );
+}
+
+/** Status esperado da sonda para um papel permitido (política) — §5.2 abaixo da camada mínima. */
+function expectedFor(
+  entry: Probe,
+  role: string,
+): { status: number; code?: string } {
+  if (
+    entry.minLayer &&
+    LAYER_RANK[dashboardLayerFor([role])] < LAYER_RANK[entry.minLayer]
+  ) {
+    return {
+      status: 403,
+      code: entry.belowLayerCode ?? 'DASH.LAYER_FORBIDDEN',
+    };
+  }
+  return { status: entry.status, code: entry.code };
+}
 const DUTY_CYCLE_PATH = `/v1/dashboard/duties/${SEED.duty.duty01}/cycles/2026-09`;
 
 /** CTG-0002 §4.2 — as 32 linhas, transcritas (Permitidos / Negados). */
@@ -173,12 +225,20 @@ const MATRIX: PolicyRow[] = [
       'CIDADAO',
     ],
     probes: [
-      { method: 'get', path: '/v1/dashboard/alerts', status: 200 },
+      {
+        method: 'get',
+        path: '/v1/dashboard/alerts',
+        status: 200,
+        minLayer: 'N1',
+      },
       {
         method: 'get',
         path: `/v1/dashboard/alerts/${SEED.alert.detectadoIrregularity}`,
         status: 200,
+        minLayer: 'N1',
       },
+      // O stream não tem camada mínima em §5.2: a camada filtra os eventos
+      // no SQL (§11, `objectLayer <= camada do papel`), não recusa o handshake.
       {
         method: 'get',
         path: '/v1/dashboard/stream',
@@ -231,6 +291,7 @@ const MATRIX: PolicyRow[] = [
         method: 'post',
         path: `/v1/dashboard/alerts/${SEED.alert.notificadoExtinction}/ack`,
         body: { channel: 'origin' },
+        minLayer: 'N1',
         ...IF_MATCH_REQUIRED,
       },
     ],
@@ -279,6 +340,7 @@ const MATRIX: PolicyRow[] = [
         method: 'post',
         path: `/v1/dashboard/alerts/${SEED.alert.reconhecidoExtinction}/treating`,
         body: {},
+        minLayer: 'N1',
         ...IF_MATCH_REQUIRED,
       },
     ],
@@ -329,6 +391,7 @@ const MATRIX: PolicyRow[] = [
         method: 'post',
         path: `/v1/dashboard/alerts/${SEED.alert.verificadoIrregularity}/close`,
         body: {},
+        minLayer: 'N1',
         ...IF_MATCH_REQUIRED,
       },
     ],
@@ -378,6 +441,7 @@ const MATRIX: PolicyRow[] = [
         method: 'post',
         path: `/v1/dashboard/alerts/${SEED.alert.notificadoExtinction}/root-cause`,
         body: { category: 'transport', description: 'sonda e2e TASK-0014' },
+        minLayer: 'N1',
         ...IF_MATCH_REQUIRED,
       },
     ],
@@ -426,6 +490,7 @@ const MATRIX: PolicyRow[] = [
         path: `/v1/dashboard/alerts/${SEED.alert.detectadoIrregularity}/incident`,
         status: 404,
         code: 'DASH.ALERT_INCIDENT_NOT_FOUND',
+        minLayer: 'N1',
       },
     ],
   },
@@ -1202,11 +1267,17 @@ const MATRIX: PolicyRow[] = [
       'CIDADAO',
     ],
     probes: [
-      { method: 'get', path: '/v1/dashboard/sources', status: 200 },
+      {
+        method: 'get',
+        path: '/v1/dashboard/sources',
+        status: 200,
+        minLayer: 'N1',
+      },
       {
         method: 'get',
         path: `/v1/dashboard/sources/${SEED.source.raitOutbox}`,
         status: 200,
+        minLayer: 'N1',
       },
     ],
   },
@@ -1258,6 +1329,8 @@ const MATRIX: PolicyRow[] = [
         body: { scope: 'alerts', filters: {}, format: 'xlsx' },
         status: 400,
         code: 'DASH.EXPORT_FORMAT_NOT_OPEN',
+        minLayer: 'N1',
+        belowLayerCode: 'DASH.EXPORT_LAYER_EXCEEDED',
       },
     ],
   },
@@ -1348,7 +1421,14 @@ const MATRIX: PolicyRow[] = [
       'dash-duty-owner',
       'CIDADAO',
     ],
-    probes: [{ method: 'get', path: '/v1/dashboard/audit-trail', status: 200 }],
+    probes: [
+      {
+        method: 'get',
+        path: '/v1/dashboard/audit-trail',
+        status: 200,
+        minLayer: 'N1',
+      },
+    ],
   },
   {
     criterion: 'C-0002-78',
@@ -1389,6 +1469,7 @@ const MATRIX: PolicyRow[] = [
         method: 'get',
         path: '/v1/dashboard/comparisons?dimension=pool',
         status: 200,
+        minLayer: 'N1',
       },
     ],
   },
@@ -1635,6 +1716,7 @@ beforeAll(async () => {
   await client.connect();
   since = await dbNow(client);
   await resetDashboardE2eRows(client, since);
+  await insertSuiteSources(client);
   await insertIndicatorConfig(client, '01', 'IND-DASH-401');
   await insertBiPanel(client, '01', 'N0');
   await insertGeneratedReport(client, '01', { layer: 'N0' });
@@ -1736,15 +1818,16 @@ describe('CTG-0002 §4.2 — matriz de política presença e ausência (C-0002-5
   for (const row of MATRIX) {
     describe(`${row.criterion} — ${row.key}`, () => {
       for (const role of DETRAN_ROLES) {
-        if (row.allowed.includes(role)) {
-          it(`${row.criterion} — dado o papel permitido ${role} quando chama ${row.probes.map((entry) => `${entry.method.toUpperCase()} ${entry.path}`).join(' | ')} então nunca 403 de política (status do caminho feliz mínimo)`, async () => {
+        if (isPermitted(row, role)) {
+          it(`${row.criterion} — dado o papel permitido ${role}${row.allowed.includes(role) ? '' : ' (administrador global, A23 a)'} quando chama ${row.probes.map((entry) => `${entry.method.toUpperCase()} ${entry.path}`).join(' | ')} então nunca 403 de política (status do caminho feliz mínimo)`, async () => {
             for (const entry of row.probes) {
+              const expected = expectedFor(entry, role);
               const result = await probe(role, entry);
               expect(
                 result.status,
                 `${role} ${entry.method.toUpperCase()} ${entry.path}: ${JSON.stringify(result.body)}`,
-              ).toBe(entry.status);
-              if (entry.code) expect(result.body.code).toBe(entry.code);
+              ).toBe(expected.status);
+              if (expected.code) expect(result.body.code).toBe(expected.code);
             }
           });
         } else {

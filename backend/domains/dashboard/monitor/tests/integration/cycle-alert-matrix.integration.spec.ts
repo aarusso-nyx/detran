@@ -134,9 +134,11 @@ async function runCommand(
   who: ActorKey,
   track: AlertTrack,
   version: number,
-  ifMatch: string | undefined = ifMatchOf(version),
+  /** `null` = cabeçalho AUSENTE (sentinela: `undefined` ativaria o default). */
+  ifMatchArg: string | null = ifMatchOf(version),
   dtoOverride?: Record<string, unknown>,
 ): Promise<unknown> {
+  const ifMatch = ifMatchArg ?? undefined;
   const ctx = ctxFor(who, NOW);
   const { alerts } = services;
   switch (command) {
@@ -532,7 +534,7 @@ describe('C-0002-09 — If-Match via assertDashIfMatch (§1.3 regra 5, OD-D56)',
     const id = nextId();
     await db.cloneAlert(seedAlertBy('NOTIFICADO', 'extinction').id, id);
     await expectDashError(
-      runCommand('ack', id, 'raitManager', 'extinction', 1, undefined),
+      runCommand('ack', id, 'raitManager', 'extinction', 1, null),
       'DASH.IF_MATCH_REQUIRED',
       428,
     );
@@ -590,14 +592,7 @@ describe('C-0002-09 — If-Match via assertDashIfMatch (§1.3 regra 5, OD-D56)',
       reconhecido,
     );
     await expectDashError(
-      runCommand(
-        'treat',
-        reconhecido,
-        'raitManager',
-        'extinction',
-        1,
-        undefined,
-      ),
+      runCommand('treat', reconhecido, 'raitManager', 'extinction', 1, null),
       'DASH.IF_MATCH_REQUIRED',
       428,
     );
@@ -607,14 +602,7 @@ describe('C-0002-09 — If-Match via assertDashIfMatch (§1.3 regra 5, OD-D56)',
       verificado,
     );
     await expectDashError(
-      runCommand(
-        'close',
-        verificado,
-        'dashOperator',
-        'irregularity',
-        1,
-        undefined,
-      ),
+      runCommand('close', verificado, 'dashOperator', 'irregularity', 1, null),
       'DASH.IF_MATCH_REQUIRED',
       428,
     );
@@ -625,7 +613,7 @@ describe('C-0002-09 — If-Match via assertDashIfMatch (§1.3 regra 5, OD-D56)',
         'dashOperator',
         'irregularity',
         1,
-        undefined,
+        null,
       ),
       'DASH.IF_MATCH_REQUIRED',
       428,

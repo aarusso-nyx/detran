@@ -22,6 +22,7 @@ import {
   insertGeneratedReport,
   insertIndicatorConfig,
   newClient,
+  insertSuiteSources,
   resetDashboardE2eRows,
   restoreEnv,
 } from './dashboard-e2e.support.js';
@@ -49,6 +50,7 @@ beforeAll(async () => {
   await client.connect();
   since = await dbNow(client);
   await resetDashboardE2eRows(client, since);
+  await insertSuiteSources(client);
   ackAlertId = await copyAlertFixture(
     client,
     SEED.alert.notificadoIrregularity,

@@ -9,7 +9,10 @@
 // Fontes sem seed (`portal.outbox`, `dashboard`) inseridas `FRESCO` (§8.3).
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
-import { loadEscalationChain } from '../../src/handwritten/cycle/index.js';
+import {
+  loadEscalationChain,
+  localDateOf,
+} from '../../src/handwritten/cycle/index.js';
 import type { DetectionCell } from '../../src/handwritten/cycle/index.js';
 import {
   ESCALATION_CHAIN,
@@ -110,7 +113,7 @@ describe('C-0002-10/11 — detector do bloco A: DETECTADO → CLASSIFICADO → N
       escalation_level: 1,
       source_event_id: cell.eventId,
     });
-    expect(String(alert.ceiling_on)).toContain('2027-03-09');
+    expect(localDateOf(alert.ceiling_on as never)).toBe('2027-03-09');
     expect(new Date(alert.next_milestone_at as string).toISOString()).toBe(
       cell.nextMilestoneAt!.toISOString(),
     );

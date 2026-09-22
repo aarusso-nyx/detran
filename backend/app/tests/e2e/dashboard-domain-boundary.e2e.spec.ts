@@ -18,6 +18,7 @@ import {
   insertIndicatorConfig,
   newClient,
   numericParameter,
+  insertSuiteSources,
   resetDashboardE2eRows,
   restoreEnv,
   writeTargets,
@@ -30,9 +31,10 @@ import {
  * interceptado; nunca `log_statement`): nenhuma escrita
  * (`insert|update|delete`) pode alcançar tabela fora de `dashboard.*` e
  * `integration.outbox`. Escritas da PLATAFORMA que todo comando do repositório
- * produz por decoradores obrigatórios (M17) — `core.idempotency_keys`
- * (`@Idempotent()` do STYNX, §1.3.6) e `audit.write(...)` (`@Audit`, chamada
- * de função, não `insert`) — são as únicas exceções, declaradas aqui.
+ * produz por decoradores obrigatórios (M17) — `integration.idempotency_keys`
+ * (`@Idempotent()` do STYNX, §1.3.6), `integration.rate_limit_windows`
+ * (`RateLimit` de `@Action`) e `audit.write(...)` (`@Audit`, chamada de
+ * função, não `insert`) — são as únicas exceções, declaradas aqui (A23 b).
  * `verify:domain-boundaries` (gate) é executado fora do spec. Fica vermelho
  * até TASK-0013 montar os controllers de §14.2.
  */
@@ -53,7 +55,11 @@ const ids = {
 };
 
 const ALLOWED_WRITE_TARGETS = new Set(['integration.outbox']);
-const PLATFORM_WRITE_TARGETS = new Set(['core.idempotency_keys']);
+/** A23 (b): `@Idempotent()` e `RateLimit` de `@Action` (STYNX) — escritas da plataforma, não do domínio. */
+const PLATFORM_WRITE_TARGETS = new Set([
+  'integration.idempotency_keys',
+  'integration.rate_limit_windows',
+]);
 
 function isAllowed(target: string): boolean {
   return (
@@ -279,6 +285,7 @@ beforeAll(async () => {
   await client.connect();
   since = await dbNow(client);
   await resetDashboardE2eRows(client, since);
+  await insertSuiteSources(client);
   await client.query(
     `delete from dashboard.transparency_audit where tenant_id = $1 and period = '2026-07'`,
     [TENANT_ID],

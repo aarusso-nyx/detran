@@ -19,6 +19,7 @@ import {
   newClient,
   numericParameter,
   outboxRows,
+  insertSuiteSources,
   resetDashboardE2eRows,
   restoreEnv,
 } from './dashboard-e2e.support.js';
@@ -60,6 +61,7 @@ beforeAll(async () => {
   await client.connect();
   since = await dbNow(client);
   await resetDashboardE2eRows(client, since);
+  await insertSuiteSources(client);
   const approval = await dashboardParameter(client, 'approval_rows');
   approvalRowsLimit = numericParameter(approval.value);
   const threshold = await dashboardParameter(client, 'cell_threshold');

@@ -73,9 +73,16 @@ export const LOCAL = {
   prescriptionRisk: (nn: string) => `00000000-0000-7000-8000-0000840007${nn}`,
   sourceEvent: (nn: string) => `00000000-0000-7000-8000-0000840008${nn}`,
   pool: (nn: string) => `00000000-0000-7000-8000-0000840009${nn}`,
+  source: (nn: string) => `00000000-0000-7000-8000-000084000b${nn}`,
   caseId: (nn: string) => `00000000-0000-7000-8000-000084000a${nn}`,
   missing: (nn: string) => `00000000-0000-7000-8000-000084000f${nn}`,
 } as const;
+
+/** Fontes sem seed 81 que o ciclo exige `FRESCO` (CTG-0002 §8.3; A23 (c), OD-D61). */
+export const SUITE_SOURCES = [
+  { nn: '01', sourceKey: 'portal.outbox', app: 'portal' },
+  { nn: '02', sourceKey: 'dashboard', app: 'dashboard' },
+] as const;
 
 /** Prefixo de nomes/códigos criados pela suíte (limpeza por `like`). */
 export const LOCAL_PREFIX = 'e2e-0084-';
@@ -292,6 +299,32 @@ export async function copyAlertFixture(
     [seedId, id, LOCAL.alertTrail(nn), TENANT_ID],
   );
   return id;
+}
+
+/**
+ * A23 (c) / OD-D61: `portal.outbox` e `dashboard` não existem no seed 81 e o
+ * ciclo responde 409 `DASH.ALERT_SOURCE_STALE` sem elas. Inseridas `FRESCO`
+ * exatamente como `tests/support/cycle-harness.ts` (A21 premissa 4), com id do
+ * namespace 0084; `on conflict (tenant_id, source_key) do nothing` quando a
+ * suíte do ciclo já as inseriu numa execução concorrente — só as linhas com
+ * id do namespace são apagadas no `afterAll` (`resetDashboardE2eRows`).
+ */
+export async function insertSuiteSources(client: pg.Client): Promise<string[]> {
+  await asOwner(client);
+  const created: string[] = [];
+  for (const source of SUITE_SOURCES) {
+    const result = await client.query<{ id: string }>(
+      `insert into dashboard.source (
+         id, tenant_id, source_key, app, state, last_seen_at, last_read_at,
+         acceptable_latency_minutes, heartbeat_contract, stale_since, hidden, version
+       ) values ($1, $2, $3, $4, 'FRESCO', now(), now(), null, 'source.heartbeat', null, false, 1)
+       on conflict (tenant_id, source_key) do nothing
+       returning id`,
+      [LOCAL.source(source.nn), TENANT_ID, source.sourceKey, source.app],
+    );
+    if (result.rows[0]) created.push(result.rows[0].id);
+  }
+  return created;
 }
 
 export async function insertIndicatorConfig(
@@ -596,6 +629,10 @@ export async function resetDashboardE2eRows(
   await client.query(
     `delete from dashboard.timer where tenant_id = $1 and (owner_id::text like $2 or created_at >= $3::timestamptz)`,
     [TENANT_ID, namespace, since],
+  );
+  await client.query(
+    `delete from dashboard.source where tenant_id = $1 and id::text like $2`,
+    [TENANT_ID, namespace],
   );
   await client.query(
     `delete from dashboard.alert_trail where tenant_id = $1 and (alert_id::text like $2 or id::text like $2)`,

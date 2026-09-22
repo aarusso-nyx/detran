@@ -1,20 +1,32 @@
 // CTG-0001 §6 C-0001-06 (M9 f, redação A9 do maestro após a regeneração,
-// adenda A10 de work/rounds/R-0011/plan.md) — "nenhuma rota altera domínio":
-// o gerador emite um controller **vazio** por recurso mesmo com
-// `operations: []` (padrão de `crashes`) e `MonitorModule` os registra, e
-// `src/index.ts` sempre re-exporta esses controllers vazios via `export *`
-// (mesmo padrão de `dashboard-crashes`) — não há caso em que esse export
-// esteja ausente, então A10 derruba a sub-asserção "`src/index.ts` sem
-// export `*Controller`". O critério vale como: "nenhum controller tem
-// método com metadado de rota Nest", `api.resources[*].operations` todos
-// `[]`, `src/handwritten/` sem `*.controller.ts`, OpenAPI gerado sem
-// operações. Análise ESTÁTICA de texto-fonte (não `import` do pacote):
-// `src/index.ts`/`monitor.module.ts` importam
-// `./handwritten/projectors.js`/`./handwritten/index.js`, que ainda não
-// existem (TASK-0010) — um `import()` dinâmico do módulo falharia por
-// dependência ausente, não pelo que este spec quer provar. Isso não depende
-// de `src/handwritten/**`.
+// adendas A10/A22(a) de work/rounds/R-0011/plan.md) — "nenhuma rota altera
+// domínio [no CTG-0001]": o gerador emite um controller **vazio** por
+// recurso mesmo com `operations: []` (padrão de `crashes`) e `MonitorModule`
+// os registra, e `src/index.ts` sempre re-exporta esses controllers vazios
+// via `export *` (mesmo padrão de `dashboard-crashes`) — não há caso em que
+// esse export esteja ausente, então A10 derruba a sub-asserção "`src/index.ts`
+// sem export `*Controller`". A22(a): o CTG-0002 (blueprint 1.1.0, §14.2)
+// declara sete controllers MANUSCRITOS em `src/handwritten/surface/*.controller.ts`
+// (`DashboardAlertsController`, `DashboardDutiesController`,
+// `DashboardCatalogController`, `DashboardSourcesController`,
+// `DashboardExportsController`, `DashboardAuditController`,
+// `DashboardOpenDataController`), registrados em `monitor.module.ts` gerado —
+// a sub-asserção "`src/handwritten/` sem `*.controller.ts`" (verdadeira só no
+// CTG-0001) cai; no lugar, prova-se que todo `*.controller.ts` manuscrito
+// mora em `src/handwritten/surface/` (nunca em `cycle/`/`projections/`, que
+// não roteiam — CTG-0002 §14.1/tabela de locks TASK-0005×TASK-0013). A
+// sub-asserção de "sem `commands.openapi.json` **gerado**" também cai: o
+// arquivo é um entregável MANUSCRITO de TASK-0006 (WP-D3) e sua presença não
+// contradiz "nenhuma rota no *blueprint*"; "gerado pelo blueprints:generate"
+// não é verificável por leitura de arquivo (nenhum marcador de proveniência
+// no JSON gerado) — a asserção foi removida em vez de reescrita para algo
+// não verificável. O que continua valendo: `api.resources[*].operations`
+// todos `[]` no blueprint, OpenAPI **gerado** (`BP-DASH-MONITOR-001.openapi.json`)
+// sem `paths`, controllers **gerados** (`src/controllers/*.controller.ts`)
+// sem método com metadado de rota Nest. Análise ESTÁTICA de texto-fonte (não
+// `import` do pacote).
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { sep as PATH_SEP } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 
@@ -34,9 +46,9 @@ const OPENAPI_PATH = fileURLToPath(
   ),
 );
 
-/** Lista `*.controller.ts` sob `dir`, recursivo; `[]` quando `dir` ainda não
- * existe (TASK-0010) — "não contém" é verdadeiro tanto para um diretório
- * vazio quanto para um diretório ausente, então não há caso a pular. */
+/** Lista `*.controller.ts` sob `dir`, recursivo, com caminho relativo a
+ * `dir` (ex. `surface/alerts.controller.ts`); `[]` quando `dir` não existe —
+ * mantido para não quebrar se `src/handwritten/` sumir numa entrega futura. */
 function listControllerFiles(dir: string): string[] {
   if (!existsSync(dir)) return [];
   return readdirSync(dir, { recursive: true } as never)
@@ -73,14 +85,6 @@ describe('BP-DASH-MONITOR-001 — nenhuma rota altera domínio (CTG-0001 §6 C-0
     expect(Object.keys(openapi.paths ?? {})).toEqual([]);
   });
 
-  it('dado docs/framework/contracts/BP-DASH-MONITOR-001.commands.openapi.json quando verificado então não existe (CTG-0001 §6)', () => {
-    const commandsPath = OPENAPI_PATH.replace(
-      '.openapi.json',
-      '.commands.openapi.json',
-    );
-    expect(existsSync(commandsPath)).toBe(false);
-  });
-
   it('dado cada controller gerado quando o texto-fonte é lido então nenhum método além do constructor tem decorator de rota Nest (@Get/@Post/@Put/@Patch/@Delete/…)', () => {
     const files = readdirSync(CONTROLLERS_DIR).filter((file) =>
       file.endsWith('.controller.ts'),
@@ -97,8 +101,15 @@ describe('BP-DASH-MONITOR-001 — nenhuma rota altera domínio (CTG-0001 §6 C-0
     }
   });
 
-  it('dado src/handwritten/ quando listado então não contém nenhum *.controller.ts (diretório ainda não existe nesta entrega — TASK-0010 — o que também satisfaz "nenhum")', () => {
+  it('dado src/handwritten/ quando listado então todo *.controller.ts mora em src/handwritten/surface/ (nenhum em cycle/ ou projections/ — CTG-0002 §14.2, A22(a))', () => {
     const controllerFiles = listControllerFiles(HANDWRITTEN_DIR);
-    expect(controllerFiles).toEqual([]);
+    expect(controllerFiles.length).toBeGreaterThan(0);
+    for (const file of controllerFiles) {
+      const normalized = file.split(PATH_SEP).join('/');
+      expect(
+        normalized.startsWith('surface/'),
+        `${file} deveria estar em src/handwritten/surface/`,
+      ).toBe(true);
+    }
   });
 });
