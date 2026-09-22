@@ -904,6 +904,21 @@ Checkpoint 38 (janela 3, integração RAIT web e recertificação combinada):
 - o worktree permaneceu limpo após o merge e os gates. O candidato está liberado para regravar a
   evidência CTG-0003 sobre a cadeia atual, publicar a branch e exigir nova CI integral verde.
 
+Checkpoint 39 (janela 3, merge e observação governada de CTG-0003):
+
+- a PR #82 foi mesclada em `b8920457…` após os sete jobs obrigatórios passarem, incluindo
+  `backend-kernel` e `verified-local-rc`; a branch de continuidade foi sincronizada por
+  fast-forward com esse merge exato;
+- o Auditor observou o merge exato em `EV-1925d89b5640ab91`, sequência 68, e materializou os cinco
+  artefatos em `.devai/state/audit-observations/b8920457…`; a cadeia permaneceu válida no head
+  `893bbe9e…` antes do registro de integração;
+- a avaliação conservadora YELLOW, com 43 células UNKNOWN por lacunas de sensores e
+  `readiness_promoting=false`, descreve somente a introspecção pós-merge e não reabre o delivery
+  review ciclo 9 PASS nem os gates verdes do candidato;
+- a observação e seu evidence record serão publicados na branch preservada para continuidade de
+  CTG-0004a/CTG-0004b/CTG-0005. CTG-0003 fica completamente encerrada após a verificação final da
+  cadeia e o push desses dois commits pós-merge.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
