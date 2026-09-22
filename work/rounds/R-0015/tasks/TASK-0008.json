@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0008",
+  "round_id": "R-0015",
+  "status": "pending",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Escrever testes da biblioteca mobile e do módulo web",
+  "description": "Após a publicação de R-0013 CTG-0004 e o scaffold, testar guardas, 14 schemas, rotas, componentes, portas nativas, integração do shell, web e a11y antes da implementação.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-mobile-tests", "MOD-teat-web-sinistros-tests"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0007",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["wp-b4", "wp-b5", "ctg-0002"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/boat-mobile", "test"],
+    ["pnpm", "--filter", "@detran/teat-web", "test"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

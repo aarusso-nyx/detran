@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0003",
+  "round_id": "R-0015",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever a semente i18n boat.pt-BR.json",
+  "description": "Criar a semente pt-BR somente com as chaves e textos autorizados pelo contrato CTG-0001, placeholders {x} e nenhum parâmetro disfarçado.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-i18n"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0001",
+  "db_isolation": "none",
+  "iteration_count": 3,
+  "max_iterations": 2,
+  "priority": 2,
+  "tags": ["wp-b4", "wp-b5", "ctg-0001"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-c995aa4fe6542912",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "verify:parameter-catalogue"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-c995aa4fe6542912",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

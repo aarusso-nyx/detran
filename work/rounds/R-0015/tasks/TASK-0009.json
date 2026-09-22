@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0009",
+  "round_id": "R-0015",
+  "status": "pending",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar @detran/boat-mobile e integrar ao shell de campo",
+  "description": "Implementar as 12 telas, guardas, componentes, croqui e portas nativas na biblioteca de feature e registrá-la no shell do TEAT, sem editar testes.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-mobile-lib", "MOD-package-json"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["wp-b4", "wp-b5", "ctg-0002"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/boat-mobile", "lint"],
+    ["pnpm", "--filter", "@detran/boat-mobile", "typecheck"],
+    ["pnpm", "--filter", "@detran/boat-mobile", "test"],
+    ["pnpm", "--filter", "@detran/boat-mobile", "build"],
+    ["pnpm", "--filter", "@detran/teat-mobile", "build"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-terra"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
