@@ -148,6 +148,9 @@ export async function invokeInFreshProcess(
   const modulePath = fileURLToPath(
     new URL(`../../src/handwritten/${file}.ts`, import.meta.url),
   );
+  const tsconfigPath = fileURLToPath(
+    new URL('./tsconfig.fresh-process.json', import.meta.url),
+  );
   const script = `import pg from 'pg'; import { ${symbol} } from ${JSON.stringify(modulePath)};
     void (async () => {
       const input = ${JSON.stringify(wire)};
@@ -173,7 +176,7 @@ export async function invokeInFreshProcess(
     })().catch(error => { process.stderr.write(String(error.stack)); process.exitCode=1; });`;
   const result = await promisify(execFile)(
     'pnpm',
-    ['exec', 'tsx', '--eval', script],
+    ['exec', 'tsx', `--tsconfig=${tsconfigPath}`, '--eval', script],
     {
       cwd: fileURLToPath(new URL('../../../../../../', import.meta.url)),
       env: process.env,

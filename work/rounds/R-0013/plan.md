@@ -823,6 +823,20 @@ Checkpoint 33 (janela 3, blocker de CI eliminado e recertificado):
 - o candidato está liberado para commit corretivo, regravação DEVAI, atualização do PR #82 e nova
   execução integral dos required checks antes do merge.
 
+Checkpoint 34 (janela 3, fronteira de subprocesso fechada):
+
+- o CI do SHA `e3446678…` passou cinco jobs, mas o fallback remoto revelou que o teste de runtime
+  novo executava `tsx` fora do alias do Vitest e ainda resolvia `@detran/shared` para `dist` ausente;
+  a falha real era mascarada pelo parser de sourcemap do Vitest;
+- a reprodução local removeu fisicamente `backend/domains/shared/dist` e obteve o mesmo erro; um
+  `tsconfig.fresh-process.json` exclusivo passou a resolver shared para fonte, mantendo processo,
+  conexão PostgreSQL, resposta/ETag, snapshot e sentinelas de efeitos independentes;
+- sem `shared/dist`, o teste focal passou 1/1 e a integração completa passou 694/694;
+  `blueprints:check` também passou, provando ausência de divergência no gerado canônico;
+- Reviewer CODEX independente em papel Auditor reproduziu resolução somente por fonte, confirmou
+  PIDs distintos e fail-closed real e emitiu `PASS` sem findings. O candidato requer recertificação
+  integral, novo evidence record e CI verde antes do merge do PR #82.
+
 ## Leitura
 
 Leitura do maestro concluída sobre `b0df484dc0ae1fc1fa742a5f60ef00b17b1c348e`, na ordem do
