@@ -1,4 +1,4 @@
-# ADR-0028: Adopt DEVAI 1.5.3 for attested local RC evidence
+# ADR-0028: Adopt DEVAI 1.5.4 for attested local RC evidence
 
 ## Status
 
@@ -17,10 +17,13 @@ DEVAI 1.5.2 adopted that verifier through the official workflow generator. DEVAI
 the correction by bounding the committed-snapshot `git cat-file --batch` reconstruction, so this
 repository's tracked blob population no longer exceeds the child-process output buffer. The
 generated workflow continues to pin verifier package, source identity and provenance independently.
+DEVAI 1.5.4 additionally preserves the required empty `artifacts/` directory while publishing a
+zero-artifact evidence bundle, removing the final false `ARTIFACTS_MISSING` refusal observed after
+the complete local RC passed.
 
 ## Decision
 
-1. Pin `@aarusso-nyx/devai` 1.5.3 and keep Constitution 1.0.0 unchanged.
+1. Pin `@aarusso-nyx/devai` 1.5.4 and keep Constitution 1.0.0 unchanged.
 2. Enable `ci_economy.attested_rc` only for `backend-kernel`, using exact-tree protected-tag
    binding, the single `owner-aarusso-nyx` Ed25519 signer and fail-closed verification.
 3. Keep `foundation`, `evidence-gate`, `senatran-mock` and `senatran-mock-tests` remote.
