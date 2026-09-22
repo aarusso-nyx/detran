@@ -1068,9 +1068,20 @@ Checkpoint 51 (janela 4, RED comportamental extraordinário congelado):
 - os REDs cobrem os cinco guards efetivos e RBAC 70×9, 28 operações HTTP, store/sync/normativo,
   oito módulos e 69 classes de página distintas, i18n, ErrorBoundary, readiness, validações de
   schemas, impressão/bodycam, dispatcher, 11 rotas BOAT e D-05 fail-closed;
-- todos os 22 hashes finais de specs/helpers estão congelados no relatório Inspector. TASK-0012
+- todos os 23 hashes finais de specs/helpers estão congelados no relatório Inspector. TASK-0012
   está `completed` em 3/3; TASK-0013 abriu a tentativa final 2/2 e não pode alterar qualquer
   sensor/helper, configuração, contrato, lockfile ou gerado.
+
+Checkpoint 52 (janela 4, correção de paths nos sensores congelados):
+
+- a auditoria do maestro detectou que dois sensores extraordinários ainda importavam paths do
+  candidato rejeitado, fora da allowlist fechada: bodycam em `shared/` e normativo em `data/local/`;
+- o Inspector alterou somente esses dois imports para `core/bodycam-indicator.component` e
+  `data/normative/normative-package.service`, sem mudar asserções. Os novos hashes são
+  `2856a554…` e `c470fd38…`; os outros 21 permanecem byte-idênticos;
+- lint e typecheck passaram; o RED focal ficou em 4/951 falhas atribuíveis ao bodycam ainda não
+  movido pela produção. TASK-0012 permanece `completed` 3/3 e TASK-0013 continua na mesma tentativa
+  final 2/2, ainda não aceita pelo maestro.
 
 ## Leitura
 

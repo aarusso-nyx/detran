@@ -1,7 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { expect, it, vi } from 'vitest';
-import * as bodycamRuntime from './shared/bodycam-indicator.component';
+import { loadMobileRuntime } from '../testing/runtime-module';
 import * as printerRuntime from './shared/mobile-printer.port';
+
+async function loadBodycamRuntime(): Promise<Record<string, unknown>> {
+  return loadMobileRuntime('core/bodycam-indicator.component');
+}
 
 it('dada porta de impressão de produção quando PrinterDialog imprime, falha e reimprime então registra o mesmo AIT sem criar outro', async () => {
   const PrinterDialog = (printerRuntime as unknown as Record<string, unknown>)[
@@ -52,11 +56,10 @@ it('dada porta de impressão de produção quando PrinterDialog imprime, falha e
 });
 
 for (const state of ['recording', 'paused-exception', 'failure'] as const) {
-  it(`dado bodycam em ${state} quando o chrome é renderizado então exibe somente o estado autorizado e nunca conteúdo`, () => {
+  it(`dado bodycam em ${state} quando o chrome é renderizado então exibe somente o estado autorizado e nunca conteúdo`, async () => {
+    const runtime = await loadBodycamRuntime();
     const Component =
-      (bodycamRuntime as unknown as Record<string, unknown>)[
-        'BodycamIndicator'
-      ] ?? bodycamRuntime['BodycamIndicatorComponent'];
+      runtime['BodycamIndicator'] ?? runtime['BodycamIndicatorComponent'];
     expect(Component).toBeTypeOf('function');
     const fixture = TestBed.configureTestingModule({
       imports: [Component as never],

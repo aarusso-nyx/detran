@@ -109,7 +109,7 @@ it('dado recibo parcial, erro e retry quando SyncWorker submete então preserva 
 
 it('dados conteúdo válido, ausente, hash divergente e expirado quando NormativePackageService revalida então só o válido é utilizável e o expirado avisa', async () => {
   const runtime = await loadMobileRuntime(
-    'data/local/normative-package.service',
+    'data/normative/normative-package.service',
   );
   const Service = runtime['NormativePackageService'] as new (
     store: unknown,
