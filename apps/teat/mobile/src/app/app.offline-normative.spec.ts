@@ -138,19 +138,21 @@ it('dados conteúdo válido, ausente, hash divergente e expirado quando Normativ
   const encryptedStore = {
     adapterName: 'fixture-encrypted-store',
     encrypted: true,
-    encryptionScope: 'teat-mobile-device',
+    encryptionScope: 'device',
     securityLevel: 'hardware-backed',
-    async put(key: string, value: unknown): Promise<void> {
-      encryptedValues.set(key, value);
+    async put(collection: string, key: string, value: unknown): Promise<void> {
+      encryptedValues.set(`${collection}:${key}`, value);
     },
-    async get(key: string): Promise<unknown> {
-      return encryptedValues.get(key);
+    async get(collection: string, key: string): Promise<unknown> {
+      return encryptedValues.get(`${collection}:${key}`);
     },
-    async list(): Promise<readonly unknown[]> {
-      return [...encryptedValues.values()];
+    async list(collection: string): Promise<readonly unknown[]> {
+      return [...encryptedValues]
+        .filter(([key]) => key.startsWith(`${collection}:`))
+        .map(([, value]) => value);
     },
-    async remove(key: string): Promise<void> {
-      encryptedValues.delete(key);
+    async remove(collection: string, key: string): Promise<void> {
+      encryptedValues.delete(`${collection}:${key}`);
     },
     async clear(): Promise<void> {
       encryptedValues.clear();

@@ -8,6 +8,7 @@ import {
   TEAT_ROUTE_FIXTURE,
 } from '../testing/route-contract.fixture';
 import { expectTeatA11yState } from '../testing/a11y-state.spec-helper';
+import { readMobileProductionSource } from '../testing/mobile-source';
 
 for (const expected of TEAT_ROUTE_FIXTURE) {
   if (expected.path === D05_ROUTE_PATH) {
@@ -22,12 +23,15 @@ for (const expected of TEAT_ROUTE_FIXTURE) {
       expect(route?.loadComponent).toBeUndefined();
     });
   } else if (BOAT_ROUTE_PATHS.includes(expected.path)) {
-    it(`dada /${expected.path} BOAT sem extensão local quando verificada então preserva apenas metadata fail-closed, sem placeholder`, () => {
+    it(`dada /${expected.path} BOAT sem extensão local quando verificada então preserva loader boundary e não importa placeholder`, () => {
       const route = TEAT_ROUTES.find(
         (candidate) => candidate.path === expected.path,
       );
       expect(route?.data).toMatchObject({ boatExtension: true });
-      expect(route?.loadComponent).toBeUndefined();
+      expect(route?.loadComponent).toBeTypeOf('function');
+      const source = readMobileProductionSource('app.routes.ts');
+      expect(source).not.toContain('./features/sinistro/pages/');
+      expect(source).not.toMatch(/<[^>]*>\s*TEAT\s*<\//);
     });
   } else {
     it(`dada /${expected.path} quando renderizada então mantém invariantes a11y e axe`, async () => {
