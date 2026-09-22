@@ -129,6 +129,24 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
 - [ ] Owner: **o DASHBOARD deve ser excluído do atalho de administrador global** (`policy.ts` concede
       `'*'` a `GLOBAL_ADMIN_ROLES` em toda rota, inclusive as do DASHBOARD) **?** — OD-D76 (fonte
       `plan.md` A23(a), contrato `CTG-0002.md` §16)
+- [ ] rait: **`rait.clock.flag-changed`, `rait.decision.published` e `rait.case.created` sem produtor em
+      `main`** (só consumidores e fixtures): IND-DASH-101…105 nascem `connected = false` e o bloco
+      `legal-ceiling` fica em 2/11 contra a meta DT-030 — OD-D17, issue #96 (dono de R-0007 CTG-0003;
+      fonte `plan.md` §Triagem, contrato `CTG-0001.md` §8)
+- [ ] dashboard: **tokens de `domainEvent` publicados fora do route contract §6** (`ALERTA_CLASSIFICADO`,
+      `ALERTA_NOTIFICADO`, `ALERTA_EM_TRATAMENTO`, `ALERTA_VERIFICADO`, `ALERTA_CRITICO_EXTINCAO`,
+      `DEVER_<estado>`): ampliar a §6 ou reduzir o conjunto publicado, e alinhar os schemas de evento —
+      OD-D33, issue #97 (Architect; fonte contrato `CTG-0002.md` §16)
+- [ ] dashboard: **catálogo de erros sem código de estado para `indicator_config`, `bi_panel`,
+      `export_log` e `transparency_audit`** (o código usa `DASH.VALIDATION_FAILED`): criar códigos por
+      recurso ou confirmar o genérico — OD-D35, issue #98 (Architect; fonte contrato `CTG-0002.md` §16)
+- [ ] dashboard: **job de geração de relatórios (`@stynx-nyx/jobs`) não implementado**: `complete`/`fail`
+      seguem manuais; precedente `backend/app/src/boat-renaest-job.*` — OD-D50, issue #99 (dono do
+      próximo CTG do DASHBOARD; fonte contrato `CTG-0002.md` §16)
+- [ ] dashboard: **`DASH.ALERT_BUSINESS_ACT_FORBIDDEN` sem guard alcançável** (todo campo análogo cai no
+      `.strict()` dos DTOs, 400): fixar a assinatura do guard ou retirar o código do catálogo; hoje é o
+      único `it.todo` da suíte de superfície — OD-D58, issue #100 (Architect; fonte `plan.md` A20(f),
+      relatório `TASK-0014.md`)
 
 ## Rodada RAIT — time multidisciplinar (2026-08-24)
 
