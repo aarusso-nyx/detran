@@ -1,4 +1,4 @@
-// Generated from BP-INF-INFRACTION-001 v1.1.1 sha256:c9e1dec5067f8324003780a279b646761b2298bf7712019b3023acdf50746e4c
+// Generated from BP-INF-INFRACTION-001 v1.1.2 sha256:59e421dbbb90b291b45408217601e9d6a86b992d9c75c00e5f73b17c5b2e21dd
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RequestContext } from '@stynx-nyx/core';
 import { Database, type Transaction } from '@stynx-nyx/data';

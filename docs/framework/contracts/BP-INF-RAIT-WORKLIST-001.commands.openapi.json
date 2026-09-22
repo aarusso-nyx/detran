@@ -1,0 +1,59 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RAIT Worklist commands",
+    "version": "1.0.0",
+    "x-blueprint": "BP-INF-RAIT-WORKLIST-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/inf/rait/schedules": {
+      "post": {
+        "operationId": "raitScheduleCreate",
+        "responses": { "200": { "description": "Escala criada" } }
+      }
+    },
+    "/v1/inf/rait/schedules/{id}/publish": {
+      "post": {
+        "operationId": "raitSchedulePublish",
+        "responses": { "200": { "description": "Escala publicada" } }
+      }
+    },
+    "/v1/inf/rait/batches": {
+      "post": {
+        "operationId": "raitBatchCreate",
+        "responses": { "200": { "description": "Lote criado" } }
+      }
+    },
+    "/v1/inf/rait/batches/{id}/approve": {
+      "post": {
+        "operationId": "raitBatchApprove",
+        "responses": { "200": { "description": "Lote aprovado" } }
+      }
+    },
+    "/v1/inf/rait/batches/{id}/items/{caseId}/accept": {
+      "post": {
+        "operationId": "raitBatchItemAccept",
+        "responses": { "200": { "description": "Item aceito" } }
+      }
+    },
+    "/v1/inf/rait/batches/{id}/items/{caseId}/impediment": {
+      "post": {
+        "operationId": "raitBatchItemImpediment",
+        "responses": { "200": { "description": "Impedimento registrado" } }
+      }
+    },
+    "/v1/inf/rait/batches/{id}/commands/draw": {
+      "post": {
+        "operationId": "raitBatchDraw",
+        "responses": { "200": { "description": "Lote sorteado" } }
+      }
+    },
+    "/v1/inf/rait/assignments/{id}/commands/reassign": {
+      "post": {
+        "operationId": "raitAssignmentReassign",
+        "responses": { "200": { "description": "Caso reatribuído" } }
+      }
+    }
+  }
+}

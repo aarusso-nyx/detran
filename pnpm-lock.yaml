@@ -283,15 +283,33 @@ importers:
       '@detran/inf-alcohol':
         specifier: workspace:*
         version: link:../domains/inf/alcohol
+      '@detran/inf-collection':
+        specifier: workspace:^
+        version: link:../domains/inf/collection
+      '@detran/inf-deadlines':
+        specifier: workspace:^
+        version: link:../domains/inf/deadlines
+      '@detran/inf-infraction':
+        specifier: workspace:^
+        version: link:../domains/inf/infraction
       '@detran/inf-measures':
         specifier: workspace:*
         version: link:../domains/inf/measures
       '@detran/inf-normative':
         specifier: workspace:*
         version: link:../domains/inf/normative
+      '@detran/inf-notification':
+        specifier: workspace:^
+        version: link:../domains/inf/notification
       '@detran/inf-rait-case':
         specifier: workspace:*
         version: link:../domains/inf/rait-case
+      '@detran/inf-rait-integration':
+        specifier: workspace:^
+        version: link:../domains/inf/rait-integration
+      '@detran/inf-rait-org':
+        specifier: workspace:^
+        version: link:../domains/inf/rait-org
       '@detran/inf-rait-session':
         specifier: workspace:*
         version: link:../domains/inf/rait-session
@@ -4485,18 +4503,12 @@ packages:
     engines: {node: '>=24 <25'}
     peerDependencies:
       '@stynx-nyx/logging': ^1.3.1
-    peerDependenciesMeta:
-      '@stynx-nyx/logging':
-        optional: true
 
   '@stynx-nyx/pdf-a@1.3.1':
     resolution: {integrity: sha512-MO6a14TLwEwwWffOnsaKGXF/7KOJff48KwrVCE+qWjuXO0zDqY10aATgQghagPNSozRsKkdbO4RpSqPpmpCRdw==, tarball: https://npm.pkg.github.com/download/@stynx-nyx/pdf-a/1.3.1/fffcf79457bc0d5b982317f0185bd5d900cd7723}
     engines: {node: '>=24 <25'}
     peerDependencies:
       '@stynx-nyx/logging': ^1.3.1
-    peerDependenciesMeta:
-      '@stynx-nyx/logging':
-        optional: true
 
   '@stynx-nyx/pdf@1.3.1':
     resolution: {integrity: sha512-ZoEFwQVHvSy5/lsGD7vRdKzGG/BrE0cGr7FgOy8AK3lN3DSVQWokbCoMeNbiHlWluIDgjFv6G3+5GiwbGF5oPA==, tarball: https://npm.pkg.github.com/download/@stynx-nyx/pdf/1.3.1/8dd141a8a9ecb9a386b83b93c7bb8410c9b47ef1}
@@ -9426,12 +9438,11 @@ snapshots:
 
   '@stynx-nyx/pdf-a-vera-docker@1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))':
     dependencies:
-      '@stynx-nyx/pdf-a': 1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))
-    optionalDependencies:
       '@stynx-nyx/logging': 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@stynx-nyx/pdf-a': 1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))
 
   '@stynx-nyx/pdf-a@1.3.1(@stynx-nyx/logging@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))':
-    optionalDependencies:
+    dependencies:
       '@stynx-nyx/logging': 1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
 
   '@stynx-nyx/pdf@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(@stynx-nyx/signature@1.3.1(@nestjs/common@11.2.1(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.2.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)':
@@ -9950,7 +9961,7 @@ snapshots:
       obug: 2.1.4
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.101.0)(tsx@4.23.13)(yaml@2.9.1))
+      vitest: 4.1.11(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(jsdom@29.1.1(@noble/hashes@1.8.0))(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(less@4.9.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.1))
 
   '@vitest/expect@4.1.11':
     dependencies:

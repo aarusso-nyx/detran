@@ -1,5 +1,13 @@
 # R-0007 — frente `rait-backend` (WP-B + WP-C do RAIT: rotas de comando, motor de prazos, SSE e contratos de comando)
 
+> CTG-0003/CTG-0004 — CONCLUÍDAS (2026-09-22): TASK-0009…0018
+> materializaram os contratos, sensores, runtime, wiring oficial, SSE, sete
+> contratos de comando e clientes. O inventário canônico verifica 256 operações;
+> módulos focados, política, decorators, boundary, geração e gates integrais
+> passaram no banco descartável autorizado `detran_r7_ctg1_a2`. Os registros
+> individuais estão em `reports/TASK-0009.md`…`TASK-0018.md`. A integração
+> permanece PR-only; nenhum bypass de gate é inferido por este registro.
+
 > SYNC/READINESS CTG-0003/0004 (2026-09-19): o checkpoint aprovado de
 > CTG-0001/0002 (`a72f6ce9`) foi preservado em
 > `codex/r0007-ctg2-pass-20260919` e integrado localmente ao `origin/main`

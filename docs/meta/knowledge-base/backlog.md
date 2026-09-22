@@ -108,7 +108,7 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
       LEGAL/Owner)
 - [ ] portal: **CNH-e/CRLV-e assinados e credenciais institucionais do IdP gov.br real** ficam para R-0014
       WP-P6 (OD-P15, ADR-0018); nesta rodada só IdP simulado nos perfis `test`/`local`
-- [ ] **OD-D81 (R-0007, ensaio de upgrade)**: `rait-priority-upgrade.integration.spec.ts` "V3 isolated priority upgrade" falha de forma intermitente em `main` (`72c15ae9`, `3bb94351`) e passa em outros SHAs com código idêntico — o fingerprint `pg_dump --data-only` muda após um `apply.sh` abortado (conjunto de casos varia: pre/DDL34/DDL20/verify/constraint diferida); suspeita de sequência/`setval` ou carimbo fora da transação. Triado em R-0011 (plan.md §Triagem, 2026-09-22) como `sensor-error` pré-existente; dono: R-0007. (added 2026-09-22)
+- [x] **OD-D81 (R-0007, ensaio de upgrade)**: resolvido em 2026-09-22. A causa era usar um segundo processo `pg_dump --data-only` como observador durante a liberação da transação do ensaio concorrente; o dump também carrega estado operacional não transacional, como `setval`, e não constitui um sensor estável dessa janela. Dados de aplicação agora são comparados pelo sensor tipado `legacyRows()`, por schema/tabela/colunas/linhas ordenadas; schema, roles e globals mantêm fingerprints independentes. O normalizador de dump permanece coberto por teste, provando que mudança de linha é detectada e envelope não tabular é ignorado. (added 2026-09-22)
 - [ ] teat: **`ops/field/shift-readiness.ts` lê `inf.normative_mobile_package`** fora dos limites do gate
       `verify:domain-boundaries` (R-0011, ADR-0020/M6) — dívida declarada e impressa pelo gate, nunca
       silenciosa — OD-D15 (dono do TEAT; fonte `plan.md` M6, contrato `CTG-0001.md` §8)
@@ -534,10 +534,10 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [x] **R-0014 `portal-pwa` fechada como `PC-0007`** (PRs #60…#67, 2026-09-17/19): primeiro app do repositório (`apps/portal/web`,
       padrão de scaffold), allowlist de namespaces i18n (OD-P46), 27 fichas, PWA, WP-P6 no mock; workers/reviewer Codex por
       autorização do Owner (B3); handoffs OD-P15/16/17/19/88 e delegações reais para R-0007
-- [ ] **R-0007 `rait-backend` em curso (Sol)**: CTG-0001 (`DetranError`, case) e CTG-0002 (worklist/sessão) em `main` pelo PR #69
-      (2026-09-20); **pendentes CTG-0003** (infração, consumidores, motor de timers — libera R-0011 CTG-0002 e a delegação de
-      indicação no Portal) **e CTG-0004** (org, financeiro, integrações, SSE — libera a delegação de pagamento); branch
-      `orchestra/rait-backend` publicado. No mesmo worktree, adoção de DEVAI 1.5.x (PR #74 mesclado; PR #75 aberto) (added 2026-09-21)
+- [x] **R-0007 `rait-backend` fechada (2026-09-22)**: CTG-0001 (`DetranError`, case) e CTG-0002 (worklist/sessão) entraram em
+      `main` pelo PR #69; CTG-0003 fechou comandos, consumidores e timers da infração; CTG-0004 fechou organização,
+      arrecadação, integrações, SSE, sete contratos canônicos e clientes gerados. A adoção DEVAI/evidência local foi integrada
+      antes do fechamento; os consumidores R-0011/R-0012 podem usar as superfícies publicadas.
 - [ ] **R-0013 `teat-frontends` em curso (Sol/Codex)**: CTG-0001 (reconciliação do corpus, PR #70) e contratos de paridade do
       CTG-0002 (PR #73) em `main`; prompt-review em `FAIL` por dois ciclos, nenhum worker disparado; pendentes as 126 fichas
       (CTG-0002), o provisionamento offline (CTG-0003) e os apps `apps/teat/{mobile,web}` (CTG-0004) (added 2026-09-21)

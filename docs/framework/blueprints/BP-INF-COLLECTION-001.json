@@ -4,7 +4,7 @@
   "module": {
     "name": "Collection",
     "namespace": "inf",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "ddlFile": "57-inf-collection.sql",
     "dependencies": {
       "@detran/inf-infraction": "workspace:*"
@@ -27,6 +27,12 @@
       {
         "target": "handwritten/index",
         "symbol": "BANK_PORT"
+      }
+    ],
+    "handwrittenControllers": [
+      {
+        "target": "handwritten/collection-commands.controller",
+        "symbol": "CollectionCommandsController"
       }
     ],
     "handwrittenExports": ["handwritten/index"],

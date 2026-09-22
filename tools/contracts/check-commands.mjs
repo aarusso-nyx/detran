@@ -40,6 +40,13 @@ export const CONTROLLER_ROOTS = [
   // directory below this root stays out of the scan (`findFilesBelow` skips
   // `controllers`/`generated`/`tests`).
   'backend/domains/dashboard/monitor/src/handwritten',
+  'backend/domains/inf/rait-case/src/handwritten',
+  'backend/domains/inf/rait-worklist/src/handwritten',
+  'backend/domains/inf/rait-session/src/handwritten',
+  'backend/domains/inf/infraction/src/handwritten',
+  'backend/domains/inf/rait-org/src/handwritten',
+  'backend/domains/inf/collection/src/handwritten',
+  'backend/domains/inf/rait-integration/src/handwritten',
   'backend/app/src',
 ];
 
@@ -52,6 +59,7 @@ export const ERROR_CATALOG_PATHS = [
   'docs/framework/arch/portal-error-catalog.md',
   'docs/framework/arch/boat-error-catalog.md',
   'docs/framework/arch/dashboard-error-catalog.md',
+  'docs/framework/arch/rait-error-catalog.md',
 ];
 
 const ERROR_CATALOG_PREFIXES = new Map([
@@ -59,6 +67,7 @@ const ERROR_CATALOG_PREFIXES = new Map([
   ['portal-error-catalog.md', 'PORTAL'],
   ['boat-error-catalog.md', 'BOAT'],
   ['dashboard-error-catalog.md', 'DASH'],
+  ['rait-error-catalog.md', 'RAIT'],
 ]);
 
 // Único e nomeado (CTG-0005 §2.6, §3.2): `SpeedModule` só monta atrás da
@@ -163,7 +172,8 @@ export function scanControllers(controllerRoots) {
         isAppSrc &&
         !path.basename(file).startsWith('teat-') &&
         !path.basename(file).startsWith('portal-') &&
-        !path.basename(file).startsWith('dashboard-')
+        !path.basename(file).startsWith('dashboard-') &&
+        !path.basename(file).startsWith('rait-')
       )
         continue;
       if (flagGated.has(toPosix(file))) continue;
@@ -243,7 +253,7 @@ export function parseErrorCatalog(catalogPath, prefix = undefined) {
   const codes = new Set();
   const expression = prefix
     ? new RegExp(`${prefix}\\.[A-Z0-9_]+`, 'gu')
-    : /(?:TEAT|PORTAL|BOAT)\.[A-Z0-9_]+/gu;
+    : /(?:TEAT|PORTAL|BOAT|DASH|RAIT)\.[A-Z0-9_]+/gu;
   for (const match of text.matchAll(expression)) codes.add(match[0]);
   return codes;
 }
@@ -264,6 +274,7 @@ function parseErrorCatalogsByPrefix(paths) {
     ['PORTAL', new Set()],
     ['BOAT', new Set()],
     ['DASH', new Set()],
+    ['RAIT', new Set()],
   ]);
   for (const candidate of paths) {
     if (!fs.existsSync(candidate)) continue;
@@ -276,7 +287,7 @@ function parseErrorCatalogsByPrefix(paths) {
 
 function parseSingleCatalogByPrefix(catalogPath) {
   return new Map(
-    ['TEAT', 'PORTAL', 'BOAT'].map((prefix) => [
+    ['TEAT', 'PORTAL', 'BOAT', 'DASH', 'RAIT'].map((prefix) => [
       prefix,
       parseErrorCatalog(catalogPath, prefix),
     ]),

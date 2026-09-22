@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-ORG-001 v1.0.0 sha256:4f035821c870a58065e91330193c1d2d97076255109085c6a40e5b30690a8ba5
+// Generated from BP-INF-RAIT-ORG-001 v1.0.1 sha256:7ece9578325dfb4c1a393f1ce7805146a621d5e7b4b843176533126efd74d55d
 export * from './controllers/rait-holiday.controller.js';
 export * from './dto/create-rait-holiday.dto.js';
 export * from './entities/rait-holiday.entity.js';
@@ -40,3 +40,4 @@ export * from './entities/rait-export.entity.js';
 export * from './repositories/rait-export.repository.js';
 export * from './services/rait-export.service.js';
 export * from './rait-org.module.js';
+export * from './handwritten/index.js';

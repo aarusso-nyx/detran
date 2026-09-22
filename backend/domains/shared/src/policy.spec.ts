@@ -2638,3 +2638,64 @@ describe('R-0007 CTG-0001 — matriz exaustiva dos comandos do caso RAIT', () =>
     ).toBe(true);
   });
 });
+
+describe('R-0007 CTG-0003 — política dos comandos da infração', () => {
+  const rules: Array<[string, string, readonly string[]]> = [
+    ['inf:rait-notice', 'issue', ['rait-secretary', 'rait-signing-authority']],
+    ['inf:rait-infraction', 'indicate-driver', ['rait-secretary']],
+    [
+      'inf:rait-extinction',
+      'declare',
+      ['rait-signing-authority', 'rait-chair'],
+    ],
+    ['inf:rait-appeal', 'authority-decide', ['rait-central-authority']],
+    ['inf:rait-appeal', 'waive', ['rait-central-authority']],
+  ];
+
+  for (const [resource, action, expected] of rules) {
+    it(`dado ${resource}:${action} quando todos os papéis canônicos são avaliados então somente os grants contratuais passam`, () => {
+      for (const role of DETRAN_ROLES) {
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            resource,
+            action,
+          ),
+          role,
+        ).toBe(expected.includes(role));
+      }
+    });
+  }
+});
+
+describe('R-0007 CTG-0004 — política das superfícies finais', () => {
+  const rules: Array<[string, string, readonly string[]]> = [
+    ['inf:rait-jeton', 'generate', ['rait-secretary']],
+    ['inf:rait-jeton', 'approve', ['rait-chair']],
+    ['inf:rait-export', 'approve', ['DPO']],
+    ['inf:rait-integration', 'read', ['integration-operator', 'AUDITOR']],
+    ['inf:rait-integration', 'retry', ['integration-operator']],
+    [
+      'inf:rait-integration',
+      'reconcile',
+      ['integration-operator', 'rait-manager'],
+    ],
+    ['inf:rait-collection', 'issue', ['rait-finance']],
+    ['inf:rait-payment', 'reconcile', ['rait-finance']],
+    ['inf:rait-refund', 'order', ['rait-finance']],
+    ['inf:rait-debt', 'handoff', ['rait-finance']],
+  ];
+  for (const [resource, action, expected] of rules) {
+    it(`dado ${resource}:${action} quando todos os papéis canônicos são avaliados então não herda administrador genérico`, () => {
+      for (const role of DETRAN_ROLES)
+        expect(
+          isDetranActionAllowed(
+            { roles: [role], permissions: [] },
+            resource,
+            action,
+          ),
+          role,
+        ).toBe(expected.includes(role));
+    });
+  }
+});

@@ -19,3 +19,5 @@ export const BANK_PORT: Provider = {
   provide: 'BANK_PORT',
   useFactory: () => createMockBankPort(new SystemClock()),
 };
+
+export { CollectionCommandsController } from './collection-commands.controller.js';

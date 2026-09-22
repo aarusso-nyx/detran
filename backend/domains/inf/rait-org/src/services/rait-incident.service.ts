@@ -1,4 +1,4 @@
-// Generated from BP-INF-RAIT-ORG-001 v1.0.0 sha256:4f035821c870a58065e91330193c1d2d97076255109085c6a40e5b30690a8ba5
+// Generated from BP-INF-RAIT-ORG-001 v1.0.1 sha256:7ece9578325dfb4c1a393f1ce7805146a621d5e7b4b843176533126efd74d55d
 import { Injectable } from '@nestjs/common';
 import { RaitIncidentRepository } from '../repositories/rait-incident.repository.js';
 import type { RaitIncident } from '../entities/rait-incident.entity.js';
