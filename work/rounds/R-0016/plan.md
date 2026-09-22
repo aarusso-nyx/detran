@@ -185,6 +185,18 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Triagem
 
+- 2026-09-22 — entrega de TASK-0005: `typecheck` do app, `lint`, `build`, Prettier e i18n byte a
+  byte **verdes**; `test` com **133 vermelhos / 1886 verdes**. Triagem por causa (verificada pelo
+  maestro, não aceita do relatório): (a) 82 casos (`i18n.spec.ts` 43, `screens.spec.ts` 39) —
+  `src/testing/kb.ts` `REPO_ROOT` sobe 4 níveis e aponta para `apps/`: **sensor-error** do
+  Inspector; (b) ~40 casos — catálogo de marcadores i18n não aguardado no TestBed: **sensor-error**;
+  (c) 13 casos — dois harness no mesmo `it`: **sensor-error**; (d) ~10 casos — contradições entre
+  critérios e entre spec e `policy.ts`: **policy-issue**, resolvida pelo Architect na adenda **A7**;
+  (e) 1 caso — `forms/exportar.schema.ts` importava `./finalidade-n2.schema.js`, violando a regra
+  de folha (C-02-83): **plant-bug** de TASK-0006, corrigido pelo maestro como Engineer (3 linhas:
+  `PURPOSE_TOKENS` e `PurposeToken` passam a viver em `forms/form-gate.ts`, reexportados por
+  `finalidade-n2.schema.ts`; 58 testes de `forms/` verdes). Nenhuma falha por defeito do código de
+  TASK-0005 → iteração 2 do **Inspector** (TASK-0004), com A7 no prompt.
 - 2026-09-22 — TASK-0005 (Engineer, app), tentativa 1: abortada por **API 529 Overloaded** durante
   a leitura dos specs; `git status` confirma que nada foi escrito em `src/app/**` fora de `forms/`
   (TASK-0006). Triagem: falha de infraestrutura, não `plant-bug` nem `sensor-error` — redespacho
@@ -252,6 +264,43 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
   maestro (f48cf2c6): a linha `check` da raiz já está estendida — TASK-0005 **não** a toca.
   (e) `pnpm check` completo só no checkpoint do grupo (após 0005 e 0006); cada Engineer prova a
   própria fronteira com `pnpm --filter @detran/dashboard-web typecheck` (§14.2 regra 2).
+- **A7 — Contradições entre critérios do CTG-0002, resolvidas pelo Architect (maestro, 2026-09-22,
+  antes de redespachar; método §4/§10 e R-0009 rec. 7).** O código de TASK-0005 seguiu o contrato;
+  os specs que o contradizem são corrigidos pelo Inspector na iteração 2. Decisões, uma a uma:
+  1. **C-02-39 × C-02-40 (descarte por versão).** Vale C-02-40 e §6(b)/OD-D16-013(b): evento com
+     `aggregate.version` ≤ a versão em cache **não** emite. O caso de prefixo opcional de C-02-39
+     (`dashboard.alert.changed`) é provado em **instância nova** do serviço (ou com outro
+     `aggregate.id`), nunca reenviando a mesma versão.
+  2. **C-02-42 × C-02-43 (status entre falhas).** `status() === 'reconnecting'` é asserção da
+     **primeira** falha; da **segunda dentro de 60 s** em diante vale `'polling'` (C-02-43, que já
+     diz "a reabertura continua no backoff"). A sequência de backoff 1000→2000→4000→8000→16000→
+     30000→30000 continua asserida em ambos.
+  3. **C-02-72 em D-11 (`dashboard:export:create` × `AUDITOR`).** `DASH_EXPORT_ROLES` (`policy.ts`
+     1532–1540) **não** inclui `AUDITOR`: o controle é **ausente** para `AUDITOR` em D-10 **e** em
+     D-11 (adenda A1 — `policy.ts` prevalece). O spec de D-11 escolhe um papel positivo real
+     (ex.: `agency-admin`) e mantém `AUDITOR`/`DPO` como negativos.
+  4. **C-02-72 em D-09 (`dashboard:duty-cycle:archive` × `dash-duty-owner`).** `policy.ts` 1578:
+     `archive` = `['dash-operator', 'agency-admin']`; `dash-duty-owner` é **negativo** (positivo
+     dele são `start|prepare|submit|prove`). O spec usa `dash-operator` como positivo de `archive`.
+  5. **C-02-68 (`blocked_by_decision`).** A asserção compara a **chave** e o valor de `{decision}`
+     renderizado, nunca o texto cru da semente com o placeholder por substituir.
+  6. **C-02-24 (leitura de `core/layer-table.ts`).** O spec lê o arquivo pelo caminho de
+     `src/testing/kb.ts` (`join`), não por `fileURLToPath(new URL(...))`, que o transform JIT do
+     vitest não resolve.
+  7. **C-02-26 (`auth-callback`).** `createStynxSessionStub().completeLogin` passa a **ativar** a
+     sessão, para que a navegação a `/monitoramento` não caia no `authGuard`.
+  8. **Sensores que varrem o próprio texto** (C-02-74/75, C-02-80, C-02-83): o literal proibido não
+     pode aparecer no título do `it` nem no corpo do spec que o procura — o spec usa concatenação
+     ou o dado da fixture.
+  9. **Fixtures e harness** (infraestrutura do Inspector, não critério): `kb.ts` `REPO_ROOT` sobe
+     **cinco** níveis (`src/testing` → raiz do monorepo); o catálogo de marcadores i18n é
+     **aguardado** antes do `detectChanges` (helper do próprio `src/testing`); **um harness por
+     `it`** (A18 vale por teste, não só por arquivo); `expectTypeOf<T>()` na forma com parâmetro de
+     tipo (vitest 4) e o predicado de `app.route-manifest.spec.ts` tipado sobre
+     `DashboardPanel | null`.
+     Nenhuma dessas decisões reabre M1–M9, A1–A6 ou OD-D16-001…019; OD-D16-020…026 (propostas por
+     TASK-0005) ficam registradas em `contracts/CTG-0002.md` §14.1 por TASK-0007 como achados de
+     infraestrutura de teste **já corrigidos** nesta iteração.
 
 ## Bloqueios
 
