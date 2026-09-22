@@ -533,6 +533,28 @@ rule_ref 'WF-DASH-001 §Estados (diagrama)'`; OD-D18 permanece para TASK-0007 al
 - **A19 (2026-09-22, relatório TASK-0012)** — `zod` entra nas `dependencies` de `BP-DASH-MONITOR-001` 1.1.0 (M16 não o
   listava; os DTOs dos comandos são zod por CODESTYLE §Backend). As 28 OD propostas pelo Architect (OD-D30…D57, contrato
   §16) trazem cada uma a premissa adotada e não bloqueiam; TASK-0007 as registra.
+- **A20 (2026-09-22, relatório TASK-0014)** — (a) o token do poller do SSE é `DASHBOARD_STREAM_POLLER` em
+  `backend/app/src/dashboard-stream.service.ts` (analogia declarada com `PORTAL_STREAM_POLLER`; OD-D59 fechada); (b) as
+  assinaturas de `suppress(rows, threshold)`, `cellThresholdOf(parameters)` e `watermarkOf({ agency, layer, userRef,
+userRole, at, scope, filters, exportId })` são as que os specs `surface-suppression.spec.ts`/`surface-watermark.spec.ts`
+  declaram — os specs do Inspector são o contrato executável de §14.2 (OD-D60 fechada); (c) `policy-routes.e2e.spec.ts`
+  **não** ganha `dashboard` em `inScope`: `dashboard-policy.e2e.spec.ts` fecha rota ⇔ política nos dois sentidos com a
+  mesma técnica (contrato §14.3 ajustado por esta adenda); (d) em C-0002-93, `core.idempotency_keys` (`@Idempotent()`)
+  e `audit.write(...)` (`@Audit`) são escritas de plataforma admitidas, declaradas no spec (§1.3.1 lê-se com essa
+  exceção); (e) forma do comando e2e filtrado: `pnpm --filter @detran/app test:e2e tests/e2e/dashboard-` (sem `--`);
+  (f) OD-D58 (`DASH.ALERT_BUSINESS_ACT_FORBIDDEN` sem guard fixado) fica `it.todo` citando a OD até o Architect fixar a
+  assinatura em CTG futuro — TASK-0007 registra D58…D60.
+- **A21 (2026-09-22, relatório TASK-0004)** — as assinaturas que §14.1 não fixou (construtores de `DashboardNotifier`,
+  `DashboardFreshnessService`, `deps` do `DashboardClockSweeper`, ordem de `assertAlertTransition`, `start/prepare/
+submit/prove/archive` do dever, `PrepareDutyDto.deadlineOn`) são as de `tests/support/cycle-harness.ts` e dos specs
+  `cycle-*` (contrato executável, como A20 b). Premissas do Inspector aceitas e registradas (TASK-0007): (1) C-28 sobre
+  `DUTY-02 2026-06`; (2) "ciclo anterior" = período imediatamente anterior; (3) `close` por ator não `dash-operator` →
+  403 `DASH.FORBIDDEN_ACTION`; `DASH.ALERT_CLOSE_WITHOUT_VERIFICATION` para todo não terminal ≠ `VERIFICADO`; (4)
+  fontes `portal.outbox`/`dashboard` ausentes no seed 81 → a suíte as insere `FRESCO` (OD-D61: linha canônica no seed);
+  (5) papéis `dash-*` só em `ctx.actor.roles` (OD-D62: personas no seed core); (7) segundo tenant sem catálogo
+  `dashboard.*` (OD-D63); (9) sem trilha de dever — asserção sobre o evento; token de `ARQUIVADO` em OD-D33; (12) o
+  detector considera alerta **terminal** já registrado para a mesma chave (um alerta por ciclo após dois `runDue`);
+  (13) `topic` da outbox = `type` técnico. Prompt de TASK-0005 remete ao harness.
 - **A6 (2026-09-21)** — CTG-0001 decomposto em 5 tarefas (0001; 0002 ∥ 0011; 0010 ∥ 0003) em vez de 3, para
   manter cada worker dentro de um lock e do orçamento de um Sonnet/Opus médio.
 

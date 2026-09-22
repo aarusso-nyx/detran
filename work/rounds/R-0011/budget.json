@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 1245000,
-  "estimated_output_total": 275500,
+  "estimated_input_total": 1513000,
+  "estimated_output_total": 396500,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1 / Opus 5 nesta sessão; reviewer codex gpt-5.6-terra pela ponte). Janela 1 estendida pela Emenda 1 (Owner): CTG-0001 concluído e mesclado (PR #83). Janela 2 (mesma sessão, Emenda 2): CTG-0002 pela via M7/A3.",
   "entries": [
     {
@@ -134,6 +134,30 @@
       "input_tokens": 75000,
       "output_tokens": 2500,
       "note": "ciclo 5 FAIL (5 achados de estrutura: cobertura 51…82, tiers nos critérios) → ciclo 6 restrito PASS; brutos 85.766 + 68.066."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0014",
+      "model": "opus",
+      "input_tokens": 117000,
+      "output_tokens": 60000,
+      "note": "Inspector superfície: 15 arquivos, 51 critérios (matriz 32 chaves × DETRAN_ROLES), captura SQL, SSE; brutos 467 k, 131 chamadas, 44 min."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "model": "opus",
+      "input_tokens": 121000,
+      "output_tokens": 60000,
+      "note": "Inspector ciclo: 13 arquivos, 49 critérios (matriz 144 células, sweeper, deveres, frescor, eventos); brutos 486 k, 112 chamadas, 46 min."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 30000,
+      "output_tokens": 1000,
+      "note": "ciclo 7 REVIEW (1 high: `--` restante em TASK-0013); brutos 47.069."
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "2.0.0",
   "round_id": "R-0011",
-  "status": "queued",
+  "status": "in_progress",
   "lifecycle": "supported",
   "target_substrates": ["F2"],
   "target_invariants": [],
@@ -10,7 +10,7 @@
   "max_iterations": 2,
   "branch": "orchestra/dashboard-backend",
   "worktree_id": "WT-dashboard-backend",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-79f3ee745effa985",
   "created_at": "2026-09-21T00:00:00.000Z",
   "id": "TASK-0013",
   "discipline": "engineer",
@@ -25,12 +25,14 @@
   "tags": ["wp-d2"],
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/dashboard-monitor", "typecheck"],
+    ["pnpm", "--filter", "@detran/app", "typecheck"],
     ["pnpm", "--filter", "@detran/dashboard-monitor", "test:unit"],
     ["pnpm", "--filter", "@detran/dashboard-monitor", "test:integration"],
-    ["pnpm", "--filter", "@detran/dashboard-monitor", "test:e2e"],
-    ["pnpm", "--filter", "@detran/app", "test:e2e"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e", "tests/e2e/dashboard-"],
+    ["pnpm", "--filter", "@detran/app", "test:e2e", "tests/e2e/policy-routes"],
     ["pnpm", "verify:decorators"],
     ["pnpm", "verify:domain-boundaries"],
+    ["pnpm", "verify:parameter-catalogue"],
     ["pnpm", "format:check"]
   ],
   "executor": {
@@ -42,7 +44,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5"
     },
-    "prompt_composition_id": "PC-0000000000000000",
+    "prompt_composition_id": "PC-79f3ee745effa985",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
