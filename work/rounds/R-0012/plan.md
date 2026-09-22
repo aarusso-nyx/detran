@@ -294,6 +294,11 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   integrar `main` com R-0016 PR #80 — conflitos na allowlist i18n, gerados e cadeia resolvidos por
   merge; evidência regravada como sequence 2); `audit observe` no sha exato. Pré-condição de
   despacho de TASK-0008/0009 satisfeita.
+- **CTG-0002b-1 mesclado**: PR #85 → `72c15ae9e4a609e567cdd4b2386d5d7792582ff5` (2026-09-22; CI 7/7
+  após rerun de `backend-kernel` — falha intermitente em `rait-priority-upgrade.integration.spec.ts`,
+  teste de R-0007 que este PR não toca e que passa em `main` —; integrado `main` com R-0011 CTG-0001
+  PR #83 e DEVAI 1.5.4 PR #84; evidência sequence 3); `audit observe` no sha exato
+  (EV-a04b28c82c5b9527). Pré-condição de despacho de TASK-0014/0015/0016 satisfeita.
 - `devai round plan --scaffold` respondeu `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31);
   `devai round status --round R-0012` → `0 task(s)`; tarefas entram por `tasks/*.json`.
 
@@ -311,6 +316,11 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   `target_modules`), não por contradição canônica. Pelo §10 do método (recomendação 7 de R-0009,
   praticada em R-0008/R-0009/R-0014) e pela emenda 1 do Owner, o maestro corrige (A12) e repete o
   ciclo restrito em vez de parar. Reportado no relatório final.
+
+- **B3 (desvio registrado, 2026-09-22).** Prompt-review do TASK-0010 chegou ao terceiro ciclo (12
+  REVIEW → 13 REVIEW → 14) porque a edição do maestro entre 12 e 13 falhou silenciosamente (asserção
+  de substituição após o Prettier) e a ponte avaliou o texto inalterado; o ciclo 14 avalia as
+  correções reais. Mesma justificativa de B1 (emenda 1 do Owner).
 
 ## Triagem
 

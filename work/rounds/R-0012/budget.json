@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 2756000,
-  "estimated_output_total": 753000,
+  "estimated_input_total": 3056000,
+  "estimated_output_total": 785000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte). Janela 1 encerrada com ≈946 k únicos estimados de entrada.",
   "entries": [
     {
@@ -182,6 +182,30 @@
       "input_tokens": 220000,
       "output_tokens": 4000,
       "note": "REVIEW (matriz de papéis, C-2B-44) → A11 → PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-10+11",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 90000,
+      "output_tokens": 3000,
+      "note": "FAIL estrutura (B2: i18n → transcriber; locks) → PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-12+13+14",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 120000,
+      "output_tokens": 4000,
+      "note": "REVIEW → REVIEW (edição não aplicada, B3) → PASS."
+    },
+    {
+      "kind": "maestro",
+      "id": "pair2+2c prompts, merge R-0011, PR85",
+      "model": "fable",
+      "input_tokens": 90000,
+      "output_tokens": 25000,
+      "note": "prompts 0014/0015/0016/0010, A12, evidência seq 3, PR #85."
     }
   ]
 }

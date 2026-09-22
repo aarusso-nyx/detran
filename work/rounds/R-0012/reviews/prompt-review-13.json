@@ -1,0 +1,24 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0010.md",
+      "line": 56,
+      "claim": "A lista fechada não inclui `rait-i18n-glossary.md` §2, `detran-ui-guide.md` §3.7/§4, `src/testing/policy.fixture.ts` nem `backend/domains/shared/src/policy.ts` (`RAIT_COMMAND_RULES`), embora a tarefa exija suas definições para i18n, UX, papéis e gates.",
+      "fix": "Adicionar esses quatro itens, com as seções indicadas, à lista de leitura obrigatória."
+    },
+    {
+      "severity": "high",
+      "item": 13,
+      "file": "work/rounds/R-0012/prompts/TASK-0010.md",
+      "line": 117,
+      "claim": "O critério só exige igualdade abstrata de `roles` com `ROLE_PERMISSIONS_FIXTURE`; não exige o mapa explícito M8 → chave de política, nem um `it` positivo por papel concedido e negativo para cada papel canônico omitido (13 por gate).",
+      "fix": "Exigir o mapa M8 → chave de `RAIT_COMMAND_RULES`, registrar OD-R12-026/027 nas divergências e especificar, por gate, os 13 casos de autorização positivos/negativos."
+    }
+  ],
+  "notes": []
+}
