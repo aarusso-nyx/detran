@@ -3,8 +3,8 @@
   "window": 1,
   "window_input_budget": 700000,
   "checkpoint_threshold": 560000,
-  "estimated_input_total": 876000,
-  "estimated_output_total": 171000,
+  "estimated_input_total": 966000,
+  "estimated_output_total": 174000,
   "note": "Tokens únicos (≈¼ dos brutos do subagente, convenção R-0003/R-0006); brutos na nota de cada entrada. Janela 1 de 3 (maestro Fable 5.1; reviewer codex gpt-5.6-terra pela ponte; workers Opus/Sonnet por subagentes nativos).",
   "entries": [
     {
@@ -70,6 +70,14 @@
       "input_tokens": 113000,
       "output_tokens": 45000,
       "note": "453 183 brutos, 64 chamadas, 31 min. contracts/CTG-0002.md §1–§14 (1578 linhas, C-02-01…94, OD-D16-012…019)."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5+6",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 90000,
+      "output_tokens": 3000,
+      "note": "prompts de TASK-0004/0005/0006: ciclo 1 FAIL (5 achados: pnpm check e MOD-package-json em TASK-0005; build pack nas listas fechadas); ciclo 2 restrito PASS."
     }
   ]
 }

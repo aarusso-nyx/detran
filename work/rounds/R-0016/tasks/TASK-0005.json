@@ -8,7 +8,7 @@
   "title": "Implementar apps/dashboard/web: bootstrap, guardas, interceptor, SSE, 18 telas, componentes §5, gráficos",
   "description": "App @detran/dashboard-web sobre @detran/ui + STYNX 1.3.1 conforme contracts/CTG-0002.md e route-manifest.md, até os testes de TASK-0004 passarem; README por blocos A–D e camadas; pnpm check estendido.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-dashboard-web-app", "MOD-package-json"],
+  "target_modules": ["MOD-dashboard-web-app"],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0002",
@@ -21,13 +21,12 @@
   "tags": ["wp-d5", "frontend"],
   "branch": "orchestra/dashboard-console",
   "worktree_id": "WT-dashboard-console",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-971f7e315c726f8e",
   "acceptance_commands": [
     ["pnpm", "--filter", "@detran/dashboard-web", "typecheck"],
     ["pnpm", "--filter", "@detran/dashboard-web", "test"],
     ["pnpm", "--filter", "@detran/dashboard-web", "build"],
-    ["pnpm", "--filter", "@detran/dashboard-web", "lint"],
-    ["pnpm", "check"]
+    ["pnpm", "--filter", "@detran/dashboard-web", "lint"]
   ],
   "created_at": "2026-09-21T00:00:00.000Z",
   "executor": {
@@ -39,7 +38,7 @@
       "mode": "exact",
       "registry_id": "claude-opus-5"
     },
-    "prompt_composition_id": "PC-0000000000000000",
+    "prompt_composition_id": "PC-971f7e315c726f8e",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }
