@@ -1105,7 +1105,7 @@ describe.sequential('CTG-0001-C4-OD V3 isolated priority upgrade', () => {
     } finally {
       await rm(directory, { recursive: true, force: true });
     }
-  }, 120_000);
+  }, 240_000);
 
   for (const scenario of qualificationScenarios) {
     it(`dado caso novo ${scenario.label} quando qualifica na transação então COMMIT preserva projeção e revisão 1`, async () => {

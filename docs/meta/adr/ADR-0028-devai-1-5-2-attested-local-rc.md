@@ -57,3 +57,7 @@ surfaces unchanged may merge only when its exact commit and tree produce a signe
 the protected verifier reports `verified-local-rc=success`, and the ordinary remote checks that
 remain mandatory are green. That later result satisfies decision 5 above without broadening the
 set of locally replaceable jobs.
+
+This paragraph is the DEVAI 1.5.4 activation candidate. It changes no protected control surface
+and records the attempt without predetermining its result. Its exact commit and tree remain subject
+to the signed local RC run and the independent protected verifier described above.
