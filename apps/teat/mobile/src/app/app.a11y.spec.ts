@@ -3,6 +3,7 @@ import type { Type } from '@angular/core';
 import { expect, it } from 'vitest';
 import { TEAT_ROUTES } from './app.routes';
 import {
+  BOAT_ROUTE_PATHS,
   D05_ROUTE_PATH,
   TEAT_ROUTE_FIXTURE,
 } from '../testing/route-contract.fixture';
@@ -18,6 +19,14 @@ for (const expected of TEAT_ROUTE_FIXTURE) {
         featureEnabled: false,
         state: 'unavailable',
       });
+      expect(route?.loadComponent).toBeUndefined();
+    });
+  } else if (BOAT_ROUTE_PATHS.includes(expected.path)) {
+    it(`dada /${expected.path} BOAT sem extensão local quando verificada então preserva apenas metadata fail-closed, sem placeholder`, () => {
+      const route = TEAT_ROUTES.find(
+        (candidate) => candidate.path === expected.path,
+      );
+      expect(route?.data).toMatchObject({ boatExtension: true });
       expect(route?.loadComponent).toBeUndefined();
     });
   } else {

@@ -116,8 +116,8 @@ for (const modulePath of DATA_CLIENT_MODULES) {
 for (const [modulePath, exportName] of [
   ['data/local/local-act.store', 'LocalActStore'],
   ['data/sync/sync.worker', 'SyncWorker'],
-  ['data/local/normative-package.service', 'NormativePackageService'],
-  ['shared/bodycam-indicator.component', 'BodycamIndicatorComponent'],
+  ['data/normative/normative-package.service', 'NormativePackageService'],
+  ['core/bodycam-indicator.component', 'BodycamIndicator'],
   ['shared/mobile-printer.port', 'MobilePrinterPort'],
 ] as const) {
   it(`dado ${modulePath} quando o runtime é carregado então expõe ${exportName}`, async () => {

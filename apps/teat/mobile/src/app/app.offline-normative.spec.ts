@@ -134,8 +134,30 @@ it('dados conteúdo válido, ausente, hash divergente e expirado quando Normativ
     .update(JSON.stringify(content))
     .digest('hex');
   const validUntil = '2999-01-01T00:00:00Z';
+  const encryptedValues = new Map<string, unknown>();
+  const encryptedStore = {
+    adapterName: 'fixture-encrypted-store',
+    encrypted: true,
+    encryptionScope: 'teat-mobile-device',
+    securityLevel: 'hardware-backed',
+    async put(key: string, value: unknown): Promise<void> {
+      encryptedValues.set(key, value);
+    },
+    async get(key: string): Promise<unknown> {
+      return encryptedValues.get(key);
+    },
+    async list(): Promise<readonly unknown[]> {
+      return [...encryptedValues.values()];
+    },
+    async remove(key: string): Promise<void> {
+      encryptedValues.delete(key);
+    },
+    async clear(): Promise<void> {
+      encryptedValues.clear();
+    },
+  };
   const service = new Service(
-    {},
+    encryptedStore,
     {
       packageContent: vi.fn().mockResolvedValue({
         content,
@@ -147,8 +169,8 @@ it('dados conteúdo válido, ausente, hash divergente e expirado quando Normativ
         validUntil,
       }),
     },
-    {},
-    {},
+    undefined,
+    undefined,
   );
   expect(service.install).toBeTypeOf('function');
   await expect(service.install?.('pkg-valid')).resolves.toMatchObject({
