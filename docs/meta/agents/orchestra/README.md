@@ -360,7 +360,10 @@ boundaries`, M6/ADR-0020) como candidatos a chave de parâmetro desconhecida (A1
    recusado por avanço de `main` entre o CI verde e o merge. A cadeia (`record/proofs/chain.json`)
    resolve-se sempre aceitando `main` e **regravando** a evidência da rodada.
 5. **Falha intermitente de CI alheia à frente.** `rait-priority-upgrade.integration.spec.ts`
-   (R-0007) falhou em dois PRs só de frontend e passou no rerun; custou ~50 min de espera.
+   (R-0007) falhou em **três** PRs desta rodada (#85, #90, #93 — frontend e documentação, que não
+   tocam o backend) e passou em todos os reruns; custou ~90 min de espera. É defeito de
+   isolamento do próprio teste (upgrade de schema em banco compartilhado), não da frente:
+   vale um `OD` ao dono de R-0007 em vez de rerun a cada PR.
 
 **O que funcionou**
 
