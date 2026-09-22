@@ -108,6 +108,7 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
       LEGAL/Owner)
 - [ ] portal: **CNH-e/CRLV-e assinados e credenciais institucionais do IdP gov.br real** ficam para R-0014
       WP-P6 (OD-P15, ADR-0018); nesta rodada só IdP simulado nos perfis `test`/`local`
+- [ ] **OD-D81 (R-0007, ensaio de upgrade)**: `rait-priority-upgrade.integration.spec.ts` "V3 isolated priority upgrade" falha de forma intermitente em `main` (`72c15ae9`, `3bb94351`) e passa em outros SHAs com código idêntico — o fingerprint `pg_dump --data-only` muda após um `apply.sh` abortado (conjunto de casos varia: pre/DDL34/DDL20/verify/constraint diferida); suspeita de sequência/`setval` ou carimbo fora da transação. Triado em R-0011 (plan.md §Triagem, 2026-09-22) como `sensor-error` pré-existente; dono: R-0007. (added 2026-09-22)
 - [ ] teat: **`ops/field/shift-readiness.ts` lê `inf.normative_mobile_package`** fora dos limites do gate
       `verify:domain-boundaries` (R-0011, ADR-0020/M6) — dívida declarada e impressa pelo gate, nunca
       silenciosa — OD-D15 (dono do TEAT; fonte `plan.md` M6, contrato `CTG-0001.md` §8)

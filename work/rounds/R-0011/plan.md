@@ -452,6 +452,14 @@ Registro do bootstrap (2026-09-21, `origin/main` = `08fb84e8`, PR #79; `gh pr li
   de TASK-0004: a suíte cria e remove o próprio segundo tenant. Lição: fixtures de teste nunca dependem de linhas que
   outra suíte cria no banco compartilhado.
 
+- 2026-09-22 PR #88 (fechamento) CI `backend-kernel` — `sensor-error` (intermitência pré-existente, fora da rodada):
+  `rait-priority-upgrade.integration.spec.ts` "V3 isolated priority upgrade" compara o fingerprint de
+  `pg_dump --data-only` antes/depois de um ensaio abortado; falha em conjuntos variáveis de casos (pre/DDL34/DDL20/
+  verify/constraint diferida) nos runs de `main` `72c15ae9` (merge do PR #85, **antes** do CTG-0002) e `3bb94351`,
+  e passou em `b8920457` e no PR #87 (`d9134f5e`) com código idêntico. O PR #88 só traz `record/`, `.devai/state` e
+  docs. Ação: rerun (§9.4); handoff ao dono de R-0007 (`backlog.md` §Handoffs: OD-D81 — fingerprint de dados não
+  determinístico no ensaio de upgrade; suspeita: sequências/`setval` ou carimbos `now()` fora da transação).
+
 ## Adendas (Architect)
 
 - **A1 (2026-09-21)** — `dashboard.crashes` é a projeção de R-0010 (`BP-DASHBOARD-CRASHES-001`); a meta 1
