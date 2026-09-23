@@ -19,6 +19,7 @@ const namespaces = [
 const knownKeys = new Set(Object.keys(TEAT_I18N));
 
 interface StynxTranslator {
+  initialize(): Promise<void>;
   translate(
     key: string,
     params?: Readonly<Record<string, string | number>>,
@@ -32,6 +33,10 @@ export class TeatI18n {
   // eslint-disable-next-line @angular-eslint/prefer-inject
   constructor(@Inject(StynxI18nService) runtime: StynxTranslator) {
     this.stynx = runtime;
+  }
+
+  initialize(): Promise<void> {
+    return this.stynx.initialize();
   }
 
   translate(

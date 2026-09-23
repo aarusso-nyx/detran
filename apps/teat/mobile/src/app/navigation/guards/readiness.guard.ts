@@ -1,6 +1,7 @@
 import { inject, InjectionToken } from '@angular/core';
-import type { CanMatchFn } from '@angular/router';
+import { Router, type CanMatchFn } from '@angular/router';
 import { TEAT_GUARD_CONTEXT } from '../../core/bootstrap.store.js';
+import { ReadinessGateService } from '../../core/readiness-gate.service.js';
 import type { BoatExtensionPort } from '../../features/sinistro/sinistro.routes.js';
 
 const BOAT_ROUTE_PATHS = new Set([
@@ -45,15 +46,20 @@ export async function resolveBoatRoute(
 
 export const readinessGuard: CanMatchFn = (route) => {
   const context = inject(TEAT_GUARD_CONTEXT);
+  const gate = inject(ReadinessGateService);
   const requiresBoat = String(route.data?.['guardPlan'] ?? '').includes('BOAT');
   const boat = inject(TEAT_BOAT_EXTENSION, { optional: true });
-  const validUntil = context.bootstrap?.snapshot?.validUntil;
-  return Boolean(
-    context.bootstrap !== undefined &&
-    context.bootstrap.readiness?.blockers?.length === 0 &&
-    context.provisioning?.ready === true &&
-    typeof validUntil === 'string' &&
-    Date.parse(validUntil) > Date.now() &&
-    (!requiresBoat || boat?.installed() === true),
-  );
+  const result = gate.evaluate({
+    bootstrap: context.bootstrap(),
+    provisioning: context.provisioning(),
+    now: new Date().toISOString(),
+    destination: route.path ?? '',
+    preShift: route.path === 'shift-context',
+  });
+  if (!result.allowed) return false;
+  if (requiresBoat && boat?.installed() !== true) {
+    const router = inject(Router);
+    return router.parseUrl(router.url === '/' ? '/auth-login' : router.url);
+  }
+  return true;
 };

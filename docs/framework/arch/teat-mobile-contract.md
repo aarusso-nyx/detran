@@ -41,8 +41,8 @@ o contrato de rota e o contrato de provisionamento fechados nesta rodada.
 - `traffic-authority` é a autoridade canônica de H.39. `decision_body` é dado
   recebido, nunca uma substituição de papel calculada pelo cliente. Defaults H.54
   são vigentes; `sync.concurrency_window_minutes` permanece `source_pending`.
-- D-05 é rota registrada com `featureEnabled: false`; exibe indisponibilidade e
-  não carrega feature. As onze rotas `crash-*` são pontos de extensão BOAT: têm
+- D-05 é rota registrada com `featureEnabled: false`; publica estado técnico
+  `unavailable` e não carrega feature. As onze rotas `crash-*` são pontos de extensão BOAT: têm
   rota e contrato de paridade, mas sua feature é resolvida pelo BOAT quando
   instalado.
 - Para `sync-conflict`, `ARCH-TEAT-FRONTENDS` §3 e §8 prevalece sobre a folha
@@ -56,7 +56,16 @@ Estes são requisitos de execução, não meras existências de arquivo. Cada ca
 uma prova independente obrigatória ao Inspector; ausência de estado, adapter,
 porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fictício.
 
-1. **Guardas e contexto.** Os cinco `CanMatchFn` efetivos são os únicos guardas:
+1. **Entrada, bootstrap, guardas e contexto.** `/auth-login` é a única entrada sem
+   guarda TEAT: ela delega o início da sessão ao provider OIDC STYNX e não tenta
+   ler bootstrap antes da autenticação. `/auth-mfa` é continuação controlada pela
+   sessão STYNX ainda não ativa e também não exige `TEAT_GUARD_CONTEXT` pronto.
+   Depois de `StynxSessionService.active() === true`, o coordenador root observa
+   sessão, tenancy e `MobileStynxSessionPort.currentSession()`, chama
+   `BootstrapStore.refresh(...)` e `ProvisioningClient.readiness(deviceId)`, e só
+   então encaminha para `shift-context`, `device-blocked` ou `home`. Qualquer
+   ausência/rejeição mantém estado `blocked`; não existe snapshot inicial vazio
+   promovido a sucesso. Os cinco `CanMatchFn` das rotas protegidas são:
    `authGuard` exige principal STYNX autenticado; `tenantGuard`, contexto de tenant;
    `roleGuard`, o resultado do oráculo da seção 6; `readinessGuard`, um snapshot
    válido de readiness; e `shiftGuard`, turno aberto. Cada um devolve negação sem
@@ -67,7 +76,20 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    pelo provider STYNX de tenancy. O bootstrap operacional não inventa papel,
    principal ou tenant, e `[]` não é substituto de claims ausentes. A sequência
    nunca é abreviada e `roleGuard` chama o oráculo cartesiano efetivo, não cópia ou
-   helper isolado.
+   helper isolado. O token root expõe accessors/signals e cada invocação do guarda
+   lê o valor atual; uma factory que captura uma fotografia na criação do injector
+   é proibida.
+   O callback OIDC é exatamente `/auth-mfa`, o mesmo path configurado em
+   `redirectUrl`; `/auth-login` é somente a tela que dispara
+   `StynxSessionService.login()` por evento real de UI. O evento de inicialização
+   de `/auth-mfa` aguarda `completeLogin(window.location.href)` resolver e somente
+   então chama `AuthBootstrapCoordinator.start()`: chamadas concorrentes ou
+   bootstrap iniciado antes do callback são proibidos. O coordenador observa o
+   signal de sessão durante toda a vida do injector; transição de ativo para
+   inativo limpa o store automaticamente, sem exigir chamada manual da página.
+   Ao concluir, navega para `home` somente com bootstrap `ready` e turno aberto,
+   para `shift-context` quando `ready` sem turno aberto e para `device-blocked`
+   quando o estado é `blocked`; navegação não ocorre enquanto `loading`.
 2. **Adapters de backend.** Os oito clients são adapters tipados sobre `HttpClient`
    ou cliente gerado para o backend unificado e só constroem rotas `/v1/inf/*` e
    `/v1/ops/*` do contrato de rotas. Comandos POST preservam `Idempotency-Key`;
@@ -86,6 +108,14 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    construtor de produção aceita somente `MobileEncryptedStorePort`; adapter
    legado, porta key-value simples, cursor opcional ou fallback de receipt/cursor
    em memória são proibidos.
+   A primeira execução sem cursor cria e persiste `{ deviceBatchId:
+MobileIdPort.uuid('sync-batch'), batchSequence: 1 }` antes do POST. Rede,
+   rejeição ou resposta inválida preservam esse cursor para retry idêntico; apenas
+   uma resposta 200 cujos receipts foram persistidos avança sequência e batch.
+   Recovery converte o receipt wire snake_case para o modelo local e somente
+   `StynxError` com `status === 404` e código
+   `TEAT.SYNC_RECEIPT_NOT_FOUND` significa ausência; qualquer outro 404/código ou
+   erro propaga sem fallback local silencioso.
 4. **Pacote normativo.** `NormativePackageService` baixa apenas metadata/conteúdo
    do backend, valida o conteúdo pelo `manifest_hash` e só torna o pacote utilizável
    depois de persistido cifradamente. Pacote ausente, hash divergente ou conteúdo
@@ -94,17 +124,32 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    `source_pending` nem cálculo de prazo legal local.
 5. **Telas, módulos e i18n.** Os oito módulos lazy possuem e exportam suas próprias
    rotas, sem importar, filtrar ou fechar ciclo com `app.routes.ts`; a raiz os
-   importa somente por `loadChildren`. Cada rota instancia o componente daquela
-   linha, nunca um alias ou placeholder comum. Cada uma das 59 páginas TEAT
-   não-BOAT executa sua leitura/ação aplicável através do schema e client do
-   contrato; metadata genérica, título e status sem integração executável não
-   constituem página. As onze entradas BOAT são boundaries, não páginas TEAT.
+   importa somente por `loadChildren`. Cada rota habilitada instancia o componente
+   daquela linha, nunca um alias ou placeholder comum. Cada uma das 58 páginas TEAT
+   habilitadas não-BOAT executa sua leitura/ação aplicável através de referências ao objeto de
+   schema e à instância real do client/store, nunca seus nomes em `string`.
+   Páginas cuja ação permanece `source_pending` exibem estado bloqueado e não
+   chamam adapter; esse comportamento explícito é preferível a fabricar endpoint.
+   Metadata genérica, título e status sem integração executável não constituem
+   página. D-05 não carrega sua página; as onze entradas BOAT são boundaries, não
+   páginas TEAT.
    Todo texto visível, inclusive fallback, erro e estado indisponível,
    passa pelo runtime STYNX de i18n com as chaves permitidas da seção 1; texto
    literal no template ou componente falha. O catálogo é carregado em runtime, não
    somente copiado para o app. `TeatI18n` é injetado e delega ao runtime STYNX;
    `new TeatI18n()`, catálogo local como runtime ou objeto tradutor ad hoc falham.
-6. **FieldShell e falhas.** `FieldShell` é a única ErrorBoundary da aplicação:
+   `load` e `submit` são acionados por `ngOnInit`/evento do template, mantêm estado
+   observável `idle | loading | loaded | submitting | persisted | blocked | error`
+   e apresentam exclusivamente chaves traduzidas pelo `TeatI18n` STYNX. Construir
+   o binding não conta como leitura nem ação. Operação local recebe contexto
+   completo de sessão, pacote normativo, reserva, identidade, idempotência, versão,
+   relógio e hash; se a folha não fecha qualquer desses valores, a ação devolve
+   `blocked/source_pending` antes de escrever. Payload genérico com identidade vazia
+   ou `source_pending` persistido como fato é proibido.
+6. **FieldShell e falhas.** `FieldShell` é a única ErrorBoundary da aplicação e
+   compartilha um estado root com o `ErrorHandler` Angular e o handler de erro do
+   Router; logo `capture` é chamado por exceções reais de componente, ação e
+   navegação, não somente por teste direto. Ela
    captura erro de rota/ação, preserva somente código, status e contexto de tokens,
    classifica `StynxError` pelo catálogo TEAT e mostra a chave canônica de erro. Erro
    de formulário fica inline; blocker de postura/sessão abre o fluxo de dispositivo;
@@ -112,7 +157,7 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    ocorrência é registrada no estado diagnóstico local sem segredo ou payload de
    ato. A boundary não pode relançar silenciosamente, apresentar texto literal nem
    transformar erro em êxito.
-7. **Readiness.** `ReadinessGateService` deriva `allowed`, `blockers`, `warnings`
+7. **Readiness.** O único decisor é `ReadinessGateService`, que deriva `allowed`, `blockers`, `warnings`
    e `validUntil` da resposta tipada de bootstrap/provisionamento: sessão exclusiva,
    postura/autorização do dispositivo, homologação, pacote, reserva de numeração e
    turno. A rota legal só abre se não houver blocker e todos os requisitos do seu
@@ -121,6 +166,15 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    A entrada é o tipo fechado da resposta bootstrap/provisionamento, nunca
    `Record<string, boolean | string>`; campo obrigatório ausente ou malformado
    bloqueia. Todo warning retornado é persistido no diagnóstico antes de permitir.
+   `readinessGuard` somente monta `ReadinessInput` a partir do contexto atual e
+   devolve a decisão desse serviço; repetir um subconjunto das condições no guarda
+   é proibido.
+   `bootstrap.snapshot.validUntil` é a validade do próprio snapshot: data ausente,
+   inválida ou `now >= validUntil` adiciona `bootstrap-snapshot-expired` aos
+   blockers, independentemente da validade do pacote normativo. O warning H.55 do
+   pacote expirado continua não bloqueante. O provider root de
+   `ReadinessWarningSink` grava cada warning uma vez no mesmo estado diagnóstico
+   sanitizado da ErrorBoundary; factory no-op é proibida.
 8. **Transições.** Além da igualdade content-addressed da seção 4, o executor
    despacha cada transição pelo par `from`/`action`, exige condição satisfeita e
    navega ao `to` registrado. Somente `__previous__` chama `Location.back()`;
@@ -133,17 +187,29 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
 9. **Forms, impressora e bodycam.** Os 14 schemas executam todas as proibições e
    validações da seção 3 antes de chamar client; prova negativa deve demonstrar que
    payload inválido não produz comando. A porta de produção de impressão usa
-   `MobilePrinterPort`, registra sucesso/falha em `print-events` sem duplicar AIT e
+   a `MobilePrinterPort` real de `@stynx-nyx/mobile-runtime`, registra sucesso/falha
+   em `print-events` com `If-Match` e `Idempotency-Key` fornecidos pelo caller, sem duplicar AIT e
    preserva o mesmo número na reimpressão controlada. `BodycamIndicator` é chrome
    global em serviço operacional com estados gravando, pausa excepcional e falha;
    conteúdo de bodycam não é exposto pelo app sem o fluxo de custódia autorizado.
-   `FixturePrinter` e doubles são somente adapters de teste, nunca runtime.
-10. **D-05 e BOAT.** D-05 permanece rota acessível, registrada e disabled: ela
-    mostra estado de indisponibilidade, não carrega feature nem envia comando. Cada
+   `FixturePrinter` e doubles são somente adapters de teste, nunca runtime. O
+   estado de bodycam vem de um adapter operacional observável; ausência do adapter
+   produz `failure`, nunca um estado fixo usado como implementação.
+10. **D-05 e BOAT.** D-05 permanece rota registrada e disabled: a tentativa
+    publica estado técnico de indisponibilidade, não carrega feature nem envia comando. Cada
     `crash-*` é resolvido pela extensão BOAT; sem extensão instalada o atalho não
     aparece e navegação direta nega/faz fallback explícito, nunca renderiza
     placeholder TEAT. A fonte não fornece a chave i18n do fallback/indisponibilidade;
     essa chave permanece `source_pending`, mas não autoriza texto literal.
+    A entrada D-05 possui zero `loadComponent`, zero `loadChildren`, zero resolver
+    de feature e zero client; sua tentativa de navegação publica apenas estado
+    técnico `unavailable` e é cancelada fail-closed, preservando a URL segura
+    anterior. O mesmo vale para BOAT ausente ou cujo `load` rejeite: não há redirect
+    para D-05, `TEAT.INTERNAL`, texto genérico, componente local ou `UrlTree`
+    inventado. Em carga direta sem URL anterior segura, o fluxo retorna à entrada
+    autenticada já configurada, sem afirmar mensagem de indisponibilidade. Até a
+    chave acessível ser aprovada, o estado técnico é verificável, mas apresentação
+    acessível continua explicitamente bloqueada.
 
 ### 1.2 Assinaturas públicas e fixtures de prova
 
@@ -230,29 +296,55 @@ type ReadinessResult = Readonly<{
   warnings: readonly string[];
   validUntil?: string;
 }>;
+type BootstrapState =
+  | Readonly<{ status: 'anonymous' }>
+  | Readonly<{ status: 'loading'; query: MobileBootstrapQuery }>
+  | Readonly<{
+      status: 'ready';
+      bootstrap: BootstrapSnapshot;
+      provisioning: ProvisioningReadinessResponse;
+    }>
+  | Readonly<{ status: 'blocked'; code: string }>;
 
 interface BootstrapStore {
+  readonly state: Signal<BootstrapState>;
   snapshot(): BootstrapSnapshot | undefined;
-  refresh(input: MobileBootstrapQuery): Promise<BootstrapSnapshot>;
+  provisioningSnapshot(): ProvisioningReadinessResponse | undefined;
+  refresh(input: MobileBootstrapQuery): Promise<
+    Readonly<{
+      bootstrap: BootstrapSnapshot;
+      provisioning: ProvisioningReadinessResponse;
+    }>
+  >;
   clear(): void;
 }
 interface ReadinessGateService {
   evaluate(input: ReadinessInput): ReadinessResult;
 }
+interface ReadinessWarningSink {
+  record(code: string): void;
+}
+export const TEAT_READINESS_WARNING_SINK: InjectionToken<ReadinessWarningSink>;
 
 interface GuardContext {
-  principal: Principal | undefined;
-  tenantId: string | undefined;
-  allowedRoles: readonly DetranRole[];
-  bootstrap: BootstrapSnapshot | undefined;
-  provisioning: ProvisioningReadinessResponse | undefined;
+  principal(): Principal | undefined;
+  tenantId(): string | undefined;
+  allowedRoles(): readonly DetranRole[];
+  bootstrap(): BootstrapSnapshot | undefined;
+  provisioning(): ProvisioningReadinessResponse | undefined;
 }
 export const TEAT_GUARD_CONTEXT: InjectionToken<GuardContext>;
+
+interface AuthBootstrapCoordinator {
+  readonly state: Signal<BootstrapState>;
+  start(): Promise<BootstrapState>;
+  clearOnSessionEnd(): void;
+}
 ```
 
-`authGuard` injeta a sessão STYNX e lê `principal`; `tenantGuard` lê `tenantId`;
-`roleGuard` lê `principal.roles` e `allowedRoles`; `readinessGuard` lê
-`bootstrap`, `provisioning`, `blockers` e `validUntil`; `shiftGuard` lê
+`authGuard` injeta a sessão STYNX e lê `principal()`; `tenantGuard` lê `tenantId()`;
+`roleGuard` lê `principal().roles` e `allowedRoles()`; `readinessGuard` lê
+`bootstrap()`, `provisioning()`, `blockers` e `validUntil`; `shiftGuard` lê
 `bootstrap.context.activeShift`. `TEAT_GUARD_CONTEXT` é exportado por
 `core/bootstrap.store.ts` como `InjectionToken<GuardContext>` e cada um dos cinco
 `CanMatchFn` o lê com `inject(TEAT_GUARD_CONTEXT)`. Cada guarda retorna
@@ -261,7 +353,9 @@ de fixture/estado devolve `false` ou `UrlTree` de negação. Nenhum guarda consu
 `localStorage`, assume `true` ou recupera estado de outro guarda.
 
 Em produção, a factory root de `TEAT_GUARD_CONTEXT` injeta
-`StynxSessionService` e o singleton `BootstrapStore`. `principal` existe somente
+`StynxSessionService`, `TenantContextService` e o singleton `BootstrapStore`, mas
+seus accessors fecham sobre os serviços/signals, não sobre valores capturados na
+criação do injector. `principal()` existe somente
 quando `StynxSessionService.active()` é verdadeiro; seus `roles` são a interseção
 ordenada da união `state().claims['cognito:groups']` +
 `state().claims['roles']` com `TEAT_STAFF_ROLES`. `tenantId` vem do contexto de
@@ -269,6 +363,27 @@ tenancy STYNX configurado no bootstrap e precisa coincidir com
 `bootstrap.context.tenantId`; ausência ou divergência devolve contexto negado.
 `bootstrap.context.agent.id` identifica o agente operacional, mas não cria
 principal nem papel. A factory não tem defaults de identidade.
+
+`AuthBootstrapCoordinator.start()` exige sessão STYNX ativa e obtém
+`deviceId`, `appVersion`, `agentId`, `tenantId` e `shiftId` do
+`MobileStynxSessionPort.currentSession()`. Ele rejeita divergência entre sessão,
+tenancy e resposta bootstrap, usa `deviceId`/`appVersion` para
+`MobileBootstrapQuery`, chama também `ProvisioningClient.readiness(deviceId)` e
+publica os dois resultados em uma única transição atômica para `ready`.
+`installation_id` e `protocol_version` não são inferidos: ficam omitidos quando o
+adapter não os fornece. Logout/expiração chama `clearOnSessionEnd()` e torna
+imediatamente todos os accessors negados. A adaptação Angular da sessão STYNX para
+`MobileStynxSessionPort` fica em `core/bootstrap.store.ts`; ela não lê
+`localStorage` nem inventa identidade.
+
+O coordenador é criado no bootstrap root, registra uma observação reativa sobre
+`StynxSessionService.active` e executa `clearOnSessionEnd()` automaticamente na
+primeira emissão inativa após uma sessão ativa. `start()` é idempotente enquanto
+`loading`, não abre segunda dupla de requests e não pode ser chamado pela tela de
+callback antes de `await session.completeLogin(window.location.href)`. Depois da
+transição atômica, usa o `Router` root: `ready` com turno aberto → `/home`; `ready`
+sem turno aberto → `/shift-context`; `blocked` → `/device-blocked`. Falha de
+navegação permanece erro observável na ErrorBoundary, não sucesso do coordenador.
 
 Fixtures públicas obrigatórias (funções retornam os tipos acima, não objetos
 parciais/cast): `fixtureAuthenticatedFieldAgent()`, `fixtureNoPrincipal()`,
@@ -286,7 +401,9 @@ O Inspector instala cada fixture exclusivamente pelo provider Angular
 `{ provide: TEAT_GUARD_CONTEXT, useValue: fixture...() }`; testes BOAT usam
 `{ provide: TEAT_BOAT_EXTENSION, useValue: fixtureBoatExtension(...) }`. Produção
 fornece esses mesmos tokens por factory de runtime; não existe token, flag ou ramo
-`TEST_*` em produção.
+`TEST_*` em produção. Além das fixtures isoladas, há prova integrada com signals:
+o mesmo injector começa negado, recebe sessão/bootstrap/provisionamento, permite a
+rota protegida e volta a negar após logout, sem recriar token ou store.
 
 #### Bootstrap raiz STYNX
 
@@ -294,9 +411,30 @@ fornece esses mesmos tokens por factory de runtime; não existe token, flag ou r
 `provideHttpClient()`, `provideRouter(TEAT_ROUTES)` e
 `provideDetranAuthenticatedApp(...)`. O provider autenticado configura
 `sessionMode: 'bearer'`, OIDC, tenancy e `loadCatalog` dinâmico de
-`i18n/teat.pt-BR.json`. `AppComponent` monta um único `FieldShell`, o
-`BodycamIndicator` no chrome operacional e o `RouterOutlet`; os estados acessíveis
-de D-05/BOAT e o alerta da ErrorBoundary vivem nesse shell, sem texto literal.
+`i18n/teat.pt-BR.json`. O mesmo grafo root fornece os oito clients HTTP, o adapter
+de `MobileStynxSessionPort`, `MobileEncryptedStorePort`, o adapter real de
+`MobilePrinterPort`, `BootstrapStore`, `AuthBootstrapCoordinator`,
+`ReadinessGateService`, o estado da ErrorBoundary e o adapter de estado bodycam;
+provider ausente é erro de bootstrap, não dependência opcional. `AppComponent` monta um único `FieldShell`, o
+`BodycamIndicator` no chrome operacional e o `RouterOutlet`; o alerta de erros com
+chave aprovada vive nesse shell. D-05/BOAT publicam somente estado técnico até sua
+chave acessível deixar de ser `source_pending`.
+
+OIDC configura `redirectUrl: ${origin}/auth-mfa` e
+`loginRedirectRoute: '/auth-login'`; esses valores têm funções distintas e não
+podem apontar ambos para `/auth-login`. `AuthLoginPageComponent` possui controle
+acionável cujo handler chama `StynxSessionService.login()`. A inicialização real de
+`AuthMfaPageComponent` chama `completeLogin(window.location.href)`, aguarda a
+Promise e só então chama o coordenador. Instanciar a classe sem acionar lifecycle
+ou invocar métodos apenas pelo teste não constitui integração de UI.
+
+`/auth-login` chama somente a API de início de login do provider STYNX;
+`/auth-mfa` é o callback configurado e somente continua o desafio oferecido pelo mesmo provider. Os nomes
+concretos desses dois métodos no STYNX são verificados contra seus tipos instalados
+pelo Inspector e não são rebatizados por facade fictícia. Depois de sessão ativa,
+o `AuthBootstrapCoordinator` executa a sequência descrita acima. Nenhuma dessas
+duas rotas de entrada recebe `authGuard`, `tenantGuard`, `roleGuard` ou
+`readinessGuard`; todas as demais rotas preservam ordem e RBAC do manifesto.
 
 `core/runtime-config.ts` lê `tenantId`, `oidcAuthority` e `clientId` de
 `window.__DETRAN_RUNTIME_CONFIG__`, sem segredo, seguindo o bootstrap DETRAN
@@ -349,20 +487,24 @@ declare class ProvisioningClient {
 }
 ```
 
-As assinaturas dos comandos marcados abaixo terminam obrigatoriamente em
-`headers: CommandHeaders`, salvo os cinco comandos condicionais de provisioning,
-que terminam em `headers: ConditionalCommandHeaders`. Isso se aplica a
-`openShift`, `closeShift`, `handoffSession`; aos cinco métodos de `AitClient`; aos
-dois comandos de `MeasuresClient`; `startProcedure`; e `validatePackage`.
-Argumentos de path e DTO permanecem antes de `headers`. Reads não recebem esses
-headers, e operação cuja fonte não os declarou não os ganha por analogia.
+As assinaturas seguem o OpenAPI gerado, não um double simplificado.
+`openShift`, `closeShift`, `handoffSession`, os dois comandos de
+`MeasuresClient`, `startProcedure` e `validatePackage` terminam em
+`headers: CommandHeaders`. `finalize`, `recordScience`, `recordPrintEvent` e
+`queueTransmission` terminam em `headers: ConditionalCommandHeaders`, pois as
+quatro operações geradas exigem `If-Match`; `requestCancel` recebe
+`CommandHeaders` no ramo draft e `ConditionalCommandHeaders` quando
+`targetAitId` torna o pedido pós-final. Os cinco comandos condicionais de
+provisioning também terminam em `ConditionalCommandHeaders`. Argumentos de path e
+DTO permanecem antes de `headers`. Reads não recebem esses headers, e operação cuja
+fonte não os declarou não os ganha por analogia.
 
 | client                  | método público                                                                                                                                     | verbo e path literal                                                                                                                                                                                        | input/headers                                                                                                                                                                                | retorno/erro                                                                                                                                                                                             |
 | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `MobileBootstrapClient` | `getBootstrap`, `openShift`, `closeShift`, `handoffSession`                                                                                        | `GET /v1/ops/mobile-bootstrap`; `POST /v1/ops/mobile-bootstrap/shifts`; `POST /v1/ops/mobile-bootstrap/shifts/{id}/close`; `POST /v1/ops/mobile-bootstrap/sessions/handoff`                                 | `MobileBootstrapQuery`; `OpenMobileShiftDto` + `device_id`; `CloseMobileShiftDto`; `{ failed_device_id, reason, new_device_id?, location_json? }`; `Idempotency-Key` em cada POST de comando | `BootstrapSnapshot`; `Shift`; `Shift`; encerramento de sessão; `StynxError`                                                                                                                              |
 | `OpsSnapshotsClient`    | `externalQuery`                                                                                                                                    | `POST /v1/ops/snapshots/external-queries`                                                                                                                                                                   | `{ query_type: vehicle_by_plate\|driver_by_cpf\|driver_by_license, parameters, purpose }`; sem header adicional declarado                                                                    | snapshot congelado `{ snapshot_id, source, queried_at, result, divergence_recorded }`; `TEAT.QUERY_UPSTREAM_UNAVAILABLE` ou `TEAT.QUERY_NOT_FOUND`                                                       |
 | `OfflineSyncClient`     | `submitBatch`, `receiptByIdempotency`, `resolveConflict`                                                                                           | `POST /v1/ops/offline-sync/sync-batches`; `GET /v1/ops/offline-sync/receipts/{tenantId}/by-idempotency/{key}`; `POST /v1/ops/offline-sync/sync-conflicts/{id}/resolve`                                      | `SubmitSyncBatchDto`; ids de path; `ResolveSyncConflictDto`; headers não declarados no contrato                                                                                              | batch/receipts; recibo durável; `resolved\|rejected`; `StynxError`                                                                                                                                       |
-| `AitClient`             | `finalize`, `recordScience`, `recordPrintEvent`, `queueTransmission`, `requestCancel`                                                              | `POST /v1/inf/ait/aits/{id}/finalize`; `POST /v1/inf/ait/aits/{id}/science`; `POST /v1/inf/ait/aits/{id}/print-events`; `POST /v1/inf/ait/aits/{id}/queue-transmission`; `POST /v1/inf/ait/cancel-requests` | DTOs homônimos do contrato; `CreateAitCancelRequestDto`; `Idempotency-Key` para POST de comando                                                                                              | estados/efeitos literais do §3.2; `StynxError`                                                                                                                                                           |
+| `AitClient`             | `finalize`, `recordScience`, `recordPrintEvent`, `queueTransmission`, `requestCancel`                                                              | `POST /v1/inf/ait/aits/{id}/finalize`; `POST /v1/inf/ait/aits/{id}/science`; `POST /v1/inf/ait/aits/{id}/print-events`; `POST /v1/inf/ait/aits/{id}/queue-transmission`; `POST /v1/inf/ait/cancel-requests` | DTOs gerados; `If-Match` + `Idempotency-Key` nos quatro comandos sobre AIT; cancelamento draft usa `Idempotency-Key`, pós-final usa também `If-Match`                                        | respostas e `ETag` literais do OpenAPI; `StynxError`                                                                                                                                                     |
 | `MeasuresClient`        | `startAdministrativeMeasure`, `releaseRetention`, `unsupported`                                                                                    | `POST /v1/inf/measures/administrative-measures/{id}/start`; `POST /v1/inf/measures/retentions/{id}/release`; demais caminhos elididos em §6 são `source_pending`                                            | `StartMeasureCommandDto`; `ReleaseRetentionCommandDto`; `Idempotency-Key` para comando                                                                                                       | `started`; `LIBERADO_*\|REGULARIZADO`; `unsupported(): Promise<never>` rejeita                                                                                                                           |
 | `AlcoholClient`         | `startProcedure`, `unsupported`                                                                                                                    | `POST /v1/inf/alcohol/procedures/{id}/start`; caminhos com `…` em §6 são `source_pending`                                                                                                                   | `StartAlcoholProcedureCommandDto`; `Idempotency-Key` para comando                                                                                                                            | `TRIAGEM`; `unsupported(): Promise<never>` rejeita                                                                                                                                                       |
 | `NormativeClient`       | `syncMetadata`, `packageContent`, `validatePackage`                                                                                                | `GET /v1/inf/normative/mobile-packages/sync-metadata`; `GET /v1/inf/normative/mobile-packages/{id}/content`; `POST /v1/inf/normative/mobile-packages/{id}/validate`                                         | package id; `ValidateMobileNormativePackageCommandDto`; `Idempotency-Key` para comando                                                                                                       | metadata; conteúdo assinado; `VALIDADO_PKG`; `StynxError`                                                                                                                                                |
@@ -384,6 +526,11 @@ Para `ProvisioningClient`, os oito pares método/path são:
 `POST /v1/ops/provisioning/grants/{id}/reconcile`. Os nomes `request` remetem aos
 schemas OpenAPI fechados; não autorizam body vazio ou campo inventado.
 
+Os oito clients e todos os callers acima pertencem ao injector root. O Inspector
+resolve cada token a partir do mesmo injector usado por `AppComponent`, executa um
+comando real com `HttpTestingController` e prova que os headers chegaram ao wire.
+Instanciar classes manualmente só no teste unitário não prova DI de produção.
+
 #### LocalActStore, SyncWorker e pacote normativo
 
 ```ts
@@ -393,7 +540,8 @@ type LocalEntityType =
   | 'administrative-measure'
   | 'alcohol-signs-term'
   | 'ait-cancel-request'
-  | 'ait-cancel-posfinal-request';
+  | 'ait-cancel-posfinal-request'
+  | 'crash-record';
 type LocalAct = Readonly<{
   entityType: LocalEntityType;
   localEntityId: string;
@@ -411,6 +559,36 @@ type QueueReceipt = Readonly<{
   errorCode?: string;
   errorMessage?: string;
 }>;
+type SubmitSyncBatchDto = Readonly<{
+  traffic_agency_id: string;
+  device_id: string;
+  agent_id: string;
+  device_batch_id: string;
+  batch_sequence?: number;
+  items: readonly Readonly<{
+    entity_type: LocalEntityType;
+    local_entity_id: string;
+    server_entity_id?: string;
+    idempotency_key?: string;
+    payload_hash: string;
+    created_locally_at?: string;
+    payload_json?: Readonly<Record<string, unknown>>;
+  }>[];
+}>;
+type SubmitSyncBatchResponse = Readonly<{
+  batchId: string;
+  batch_sequence?: number | null;
+  accepted_items: number;
+  receipts: readonly Readonly<{
+    local_entity_id: string;
+    idempotency_key?: string;
+    status: QueueReceiptStatus;
+    server_entity_id?: string;
+    error_code?: string | null;
+    error_message?: string | null;
+  }>[];
+  warnings?: readonly 'SYNC_CONCURRENCY_WINDOW_SOURCE_PENDING'[];
+}>;
 type SyncCursor = Readonly<{
   deviceBatchId: string;
   batchSequence: number;
@@ -418,9 +596,16 @@ type SyncCursor = Readonly<{
 
 declare class LocalActStore {
   constructor(store: MobileEncryptedStorePort);
-  put(act: LocalAct): Promise<void>;
-  get(localEntityId: string): Promise<LocalAct | undefined>;
-  pending(): Promise<readonly LocalAct[]>;
+  putDraft(draft: MobileEntityDraft<LocalEntityType>): Promise<void>;
+  draft(
+    localEntityId: string,
+  ): Promise<MobileEntityDraft<LocalEntityType> | undefined>;
+  putQueueItem(item: MobileSyncQueueItem<LocalEntityType>): Promise<void>;
+  pending(): Promise<readonly MobileSyncQueueItem<LocalEntityType>[]>;
+  putEvidence(evidence: MobileEvidenceDraft): Promise<void>;
+  putReservation(reservation: MobileNumberingReservation): Promise<void>;
+  putPackage(value: InstalledNormativePackage): Promise<void>;
+  putPrintReceipt(receipt: MobilePrintReceipt): Promise<void>;
   applyReceipts(receipts: readonly QueueReceipt[]): Promise<void>;
   receiptByIdempotency(key: string): Promise<QueueReceipt | undefined>;
   cursor(): Promise<SyncCursor | undefined>;
@@ -431,8 +616,9 @@ declare class SyncWorker {
     store: LocalActStore,
     client: OfflineSyncClient,
     bootstrap: BootstrapStore,
+    ids: MobileIdPort,
   );
-  submitNext(): Promise<readonly QueueReceipt[]>;
+  submitNext(): Promise<SubmitSyncBatchResponse>;
   recoverReceipt(
     tenantId: string,
     idempotencyKey: string,
@@ -440,36 +626,83 @@ declare class SyncWorker {
 }
 type InstalledNormativePackage = Readonly<{
   id: string;
+  version: string;
   manifestHash: string;
   validUntil: string;
-  content: unknown;
+  manifest: Readonly<Record<string, unknown>>;
+  signature: Readonly<{
+    value: string;
+    signer: string;
+    kind: 'local-unsigned';
+  }>;
 }>;
 declare class NormativePackageService {
   constructor(
     store: MobileEncryptedStorePort,
     client: NormativeClient,
-    provisioning: ProvisioningClient,
     bootstrap: BootstrapStore,
   );
-  install(id: string): Promise<InstalledNormativePackage>;
+  install(
+    id: string,
+    input: Readonly<{
+      packageVersion: string;
+      headers: CommandHeaders;
+    }>,
+  ): Promise<InstalledNormativePackage>;
   usable(now: string): Promise<InstalledNormativePackage | undefined>;
   revalidate(now: string): Promise<'usable' | 'warning-expired' | 'blocked'>;
 }
 ```
 
-`put` é atômico no store cifrado e não aceita `localEntityId` já persistido com
-payload/hash/idempotência distintos. `submitNext` retorna somente receipts do
-servidor e chama `applyReceipts` antes de concluir; receipt parcial não muda itens
-ausentes. `cursor`, `saveCursor`, `applyReceipts` e `receiptByIdempotency` são
-operações obrigatórias e duráveis do `MobileEncryptedStorePort`; não podem ser
-opcionais nem substituídas por `Map` do processo. `recoverReceipt` usa o path literal
-do `OfflineSyncClient`, persiste a resposta antes de devolvê-la, e retry usa o mesmo
-`device_batch_id`/sequência do cursor persistido; se esses valores não existirem,
-rejeita. `install` só resolve após conteúdo e `manifestHash`
-conferirem; `usable` devolve `undefined` para ausência/divergência; `revalidate`
-devolve `warning-expired` para expiração H.55 e `blocked` para qualquer outro
-blocker. A representação de bytes/assinatura do envelope é `source_pending` e não
-pode ser simulada como verificada.
+As coleções literais são `draft`, `queue`, `evidence`, `reservation`, `package`,
+`print-receipt`, `sync-receipt` e `sync-cursor`; todas usam o mesmo
+`MobileEncryptedStorePort` de produção. Escrita por chave é atômica e não aceita
+`localEntityId` já persistido com payload/hash/idempotência distintos. Não existe
+segundo store nominal restrito a acts.
+
+Cada `put*` executa leitura, comparação e eventual escrita na mesma transação
+`readwrite` do IndexedDB. Replay byte/semanticamente equivalente é idempotente e
+não regrava; colisão preserva o registro anterior e rejeita com
+`local-store-identity-conflict`. Para `draft`, a identidade comparada é
+`localId + entityType + idempotencyKey + localContentHash + status`; para `queue`,
+`queueItemId + localEntityId + idempotencyKey + payloadHash`; para receipt,
+`localEntityId + idempotencyKey + status + serverEntityId`. Evidence, reservation,
+package e print receipt usam respectivamente seus IDs canônicos e todo campo de
+hash/versão/status presente no tipo. `applyReceipts` faz a mesma comparação por
+item e nunca sobrescreve receipt divergente. Falha no meio da transação faz abort,
+sem estado parcial; essa garantia pertence ao adapter IndexedDB/WebCrypto de
+produção, não somente ao fixture.
+
+`SyncWorker` obtém `traffic_agency_id`, `device_id` e `agent_id` do snapshot
+bootstrap `ready`; transforma cada `MobileSyncQueueItem` nos nomes snake_case do
+`SubmitSyncBatchDto` acima e nunca envia o snapshot inteiro. `OfflineSyncClient`
+desserializa o envelope `SubmitSyncBatchResponse`; o worker mapeia `receipts`
+snake_case para `QueueReceipt`, chama `applyReceipts` antes de concluir e não toca
+item ausente em receipt parcial. Cursor e `device_batch_id` são persistidos antes
+do primeiro POST. Rejeição/rede reutiliza exatamente ambos; depois de resposta 200
+persistida, o próximo cursor usa `batchSequence + 1` e novo id produzido por
+`MobileIdPort.uuid('sync-batch')`. Na ausência inicial de cursor, o worker cria
+sequência `1`, persiste-a e relê o mesmo valor antes do primeiro POST; se o POST
+falhar, não gera novo UUID nem altera sequência. Ausência de identidade bootstrap
+ou campo obrigatório rejeita antes do HTTP. `OfflineSyncClient` mapeia o receipt
+wire `local_entity_id`, `idempotency_key`, `server_entity_id`, `error_code` e
+`error_message` para os campos camelCase de `QueueReceipt`; o worker nunca recebe
+wire cru no recovery. `recoverReceipt` usa o path literal do client, persiste a
+resposta antes de devolvê-la e converte em `undefined` exclusivamente um
+`StynxError` com status 404 **e** código `TEAT.SYNC_RECEIPT_NOT_FOUND`; qualquer
+outro erro, inclusive 404 com código distinto, propaga. Cache/local receipt não
+mascara erro remoto.
+
+`NormativeClient.packageContent` retorna o envelope OpenAPI
+`{ manifest, manifest_hash, signature }`; `validatePackage` recebe
+`{ package_version, manifest_hash }` e `CommandHeaders` do caller e retorna
+`{ valid, reason }`. `install` exige que id, versão, hash e `validUntil` coincidam
+com o pacote autoritativo do `BootstrapStore`, re-hasheia `manifest`, exige
+`valid === true` e só então persiste. Como verificação criptográfica da assinatura
+`local-unsigned` permanece `source_pending`, a implementação não a chama de
+assinatura verificada; divergência/ausência bloqueia. `usable` re-hasheia após
+reinício; `revalidate` devolve `warning-expired` para H.55 e `blocked` para qualquer
+outro blocker, sem fabricar data.
 
 #### Dispatch de transição, ErrorBoundary e diagnósticos
 
@@ -518,6 +751,15 @@ declare class FieldShell {
   capture(error: unknown, source: DiagnosticEntry['source']): DiagnosticEntry;
   diagnostics(): readonly DiagnosticEntry[];
 }
+declare class TeatErrorBoundaryState {
+  readonly current: Signal<DiagnosticEntry | undefined>;
+  capture(error: unknown, source: DiagnosticEntry['source']): DiagnosticEntry;
+  clear(): void;
+  diagnostics(): readonly DiagnosticEntry[];
+}
+declare class TeatErrorHandler implements ErrorHandler {
+  handleError(error: unknown): void;
+}
 ```
 
 `dispatchTransition` pesquisa a lista hash-validada da seção 4 pelo par exato
@@ -533,7 +775,9 @@ linha/destino/condição devolve `denied` sem chamar Router ou Location. `captur
 no `FieldShell` mapeia `StynxError` conhecido para o código TEAT recebido, converte
 desconhecido em `TEAT.INTERNAL`, remove valores que não sejam tokens de contexto e
 acrescenta entrada diagnóstica; não lança, não retorna sucesso e não serializa
-payload de ato. A persistência/exportação física de `DiagnosticEntry` é
+payload de ato. `FieldShell`, `TeatErrorHandler` e o handler de erro do Router
+injetam a mesma instância root de `TeatErrorBoundaryState`; o template observa
+`current` e anuncia o erro com `role="alert"`/`aria-live`. A persistência/exportação física de `DiagnosticEntry` é
 `source_pending`; a API em memória é suficiente para provar classificação e
 apresentação sem inventar endpoint.
 
@@ -546,14 +790,23 @@ type PrintResult = Readonly<{
   receiptHash?: string;
   failureReason?: string;
 }>;
-abstract class MobilePrinterPort {
-  abstract print(aitId: string): Promise<PrintResult>;
-}
+type PrintAttempt = Readonly<{
+  aitId: string;
+  aitVersion: string;
+  eventIdempotencyKey: string;
+  session: MobileSessionContext;
+  draft: MobileEntityDraft<'ait'>;
+  contentHash: string;
+}>;
 declare class PrinterDialog {
-  constructor(printer: MobilePrinterPort, ait: AitClient);
-  print(aitId: string): Promise<PrintResult>;
+  constructor(printer: MobilePrinterPort, ait: AitClient, store: LocalActStore);
+  print(input: PrintAttempt): Promise<PrintResult>;
 }
 type BodycamState = 'recording' | 'paused-exception' | 'failure';
+interface BodycamStatePort {
+  readonly state: Signal<BodycamState>;
+}
+export const TEAT_BODYCAM_STATE: InjectionToken<BodycamStatePort>;
 declare class BodycamIndicator {
   readonly state: InputSignal<BodycamState>;
 }
@@ -582,22 +835,35 @@ export const TEAT_ROUTES: Routes;
 ```
 
 `BodycamIndicator` declara `readonly state = input.required<BodycamState>()`.
-`PrinterDialog` chama `MobilePrinterPort.print`, depois
-`AitClient.recordPrintEvent`; êxito e falha conservam o `aitId`/numeração e a
-falha produz `failure_reason`, sem criar outro AIT. `FixturePrinter` não satisfaz
-`MobilePrinterPort` de produção: um double de Inspector a estende por subclass e
-retorna `PrintResult` sem token/hook de produção. O input `state` de
-`BodycamIndicator` sempre recebe um dos três estados e não oferece método de ler
-conteúdo; esse conteúdo só usa a entrega
+`AppComponent` liga `[state]` ao signal do provider `TEAT_BODYCAM_STATE`, nunca a
+uma constante. O adapter concreto de hardware/bodycam permanece
+`source_pending`; até ele existir, o provider de integração reporta somente
+`failure` e registra diagnóstico, sem simular `recording`. O input `state` sempre
+recebe um dos três estados e não oferece método de ler conteúdo; esse conteúdo só usa a entrega
 de custódia registrada. Cada módulo expõe `Routes` não vazio contendo exatamente
 as linhas de seu grupo do manifesto e cada página expõe componente standalone
 distinto. `TeatI18n.translate` rejeita chave fora dos namespaces autorizados e
-nenhum componente exibe literal. Para D-05, o módulo AIT expõe a rota com
+nenhum componente exibe literal. `TeatI18n` exige `StynxI18nService` por DI;
+falha de resolução propaga e é capturada pela ErrorBoundary, sem `try/catch`,
+translator `{ translate: key => key }` ou catálogo local de fallback. Para D-05, o módulo AIT expõe a rota com
 `featureEnabled: false` e retorna estado disabled sem invocar client. Para BOAT,
 `installed() === false` impede o atalho e `load` não é chamado; navegação direta
 recebe negação/fallback sem placeholder. A chave de texto para esses dois estados é
-`source_pending`, por isso o Inspector prova o estado e a ausência de literal, não
-uma frase ou chave inventada.
+`source_pending`; portanto o estado técnico/redirect pode ser provado, mas a UI
+não pode ser declarada pronta nem receber texto/`aria-label` inventado antes de a
+chave ser aprovada. O gate deve falhar fechado nesse ponto em vez de contar um
+container vazio como fallback acessível.
+
+`PrinterDialog` chama o `MobilePrinterPort.printReceipt` real de
+`@stynx-nyx/mobile-runtime` com `session`, `draft` e `contentHash`, persiste o
+`MobilePrintReceipt` em `print-receipt` e chama
+`AitClient.recordPrintEvent(aitId, dto, { 'If-Match': aitVersion,
+'Idempotency-Key': eventIdempotencyKey })`. O DTO usa `event_type`,
+`printer_identifier`, `receipt_hash` e, em falha, `failure_reason`. A tentativa
+fornece a chave e a versão; nem dialog nem client as geram. Reimpressão recebe nova
+chave de evento e o mesmo `aitId`/número, sem criar AIT. Um adapter de Inspector
+implementa a interface exata e um teste de integração usa o provider de produção;
+objeto com método ad hoc `print(aitId)` não satisfaz o oráculo.
 
 `resolveBoatRoute` aceita somente os onze paths `crash-*` do manifesto. Para path
 fora desse conjunto devolve `{ kind: 'unavailable' }` sem chamar `installed` ou
@@ -613,26 +879,43 @@ client e nunca pode chamá-lo.
 `loadChildren`; cada módulo é dono de suas entradas concretas, guardas e
 `loadComponent`, sem importar `TEAT_ROUTES`. O módulo AIT usa
 `resolveDisabledRoute` antes de qualquer carga de D-05 e, para `unavailable`,
-termina na boundary acessível de indisponibilidade do `FieldShell`, sem importar
-feature de velocidade. Cada entrada `crash-*` do módulo sinistro usa
-`TEAT_BOAT_EXTENSION` em `canMatch` para negar quando `installed()` é falso e usa
-`resolveBoatRoute` como resolvedor/load boundary quando verdadeiro. Assim não há
+publica somente estado técnico na ErrorBoundary, cancela a navegação e preserva a
+URL segura anterior, sem importar feature de velocidade. A rota D-05 não declara
+`loadComponent`, `loadChildren` nem resolver de feature. Cada entrada `crash-*` do módulo sinistro usa
+o próprio `readinessGuard` (na posição normal dos cinco guardas) para consultar
+`TEAT_BOAT_EXTENSION` e negar quando `installed()` é falso; não se adiciona sexto
+guarda. Quando verdadeiro, usa `resolveBoatRoute` como resolvedor/load boundary.
+Quando falso, em rejeição de `load` ou em navegação direta, publica estado
+`unavailable` na mesma
+`TeatErrorBoundaryState` observada pelo `FieldShell`. Assim não há
 placeholder: BOAT só fornece componente carregado e D-05 só fornece estado
 indisponível; a resolução é uma superfície pública diretamente invocável pelo
 Inspector.
 
+Nenhum desses caminhos usa `TEAT.INTERNAL` como mensagem substituta nem redireciona
+BOAT para D-05. Com URL segura anterior, a navegação permanece nela; em carga
+direta, o bootstrap retorna à entrada autenticada configurada. Até existir chave
+i18n aprovada, não se cria alerta textual, `aria-label`, componente ou placeholder
+local: a apresentação acessível continua blocker conhecido.
+
+Como a chave i18n acessível desses dois estados permanece `source_pending`, o
+Inspector mantém o caso RED/blocked para apresentação acessível até a decisão de
+produto; ele ainda prova agora que não houve load, comando, placeholder ou literal.
+
 ## 2. Manifesto de 70 rotas
 
 `allowedRoles` é o conjunto completo permitido em cada linha; todos os demais
-papéis canônicos de `TEAT_STAFF_ROLES` são negados. `R` significa somente
+papéis canônicos de `TEAT_STAFF_ROLES` são negados. Nas duas entradas `E`, o rol é
+validado pelo coordenador ao concluir autenticação, não por `canMatch` antes de a
+sessão existir. `E` significa entrada STYNX sem guarda TEAT; `R` significa somente
 `auth, tenant, role`; `B` acrescenta `readiness`; `S` acrescenta `shift` (logo,
 `B+S` preserva a ordem da seção 1). Caminho de componente é também a posse de
 produção do Feature Engineer.
 
 | rota                     | uxCode           | folha fonte                        | guardas       | allowedRoles                      | componente                                                                                |
 | ------------------------ | ---------------- | ---------------------------------- | ------------- | --------------------------------- | ----------------------------------------------------------------------------------------- |
-| `/auth-login`            | `UX-MOB-001`     | `IU-TEAT-auth-login.md`            | R             | `field-agent`, `field-supervisor` | `features/turno/pages/auth-login.page.ts#AuthLoginPageComponent`                          |
-| `/auth-mfa`              | `UX-MOB-002`     | `IU-TEAT-auth-mfa.md`              | R             | `field-agent`, `field-supervisor` | `features/turno/pages/auth-mfa.page.ts#AuthMfaPageComponent`                              |
+| `/auth-login`            | `UX-MOB-001`     | `IU-TEAT-auth-login.md`            | E             | `field-agent`, `field-supervisor` | `features/turno/pages/auth-login.page.ts#AuthLoginPageComponent`                          |
+| `/auth-mfa`              | `UX-MOB-002`     | `IU-TEAT-auth-mfa.md`              | E             | `field-agent`, `field-supervisor` | `features/turno/pages/auth-mfa.page.ts#AuthMfaPageComponent`                              |
 | `/device-blocked`        | `UX-MOB-003`     | `IU-TEAT-device-blocked.md`        | R             | `field-agent`, `field-supervisor` | `features/turno/pages/device-blocked.page.ts#DeviceBlockedPageComponent`                  |
 | `/shift-context`         | `UX-MOB-004`     | `IU-TEAT-shift-context.md`         | B             | `field-agent`, `field-supervisor` | `features/turno/pages/shift-context.page.ts#ShiftContextPageComponent`                    |
 | `/operation-select`      | `UX-MOB-005`     | `IU-TEAT-operation-select.md`      | B             | `field-agent`, `field-supervisor` | `features/turno/pages/operation-select.page.ts#OperationSelectPageComponent`              |
@@ -701,6 +984,121 @@ produção do Feature Engineer.
 | `/special-inspection`    | `UX-MOB-C03`     | `IU-TEAT-special-inspection.md`    | B+S           | `field-agent`, `field-supervisor` | `features/complementares/pages/special-inspection.page.ts#SpecialInspectionPageComponent` |
 | `/context-help`          | `UX-MOB-C04`     | `IU-TEAT-context-help.md`          | R             | `field-agent`, `field-supervisor` | `features/complementares/pages/context-help.page.ts#ContextHelpPageComponent`             |
 | `/local-settings`        | `UX-MOB-C05`     | `IU-TEAT-local-settings.md`        | B             | `field-agent`, `field-supervisor` | `features/complementares/pages/local-settings.page.ts#LocalSettingsPageComponent`         |
+
+### 2.1 Binding comportamental das 58 páginas TEAT habilitadas
+
+`MobilePageRuntime` não retorna nomes. Ele injeta as instâncias root e devolve uma
+união fechada cujo `schema`, `client` e `store` são objetos executáveis:
+
+```ts
+type PageExecutionResult =
+  | Readonly<{ kind: 'loaded'; value: unknown }>
+  | Readonly<{ kind: 'persisted'; localEntityId: string }>
+  | Readonly<{ kind: 'submitted'; value: unknown }>
+  | Readonly<{ kind: 'blocked'; reason: 'source_pending' | 'not-ready' }>;
+
+type CommandContext = Readonly<{
+  session: MobileSessionContext;
+  localEntityId: string;
+  entityType: LocalEntityType;
+  version: number;
+  idempotencyKey: string;
+  payloadHash: string;
+  createdLocallyAt: string;
+  normativePackageId: string;
+  normativePackageVersion: string;
+  reservationId?: string;
+  reservedNumber?: number;
+  ifMatch?: string;
+}>;
+
+type PageBinding = Readonly<{
+  screenId: string;
+  schema?: ZodType<unknown>;
+  client?:
+    | MobileBootstrapClient
+    | OpsSnapshotsClient
+    | OfflineSyncClient
+    | AitClient
+    | MeasuresClient
+    | AlcoholClient
+    | NormativeClient
+    | ProvisioningClient;
+  store?: LocalActStore;
+  load(): Promise<PageExecutionResult>;
+  submit?(
+    input: unknown,
+    context: CommandContext,
+  ): Promise<PageExecutionResult>;
+}>;
+```
+
+Construção da página apenas resolve o binding; HTTP/persistência ocorre em
+`load` explícito ou ação do usuário. `CommandContext` carrega ids, versão,
+`Idempotency-Key`, `If-Match`, sessão STYNX, pacote normativo, reserva, horário e
+hash já adquiridos; runtime/page/client não geram nem deixam vazios esses valores.
+Para criação offline, `localEntityId`, `idempotencyKey`, `createdLocallyAt` e
+`payloadHash` vêm respectivamente de `MobileIdPort`, chave de evento entregue pelo
+fluxo, `MobileClockPort` e `MobileCryptoPort`; sessão, pacote e reserva vêm dos
+stores root já validados. Se qualquer dependência estiver ausente, `submit` retorna
+`blocked/not-ready` antes de `putDraft`/`putQueueItem`; se a fonte não define a
+operação, retorna `blocked/source_pending`. Nunca persiste string vazia,
+`source_pending` como identidade nem objeto genérico `{ id, payload }`.
+A tabela abaixo é exaustiva para as 58 páginas habilitadas; D-05 é a 59ª
+entrada não-BOAT e segue exclusivamente o estado disabled da §1.2:
+
+| screenIds                                                                                                                                                                  | objeto executável e comportamento mínimo autorizado                                                                                                        |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth-login`, `auth-mfa`                                                                                                                                                   | provider STYNX real + `AuthBootstrapCoordinator`; inicia/continua autenticação e, após sessão ativa, executa bootstrap reativo                             |
+| `device-blocked`, `shift-context`, `operation-select`, `home`, `shift-summary`                                                                                             | `BootstrapStore`; lê o signal atual e bloqueia quando não `ready`                                                                                          |
+| `open-shift`, `close-shift`, `device-handoff`                                                                                                                              | schemas aplicáveis + `MobileBootstrapClient`; valida e envia comando com headers do `CommandContext`                                                       |
+| `vehicle-search`, `driver-search`                                                                                                                                          | `OpsSnapshotsClient.externalQuery`; finalidade e parâmetros vêm do formulário, sem consulta nacional direta                                                |
+| `vehicle-result`, `vehicle-divergence`, `driver-result`, `query-failure`                                                                                                   | resultado congelado retornado por `OpsSnapshotsClient`; ausência de snapshot bloqueia                                                                      |
+| `ait-start`, `ait-vehicle`, `ait-driver`, `ait-frame`, `ait-frame-detail`, `ait-location`, `ait-notes`, `ait-validations`, `ait-evidence`, `ait-measures`, `ait-signature` | schema quando listado na §3 + `LocalActStore`; valida e persiste draft/queue/evidence, sem inventar comando remoto ausente                                 |
+| `ait-review`                                                                                                                                                               | `aitReviewSchema` + `LocalActStore`; valida o agregado e a ação explícita, finaliza localmente e enfileira uma vez                                         |
+| `ait-done`, `ait-shift-detail`                                                                                                                                             | `LocalActStore`; lê draft/receipt do mesmo ato, sem mutação legal                                                                                          |
+| `ait-print`                                                                                                                                                                | `PrinterDialog` real conforme §1.2; persiste receipt e evento no mesmo AIT                                                                                 |
+| `ait-cancel-request`                                                                                                                                                       | `aitCancelRequestSchema` + `LocalActStore`; persiste/enfileira o tipo correto; quando há `targetAitId`, `AitClient.requestCancel` usa headers condicionais |
+| `measure-start`, `retention`                                                                                                                                               | schema aplicável + `MeasuresClient.startAdministrativeMeasure`/`releaseRetention`, com headers do caller                                                   |
+| `removal`, `inventory`, `transshipment`, `measure-term`                                                                                                                    | `measureTermSchema` quando aplicável + `LocalActStore`; persiste medida offline; endpoint remoto elidido continua `source_pending`                         |
+| `measure-done`                                                                                                                                                             | `LocalActStore`; lê termo/receipt sem fabricar conclusão remota                                                                                            |
+| `alcohol-start`                                                                                                                                                            | `AlcoholClient.startProcedure` com headers do caller                                                                                                       |
+| `alcohol-device`, `alcohol-result`, `alcohol-refusal`, `alcohol-signs`, `alcohol-forward`, `alcohol-links`, `alcohol-term`                                                 | schema aplicável + `LocalActStore`; persiste termo/estado offline; comandos remotos elididos continuam `source_pending`                                    |
+| `sync`, `sync-item`                                                                                                                                                        | `SyncWorker`/`LocalActStore`; submete ou lê fila/receipt duráveis                                                                                          |
+| `sync-conflict`                                                                                                                                                            | `syncConflictSchema` + `OfflineSyncClient.resolveConflict`; somente `field-supervisor` e payload OpenAPI válido                                            |
+| `diagnostics`                                                                                                                                                              | `TeatErrorBoundaryState`, `BootstrapStore` e `LocalActStore`; leitura sanitizada, sem export físico inventado                                              |
+| `support`, `messages`                                                                                                                                                      | nenhum endpoint está fechado; `submit` devolve `blocked/source_pending` e não faz HTTP                                                                     |
+| `approach-no-ait`, `document-check`, `special-inspection`                                                                                                                  | `LocalActStore`; somente estado local previsto pela matriz; operação remota não documentada fica bloqueada                                                 |
+| `context-help`                                                                                                                                                             | conteúdo i18n canônico; zero client e zero mutação                                                                                                         |
+| `local-settings`                                                                                                                                                           | apenas preferências expressamente fornecidas pelo runtime; persistência/configuração não especificada fica `blocked/source_pending`                        |
+
+A coluna anterior identifica as dependências; a matriz de efeitos abaixo é
+igualmente obrigatória e elimina retorno `loaded`/`persisted` sem efeito:
+
+| grupo                                           | efeito de `load`                                                                      | efeito de `submit`/evento                                                                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| entrada auth                                    | lê o signal STYNX e apresenta estado por chave i18n                                   | botão login chama `login()`; init callback aguarda `completeLogin(url)` e depois `coordinator.start()`                                |
+| contexto (`device-blocked` até `shift-summary`) | lê `BootstrapStore.state()` e bloqueia fora de `ready`                                | somente transição registrada; abertura/fechamento chama `MobileBootstrapClient` com DTO/headers completos                             |
+| consultas                                       | pesquisa chama `OpsSnapshotsClient.externalQuery`; resultados leem snapshot congelado | finalidade/formulário vêm da UI; telas de resultado apenas transitam, sem segunda consulta                                            |
+| AIT                                             | lê draft/evidence/pacote/reserva pelo mesmo `localEntityId`                           | valida schema; `ait-review` grava draft `finalized` e `MobileSyncQueueItem<'ait'>` completos; print/cancel usam dialog/client literal |
+| medidas                                         | lê agregado/termo/receipt identificado                                                | comandos fechados usam `MeasuresClient`; demais persistem draft/queue completos ou bloqueiam `source_pending`                         |
+| alcoolemia                                      | lê procedimento/draft identificado                                                    | `alcohol-start` usa client; demais validam e persistem agregado/queue completos ou bloqueiam comando remoto ausente                   |
+| sync/diagnóstico                                | lê cursor, fila, item, receipt e diagnóstico duráveis                                 | `sync` chama worker, conflito chama client com RBAC; export/ação não fechada bloqueia                                                 |
+| complementares                                  | lê draft somente com identidade completa; help usa i18n STYNX                         | persiste somente estado expressamente previsto; support/messages/settings e mutação remota ausente bloqueiam sem tocar store/client   |
+
+Cada componente liga esses métodos ao lifecycle/evento real: `ngOnInit` dispara
+somente o `load` autorizado; botões/form submit chamam `submit`; o template observa
+o signal `idle | loading | loaded | submitting | persisted | blocked | error` e
+traduz sua chave com `TeatI18n`. Chamar métodos diretamente em uma instância sem
+provar o binding do evento não fecha a página. Em todo efeito local, o objeto
+persistido é `MobileEntityDraft`/`MobileSyncQueueItem` integral com sessão,
+identidade, pacote, reserva, versão, idempotência, hash e horário do
+`CommandContext`; objeto genérico, cast ou campos vazios falham.
+
+O Inspector importa cada componente, aciona `load` ou `submit` e observa pelo menos
+um efeito do objeto real (request HTTP, escrita cifrada, transição de sessão ou
+negação `source_pending`). Comparar strings `schemaId`/`clientId`, procurar tokens
+na fonte ou retornar o próprio contrato não satisfaz o oráculo.
 
 ## 3. Form schemas e renderização
 
@@ -798,8 +1196,9 @@ As APIs §1.2 não autorizam arquivo adicional: `BootstrapStore` fica em
 `core/bootstrap.store.ts`; `GuardContext` nos cinco arquivos de guardas;
 `LocalActStore`, `SyncWorker` e `NormativePackageService` nos três paths da linha
 de persistência; `dispatchTransition` em `navigation/transitions.ts`; `FieldShell`
-em `core/field-shell.component.ts`; `MobilePrinterPort` nos
-shared; `BodycamIndicator` em core; `TeatI18n` em `core/i18n.service.ts`; e
+e os handlers em `core/field-shell.component.ts`; o binding da
+`MobilePrinterPort` STYNX e `PrinterDialog` nos shared; `BodycamIndicator` e sua
+porta em core; `TeatI18n` em `core/i18n.service.ts`; e
 `BoatExtensionPort` em `features/sinistro/sinistro.routes.ts`. Portanto toda
 classe/interface pública necessária já pertence a path da allowlist.
 
@@ -813,45 +1212,83 @@ classe/interface pública necessária já pertence a path da allowlist.
 3. O teste de paridade lê a fonte fechada do §4, confirma hash, cardinalidade 576,
    igualdade ordenada e alcance de todo destino concreto registrado; BOAT continua
    extensão e não é removido da matriz.
-4. Readiness vem da resposta de provisionamento/bootstrap; warnings são mostrados
-   e registrados, blockers impedem a rota. Nada no app transforma `source_pending`
-   em valor, nem muda a decisão de H.39, H.54 ou H.55.
-5. Para cada guarda efetivo, o Inspector prova uma entrada válida que permite e
-   uma entrada ausente/inválida que nega. Para `roleGuard`, a prova executa o
-   oráculo cartesiano da regra 2; um helper não usado pela guarda não satisfaz este
-   oráculo. Para rota `B+S`, a prova mostra que `readinessGuard` precede
-   `shiftGuard`.
-6. Para cada um dos oito adapters, um double de `HttpClient`/cliente gerado prova
-   método, prefixo unificado, headers obrigatórios quando o comando os exige,
-   desserialização tipada e propagação do mesmo `StynxError`. Uma URL fora de
-   `/v1/inf/` ou `/v1/ops/`, sucesso fabricado ou chamada nacional falha.
-7. O oráculo offline reinicia o store entre escrita e leitura e comprova que o ato,
-   versão, hash, idempotência e fila sobrevivem; simula recibo parcial, retry e
-   erro, e prova ausência de duplicidade, apagamento ou bloqueio indevido. Store
-   somente em memória não satisfaz a prova.
-8. O oráculo normativo cobre conteúdo válido, ausente, hash divergente e expirado:
-   somente o primeiro é utilizável; ausente/divergente bloqueiam; expirado emite e
-   registra warning sem bloquear. Também prova reavaliação após `validUntil`.
-9. Para os oito módulos, as provas carregam a rota lazy e comprovam a instância do
-   componente de cada linha do manifesto; a mesma classe/alias/placeholder em duas
-   linhas falha. Cada página com formulário exercita seu schema e a ação/client
-   correspondente; cada texto observado é uma chave do catálogo carregado.
-10. O oráculo da ErrorBoundary lança um `StynxError` conhecido e um erro desconhecido
-    em ação e rota, e comprova classificação, chave i18n, contexto sanitizado e
-    registro diagnóstico; não pode haver throw não tratado, literal visível ou
-    resultado de sucesso.
-11. Para os 14 schemas, há uma prova negativa por validação expressa na seção 3 e
-    prova de que nenhum adapter é chamado ao falhar. `source_pending` não pode ser
-    convertido em validação permissiva nem em valor inventado.
-12. O oráculo de produção de impressão usa uma implementação não-`FixturePrinter`
-    de `MobilePrinterPort` e prova evento de êxito/falha e reimpressão sem novo AIT;
-    o de bodycam prova os três estados de chrome e que conteúdo não autorizado não
-    é renderizado.
-13. D-05 tem prova de rota acessível que mostra indisponibilidade e prova de zero
-    carga/chamada de feature. `resolveDisabledRoute` é exercida com D-05 e um path
-    não-disabled. `resolveBoatRoute` é exercida com path não-BOAT, extensão ausente,
-    extensão presente e rejeição de `load`; só o terceiro chama `load`. Cada rota
-    BOAT tem prova com extensão presente e ausente; a segunda não mostra placeholder
-    TEAT e não torna o atalho visível.
-14. Esses oráculos são provas de comportamento das superfícies efetivas, não testes
-    de existência de classe, arquivo, array, metadata ou helper isolado.
+4. A prova de entrada navega para `/auth-login` sem contexto TEAT, clica o controle
+   real e observa `login()`. Em seguida navega pelo callback configurado
+   `/auth-mfa`, prova pelo lifecycle que `completeLogin(url)` resolve antes de
+   qualquer bootstrap, ativa sessão/tenant/mobile-session no mesmo injector,
+   observa `GET mobile-bootstrap` + `GET provisioning/.../readiness` e a navegação
+   `ready` para `home` ou `shift-context`; resposta blocked navega para
+   `device-blocked`. Logout/expiração limpa automaticamente e volta a negar sem
+   chamar `clearOnSessionEnd()` pelo teste nem reconstruir injector. Nenhum mock
+   pode instalar `TEAT_GUARD_CONTEXT` pronto nesse teste.
+5. Readiness vem da resposta de provisionamento/bootstrap e é decidido uma única
+   vez por `ReadinessGateService`; o teste injeta um spy nesse serviço e comprova
+   que `readinessGuard` usa exatamente seu resultado. Warnings são mostrados e
+   registrados no `TeatErrorBoundaryState` pelo warning sink root, blockers impedem
+   a rota. O teste cobre `snapshot.validUntil` futuro, ausente, inválido e expirado,
+   separadamente de `normativePackage.validUntil`, e rejeita sink no-op. Nada
+   transforma `source_pending` em valor nem muda H.39, H.54 ou H.55.
+6. Para cada guarda efetivo, o Inspector prova uma entrada válida que permite e
+   uma entrada ausente/inválida que nega. Para `roleGuard`, executa o cartesiano da
+   regra 2; helper não usado pelo guarda não satisfaz. Para `B+S`, comprova a ordem.
+7. Os oito clients são resolvidos do injector root. `HttpTestingController` prova
+   request e response tipados reais, inclusive `If-Match` nas quatro operações AIT,
+   ramo condicional de cancelamento, headers normativo/impressão/provisioning e
+   propagação do mesmo `StynxError`. Double com assinatura menor que o client real
+   falha em typecheck. URL fora de `/v1/inf/` ou `/v1/ops/`, sucesso fabricado ou
+   chamada nacional falha.
+8. O oráculo sync importa os tipos gerados, começa também sem cursor, comprova que
+   o primeiro cursor `{ uuid('sync-batch'), 1 }` foi persistido antes do POST,
+   reinicia o store, executa o worker e compara o body completo ao `SubmitSyncBatchDto`:
+   três identidades, `device_batch_id`, sequência e item snake_case. Responde com
+   envelope `{ batchId, batch_sequence, accepted_items, receipts, warnings? }`,
+   prova persistência parcial, retry com mesmo UUID/sequência após erro e avanço
+   atômico para novo batch após 200. Recovery prova o mapeamento snake_case completo,
+   persiste o receipt e converte somente 404 + `TEAT.SYNC_RECEIPT_NOT_FOUND` em
+   ausência; outro 404 e qualquer erro propagam. Array nu de receipts, `bootstrap`
+   no body, `Map` ou campos camelCase no wire falham.
+9. O oráculo offline usa o adapter IndexedDB/WebCrypto de produção, fecha sua
+   instância, abre outra sobre o mesmo banco e chave não exportável entre escrita e
+   leitura e comprova separadamente `draft`, `queue`, `evidence`, `reservation`,
+   `package`, `print-receipt`, `sync-receipt` e `sync-cursor`. Para cada coleção,
+   verifica identidade/hash/versão. Para cada `put*` repete valor idêntico e prova
+   no-op; depois tenta mesma chave com identidade/hash/idempotência/status divergente,
+   exige `local-store-identity-conflict` e relê bytes/valor anterior intactos. O
+   teste inspeciona o registro IndexedDB e comprova que payload não está em texto
+   claro; fixture em memória não fecha este oráculo.
+10. O oráculo normativo usa `NormativeClient` com assinatura real: conteúdo
+    `{ manifest, manifest_hash, signature }`, validação com
+    `{ package_version, manifest_hash }` e `CommandHeaders`. Cobre válido, ausente,
+    hash divergente, `valid:false`, reinício e expirado; somente o primeiro é
+    utilizável, expirado registra warning sem bloquear.
+11. Para os oito módulos, a prova carrega a rota lazy e instancia cada componente.
+    Para cada linha das duas tabelas da §2.1, dispara `ngOnInit` e o evento real de
+    UI, observa transições do signal e o request HTTP, escrita cifrada de
+    `MobileEntityDraft`/`MobileSyncQueueItem` completo, sessão ou negação
+    `source_pending` correspondente. Também remove, um por vez, sessão, pacote,
+    reserva, identidade, idempotência, versão, horário e hash e prova que nenhum
+    store/client é chamado. String de client/schema, objeto genérico `{ id,
+payload }`, cast, retorno de metadata e busca textual não passam. Cada texto
+    observado vem do provider STYNX; ausência dele falha, sem translator ad hoc.
+12. O oráculo da ErrorBoundary provoca erro conhecido/desconhecido por ação, erro
+    real de componente e `NavigationError`; comprova que o mesmo estado root chega
+    ao `FieldShell`, com classificação, chave i18n, contexto sanitizado e alerta
+    acessível. Invocar `capture` diretamente como única prova não passa.
+13. Para os 14 schemas, há prova negativa por validação expressa na seção 3 e prova
+    de que nenhum adapter/store é chamado ao falhar. `source_pending` não vira
+    validação permissiva nem valor inventado.
+14. O oráculo de impressão resolve `MobilePrinterPort`, `AitClient` e store pelo
+    injector de produção; prova input STYNX exato, receipt durável, `If-Match`,
+    idempotência distinta por tentativa, sucesso/falha e reimpressão do mesmo AIT.
+    O de bodycam altera o signal do adapter pelos três estados e prova ausência de
+    conteúdo; constante `failure` não passa.
+15. D-05 prova ausência estrutural e dinâmica de `loadComponent`, `loadChildren`,
+    resolver, import e client. BOAT prova extensão ausente/presente/rejeitada
+    através dos cinco guardas e da ErrorBoundary real: ausência/rejeição não chama
+    loader local, não redireciona a D-05 e preserva URL segura; presença carrega
+    somente o componente externo. Enquanto a chave acessível permanece
+    `source_pending`, o teste de apresentação continua RED/blocked; `TEAT.INTERNAL`,
+    container vazio, literal ou placeholder não contam como verde.
+16. Esses oráculos são provas de comportamento das superfícies efetivas, não testes
+    de existência de classe, arquivo, array, metadata, regex de fonte ou helper
+    isolado.

@@ -1,40 +1,40 @@
 import type { MobileEncryptedStorePort } from '@stynx-nyx/mobile-runtime';
+import type { CommandHeaders } from '../api/ait.client.js';
 
-interface InstalledNormativePackage {
+export interface InstalledNormativePackage {
   readonly id: string;
+  readonly version: string;
   readonly manifestHash: string;
   readonly validUntil: string;
-  readonly content: unknown;
+  readonly manifest: Readonly<Record<string, unknown>>;
+  readonly signature: Readonly<{
+    value: string;
+    signer: string;
+    kind: 'local-unsigned';
+  }>;
 }
 
 interface NormativePackageEnvelope {
-  readonly content: unknown;
-  readonly manifestHash?: string;
-  readonly manifest_hash?: string;
-  readonly validUntil?: string;
-  readonly valid_until?: string;
-}
-
-interface ValidationResponse {
-  readonly manifestHash?: string;
-  readonly manifest_hash?: string;
-  readonly validUntil?: string;
-  readonly valid_until?: string;
+  readonly manifest: Readonly<Record<string, unknown>>;
+  readonly manifest_hash: string;
+  readonly signature: string;
 }
 
 interface NormativeClientPort {
   packageContent(id: string): Promise<NormativePackageEnvelope>;
   validatePackage(
     id: string,
-    input: Readonly<{ manifest_hash: string }>,
-  ): Promise<ValidationResponse>;
+    input: Readonly<{ package_version: string; manifest_hash: string }>,
+    headers: CommandHeaders,
+  ): Promise<Readonly<{ valid: boolean; reason: string }>>;
 }
 
 interface BootstrapPort {
   snapshot():
     | Readonly<{
-        normativePackage?: Readonly<{
+        normativePackage: Readonly<{
           id: string;
+          version: string;
           manifestHash: string;
           validUntil: string;
         }>;
@@ -42,7 +42,7 @@ interface BootstrapPort {
     | undefined;
 }
 
-const COLLECTION = 'teat-normative-package';
+const COLLECTION = 'package';
 const ACTIVE_KEY = 'active';
 
 async function sha256(value: unknown): Promise<string> {
@@ -53,67 +53,77 @@ async function sha256(value: unknown): Promise<string> {
     .join('');
 }
 
-function firstDefined(
-  ...values: readonly (string | undefined)[]
-): string | undefined {
-  return values.find((value): value is string => value !== undefined);
-}
-
 export class NormativePackageService {
   private integrityBlocked = false;
 
   constructor(
     private readonly store: MobileEncryptedStorePort,
     private readonly client: NormativeClientPort,
-    private readonly provisioning: unknown,
-    private readonly bootstrap?: BootstrapPort,
+    private readonly bootstrap: BootstrapPort,
   ) {
-    if (this.store.encrypted !== true) {
+    if (store.encrypted !== true) {
       throw new Error('normative-package-store-not-encrypted');
     }
   }
 
-  async install(id: string): Promise<InstalledNormativePackage> {
-    const envelope = await this.client.packageContent(id);
-    if (envelope === undefined || !Object.hasOwn(envelope, 'content')) {
-      this.integrityBlocked = true;
-      throw new Error('normative-package-content-missing');
+  async install(
+    id: string,
+    input: Readonly<{ packageVersion: string; headers: CommandHeaders }>,
+  ): Promise<InstalledNormativePackage> {
+    const authority = this.bootstrap.snapshot()?.normativePackage;
+    if (
+      authority === undefined ||
+      authority.id !== id ||
+      authority.version !== input.packageVersion
+    ) {
+      throw new Error('normative-package-authority-mismatch');
     }
-    const computedHash = await sha256(envelope.content);
-    const bootstrapAuthority = this.bootstrap?.snapshot()?.normativePackage;
-    const declaredHash = firstDefined(
-      envelope.manifestHash,
-      envelope.manifest_hash,
-      bootstrapAuthority?.id === id
-        ? bootstrapAuthority.manifestHash
-        : undefined,
+    const envelopePromise = this.client.packageContent(id);
+    const validationPromise = this.client.validatePackage(
+      id,
+      {
+        package_version: input.packageVersion,
+        manifest_hash: authority.manifestHash,
+      },
+      input.headers,
     );
-    if (declaredHash === undefined || declaredHash !== computedHash) {
+    const envelope = await envelopePromise;
+    const manifestHash = await sha256(envelope.manifest);
+    if (
+      manifestHash !== envelope.manifest_hash ||
+      manifestHash !== authority.manifestHash
+    ) {
       this.integrityBlocked = true;
       throw new Error('normative-package-hash-mismatch');
     }
-
-    const validation = await this.client.validatePackage(id, {
-      manifest_hash: computedHash,
-    });
-    const validUntil = firstDefined(
-      validation.validUntil,
-      validation.valid_until,
-      envelope.validUntil,
-      envelope.valid_until,
-      bootstrapAuthority?.id === id ? bootstrapAuthority.validUntil : undefined,
-    );
-    if (validUntil === undefined || Number.isNaN(Date.parse(validUntil))) {
+    const manifestVersion = envelope.manifest['package_version'];
+    const manifestValidUntil = envelope.manifest['valid_until'];
+    if (
+      manifestVersion !== input.packageVersion ||
+      manifestValidUntil !== authority.validUntil ||
+      typeof envelope.signature !== 'string' ||
+      envelope.signature === ''
+    ) {
       this.integrityBlocked = true;
-      throw new Error('normative-package-valid-until-missing');
+      throw new Error('normative-package-manifest-mismatch');
     }
-
-    const installed = {
+    const validation = await validationPromise;
+    if (!validation.valid) {
+      this.integrityBlocked = true;
+      throw new Error(`normative-package-invalid:${validation.reason}`);
+    }
+    const installed: InstalledNormativePackage = {
       id,
-      manifestHash: computedHash,
-      validUntil,
-      content: envelope.content,
-    } satisfies InstalledNormativePackage;
+      version: input.packageVersion,
+      manifestHash,
+      validUntil: authority.validUntil,
+      manifest: envelope.manifest,
+      signature: {
+        value: envelope.signature,
+        signer: 'source_pending',
+        kind: 'local-unsigned',
+      },
+    };
     await this.store.put(COLLECTION, ACTIVE_KEY, installed);
     this.integrityBlocked = false;
     return installed;
@@ -127,8 +137,7 @@ export class NormativePackageService {
       ACTIVE_KEY,
     );
     if (installed === undefined) return undefined;
-    const computedHash = await sha256(installed.content);
-    if (computedHash !== installed.manifestHash) {
+    if ((await sha256(installed.manifest)) !== installed.manifestHash) {
       this.integrityBlocked = true;
       return undefined;
     }

@@ -1,12 +1,16 @@
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import type {
   BootstrapSnapshot,
   ProvisioningReadiness,
 } from './bootstrap.store.js';
+import { TeatErrorBoundaryState } from './field-shell.component.js';
 
 export interface ReadinessInput {
   readonly bootstrap: BootstrapSnapshot | undefined;
   readonly provisioning: ProvisioningReadiness | undefined;
   readonly now: string;
+  readonly destination?: string;
+  readonly preShift?: boolean;
 }
 
 export interface ReadinessResult {
@@ -20,8 +24,20 @@ export interface ReadinessWarningSink {
   record(code: string): void;
 }
 
+export const TEAT_READINESS_WARNING_SINK =
+  new InjectionToken<ReadinessWarningSink>('TEAT_READINESS_WARNING_SINK', {
+    providedIn: 'root',
+    factory: () => {
+      const boundary = inject(TeatErrorBoundaryState);
+      return {
+        record: (code: string) => boundary.recordWarning(code),
+      };
+    },
+  });
+
+@Injectable({ providedIn: 'root' })
 export class ReadinessGateService {
-  constructor(private readonly diagnostics: ReadinessWarningSink) {}
+  private readonly diagnostics = inject(TEAT_READINESS_WARNING_SINK);
 
   evaluate(input: ReadinessInput): ReadinessResult {
     const { bootstrap, provisioning } = input;
@@ -30,6 +46,13 @@ export class ReadinessGateService {
     if (provisioning === undefined) blockers.push('provisioning-missing');
     if (Number.isNaN(Date.parse(input.now))) blockers.push('clock-invalid');
     if (bootstrap !== undefined) {
+      const snapshotValidUntil = Date.parse(bootstrap.snapshot?.validUntil);
+      if (
+        !Number.isFinite(snapshotValidUntil) ||
+        snapshotValidUntil <= Date.parse(input.now)
+      ) {
+        blockers.push('bootstrap-snapshot-expired');
+      }
       if (bootstrap.context.session.exclusive !== true)
         blockers.push('session-not-exclusive');
       if (bootstrap.context.device.status !== 'authorized')
@@ -42,7 +65,10 @@ export class ReadinessGateService {
         blockers.push('normative-package-missing');
       if (bootstrap.numberingReservations.length === 0)
         blockers.push('numbering-reservation-missing');
-      if (bootstrap.context.activeShift?.status !== 'open')
+      if (
+        bootstrap.context.activeShift?.status !== 'open' &&
+        input.preShift !== true
+      )
         blockers.push('shift-not-open');
       blockers.push(...bootstrap.readiness.blockers);
     }
@@ -51,11 +77,12 @@ export class ReadinessGateService {
       blockers.push(...provisioning.blockers.map((blocker) => blocker.code));
     }
     const warnings: string[] = [];
-    const validUntil = bootstrap?.normativePackage.validUntil;
+    const validUntil = bootstrap?.snapshot?.validUntil;
+    const normativeValidUntil = bootstrap?.normativePackage.validUntil;
     if (
-      validUntil !== undefined &&
+      normativeValidUntil !== undefined &&
       !Number.isNaN(Date.parse(input.now)) &&
-      Date.parse(input.now) >= Date.parse(validUntil)
+      Date.parse(input.now) >= Date.parse(normativeValidUntil)
     ) {
       warnings.push('warning-expired');
       this.diagnostics.record('warning-expired');

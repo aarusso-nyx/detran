@@ -7,7 +7,7 @@ export const TURNO_ROUTES: Routes = [
       path: 'auth-login',
       uxCode: 'UX-MOB-001',
       sourceSheet: 'IU-TEAT-auth-login.md',
-      guardPlan: 'R',
+      guardPlan: 'E',
       allowedRoles: ['field-agent', 'field-supervisor'],
       component:
         'features/turno/pages/auth-login.page.ts#AuthLoginPageComponent',
@@ -22,7 +22,7 @@ export const TURNO_ROUTES: Routes = [
       path: 'auth-mfa',
       uxCode: 'UX-MOB-002',
       sourceSheet: 'IU-TEAT-auth-mfa.md',
-      guardPlan: 'R',
+      guardPlan: 'E',
       allowedRoles: ['field-agent', 'field-supervisor'],
       component: 'features/turno/pages/auth-mfa.page.ts#AuthMfaPageComponent',
     },

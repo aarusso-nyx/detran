@@ -2,10 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 export type CommandHeaders = Readonly<{ 'Idempotency-Key': string }>;
+export type ConditionalCommandHeaders = CommandHeaders &
+  Readonly<{ 'If-Match': string }>;
 
-function commandOptions(headers: CommandHeaders) {
+function commandOptions(
+  headers: CommandHeaders | ConditionalCommandHeaders,
+  conditional = false,
+) {
   if (headers['Idempotency-Key'].trim() === '') {
     throw new Error('idempotency-key-required');
+  }
+  if (
+    conditional &&
+    (!('If-Match' in headers) || headers['If-Match'].trim() === '')
+  ) {
+    throw new Error('if-match-required');
   }
   return { headers };
 }
@@ -29,8 +40,13 @@ export class AitClient {
   readonly recordPrintEvent = (
     id: string,
     input: unknown,
-    headers: CommandHeaders,
-  ) => this.post(`/v1/inf/ait/aits/${id}/print-events`, input, headers);
+    headers: ConditionalCommandHeaders,
+  ) =>
+    firstValueFrom(
+      this.http.post(`/v1/inf/ait/aits/${id}/print-events`, input, {
+        ...commandOptions(headers, true),
+      }),
+    );
   readonly queueTransmission = (
     id: string,
     input: unknown,

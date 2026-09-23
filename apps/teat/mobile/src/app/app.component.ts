@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {
   BodycamIndicator,
-  type BodycamState,
+  TEAT_BODYCAM_STATE,
 } from './core/bodycam-indicator.component.js';
 import { FieldShellComponent } from './core/field-shell.component.js';
 
@@ -12,12 +12,12 @@ import { FieldShellComponent } from './core/field-shell.component.js';
   imports: [FieldShellComponent, BodycamIndicator, RouterOutlet],
   template: `
     <teat-field-shell>
-      <teat-bodycam-indicator [state]="bodycamState" />
+      <teat-bodycam-indicator [state]="bodycamState()" />
       <router-outlet />
     </teat-field-shell>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  readonly bodycamState: BodycamState = 'failure';
+  readonly bodycamState = inject(TEAT_BODYCAM_STATE).state;
 }

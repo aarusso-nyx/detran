@@ -1,7 +1,19 @@
-import { inject, Injectable, InjectionToken } from '@angular/core';
+import {
+  effect,
+  inject,
+  Injectable,
+  InjectionToken,
+  signal,
+  type Signal,
+} from '@angular/core';
+import type {
+  MobileSessionContext,
+  MobileStynxSessionPort,
+} from '@stynx-nyx/mobile-runtime';
 import { TenantContextService } from '@stynx-nyx/angular-tenancy';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { MobileBootstrapClient } from '../data/api/mobile-bootstrap.client.js';
+import { ProvisioningClient } from '../data/api/provisioning.client.js';
 
 export interface Principal {
   readonly id: string;
@@ -88,12 +100,22 @@ export interface ProvisioningReadiness {
 }
 
 export interface GuardContext {
-  readonly principal: Principal | undefined;
-  readonly tenantId: string | undefined;
-  readonly allowedRoles: readonly DetranRole[];
-  readonly bootstrap: BootstrapSnapshot | undefined;
-  readonly provisioning: ProvisioningReadiness | undefined;
+  readonly principal: () => Principal | undefined;
+  readonly tenantId: () => string | undefined;
+  readonly allowedRoles: () => readonly DetranRole[];
+  readonly bootstrap: () => BootstrapSnapshot | undefined;
+  readonly provisioning: () => ProvisioningReadiness | undefined;
 }
+
+export type BootstrapState =
+  | Readonly<{ status: 'anonymous' }>
+  | Readonly<{ status: 'loading'; query: MobileBootstrapQuery }>
+  | Readonly<{
+      status: 'ready';
+      bootstrap: BootstrapSnapshot;
+      provisioning: ProvisioningReadiness;
+    }>
+  | Readonly<{ status: 'blocked'; code: string }>;
 
 const TEAT_STAFF_ROLES: readonly DetranRole[] = [
   'field-agent',
@@ -115,13 +137,49 @@ function claimValues(value: unknown): readonly string[] {
 
 export const TEAT_GUARD_CONTEXT = new InjectionToken<GuardContext>(
   'TEAT_GUARD_CONTEXT',
+  { providedIn: 'root', factory: createTeatGuardContext },
 );
+
+export const TEAT_MOBILE_STYNX_SESSION_PORT =
+  new InjectionToken<MobileStynxSessionPort>('TEAT_MOBILE_STYNX_SESSION_PORT', {
+    providedIn: 'root',
+    factory: () => {
+      const session = inject(StynxSessionService);
+      const tenancy = inject(TenantContextService);
+      return {
+        currentSession: async (): Promise<MobileSessionContext> => {
+          const state = session.state();
+          const claims = state.claims ?? {};
+          const tenantId = tenancy.tenantId();
+          const subject = claims['sub'];
+          if (!session.active() || !tenantId || typeof subject !== 'string') {
+            throw new Error('authenticated-mobile-session-required');
+          }
+          return {
+            tenantId,
+            orgUnitId: String(claims['org_unit_id'] ?? tenantId),
+            agentId: subject,
+            deviceId: String(claims['device_id'] ?? ''),
+            shiftId: String(claims['shift_id'] ?? ''),
+            appVersion: String(claims['app_version'] ?? ''),
+            roles: [
+              ...claimValues(claims['cognito:groups']),
+              ...claimValues(claims['roles']),
+            ],
+          };
+        },
+      };
+    },
+  });
 
 @Injectable({ providedIn: 'root' })
 export class BootstrapStore {
   private readonly client = inject(MobileBootstrapClient);
+  private readonly provisioningClient = inject(ProvisioningClient);
   private value: BootstrapSnapshot | undefined;
   private provisioning: ProvisioningReadiness | undefined;
+  private readonly stateValue = signal<BootstrapState>({ status: 'anonymous' });
+  readonly state: Signal<BootstrapState> = this.stateValue.asReadonly();
 
   snapshot(): BootstrapSnapshot | undefined {
     return this.value;
@@ -131,19 +189,79 @@ export class BootstrapStore {
     return this.provisioning;
   }
 
-  async refresh(input: MobileBootstrapQuery): Promise<BootstrapSnapshot> {
-    const snapshot = await this.client.getBootstrap(input);
-    this.value = snapshot;
-    return snapshot;
-  }
-
-  setProvisioning(readiness: ProvisioningReadiness | undefined): void {
-    this.provisioning = readiness;
+  async refresh(input: MobileBootstrapQuery): Promise<
+    Readonly<{
+      bootstrap: BootstrapSnapshot;
+      provisioning: ProvisioningReadiness;
+    }>
+  > {
+    this.stateValue.set({ status: 'loading', query: input });
+    try {
+      const [bootstrap, provisioning] = await Promise.all([
+        this.client.getBootstrap(input),
+        this.provisioningClient.readiness(
+          input.device_id,
+        ) as Promise<ProvisioningReadiness>,
+      ]);
+      this.value = bootstrap;
+      this.provisioning = provisioning;
+      const result = { bootstrap, provisioning };
+      this.stateValue.set({ status: 'ready', ...result });
+      return result;
+    } catch (error) {
+      this.clear();
+      this.stateValue.set({
+        status: 'blocked',
+        code: error instanceof Error ? error.message : 'bootstrap-failed',
+      });
+      throw error;
+    }
   }
 
   clear(): void {
     this.value = undefined;
     this.provisioning = undefined;
+    this.stateValue.set({ status: 'anonymous' });
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class AuthBootstrapCoordinator {
+  private readonly session = inject(StynxSessionService);
+  private readonly mobileSession = inject(TEAT_MOBILE_STYNX_SESSION_PORT);
+  private readonly store = inject(BootstrapStore);
+  readonly state = this.store.state;
+
+  private readonly sessionLifecycle = effect(() => {
+    if (!this.session.active()) this.store.clear();
+  });
+
+  start(): Promise<BootstrapState> {
+    return this.mobileSession.currentSession().then(async (mobile) => {
+      if (!this.session.active()) {
+        throw new Error('authenticated-session-required');
+      }
+      if (!mobile.deviceId || !mobile.appVersion) {
+        throw new Error('mobile-session-context-incomplete');
+      }
+      const result = await this.store.refresh({
+        device_id: mobile.deviceId,
+        app_version: mobile.appVersion,
+      });
+      if (
+        result.bootstrap.context.tenantId !== mobile.tenantId ||
+        result.bootstrap.context.agent.id !== mobile.agentId ||
+        result.bootstrap.context.device.id !== mobile.deviceId
+      ) {
+        this.store.clear();
+        throw new Error('bootstrap-session-mismatch');
+      }
+      return this.store.state();
+    });
+  }
+
+  clearOnSessionEnd(): void {
+    this.store.clear();
   }
 }
 
@@ -151,29 +269,46 @@ export function createTeatGuardContext(): GuardContext {
   const session = inject(StynxSessionService);
   const tenancy = inject(TenantContextService);
   const store = inject(BootstrapStore);
-  const state = session.state();
-  const claims = state.claims ?? {};
-  const claimedRoles = new Set([
-    ...claimValues(claims['cognito:groups']),
-    ...claimValues(claims['roles']),
-  ]);
-  const roles = TEAT_STAFF_ROLES.filter((role) => claimedRoles.has(role));
-  const bootstrap = store.snapshot();
-  const resolvedTenant = tenancy.tenantId();
-  const tenantMatches =
-    typeof resolvedTenant === 'string' &&
-    resolvedTenant !== '' &&
-    bootstrap?.context.tenantId === resolvedTenant;
-  const subject = claims['sub'];
-  const principal =
-    session.active() && tenantMatches && typeof subject === 'string'
-      ? { id: subject, roles }
+  const tenant = (): string | undefined => {
+    if (!session.active()) return undefined;
+    const resolvedTenant = tenancy.tenantId();
+    return typeof resolvedTenant === 'string' && resolvedTenant !== ''
+      ? resolvedTenant
       : undefined;
+  };
+  const roles = (): readonly DetranRole[] => {
+    const claims = session.state().claims ?? {};
+    const claimedRoles = new Set([
+      ...claimValues(claims['cognito:groups']),
+      ...claimValues(claims['roles']),
+    ]);
+    return TEAT_STAFF_ROLES.filter((role) => claimedRoles.has(role));
+  };
+  const operationalBootstrap = (): BootstrapSnapshot | undefined => {
+    if (!session.active()) return undefined;
+    const currentTenant = tenancy.tenantId();
+    const bootstrap = store.snapshot();
+    return typeof currentTenant === 'string' &&
+      currentTenant !== '' &&
+      bootstrap?.context.tenantId === currentTenant
+      ? bootstrap
+      : undefined;
+  };
   return {
-    principal,
-    tenantId: tenantMatches ? resolvedTenant : undefined,
+    principal: () => {
+      const subject = session.state().claims?.['sub'];
+      return session.active() &&
+        tenant() !== undefined &&
+        typeof subject === 'string'
+        ? { id: subject, roles: roles() }
+        : undefined;
+    },
+    tenantId: tenant,
     allowedRoles: roles,
-    bootstrap,
-    provisioning: store.provisioningSnapshot(),
+    bootstrap: operationalBootstrap,
+    provisioning: () =>
+      operationalBootstrap() === undefined
+        ? undefined
+        : store.provisioningSnapshot(),
   };
 }

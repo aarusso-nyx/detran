@@ -129,6 +129,12 @@ do bootstrap. Gate: `pnpm contracts:check` (gerador CRUD + `tools/contracts/chec
 
 ### WP-T4 — Telas, formulários e i18n (Transcriber-docs → Engineer-frontend)
 
+**Entregue e revisto em R-0013; integração final da rodada pendente.** CTG-0002 registrou as
+matrizes imutáveis, as 126 fichas (70 mobile e 56 web), o catálogo pt-BR e os parâmetros
+correlatos. Seu fechamento documental foi mesclado no PR #73
+(`3da2b61ee8e418e634a7364417175a1e86a8c9e0`). As fichas preservam as fronteiras BOAT e as
+lacunas reais como `source_pending`; não materializam integração física nem serviço nacional.
+
 Portar a matriz oficial para `docs/framework/product/domains/inf/teat/screens/`: uma ficha
 `IU-TEAT-<screenId>.md` por tela (70 mobile + 56 web, sinistros marcados BOAT), com objetivo,
 papel, dados (bootstrap/pacote/API), layout, componentes de `teat-frontends.md` §6, ações e
@@ -140,6 +146,13 @@ ficha e rota; revisão do Owner.
 
 ### WP-T5 — Provisionamento offline e dispositivo (Architect → Engineer; ADR própria)
 
+**Entregue e mesclado em R-0013/CTG-0003.** O provisionamento foi fechado por ADR-0028,
+`BP-OPS-PROVISIONING-001`, DDL, contratos e implementação tenant-scoped, com revisão final
+independente PASS antes da integração. O merge observado é o da PR #82 (`b8920457…` no registro
+da rodada). A prova cobre contratos, persistência, RLS, idempotência, readiness e ports; não
+demonstra KMS, Keystore de dispositivo, criptografia/envelope ou attestation de produção, nem
+emissão física em produção.
+
 ADR "Provisionamento operacional offline" (chave do dispositivo no Keystore, grant
 `OfflineOperationalGrantV1`, pacote assinado por KMS, envelope cifrado, revogação por época,
 reconciliação obrigatória), blueprint `BP-OPS-PROVISIONING-001`, rotas `/v1/ops/provisioning/*`
@@ -148,6 +161,14 @@ integração do `ReadinessGate`. Fases P0–P6 e matriz de prova da origem valem
 pacote copiado/alterado/expirado/revogado rejeitado em teste; sem chave privada no servidor.
 
 ### WP-T6 — Frontends (Engineer-frontend)
+
+**Candidatos entregues e revistos; não mesclados nem implantados.** O candidato conjunto
+`408ab438fdd940eed6bd46296daad0a141d5a222` recebeu PASS independente em CTG-0004a
+(mobile, 30/30 specs focais; digest `d9382578…dd32ea`) e CTG-0004b (web, lint, typecheck,
+565/565 testes e build; digest `2febf768…d5becb`). A única publicação/PR da rodada permanece
+deferida até o encerramento; portanto este registro não afirma merge, deploy, KMS/Keystore,
+criptografia/envelope ou attestation reais, bodycam real nem adaptadores de hardware (inclusive
+impressora).
 
 `apps/teat/mobile` (Capacitor via `@stynx-nyx/mobile-runtime`; `FieldShell`, `ReadinessGate`,
 `LocalActStore`, `SyncWorker`, `NormativePackageService`, `BodycamIndicator`; 8 módulos; 70 rotas;

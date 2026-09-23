@@ -538,9 +538,12 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       (2026-09-20); **pendentes CTG-0003** (infração, consumidores, motor de timers — libera R-0011 CTG-0002 e a delegação de
       indicação no Portal) **e CTG-0004** (org, financeiro, integrações, SSE — libera a delegação de pagamento); branch
       `orchestra/rait-backend` publicado. No mesmo worktree, adoção de DEVAI 1.5.x (PR #74 mesclado; PR #75 aberto) (added 2026-09-21)
-- [ ] **R-0013 `teat-frontends` em curso (Sol/Codex)**: CTG-0001 (reconciliação do corpus, PR #70) e contratos de paridade do
-      CTG-0002 (PR #73) em `main`; prompt-review em `FAIL` por dois ciclos, nenhum worker disparado; pendentes as 126 fichas
-      (CTG-0002), o provisionamento offline (CTG-0003) e os apps `apps/teat/{mobile,web}` (CTG-0004) (added 2026-09-21)
+- [ ] **R-0013 `teat-frontends` — integração final pendente**: CTG-0001 foi mesclado no PR #70,
+      CTG-0002 no PR #73 e CTG-0003 no PR #82. Os candidatos mobile e web passaram nas reviews
+      independentes CTG-0004a/b no mesmo commit candidato `408ab438…`, mas não foram mesclados,
+      publicados ou implantados. A rodada mantém uma única PR/push ao encerramento; KMS, Keystore,
+      criptografia/envelope/attestation de produção, bodycam real, adapters de hardware (inclusive
+      impressora) e integrações nacionais não são comprovados por fixtures/ports (updated 2026-09-22)
 - [x] **R-0011 `dashboard-backend` fechada como PC-0009 (2026-09-22; Fable, troca Sol → Fable, Owner 2026-09-21)** — CTG-0002 mesclado pelo PR #87 (`3bb94351`); resto do histórico: CTG-0001 mesclado em `main` pelo PR #83 (2026-09-21, `e0763c6c`): `BP-DASH-MONITOR-001`, DDL `19-dashboard-lifecycle-vocabulary.sql`/`80-dashboard.sql`, seed dos 42 indicadores, gate `verify:domain-boundaries`; **CTG-0002** (ciclo do alerta, deveres, frescor, relógio próprio via M7/A3 — Emenda 2 de `AUTHORIZATION.md`, exportação, relatórios, auditoria, open-data, SSE, contratos) pronto nesta worktree — PR a abrir (R-0011 CTG-0002). R-0016 `dashboard-console` pode consumir `@detran/api-clients` do DASHBOARD assim que o CTG-0002 mesclar (added 2026-09-22)
 - [ ] **Rodadas ainda não abertas**: R-0012 `rait-web` (Fable), R-0015 `boat-mobile` (Fable), R-0016 `dashboard-console` (Sol; fichas livres, console espera R-0011) (added 2026-09-21)
 - [ ] **Podem abrir em sessões Claude imediatamente (2026-09-21)**:

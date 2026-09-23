@@ -14,10 +14,10 @@ export const roleGuard: CanMatchFn = (route) => {
   const routeRoles = route.data?.['allowedRoles'];
   const allowedRoles = Array.isArray(routeRoles)
     ? (routeRoles as readonly string[])
-    : context.allowedRoles;
+    : context.allowedRoles();
   return Boolean(
-    context.principal?.roles.some((role) =>
-      canAccessRouteForRole(role, allowedRoles),
-    ),
+    context
+      .principal()
+      ?.roles.some((role) => canAccessRouteForRole(role, allowedRoles)),
   );
 };
