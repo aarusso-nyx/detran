@@ -184,10 +184,46 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   em base64; a ponte recusou a saída e não criou JSON normalizado nem `.bridge.json`. O maestro
   decodificou somente para recuperar o residual anterior de S-02, o Architect corrigiu a ordem e a
   repetição continua sendo o mesmo ciclo 2 restrito.
+- `process-error` — a primeira invocação pós-merge de `devai audit observe` recebeu o SHA correto,
+  mas o worktree ainda estava no pai do merge e falhou fechada com
+  `AUDIT_OBSERVE_EXACT_HEAD_REQUIRED`. Após provar que HEAD era ancestral de `origin/main`, a branch
+  avançou somente por fast-forward ao merge exato e a mesma observação concluiu.
+- `process-error` contido — TASK-0003 criou inicialmente um arquivo não rastreado no checkout raiz,
+  fora do worktree autorizado. O maestro comparou os bytes com a cópia do worktree, removeu apenas
+  esse arquivo acidental e revalidou que os caminhos envolvidos no checkout raiz estavam limpos;
+  nenhuma alteração rastreada ou de sibling foi feita fora deste worktree.
 
 ## Retomada
 
-(vazio)
+**Checkpoint 1 — janela 1 (2026-09-22, maestro GPT-5.6 Sol).** O orçamento estimado atingiu
+795.000/800.000 tokens de entrada (limiar 640.000), então a janela para no ponto natural posterior
+ao CTG-0001. A rodada permanece aberta e nenhum worker de CTG-0002 foi despachado.
+
+- **Concluídas:** TASK-0001…TASK-0007: contrato/manifesto, 17 fichas IU-BOAT-S/W, catálogo i18n
+  de 114 chaves (101 literais + 13 marcadores `source_pending:OD-R15-004`), allowlist `boat.*`,
+  parser/verificador/gerados e máquina de transições com S-12. O manifesto de conhecimento subiu
+  de 756 para 773 no mesmo commit das fichas.
+- **Reviews:** prompt-review ciclo 4 = PASS; delivery-review CTG-0001 ciclo 1 = REVIEW, correções e
+  escalada de TASK-0002 para Luna/médio, ciclo 2 restrito = PASS. Último veredito: PASS, sem
+  findings.
+- **Publicação CTG-0001:** commits de conteúdo `3080f5b8`, merge explícito de `origin/main`
+  `fda0f653` e evidência `6c76971d`; `generic sequence 1`, head
+  `98a55808e1d5b4bb38d63466719d91022b8bb51919918d7dd70bb157b53eff72`. PR #107 teve 7/7
+  checks verdes e foi mesclado em `main` como
+  `1dc8b630582cfc2fe34e8a0c1e30a7694505831d`.
+- **Observação pós-merge:** `audit observe` no SHA exato concluiu como `EV-c0590734c54263e9`,
+  `readiness_promoting=false`; cadeia sequence 84, head
+  `678d657cdd848af04c02cb93a8d44371451598656c62d94e1b16387db3cf52b1`.
+- **Bloqueadas/pedentes:** TASK-0008…TASK-0011 (CTG-0002). Revalidação após o merge encontrou
+  R-0013 somente até CTG-0003; CTG-0004 e `apps/teat/{mobile,web}` ainda não existem em `main`.
+  Não criar scaffold antecipado nem inventar substituto.
+- **Próximos passos do maestro que retoma:** (1) confirmar R-0013 CTG-0004 em `main` e a existência
+  dos dois apps; (2) integrar `origin/main` por merge e empilhar a base de
+  `orchestra/teat-frontends` somente conforme §Concorrência; (3) executar o checkpoint de scaffold
+  copiando `apps/portal/web`, instalar e atualizar o lockfile antes de TASK-0008; (4) seguir
+  Inspector → Engineers → documentação, incluindo em TASK-0011 a troca Fable → Sol na coluna
+  Maestro e no §Histórico de `waves.md`; (5) delivery-review, gates, evidência, PR CTG-0002,
+  merge, observação e só então fechamento da rodada.
 
 ## Leitura
 
