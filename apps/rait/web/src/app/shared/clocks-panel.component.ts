@@ -62,7 +62,7 @@ interface ClockPosition {
               <rait-risk-flag
                 [flag]="clock.flag"
                 [clockCode]="clock.clock_code"
-                [daysRemaining]="daysRemaining()[clock.id] ?? null"
+                [daysRemaining]="daysRemainingOf(clock.id)"
                 [ceilingOn]="clock.ceiling_on"
               />
               <time [attr.datetime]="clock.started_on">{{
@@ -90,6 +90,12 @@ export class ClocksPanelComponent {
 
   readonly emptyKey = EMPTY_KEY;
   readonly clockAbsentKey = CLOCK_ABSENT_KEY;
+
+  /** Dias restantes do relógio quando o servidor os mandou; senão `null` (OD-R12-022). */
+  daysRemainingOf(clockId: string): number | null {
+    const days = this.daysRemaining();
+    return Object.hasOwn(days, clockId) ? days[clockId] : null;
+  }
 
   /** Posições fixas A, B, C, D; a primeira ocorrência de cada código na ordem recebida. */
   readonly positions = computed<readonly ClockPosition[]>(() => {

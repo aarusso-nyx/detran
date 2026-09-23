@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0015",
+  "status": "completed",
+  "discipline": "inspector",
+  "discipline_specialization": "inspector-tests",
+  "title": "Codificar testes independentes para transições e cobertura BOAT",
+  "description": "Depois de TASK-0002 e TASK-0003, escrever testes node:test+tsx e typecheck que provam a união exata das 149 transições, S-12 e cobertura 17/17, e integrar o script ao pnpm check; nenhuma implementação.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-boat-transition-tests", "MOD-package-json"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0001",
+  "coupled_pipeline_position": "inspector",
+  "upstream_task_id": "TASK-0003",
+  "db_isolation": "none",
+  "iteration_count": 2,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": ["wp-b4", "wp-b5", "ctg-0001"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-a66c4e291d40f558",
+  "acceptance_commands": [
+    ["pnpm", "test:boat-transitions"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-a66c4e291d40f558",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

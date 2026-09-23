@@ -1,5 +1,21 @@
 # R-0007 — frente `rait-backend` (WP-B + WP-C do RAIT: rotas de comando, motor de prazos, SSE e contratos de comando)
 
+> FECHAMENTO DO ROUND (2026-09-22): CTG-0001…CTG-0004 estão concluídas e
+> integradas por PR #69 (`a0f62cb`) e PR #94 (`b662f8af`). O run pós-merge
+> `35755550929` terminou verde nos sete checks, incluindo o fallback remoto de
+> `backend-kernel` e `verified-local-rc`; o merge final foi observado pelo
+> Auditor como `EV-e0e0f616a7db4cca`. O pacote de fechamento está em
+> `closure.json`; `devai round close` emitiu **PC-0011**. Nenhuma tarefa de
+> produto permanece nesta rodada.
+
+> CTG-0003/CTG-0004 — CONCLUÍDAS (2026-09-22): TASK-0009…0018
+> materializaram os contratos, sensores, runtime, wiring oficial, SSE, sete
+> contratos de comando e clientes. O inventário canônico verifica 256 operações;
+> módulos focados, política, decorators, boundary, geração e gates integrais
+> passaram no banco descartável autorizado `detran_r7_ctg1_a2`. Os registros
+> individuais estão em `reports/TASK-0009.md`…`TASK-0018.md`. A integração
+> permanece PR-only; nenhum bypass de gate é inferido por este registro.
+
 > SYNC/READINESS CTG-0003/0004 (2026-09-19): o checkpoint aprovado de
 > CTG-0001/0002 (`a72f6ce9`) foi preservado em
 > `codex/r0007-ctg2-pass-20260919` e integrado localmente ao `origin/main`

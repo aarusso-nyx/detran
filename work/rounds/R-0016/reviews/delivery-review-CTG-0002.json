@@ -1,0 +1,34 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0016",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0016/contracts/CTG-0002.md",
+      "line": 1565,
+      "claim": "A fronteira reserva o maestro ao scaffold e veda `src/app/**`, mas a triagem registra que ele alterou `forms/form-gate.ts` e os relatórios registram alterações em `core/layer-table.ts` e `shared/export-dialog.component.ts`.",
+      "fix": "Restaurar a fronteira por tarefa: atribuir e registrar essas correções ao Engineer dono, ou reabrir formalmente a alocação antes de qualquer escrita."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "apps/dashboard/web/src/app/app.scaffold.spec.ts",
+      "line": 109,
+      "claim": "O sensor de C-02-83 exclui `forms/index.ts`, embora o critério exija que nenhum arquivo de `src/app/forms/**` importe além de zod e `./form-gate`; o agregador importa zod e os nove schemas.",
+      "fix": "Corrigir a entrega para satisfazer o critério literal ou registrar uma adenda formal do Architect que altere o critério e depois atualizar o spec."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0016/contracts/CTG-0002.md",
+      "line": 1507,
+      "claim": "C-02-94 exige `pnpm check` verde, mas a entrega só o declara verde antes do merge de `origin/main`; o resultado após o merge permanece pendente.",
+      "fix": "Executar e registrar `pnpm check` no HEAD atual antes de prosseguir para PR."
+    }
+  ],
+  "notes": [
+    "A tríade de commits está na ordem Architect → Inspector → Engineers, e as matrizes de rotas e comandos percorrem os 36 papéis canônicos; o FAIL decorre da fronteira de escrita expressamente violada."
+  ]
+}

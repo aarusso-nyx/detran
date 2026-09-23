@@ -1,0 +1,131 @@
+{
+  "round": "R-0015",
+  "window": 1,
+  "window_input_budget": 800000,
+  "checkpoint_threshold": 640000,
+  "estimated_input_total": 795000,
+  "estimated_output_total": 145000,
+  "note": "Tokens únicos estimados. Janela 1: maestro GPT-5.6 Sol, sete workers Terra/Luna nativos, reviewer claude opus pela ponte. O delivery-review exigiu um ciclo de correção e uma escalada Luna média; o limiar de checkpoint foi cruzado e a janela para ao fim do CTG-0001. CTG-0002 fica fora até R-0013 CTG-0004.",
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "bootstrap+plan+prompts-0001..0007",
+      "model": "gpt-5.6-sol",
+      "input_tokens": 190000,
+      "output_tokens": 28000,
+      "note": "Leitura, revalidação, pnpm install/check/doctor, plano M1-M13, 11 tasks e 7 prompts do CTG-0001."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1-invalid-json",
+      "model": "claude-opus",
+      "input_tokens": 30000,
+      "output_tokens": 3000,
+      "note": "Primeira chamada exaustiva; saída inválida revelou prefixo boat não suportado."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2-invalid-json",
+      "model": "claude-opus",
+      "input_tokens": 30000,
+      "output_tokens": 3000,
+      "note": "Retry exaustivo; saída inválida revelou ausência de vitest/pacote."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3",
+      "model": "claude-opus",
+      "input_tokens": 30000,
+      "output_tokens": 6000,
+      "note": "Parecer base64 válido: REVIEW; correção integral antes do ciclo restrito."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-4",
+      "model": "claude-opus",
+      "input_tokens": 20000,
+      "output_tokens": 3000,
+      "note": "Ciclo restrito válido: PASS com duas notas low não bloqueantes."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "gpt-5.6-terra/high",
+      "input_tokens": 80000,
+      "output_tokens": 18000,
+      "note": "Manifesto, contratos, norma e allowlist."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "model": "gpt-5.6-luna/low",
+      "input_tokens": 60000,
+      "output_tokens": 16000,
+      "note": "17 fichas e baseline 756 para 773."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "model": "gpt-5.6-luna/low",
+      "input_tokens": 45000,
+      "output_tokens": 9000,
+      "note": "Semente i18n fechada pelo contrato."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "model": "gpt-5.6-luna/medium",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Teste fail-closed do prefixo boat."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "gpt-5.6-terra/low",
+      "input_tokens": 30000,
+      "output_tokens": 4000,
+      "note": "Parser, verifier, gerados e suíte integral."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "gpt-5.6-luna/medium",
+      "input_tokens": 40000,
+      "output_tokens": 5000,
+      "note": "Testes e typecheck de transições/cobertura."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007",
+      "model": "gpt-5.6-terra/medium",
+      "input_tokens": 40000,
+      "output_tokens": 4000,
+      "note": "Implementação transitions.ts."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-1",
+      "model": "claude-opus",
+      "input_tokens": 35000,
+      "output_tokens": 10000,
+      "note": "Revisão exaustiva: REVIEW com cinco achados high e quatro low corrigíveis."
+    },
+    {
+      "kind": "worker-corrections",
+      "id": "TASK-0001..0005-delivery-cycle-1",
+      "model": "terra+luna",
+      "input_tokens": 100000,
+      "output_tokens": 25000,
+      "note": "Adenda A1, i18n 101+13, fichas por tela, gate exato do Inspector, regeneração; TASK-0002 escalada para Luna média na iteração 5."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-2-restricted",
+      "model": "claude-opus",
+      "input_tokens": 35000,
+      "output_tokens": 7000,
+      "note": "Segundo e último ciclo, restrito aos achados corrigidos; inclui retry da mesma invocação após a ponte recusar objeto inteiro em base64."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0016",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/framework/arch/dashboard-build-pack.md",
+      "line": 120,
+      "claim": "A correção ainda afirma que os critérios de supressão da ficha IU-DASH-D-13 estão \"provados em teste de componente\". Os testes só provam a apresentação de uma célula já marcada como suprimida e uma série sintética; não provam os critérios da ficha para supressão primária e secundária, que permanecem para o dado real e teste ponta a ponta em L2.",
+      "fix": "Restringir a afirmação ao critério efetivamente provado: apresentação acessível da célula já marcada como suprimida; manter explicitamente a prova da supressão primária e secundária sobre dados reais para L2."
+    }
+  ],
+  "notes": [
+    "O estado mesclado do CTG-0002 de R-0011 foi corrigido de forma consistente com waves.md e closure.json (PR #87, 3bb94351, PC-0009)."
+  ]
+}

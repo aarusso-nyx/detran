@@ -3,7 +3,7 @@ id: ARCH-RAIT-WEB
 title: apps/rait/web — especificação completa da aplicação web (módulos, domínios, rotas, componentes, jornadas, transições e ações)
 status: draft
 apps: [rait, dashboard]
-updated: 2026-09-12
+updated: 2026-09-22
 ---
 
 # apps/rait/web — Console interno do RAIT
@@ -419,46 +419,75 @@ cabível, à base legal. Formulários campo a campo, gates de transição e payl
 
 ## 11. Dependências de backend (pré-requisitos de release)
 
-| Dependência                                                                                                       | Módulo FE afetado                         | Situação                                                                                       |
-| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Endpoints de comando com guardas de estado (§7)                                                                   | todos                                     | pendente — hoje só CRUD gerado                                                                 |
-| Papéis do RAIT no catálogo canônico e na matriz de política (§3)                                                  | core, guardas                             | **feito** (ADR-0015; `roles.ts`, `policy.ts`, `05-role-catalog.sql`)                           |
-| Fluxo SSE `/v1/inf/rait/stream`                                                                                   | painel, sessão, radar                     | pendente (outbox/notifications do STYNX)                                                       |
-| Escala/plantão, lote de sorteio com ata, unidade/turma, suplência, tipo de impedimento, banca ([WF-RAIT-004] §10) | organizacao, colegiado                    | pendente no blueprint do worklist                                                              |
-| Agregado da infração ([WF-INF-003]) e módulo financeiro (arrecadação, restituição, cobrança)                      | financeiro, caso (prazos T-DEC/T-NP-VENC) | pendente (ADR-0014); vocabulário já persistido em `14-inf-lifecycle-vocabulary.sql` (ADR-0015) |
-| Painel de integrações (adapter/outbox: filas, recibos, divergências)                                              | integracoes                               | pendente                                                                                       |
-| Parâmetros versionados e calendário de feriados                                                                   | admin, timers                             | pendente                                                                                       |
-| Jeton (folha) e exportações assinadas                                                                             | organizacao, auditoria                    | pendente; regra local do AM sem fonte                                                          |
-| Assinatura PAdES+TSA (kernel `signature`)                                                                         | assinatura, ata                           | pendente de integração no app                                                                  |
+| Dependência                                                                                                       | Módulo FE afetado                         | Situação                                                                                                                                                                                                                                                               |
+| ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Endpoints de comando com guardas de estado (§7)                                                                   | todos                                     | **feito** no backend em R-0007 CTG-0001…0004; R-0012 entrega as 11 facades com os 64 métodos M8, inicialmente indisponíveis até a adoção dos clientes gerados (`contracts/CTG-0002b.md` §3.5/§4.3)                                                                     |
+| Papéis do RAIT no catálogo canônico e na matriz de política (§3)                                                  | core, guardas                             | **feito** (ADR-0015; `roles.ts`, `policy.ts`, `05-role-catalog.sql`)                                                                                                                                                                                                   |
+| Fluxo SSE `/v1/inf/rait/stream`                                                                                   | painel, sessão, radar                     | **feito** no backend em R-0007 CTG-0004 sobre o poller compartilhado; R-0012 entrega `SseService` com fallback por polling de 15 s após duas falhas em 60 s e banner `rait.states.stream_unavailable` (`rait-events-sse-contract.md` §3; `contracts/CTG-0002a.md` M10) |
+| Escala/plantão, lote de sorteio com ata, unidade/turma, suplência, tipo de impedimento, banca ([WF-RAIT-004] §10) | organizacao, colegiado                    | pendente no blueprint do worklist                                                                                                                                                                                                                                      |
+| Agregado da infração ([WF-INF-003]) e módulo financeiro (arrecadação, restituição, cobrança)                      | financeiro, caso (prazos T-DEC/T-NP-VENC) | **feito** no backend em R-0007 CTG-0003/0004                                                                                                                                                                                                                           |
+| Painel de integrações (adapter/outbox: filas, recibos, divergências)                                              | integracoes                               | **feito** no backend em R-0007 CTG-0004                                                                                                                                                                                                                                |
+| Parâmetros versionados e calendário de feriados                                                                   | admin, timers                             | **feito** no backend em R-0007 CTG-0004                                                                                                                                                                                                                                |
+| Jeton (folha) e exportações assinadas                                                                             | organizacao, auditoria                    | **feito** no backend em R-0007 CTG-0004; assinatura continua no kernel                                                                                                                                                                                                 |
+| Assinatura PAdES+TSA (kernel `signature`)                                                                         | assinatura, ata                           | pendente de integração no app; R-0012 já modela `context.signatureAvailable=false` (`OD-R12-043`)                                                                                                                                                                      |
 
 Enquanto uma dependência não existe, a rota correspondente é registrada mas exibe estado
-"indisponível nesta versão", sem mock silencioso.
+"indisponível nesta versão", sem mock silencioso (R-0012, WP-F: `organizacao/{escala,jeton}`,
+`integracoes/*`, `financeiro/*`, `admin/*`, `auditoria/exportacoes` nesta rodada, M13).
 
 ## 12. Estrutura de pastas
 
+Real desde R-0012 (CTG-0002a/b, PRs #81/#85/#90; `apps/rait/web/README.md`; scaffold copiado de
+`apps/portal/web`, M1):
+
 ```text
 apps/rait/web/
-  package.json                 @detran/rait-web (Angular 21; deps: @detran/ui, @stynx-nyx/angular*, rxjs)
-  angular.json / project.json  build: application builder; budgets; i18n pt-BR
+  package.json            @detran/rait-web (private, ESM, engines node >=24 <25; Angular 22.1.6;
+                           deps: @detran/ui, @detran/api-clients, @stynx-nyx/angular* 1.3.1, rxjs, zod;
+                           scripts build/test/lint/typecheck do M1)
+  angular.json            projeto rait-web, builder @angular/build:application, outputPath dist,
+                           assets de public/, sem service worker (§8: offline não suportado)
+  tsconfig.json / .app.json / .spec.json
+  vitest.config.ts        jsdom, globals, src/**/*.spec.ts, setupFiles src/test-setup.ts, JIT
+  eslint.config.js        M5 do Portal + regras locais rait/* (eslint/local-rules.js, WP-E)
+  eslint/local-rules.js   rait/no-client-deadline-math ([RN-RAIT-005]); rait/no-static-token-i18n-key (A1)
+  public/runtime-config.js  tenantId, oidcAuthority, clientId (sem segredo)
   src/
-    main.ts                    bootstrapApplication(App, { providers: [provideDetranAuthenticatedApp(env), provideRouter(routes, withComponentInputBinding()), ...] })
-    environments/              oidc (Cognito), api base, tenant resolver, feature flags
+    main.ts               bootstrapApplication com provideDetranAuthenticatedApp + provideRouter(RAIT_ROUTES)
+    test-setup.ts          TestBed único; resetTestingModule após cada spec
     app/
-      app.routes.ts            árvore da §4 com loadChildren por feature
-      core/                    shell, guards, sse, shortcuts, error, role-home
+      app.routes.ts / app.route-manifest.ts   RAIT_ROUTES + RAIT_ROUTE_MANIFEST — 74 entradas
+                                               (72 rotas da §4 + /sem-permissao + /auth/callback, A2)
+      core/                shell (RaitShellComponent), guards (auth/role/case-access/group-redirect/
+                           role-home), session.facade, sse.service (+ fallback de polling),
+                           shortcut.service, error-boundary, title.strategy, runtime-config, pages/
+                           (forbidden, not-found, auth-callback)
       data/
-        api/                   clientes gerados por módulo
-        models/                tipos/enums dos contratos
-        facades/               CaseFacade, QueueFacade, SessionFacade, RadarFacade, OrganizationFacade, ...
-      shared/                  componentes da §5.2, pipes (prazo, base legal, cpf), diretivas (atalho)
-      features/
-        painel/  fila/  caso/  protocolo/  assinatura/  autoridade/  colegiado/
-        gestao/  organizacao/  integracoes/  financeiro/  arquivo/  auditoria/  admin/  conta/
-    i18n/pt-BR.json
-    styles.css                 importa @detran/ui/styles; tokens locais mínimos
-  test/                        vitest + Testing Library; contratos de facade com MSW sobre os OpenAPI
-  e2e/                         Playwright: jornadas §6 com backend em perfil test
+        api/               8 clientes (case, worklist→session/org/collection/infraction/integration/
+                           notification) sobre @detran/api-clients; rait-http, etag-store
+        models/            tipos/enums/tokens por módulo, commands.ts, list-page.ts
+        facades/           CaseFacade, QueueFacade, SessionFacade, RadarFacade, OrganizationFacade,
+                           ProtocolFacade, SigningFacade, ArchiveFacade, AuditFacade, FinanceFacade,
+                           IntegrationFacade + read-store/command/list.facade/bundles/stream
+        clock.ts, idempotency-key.ts, list-query.ts, shell-search/
+      shared/              22 componentes de domínio da §5.2 (+ apoio: page-state, placeholder-page,
+                           route-screen, table-column) — *stynxHasPermission do kit, nunca diretiva local
+      features/            15 módulos lazy da §2 (painel, fila, caso, protocolo, assinatura,
+                           autoridade, colegiado, gestao, organizacao, integracoes, financeiro,
+                           arquivo, auditoria, admin, conta); páginas L0/L1/L2 por rota (M13)
+      forms/               16 <formulario>.schema.ts (zod, WP-E) + form-gate.ts (FormGate)
+      i18n/rait.pt-BR.json  semente docs/framework/arch/i18n/rait.pt-BR.json + rait.shell/states/
+                           screens/forms/legal/a11y/nav
+      lint/                *.spec.ts (RuleTester das duas regras locais)
+      screens/             screens.spec.ts (tela ↔ ficha ↔ rota ↔ i18n)
+    testing/               facade.stub, http-fixtures, policy.fixture, clock.stub, session.stub,
+                           stynx-session.stub, router-harness, route-manifest.fixture, gates.fixture,
+                           i18n-test-catalog, a11y-state/axe spec-helpers, stream-transport.stub, kb.ts
 ```
+
+`e2e/` (Playwright) da especificação original não foi criado nesta rodada: os critérios de
+aceitação de R-0012 (§13) são cobertos por specs vitest/TestBed; jornadas ponta a ponta com backend
+real ficam para quando os comandos de `R-0007 CTG-0004` existirem.
 
 ## 13. Testes e critérios de pronto
 
@@ -472,6 +501,20 @@ apps/rait/web/
 - Acessibilidade: axe em cada página; contraste AA; foco visível.
 - Pronto quando: todas as rotas da §4 existem (com "indisponível" onde a dependência falta), os
   critérios de aceitação dos UC-RAIT-001…043 mapeados em §6-§7 têm teste, e `pnpm check` passa.
+
+Gates reais desde R-0012 (`docs/meta/agents/orchestra/README.md` §9 corrigido — `ng build`/
+`pnpm --filter @detran/rait-web test` deixam de ser "inexistentes"): `pnpm --filter @detran/rait-web
+lint|typecheck|test|build`; `pnpm verify:parameter-catalogue`; `pnpm parameters:test`; `pnpm
+format:check`; `pnpm check` (raiz, M2) inclui os quatro. Estado ao final do CTG-0002c (TASK-0012,
+gate do maestro sobre a árvore completa): `test` → 4434 passed | 139 todo (4573), 154 arquivos;
+`build` sem warnings; `pnpm check` EXIT 0. Testes de roteamento (M14) cobrem as 72 rotas + 2
+auxiliares: papel mínimo → ativa, cada papel canônico omitido → `/sem-permissao`, sem sessão →
+login (presença e ausência). Tela ↔ ficha ↔ rota ↔ i18n provado para as 63 fichas
+(`contracts/CTG-0002a.md` A4/A5, C-2A-53/56; `contracts/CTG-0002b.md` C-2B-81). `e2e/` (Playwright)
+não existe nesta rodada (§12); os UC-RAIT-001…043 são cobertos por specs unitárias/TestBed sobre
+facades e páginas, não por jornada ponta a ponta com backend real. Comandos reais (`POST
+…/commands/*`), `caseAccessGuard` e o endpoint SSE ficam `todo` citando `R-0007 CTG-0004`
+(M8/OD-R12-005).
 
 ## 14. Fora de escopo deste app
 

@@ -202,8 +202,9 @@ postState, errorCodes }` transcrito de §6.6/§7/§9 + `rait-error-catalog.md`; 
 | TASK-0015 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-features`                                                                                              | TASK-0014, TASK-0016                | CTG-0002b-2 | `features/<modulo>/pages/*` (50 páginas) e rotas por módulo até os testes passarem                                                                                                                                                                                   |
 | TASK-0016 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-rait-web-i18n`                                                                                                  | TASK-0009 (merge PR 3a)             | CTG-0002b-2 | chaves i18n das páginas: 44 `confirm.*` (texto das fichas §6) e (P) do contrato §9.2 ausentes, no catálogo do app (A12)                                                                                                                                              |
 | TASK-0010 | Architect            | architect-blueprint | Opus / alto    | `MOD-r12-contracts-2c`, `MOD-rait-web-forms-doc`                                                                     | TASK-0015 (merge PR 3b)             | CTG-0002c   | `contracts/CTG-0002c.md` + `docs/framework/arch/rait-web-forms.md`: 16 formulários campo a campo, gates, códigos de erro, regras ESLint (M11/M12)                                                                                                                    |
-| TASK-0011 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-rait-web-tests-forms`                                                                                           | TASK-0010                           | CTG-0002c   | specs dos 16 schemas (válido/inválido/condicional, gate) + `RuleTester` das duas regras (casos negativos)                                                                                                                                                            |
-| TASK-0012 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-rait-web-forms`, `MOD-rait-web-lint`                                                                            | TASK-0011                           | CTG-0002c   | 16 `*.schema.ts` com cabeçalho de gate, `eslint/local-rules.js`, `eslint.config.js`; testes verdes                                                                                                                                                                   |
+| TASK-0011 | Inspector            | inspector-tests     | Opus / médio   | `MOD-rait-web-tests-forms`, `MOD-rait-web-tests-lint`                                                                | TASK-0010                           | CTG-0002c   | specs dos 16 schemas (válido/inválido/condicional, gate) + `RuleTester` das duas regras (casos negativos)                                                                                                                                                            |
+| TASK-0017 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-rait-web-i18n`                                                                                                  | TASK-0010, merge PR 3b              | CTG-0002c   | 152 chaves `rait.forms.*` do contrato §7 no catálogo do app (A12)                                                                                                                                                                                                    |
+| TASK-0012 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-rait-web-forms`, `MOD-rait-web-lint`, `MOD-rait-web-eslint-config`                                              | TASK-0011, TASK-0017                | CTG-0002c   | 16 `*.schema.ts` com cabeçalho de gate, `eslint/local-rules.js`, `eslint.config.js`; testes verdes                                                                                                                                                                   |
 | TASK-0013 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs-rait-arch`                                                                                                 | TASK-0012                           | CTG-0002c   | `rait-build-pack.md` §WP-D/E/F executados (gates reais), `rait-web-frontend.md` §12/§13, `open-decisions-rait.md` §G (OD-R12-*), backlog                                                                                                                             |
 
 CTG-0001 = 0002/0003/0004 (fichas, PR 1). CTG-0002a = 0001/0005/0006 (PR 2). CTG-0002b-1 =
@@ -294,6 +295,18 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   integrar `main` com R-0016 PR #80 — conflitos na allowlist i18n, gerados e cadeia resolvidos por
   merge; evidência regravada como sequence 2); `audit observe` no sha exato. Pré-condição de
   despacho de TASK-0008/0009 satisfeita.
+- **CTG-0002b-1 mesclado**: PR #85 → `72c15ae9e4a609e567cdd4b2386d5d7792582ff5` (2026-09-22; CI 7/7
+  após rerun de `backend-kernel` — falha intermitente em `rait-priority-upgrade.integration.spec.ts`,
+  teste de R-0007 que este PR não toca e que passa em `main` —; integrado `main` com R-0011 CTG-0001
+  PR #83 e DEVAI 1.5.4 PR #84; evidência sequence 3); `audit observe` no sha exato
+  (EV-a04b28c82c5b9527). Pré-condição de despacho de TASK-0014/0015/0016 satisfeita.
+- **CTG-0002b-2 — PR #90** (2026-09-22): CI 7/7 após rerun de `backend-kernel` (mesma falha
+  intermitente de `rait-priority-upgrade`, R-0007); o merge foi recusado porque `main` avançou
+  (DEVAI 1.5.6 PR #91; R-0007 PR #86) — `main` integrado por merge no branch, CI reexecutado;
+  **mesclado** em 2026-09-22 → `4abe570a062d5a688066c795cf8efe90bd5bb386`; `audit observe` no sha
+  exato (EV-1cbd064c9bf1fabc). Pré-condição de despacho de
+  TASK-0017/0011 (specs e i18n, sem commits até o merge) considerada satisfeita pelo maestro com
+  o PR verde e a integração feita (desvio B5).
 - `devai round plan --scaffold` respondeu `ROUND_ALREADY_EXISTS` (rodada instanciada pelo PR #31);
   `devai round status --round R-0012` → `0 task(s)`; tarefas entram por `tasks/*.json`.
 
@@ -312,8 +325,33 @@ merged --limit 20`, `gh pr list --search orchestra/`):
   praticada em R-0008/R-0009/R-0014) e pela emenda 1 do Owner, o maestro corrige (A12) e repete o
   ciclo restrito em vez de parar. Reportado no relatório final.
 
+- **B3 (desvio registrado, 2026-09-22).** Prompt-review do TASK-0010 chegou ao terceiro ciclo (12
+  REVIEW → 13 REVIEW → 14) porque a edição do maestro entre 12 e 13 falhou silenciosamente (asserção
+  de substituição após o Prettier) e a ponte avaliou o texto inalterado; o ciclo 14 avalia as
+  correções reais. Mesma justificativa de B1 (emenda 1 do Owner).
+
+- **B4 (desvio registrado, 2026-09-22).** Delivery-review do CTG-0002b-2 chegou ao terceiro ciclo
+  (1 REVIEW → 2 REVIEW residual → 3): o ciclo 2 apontou uma única ação (`claim-next`) que a
+  iteração 5 do Inspector não desdobrou em três `it`. Mesma justificativa de B1/B3 (emenda 1 do Owner).
+
+- **B5 (desvio registrado, 2026-09-22).** TASK-0017/0011 (CTG-0002c: transcrição i18n e specs)
+  foram disparadas com o PR #90 aprovado e verde mas ainda não mesclado (merge recusado por
+  avanço de `main`; reexecução do CI em curso), porque escrevem só arquivos novos/JSON sem commit
+  até o merge. O `audit observe` do merge do CTG-0002b-2 é feito quando ocorrer.
+
+- **B6 (registro, 2026-09-22).** `tests/integration/rait-priority-upgrade.integration.spec.ts`
+  (R-0007) falhou de forma intermitente no `backend-kernel` dos PRs #85, #90 e #93 — todos sem
+  tocar `backend/**` — e passou em todos os reruns (`gh run rerun --failed`, §9.4: falha de
+  infraestrutura, não triagem da frente). Recomendação ao dono de R-0007 registrada em
+  `orchestra/README.md` §10 (isolamento do upgrade de schema em banco compartilhado).
+
 ## Triagem
 
+- CTG-0002b-2, TASK-0015 it. 1 → 393/3712 testes vermelhos: `sensor-error` ×7 (stub de facade sem
+  métodos; lista de arquivos de confirm dialog; caminho do spec de fichas; matriz via router para
+  papéis sem acesso; sessão STYNX ausente no harness; harness duplo; fixture sem base legal) +
+  `plant-bug` ×1 (NG8102 em `shared/clocks-panel`) → adenda A14 → iteração restrita do Inspector e
+  do Engineer.
 - CTG-0002b-1, TASK-0009 it. 1 → 33/2307 testes + typecheck vermelhos: `sensor-error` (8 defeitos
   de spec/fixture: render repetido, afterEach sem provider, regex, flush ausente, evento do kit,
   marcador i18n, tipo `any`) + 2 divergências spec × contrato (`emptyWhen`, diretiva de permissão) →
@@ -452,30 +490,65 @@ null)` e as chaves reais de `RAIT_COMMAND_RULES` no `InquiryCard` (OD-R12-026). 
   seguindo os contratos §9 permanecem (já mescladas/revisadas), listadas em OD-R12-008/028 para
   revisão do Owner.
 
+- **A13 — Chaves `confirm.*` (Architect/maestro, 2026-09-22; TASK-0016).** (a) O contrato CTG-0002b
+  §9.2 enumera **45** chaves `rait.screens.<slug>.confirm.<x>` e rotula "44": vale a enumeração (45,
+  todas com texto sourceado nas fichas §6). (b) O texto transcrito é o **conteúdo** da célula
+  "Confirmação" da ficha: as aspas externas são marcação da ficha e **não** entram no valor; a
+  pontuação interna, os tokens em backticks e as citações legais dentro do texto permanecem.
+  (c) As ações com confirmação nas fichas mas fora da lista do §9.2 (`casos-id-impedimentos.confirm.suspicion/decide`,
+  `gestao-radar-caseId.confirm.acknowledge-alert`) ficam para OD-R12-036 (extensão da lista pelo
+  Architect do CTG-0002c ou revisão do Owner), não são transcritas agora.
+
+- **A14 — Reconciliação do par CTG-0002b-2 (Architect/maestro, 2026-09-22; triagem dos 8 bloqueios
+  de TASK-0015 it. 1: 7 `sensor-error` em specs/fixtures, 1 `plant-bug` em `shared/`).** Inspector
+  (iteração restrita 4 de TASK-0014): (1) `src/testing/facade.stub.ts`: `stubFacade`/`pageProviders`
+  expõem os métodos `load*`/`find*` (§4.3) e de comando (§3.5) das facades — `load*(…)` delega ao
+  `load` do slot, `<comando>(…)` = `command.run('<M8>', …)` (mantém `runMock`), sinais faltantes
+  (`casosDaFila`); (2) `features/static-gates.spec.ts` `CONFIRM_DIALOG_FILES` = as 22 páginas que
+  importam `StynxConfirmDialogComponent` (lista do relatório de TASK-0015; OD-R12-025); (3)
+  `screens/screens.spec.ts` C-2B-81 lê `join(APP_SRC_ROOT, 'app', 'features', …)`; (4) C-2B-69/70:
+  a matriz de papéis nas páginas com rota restrita monta o componente isolado por
+  `TestBed.createComponent` + `pageProviders(papel)` (não pelo router, que redireciona a
+  `/sem-permissao` os papéis sem acesso — isso já é C-2A-13); (5) `app.guards-matrix.presence.spec.ts`
+  e `core/guards.spec.ts` C-2A-23/24 provêm `StynxSessionService` (`createStynxSessionStub`) como
+  `pageProviders`, porque as páginas reais usam `*stynxHasPermission`; (6) 8 `it` com dois harness
+  → `resetTestingModule` ou um `it` por estado (A10 a); (7) `deadlines.page.spec.ts` fixtures com
+  `legal_basis` (regra "prazo nunca sem base legal"). Engineer (iteração restrita 2 de TASK-0015,
+  lock estendido a **`shared/clocks-panel.component.ts` somente**): corrigir o NG8102 (`?? null`
+  sobre índice tipado) para build sem warnings. Ratificados como defaults até R-0007 CTG-0004:
+  componentes inteligentes inline, `claimNext` sem `pool_id` (OD-R12-054), rótulos de tokens sem
+  namespace pelo nome do campo (OD-R12-053/028).
+
+- **A15 — C-2B-71 completo (Architect/maestro, 2026-09-22; delivery-review CTG-0002b-2 ciclo 1).**
+  Para **cada** uma das 45 ações com chave `rait.screens.<slug>.confirm.<x>` (páginas L2), o spec
+  da página tem três `it`: o diálogo abre com `message` = texto da chave; `confirm` chama a facade
+  (`runMock`) exatamente uma vez com o comando M8 da ação; `dismiss` não chama a facade. Nenhuma
+  ação confirmável fica sem os três casos (ex.: `assinatura/:caseId` return-draft e
+  declare-impediment). Inspector em iteração restrita; Engineer só se uma página falhar.
+
+- **A16 — Harness do `shortcut.service.spec.ts` (Architect/maestro, 2026-09-22).** O `it` de
+  C-2A-45 que monta `RaitShellComponent` sobre `RAIT_ROUTES` reais passa a prover
+  `StynxSessionService` (`createStynxSessionStub`), porque as rotas agora carregam páginas reais
+  com `*stynxHasPermission` (mesma causa de A14 5); corrige o `Uncaught Exception` NG0201
+  intermitente do coletor do Vitest. Ajuste do Inspector (lock `MOD-rait-web-tests-core`), sem
+  alterar as asserções.
+
 ## Retomada
 
-**Checkpoint 1 — janela 1 (2026-09-21, maestro Fable 5.1).** Orçamento estimado da janela em
-`budget.json` acima do limiar de 80 % (≈ 770 k únicos estimados, incluindo os quatro workers e os
-quatro ciclos do reviewer) → parada por corte de janela após fechar o CTG-0001 como ponto natural.
+**Rodada encerrada em 2026-09-22 como `PC-0010`** (`devai round close`, merge final
+`828331d49ef5fb5d6ec368aba8c3f2360863e610`, PR #92). Nada pendente de retomada: as cinco tarefas
+de grupo acoplado (CTG-0001, CTG-0002a, CTG-0002b-1, CTG-0002b-2, CTG-0002c) e a documentação de
+fechamento estão em `main`; evidência `generic` sequences 1…5; observações do Auditor nos SHAs
+`08fb84e8`, `026c9fc0`, `72c15ae9`, `4abe570a`, `828331d4`.
 
-- **Concluídas:** TASK-0001 (Architect: `route-manifest.md`, `contracts/CTG-0002a.md`), TASK-0002/
-  0003/0004 (63 fichas IU-RAIT-002…064, baseline 738). Prompt-review 1 REVIEW → 2 PASS;
-  delivery-review CTG-0001 1 REVIEW → 2 PASS. Evidência `generic sequence 1` (head 95f0986c).
-  PR #79 (`orchestra/rait-web` → `main`) **mesclado** em 2026-09-21 (CI 7/7 verde) como 08fb84e8; `audit observe` no sha exato → EV-b4d8707038beb8a2; `origin/main` integrado por merge (fast-forward).
-- **Em curso:** nenhuma tarefa de worker.
-- **Pendentes:** CTG-0002a (TASK-0005 Inspector, TASK-0006 Engineer — prompts ainda não compostos;
-  antes deles o **checkpoint de dependências do maestro**: scaffold de configuração de
-  `apps/rait/web` copiado do Portal (M1), `pnpm install`, `pnpm check` estendido (M2), provado sobre
-  o esqueleto vazio); CTG-0002b (TASK-0007…0009); CTG-0002c (TASK-0010…0012); TASK-0013 (docs);
-  fechamento (`audit observe` por PR, `closure.json`, `round close`, `waves.md` §Histórico,
-  `orchestra/README.md` §10, backlog).
-- **Último veredito:** delivery-review CTG-0001 ciclo 2 = PASS.
-- **Próximos passos do maestro que retoma:** (1) `git fetch` e `git merge --no-edit origin/main` (branch publicado; #79 já observado);
-  (2) checkpoint de dependências (M1/M2) num commit `chore(rait-web): scaffold` + `chore(deps)`;
-  (3) compor prompts de TASK-0005/0006 a partir de `contracts/CTG-0002a.md` (66 critérios C-2A) e
-  `route-manifest.md`; prompt-review restrita; disparar Inspector (Sonnet/médio) e depois Engineer
-  (Opus/médio); (4) gates, delivery-review, evidência, PR 2. Regra do Owner: a mensagem "prosseguir
-  até a completa finalização" substitui o corte por janela (emenda em `AUTHORIZATION.md`).
+**O que a rodada deixa para outras frentes** (nenhum trabalho desta rodada depende disso):
+
+- **R-0007 CTG-0004** (contratos de comando `BP-INF-RAIT-*.commands.openapi.json`): liga os 64
+  métodos de comando das facades (hoje `RaitCommandUnavailableError`, M8), o `caseAccessGuard`
+  real, o endpoint SSE `/v1/inf/rait/stream` e os schemas de formulário às páginas.
+- **Owner**: revisão das 63 fichas (`status: draft` → `reviewed`) e dos textos (P) do catálogo
+  i18n (OD-R12-008/028); decisão sobre OD-R12-001…054 (`open-decisions-rait.md` §G).
+- **R-0013** (`teat-frontends`): o lock `packages/ui` está livre desde o merge do CTG-0002b-1.
 
 ## Leitura
 

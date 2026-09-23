@@ -70,25 +70,25 @@ jobs:
           node - "$metadata" <<'NODE'
           const { readFileSync } = require('node:fs');
           const metadata = JSON.parse(readFileSync(process.argv[2], 'utf8'));
-          const selected = metadata.versions?.['1.5.1'];
+          const selected = metadata.versions?.['1.5.4'];
           if (metadata.name !== '@aarusso-nyx/devai') throw new Error('DEVAI_VERIFIER_PACKAGE_NAME_INVALID');
-          if (selected?.version !== '1.5.1') throw new Error('DEVAI_VERIFIER_PACKAGE_VERSION_INVALID');
-          if (selected.dist?.tarball !== 'https://npm.pkg.github.com/download/@aarusso-nyx/devai/1.5.1/10ab06c759ea9c52a30b0e2afe42dbb05edecca9') throw new Error('DEVAI_VERIFIER_PACKAGE_TARBALL_URL_INVALID');
-          if (selected.dist?.shasum !== '10ab06c759ea9c52a30b0e2afe42dbb05edecca9') throw new Error('DEVAI_VERIFIER_PACKAGE_SHASUM_INVALID');
-          if (selected.dist?.integrity !== 'sha512-n6XFg8YgF2RWUHqRrawk/UhZjnHMjb6ddzVY8Vq/PagfLUtFMvMFfqf8Ru+owKpBtAoZz6/bgEt+VRhARJxW8A==') throw new Error('DEVAI_VERIFIER_PACKAGE_INTEGRITY_INVALID');
+          if (selected?.version !== '1.5.4') throw new Error('DEVAI_VERIFIER_PACKAGE_VERSION_INVALID');
+          if (selected.dist?.tarball !== 'https://npm.pkg.github.com/download/@aarusso-nyx/devai/1.5.4/e5c34a17bc27b47cc1dba711561e4f9c6394cac8') throw new Error('DEVAI_VERIFIER_PACKAGE_TARBALL_URL_INVALID');
+          if (selected.dist?.shasum !== 'e5c34a17bc27b47cc1dba711561e4f9c6394cac8') throw new Error('DEVAI_VERIFIER_PACKAGE_SHASUM_INVALID');
+          if (selected.dist?.integrity !== 'sha512-neGgDPkoCiaex2f6GzSVrZsCIxaQhml6D0EC+bpHb2bgSDb4nm78Evx+Lo49VmH81gTwSI1WQFWb48PWj0/arQ==') throw new Error('DEVAI_VERIFIER_PACKAGE_INTEGRITY_INVALID');
           NODE
-          curl --fail-with-body --silent --show-error --location             --header "$auth_header"             --output "$archive"             "https://npm.pkg.github.com/download/@aarusso-nyx/devai/1.5.1/10ab06c759ea9c52a30b0e2afe42dbb05edecca9"
+          curl --fail-with-body --silent --show-error --location             --header "$auth_header"             --output "$archive"             "https://npm.pkg.github.com/download/@aarusso-nyx/devai/1.5.4/e5c34a17bc27b47cc1dba711561e4f9c6394cac8"
           node - "$archive" <<'NODE'
           const { createHash } = require('node:crypto');
           const { readFileSync } = require('node:fs');
           const bytes = readFileSync(process.argv[2]);
-          if (createHash('sha1').update(bytes).digest('hex') !== '10ab06c759ea9c52a30b0e2afe42dbb05edecca9') throw new Error('DEVAI_VERIFIER_PACKAGE_SHASUM_INVALID');
-          if ('sha512-' + createHash('sha512').update(bytes).digest('base64') !== 'sha512-n6XFg8YgF2RWUHqRrawk/UhZjnHMjb6ddzVY8Vq/PagfLUtFMvMFfqf8Ru+owKpBtAoZz6/bgEt+VRhARJxW8A==') throw new Error('DEVAI_VERIFIER_PACKAGE_INTEGRITY_INVALID');
+          if (createHash('sha1').update(bytes).digest('hex') !== 'e5c34a17bc27b47cc1dba711561e4f9c6394cac8') throw new Error('DEVAI_VERIFIER_PACKAGE_SHASUM_INVALID');
+          if ('sha512-' + createHash('sha512').update(bytes).digest('base64') !== 'sha512-neGgDPkoCiaex2f6GzSVrZsCIxaQhml6D0EC+bpHb2bgSDb4nm78Evx+Lo49VmH81gTwSI1WQFWb48PWj0/arQ==') throw new Error('DEVAI_VERIFIER_PACKAGE_INTEGRITY_INVALID');
           NODE
           release_ref="$control/download/release-ref.json"
           release_tag="$control/download/release-tag.json"
           release_commit="$control/download/release-commit.json"
-          curl --fail-with-body --silent --show-error             --header "$auth_header"             --header "Accept: application/vnd.github+json"             --output "$release_ref"             "https://api.github.com/repos/aarusso-nyx/devai/git/ref/tags/v1.5.1"
+          curl --fail-with-body --silent --show-error             --header "$auth_header"             --header "Accept: application/vnd.github+json"             --output "$release_ref"             "https://api.github.com/repos/aarusso-nyx/devai/git/ref/tags/v1.5.4"
           tag_url="$(node -e 'const x=require(process.argv[1]); if(x.object?.type!=="tag"||typeof x.object?.url!=="string") process.exit(1); process.stdout.write(x.object.url)' "$release_ref")"
           curl --fail-with-body --silent --show-error             --header "$auth_header"             --header "Accept: application/vnd.github+json"             --output "$release_tag" "$tag_url"
           commit_url="$(node -e 'const x=require(process.argv[1]); if(x.object?.type!=="commit"||typeof x.object?.url!=="string") process.exit(1); process.stdout.write(x.object.url)' "$release_tag")"
@@ -97,8 +97,8 @@ jobs:
           const { readFileSync } = require('node:fs');
           const tag = JSON.parse(readFileSync(process.argv[2], 'utf8'));
           const commit = JSON.parse(readFileSync(process.argv[3], 'utf8'));
-          if (tag.object?.sha !== '63578da0b66f94636b359bf19443fb75e6a42d39' || commit.sha !== '63578da0b66f94636b359bf19443fb75e6a42d39') throw new Error('DEVAI_VERIFIER_PACKAGE_RELEASE_COMMIT_INVALID');
-          if (commit.tree?.sha !== 'c343d2b5c6c521359073d30048827e0f705f2256') throw new Error('DEVAI_VERIFIER_PACKAGE_RELEASE_TREE_INVALID');
+          if (tag.object?.sha !== '8b600ed16ebd101ff88ecfaac9cc04abcf0ce174' || commit.sha !== '8b600ed16ebd101ff88ecfaac9cc04abcf0ce174') throw new Error('DEVAI_VERIFIER_PACKAGE_RELEASE_COMMIT_INVALID');
+          if (commit.tree?.sha !== 'd2f60e0602ffc849e9b5b1b52ca54731eca7c8b1') throw new Error('DEVAI_VERIFIER_PACKAGE_RELEASE_TREE_INVALID');
           NODE
           node - "$archive" <<'NODE'
           const { readFileSync } = require('node:fs');
@@ -127,7 +127,7 @@ jobs:
           verifier_root="$package_root/dist/runtime/evidence-verification"
           provenance="$verifier_root/provenance.json"
           actual_provenance_sha256="$(sha256sum "$provenance" | cut -d' ' -f1)"
-          test "$actual_provenance_sha256" = "771d4a2a611bbc850875b1ad65db12770d5a6b1bd1ee001a40adff1afec4c5ff"
+          test "$actual_provenance_sha256" = "1035c8aad52f4b2beb6a6f010106a4d1866c92dadf3fbae1c6e36e1a4d2ceddf"
           test "$actual_provenance_sha256" = "$VERIFIER_PROVENANCE_SHA256"
           node - "$package_root" "$verifier_root" <<'NODE'
           const { createHash } = require('node:crypto');
@@ -137,7 +137,7 @@ jobs:
           const expectedBins = {"devai-evidence-policy":"./dist/runtime/evidence-verification/src/build-policy-cli.js","devai-evidence-verify":"./dist/runtime/evidence-verification/src/cli.js","devai-evidence-bundle-verify":"./dist/runtime/evidence-verification/src/bundle-cli.js","devai-evidence-export":"./dist/runtime/evidence-verification/src/export-cli.js","devai-evidence-publish":"./dist/runtime/evidence-verification/src/publish-cli.js"};
           const manifest = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
           if (manifest.name !== '@aarusso-nyx/devai') throw new Error('DEVAI_VERIFIER_PACKAGE_NAME_INVALID');
-          if (manifest.version !== '1.5.1') throw new Error('DEVAI_VERIFIER_PACKAGE_VERSION_INVALID');
+          if (manifest.version !== '1.5.4') throw new Error('DEVAI_VERIFIER_PACKAGE_VERSION_INVALID');
           const evidenceBins = Object.fromEntries(Object.entries(manifest.bin ?? {}).filter(([name]) => name.startsWith('devai-evidence-')));
           if (JSON.stringify(evidenceBins) !== JSON.stringify(expectedBins)) throw new Error('DEVAI_VERIFIER_PACKAGE_BIN_INVALID:population');
           for (const [name, path] of Object.entries(expectedBins)) {
@@ -145,7 +145,7 @@ jobs:
           }
           const provenancePath = join(verifierRoot, 'provenance.json');
           const provenance = JSON.parse(readFileSync(provenancePath, 'utf8'));
-          if (provenance.schemaVersion !== '1.0.0' || provenance.sourceCommit !== '7ad2a394fbc0a6220808561f645830addf5e5184') {
+          if (provenance.schemaVersion !== '1.0.0' || provenance.sourceCommit !== '8174749ebcfabab246031281a036032f636b8a39') {
             throw new Error('DEVAI_VERIFIER_PACKAGE_PROVENANCE_INVALID');
           }
           if (!Array.isArray(provenance.files) || provenance.files.length !== 26) {
@@ -180,7 +180,7 @@ jobs:
             echo "DEVAI_EVIDENCE_VERIFY=$verifier_root/src/cli.js"
             echo "DEVAI_EVIDENCE_BUNDLE_VERIFY=$verifier_root/src/bundle-cli.js"
           } >> "$GITHUB_ENV"
-          echo "version=1.5.1" >> "$GITHUB_OUTPUT"
+          echo "version=1.5.4" >> "$GITHUB_OUTPUT"
           echo "provenance_sha256=$actual_provenance_sha256" >> "$GITHUB_OUTPUT"
 
       - name: Bind candidate and protected evidence tag
@@ -218,6 +218,18 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
+      - name: Materialize inert versioned proof payload
+        id: proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          proof="$RUNNER_TEMP/devai-local-rc/proof"
+          mkdir -p "$proof"
+          git -C evidence archive "${{ steps.identity.outputs.proof_commit }}" \
+            | tar -x -C "$proof" --no-same-owner --no-same-permissions
+          test ! -e "$proof/.git"
+          echo "path=$proof" >> "$GITHUB_OUTPUT"
+
       - name: Reconstruct exact RC task policy
         id: policy
         shell: bash
@@ -235,7 +247,7 @@ jobs:
             --schema-version 1.1.0 \
             --output "$RUNNER_TEMP/devai-local-rc/expected-task-policy.json" \
             > "$RUNNER_TEMP/devai-local-rc/policy-result.json"
-          cmp "$RUNNER_TEMP/devai-local-rc/expected-task-policy.json" evidence/task-policy.json
+          cmp "$RUNNER_TEMP/devai-local-rc/expected-task-policy.json" "${{ steps.proof.outputs.path }}/task-policy.json"
           digest="$(node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync(process.argv[1]));process.stdout.write(x.taskPolicyDigest)' "$RUNNER_TEMP/devai-local-rc/policy-result.json")"
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
@@ -246,14 +258,15 @@ jobs:
         run: |
           set -euo pipefail
           node "$DEVAI_EVIDENCE_BUNDLE_VERIFY" \
-            --bundle evidence \
+            --bundle "${{ steps.proof.outputs.path }}" \
             --trust control/law/policy/devai-local-rc-trust-store.json \
             --repository "$GITHUB_REPOSITORY" \
             --commit "$CANDIDATE_SHA" \
             --tree "${{ steps.identity.outputs.tree }}" \
             --policy-digest "${{ steps.policy.outputs.digest }}" \
             --binding "${{ steps.identity.outputs.binding }}" \
-            > "$RUNNER_TEMP/devai-local-rc/verified.json"
+            > "$RUNNER_TEMP/devai-local-rc/verified.json" \
+            2> "$RUNNER_TEMP/devai-local-rc/verifier-error.json"
 
       - name: Build concise verification artifact
         if: always()
@@ -265,14 +278,29 @@ jobs:
           POLICY_DIGEST: ${{ steps.policy.outputs.digest }}
         run: |
           set -euo pipefail
-          node - "$RUNNER_TEMP/devai-local-rc/verified.json" "$RUNNER_TEMP/devai-local-rc/verification-summary.json" <<'NODE'
+          node - "$RUNNER_TEMP/devai-local-rc/verified.json" "$RUNNER_TEMP/devai-local-rc/verifier-error.json" "$RUNNER_TEMP/devai-local-rc/verification-summary.json" <<'NODE'
           const fs = require('node:fs');
-          const [input, output] = process.argv.slice(2);
-          const verified = fs.existsSync(input) ? JSON.parse(fs.readFileSync(input, 'utf8')) : {};
+          const [successInput, failureInput, output] = process.argv.slice(2);
+          const parseDiagnostic = (path) => {
+            if (!fs.existsSync(path)) return {};
+            const text = fs.readFileSync(path, 'utf8').trim();
+            if (text === '') return {};
+            for (const candidate of [text, ...text.split(/\r?\n/u).reverse()]) {
+              try {
+                const value = JSON.parse(candidate);
+                if (value !== null && typeof value === 'object' && !Array.isArray(value)) return value;
+              } catch {}
+            }
+            return {};
+          };
+          const success = parseDiagnostic(successInput);
+          const failure = parseDiagnostic(failureInput);
+          const verified = Object.keys(success).length > 0 ? success : failure;
           const mutation = Array.isArray(verified.verifiedMutation) ? verified.verifiedMutation : [];
+          const passed = process.env.VERIFY_OUTCOME === 'success';
           const summary = {
             schemaVersion: '1.0.0',
-            verdict: process.env.VERIFY_OUTCOME === 'success' ? 'pass' : 'fail',
+            verdict: passed ? 'pass' : 'fail',
             signer: verified.signerId ?? null,
             evidenceCommit: verified.evidenceCommit ?? null,
             candidateCommit: process.env.CANDIDATE_SHA,
@@ -280,6 +308,8 @@ jobs:
             binding: process.env.BINDING,
             policyDigest: process.env.POLICY_DIGEST,
             rosterCount: mutation.reduce((count, entry) => count + Number(entry.packageCount ?? 0), 0),
+            failureCode: passed ? null : (verified.code ?? verified.error?.code ?? 'VERIFIER_FAILED'),
+            failureMessage: passed ? null : (verified.message ?? verified.error?.message ?? null),
           };
           fs.writeFileSync(output, JSON.stringify(summary) + '\n');
           NODE

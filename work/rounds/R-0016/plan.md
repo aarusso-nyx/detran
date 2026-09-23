@@ -1,6 +1,7 @@
 # R-0016 — frente `dashboard-console` (WP-D4, WP-D5 do DASHBOARD: fichas, formulários, i18n e console)
 
-**Status:** planejado em 2026-09-14 pelo Architect; **aberta em 2026-09-21** pelo maestro Fable 5.1
+**Status:** **fechada em 2026-09-22 como PC-0012** (merges 6a50f026 e 973e78c3; `audit observe`
+EV-ded786c48daa2c5f e EV-7b245d9fa41ab30a). Planejada em 2026-09-14 pelo Architect; aberta em 2026-09-21 pelo maestro Fable 5.1
 (`AUTHORIZATION.md`; prompt em `prompts/00-maestro.md`). Reviewer: GPT-5.6 Terra via
 `tools/orchestra/bridge.sh codex` (troca de família decidida pelo Owner em 2026-09-21). Base
 `origin/main` 08fb84e8 (PR #79). Worktree
@@ -38,11 +39,12 @@
 | TASK-0002 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-product-dashboard-screens`, `MOD-kb-manifest`      | TASK-0001  | 18 fichas `IU-DASH-D-01`…`D-18` (M4); `artifactIdCount` + 18 no mesmo lote                                                                                                                                                                                                                                                                                                             |
 | TASK-0003 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-dashboard-i18n`                                    | TASK-0001  | `docs/framework/arch/i18n/dashboard.pt-BR.json` (M5): estados, frescor, severidades, blocos, camadas, relógios, classificação, 42 nomes de indicador transcritos de [APP-DASHBOARD] §Catálogo, erros `DASH.*`, títulos das 18 telas, textos fixos, 9 formulários                                                                                                                       |
 | TASK-0004 | Inspector            | inspector-tests     | Sonnet / médio | `MOD-dashboard-web-tests`                               | TASK-0003  | testes: roteamento por papel × camada (N3 sempre bloqueado), 9 schemas, `freshnessInterceptor`, célula suprimida visível, a11y (severidade por forma); teste tela ↔ ficha ↔ rota (18/18)                                                                                                                                                                                               |
-| TASK-0005 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-dashboard-web-app`, `MOD-package-json`             | TASK-0004  | app completo (18 telas, guardas, SSE, gráficos); `pnpm check` estendido; README; testes verdes                                                                                                                                                                                                                                                                                         |
+| TASK-0005 | Engineer             | engineer-frontend   | Opus / médio   | `MOD-dashboard-web-app`                                 | TASK-0004  | app completo (18 telas, guardas, SSE, gráficos); `pnpm check` estendido; README; testes verdes                                                                                                                                                                                                                                                                                         |
 | TASK-0006 | Engineer             | engineer-frontend   | Sonnet / médio | `MOD-dashboard-web-forms`                               | TASK-0005  | 9 schemas com gates; testes verdes                                                                                                                                                                                                                                                                                                                                                     |
+| TASK-0008 | Architect            | architect-blueprint | Opus / alto    | `MOD-r16-contract-ctg2`                                 | TASK-0003  | `contracts/CTG-0002.md` §1–§14 (scaffold, manifesto TS, rotas, guardas, shell, SSE/frescor, error boundary, 18 componentes, 18 páginas L0, i18n, schemas, fixtures, critérios C-02-nn) — A5                                                                                                                                                                                            |
 | TASK-0007 | Architect (transcr.) | transcriber-docs    | Sonnet / baixo | `MOD-docs`                                              | TASK-0006  | build pack, `dashboard-frontends.md`, backlog                                                                                                                                                                                                                                                                                                                                          |
 
-CTG-0001 = 0001/0002/0003 (Architect explícito; 0002 ∥ 0003 com fronteiras disjuntas); CTG-0002 = 0004…0006 (+ TASK-0008 Architect, contrato detalhado, se `contracts/CTG-0002.md` §Decisões não bastar — decidido no checkpoint de M7); 0007 fecha. Um PR por CTG (M7).
+CTG-0001 = 0001/0002/0003 (Architect explícito; 0002 ∥ 0003 com fronteiras disjuntas); CTG-0002 = 0008 → 0004 → 0005 ∥ 0006 (A5); CTG-0003 = 0007. Um PR por CTG (M7).
 
 **Checkpoints de dependências (maestro, Engineer):** (a) após TASK-0001, `pnpm parameters:generate` + `pnpm verify:parameter-catalogue` (allowlist M5) e libera TASK-0002 ∥ TASK-0003; (b) no CTG-0002, o scaffold copiado de `apps/portal/web` + `pnpm install` + lockfile + extensão de `pnpm check` (tripla `pnpm --filter @detran/dashboard-web lint|test|build`) antes de liberar o Inspector (§4.18), como em R-0012 M1.
 
@@ -184,6 +186,51 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Triagem
 
+- 2026-09-22 — CI do PR #103, `foundation` (`pnpm check`): `apps/dashboard/web typecheck:
+src/app/app.routes.ts(95,14): error TS2307: Cannot find module './features/reports/reports.routes'`.
+  Causa: **`.gitignore` linha 10 (`reports/`)** — pensada para saídas de ferramenta e para
+  `work/rounds/*/reports/` — também casava com `apps/dashboard/web/src/app/features/reports/`, de
+  modo que o módulo inteiro das telas D-16/D-17 (5 arquivos: rotas, duas páginas e dois specs)
+  **nunca entrou em commit algum**. Os gates locais passavam porque os arquivos existem em disco;
+  só o CI, que parte de um checkout limpo, viu a falta. Triagem: **plant-bug do maestro** (fui eu
+  quem rodou `git add` do grupo, e o `add` silenciosamente ignorou o diretório — o mesmo padrão já
+  havia exigido `git add -f` para `work/rounds/R-0016/reports/`, sinal que não interpretei).
+  Correção: o padrão ganhou negação explícita (`!apps/*/*/src/app/features/reports/**`) com o
+  motivo em comentário, e os 5 arquivos entraram no commit. Lição para o método (TASK-0007):
+  depois de `git add` de um grupo, comparar `find <dir> -type f` com `git ls-files <dir>` antes do
+  push — um `add` que ignora diretório não falha.
+- 2026-09-22 — CI do PR #103, segunda execução, `foundation`: `format:check` acusou 3 arquivos de
+  `features/reports/`. Causa **derivada da anterior**: o Prettier 3 usa o `.gitignore` como
+  `--ignore-path`, de modo que o diretório ignorado também era invisível ao `pnpm format:check` —
+  os três arquivos nunca haviam sido formatados nem verificados, local ou em CI. Triagem:
+  `sensor-error` do próprio ecossistema de ignore, não defeito de worker. Correção pelos donos das
+  fronteiras (A9): TASK-0005 it. 4 (a página) e TASK-0004 it. 5 (os dois specs), só `prettier
+--write`. Lição para o método (TASK-0007): um padrão de `.gitignore` esconde arquivos **do git e
+  do Prettier** ao mesmo tempo.
+- 2026-09-22 — checkpoint do grupo CTG-0002, `pnpm check`: falhou em `verify:parameter-catalogue`
+  com `apps/dashboard/web/src/app/core/sse/sse.service.spec.ts:141: unknown parameter literal
+rait.case.changed`. **sensor-error** da mesma classe de A7 item 8 (o gate da raiz trata o nome de
+  evento de outro domínio como candidato a chave de parâmetro, porque `rait.` é prefixo de
+  superfície). Correção mecânica do maestro: os dois nomes de evento estrangeiros de C-02-40
+  passam a ser compostos por `join('.')`, com o motivo em comentário — a asserção (nenhum evento
+  emitido) e o dado enviado ao stub são idênticos. `verify:parameter-catalogue` → `OK (… 0 errors)`;
+  os 14 testes de `core/sse` seguem verdes.
+- 2026-09-22 — entrega de TASK-0005: `typecheck` do app, `lint`, `build`, Prettier e i18n byte a
+  byte **verdes**; `test` com **133 vermelhos / 1886 verdes**. Triagem por causa (verificada pelo
+  maestro, não aceita do relatório): (a) 82 casos (`i18n.spec.ts` 43, `screens.spec.ts` 39) —
+  `src/testing/kb.ts` `REPO_ROOT` sobe 4 níveis e aponta para `apps/`: **sensor-error** do
+  Inspector; (b) ~40 casos — catálogo de marcadores i18n não aguardado no TestBed: **sensor-error**;
+  (c) 13 casos — dois harness no mesmo `it`: **sensor-error**; (d) ~10 casos — contradições entre
+  critérios e entre spec e `policy.ts`: **policy-issue**, resolvida pelo Architect na adenda **A7**;
+  (e) 1 caso — `forms/exportar.schema.ts` importava `./finalidade-n2.schema.js`, violando a regra
+  de folha (C-02-83): **plant-bug** de TASK-0006, corrigido pelo maestro como Engineer (3 linhas:
+  `PURPOSE_TOKENS` e `PurposeToken` passam a viver em `forms/form-gate.ts`, reexportados por
+  `finalidade-n2.schema.ts`; 58 testes de `forms/` verdes). Nenhuma falha por defeito do código de
+  TASK-0005 → iteração 2 do **Inspector** (TASK-0004), com A7 no prompt.
+- 2026-09-22 — TASK-0005 (Engineer, app), tentativa 1: abortada por **API 529 Overloaded** durante
+  a leitura dos specs; `git status` confirma que nada foi escrito em `src/app/**` fora de `forms/`
+  (TASK-0006). Triagem: falha de infraestrutura, não `plant-bug` nem `sensor-error` — redespacho
+  idêntico (mesmo prompt, mesmo `PC-`), sem consumir iteração do §6.
 - 2026-09-21 — `delivery-review-CTG-0001` ciclo 1: **FAIL** (4 achados `high`): (1) D-09 `prove`
   "evidência completa" contradiz [UC-DASH-003] AC-DASH-003-1 ("protocolo, captura ou hash") —
   `reference-gap` de transcrição: a fonte do prompt (`dashboard-frontends.md` §7) diverge do
@@ -194,6 +241,13 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
   contrato; corrigido. Correções mecânicas aplicadas pelo maestro (Architect, dono de `docs/` e
   dos contratos — parcimônia §5, precedente R-0012 M6) em vez de redespachar; gates
   `docs:kb:check`/`format:check` verdes; ciclo 2 restrito.
+- 2026-09-21 — CI do PR #80, `backend-kernel` (fallback remoto): 3 falhas em
+  `backend/domains/inf/rait-case/tests/integration/rait-priority-upgrade.integration.spec.ts`
+  (hash do `pg_dump --data-only` oscila entre dois valores antes/depois de `apply.sh` abortado;
+  suíte de R-0007). O diff do PR não toca dado (só a linha de comentário com o SHA do cabeçalho de
+  `05-parameters.sql`, invisível ao `pg_dump`) e a mesma suíte passou em `main` 08fb84e8 duas
+  horas antes → `sensor-error` (flake); `gh run rerun --failed` → verde (20 min). Registrar no
+  fechamento como recomendação a R-0007 (determinismo do snapshot de dados).
 
 ## Adendas
 
@@ -219,6 +273,98 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
   `contracts/CTG-0002.md` §Decisões 2 não é transcrito como rótulo. Critério C-01 do Inspector: a
   cobertura fecha em 307 (312 − 5), e `SeverityChip` prova forma + rótulo por `dashboard.a11y.severity_shape.*`
   só quando a OD fechar; até lá, a forma é provada por atributo de teste, não por texto.
+- **A5 — "Prosseguir até a completa finalização" (Owner, 2026-09-21; AUTHORIZATION.md Amendment 1).**
+  O corte por janela cai. CTG-0002 nasce **neste branch**, após o merge de #80, sem base empilhada
+  (R-0011 sem código): toda tela em nível **L0** (`contracts/CTG-0002.md` §Decisões 6 — "indisponível
+  nesta versão", nunca mock silencioso; nenhum `HttpClient` nas features), com roteamento, guardas,
+  shell, SSE/frescor, error boundary, 18 componentes §5, 9 schemas, i18n e fixtures provados sem
+  backend. Tríade: **TASK-0008** (Architect, Opus — contrato detalhado §1–§14) → TASK-0004
+  (Inspector) → TASK-0005 (Engineer, app) **∥** TASK-0006 (Engineer, `forms/` — fronteira
+  disjunta; antes dependia de 0005). Checkpoint b do maestro (scaffold de configuração copiado de
+  `apps/portal/web`, `pnpm install`, lockfile, `pnpm check` estendido) entre TASK-0008 e TASK-0004.
+  Quando R-0011 publicar `BP-DASH-MONITOR-001.commands.openapi.json` e o seed, integra-se por
+  merge e as features sobem a L2 num CTG posterior (fora desta rodada se R-0011 não mesclar antes
+  do fechamento — registrado em `backlog.md` por TASK-0007).
+- **A6 — Ratificações do contrato CTG-0002 (Architect/maestro, 2026-09-21, TASK-0008).**
+  (a) OD-D16-018: `DashboardRouteEntry` ganha `parent` (filhas `:id` de D-14/D-16 dentro do
+  manifesto, C-01-01 mantido em 18) — ratificado, precedente R-0012 A3. (b) OD-D16-019: no app
+  vale a **semente** (M5, cópia inalterada); TASK-0007 alinha `intro`/`empty` das fichas ao
+  texto da semente (34/36). (c) OD-D16-012/014/015/016: os provisórios do contrato §14.1 valem
+  nesta CTG; nenhuma chave i18n nova, nada em `packages/ui`. (d) Checkpoint b executado pelo
+  maestro (f48cf2c6): a linha `check` da raiz já está estendida — TASK-0005 **não** a toca.
+  (e) `pnpm check` completo só no checkpoint do grupo (após 0005 e 0006); cada Engineer prova a
+  própria fronteira com `pnpm --filter @detran/dashboard-web typecheck` (§14.2 regra 2).
+- **A7 — Contradições entre critérios do CTG-0002, resolvidas pelo Architect (maestro, 2026-09-22,
+  antes de redespachar; método §4/§10 e R-0009 rec. 7).** O código de TASK-0005 seguiu o contrato;
+  os specs que o contradizem são corrigidos pelo Inspector na iteração 2. Decisões, uma a uma:
+  1. **C-02-39 × C-02-40 (descarte por versão).** Vale C-02-40 e §6(b)/OD-D16-013(b): evento com
+     `aggregate.version` ≤ a versão em cache **não** emite. O caso de prefixo opcional de C-02-39
+     (`dashboard.alert.changed`) é provado em **instância nova** do serviço (ou com outro
+     `aggregate.id`), nunca reenviando a mesma versão.
+  2. **C-02-42 × C-02-43 (status entre falhas).** `status() === 'reconnecting'` é asserção da
+     **primeira** falha; da **segunda dentro de 60 s** em diante vale `'polling'` (C-02-43, que já
+     diz "a reabertura continua no backoff"). A sequência de backoff 1000→2000→4000→8000→16000→
+     30000→30000 continua asserida em ambos.
+  3. **C-02-72 em D-11 (`dashboard:export:create` × `AUDITOR`).** `DASH_EXPORT_ROLES` (`policy.ts`
+     1532–1540) **não** inclui `AUDITOR`: o controle é **ausente** para `AUDITOR` em D-10 **e** em
+     D-11 (adenda A1 — `policy.ts` prevalece). O spec de D-11 escolhe um papel positivo real
+     (ex.: `agency-admin`) e mantém `AUDITOR`/`DPO` como negativos.
+  4. **C-02-72 em D-09 (`dashboard:duty-cycle:archive` × `dash-duty-owner`).** `policy.ts` 1578:
+     `archive` = `['dash-operator', 'agency-admin']`; `dash-duty-owner` é **negativo** (positivo
+     dele são `start|prepare|submit|prove`). O spec usa `dash-operator` como positivo de `archive`.
+  5. **C-02-68 (`blocked_by_decision`).** A asserção compara a **chave** e o valor de `{decision}`
+     renderizado, nunca o texto cru da semente com o placeholder por substituir.
+  6. **C-02-24 (leitura de `core/layer-table.ts`).** O spec lê o arquivo pelo caminho de
+     `src/testing/kb.ts` (`join`), não por `fileURLToPath(new URL(...))`, que o transform JIT do
+     vitest não resolve.
+  7. **C-02-26 (`auth-callback`).** `createStynxSessionStub().completeLogin` passa a **ativar** a
+     sessão, para que a navegação a `/monitoramento` não caia no `authGuard`.
+  8. **Sensores que varrem o próprio texto** (C-02-74/75, C-02-80, C-02-83): o literal proibido não
+     pode aparecer no título do `it` nem no corpo do spec que o procura — o spec usa concatenação
+     ou o dado da fixture.
+  9. **Fixtures e harness** (infraestrutura do Inspector, não critério): `kb.ts` `REPO_ROOT` sobe
+     **cinco** níveis (`src/testing` → raiz do monorepo); o catálogo de marcadores i18n é
+     **aguardado** antes do `detectChanges` (helper do próprio `src/testing`); **um harness por
+     `it`** (A18 vale por teste, não só por arquivo); `expectTypeOf<T>()` na forma com parâmetro de
+     tipo (vitest 4) e o predicado de `app.route-manifest.spec.ts` tipado sobre
+     `DashboardPanel | null`.
+     Nenhuma dessas decisões reabre M1–M9, A1–A6 ou OD-D16-001…019; OD-D16-020…026 (propostas por
+     TASK-0005) ficam registradas em `contracts/CTG-0002.md` §14.1 por TASK-0007 como achados de
+     infraestrutura de teste **já corrigidos** nesta iteração.
+
+- **A8 — Dois resíduos da iteração 2 do Inspector (Architect/Engineer, maestro, 2026-09-22).**
+  (a) **C-02-83 e o agregador.** A regra de folha (`só zod e ./form-gate`) vale para os **nove
+  schemas**; `forms/index.ts`, agregador de `FORM_SCHEMAS` exigido por §11, importa os irmãos do
+  próprio diretório e segue sujeito à proibição substantiva (`../core`, `../shared`, `@angular/*`,
+  `rxjs`). (b) **C-02-24 e C-02-75 × comentários de produção.** Os dois vermelhos vinham de
+  comentários, não de código: o cabeçalho de `core/layer-table.ts` citava o pacote compartilhado
+  do backend pelo nome e um JSDoc de `shared/export-dialog.component.ts` citava a chave de
+  parâmetro do limiar de aprovação. As duas linhas foram reescritas preservando o sentido — pelo
+  **Engineer dono** (TASK-0005 it. 3), depois da correção de fronteira de A9.
+- **A9 — Fronteira do maestro em `src/app/**` (Architect, 2026-09-22; delivery-review CTG-0002
+  ciclo 1, achado 1).** O reviewer apontou, com razão, que o maestro escreveu em `src/app/**`
+  (`forms/{form-gate,finalidade-n2.schema,exportar.schema}.ts`; os comentários de
+  `core/layer-table.ts` e `shared/export-dialog.component.ts`; o literal composto em
+  `core/sse/sse.service.spec.ts`), embora `contracts/CTG-0002.md` §14.2 reserve ao maestro apenas
+  o scaffold do §1. **Correção aplicada:** as seis edições foram **revertidas** aos blobs
+  entregues por TASK-0005 (`42b4e6ac`), TASK-0006 (`8ae0926c`) e TASK-0004 it. 2 (`b64fb8bf`) e
+  redespachadas, em iterações restritas, aos donos das fronteiras — TASK-0006 it. 2 (`forms/`),
+  TASK-0005 it. 3 (comentários), TASK-0004 it. 3 (literal do spec de SSE). O §14.2 passa a dizer
+  que **nem correção mecânica** autoriza o maestro a escrever em `src/app/**`: achado de gate ali
+  volta ao dono. Decisões de mérito continuam do Architect; execução, dos workers.
+- **A10 — C-02-83 emendado no contrato (Architect, 2026-09-22; delivery-review CTG-0002 ciclo 1,
+  achado 2).** A ratificação de A8(a) vivia só no plano e o critério em `contracts/CTG-0002.md`
+  §13 mantinha a redação que o agregador não pode satisfazer. O **critério** foi emendado no
+  contrato; o spec do Inspector já o reflete.
+- **A11 — Dois sensores exigindo "termina com" a própria tripla na linha `check` (Architect,
+  2026-09-22).** O merge de `origin/main` trouxe `apps/rait/web/src/app/app.scaffold.spec.ts`
+  (R-0012, fechada como PC-0010), que exige `check.endsWith(<tripla do rait-web>)`; o nosso
+  C-02-81 exigia o mesmo para `dashboard-web`. Decisão: (a) a ordem vigente da linha é
+  **portal → dashboard → rait**, de modo que o sensor mesclado siga verde sem esta rodada editar
+  testes de rodada fechada; (b) **C-02-81 emendado** no contrato para exigir a **presença** da
+  tripla contígua do `dashboard-web` depois da do Portal, nunca o fim da linha; (c) TASK-0007
+  leva ao método (`orchestra/README.md` §10) a recomendação de que o sensor de scaffold de cada
+  app afirme **contenção**, não fim de linha. O spec foi corrigido pelo Inspector (it. 4).
 
 ## Bloqueios
 
@@ -232,7 +378,26 @@ Bootstrap (2026-09-21): `pnpm install --frozen-lockfile` OK; `pnpm exec devai do
 
 ## Retomada
 
-(vazio)
+**Estado em 2026-09-21 (maestro Fable 5.1) — sem parada:** o Owner instruiu "prosseguir até a
+completa finalização" (AUTHORIZATION.md Amendment 1; adenda A5): o corte por janela cai e o
+CTG-0002 segue neste branch em nível L0. PR #80 **mesclado** (merge 6a50f026, `audit observe`
+EV-ded786c48daa2c5f). O texto abaixo vale como retomada se uma sessão cair.
+
+- **Concluídas:** TASK-0001 (Architect, Opus — manifesto, contratos, allowlist), TASK-0002
+  (18 fichas, baseline 756), TASK-0003 (semente i18n, 307 chaves). Reviews: prompt-review 1
+  FAIL/2 PASS; delivery-review CTG-0001 1 FAIL/2 PASS. Evidência: generic sequence 1, head
+  `511d404d…c71b59`. **PR #80** (`orchestra/dashboard-console` → `main`) aberto; CI e merge
+  conforme §9 (merge só com CI verde; depois `audit observe` no SHA do merge e novo checkpoint).
+- **Em curso:** TASK-0008 (Architect, Opus — contrato detalhado; prompt-review 3 FAIL → 4 PASS).
+- **Pendentes:** checkpoint b (scaffold + `pnpm install`), TASK-0004 (Inspector), TASK-0005 ∥
+  TASK-0006 (Engineers), delivery-review CTG-0002, PR, merge, `audit observe`; TASK-0007 (docs),
+  PR, merge, `audit observe`, `round close`.
+- **Próximos passos (se retomar):** (1) `git fetch` e `git merge --no-edit origin/main` (branch
+  publicado, nunca rebase); (2) se `origin/orchestra/dashboard-backend` já tiver contrato e seed,
+  integrá-lo por merge e subir as features a L2 (senão, L0 até o fim — A5); (3) seguir a tríade
+  de A5 pelos prompts de `prompts/TASK-0004…0006.md` quando existirem, ou compô-los a partir de
+  `contracts/CTG-0002.md` §1–§14; (4) TASK-0007 fecha (build pack, `dashboard-frontends.md`
+  §7/§9/§10 com OD-D16-011, backlog, `waves.md` com a troca Sol → Fable).
 
 ## Leitura
 

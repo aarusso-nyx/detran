@@ -158,6 +158,11 @@ autoridade aparecem na própria linha.
 | `portal.services`          | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
 | `portal.a11y`              | `apps/portal/web`                  | `src/app/i18n/portal.pt-BR.json`                | OD-P46  |
 | `est.crash`                | `backend/app`                      | `inf.normative_document_template`               | OD-B08  |
+| `boat.screens`             | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46  |
+| `boat.forms`               | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46  |
+| `boat.states`              | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46  |
+| `boat.errors`              | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46  |
+| `boat.legal`               | `apps/boat/mobile`                 | `docs/framework/arch/i18n/boat.pt-BR.json`      | OD-P46  |
 | `teat.shell`               | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
 | `teat.common`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
 | `teat.states`              | `apps/teat/mobile + apps/teat/web` | `docs/framework/arch/i18n/teat.pt-BR.json`      | OD-P46  |
@@ -252,18 +257,20 @@ texto resultante dessa remoção de markup.
 
 O heading determina a superfície e os únicos prefixos aceitos para suas chaves:
 
-| Heading   | `surface`   | Prefixos literais permitidos                    | Exceções |
-| --------- | ----------- | ----------------------------------------------- | -------- |
-| RAIT      | `rait`      | `rait.`, `collection.`, `deadline.`, `session.` | nenhuma  |
-| TEAT      | `teat`      | `teat.`, `sync.`                                | nenhuma  |
-| PORTAL    | `portal`    | `portal.`, `privacy.`                           | nenhuma  |
-| BOAT      | `est`       | `est.`                                          | nenhuma  |
-| DASHBOARD | `dashboard` | `dashboard.`                                    | nenhuma  |
+| Heading   | `surface`   | Prefixos literais permitidos                    | Exceções                                                                      |
+| --------- | ----------- | ----------------------------------------------- | ----------------------------------------------------------------------------- |
+| RAIT      | `rait`      | `rait.`, `collection.`, `deadline.`, `session.` | nenhuma                                                                       |
+| TEAT      | `teat`      | `teat.`, `sync.`                                | nenhuma                                                                       |
+| PORTAL    | `portal`    | `portal.`, `privacy.`                           | nenhuma                                                                       |
+| BOAT      | `est`       | `est.`                                          | `boat.` somente como prefixo de namespace i18n; nunca como chave de parâmetro |
+| DASHBOARD | `dashboard` | `dashboard.`                                    | nenhuma                                                                       |
 
 A chave é literal, não é reescrita e deve começar por um dos prefixos da sua
 linha. `shared` permanece superfície válida do store, mas não tem heading, tabela
 ou linha neste catálogo. Uma exceção futura exige ser acrescentada explicitamente
-à coluna **Exceções** desta tabela antes de o parser poder aceitá-la.
+à coluna **Exceções** desta tabela antes de o parser poder aceitá-la. A exceção BOAT
+`boat.` é exclusivamente de namespace i18n: não altera `surface=est`, não autoriza
+chave de parâmetro `boat.*` e não é tratada como prefixo de chave desta tabela.
 
 `Status` aceita somente `vigente`, `a_confirmar` ou `proposta`. `pend.` e `legal`
 aceitam somente `sim` ou `não`; eles geram respectivamente `source_pending` e
@@ -303,7 +310,9 @@ Decisão`, na mesma disciplina de gramática das cinco tabelas de parâmetros.
 
 `Namespace` é um literal `<prefixo>.<segmento>` em que `<prefixo>` é um dos
 prefixos literais permitidos de uma das cinco superfícies (§Superfície, chave e
-valores de linha) e `<segmento>` casa `[a-z][a-z0-9_]*`. A unicidade do
+valores de linha), acrescido de `boat.` somente para namespace i18n da superfície
+BOAT, e `<segmento>` casa `[a-z][a-z0-9_]*`. A exceção `boat.` não autoriza parâmetro
+nem muda `surface=est`. A unicidade do
 `Namespace` é obrigatória na tabela. A célula `Decisão` segue a mesma regra de
 resolução da célula `Decisão` das tabelas de parâmetros: só `H.<n>`, `OD-*` ou
 `DT-*` são elegíveis e a decisão selecionada precisa existir em ao menos uma das

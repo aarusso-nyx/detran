@@ -1,0 +1,45 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Infraction commands",
+    "version": "1.0.0",
+    "x-blueprint": "BP-INF-INFRACTION-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/inf/infraction/infractions/{id}/commands/issue-notice": {
+      "post": {
+        "operationId": "infractionIssueNotice",
+        "responses": {
+          "200": { "description": "Aviso aplicado à máquina legal" }
+        }
+      }
+    },
+    "/v1/inf/infraction/infractions/{id}/commands/indicate-driver": {
+      "post": {
+        "operationId": "infractionIndicateDriver",
+        "responses": { "200": { "description": "Indicação registrada" } }
+      }
+    },
+    "/v1/inf/infraction/infractions/{id}/commands/declare-extinction": {
+      "post": {
+        "operationId": "infractionDeclareExtinction",
+        "responses": { "200": { "description": "Extinção declarada" } }
+      }
+    },
+    "/v1/inf/infraction/infractions/{id}/commands/authority-appeal": {
+      "post": {
+        "operationId": "infractionAuthorityAppeal",
+        "responses": {
+          "200": { "description": "Recurso da autoridade registrado" }
+        }
+      }
+    },
+    "/v1/inf/infraction/infractions/{id}/commands/waive-appeal": {
+      "post": {
+        "operationId": "infractionWaiveAppeal",
+        "responses": { "200": { "description": "Renúncia registrada" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RAIT Case commands",
+    "version": "1.0.0",
+    "x-blueprint": "BP-INF-RAIT-CASE-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/inf/rait/cases": {
+      "post": {
+        "operationId": "raitCaseProtocol",
+        "responses": { "200": { "description": "Caso protocolado" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/admit": {
+      "post": {
+        "operationId": "raitCaseAdmit",
+        "responses": { "200": { "description": "Caso admitido" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/non-admission": {
+      "post": {
+        "operationId": "raitCaseNonAdmission",
+        "responses": { "200": { "description": "Caso não admitido" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/remit": {
+      "post": {
+        "operationId": "raitCaseRemit",
+        "responses": { "200": { "description": "Caso remetido" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/receive": {
+      "post": {
+        "operationId": "raitCaseReceive",
+        "responses": { "200": { "description": "Caso recebido" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/ready": {
+      "post": {
+        "operationId": "raitCaseReady",
+        "responses": { "200": { "description": "Minuta pronta" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/decide": {
+      "post": {
+        "operationId": "raitCaseDecide",
+        "responses": { "200": { "description": "Decisão assinada" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/return-draft": {
+      "post": {
+        "operationId": "raitCaseReturnDraft",
+        "responses": { "200": { "description": "Minuta devolvida" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/withdraw": {
+      "post": {
+        "operationId": "raitCaseWithdraw",
+        "responses": { "200": { "description": "Desistência registrada" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/redirect": {
+      "post": {
+        "operationId": "raitCaseRedirect",
+        "responses": { "200": { "description": "Caso redirecionado" } }
+      }
+    },
+    "/v1/inf/rait/cases/{id}/commands/resolve-pending": {
+      "post": {
+        "operationId": "raitCaseResolvePending",
+        "responses": { "200": { "description": "Pendência resolvida" } }
+      }
+    },
+    "/v1/inf/rait/pools/{id}/claim-next": {
+      "post": {
+        "operationId": "raitPoolClaimNext",
+        "responses": { "200": { "description": "Próximo caso atribuído" } }
+      }
+    },
+    "/v1/inf/rait/inquiries/{id}/commands/answer": {
+      "post": {
+        "operationId": "raitInquiryAnswer",
+        "responses": { "200": { "description": "Diligência respondida" } }
+      }
+    },
+    "/v1/inf/rait/inquiries/{id}/commands/extend": {
+      "post": {
+        "operationId": "raitInquiryExtend",
+        "responses": { "200": { "description": "Diligência prorrogada" } }
+      }
+    },
+    "/v1/inf/rait/inquiries/{id}/commands/expire": {
+      "post": {
+        "operationId": "raitInquiryExpire",
+        "responses": { "200": { "description": "Diligência vencida" } }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0016",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0016/tasks/TASK-0005.json",
+      "line": 30,
+      "claim": "A tarefa declara `pnpm check` como comando de aceitação, mas A6 reserva o gate completo ao checkpoint do maestro após TASK-0005 e TASK-0006; o próprio prompt o proíbe ao Engineer.",
+      "fix": "remover `pnpm check` de `acceptance_commands`; manter os gates locais do app e o checkpoint do maestro."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0016/tasks/TASK-0005.json",
+      "line": 11,
+      "claim": "`MOD-package-json` permanece no lock de TASK-0005 embora A6 determine que a linha `check` já foi feita pelo maestro e o prompt proíba editar o package.json.",
+      "fix": "remover `MOD-package-json` de `target_modules` e preservar somente `MOD-dashboard-web-app`."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0016/prompts/TASK-0004.md",
+      "line": 33,
+      "claim": "A lista fechada omite a seção WP-D4/WP-D5 do build pack, exigida pelas regras comuns antes dos artefatos citados.",
+      "fix": "acrescentar apenas `docs/framework/arch/dashboard-build-pack.md` §WP-D4 e §WP-D5, incluindo o mapa entregável → definições."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0016/prompts/TASK-0005.md",
+      "line": 30,
+      "claim": "A lista fechada omite a seção WP-D5 do build pack, exigida pelas regras comuns antes dos artefatos citados.",
+      "fix": "acrescentar apenas `docs/framework/arch/dashboard-build-pack.md` §WP-D5 e o mapa entregável → definições."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0016/prompts/TASK-0006.md",
+      "line": 29,
+      "claim": "A lista fechada omite a seção WP-D4 do build pack, exigida pelas regras comuns antes dos artefatos citados.",
+      "fix": "acrescentar apenas `docs/framework/arch/dashboard-build-pack.md` §WP-D4 e o mapa entregável → definições."
+    }
+  ],
+  "notes": [
+    "A tríade efetiva e as fronteiras de escrita dos três prompts estão compatíveis com A5/A6 e CTG-0002 §14.2."
+  ]
+}

@@ -784,11 +784,12 @@ test('C-5-15 — dado um decorador de rota com argumento não literal quando che
 // Portal (BP-PORTAL-*.commands.openapi.json, CTG-0002 §2 + stream §9) + 13
 // do BOAT (BP-EST-CRASH-001.commands.openapi.json) = 160; R-0011 (plan.md M24,
 // TASK-0006) soma 43 do DASHBOARD (BP-DASH-MONITOR-001.commands.openapi.json,
-// CTG-0002 §3, sete controllers manuscritos + o stream) = 203.
-test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=203', async () => {
+// CTG-0002 §3, sete controllers manuscritos + o stream) = 203; R-0007
+// CTG-0003/0004 acrescentam 53 operações RAIT/infraction/collection = 256.
+test('C-5-16 — dado o repositório real (sem flags) quando checkCommands então ok=true e operations=256', async () => {
   const result = checkCommands();
   assert.equal(result.ok, true, JSON.stringify(result.problems, null, 2));
-  assert.equal(result.operations, 203);
+  assert.equal(result.operations, 256);
 });
 
 // ---------------------------------------------------------------------------
@@ -1014,7 +1015,7 @@ test('C-2-16 — dado o conjunto de contratos reais quando coletar operações e
   );
   assert.deepEqual(problems, []);
   const teatOperations = operations.filter((entry) =>
-    /\/BP-(?:INF|OPS)-/.test(entry.file),
+    /\/BP-(?:INF-(?:AIT|ALCOHOL|MEASURES|NORMATIVE)|OPS-)/.test(entry.file),
   );
   assert.equal(teatOperations.length, 100);
   assert.equal(

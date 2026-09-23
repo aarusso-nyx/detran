@@ -2,40 +2,42 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0011",
   "round_id": "R-0012",
-  "status": "queued",
+  "status": "completed",
   "discipline": "inspector",
   "discipline_specialization": "inspector-tests",
   "title": "Codificar os critérios do CTG-0002c: schemas dos 16 formulários e casos negativos das regras ESLint",
   "description": "Specs por schema (válido, inválido, obrigatoriedade condicional, gate) e RuleTester das duas regras locais.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-rait-web-tests-forms"],
+  "target_modules": ["MOD-rait-web-tests-forms", "MOD-rait-web-tests-lint"],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0002c",
   "coupled_pipeline_position": "inspector",
   "upstream_task_id": "TASK-0010",
   "db_isolation": "none",
-  "iteration_count": 0,
+  "iteration_count": 1,
   "max_iterations": 2,
   "priority": 5,
   "tags": ["wp-e", "inspector"],
   "branch": "orchestra/rait-web",
   "worktree_id": "WT-rait-web",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-3a9f0a083e83639f",
   "acceptance_commands": [
-    ["pnpm", "--filter", "@detran/rait-web", "typecheck"]
+    ["pnpm", "--filter", "@detran/rait-web", "lint"],
+    ["pnpm", "format:check"],
+    ["pnpm", "--filter", "@detran/rait-web", "test"]
   ],
   "created_at": "2026-09-21T00:00:00.000Z",
   "executor": {
     "kind": "agent",
     "runtime": "claude-cli",
-    "model": "sonnet",
+    "model": "opus",
     "effort": "medium",
     "selection": {
       "mode": "exact",
-      "registry_id": "claude-sonnet-5"
+      "registry_id": "claude-opus-5"
     },
-    "prompt_composition_id": "PC-0000000000000000",
+    "prompt_composition_id": "PC-3a9f0a083e83639f",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

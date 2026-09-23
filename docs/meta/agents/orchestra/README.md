@@ -164,7 +164,8 @@ de comandos). O build pack do RAIT não tem seção OD própria: as questões vi
 
 Numeração de DDL nos build packs colide com arquivos existentes: BOAT cita `40-est-crash.sql`
 (`40-ch-clinical-network.sql` existe) e DASHBOARD cita `50-dashboard.sql` (`50-ch-telehealth.sql`
-existe); o RAIT diz que os DDL "34…37 já foram incluídos" no `apply.sh`, mas o script aplica
+existe) — **corrigido para o DASHBOARD por R-0011** (WP-D1, PR #83): `dashboard-build-pack.md`
+já cita `80-dashboard.sql`, a ordem lexicográfica real de `apply.sh`; o RAIT diz que os DDL "34…37 já foram incluídos" no `apply.sh`, mas o script aplica
 `ddl/*.sql` por ordem lexicográfica. Os planos das rodadas usam `70-est-crash.sql`,
 `80-dashboard.sql`, `38/39/57/58-inf-*.sql`, `13/16/17/18/19-ops-*.sql` e `61…64-portal-*.sql`;
 a tarefa de documentação de cada rodada corrige o build pack correspondente.
@@ -336,6 +337,137 @@ boundaries`, M6/ADR-0020) como candidatos a chave de parâmetro desconhecida (A1
 5. **Relógio próprio via M7/A3** — quando uma frente depende de um motor de prazos ainda não mesclado,
    preferir relógio próprio do pacote (`Calendar`/`Clock` como dependência de leitura, nunca editar o
    pacote dono) a bloquear a frente inteira; registrar a integração futura como OD explícita (OD-D28).
+
+### R-0012 `rait-web` (Fable 5.1 → maestro Opus 5; reviewer `codex gpt-5.6-terra`; 2026-09-21/22; PRs #79, #81, #85, #90 + CTG-0002c)
+
+**O que custou tempo**
+
+1. **Contrato grande demais para uma tarefa.** O contrato do CTG-0002b (91 critérios, 50 páginas,
+   26 componentes, 8 clientes, 11 facades) excedeu o que um worker entrega com rigor: dividido em
+   dois pares com PR próprio (A8) já depois de escrito. O Inspector do par 2 ainda precisou de três
+   iterações só para cobrir os 15 módulos. Regra prática: um contrato de CTG cabe em ~40 critérios
+   e ~25 arquivos de produção; acima disso, dividir **antes** de escrever os prompts.
+2. **Fixtures de teste que não acompanham o contrato.** Três iterações inteiras (A10, A14, A15)
+   foram gastas em `stubFacade`/`pageProviders` sem os métodos das facades, harness sem
+   `StynxSessionService`, `render()` repetido no mesmo `it` e caminhos errados de leitura de ficha.
+   Vale o Architect fixar no contrato a **assinatura do stub** (não só a da produção) e o Inspector
+   provar o stub contra a interface real num `it` próprio.
+3. **Matriz de autorização por amostra.** O reviewer reprovou duas vezes (A11, A15) matrizes que
+   testavam "um papel permitido e um negado" e confirmações de uma só ação por página. A regra
+   §4.8 é exaustiva: **todo** papel canônico e **toda** ação com confirmação, geradas por laço
+   sobre a fixture de política.
+4. **`main` andando em paralelo.** Quatro merges de `main` na rodada (R-0011, R-0013, R-0016,
+   DEVAI 1.5.4/1.5.5/1.5.6), dois com conflito na allowlist i18n e na cadeia de evidência, e um PR
+   recusado por avanço de `main` entre o CI verde e o merge. A cadeia (`record/proofs/chain.json`)
+   resolve-se sempre aceitando `main` e **regravando** a evidência da rodada.
+5. **Falha intermitente de CI alheia à frente.** `rait-priority-upgrade.integration.spec.ts`
+   (R-0007) falhou em **três** PRs desta rodada (#85, #90, #93 — frontend e documentação, que não
+   tocam o backend) e passou em todos os reruns; custou ~90 min de espera. É defeito de
+   isolamento do próprio teste (upgrade de schema em banco compartilhado), não da frente:
+   vale um `OD` ao dono de R-0007 em vez de rerun a cada PR.
+
+**O que funcionou**
+
+1. **Tarefa de transcrição própria para i18n** (A12, TASK-0016/0017): tirou do Engineer o que o
+   método já reserva ao Architect e tornou o catálogo verificável por um `it` de contagem exata.
+2. **Adendas numeradas como único canal de reconciliação** (A1…A16): 20 iterações restritas sem
+   nenhuma reabertura de tarefa e sem nenhum spec alterado fora de adenda.
+3. **Contrato com assinaturas exatas** (arquivo, símbolo, tipo, `operationId`): o Engineer do
+   CTG-0002c entregou **verde na primeira iteração** (4434 testes) com 100 critérios.
+4. **Pré-condição de despacho explícita no prompt** (SHA do merge do CTG anterior em §Concorrência):
+   evitou que um par começasse a escrever sobre árvore desatualizada.
+
+**Recomendações ao método**
+
+1. **§4** — limite de tamanho por CTG (≈40 critérios / ≈25 arquivos de produção); acima disso o
+   Architect entrega o contrato já dividido em pares.
+2. **§4.13** — o contrato fixa também a **assinatura dos stubs** que o Inspector escreve; um `it`
+   prova o stub contra a interface real.
+3. **§4.8** — a matriz de autorização é sempre gerada por laço sobre a fixture de política (papéis)
+   e sobre a lista de ações com confirmação; amostra é achado `high` na delivery-review.
+4. **§9** — quando `main` avança entre o CI verde e o merge, integrar por merge e **reexecutar o
+   CI** antes de tentar de novo; falha de CI em teste de outra frente, reproduzível como
+   intermitente, é `gh run rerun --failed` (não é triagem da frente).
+5. **`model-ladder.md`** — custo real de R-0012: Opus 330–780 k brutos por tarefa de Engineer;
+   Sonnet 100–830 k por tarefa de Inspector com matriz grande; rodada de 5 CTG e 17 tarefas
+   ≈5,5 M únicos / ≈12 M brutos.
+
+### R-0016 `dashboard-console` (Fable 5.1, 2026-09-21/22 — troca de família Sol → Fable por decisão
+
+do Owner; PR #80 CTG-0001 merge `6a50f026`, PR #103 CTG-0002 em CI)
+
+**O que custou tempo**
+
+1. **`.gitignore` engoliu um módulo inteiro sem falhar visivelmente.** A linha `reports/` (pensada
+   para saídas de ferramenta e `work/rounds/*/reports/`) também casava com
+   `apps/dashboard/web/src/app/features/reports/` (telas D-16/D-17, 5 arquivos): os gates locais
+   passam porque os arquivos existem em disco, e só o CI, que parte de checkout limpo, viu a falta
+   (`TS2307` em `app.routes.ts`). O mesmo padrão já havia exigido `git add -f` para
+   `work/rounds/R-0016/reports/` pouco antes — sinal não interpretado pelo maestro. Recomendação:
+   depois de `git add` de um grupo, comparar `find <dir> -type f` com `git ls-files <dir>` antes do
+   push — um `add` que ignora diretório não falha.
+2. **O mesmo `.gitignore` também cegou o Prettier.** O Prettier 3 usa o `.gitignore` como
+   `--ignore-path`; os três arquivos de `features/reports/` nunca haviam sido formatados nem
+   verificados, local ou em CI, até a correção — um padrão de `.gitignore` esconde arquivos do
+   git **e** do Prettier ao mesmo tempo.
+3. **Dois apps com sensor de scaffold incompatíveis entre si.** `apps/rait/web/src/app/app.scaffold.spec.ts`
+   (R-0012, em `main`) exige que a linha `check` **termine** com a tripla do `rait-web`; o
+   `dashboard-web` (C-02-81) exigia o mesmo para si — as duas exigências de "fim de linha" não
+   coexistem quando um terceiro app se acrescenta à linha. Corrigido com a ordem vigente
+   portal → dashboard → rait e o critério emendado para exigir **contenção**, não fim de linha
+   (A11).
+4. **Fronteira do maestro em `src/app/**` violada por correção mecânica.** Seis edições em
+   `forms/{form-gate,finalidade-n2.schema,exportar.schema}.ts`, dois comentários de produção e um
+   literal de spec foram feitas pelo maestro fora do scaffold do §1 do contrato; revertidas e
+   redespachadas aos donos das fronteiras em iterações restritas (A9). O contrato passou a dizer
+   que nem correção mecânica autoriza o maestro a escrever em `src/app/**`: achado de gate ali
+   volta ao dono.
+5. **Contradições entre critérios do próprio contrato do CTG-0002** (descarte de evento SSE por
+   versão × prefixo opcional, status `reconnecting`/`polling`, matriz de papel positivo/negativo
+   por comando) resolvidas pelo Architect em adenda numerada (A7) antes de redespachar o Inspector,
+   sem reabrir M1…M9.
+6. **Transcrição paralela de fichas e semente i18n a partir do mesmo contrato.** TASK-0002 (fichas)
+   e TASK-0003 (i18n) rodaram em paralelo sobre `contracts/CTG-0001.md`; os textos de `intro`/`empty`
+   divergiram em 34 dos 36 casos (títulos coincidiram 18/18) — OD-D16-019. Recomendação: ou a
+   semente nasce antes das fichas, ou o contrato fixa o texto literal de cada campo — nunca duas
+   tarefas "transcrevendo de novo" a mesma fonte em paralelo.
+7. **Queda de API durante uma tarefa longa não é achado do worker.** A tentativa 1 de TASK-0005
+   abortou por `529 Overloaded` durante a leitura dos specs, sem escrever nada; redespachada de
+   forma idêntica (mesmo prompt, mesmo `PC-`), sem consumir iteração do método.
+
+**O que funcionou**
+
+1. **Nível L0 disciplinado** (A5, `AUTHORIZATION.md` Amendment 1). Com `dashboard-backend`
+   (R-0011) sem contrato/seed publicados no início do CTG-0002, todo o console (roteamento,
+   guardas, shell, SSE/frescor, error boundary, 18 páginas, 9 schemas, i18n, fixtures) foi provado
+   sem backend, com `dashboard.states.unavailable_in_version` explícito — nunca mock silencioso.
+2. **Fronteiras disjuntas entre Inspector e Engineers** (TASK-0004 em `src/testing/**`/`*.spec.ts`;
+   TASK-0005 em `src/app/**` exceto `forms/`; TASK-0006 só em `forms/`) permitiram iterações
+   restritas curtas (a maioria 1,2–2,1 min; a iteração 2 do Inspector, que resolveu 133 → 2
+   vermelhos, levou 32 min) sem redespachar tarefa inteira — mesmo padrão de R-0011/R-0012.
+3. **Adendas numeradas (A1…A11)** reconciliaram contrato × código × canônico sem reabrir decisões
+   do plano; o reviewer as aceitou como base de julgamento nos ciclos restritos.
+4. **Checkpoint do maestro isolado do trabalho dos workers** (scaffold, `pnpm install`,
+   `pnpm-lock.yaml`, ordem da linha `check`) manteve a fronteira de escrita das tarefas limpa
+   depois de corrigida (A9).
+
+**Recomendações ao método**
+
+1. **§4** — todo `.gitignore` de propósito geral (`reports/`, `dist/` etc.) precisa de negação
+   explícita (`!apps/*/*/src/app/features/reports/**`) com o motivo em comentário quando o
+   repositório também usa esses nomes como pastas de produto; conferir Prettier (`--ignore-path`)
+   junto do `git`, nunca só um dos dois.
+2. **`architect-blueprint.md` / `inspector-tests.md`** — o sensor de scaffold de um app novo deve
+   afirmar contenção da própria tripla na linha `check`, nunca exigir que a linha termine com ela
+   (mais de um app quebra a segunda forma).
+3. **§4** — reforçar que nem correção mecânica autoriza o maestro a escrever em `src/app/**` (ou
+   equivalente de qualquer app): achado de gate em fronteira de worker sempre volta ao dono, em
+   iteração restrita.
+4. **Transcrição de fichas + i18n a partir do mesmo contrato** — serializar (semente antes das
+   fichas) ou fixar o texto literal no contrato; paralelizar as duas tarefas sem essa trava reabre
+   inconsistência de texto (OD-D16-019 nesta rodada, mesma classe do item 2 de R-0009).
+5. **Falha de API (529) em worker** — redespacho idêntico sob o mesmo `PC-`, registrado em
+   §Triagem, nunca contado como iteração nem como achado.
 
 ## Arquivos deste método
 

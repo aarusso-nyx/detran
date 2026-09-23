@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0010",
+  "round_id": "R-0015",
+  "status": "pending",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-frontend",
+  "title": "Implementar o módulo web sinistros e os 14 schemas",
+  "description": "Implementar as cinco telas web em apps/teat/web e os 14 schemas/gates fechados pelo contrato, sem editar testes.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-teat-web-sinistros", "MOD-boat-mobile-forms"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0008",
+  "db_isolation": "none",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 6,
+  "tags": ["wp-b4", "wp-b5", "ctg-0002"],
+  "branch": "orchestra/boat-mobile",
+  "worktree_id": "WT-boat-mobile",
+  "prompt_composition_id": "PC-0000000000000000",
+  "acceptance_commands": [
+    ["pnpm", "--filter", "@detran/teat-web", "lint"],
+    ["pnpm", "--filter", "@detran/teat-web", "typecheck"],
+    ["pnpm", "--filter", "@detran/teat-web", "test"],
+    ["pnpm", "--filter", "@detran/teat-web", "build"]
+  ],
+  "created_at": "2026-09-22T20:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-5.6-luna",
+    "effort": "high",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-5.6-luna"
+    },
+    "prompt_composition_id": "PC-0000000000000000",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

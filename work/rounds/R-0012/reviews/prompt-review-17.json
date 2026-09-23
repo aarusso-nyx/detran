@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0012",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0012/prompts/TASK-0013.md",
+      "line": 29,
+      "claim": "A lista fechada manda ler o manual `transcriber-docs.md`, mas esse manual exige também fontes que não constam da lista, como `rait-build-pack.md` §0/WP-C, jornadas, `IU-RAIT-001`, catálogo de erros e glossário. O worker não consegue obedecer simultaneamente ao manual e à proibição de ler além da lista.",
+      "fix": "Incluir explicitamente as fontes obrigatórias do manual que são necessárias para esta transcrição, ou delimitar no prompt uma exceção canônica aprovada para a leitura do manual."
+    },
+    {
+      "severity": "high",
+      "item": 10,
+      "file": "work/rounds/R-0012/prompts/TASK-0013.md",
+      "line": 26,
+      "claim": "O prompt diz seguir o formato da §F, mas define a tabela de OD com quatro colunas e omite `Decisor`; a tabela canônica da §F possui `ID | Questão | Premissa adotada | Decisor | Fonte`. Isso perde a autoridade de cada decisão transcrita.",
+      "fix": "Exigir a coluna `Decisor` e transcrever o decisor canônico de cada OD, preservando a tabela de cinco colunas da §F."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0012/prompts/TASK-0013.md",
+      "line": 83,
+      "claim": "O segundo comando de aceitação contém a elipse literal (`grep -n \"^## G\\.\" …`), portanto não é um comando executável nem identifica o arquivo a verificar; o primeiro critério também aceita mais de 54 ocorrências sem detectar duplicação.",
+      "fix": "Substituir por comandos completos e determinísticos, por exemplo testar exatamente uma seção G no arquivo e exatamente 54 IDs distintos `OD-R12-001…054`."
+    }
+  ],
+  "notes": []
+}

@@ -1,0 +1,35 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Collection commands",
+    "version": "1.0.0",
+    "x-blueprint": "BP-INF-COLLECTION-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/inf/collection/collection-documents": {
+      "post": {
+        "operationId": "collectionDocumentIssue",
+        "responses": { "201": { "description": "Documento emitido" } }
+      }
+    },
+    "/v1/inf/collection/payments/reconcile": {
+      "post": {
+        "operationId": "collectionPaymentReconcile",
+        "responses": { "201": { "description": "Pagamento conciliado" } }
+      }
+    },
+    "/v1/inf/collection/refund-orders": {
+      "post": {
+        "operationId": "collectionRefundOrder",
+        "responses": { "201": { "description": "Restituição ordenada" } }
+      }
+    },
+    "/v1/inf/collection/debt-handoffs": {
+      "post": {
+        "operationId": "collectionDebtHandoff",
+        "responses": { "201": { "description": "Dívida encaminhada" } }
+      }
+    }
+  }
+}

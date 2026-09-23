@@ -1,0 +1,259 @@
+{
+  "action": "Deliver R-0012 CTG-0002c (WP-E) and the round's closure documentation: form-gate.ts and the 16 zod form schemas with their transition gates (pre-state, roles, preconditions, command, post-state, catalogue error codes), the rait/no-client-deadline-math and rait/no-static-token-i18n-key ESLint rules wired into the app, 152 rait.forms.* keys, 22 Inspector specs (25 gates × 13 roles = 325 authorization tests, 2 RuleTester suites); build pack §WP-D/E/F marked executed with the real gates, rait-web-frontend.md §11/§12/§13, open-decisions-rait.md §G (OD-R12-001…054), backlog, waves.md history and orchestra README §10 lessons.",
+  "round": "R-0012",
+  "coupled_task_group": "CTG-0002c",
+  "role": "engineer",
+  "commits": [
+    "c1fca50f87577dbb4af639fa756e4214dfd650e4",
+    "4b0fcc1c4bfb867093cdd008f5c1949913910a3f",
+    "eb9ce44c5c66521256b929633486373eb10dbdc0",
+    "9639538c908de2f804c34d67c9d1b28bc6b29aaf"
+  ],
+  "artifacts": [
+    {
+      "path": "apps/rait/web/src/app/forms/ato-suspensao.schema.spec.ts",
+      "sha256": "419bd2135e0b4182e0c3982641e50bcb5c013b87526cd8bdacd6984c3c9cf73e"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/ato-suspensao.schema.ts",
+      "sha256": "01d657f451be127411ded904eeee37787aa11a0992d463843dd442c3d0e56a57"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/decisao-autoridade.schema.spec.ts",
+      "sha256": "901213844b573223b914fee603830da55d156775db4d0a29a0d6f005d09b99c2"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/decisao-autoridade.schema.ts",
+      "sha256": "6c3d0ae506708d33352e51c2129238853f067e2c8640ac55b5e0ba60724f0e54"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/desistencia.schema.spec.ts",
+      "sha256": "157ea03f1ac72b38722ee6d48442cc2d01640edfbe2205279fcd08d32fa6f788"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/desistencia.schema.ts",
+      "sha256": "eaa0ef9f5cf29da54c8e7ae1363e3b3bd6df5452096f4900ad9fb3bf33973d7d"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/diligencia.schema.spec.ts",
+      "sha256": "3b1c6a25476bb82e02f0731ef9678a5b0e1e797e5986f9bbacd9bca40a148f54"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/diligencia.schema.ts",
+      "sha256": "6d1499fd6eb27ce73eefca148ba51ac9127ec45585b8cf7bbc4fdfee8d4be008"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/escala.schema.spec.ts",
+      "sha256": "2015b743e5f28fa1728ab44bccc6d018a4223a53d7f7099da8a37d67a31ea222"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/escala.schema.ts",
+      "sha256": "c11ca140c70619db61978561503d502b532ece6aaf404f42d0dae9b8ae4ae7b1"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/exportacao.schema.spec.ts",
+      "sha256": "412494b492de653ab5968b617720b7aa398991950501845b37fe174b1dcbb516"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/exportacao.schema.ts",
+      "sha256": "1a60880be017241c0d7af26750dc9f1cb931da5ddd6fda80337bd8c453b74de0"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/form-gate.spec.ts",
+      "sha256": "2c865e4a31b06d9379a7d3b99b4d39cc3ed9b50b622f541325b22b581a510519"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/form-gate.ts",
+      "sha256": "9b00f8fec1fa3fe073b72eea24df4cc76f316ef2dc58cb131dd2b564664615f8"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/gates-matrix.spec.ts",
+      "sha256": "6caad504d209bd23b7ad45357867dce1e612ba04da53c50b6d0dddf4ed0eba86"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/intake-fisico.schema.spec.ts",
+      "sha256": "d3ed6fbeda2534cde9acd7ff989e680da84ca1bb476c5c557012d611d961b72e"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/intake-fisico.schema.ts",
+      "sha256": "a8cc6c311554aa2a5d07a8a7342a0b510dd2061f974444db162458a7a8db86cf"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/lote-sorteio.schema.spec.ts",
+      "sha256": "6759812cdb562bedcec70be3311c59ffb3a0791940e88d2cab125f5cbc81e0de"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/lote-sorteio.schema.ts",
+      "sha256": "02f85e2144cc7181a52cc97386838c635f14d28339c538f18b2aa5daed959189"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/mandato.schema.spec.ts",
+      "sha256": "de9e937f412b54b14ee666df10d38ea0084e115da76be54631a644fbb3f17afd"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/mandato.schema.ts",
+      "sha256": "ec577f9338edeffb75fb12b2fd192b6ab7f15d8c8aff555364218ae5c5accfa6"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/minuta.schema.spec.ts",
+      "sha256": "466e9891079ecce5608d0f4c70599131c540b6c0c14248989f62627b571fcb99"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/minuta.schema.ts",
+      "sha256": "3964e842cf88caf1678b0ce80c5c71c89a8635531a29a61e8726084837adb941"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/parametro.schema.spec.ts",
+      "sha256": "0743b40c89231ec90eb84bc94a3fac2737ea0e6424dcabfd7021c8ac20975bf5"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/parametro.schema.ts",
+      "sha256": "0876ffa1e7e4edc06fdaa23fa28db35b8a2fb80a0e49836ddad200703eed1d89"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/parecer-voto.schema.spec.ts",
+      "sha256": "402a17b4be45444416b48340a263e6ca8b0bf812ba6c21fd228b234d3fbcff41"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/parecer-voto.schema.ts",
+      "sha256": "b2b7b1bc3a26ccaaaaf3753a77303dcc3b5a1c1f832cb7df76a90e2c6649954a"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/pauta.schema.spec.ts",
+      "sha256": "04dfde9a54b8d900925a26c1270f4b172dda0fb0565a7b2d594856dc9310d2d3"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/pauta.schema.ts",
+      "sha256": "404bfa9efd935ded05eecea8f0f531bab7728522d0d8474a501ebf1d5c999940"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/reatribuicao.schema.spec.ts",
+      "sha256": "548a4d1bbc1bd8e4a2372dc48d0b8e8b63c7a6e8d421d14ecb771b62507808e9"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/reatribuicao.schema.ts",
+      "sha256": "a0b73d4c4c8cf3f020cf1e131050eabc2980a8661839d9c0985042663af71307"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/schemas-matrix.spec.ts",
+      "sha256": "635da82362fcab358b16618f968c7340b4cc77e605bdf011b5c3e1deb99af8d6"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/sessao-ao-vivo.schema.spec.ts",
+      "sha256": "f820613c6d4a514e7ed45cb88b46f60d4393b595c78ed678546a93b99cc70e33"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/sessao-ao-vivo.schema.ts",
+      "sha256": "73d82e40151054913549bccd158ca1f8a854f469352820f3d99637c3b7134ec9"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/triagem.schema.spec.ts",
+      "sha256": "dfeec5b0cc928f683ae256d7b4e61843115967fd09bac6f9538c229a70a035ca"
+    },
+    {
+      "path": "apps/rait/web/src/app/forms/triagem.schema.ts",
+      "sha256": "50e0c789997153f40162d17e2a3ff381cf22fd84ecadc1f1e2a153a155799a9d"
+    },
+    {
+      "path": "apps/rait/web/src/app/lint/no-client-deadline-math.spec.ts",
+      "sha256": "d4620db7d2f5350e7f410cad4589cf151c0806afb0de49d791b6d4c97bcd4a3f"
+    },
+    {
+      "path": "apps/rait/web/src/app/lint/no-static-token-i18n-key.spec.ts",
+      "sha256": "1d8408adc63b075b233352da53336f5bf19156699e44b5fd1b25cdd656b66db7"
+    },
+    {
+      "path": "apps/rait/web/eslint/local-rules.js",
+      "sha256": "d8fdfd3b7b93509d5776f450cd5af73b556cccfdfbc57d56ba5eef524ce910bf"
+    },
+    {
+      "path": "apps/rait/web/eslint/local-rules.d.ts",
+      "sha256": "88b01ae086d0c019e13804baabc85550b52569c539db699c7494970aa80e86e6"
+    },
+    {
+      "path": "apps/rait/web/eslint.config.js",
+      "sha256": "060f81d5a26d6ae9f88697bc43285af23ba2d2578a4feb1246a8642091895b66"
+    },
+    {
+      "path": "apps/rait/web/src/testing/gates.fixture.ts",
+      "sha256": "9d617934236895680fb3d64a17c94ece7907682c0389a1f88576083b909aa898"
+    },
+    {
+      "path": "apps/rait/web/src/app/i18n/rait.pt-BR.json",
+      "sha256": "7145c67899da4e8fd3216ebd15ae2b1486b6b63670d43cfdb5dc1b04d6a2e370"
+    },
+    {
+      "path": "work/rounds/R-0012/contracts/CTG-0002c.md",
+      "sha256": "6aceb12cfb84f2c6cbd2d08aec4adc72831d249a79d0f4cc869a02cfe43212e3"
+    },
+    {
+      "path": "docs/framework/arch/rait-web-forms.md",
+      "sha256": "7629b68a82ad2fa8e667ff803f7ee04b19e0062fce627ddbab15ca74dd1a10b3"
+    },
+    {
+      "path": "docs/framework/arch/rait-build-pack.md",
+      "sha256": "ef8520035255b5617c199c3b809371d888a8d81c37f9f2ef80dafab294e93231"
+    },
+    {
+      "path": "docs/framework/arch/rait-web-frontend.md",
+      "sha256": "0b0e4a8d8260aa3a706921cf5fff33f7b5a4ab125f203ee83d5bd3ac4c69fa56"
+    },
+    {
+      "path": "docs/meta/knowledge-base/open-decisions-rait.md",
+      "sha256": "a5919788dad2e17be30198688ea572ee24d12ee732f1c8904042996b178b0c22"
+    },
+    {
+      "path": "docs/meta/knowledge-base/backlog.md",
+      "sha256": "407164375b4005cd20365454efa47a994b2efe08834c78be128d4cec80344e71"
+    },
+    {
+      "path": "docs/meta/agents/orchestra/waves.md",
+      "sha256": "54e2358362013bda87b288d4c2f9d2ccbcb6d234c6d78c665cace8a22463a624"
+    },
+    {
+      "path": "docs/meta/agents/orchestra/README.md",
+      "sha256": "cd6b8f813b402f4c702b7c900dc93c9bf4bd9425f9e22dd9743eb8ca02bcedea"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm --filter @detran/rait-web typecheck|lint|test|build",
+      "result": "pass",
+      "note": "Tests 4434 passed | 139 todo (4573); lint with both local rules; build without warnings"
+    },
+    {
+      "name": "pnpm verify:parameter-catalogue",
+      "result": "pass",
+      "note": "OK (90 entries, 18 flags, 57 i18n namespaces)"
+    },
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "EXIT 0 (Engineer, TASK-0012)"
+    },
+    {
+      "name": "pnpm docs:kb:check / docs:kb:publish-check",
+      "result": "pass",
+      "note": "OK (756 artifacts, 446 canonical tokens); publication dry run OK"
+    },
+    {
+      "name": "pnpm format:check",
+      "result": "pass"
+    },
+    {
+      "name": "prompt-review (gpt-5.6-terra)",
+      "result": "pass",
+      "note": "cycles 12→14 (TASK-0010, B3), 15→16 (workers), 17→18 (TASK-0013)"
+    },
+    {
+      "name": "delivery-review (gpt-5.6-terra)",
+      "result": "pass",
+      "note": "PASS on the first cycle"
+    }
+  ],
+  "tasks": ["TASK-0010", "TASK-0017", "TASK-0011", "TASK-0012", "TASK-0013"],
+  "decisions": [
+    "plan.md A1–A16; B1–B5",
+    "OD-R12-001…054 recorded in open-decisions-rait.md §G (none closed)"
+  ]
+}

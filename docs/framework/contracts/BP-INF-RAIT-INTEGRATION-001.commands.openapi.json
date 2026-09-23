@@ -1,0 +1,38 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "RAIT Integration and stream commands",
+    "version": "1.0.0",
+    "x-blueprint": "BP-INF-RAIT-INTEGRATION-001",
+    "x-commands": true
+  },
+  "paths": {
+    "/v1/inf/rait/integrations/outbox": {
+      "get": {
+        "operationId": "raitIntegrationOutboxList",
+        "responses": { "200": { "description": "Outbox listado" } }
+      }
+    },
+    "/v1/inf/rait/integrations/outbox/{id}/retry": {
+      "post": {
+        "operationId": "raitIntegrationOutboxRetry",
+        "responses": { "200": { "description": "Retry solicitado" } }
+      }
+    },
+    "/v1/inf/rait/integrations/reconciliations": {
+      "post": {
+        "operationId": "raitIntegrationReconcile",
+        "responses": { "201": { "description": "Conciliação solicitada" } }
+      }
+    },
+    "/v1/inf/rait/stream": {
+      "get": {
+        "operationId": "raitStreamRead",
+        "responses": {
+          "200": { "description": "Fluxo SSE" },
+          "204": { "description": "Cursor expirado" }
+        }
+      }
+    }
+  }
+}

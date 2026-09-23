@@ -1,6 +1,6 @@
 # Prompt do maestro — orquestra `boat-mobile` (rodada `R-0015`)
 
-> Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `Anthropic — Claude Code com Fable 5.1`
+> Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `OpenAI — Codex CLI com GPT-5.6 Sol`
 > (Claude Code com Fable 5.1, ou Codex CLI com GPT-5.6 Sol), aberta na worktree `/Volumes/Thiamat II/stech/detran-worktrees/boat-mobile`.
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;
 > não há contexto anterior a recuperar.
@@ -11,16 +11,16 @@
 - Declare, na primeira linha da sua primeira resposta, o papel constitucional em que atua em cada
   fase: **Architect** ao planejar e revisar, **Engineer** ao commitar código, **Auditor** nunca
   (o reviewer é a outra família). Os workers declaram o papel deles no próprio prompt.
-- Família dos seus workers: **a sua** (`Anthropic — Claude Code com Fable 5.1`), por subagentes nativos da sua CLI.
-  Família do reviewer: **a outra** (`codex`), modelo `gpt-5.6-terra`, sempre
+- Família dos seus workers: **a sua** (`OpenAI — Codex CLI com GPT-5.6 Sol`), por subagentes nativos da sua CLI.
+  Família do reviewer: **a outra** (`claude`), modelo `opus`, sempre
   pela ponte `tools/orchestra/bridge.sh`. Nunca inverta.
-- Orçamento desta janela de 5 h: **frente prevista para 3 janela(s); nesta janela, um planejamento de maestro + até 7 tarefas de worker (Opus/Sonnet) com revisões — ≈ 700 k tokens de entrada; ao atingir 80 % grave checkpoint**. Contabilize em
+- Orçamento desta janela de 5 h: **frente prevista para 3 janela(s); nesta janela, um planejamento de maestro + até 7 tarefas de worker (Terra/Luna) com revisões — ≈ 800 k tokens de entrada; ao atingir 80 % grave checkpoint**. Contabilize em
   `work/rounds/R-0015/budget.json` (uma linha por tarefa e por chamada ao reviewer, com
   estimativas de tokens de entrada e saída). Se esgotar, grave `checkpoint` (§9) e pare.
 - Você é o único que executa `git`. Workers não commitam, não fazem push, não abrem PR.
 - Concorrência (regra de `waves.md`): para **abrir** esta frente basta `origin/main` atualizado
   (≥ 80d705a, PR #31) — nunca pare por upstream ainda não mesclado. O que depende de upstream é o
-  **merge de cada grupo acoplado**: **CTG-0001 (17 fichas, i18n, transições): nenhum upstream. CTG-0002 (biblioteca mobile, módulo `sinistros` web, formulários): `boat-backend` R-0010 já em `main` (PC-0008); falta `teat-frontends` R-0013 CTG-0004 (shell de campo e `apps/teat/web`) — empilhar em `orchestra/teat-frontends` quando os apps existirem ou gravar checkpoint após o CTG-0001. Padrão de scaffold em `main` (`apps/portal/web`); allowlist i18n existe: acrescentar `boat.*`**. No bootstrap, registre em `plan.md`
+  **merge de cada grupo acoplado**: **CTG-0001 (17 fichas `IU-BOAT-S/W-nn`, `i18n/boat.pt-BR.json`, `transitions.ts` 149 + S-12): nenhum upstream. CTG-0002 (biblioteca mobile `@detran/boat-mobile` carregada pelo shell de campo, módulo `sinistros` em `apps/teat/web`, 14 schemas): `boat-backend` R-0010 já em `main` (PC-0008); falta `teat-frontends` R-0013 CTG-0004 (shell e `apps/teat/web`, ainda não iniciado) — empilhe em `orchestra/teat-frontends` quando os apps existirem ou grave checkpoint após o CTG-0001. Padrão de scaffold em `main` (`apps/portal/web`, R-0014): copiar. Allowlist i18n existe (`parameter-catalogue.md` §Namespaces i18n): acrescentar as linhas `boat.*`. Troca de família decidida pelo Owner em 2026-09-21: maestro GPT-5.6 Sol (Codex CLI), workers Terra/Luna, reviewer `claude opus` pela ponte — registre em `waves.md` (coluna Maestro e §Histórico) na tarefa de documentação**. No bootstrap, registre em `plan.md`
   §Concorrência quais upstreams já estão em `main` (`git log --oneline -30 origin/main`,
   `gh pr list --state merged --limit 20`), quais grupos estão liberados para merge e quais serão
   desenvolvidos sobre base empilhada (§1). Grupos livres avançam sempre; grupos presos aguardam ou
@@ -156,7 +156,7 @@ Monte `reviews/prompt-review-<n>.md` com `docs/meta/agents/orchestra/reviewer-pr
 em modo `prompt-review`, anexando `plan.md` e todos os `prompts/*.md`. Invoque:
 
 ```bash
-tools/orchestra/bridge.sh codex gpt-5.6-terra work/rounds/R-0015/reviews/prompt-review-1.md work/rounds/R-0015/reviews/prompt-review-1.json /Volumes/Thiamat II/stech/detran-worktrees/boat-mobile
+tools/orchestra/bridge.sh claude opus work/rounds/R-0015/reviews/prompt-review-1.md work/rounds/R-0015/reviews/prompt-review-1.json /Volumes/Thiamat II/stech/detran-worktrees/boat-mobile
 ```
 
 Leia o veredito. `REVIEW` → corrija os prompts apontados e repita (máximo 2 ciclos). `FAIL` ou
