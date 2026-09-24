@@ -1,9 +1,11 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Directive,
   inject,
+  PendingTasks,
   type OnInit,
   signal,
   type Type,
@@ -29,12 +31,17 @@ abstract class BoatRouteBoundary implements OnInit {
   readonly externalComponent = signal<Type<unknown> | null>(null);
   protected abstract readonly routePath: string;
   private readonly extension = inject(TEAT_BOAT_EXTENSION);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly pendingTasks = inject(PendingTasks);
 
   ngOnInit(): void {
-    void resolveBoatRoute(this.routePath, this.extension).then((result) => {
-      if (result.kind === 'loaded' && typeof result.component === 'function') {
-        this.externalComponent.set(result.component as Type<unknown>);
+    void this.pendingTasks.run(async () => {
+      const result = await resolveBoatRoute(this.routePath, this.extension);
+      if (result.kind !== 'loaded' || typeof result.component !== 'function') {
+        return;
       }
+      this.externalComponent.set(result.component as Type<unknown>);
+      this.changeDetector.detectChanges();
     });
   }
 }
