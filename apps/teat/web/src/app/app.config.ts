@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { provideRouter, withRouterConfig, type Routes } from '@angular/router';
 import { provideDetranAuthenticatedApp } from '@detran/ui';
+import { BOAT_PT_BR_CATALOG } from '@detran/boat-mobile';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { TenantContextService } from '@stynx-nyx/angular-tenancy';
 
@@ -138,6 +139,6 @@ export const teatAuthenticatedProvider = provideDetranAuthenticatedApp({
   i18n: {
     defaultLocale: 'pt-BR',
     supportedLocales: ['pt-BR'],
-    loadCatalog: async () => catalog,
+    loadCatalog: async () => ({ ...catalog, ...BOAT_PT_BR_CATALOG }),
   },
 });

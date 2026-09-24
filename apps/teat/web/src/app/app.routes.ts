@@ -1,8 +1,9 @@
-import type { Routes } from '@angular/router';
+import type { Routes, UrlSegment } from '@angular/router';
 
 import type { TeatWebRole } from './core/roles.js';
 import { deniedNavigationMatcher, denyNavigation } from './core/guards.js';
 import { operationalRoute } from './data/route-contract.js';
+import { SUBJECT_REQUEST_ROUTE } from './features/sinistros/sinistros.routes.js';
 
 const ALL_ROLES: readonly TeatWebRole[] = [
   'field-agent',
@@ -15,6 +16,14 @@ const ALL_ROLES: readonly TeatWebRole[] = [
   'bi-analyst',
   'integration-operator',
 ];
+
+const subjectRequestDeniedMatcher = (segments: UrlSegment[]) => {
+  const expected = ['fiscalizacao', 'sinistros', 'titular'];
+  return segments.length === expected.length &&
+    segments.every((segment, index) => segment.path === expected[index])
+    ? { consumed: segments }
+    : null;
+};
 
 export const TEAT_ROUTES: Routes = [
   {
@@ -58,10 +67,16 @@ export const TEAT_ROUTES: Routes = [
       {
         path: '',
         loadChildren: () =>
-          import('./features/crashes/crashes.routes.js').then(
-            (module) => module.CRASHES_ROUTES,
+          import('./features/sinistros/sinistros.routes.js').then(
+            (module) => module.SINISTROS_ROUTES,
           ),
       },
+    ],
+  },
+  SUBJECT_REQUEST_ROUTE,
+  {
+    path: 'ux/web',
+    children: [
       {
         path: '',
         loadChildren: () =>
@@ -109,6 +124,14 @@ export const TEAT_ROUTES: Routes = [
   operationalRoute('acesso-negado', ALL_ROLES, 'teat.navigation.accessDenied'),
   operationalRoute('conta', ALL_ROLES, 'teat.navigation.account'),
   operationalRoute('erro', ALL_ROLES, 'teat.navigation.error'),
+  {
+    matcher: subjectRequestDeniedMatcher,
+    canActivate: [denyNavigation],
+    loadComponent: async () =>
+      import('./shared/product-page.component.js').then(
+        (module) => module.ProductPageComponent,
+      ),
+  },
   operationalRoute('**', ALL_ROLES, 'teat.navigation.error'),
   {
     matcher: deniedNavigationMatcher,

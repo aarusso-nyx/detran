@@ -28,3 +28,20 @@ export {
   VictimCardComponent,
 } from './lib/shared/boat-shared.components.js';
 export { victimAccessGuard } from './lib/victim-access.guard.js';
+export {
+  crashComplementSchema,
+  crashConditionsSchema,
+  crashDamagesSchema,
+  crashDynamicsSchema,
+  crashEvidenceSchema,
+  crashLocationSchema,
+  crashPeopleSchema,
+  crashReviewSchema,
+  crashSketchSchema,
+  crashStartSchema,
+  crashVehiclesSchema,
+  crashVictimsSchema,
+  renaestSchema,
+  subjectRequestSchema,
+} from './lib/forms/schemas.js';
+export { BOAT_GATES } from './lib/forms/gates.js';
