@@ -6,6 +6,11 @@ import type {
   MobileSessionContext,
   MobileSyncQueueItem,
 } from '@stynx-nyx/mobile-runtime';
+import {
+  BootstrapStore,
+  type BootstrapSnapshot,
+} from '../core/bootstrap.store.js';
+import { ReadinessGateService } from '../core/readiness-gate.service.js';
 import { AitClient } from '../data/api/ait.client.js';
 import { AlcoholClient } from '../data/api/alcohol.client.js';
 import { MeasuresClient } from '../data/api/measures.client.js';
@@ -14,6 +19,7 @@ import { OfflineSyncClient } from '../data/api/offline-sync.client.js';
 import { OpsSnapshotsClient } from '../data/api/ops-snapshots.client.js';
 import {
   LocalActStore,
+  type LocalAitDraft,
   type LocalEntityType,
 } from '../data/local/local-act.store.js';
 import { aitCancelRequestSchema } from '../data/local/ait-cancel-request.schema.js';
@@ -30,11 +36,16 @@ import { alcoholResultSchema } from '../data/local/alcohol-result.schema.js';
 import { measureTermSchema } from '../data/local/measure-term.schema.js';
 import { openShiftSchema } from '../data/local/open-shift.schema.js';
 import { syncConflictSchema } from '../data/local/sync-conflict.schema.js';
+import {
+  type InstalledNormativePackage,
+  NormativePackageService,
+} from '../data/normative/normative-package.service.js';
 import { authGuard } from '../navigation/guards/auth.guard.js';
 import { readinessGuard } from '../navigation/guards/readiness.guard.js';
 import { roleGuard } from '../navigation/guards/role.guard.js';
 import { shiftGuard } from '../navigation/guards/shift.guard.js';
 import { tenantGuard } from '../navigation/guards/tenant.guard.js';
+import { TEAT_HOMOLOGATION_AIT } from './homologation-ait.port.js';
 
 export interface TeatRouteContract {
   readonly path: string;
@@ -101,6 +112,7 @@ export interface MobilePageIntegration {
     context?: MobileCommandContext,
   ): Promise<
     | Readonly<{ kind: 'persisted'; localEntityId: string }>
+    | Readonly<{ kind: 'demonstrated'; localEntityId: string }>
     | Readonly<{ kind: 'blocked'; reason: 'source_pending' | 'not-ready' }>
   >;
 }
@@ -125,6 +137,78 @@ export interface DurableMobileSyncQueueItem extends MobileSyncQueueItem<LocalEnt
   readonly commandContext: MobileCommandContext;
 }
 
+export interface AitReviewAuthorityInput {
+  readonly payload: Readonly<Record<string, unknown>>;
+  readonly context: MobileCommandContext;
+  readonly snapshot: BootstrapSnapshot | undefined;
+  readonly installed: InstalledNormativePackage | undefined;
+  readonly now: string;
+}
+
+export type AitReviewAuthorityResult =
+  | Readonly<{ allowed: true }>
+  | Readonly<{
+      allowed: false;
+      reason: 'context-invalid' | 'numbering-invalid' | 'package-invalid';
+    }>;
+
+export function evaluateAitReviewAuthority(
+  input: AitReviewAuthorityInput,
+): AitReviewAuthorityResult {
+  const { context, installed, payload, snapshot } = input;
+  const now = Date.parse(input.now);
+  if (
+    !hasCompleteReviewContext(context) ||
+    !Number.isFinite(now) ||
+    snapshot === undefined ||
+    !Number.isFinite(Date.parse(snapshot.snapshot?.validUntil ?? '')) ||
+    Date.parse(snapshot.snapshot?.validUntil ?? '') <= now ||
+    snapshot.context.tenantId !== context.session.tenantId ||
+    snapshot.context.device.id !== context.session.deviceId ||
+    snapshot.context.agent.id !== context.session.agentId ||
+    snapshot.context.activeShift?.id !== context.session.shiftId ||
+    snapshot.context.activeShift.status !== 'open' ||
+    payload['explicit_action'] !== 'finalize'
+  ) {
+    return { allowed: false, reason: 'context-invalid' };
+  }
+
+  const reservation = snapshot.numberingReservations.find(
+    (candidate) =>
+      isRecord(candidate) &&
+      candidate['id'] === context.reservationId &&
+      candidate['status'] === 'reserved' &&
+      Number.isSafeInteger(candidate['startNumber']) &&
+      Number.isSafeInteger(candidate['endNumber']) &&
+      context.reservedNumber >= Number(candidate['startNumber']) &&
+      context.reservedNumber <= Number(candidate['endNumber']) &&
+      typeof candidate['validUntil'] === 'string' &&
+      Number.isFinite(Date.parse(candidate['validUntil'])) &&
+      Date.parse(candidate['validUntil']) > now,
+  );
+  if (
+    reservation === undefined ||
+    payload['reserved_number'] !== String(context.reservedNumber)
+  ) {
+    return { allowed: false, reason: 'numbering-invalid' };
+  }
+
+  const normativeAuthority = snapshot.normativePackage;
+  if (
+    installed === undefined ||
+    normativeAuthority?.status !== 'published' ||
+    installed.id !== context.normativePackageId ||
+    installed.id !== normativeAuthority.id ||
+    installed.version !== context.normativePackageVersion ||
+    installed.version !== normativeAuthority.version ||
+    !nonEmptyString(installed.manifestHash) ||
+    installed.manifestHash !== normativeAuthority.manifestHash
+  ) {
+    return { allowed: false, reason: 'package-invalid' };
+  }
+  return { allowed: true };
+}
+
 const SCHEMA_RUNTIME_BY_SCREEN: Readonly<Record<string, unknown>> = {
   'open-shift': openShiftSchema,
   'ait-vehicle': aitVehicleSchema,
@@ -146,6 +230,14 @@ const SCHEMA_RUNTIME_BY_SCREEN: Readonly<Record<string, unknown>> = {
 export class MobilePageRuntime {
   private readonly injector = inject(Injector);
   private readonly localStore = inject(LocalActStore);
+  private readonly bootstrap = inject(BootstrapStore, { optional: true });
+  private readonly readiness = inject(ReadinessGateService);
+  private readonly normativePackages = inject(NormativePackageService, {
+    optional: true,
+  });
+  private readonly homologationAit = inject(TEAT_HOMOLOGATION_AIT, {
+    optional: true,
+  });
 
   load(contract: MobilePageContract): MobilePageIntegration {
     const clientType = clientTypeForScreen(contract.screenId);
@@ -169,6 +261,14 @@ export class MobilePageRuntime {
           : { kind: 'loaded' },
       submit: async (input: unknown, context?: MobileCommandContext) => {
         if (sourcePending) return { kind: 'blocked', reason: 'source_pending' };
+        if (this.homologationAit?.profile === 'homologation') {
+          if (contract.screenId === 'ait-start') {
+            return this.homologationAit.start(input, context);
+          }
+          if (contract.screenId === 'ait-review') {
+            return this.homologationAit.review(input, context);
+          }
+        }
         if (schema !== undefined && 'safeParse' in Object(schema)) {
           const parsed = (
             schema as {
@@ -189,10 +289,104 @@ export class MobilePageRuntime {
           return { kind: 'blocked', reason: 'not-ready' };
         }
         const payload = input as Record<string, unknown>;
+        if (
+          contract.screenId === 'ait-review' &&
+          !(await this.reviewCanFinalize(payload, context))
+        ) {
+          return { kind: 'blocked', reason: 'not-ready' };
+        }
         const location = context.location;
         const finalizing =
           contract.screenId === 'ait-review' &&
           payload['explicit_action'] === 'finalize';
+        if (contract.screenId === 'ait-start') {
+          if (context.entityType !== 'ait') {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+          if (!(await this.currentAitAuthorityMatches(context))) {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+          const unnumberedPayload = { ...payload };
+          delete unnumberedPayload['reserved_number'];
+          const firstDraft = {
+            localId: context.localEntityId,
+            entityType: 'ait' as const,
+            tenantId: context.session.tenantId,
+            orgUnitId: context.session.orgUnitId,
+            agentId: context.session.agentId,
+            deviceId: context.session.deviceId,
+            shiftId: context.session.shiftId,
+            idempotencyKey: context.idempotencyKey,
+            normativePackageId: context.normativePackageId,
+            normativePackageVersion: context.normativePackageVersion,
+            localContentHash: context.payloadHash,
+            payload: unnumberedPayload,
+            location: context.location,
+            evidence: [],
+            createdAt: context.createdLocallyAt,
+            updatedAt: context.createdLocallyAt,
+            status: 'draft' as const,
+          };
+          const pin = this.localStore.pinAitNumberAndPutFirstDraft;
+          if (typeof pin !== 'function') {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+          try {
+            const pinned = await pin.call(this.localStore, {
+              reservationId: context.reservationId,
+              now: new Date().toISOString(),
+              scope: {
+                tenantId: context.session.tenantId,
+                agentId: context.session.agentId,
+                deviceId: context.session.deviceId,
+                shiftId: context.session.shiftId,
+              },
+              draft: firstDraft,
+            });
+            return {
+              kind: 'persisted',
+              localEntityId: pinned.localId,
+            };
+          } catch {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+        }
+        if (AIT_DRAFT_EDIT_SCREENS.has(contract.screenId)) {
+          if (context.entityType !== 'ait') {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+          const pinned = await this.localStore.draft(context.localEntityId);
+          if (!pinnedAitMatchesContext(pinned, context)) {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+          const current = pinned as LocalAitDraft;
+          if (
+            !Number.isSafeInteger(current.localRevision) ||
+            context.version !== current.localRevision
+          ) {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+          const replacement: LocalAitDraft = {
+            ...pinned,
+            localRevision: current.localRevision + 1,
+            payload: {
+              ...pinned.payload,
+              ...payload,
+              reserved_number: String(pinned.reservedNumber),
+            },
+            localContentHash: context.payloadHash,
+            updatedAt: context.createdLocallyAt,
+          };
+          try {
+            await this.localStore.transitionDraft(pinned, replacement);
+          } catch {
+            return { kind: 'blocked', reason: 'not-ready' };
+          }
+          return {
+            kind: 'persisted',
+            localEntityId: context.localEntityId,
+          };
+        }
         const targetVersion = finalizing
           ? context.version + 1
           : context.version;
@@ -255,6 +449,108 @@ export class MobilePageRuntime {
       },
     };
   }
+
+  private async reviewCanFinalize(
+    payload: Readonly<Record<string, unknown>>,
+    context: MobileCommandContext,
+  ): Promise<boolean> {
+    const now = new Date().toISOString();
+    const snapshot = this.bootstrap?.snapshot();
+    const installed = await this.normativePackages?.usable(now);
+    const authority = evaluateAitReviewAuthority({
+      payload,
+      context,
+      snapshot,
+      installed,
+      now,
+    });
+    if (!authority.allowed) return false;
+
+    const aggregate = await this.localStore.draft(context.localEntityId);
+    if (aggregate === undefined) return false;
+    // No executable authoritative AIT aggregate validator exists yet. A durable
+    // generic payload cannot prove that every blocking validation is green.
+    return false;
+  }
+
+  private async currentAitAuthorityMatches(
+    context: MobileCommandContext,
+  ): Promise<boolean> {
+    if (this.bootstrap?.state().status !== 'ready') return false;
+    const snapshot = this.bootstrap.snapshot();
+    const provisioning = this.bootstrap.provisioningSnapshot();
+    const now = new Date().toISOString();
+    if (
+      snapshot === undefined ||
+      snapshot.capabilities.canOperateOffline !== true ||
+      !this.readiness.evaluate({
+        bootstrap: snapshot,
+        provisioning,
+        now,
+        destination: 'ait-start',
+        preShift: false,
+      }).allowed ||
+      snapshot.context.tenantId !== context.session.tenantId ||
+      snapshot.context.agent.id !== context.session.agentId ||
+      snapshot.context.device.id !== context.session.deviceId ||
+      snapshot.context.activeShift?.status !== 'open' ||
+      snapshot.context.activeShift.id !== context.session.shiftId
+    ) {
+      return false;
+    }
+    const candidate = snapshot.numberingReservations.find(
+      (value) => isRecord(value) && value['id'] === context.reservationId,
+    );
+    const installed = await this.localStore.reservationAuthority(
+      context.reservationId,
+    );
+    if (!isRecord(candidate) || installed === undefined) return false;
+    const validUntil = Date.parse(String(candidate['validUntil'] ?? ''));
+    return (
+      candidate['status'] === 'reserved' &&
+      candidate['shiftId'] === snapshot.context.activeShift.id &&
+      candidate['rangeId'] === installed.rangeId &&
+      candidate['series'] === installed.series &&
+      candidate['startNumber'] === installed.startNumber &&
+      candidate['endNumber'] === installed.endNumber &&
+      candidate['validUntil'] === installed.validUntil &&
+      installed.tenantId === context.session.tenantId &&
+      installed.agentId === context.session.agentId &&
+      installed.deviceId === context.session.deviceId &&
+      installed.shiftId === context.session.shiftId &&
+      installed.status === 'reserved' &&
+      Number.isFinite(validUntil) &&
+      validUntil > Date.now()
+    );
+  }
+}
+
+function hasCompleteReviewContext(context: MobileCommandContext): boolean {
+  return (
+    isRecord(context) &&
+    isRecord(context.session) &&
+    nonEmptyString(context.session.tenantId) &&
+    nonEmptyString(context.session.agentId) &&
+    nonEmptyString(context.session.deviceId) &&
+    nonEmptyString(context.session.shiftId) &&
+    nonEmptyString(context.localEntityId) &&
+    context.entityType === 'ait' &&
+    nonEmptyString(context.createdLocallyAt) &&
+    Number.isFinite(Date.parse(context.createdLocallyAt)) &&
+    nonEmptyString(context.normativePackageId) &&
+    nonEmptyString(context.normativePackageVersion) &&
+    nonEmptyString(context.reservationId) &&
+    Number.isSafeInteger(context.reservedNumber) &&
+    context.reservedNumber > 0
+  );
+}
+
+function nonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
+  return typeof value === 'object' && value !== null;
 }
 
 function draftCanTransition(
@@ -282,6 +578,38 @@ function draftCanTransition(
 
 const STORE_SCREEN =
   /^(ait-|removal$|inventory$|transshipment$|measure-term$|measure-done$|alcohol-(device|result|refusal|signs|forward|links|term)$|sync$|sync-item$|diagnostics$|approach-no-ait$|document-check$|special-inspection$)/;
+
+const AIT_DRAFT_EDIT_SCREENS = new Set([
+  'ait-vehicle',
+  'ait-driver',
+  'ait-frame',
+  'ait-frame-detail',
+  'ait-location',
+  'ait-notes',
+  'ait-validations',
+  'ait-evidence',
+  'ait-measures',
+  'ait-signature',
+]);
+
+function pinnedAitMatchesContext(
+  draft: MobileEntityDraft<LocalEntityType> | undefined,
+  context: MobileCommandContext,
+): draft is MobileEntityDraft<'ait'> {
+  return (
+    draft !== undefined &&
+    draft.entityType === 'ait' &&
+    draft.status === 'draft' &&
+    draft.localId === context.localEntityId &&
+    draft.tenantId === context.session.tenantId &&
+    draft.agentId === context.session.agentId &&
+    draft.deviceId === context.session.deviceId &&
+    draft.shiftId === context.session.shiftId &&
+    draft.reservationId === context.reservationId &&
+    Number.isSafeInteger(draft.reservedNumber) &&
+    draft.reservedNumber > 0
+  );
+}
 
 function clientTypeForScreen(screenId: string): Type<object> | undefined {
   if (/^(open-shift|close-shift|device-handoff)$/.test(screenId)) {

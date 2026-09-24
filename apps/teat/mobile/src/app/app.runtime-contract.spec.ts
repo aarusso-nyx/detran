@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
 import { loadMobileRuntime } from '../testing/runtime-module';
 import { fixtureBootstrapReady } from '../testing/guard-fixtures';
 import { TEAT_ROUTES } from './app.routes';
@@ -14,10 +15,16 @@ async function concreteRoutes() {
   ).flat();
 }
 
-it('dado cada rota concreta quando os guardas são registrados então preservam auth, tenant, papel, readiness e turno nesta ordem', async () => {
+it('dado cada rota concreta quando os guardas são registrados então preservam entrada pública e auth, tenant, papel, readiness e turno nesta ordem', async () => {
   const routes = await concreteRoutes();
   expect(routes).toHaveLength(70);
   for (const route of routes) {
+    if (route.data?.['featureEnabled'] === false) {
+      expect(route.canMatch).toBeUndefined();
+      expect(route.redirectTo).toBeTypeOf('function');
+      expect(route.loadComponent).toBeUndefined();
+      continue;
+    }
     const guardPlan = String(route.data?.['guardPlan'] ?? '')
       .split(',')[0]
       .trim();
@@ -26,11 +33,15 @@ it('dado cada rota concreta quando os guardas são registrados então preservam 
         typeof guard === 'function' ? guard.name : guard,
       ),
     ).toEqual([
-      'authGuard',
-      'tenantGuard',
-      'roleGuard',
-      ...(guardPlan === 'R' ? [] : ['readinessGuard']),
-      ...(guardPlan === 'B+S' ? ['shiftGuard'] : []),
+      ...(guardPlan === 'E'
+        ? []
+        : [
+            'authGuard',
+            'tenantGuard',
+            'roleGuard',
+            ...(guardPlan === 'R' ? [] : ['readinessGuard']),
+            ...(guardPlan === 'B+S' ? ['shiftGuard'] : []),
+          ]),
     ]);
   }
 });
@@ -49,7 +60,15 @@ it('dado readiness tipado com campo obrigatório ausente ou sessão não exclusi
     };
   };
   const record = vi.fn();
-  const gate = new Gate({ record });
+  TestBed.configureTestingModule({
+    providers: [
+      {
+        provide: runtime['TEAT_READINESS_WARNING_SINK'],
+        useValue: { record },
+      },
+    ],
+  });
+  const gate = TestBed.inject(Gate);
   const context = fixtureBootstrapReady();
   const ready = {
     bootstrap: context.bootstrap,

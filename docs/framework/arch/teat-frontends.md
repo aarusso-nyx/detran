@@ -281,11 +281,19 @@ apps/teat/web/src/app/{core/{error-boundary},data,features,shared,i18n}
 
 ## 11. Dependências de backend e estado de entrega R-0013
 
+ADR-0033 redefine o aceite dos frontends de R-0013 como **homologação de UI e
+workflows**. Fluxos positivos com fixtures devem ser explícitos, sintéticos e
+segregados; não comprovam autoridade para ato real. App Android de produção,
+segredos/chaves, port de localização, validador AIT, ciclo de sincronização e
+prova no GMS820 (modelo já homologado como equipamento) pertencem a round
+posterior dedicado, R-0017 apenas candidato; issues
+[#108](https://github.com/aarusso-nyx/detran/issues/108)–[#112](https://github.com/aarusso-nyx/detran/issues/112).
+
 As superfícies de AIT, bootstrap/turno, numeração/sincronização, evidência, pacote normativo e
 provisionamento foram entregues nos CTGs precedentes; CTG-0003 foi mesclado pela PR #82. Mobile e
 web usam adapters `HttpClient` manuscritos, respectivamente em `data/api/*.client.ts` e
-`data/*.client.ts`, para aplicar os contratos do backend unificado. Os PASS de CTG-0004a e
-CTG-0004b permanecem candidatos sem merge, publicação ou deploy. KMS, Keystore,
+`data/*.client.ts`, para aplicar os contratos do backend unificado. Os PASS anteriores de CTG-0004a e
+CTG-0004b não cobrem a adenda e permanecem candidatos sem merge, publicação ou deploy. KMS, Keystore,
 criptografia/envelope/attestation de produção, bodycam real, adapters de hardware (inclusive
 impressora) e serviços nacionais continuam fora do escopo comprovado por fixtures/ports; lacunas
 de produto permanecem `source_pending` ou nas ODs já registradas.

@@ -46,14 +46,49 @@ export class ReadinessGateService {
     if (provisioning === undefined) blockers.push('provisioning-missing');
     if (Number.isNaN(Date.parse(input.now))) blockers.push('clock-invalid');
     if (bootstrap !== undefined) {
-      const snapshotValidUntil = Date.parse(bootstrap.snapshot?.validUntil);
+      const rawContext = bootstrap.context as unknown as Readonly<
+        Record<string, unknown>
+      >;
+      const hasShift = Object.prototype.hasOwnProperty.call(
+        rawContext,
+        'activeShift',
+      );
+      const hasSession = Object.prototype.hasOwnProperty.call(
+        rawContext,
+        'session',
+      );
+      const activeShift = hasShift ? bootstrap.context.activeShift : undefined;
+      const operationalSession = hasSession
+        ? bootstrap.context.session
+        : undefined;
+      const preShiftPair = activeShift === null && operationalSession === null;
+      const operationalPair =
+        activeShift !== undefined &&
+        activeShift !== null &&
+        operationalSession !== undefined &&
+        operationalSession !== null;
+      if (!hasShift || !hasSession || (!preShiftPair && !operationalPair)) {
+        blockers.push('shift-session-context-invalid');
+      }
+      const preShiftAllowed =
+        input.preShift === true &&
+        preShiftPair &&
+        bootstrap.readiness.preShiftReady === true &&
+        bootstrap.capabilities.canOpenShift === true;
+      if (input.preShift === true && !preShiftAllowed)
+        blockers.push('pre-shift-not-ready');
+      const snapshotValidUntil = Date.parse(
+        bootstrap.snapshot?.validUntil ?? '',
+      );
       if (
         !Number.isFinite(snapshotValidUntil) ||
         snapshotValidUntil <= Date.parse(input.now)
       ) {
         blockers.push('bootstrap-snapshot-expired');
       }
-      if (bootstrap.context.session.exclusive !== true)
+      if (operationalPair && operationalSession.exclusive !== true)
+        blockers.push('session-not-exclusive');
+      if (!preShiftPair && !operationalPair)
         blockers.push('session-not-exclusive');
       if (bootstrap.context.device.status !== 'authorized')
         blockers.push('device-not-authorized');
@@ -63,14 +98,19 @@ export class ReadinessGateService {
         blockers.push('device-tamper');
       if (!bootstrap.normativePackage.manifestHash)
         blockers.push('normative-package-missing');
-      if (bootstrap.numberingReservations.length === 0)
+      if (bootstrap.numberingReservations.length === 0 && !preShiftAllowed)
         blockers.push('numbering-reservation-missing');
-      if (
-        bootstrap.context.activeShift?.status !== 'open' &&
-        input.preShift !== true
-      )
+      if (activeShift?.status !== 'open' && !preShiftAllowed)
         blockers.push('shift-not-open');
-      blockers.push(...bootstrap.readiness.blockers);
+      blockers.push(
+        ...bootstrap.readiness.blockers.filter(
+          (blocker) =>
+            !preShiftAllowed ||
+            !['NUMBERING_RESERVATION_REQUIRED', 'SHIFT_NOT_OPEN'].includes(
+              blocker,
+            ),
+        ),
+      );
     }
     if (provisioning !== undefined) {
       if (!provisioning.ready) blockers.push('provisioning-not-ready');
@@ -91,7 +131,7 @@ export class ReadinessGateService {
       allowed: blockers.length === 0,
       blockers,
       warnings,
-      ...(validUntil === undefined ? {} : { validUntil }),
+      ...(typeof validUntil === 'string' ? { validUntil } : {}),
     };
   }
 }

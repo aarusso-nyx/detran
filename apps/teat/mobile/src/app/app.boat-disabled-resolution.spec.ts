@@ -1,13 +1,21 @@
 import { expect, it, vi } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import type { CanMatchFn, Route, UrlSegment } from '@angular/router';
+import {
+  provideRouter,
+  type CanMatchFn,
+  type Route,
+  type UrlSegment,
+} from '@angular/router';
 import {
   BOAT_ROUTE_PATHS,
   D05_ROUTE_PATH,
 } from '../testing/route-contract.fixture';
 import * as routesRuntime from './app.routes';
 import { loadConcreteRoutes } from '../testing/concrete-routes';
-import { fixtureBootstrapReady } from '../testing/guard-fixtures';
+import {
+  fixtureBootstrapReady,
+  guardContextPort,
+} from '../testing/guard-fixtures';
 import { TEAT_GUARD_CONTEXT } from './core/bootstrap.store';
 import { TEAT_BOAT_EXTENSION } from './navigation/guards/readiness.guard';
 
@@ -102,7 +110,11 @@ it('dadas rotas BOAT quando registradas então navegação direta usa canMatch d
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
-          { provide: TEAT_GUARD_CONTEXT, useValue: fixtureBootstrapReady() },
+          provideRouter([]),
+          {
+            provide: TEAT_GUARD_CONTEXT,
+            useValue: guardContextPort(fixtureBootstrapReady()),
+          },
           {
             provide: TEAT_BOAT_EXTENSION,
             useValue: { installed: () => installed, load: vi.fn() },

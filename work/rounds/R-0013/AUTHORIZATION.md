@@ -106,3 +106,18 @@ continuing the same focal corrective scope after the cycle-3 review exposed seve
 This resets once the same Architect/Inspector/Engineer tasks to `5/5`, `5/5` and `4/4`; it does not
 broaden beyond `CTG4A-R2-F001…F009`, does not authorize broad test suites for this correction and
 retains the requirement for an independent zero-finding focal review before CTG-0004b.
+
+## Amendment 7 — UI/workflow homologation and final closure (2026-09-23)
+
+The Owner explicitly decided that the mobile application being built in R-0013 is a UI and
+workflow homologation version. A production mobile application requiring institutional keys,
+secrets and device integration is a dedicated later round (R-0017 is a candidate only).
+ADR-0033 and the corrective CTG-0004a/b/5 prompts record the revised acceptance boundary;
+issues #108–#112 carry the postponed work. The Owner then directed resolution of the six
+remaining REDs and the procedure to close R-0013. This authorizes the scoped
+Architect → Inspector → Engineer correction, full gates, independent Codex-family review
+under the session-specific reviewer exception, and the original normal push/PR/merge/audit/
+round-close sequence when its gates actually pass. It does not authorize a production
+mobile release, protected keys/secrets in the repository, fixture-based official acts,
+force-push, bypass of checks, or weakening of tests. Prior narrow PASS verdicts do not
+cover this new candidate.

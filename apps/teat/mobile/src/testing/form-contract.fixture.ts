@@ -85,16 +85,10 @@ export const FORM_CONTRACT_FIXTURES: readonly FormContractFixture[] = [
   {
     modulePath: 'data/local/ait-review.schema',
     exportName: 'aitReviewSchema',
-    required: [
-      'blocking_validations_green',
-      'reserved_number',
-      'package_valid',
-      'explicit_action',
-    ],
+    required: ['validation_blockers', 'reserved_number', 'explicit_action'],
     validPayload: {
-      blocking_validations_green: true,
-      reserved_number: 'AIT-0001',
-      package_valid: true,
+      validation_blockers: [],
+      reserved_number: '101',
       explicit_action: 'finalize',
     },
   },

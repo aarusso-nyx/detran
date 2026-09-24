@@ -18,7 +18,8 @@ type DispatchResult =
         | 'missing-transition'
         | 'condition-unsatisfied'
         | 'unregistered-destination'
-        | 'unsafe-previous';
+        | 'unsafe-previous'
+        | 'navigation-rejected';
     }>;
 
 interface NavigationHistory {
@@ -78,15 +79,25 @@ export async function dispatchTransition(
     from: string;
     action: string;
     conditionSatisfied: boolean;
+    transitionIndex?: number;
   }>,
   router: { navigateByUrl(url: string): Promise<boolean> },
   location: { back(): void },
   history?: NavigationHistory,
 ): Promise<DispatchResult> {
-  const transition = TEAT_TRANSITIONS.find(
-    (candidate) =>
-      candidate.from === input.from && candidate.action === input.action,
-  );
+  const indexed =
+    input.transitionIndex === undefined
+      ? undefined
+      : TEAT_TRANSITIONS[input.transitionIndex];
+  const transition =
+    input.transitionIndex === undefined
+      ? TEAT_TRANSITIONS.find(
+          (candidate) =>
+            candidate.from === input.from && candidate.action === input.action,
+        )
+      : indexed?.from === input.from && indexed.action === input.action
+        ? indexed
+        : undefined;
   if (transition === undefined) {
     return { kind: 'denied', reason: 'missing-transition' };
   }
@@ -109,6 +120,7 @@ export async function dispatchTransition(
   if (!REGISTERED_DESTINATIONS.has(transition.to)) {
     return { kind: 'denied', reason: 'unregistered-destination' };
   }
-  await router.navigateByUrl(`/${transition.to}`);
+  const navigated = await router.navigateByUrl(`/${transition.to}`);
+  if (!navigated) return { kind: 'denied', reason: 'navigation-rejected' };
   return { kind: 'navigated', to: transition.to };
 }

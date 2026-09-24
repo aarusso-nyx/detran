@@ -25,6 +25,7 @@ import { TeatI18n } from './core/i18n.service';
 import { readRuntimeConfig } from './core/runtime-config';
 import { MobileBootstrapClient } from './data/api/mobile-bootstrap.client';
 import { ProvisioningClient } from './data/api/provisioning.client';
+import { LocalActStore } from './data/local/local-act.store';
 import { TURNO_ROUTES } from './features/turno/turno.routes';
 import { AIT_ROUTES } from './features/ait/ait.routes';
 import { AppComponent } from './app.component';
@@ -53,15 +54,35 @@ const readyBootstrap = {
       homologated: true,
       tamperDetected: false,
     },
-    session: { id: 'session-001', exclusive: true },
+    session: {
+      id: 'shift-001',
+      startedAt: '2026-09-22T00:00:00Z',
+      exclusive: true,
+    },
     activeShift: { id: 'shift-001', status: 'open' },
   },
   normativePackage: {
     manifestHash: 'sha256:manifest',
     validUntil: '2999-01-01T00:00:00Z',
   },
-  numberingReservations: [{ id: 'reservation-001' }],
-  readiness: { blockers: [] },
+  numberingReservations: [
+    {
+      id: 'reservation-001',
+      rangeId: 'range-001',
+      series: 'F',
+      shiftId: 'shift-001',
+      startNumber: 101,
+      endNumber: 102,
+      validUntil: '2999-01-01T00:00:00.000Z',
+      status: 'reserved',
+    },
+  ],
+  readiness: { blockers: [], preShiftReady: true, offlineReady: true },
+  capabilities: {
+    canOpenShift: true,
+    canOperateOffline: true,
+    canReserveNumbering: true,
+  },
 } as const;
 
 @Component({ standalone: true, template: '<main>home</main>' })
@@ -481,9 +502,24 @@ for (const scenario of [
       context: {
         ...readyBootstrap.context,
         ...(scenario.label === 'ready sem turno'
-          ? { activeShift: undefined }
+          ? { activeShift: null, session: null }
           : {}),
       },
+      ...(scenario.label === 'ready sem turno'
+        ? {
+            numberingReservations: [],
+            readiness: {
+              blockers: ['NUMBERING_RESERVATION_REQUIRED'],
+              preShiftReady: true,
+              offlineReady: false,
+            },
+            capabilities: {
+              canOpenShift: true,
+              canOperateOffline: false,
+              canReserveNumbering: false,
+            },
+          }
+        : {}),
     };
     TestBed.configureTestingModule({
       imports: [RouterHarnessComponent],
@@ -649,6 +685,7 @@ it('F001 mudança de tenant preserva recuperação e invalida contexto operacion
       sub: 'agent-001',
       roles: ['field-agent'],
       device_id: 'device-001',
+      shift_id: 'shift-001',
       app_version: '1.0.0',
     } as Record<string, unknown>,
   });
@@ -671,6 +708,12 @@ it('F001 mudança de tenant preserva recuperação e invalida contexto operacion
       {
         provide: ProvisioningClient,
         useValue: { readiness: vi.fn(async () => readyProvisioning) },
+      },
+      {
+        provide: LocalActStore,
+        useValue: {
+          installAitReservationAuthorities: vi.fn(async () => undefined),
+        },
       },
       bootstrapRuntime['BootstrapStore'],
       {
@@ -696,15 +739,37 @@ it('F001 mudança de tenant preserva recuperação e invalida contexto operacion
     ],
   });
   const Store = bootstrapRuntime['BootstrapStore'] as new () => {
-    refresh(input: {
-      device_id: string;
-      app_version: string;
-    }): Promise<unknown>;
+    refresh(
+      input: {
+        device_id: string;
+        app_version: string;
+      },
+      authenticatedSession: {
+        tenantId: string;
+        orgUnitId: string;
+        agentId: string;
+        deviceId: string;
+        shiftId: string;
+        appVersion: string;
+        roles: readonly string[];
+      },
+    ): Promise<unknown>;
   };
-  await TestBed.inject(Store).refresh({
-    device_id: 'device-001',
-    app_version: '1.0.0',
-  });
+  await TestBed.inject(Store).refresh(
+    {
+      device_id: 'device-001',
+      app_version: '1.0.0',
+    },
+    {
+      tenantId: 'tenant-001',
+      orgUnitId: 'unit-001',
+      agentId: 'agent-001',
+      deviceId: 'device-001',
+      shiftId: 'shift-001',
+      appVersion: '1.0.0',
+      roles: ['field-agent'],
+    },
+  );
   const context = TestBed.inject(
     bootstrapRuntime['TEAT_GUARD_CONTEXT'] as never,
   ) as {
@@ -1064,6 +1129,14 @@ for (const coldPath of ['/ait-speed-measurement', '/crash-start'] as const) {
 }
 
 it('F007 bodycam vem de adapter dinâmico no injector, nunca de constante do AppComponent', async () => {
+  TestBed.configureTestingModule({
+    providers: [
+      {
+        provide: TeatI18n,
+        useValue: { translate: (key: string) => key },
+      },
+    ],
+  });
   const bodycamRuntime = await loadMobileRuntime(
     'core/bodycam-indicator.component',
   );

@@ -8,6 +8,27 @@ updated: 2026-09-16
 
 # Pacote de construção do TEAT
 
+## Adenda R-0013 — entrega de homologação de UI e workflows (2026-09-23)
+
+CTG-0004a/0004b/0005 entregam somente builds de **homologação** Android/mobile e
+web. A entrada padrão dos frontends exibe `HOMOLOGAÇÃO — SIMULAÇÃO`, usa identidade,
+dados, AIT, turno, fila e eventos sintéticos segregados, e bloqueia HTTP remoto;
+não emite ato, número, assinatura, impressão ou recibo oficial. O mobile demonstra
+login/MFA, pré-turno/abertura, AIT validado até `ait-done` e fila/falha/retry/
+conflito; as 576 transições têm vínculo DOM ordenado com a matriz, mas aresta
+condicionada sem fato validado permanece negada. O web demonstra papéis, estados
+`data/empty/error`, aceite AIT sintético e SSE com fallback sintético de 15 s.
+BOAT e D-05 continuam indisponíveis no recorte contratado. Os contratos
+`teat-mobile-contract.md` e `teat-web-contract.md`, ADR-0033 e a evidência de
+R-0013 definem o aceite; não extrapolar PASS focal para produção.
+
+A app de campo produtiva, chaves/segredos, provas E2/AIT, integração Android no
+Gertec GMS820 e gate de release estão postergados nas issues
+[#108](https://github.com/aarusso-nyx/detran/issues/108)–
+[#112](https://github.com/aarusso-nyx/detran/issues/112). R-0017 é apenas
+candidato a round futuro, não compromisso. As seções históricas abaixo descrevem
+o programa e seus estados de partida, não uma certificação produtiva atual.
+
 Índice das definições que amparam a orquestra na construção do TEAT sobre o backend unificado:
 modelo de dados, rotas, payloads, telas, formulários e hierarquia. Segue as regras comuns do
 `rait-build-pack.md` §0 (substrato STYNX 1.3.1 / Angular 22, governança DEVAI, geração por
@@ -162,7 +183,17 @@ pacote copiado/alterado/expirado/revogado rejeitado em teste; sem chave privada 
 
 ### WP-T6 — Frontends (Engineer-frontend)
 
-**Candidatos entregues e revistos; não mesclados nem implantados.** O candidato conjunto
+**Escopo revisto pelo Owner em 2026-09-23: homologação de UI e workflows, não app de
+campo** (ADR-0033; adenda de R-0013). O app mobile produtivo terá round dedicado
+posterior (R-0017 apenas candidato) e backlog nas issues
+[#108](https://github.com/aarusso-nyx/detran/issues/108)–[#112](https://github.com/aarusso-nyx/detran/issues/112).
+GMS820 está homologado como equipamento por decisão incondicional do Owner, mas a
+integração da aplicação nele ainda não foi provada. CTG-0004a/b/5 devem demonstrar
+fluxos somente com fixtures explícitas e segregadas; caminhos produtivos sem provas
+continuam bloqueados. O fechamento exige novos testes e reviews no candidato atual,
+sem converter REDs de produção em skips.
+
+**Candidatos históricos entregues e revistos; não mesclados nem implantados.** O candidato conjunto
 `408ab438fdd940eed6bd46296daad0a141d5a222` recebeu PASS independente em CTG-0004a
 (mobile, 30/30 specs focais; digest `d9382578…dd32ea`) e CTG-0004b (web, lint, typecheck,
 565/565 testes e build; digest `2febf768…d5becb`). A única publicação/PR da rodada permanece
@@ -174,7 +205,8 @@ impressora).
 `LocalActStore`, `SyncWorker`, `NormativePackageService`, `BodycamIndicator`; 8 módulos; 70 rotas;
 formulários do WP-T4; impressora via porta com `FixturePrinter` nos testes) e `apps/teat/web`
 (`@detran/ui`; 12 módulos; 56 + 4 rotas novas). Gate: testes de roteamento por papel, matriz de
-576 transições verde, TestBed dos compartilhados, `ng build` mobile e web, `pnpm check`.
+576 transições verde, segregação de modo/fixtures, negativos de produção fail-closed,
+TestBed dos compartilhados, `ng build` mobile e web, `pnpm check` e revisão independente.
 
 ## 3. Ordem e paralelismo
 

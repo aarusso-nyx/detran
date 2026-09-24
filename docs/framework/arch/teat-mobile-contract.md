@@ -3,7 +3,7 @@ id: ARCH-TEAT-MOBILE-CONTRACT
 title: Contrato executável do aplicativo móvel TEAT
 status: draft
 apps: [teat]
-updated: 2026-09-22
+updated: 2026-09-23
 ---
 
 # Contrato executável do aplicativo móvel TEAT
@@ -13,6 +13,94 @@ Papel: Architect.
 Este contrato é a fronteira para os workers de implementação. Ele não cria regra
 de produto: transpõe a matriz de paridade, as folhas IU, o catálogo de parâmetros,
 o contrato de rota e o contrato de provisionamento fechados nesta rodada.
+
+## Adenda de escopo R-0013 — homologação de UI/workflows (ADR-0033)
+
+As cláusulas abaixo prevalecem sobre qualquer positivo anterior de finalização
+produtiva neste documento. R-0013 não entrega app de campo. O perfil produtivo
+continua fail-closed sem E2, localização real, validador agregado e serviços
+institucionais; o futuro round dedicado está nas issues #108–#112. Não reduzir
+70 rotas, 576 transições, RBAC, acessibilidade, estados ou os gates integrais.
+
+O token opcional `TEAT_HOMOLOGATION_AIT` é **ausente por padrão** e sua interface
+fechada é `HomologationAitPort { profile: 'homologation'; start(input?,
+context?): Promise<{kind:'demonstrated';localEntityId:string}>;
+review(input?,context?): Promise<{kind:'demonstrated';localEntityId:string}> }`.
+Somente a composição explícita da build de homologação pode instalá-lo; nenhuma
+claim, query string, rota ou dado remoto ativa esse modo. O port guarda somente
+um cenário sintético segregado, não usa clientes HTTP, `LocalActStore` produtivo,
+`SyncWorker`, `PrinterDialog`, numeração ou assinatura oficiais. `ait-start` e
+`ait-review` oferecem ações DOM reais: com esse port, usam `MobilePageRuntime` e
+exibem `data-profile="homologation"`, marcador visível `HOMOLOGAÇÃO — SIMULAÇÃO`
+e `data-state="demonstrated"` na conclusão demonstrativa. Sem o port, exibem
+bloqueio quando as provas produtivas faltam; nenhum draft/queue parcial é criado.
+Erro/rejeição do port produz estado de erro, nunca sucesso. A palavra
+`demonstrated` não é `persisted`, `finalized` ou recibo jurídico.
+
+O build padrão de R-0013 usa `src/main.homologation.ts` por configuração Angular
+explícita; `src/main.ts` continua sem o port e representa o caminho comum
+fail-closed para a futura composição produtiva. A entrada de homologação aplica
+`homologationHttpBlockInterceptor`, que permite apenas asset local e rejeita
+todo HTTP de backend/remoto; seu IndexedDB usa nome separado. Essa entrada não
+instala o OIDC produtivo: sessão e tenant de demonstração são sintéticos,
+somente em memória, e não leem auth storage nem redirecionam ao IdP. Um
+`TEAT_GUARD_CONTEXT` sintético explícito permite navegar as jornadas de UI com
+os guardas reais, inclusive negação quando o papel é omitido; seus dados não
+constituem grant, turno, numeração ou homologação operacional do dispositivo.
+O perfil oferece seletor visível de persona sintética em memória para acessar
+rotas de cada papel canônico; a seleção nunca muda claims OIDC, não persiste
+identidade e só afeta o contexto demonstrativo. O mesmo `roleGuard` continua
+negando qualquer papel ausente da rota, inclusive antes da seleção.
+A presença do port deve ser visível também no `AppComponent`, não apenas nas páginas AIT.
+
+### Correção de alcançabilidade de workflows na homologação
+
+O mero import das 576 transições e a renderização de shells não demonstram um
+workflow. A UI homologada deve ligar ações DOM ao `dispatchTransition` do
+manifesto, sem alterar `from/action/to/condition/type/notes`. Condição textual
+não é automaticamente verdadeira: uma aresta condicionada só pode disparar
+depois de um fato sintético explícito e observável na UI; negação mantém a rota
+e mostra erro. A navegação não persiste ou sincroniza ato oficial.
+
+Na cadeia AIT `ait-start → ait-vehicle → ait-driver → ait-frame →
+ait-frame-detail → ait-location → ait-notes → ait-validations → ait-evidence →
+ait-measures → ait-signature → ait-review → ait-done`, cada `Continuar` só ocorre
+após validação da etapa demonstrativa. Os sete schemas AIT existentes
+(`vehicle`, `driver`, `frame`, `location`, `evidence`, `signature`, `review`)
+validam entradas DOM reais; as quatro etapas sem schema exigem confirmação
+explícita, e `ait-validations` expõe as pendências antes da revisão. `ait-start`
+recebe escolha expressa de abordagem; `ait-review` mostra resumo/hash do cenário
+e exige ação final explícita, sem `submit(undefined)`. O port de homologação
+mantém somente um agregado em memória, marca valor/número/assinatura como
+sintéticos, bloqueia avanço/review se etapa obrigatória faltar ou schema falhar,
+e só então devolve `demonstrated` e navega à tela final. O perfil comum conserva
+seu bloqueio produtivo e nunca recebe esse agregado.
+
+`sync`, `sync-item` e `sync-conflict` precisam de cenário offline demonstrativo
+segregado: fila, falha, retry e conflito visíveis por controles DOM, sem invocar
+`SyncWorker`, `OfflineSyncClient` ou endpoint. O cenário nunca reclassifica um
+item sintético como recibo oficial. Inspector cobre por RouterOutlet o caminho
+positivo, erros/condições negadas, RBAC e ausência de HTTP/store/print oficiais.
+
+O perfil também oferece `TEAT_MOBILE_HOMOLOGATION_SHIFT`, estado **somente em
+memória** com fases `pre-shift` (turno/sessão `null/null`, sem reserva nem direito
+offline) e `open` (turno sintético aberto). Login e MFA usam formulários e
+credenciais declaradamente sintéticos, sem IdP, storage de autenticação ou
+`AuthBootstrapCoordinator`; o MFA demonstrativo conduz ao pré-turno. O formulário
+de abertura validado muda a fase pelo port e conduz a `/home`, sem chamar
+`MobileBootstrapClient.openShift`. As rotas B de pré-turno e B+S operacional
+continuam sujeitas aos guardas reais; mudar a fase não concede autoridade de
+campo. Um port ausente mantém o caminho produtivo inalterado. Os controles
+visíveis, inclusive as 97 ações únicas da matriz, são traduzidos pelo
+`TeatI18n` injetado a partir do catálogo canônico; o índice de transição
+preserva ramos homônimos sem inventar condição positiva.
+
+Inspector deve reescrever os três oráculos legados que exigiam `persisted` e
+`finalized` produtivos sem validador para positivar **somente** o port explícito,
+e acrescentar negativos de ausência do port e ausência de efeitos oficiais.
+Os três REDs de `ait-start` continuam negativos de autenticação/autoridade/fonte
+de localização no perfil produtivo, agora com botão DOM obrigatório. Nenhum
+teste é pulado, convertido em `todo` ou enfraquecido sem caso negativo substituto.
 
 ## 1. Invariantes de runtime
 
@@ -98,11 +186,15 @@ porta, resposta ou chave canônica nega a ação e não pode retornar sucesso fi
    chama sistema nacional, URL nacional, mock nem dados locais como resposta remota.
 3. **Persistência e sincronização.** `LocalActStore` usa
    `MobileEncryptedStorePort` e persiste por agregado `draft`, `queue`, `evidence`,
-   `reservation`, `package` e `print-receipt`. Toda escrita local recebe versão,
-   `idempotency_key`, `payload_hash` e item `SyncQueueItem`; armazenamento em
-   memória/planilha/`localStorage` simples é proibido. `SyncWorker` lê somente a
-   fila e o cursor persistidos, submete `SubmitSyncBatchDto` com `device_batch_id`,
-   `batch_sequence` e os itens contratuais, grava o recibo por item (`received` →
+   `reservation`, `package` e `print-receipt`. Toda escrita local é durável e
+   versionada; atos sincronizáveis recebem `idempotency_key`, `payload_hash` e
+   item `SyncQueueItem`. No AIT, telas de preenchimento persistem `draft` e
+   `evidence` sem item de fila elegível à sincronização; somente a finalização
+   explícita e validada em `ait-review` cria o único item AIT `pending` completo.
+   Armazenamento em memória/planilha/`localStorage` simples é proibido.
+   `SyncWorker` lê somente a fila e o cursor persistidos, submete
+   `SubmitSyncBatchDto` com `device_batch_id`, `batch_sequence` e os itens
+   contratuais, grava o recibo por item (`received` →
    `applied`) e recupera por idempotência. Falha fica no item com código canônico;
    jamais apaga ato, duplica comando ou bloqueia nova lavratura por si só. O
    construtor de produção aceita somente `MobileEncryptedStorePort`; adapter
@@ -171,8 +263,9 @@ MobileIdPort.uuid('sync-batch'), batchSequence: 1 }` antes do POST. Rede,
    é proibido.
    `bootstrap.snapshot.validUntil` é a validade do próprio snapshot: data ausente,
    inválida ou `now >= validUntil` adiciona `bootstrap-snapshot-expired` aos
-   blockers, independentemente da validade do pacote normativo. O warning H.55 do
-   pacote expirado continua não bloqueante. O provider root de
+   blockers, independentemente da validade do pacote normativo. O warning E.29 do
+   pacote expirado continua não bloqueante (ADR-0031); H.55 trata da homologação
+   do software. O provider root de
    `ReadinessWarningSink` grava cada warning uma vez no mesmo estado diagnóstico
    sanitizado da ErrorBoundary; factory no-op é proibida.
 8. **Transições.** Além da igualdade content-addressed da seção 4, o executor
@@ -231,8 +324,8 @@ type BootstrapSnapshot = Readonly<{
   requestedProtocolVersion: string;
   snapshot: Readonly<{
     capturedAt: string;
-    validUntil: string;
-    maxAgeSeconds: number;
+    validUntil: string | null;
+    maxAgeSeconds: number | null;
     authority: unknown;
   }>;
   context: Readonly<{
@@ -246,8 +339,12 @@ type BootstrapSnapshot = Readonly<{
       tamperDetected: boolean;
       appVersion: string;
     }>;
-    activeShift?: Readonly<{ id: string; status: string }>;
-    session: Readonly<{ id: string; startedAt: string; exclusive: boolean }>;
+    activeShift: Readonly<{ id: string; status: string }> | null;
+    session: Readonly<{
+      id: string;
+      startedAt: string;
+      exclusive: boolean;
+    }> | null;
   }>;
   catalog: Readonly<{
     operationalUnits: readonly unknown[];
@@ -341,6 +438,12 @@ interface AuthBootstrapCoordinator {
   clearOnSessionEnd(): void;
 }
 ```
+
+`context.activeShift` e `context.session` são chaves wire obrigatórias e
+formam um par. Antes da abertura do turno, ambas valem `null`; durante o turno,
+ambas são objetos vinculados ao mesmo turno. Omissão ou par misto é inválido e
+o bootstrap deve falhar fechado antes de publicar estado operacional ou
+instalar reserva local.
 
 `authGuard` injeta a sessão STYNX e lê `principal()`; `tenantGuard` lê `tenantId()`;
 `roleGuard` lê `principal().roles` e `allowedRoles()`; `readinessGuard` lê
@@ -701,7 +804,7 @@ com o pacote autoritativo do `BootstrapStore`, re-hasheia `manifest`, exige
 `valid === true` e só então persiste. Como verificação criptográfica da assinatura
 `local-unsigned` permanece `source_pending`, a implementação não a chama de
 assinatura verificada; divergência/ausência bloqueia. `usable` re-hasheia após
-reinício; `revalidate` devolve `warning-expired` para H.55 e `blocked` para qualquer
+reinício; `revalidate` devolve `warning-expired` para E.29/ADR-0031 e `blocked` para qualquer
 outro blocker, sem fabricar data.
 
 #### Dispatch de transição, ErrorBoundary e diagnósticos
@@ -1047,30 +1150,30 @@ operação, retorna `blocked/source_pending`. Nunca persiste string vazia,
 A tabela abaixo é exaustiva para as 58 páginas habilitadas; D-05 é a 59ª
 entrada não-BOAT e segue exclusivamente o estado disabled da §1.2:
 
-| screenIds                                                                                                                                                                  | objeto executável e comportamento mínimo autorizado                                                                                                        |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `auth-login`, `auth-mfa`                                                                                                                                                   | provider STYNX real + `AuthBootstrapCoordinator`; inicia/continua autenticação e, após sessão ativa, executa bootstrap reativo                             |
-| `device-blocked`, `shift-context`, `operation-select`, `home`, `shift-summary`                                                                                             | `BootstrapStore`; lê o signal atual e bloqueia quando não `ready`                                                                                          |
-| `open-shift`, `close-shift`, `device-handoff`                                                                                                                              | schemas aplicáveis + `MobileBootstrapClient`; valida e envia comando com headers do `CommandContext`                                                       |
-| `vehicle-search`, `driver-search`                                                                                                                                          | `OpsSnapshotsClient.externalQuery`; finalidade e parâmetros vêm do formulário, sem consulta nacional direta                                                |
-| `vehicle-result`, `vehicle-divergence`, `driver-result`, `query-failure`                                                                                                   | resultado congelado retornado por `OpsSnapshotsClient`; ausência de snapshot bloqueia                                                                      |
-| `ait-start`, `ait-vehicle`, `ait-driver`, `ait-frame`, `ait-frame-detail`, `ait-location`, `ait-notes`, `ait-validations`, `ait-evidence`, `ait-measures`, `ait-signature` | schema quando listado na §3 + `LocalActStore`; valida e persiste draft/queue/evidence, sem inventar comando remoto ausente                                 |
-| `ait-review`                                                                                                                                                               | `aitReviewSchema` + `LocalActStore`; valida o agregado e a ação explícita, finaliza localmente e enfileira uma vez                                         |
-| `ait-done`, `ait-shift-detail`                                                                                                                                             | `LocalActStore`; lê draft/receipt do mesmo ato, sem mutação legal                                                                                          |
-| `ait-print`                                                                                                                                                                | `PrinterDialog` real conforme §1.2; persiste receipt e evento no mesmo AIT                                                                                 |
-| `ait-cancel-request`                                                                                                                                                       | `aitCancelRequestSchema` + `LocalActStore`; persiste/enfileira o tipo correto; quando há `targetAitId`, `AitClient.requestCancel` usa headers condicionais |
-| `measure-start`, `retention`                                                                                                                                               | schema aplicável + `MeasuresClient.startAdministrativeMeasure`/`releaseRetention`, com headers do caller                                                   |
-| `removal`, `inventory`, `transshipment`, `measure-term`                                                                                                                    | `measureTermSchema` quando aplicável + `LocalActStore`; persiste medida offline; endpoint remoto elidido continua `source_pending`                         |
-| `measure-done`                                                                                                                                                             | `LocalActStore`; lê termo/receipt sem fabricar conclusão remota                                                                                            |
-| `alcohol-start`                                                                                                                                                            | `AlcoholClient.startProcedure` com headers do caller                                                                                                       |
-| `alcohol-device`, `alcohol-result`, `alcohol-refusal`, `alcohol-signs`, `alcohol-forward`, `alcohol-links`, `alcohol-term`                                                 | schema aplicável + `LocalActStore`; persiste termo/estado offline; comandos remotos elididos continuam `source_pending`                                    |
-| `sync`, `sync-item`                                                                                                                                                        | `SyncWorker`/`LocalActStore`; submete ou lê fila/receipt duráveis                                                                                          |
-| `sync-conflict`                                                                                                                                                            | `syncConflictSchema` + `OfflineSyncClient.resolveConflict`; somente `field-supervisor` e payload OpenAPI válido                                            |
-| `diagnostics`                                                                                                                                                              | `TeatErrorBoundaryState`, `BootstrapStore` e `LocalActStore`; leitura sanitizada, sem export físico inventado                                              |
-| `support`, `messages`                                                                                                                                                      | nenhum endpoint está fechado; `submit` devolve `blocked/source_pending` e não faz HTTP                                                                     |
-| `approach-no-ait`, `document-check`, `special-inspection`                                                                                                                  | `LocalActStore`; somente estado local previsto pela matriz; operação remota não documentada fica bloqueada                                                 |
-| `context-help`                                                                                                                                                             | conteúdo i18n canônico; zero client e zero mutação                                                                                                         |
-| `local-settings`                                                                                                                                                           | apenas preferências expressamente fornecidas pelo runtime; persistência/configuração não especificada fica `blocked/source_pending`                        |
+| screenIds                                                                                                                                                                  | objeto executável e comportamento mínimo autorizado                                                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `auth-login`, `auth-mfa`                                                                                                                                                   | provider STYNX real + `AuthBootstrapCoordinator`; inicia/continua autenticação e, após sessão ativa, executa bootstrap reativo                              |
+| `device-blocked`, `shift-context`, `operation-select`, `home`, `shift-summary`                                                                                             | `BootstrapStore`; lê o signal atual e bloqueia quando não `ready`                                                                                           |
+| `open-shift`, `close-shift`, `device-handoff`                                                                                                                              | schemas aplicáveis + `MobileBootstrapClient`; valida e envia comando com headers do `CommandContext`                                                        |
+| `vehicle-search`, `driver-search`                                                                                                                                          | `OpsSnapshotsClient.externalQuery`; finalidade e parâmetros vêm do formulário, sem consulta nacional direta                                                 |
+| `vehicle-result`, `vehicle-divergence`, `driver-result`, `query-failure`                                                                                                   | resultado congelado retornado por `OpsSnapshotsClient`; ausência de snapshot bloqueia                                                                       |
+| `ait-start`, `ait-vehicle`, `ait-driver`, `ait-frame`, `ait-frame-detail`, `ait-location`, `ait-notes`, `ait-validations`, `ait-evidence`, `ait-measures`, `ait-signature` | schema quando listado na §3 + `LocalActStore`; valida e persiste draft/evidence versionados, sem enfileirar AIT parcial nem inventar comando remoto ausente |
+| `ait-review`                                                                                                                                                               | `aitReviewSchema` + `LocalActStore`; valida o agregado e a ação explícita, finaliza localmente e enfileira uma vez                                          |
+| `ait-done`, `ait-shift-detail`                                                                                                                                             | `LocalActStore`; lê draft/receipt do mesmo ato, sem mutação legal                                                                                           |
+| `ait-print`                                                                                                                                                                | `PrinterDialog` real conforme §1.2; persiste receipt e evento no mesmo AIT                                                                                  |
+| `ait-cancel-request`                                                                                                                                                       | `aitCancelRequestSchema` + `LocalActStore`; persiste/enfileira o tipo correto; quando há `targetAitId`, `AitClient.requestCancel` usa headers condicionais  |
+| `measure-start`, `retention`                                                                                                                                               | schema aplicável + `MeasuresClient.startAdministrativeMeasure`/`releaseRetention`, com headers do caller                                                    |
+| `removal`, `inventory`, `transshipment`, `measure-term`                                                                                                                    | `measureTermSchema` quando aplicável + `LocalActStore`; persiste medida offline; endpoint remoto elidido continua `source_pending`                          |
+| `measure-done`                                                                                                                                                             | `LocalActStore`; lê termo/receipt sem fabricar conclusão remota                                                                                             |
+| `alcohol-start`                                                                                                                                                            | `AlcoholClient.startProcedure` com headers do caller                                                                                                        |
+| `alcohol-device`, `alcohol-result`, `alcohol-refusal`, `alcohol-signs`, `alcohol-forward`, `alcohol-links`, `alcohol-term`                                                 | schema aplicável + `LocalActStore`; persiste termo/estado offline; comandos remotos elididos continuam `source_pending`                                     |
+| `sync`, `sync-item`                                                                                                                                                        | `SyncWorker`/`LocalActStore`; submete ou lê fila/receipt duráveis                                                                                           |
+| `sync-conflict`                                                                                                                                                            | `syncConflictSchema` + `OfflineSyncClient.resolveConflict`; somente `field-supervisor` e payload OpenAPI válido                                             |
+| `diagnostics`                                                                                                                                                              | `TeatErrorBoundaryState`, `BootstrapStore` e `LocalActStore`; leitura sanitizada, sem export físico inventado                                               |
+| `support`, `messages`                                                                                                                                                      | nenhum endpoint está fechado; `submit` devolve `blocked/source_pending` e não faz HTTP                                                                      |
+| `approach-no-ait`, `document-check`, `special-inspection`                                                                                                                  | `LocalActStore`; somente estado local previsto pela matriz; operação remota não documentada fica bloqueada                                                  |
+| `context-help`                                                                                                                                                             | conteúdo i18n canônico; zero client e zero mutação                                                                                                          |
+| `local-settings`                                                                                                                                                           | apenas preferências expressamente fornecidas pelo runtime; persistência/configuração não especificada fica `blocked/source_pending`                         |
 
 A coluna anterior identifica as dependências; a matriz de efeitos abaixo é
 igualmente obrigatória e elimina retorno `loaded`/`persisted` sem efeito:

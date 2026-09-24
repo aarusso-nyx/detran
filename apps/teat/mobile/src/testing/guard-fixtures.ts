@@ -1,4 +1,5 @@
 import type { TeatStaffRole } from './route-contract.fixture';
+import type { GuardContext } from '../app/core/bootstrap.store';
 
 export interface GuardContextFixture {
   readonly principal:
@@ -31,17 +32,23 @@ export interface GuardContextFixture {
             readonly tamperDetected: boolean;
             readonly appVersion: string;
           };
-          readonly activeShift?: {
+          readonly activeShift: {
             readonly id: string;
             readonly status: string;
-          };
+          } | null;
           readonly session: {
             readonly id: string;
             readonly startedAt: string;
             readonly exclusive: boolean;
-          };
+          } | null;
         };
-        readonly catalog: Record<string, readonly unknown[]>;
+        readonly catalog: {
+          readonly operationalUnits: readonly unknown[];
+          readonly teams: readonly unknown[];
+          readonly patrolVehicles: readonly unknown[];
+          readonly operations: readonly unknown[];
+          readonly measurementInstruments: readonly unknown[];
+        };
         readonly normativePackage: {
           readonly id: string;
           readonly catalogId: string;
@@ -79,6 +86,16 @@ export interface GuardContextFixture {
     | undefined;
 }
 
+export function guardContextPort(fixture: GuardContextFixture): GuardContext {
+  return {
+    principal: () => fixture.principal,
+    tenantId: () => fixture.tenantId,
+    allowedRoles: () => fixture.allowedRoles,
+    bootstrap: () => fixture.bootstrap,
+    provisioning: () => fixture.provisioning,
+  };
+}
+
 const bootstrap = {
   protocolVersion: '1',
   requestedProtocolVersion: '1',
@@ -101,7 +118,7 @@ const bootstrap = {
     },
     activeShift: { id: 'shift-001', status: 'open' },
     session: {
-      id: 'session-001',
+      id: 'shift-001',
       startedAt: '2026-09-22T00:00:00Z',
       exclusive: true,
     },
@@ -183,7 +200,18 @@ export function fixtureNoOpenShift(): GuardContextFixture {
     ...fixtureAuthenticatedFieldAgent(),
     bootstrap: {
       ...bootstrap,
-      context: { ...bootstrap.context, activeShift: undefined },
+      context: { ...bootstrap.context, activeShift: null, session: null },
+      numberingReservations: [],
+      readiness: {
+        blockers: ['NUMBERING_RESERVATION_REQUIRED'],
+        preShiftReady: true,
+        offlineReady: false,
+      },
+      capabilities: {
+        canOpenShift: true,
+        canOperateOffline: false,
+        canReserveNumbering: false,
+      },
     },
   };
 }

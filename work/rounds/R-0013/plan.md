@@ -1,10 +1,251 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Estado atual (2026-09-22; substitui o planejamento histórico abaixo):** CTG-0001, CTG-0002 e
+## Adenda vinculante de escopo — decisão do Owner de 2026-09-23
+
+**Objeto final de CTG-0004a/b e CTG-0005:** homologação de **UI e workflows** TEAT,
+não aplicativos aptos à operação produtiva. ADR-0033 governa a separação. O app mobile
+produtivo, dependente de chaves/segredos institucionais e da integração/prova em
+dispositivos homologados, exige round próprio posterior (R-0017 é apenas candidato,
+não ID reservado). Gertec GMS820 continua homologado incondicionalmente como
+equipamento; isso não homologa a build nem autoriza operação de campo. As decisões
+ADR-0028–0032 continuam válidas como requisitos do futuro round.
+
+| CTG   | Meta revisada                                                                                                                                                                  | Aceite específico, além dos gates existentes                                                                                                                                                                                                                                                                                     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0004a | Android mobile navegável e demonstrável com dados sintéticos segregados; 70 fichas/rotas, 576 transições, papéis, formulários, AIT e offline em modo de homologação explícito. | Seis REDs AIT fechados mediante positivo **somente** na trilha de homologação, com negativos produtivos preservados; nenhuma emissão, assinatura, numeração, impressão ou sync oficiais por fixture; produção sem provas E2/AIT/localização permanece fail-closed; suíte integral, lint, typecheck e build verdes e novo review. |
+| 0004b | Web de homologação de UI/workflows correlatos, com 56 fichas, 60 rotas, 12 módulos e estados/guards/SSE demonstrados.                                                          | Dados/eventos simulados identificados, fixtures segregadas, nenhuma integração real inferida; oráculos de papéis, erro, a11y e SSE, gates integrais e novo review verdes.                                                                                                                                                        |
+| 0005  | Documentar apenas a homologação provada e transferir toda capacidade produtiva para issues completas.                                                                          | Build pack, arquitetura e backlog distinguem demonstração de operação; links às issues, gates de documentação e `pnpm check`, review no candidato atual; PR/closure não afirmam app de produção.                                                                                                                                 |
+
+Para execução corretiva, usar `prompts/CTG-0004a-homologation.md`,
+`prompts/CTG-0004b-homologation.md` e `prompts/CTG-0005-homologation.md` após
+os prompts históricos TASK-0010–0018. Os registros `TASK-*.json`, IDs de composição,
+reviews e commits concluídos são imutáveis como história; novos oráculos/reviews
+devem ter identidade e evidência próprias, sem reciclar um PASS estreito. Nenhum
+RED pode virar skip/todo nem fixture silenciosa. A saída desta adenda não é um
+waiver do `pnpm check`: os gates integrais continuam condição de fechamento.
+
+**Backlog produtivo aberto:** [E2/trust #108](https://github.com/aarusso-nyx/detran/issues/108),
+[Android/GMS820 #109](https://github.com/aarusso-nyx/detran/issues/109),
+[catálogo/validador AIT #110](https://github.com/aarusso-nyx/detran/issues/110),
+[ciclo transacional/sync #111](https://github.com/aarusso-nyx/detran/issues/111) e
+[gate de campo/release #112](https://github.com/aarusso-nyx/detran/issues/112).
+Nenhum item recebe data, round definitivo ou estado `done` por esta decisão.
+
+**Retomada corretiva de 2026-09-23 (substitui o status de seis REDs abaixo):**
+o Architect fixou a separação de homologação nos contratos; o Inspector congelou
+oráculos de RouterOutlet, RBAC negativo, rede/IdP/storage e SSE sintético antes
+da correção. O Engineer eliminou os seis REDs AIT originais com port exclusivo de
+homologação e negativos produtivos preservados, removeu OIDC real dos dois
+entrypoints de homologação, instalou contexto sintético em memória só nessas
+entradas e emitiu eventos SSE determinísticos sem rede. As suítes completas
+passaram em **mobile 1138/1138** e **web 584/584**; lint, typecheck e build de
+ambos passaram naquele candidato parcial. A revisão independente descobriu
+lacunas adicionais e reabriu o gate: rotas de persona e pré-turno, entrada `/`,
+formulários AIT completos, sync sintético, 576 ações DOM/197 condições negadas,
+dados web por módulo, fallback SSE, i18n e a11y do shell. A correção atual
+passou mobile **1157/1157** e web **594/594**, incluindo login/MFA/pré-turno,
+AIT, sync, 576 transições, fallback SSE e a11y focal. `pnpm check` integral
+terminou com código **0** depois das últimas edições; `devai doctor` e cadeia
+DEVAI também passaram (head `98a55808…15b53eff72`). Review independente do
+candidato integral, evidência, push, PR, CI e observação pós-merge ainda são
+gates abertos. Não
+declarar fechamento a partir de PASS focal ou dos números históricos.
+
+**Estado anterior (2026-09-23; histórico abaixo):** CTG-0001, CTG-0002 e
 CTG-0003 foram mesclados e observados; CTG-0004a e CTG-0004b passaram review independente no
-candidato `408ab438fdd940eed6bd46296daad0a141d5a222`; CTG-0005 está em revisão documental. Há
-uma única PR/push final da rodada, depois do PASS de CTG-0005 e dos gates de integração do candidato
-completo. Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
+candidato `408ab438fdd940eed6bd46296daad0a141d5a222`; CTG-0005 passou review documental.
+O branch integrou `origin/main` no merge `666dd63e`; a única PR/push final da rodada segue
+pendente dos gates do candidato completo. Nesta sessão, por exceção explícita do Owner, reviewer
+Codex/Sol/high. ADR-0032 registra todas as escolhas do questionário (inclusive 6A), mas ainda
+não há prova E2 produtiva nem avaliador agregado AIT. A suíte mobile reexecutada permaneceu
+em 1116/1122, com seis REDs; nenhum gate integral ou PR final foi liberado por esse despacho.
+
+**Gate de integração reaberto:** a última suíte mobile completa antes dos novos REDs técnicos
+estava em 1016/1019; três oráculos F004 de finalização positiva do AIT continuam RED. A
+pré-checagem independente de reserva/pacote/contexto e o pin atômico local estão implementados,
+mas a finalização permanece fail-closed: as fontes atuais não definem avaliador executável do
+agregado AIT. OD-T14 agora tem parâmetro e cálculo de frescor online aprovados em review estreito,
+mas o gate mobile ainda nega snapshots vencidos sem prova local E2; B/B+S offline após 300 s
+seguem bloqueadas em produção. Não
+usar os reviews focais anteriores como PASS do candidato de integração, nem fazer push/PR antes
+da execução dos contratos aprovados e dos gates integrais.
+
+O caminho real de abertura de turno foi implementado e aprovado apenas em review estreito:
+`activeShift/session` obrigatórios `object|null`, `null/null` pré-turno, POST idempotente, refresh
+autenticado, reserva durável e só então `/home`. `ait-start` continua display-only e `ait-review`
+agora bloqueia sem `localEntityId` explícito, sem buscar ação na fila pendente; esta limpeza
+fail-closed passou review estreito (2/2), mas não entrega revisão funcional. Três REDs DOM de
+`ait-start` continuam abertos. Essas páginas seguem pendentes de identidade persistida,
+localização/proveniência, revisão local e validador agregado, sem inventar dados.
+
+**Histórico corretivo (supersedido pelo PASS estreito abaixo):** a tranche de reserva/faixa e pin atômico passou
+89/89 testes mobile e 32/32 backend, mas o REVIEWER independente retornou `NOT PASS` por dois
+gaps de autoridade: `ait-start` não revalidava freshness do snapshot e blockers de
+provisionamento/readiness no limite da ação; o join de reserva com faixa não conferia agência nem
+limites numéricos. Ambos exigem negativos focais e novo review. Separadamente, o RED pré-turno
+prova que `shift-context` B é negada antes de existir reserva; B+S deve permanecer negada até
+abertura e bootstrap autenticado. Nenhum desses resultados estreitos substitui a suíte integral.
+
+**Histórico corretivo (supersedido pelo PASS estreito abaixo):** os dois gaps de autoridade acima foram corrigidos em escopo focal
+(backend 34/34; mobile 90/90), mas o veredito continua `NOT PASS`: o bootstrap real antes do
+turno retorna `activeShift: null` e `session: null`, enquanto o cliente ainda aceita apenas
+`undefined` para o turno ausente e o gate desreferencia `session.exclusive`. Os fixtures anteriores
+usavam turno `undefined` e sessão não nula. Architect → Inspector RED com payload real → Engineer
+→ novo review devem fechar essa contradição sem relaxar segurança nem OD-T14.
+
+**Re-review independente mais recente:** PASS **somente** para reserva/faixa, pin, wire
+`activeShift/session` real-null, guard pré-turno e UI de abertura. O REVIEWER reproduziu 114/114
+mobile (38/38 abertura/autoridade/F001 + 76/76 pin), 34/34 backend, `contracts:check`,
+typechecks, lint, Prettier e diff-check. O veredito não cobre OD-T14, avaliador agregado AIT,
+as páginas AIT restantes nem a suíte integral; nenhum push/PR foi feito.
+
+**Pendências identificadas para fechamento:** integração executável da prova offline E2; regras
+executáveis e dados do validador do agregado AIT; seleção/retomada e ciclo de vida do
+`localEntityId` persistido (o marcador cifrado atual não possui leitura/liberação), aquisição de
+localização com proveniência e revisão local/ETag sem valores sintéticos. O destino de números
+fixados em rascunhos abandonados também precisa de regra explícita antes de afirmar ciclo completo
+de numeração. Até essas fontes/decisões existirem, B/B+S offline após o frescor online e
+finalização AIT continuam fail-closed; não há gate integral nem autorização de PR final.
+
+**Resposta do Owner (2026-09-23):** `1A-300-E2` aprova chave
+`teat.bootstrap.snapshot_max_age_seconds`, inteiro `300`, escopo tenant/TEAT sem override por
+agência, status `vigente`, `source_pending=false`, `legal_readonly=false`, decisão `OD-T14`, sem
+alegar fundamento legal. A vigência operacional começa na instalação/ativação da linha, não na
+data da decisão se a implantação ocorrer depois; o backend calcula
+`validUntil = capturedAt + 300 s` em UTC, sem fallback hardcoded se o parâmetro faltar ou for
+inválido. Os 300 s limitam o frescor **online**, não constituem expiração universal da autoridade
+offline. Depois desse prazo, o mobile só pode prosseguir offline com grant, reserva e pacote
+íntegros, localmente verificáveis e vigentes, sem bloqueio conhecido; ausência de qualquer prova
+bloqueia. Esta decisão não autoriza tratar `offlineReady` ou assinatura ainda `local-unsigned`
+como prova criptográfica. Contrato, implementação e testes E2 continuam pendentes até existir
+verificador local real; o backend já emite prazo quando a linha é válida, e o gate atual continua
+estrito após esse prazo.
+
+2A autoriza Architect a propor matriz
+executável do agregado a partir das fontes aprovadas, com aprovação do Owner **antes** de
+implementá-la; 3A escolhe handoff explícito do `localEntityId` persistido, revisão local
+monotônica/durável e marcador cifrado somente como trava de um rascunho ativo por
+tenant/agente/dispositivo/turno, liberada atomicamente ao finalizar/cancelar (`If-Match` apenas
+com ETag real do servidor); 4A escolhe GPS/rede com coordenadas, precisão medida, horário e origem
+registrados, bloqueando criação sem esses dados; 5A proíbe reutilização automática de número
+fixado, exige registro de abandono/consumo auditável e reconciliação backend.
+
+Architect registrou a proposta 2A em
+`contracts/CTG-0004a-ait-validation-matrix-proposal.md`: 11 predicados candidatos, fontes e
+status, fatos ausentes e quatro decisões residuais. Em 2026-09-23 o Owner **aprovou a intenção
+da matriz V01–V11 e os requisitos mínimos de prova E2 propostos**; posteriormente autorizou
+a matriz como fonte executável no seu recorte exato. Não aprovou por omissão a gramática ainda inexistente, caminhos
+de dados ausentes ou algoritmos/trust anchors `source_pending`. A finalização AIT segue bloqueada
+até existir contrato executável. REVIEWER independente
+deu **PASS estreito da fidelidade da proposta às fontes** após corrigir V01/V10 e explicitar
+`local-unsigned`; a aprovação de conteúdo pelo Owner veio depois e não equivale a avaliador
+executável nem a aprovação dos detalhes normativos residuais.
+
+Architect documentou o perfil E2 e o ciclo 3A/4A/5A em propostas restritas de CTG-0004a;
+REVIEWER independente deu PASS **documental estreito**, sem achados abertos, após explicitar
+início autenticado da janela offline, limite de conhecimento sobre turno/revogação, enrollment
+da chave de cifragem, seletor transacional, hashes distintos e cancelamento durável. Naquele
+momento, a aprovação não selecionava A/JOSE ou B/COSE, runtime, âncora de confiança/tempo,
+TTL de revogação/turno nem mapas/DSL normativos; ADR-0032 registra o despacho posterior.
+Os ports, dados e testes reais seguem necessários; nenhum positivo E2/AIT ou gate integral
+decorre do PASS documental.
+
+**Despacho adicional do Owner (2026-09-23):** pacote normativo vencido permanece como
+advertência visível e registrada também sob E2; vencimento isolado não bloqueia quando
+identidade, versão, digest e assinatura confiável do pacote forem demonstrados. ADR-0031
+confirma E.29 e distingue H.55, que trata da homologação do software. Ausência, divergência,
+adulteração ou revogação conhecida do pacote continuam bloqueantes. O gate E2 permanece
+estrito enquanto não houver verificador local real; não existe positivo obtido só com esse
+despacho.
+
+**Despacho posterior do Owner (2026-09-23):** Android é a plataforma-alvo E2; iOS fica fora
+do escopo desta rodada. Por decisão **incondicional** do Owner, o Gertec GMS820 atende aos
+requisitos de homologação do equipamento e é o primeiro modelo homologado; não reabrir sua
+elegibilidade por falta de inventário Android/API ou novo parecer sobre o modelo.
+A matriz AIT V01–V11 revisada é fonte executável autorizada, inclusive
+o conteúdo das RN citadas **na extensão expressa pela matriz**, sem promoção indiscriminada
+do restante dos documentos `draft`. ADR-0029 e ADR-0030 registram esses limites. Permanecem
+pendentes o perfil criptográfico de prova E2 e sua execução (enrollment, chave, assinatura,
+escopo, confiança, tempo e revogação), eventual ampliação da lista de aparelhos e os
+caminhos/DSL/fatos que a matriz marca como ausentes.
+Nenhuma dessas lacunas ganha valor provisório por ser Android ou por a matriz ter autoridade;
+o gate integral continua RED.
+
+**Despacho consolidado posterior do Owner (ADR-0032, 2026-09-23):** adotadas 1A–5A e
+7A–16A do questionário de fechamento, e 6A por resposta explícita: status assinados de
+revogação/turno até 900 s cada e janela offline do grant até 3600 s, sempre limitados pelo
+menor `validUntil`/reserva/grant aplicável. Perfil JOSE/JCS/JWS/JWE, raízes públicas
+independentes, chaves Android por uso, afirmações assinadas, refresh autenticado como início,
+âncora temporal com bloqueio após reinício, assinatura normativa, DSL JSON fechada e
+semântica AIT restante estão aprovados. **As escolhas de política do questionário estão
+despachadas; não estão implementadas.** Faltam identidades de confiança institucional e
+portas produtivas, catálogo/fichas exatos e dados tipados, validador local/backend, captura
+real de localização, ciclo transacional do AIT e provas/gates completos no GMS820. O
+equipamento permanece homologado incondicionalmente; testes E2 não reabrem essa decisão.
+
+**3A, tranche de seletor/retomada (2026-09-23):** Inspector reproduziu RED para ausência de
+seletor no pin; Engineer incluiu seletor cifrado na mesma transação IndexedDB de reserva,
+rascunho e trava, escopou a trava por tenant/agente/dispositivo/turno e ligou a chave de
+idempotência ao digest imutável do primeiro comando. Retomada e retry pós-crash com novo ID
+devolvem o ID/número originais; seletor parcial, conteúdo divergente e cursor incoerente
+bloqueiam. REVIEWER independente deu PASS **estreito** após novos REDs de replay/corrupção:
+88/88 testes focais, typecheck, lint, Prettier e diff-check. Não cobre UI handoff, revisão
+monotônica, localização, finalização, cancelamento ou E2.
+
+**3A, microtranche de handoff do runtime:** Inspector RED demonstrou que `ait-start` devolvia
+o ID recém-gerado pelo caller mesmo quando o pin retornava um ID persistido distinto após
+replay. Engineer passou a devolver `pinned.localId`; REVIEWER independente deu PASS estreito
+com 88/88 focal, typecheck, lint, Prettier e diff-check. A página DOM continua display-only,
+sem fonte de localização; este ajuste não a declara funcional.
+
+**3A, microtranche de revisão local:** Inspector RED demonstrou ausência de revisão durável.
+O pin inicial grava `localRevision=1`; a transição AIT rascunho→rascunho exige CAS atômico,
+revisão exatamente `+1` e preservação de identidade, escopo, reserva, número, pacote e
+localização. O runtime de edição exige a revisão corrente. Gravações AIT genéricas de draft
+e queue foram fechadas enquanto não há port de finalização atômica. REVIEWER independente
+deu PASS **estreito**, não de ciclo AIT completo. Um RED posterior demonstrou que uma fila
+AIT legada podia contornar o novo guard de gravação; `pending()` agora rejeita tais itens
+ativos, tanto no alias camel quanto snake. Esta última proteção passou 174/174 testes focais,
+typecheck, lint, Prettier e diff-check, mas o REVIEWER apontou falso bloqueio de item AIT
+histórico `snake_case` já terminal. O novo RED reproduziu o problema, o filtro foi alinhado
+ao alias de idempotência do `SyncWorker` e a verificação subiu para 175/175 focais, com
+typecheck, lint, Prettier e diff-check. O re-review independente deu **PASS estreito**
+(14/14 reproduzidos), sem afirmar finalização AIT ou aprovação da suíte integral.
+
+**Suíte mobile integral após essas tranches:** 1116/1122 passaram, com seis REDs ainda abertos:
+três de ação DOM em `ait-start` sem port real de localização e três de finalização em
+`ait-review` sem validador executável do agregado. Não converter esses REDs em skips nem
+promover a tranche a PASS do Round.
+
+**OD-T14, tranche de decisão/catálogo:** ADR-0029, linha do catálogo e artefatos gerados
+registram `1A-300-E2`. O seed usa a data da primeira instalação e a conserva em reaplicações;
+Inspector provou a estrutura por teste focal, Engineer corrigiu o gerador, 27/27 testes de
+geração e `verify:parameter-catalogue` passaram; REVIEWER independente deu **PASS estreito**.
+Não houve teste de banco atravessando dias nem implementação do verificador offline; não é PASS do
+CTG ou do Round.
+
+**OD-T14, tranche online backend:** Architect fixou seleção tenant/TEAT vigente no dia UTC de
+`capturedAt`, sem segundo relógio/override de agência. Inspector RED demonstrou ausência de
+prazo e depois divergência de data no lookup; Engineer implementou derivação exata do parâmetro,
+falha `null`/`null` em linha ausente/inválida e correção da fronteira de meia-noite. A fixture
+passou a respeitar `effective_from` da linha hipoteticamente instalada. REVIEWER independente
+deu **PASS estreito**; 52/52 testes backend, typecheck, Prettier e diff-check passaram. E2,
+validador AIT e gate integral seguem pendentes.
+
+Checklist de execução após o despacho ADR-0032 (não são novas escolhas implícitas do Owner):
+
+1. **OD-T14 (online implementado, E2 pendente):** implementar perfil criptográfico, confiança,
+   revogação e tempo selecionados; manter fail-closed após o prazo até o verificador existir.
+2. **Validação AIT (matriz V01–V11 executável aprovada):** publicar DSL fechada, identificadores,
+   caminhos, condições, fichas e blockers vinculados ao pacote exato; construir avaliador puro
+   local e verificação backend. Array aberto de `validation_rules` não basta.
+3. **Rascunho/revisão (3A aprovado):** seletor, trava escopada, handoff de ID e revisão local
+   monotônica já têm PASS estreito; ainda faltam UI positiva, finalização/cancelamento atômicos
+   e reconciliação. `If-Match` só usa ETag real do servidor.
+4. **Localização/numeração (4A/5A aprovados):** integrar port que reporte proveniência real
+   GPS/rede durante o ato; não inferir a fonte de `navigator.geolocation`. Fechar evento e
+   reconciliação backend do número consumido/abandonado, sem reutilização automática.
+
 **Concorrência histórica (supersedida pelo estado atual acima):** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
 (matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
 CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar todos os joins no
@@ -33,12 +274,13 @@ CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar 
    `provisioning_receipt`, `device_revocation`; DDL `21-ops-provisioning.sql`); rotas
    `/v1/ops/provisioning/*` (desafio, registro de chave, emissão, download, recibo, prontidão,
    revogação, reconciliação); `ReadinessGate` integrado. Fases P0–P6 da origem como plano.
-4. **Apps** (WP-T6): `apps/teat/mobile` (`@detran/teat-mobile`; Capacitor via `@stynx-nyx/mobile-runtime`;
+4. **Apps — meta original, agora limitada pela adenda acima à homologação UI/workflows** (WP-T6): `apps/teat/mobile` (`@detran/teat-mobile`; Capacitor via `@stynx-nyx/mobile-runtime`;
    `FieldShell`, `ReadinessGate`, `LocalActStore`, `SyncWorker`, `NormativePackageService`,
    `BodycamIndicator`; 8 módulos; 70 rotas; formulários; impressora via porta com `FixturePrinter`
    nos testes) e `apps/teat/web` (`@detran/teat-web`; `@detran/ui`; 12 módulos; 56 + 4 rotas). Scripts
-   `build|test|lint|typecheck` criados nesta rodada. O `pnpm check` raiz inclui o typecheck de
-   workspaces; lint/test/build dos apps rodam pelos gates específicos de cada pacote. O módulo `sinistros`
+   `build|test|lint|typecheck` criados nesta rodada. O `pnpm check` raiz agora inclui typecheck
+   de workspaces e lint/test/build completos de ambos os apps. Os 30 testes focais mobile são
+   evidência separada do ciclo corretivo. O módulo `sinistros`
    da web e a biblioteca de sinistro mobile são de R-0015 (BOAT): aqui só os pontos de extensão do shell.
 5. Documentação: `teat-build-pack.md` §WP-T4…T6 executados (gates reais); `teat-frontends.md` §10–§12;
    ADR nova; backlog.
@@ -91,10 +333,11 @@ que TASK-0018 executou `pnpm check` ou gates dos apps durante esta transcrição
   shared policy, RLS, decorators, reset + dois seeds idempotentes em `detran_r13`; toda a matriz
   P0–P6, não apenas quatro rejeitos; `contracts:check` admite exatamente oito `missing-route` após
   o Architect, como RED da fronteira manuscrita, e deve ficar integralmente verde no Engineer;
-- mobile: comandos separados `lint`, `typecheck`, `test`, `build`; 70/70 rotas/fichas, 576/576
-  transições e produto cartesiano de papéis permitidos/omitidos;
-- web: comandos separados `lint`, `typecheck`, `test`, `build`; 60/60 rotas, 56/56 fichas e
-  produto cartesiano de papéis;
+- mobile de homologação: comandos separados `lint`, `typecheck`, `test`, `build`; 70/70
+  rotas/fichas, 576/576 transições e produto cartesiano de papéis permitidos/omitidos;
+  jornadas positivas só em modo explícito/sintético e negativas produtivas fail-closed;
+- web de homologação: comandos separados `lint`, `typecheck`, `test`, `build`; 60/60
+  rotas, 56/56 fichas, produto cartesiano de papéis e segregação das simulações;
 - ao fim de cada CTG: `pnpm check`; CTG-0003 também `pnpm backend:test:ci`; zero skip/todo novo.
 
 ## Mapa entregável → definições

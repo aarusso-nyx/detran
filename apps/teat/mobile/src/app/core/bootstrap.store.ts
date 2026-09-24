@@ -14,6 +14,10 @@ import { TenantContextService } from '@stynx-nyx/angular-tenancy';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { MobileBootstrapClient } from '../data/api/mobile-bootstrap.client.js';
 import { ProvisioningClient } from '../data/api/provisioning.client.js';
+import {
+  LocalActStore,
+  type ScopedAitReservation,
+} from '../data/local/local-act.store.js';
 
 export interface Principal {
   readonly id: string;
@@ -43,8 +47,8 @@ export interface BootstrapSnapshot {
   readonly requestedProtocolVersion: string;
   readonly snapshot: Readonly<{
     capturedAt: string;
-    validUntil: string;
-    maxAgeSeconds: number;
+    validUntil: string | null;
+    maxAgeSeconds: number | null;
     authority: unknown;
   }>;
   readonly context: Readonly<{
@@ -58,8 +62,12 @@ export interface BootstrapSnapshot {
       tamperDetected: boolean;
       appVersion: string;
     }>;
-    activeShift?: Readonly<{ id: string; status: string }>;
-    session: Readonly<{ id: string; startedAt: string; exclusive: boolean }>;
+    activeShift: Readonly<{ id: string; status: string }> | null;
+    session: Readonly<{
+      id: string;
+      startedAt: string;
+      exclusive: boolean;
+    }> | null;
   }>;
   readonly catalog: Readonly<{
     operationalUnits: readonly unknown[];
@@ -176,6 +184,7 @@ export const TEAT_MOBILE_STYNX_SESSION_PORT =
 export class BootstrapStore {
   private readonly client = inject(MobileBootstrapClient);
   private readonly provisioningClient = inject(ProvisioningClient);
+  private readonly localStore = inject(LocalActStore);
   private value: BootstrapSnapshot | undefined;
   private provisioning: ProvisioningReadiness | undefined;
   private readonly stateValue = signal<BootstrapState>({ status: 'anonymous' });
@@ -189,12 +198,23 @@ export class BootstrapStore {
     return this.provisioning;
   }
 
-  async refresh(input: MobileBootstrapQuery): Promise<
+  async refresh(
+    input: MobileBootstrapQuery,
+    authenticatedSession: MobileSessionContext,
+  ): Promise<
     Readonly<{
       bootstrap: BootstrapSnapshot;
       provisioning: ProvisioningReadiness;
     }>
   > {
+    if (!validAuthenticatedSession(authenticatedSession)) {
+      this.clear();
+      this.stateValue.set({
+        status: 'blocked',
+        code: 'authenticated-mobile-session-required',
+      });
+      throw new Error('authenticated-mobile-session-required');
+    }
     this.stateValue.set({ status: 'loading', query: input });
     try {
       const [bootstrap, provisioning] = await Promise.all([
@@ -203,6 +223,8 @@ export class BootstrapStore {
           input.device_id,
         ) as Promise<ProvisioningReadiness>,
       ]);
+      this.assertAuthenticatedIdentity(bootstrap, authenticatedSession);
+      await this.installNumberingAuthority(bootstrap, input);
       this.value = bootstrap;
       this.provisioning = provisioning;
       const result = { bootstrap, provisioning };
@@ -223,6 +245,136 @@ export class BootstrapStore {
     this.provisioning = undefined;
     this.stateValue.set({ status: 'anonymous' });
   }
+
+  private async installNumberingAuthority(
+    bootstrap: BootstrapSnapshot,
+    query: MobileBootstrapQuery,
+  ): Promise<void> {
+    const context = bootstrap.context;
+    if (context.device.id !== query.device_id) {
+      throw new Error('bootstrap-device-mismatch');
+    }
+    const rawContext = context as unknown as Readonly<Record<string, unknown>>;
+    if (
+      !Object.prototype.hasOwnProperty.call(rawContext, 'activeShift') ||
+      !Object.prototype.hasOwnProperty.call(rawContext, 'session')
+    ) {
+      throw new Error('bootstrap-shift-session-required');
+    }
+    const shift = context.activeShift;
+    const operationalSession = context.session;
+    if (shift === null && operationalSession === null) {
+      if (bootstrap.numberingReservations.length !== 0) {
+        throw new Error('bootstrap-reservation-shift-required');
+      }
+      return;
+    }
+    if (!isRecord(shift) || !isRecord(operationalSession)) {
+      throw new Error('bootstrap-shift-session-mismatch');
+    }
+    if (!nonEmpty(shift.id) || shift.status !== 'open') {
+      throw new Error('bootstrap-open-shift-required');
+    }
+    if (
+      !nonEmpty(operationalSession.id) ||
+      operationalSession.id !== shift.id ||
+      !nonEmpty(operationalSession.startedAt) ||
+      typeof operationalSession.exclusive !== 'boolean'
+    ) {
+      throw new Error('bootstrap-shift-session-mismatch');
+    }
+    if (bootstrap.numberingReservations.length === 0) {
+      throw new Error('bootstrap-numbering-reservation-required');
+    }
+    const authorities = bootstrap.numberingReservations.map((candidate) =>
+      this.numberingAuthority(candidate, context, shift.id),
+    );
+    await this.localStore.installAitReservationAuthorities(authorities);
+  }
+
+  private assertAuthenticatedIdentity(
+    bootstrap: BootstrapSnapshot,
+    authenticated: MobileSessionContext,
+  ): void {
+    if (
+      bootstrap.context.tenantId !== authenticated.tenantId ||
+      bootstrap.context.agent.id !== authenticated.agentId ||
+      bootstrap.context.device.id !== authenticated.deviceId
+    ) {
+      throw new Error('bootstrap-session-mismatch');
+    }
+  }
+
+  private numberingAuthority(
+    candidate: unknown,
+    context: BootstrapSnapshot['context'],
+    activeShiftId: string,
+  ): ScopedAitReservation {
+    if (!isRecord(candidate)) {
+      throw new Error('bootstrap-reservation-invalid');
+    }
+    const authority: ScopedAitReservation = {
+      reservationId: requiredString(candidate['id']),
+      rangeId: requiredString(candidate['rangeId']),
+      entityType: 'ait',
+      series: requiredString(candidate['series']),
+      startNumber: requiredSafeInteger(candidate['startNumber']),
+      endNumber: requiredSafeInteger(candidate['endNumber']),
+      nextNumber: requiredSafeInteger(candidate['startNumber']),
+      validUntil: requiredString(candidate['validUntil']),
+      status:
+        candidate['status'] === 'reserved'
+          ? 'reserved'
+          : (() => {
+              throw new Error('bootstrap-reservation-status-invalid');
+            })(),
+      tenantId: requiredString(context.tenantId),
+      agentId: requiredString(context.agent.id),
+      deviceId: requiredString(context.device.id),
+      shiftId: requiredString(candidate['shiftId']),
+    };
+    const validUntil = Date.parse(authority.validUntil);
+    if (
+      authority.shiftId !== activeShiftId ||
+      authority.startNumber > authority.endNumber ||
+      !Number.isFinite(validUntil) ||
+      validUntil <= Date.now()
+    ) {
+      throw new Error('bootstrap-reservation-authority-mismatch');
+    }
+    return authority;
+  }
+}
+
+function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
+  return typeof value === 'object' && value !== null;
+}
+
+function nonEmpty(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
+function requiredString(value: unknown): string {
+  if (!nonEmpty(value)) throw new Error('bootstrap-string-authority-required');
+  return value;
+}
+
+function requiredSafeInteger(value: unknown): number {
+  if (!Number.isSafeInteger(value)) {
+    throw new Error('bootstrap-integer-authority-required');
+  }
+  return value as number;
+}
+
+function validAuthenticatedSession(
+  value: MobileSessionContext | undefined,
+): value is MobileSessionContext {
+  return (
+    value !== undefined &&
+    nonEmpty(value.tenantId) &&
+    nonEmpty(value.agentId) &&
+    nonEmpty(value.deviceId)
+  );
 }
 
 @Injectable({ providedIn: 'root' })
@@ -244,10 +396,13 @@ export class AuthBootstrapCoordinator {
       if (!mobile.deviceId || !mobile.appVersion) {
         throw new Error('mobile-session-context-incomplete');
       }
-      const result = await this.store.refresh({
-        device_id: mobile.deviceId,
-        app_version: mobile.appVersion,
-      });
+      const result = await this.store.refresh(
+        {
+          device_id: mobile.deviceId,
+          app_version: mobile.appVersion,
+        },
+        mobile,
+      );
       if (
         result.bootstrap.context.tenantId !== mobile.tenantId ||
         result.bootstrap.context.agent.id !== mobile.agentId ||

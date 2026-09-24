@@ -1,4 +1,5 @@
 import type { MobileEncryptedStorePort } from '@stynx-nyx/mobile-runtime';
+import type { ScopedAitReservation } from '../app/data/local/local-act.store';
 
 export class EncryptedStoreFixture implements MobileEncryptedStorePort {
   readonly adapterName = 'inspector-encrypted-store';
@@ -29,6 +30,25 @@ export class EncryptedStoreFixture implements MobileEncryptedStorePort {
 
   async clear(): Promise<void> {
     this.values.clear();
+  }
+
+  async installAitReservationAuthoritiesAtomic(
+    authorities: readonly ScopedAitReservation[],
+  ): Promise<void> {
+    const staged = new Map(this.values);
+    for (const authority of authorities) {
+      const key = `reservation:${authority.reservationId}`;
+      const existing = staged.get(key);
+      if (
+        existing !== undefined &&
+        JSON.stringify(existing) !== JSON.stringify(authority)
+      ) {
+        throw new Error('local-store-identity-conflict');
+      }
+      staged.set(key, structuredClone(authority));
+    }
+    this.values.clear();
+    for (const [key, value] of staged) this.values.set(key, value);
   }
 
   corrupt(collection: string, key: string, value: unknown): void {

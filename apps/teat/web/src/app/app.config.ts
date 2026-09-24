@@ -6,7 +6,7 @@ import {
   provideZonelessChangeDetection,
   type ApplicationConfig,
 } from '@angular/core';
-import { provideRouter, withRouterConfig } from '@angular/router';
+import { provideRouter, withRouterConfig, type Routes } from '@angular/router';
 import { provideDetranAuthenticatedApp } from '@detran/ui';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { TenantContextService } from '@stynx-nyx/angular-tenancy';
@@ -60,59 +60,63 @@ function provideSessionContext(session: StynxSessionService): TeatWebSession {
   };
 }
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZonelessChangeDetection(),
-    provideHttpClient(withInterceptorsFromDi()),
-    provideRouter(
-      TEAT_ROUTES,
-      withRouterConfig({ onSameUrlNavigation: 'reload' }),
-    ),
-    {
-      provide: TEAT_WEB_SESSION,
-      useFactory: provideSessionContext,
-      deps: [StynxSessionService],
-    },
-    {
-      provide: TEAT_WEB_TENANT,
-      useFactory: (tenant: TenantContextService) => ({
-        get tenantId() {
-          return tenant.tenantId() ?? undefined;
-        },
-      }),
-      deps: [TenantContextService],
-    },
-    {
-      provide: TEAT_WEB_ROUTE_CONTEXT_RESOLVER,
-      useExisting: DefaultTeatWebRouteContextResolver,
-    },
-    {
-      provide: TEAT_WEB_ROUTE_CONTEXT,
-      useFactory: (
-        resolver: {
-          readonly state: () => {
-            readonly tenantId?: string;
-            readonly resolved: boolean;
-            readonly available: boolean;
-          };
-        },
-        tenant: TenantContextService,
-      ) => ({
-        get available() {
-          const resolution = resolver.state();
-          const currentTenant = tenant.tenantId();
-          return (
-            resolution.resolved &&
-            resolution.available &&
-            typeof currentTenant === 'string' &&
-            resolution.tenantId === currentTenant
-          );
-        },
-      }),
-      deps: [TEAT_WEB_ROUTE_CONTEXT_RESOLVER, TenantContextService],
-    },
-  ],
-};
+export function createTeatWebAppConfig(routes: Routes): ApplicationConfig {
+  return {
+    providers: [
+      provideZonelessChangeDetection(),
+      provideHttpClient(withInterceptorsFromDi()),
+      provideRouter(
+        routes,
+        withRouterConfig({ onSameUrlNavigation: 'reload' }),
+      ),
+      {
+        provide: TEAT_WEB_SESSION,
+        useFactory: provideSessionContext,
+        deps: [StynxSessionService],
+      },
+      {
+        provide: TEAT_WEB_TENANT,
+        useFactory: (tenant: TenantContextService) => ({
+          get tenantId() {
+            return tenant.tenantId() ?? undefined;
+          },
+        }),
+        deps: [TenantContextService],
+      },
+      {
+        provide: TEAT_WEB_ROUTE_CONTEXT_RESOLVER,
+        useExisting: DefaultTeatWebRouteContextResolver,
+      },
+      {
+        provide: TEAT_WEB_ROUTE_CONTEXT,
+        useFactory: (
+          resolver: {
+            readonly state: () => {
+              readonly tenantId?: string;
+              readonly resolved: boolean;
+              readonly available: boolean;
+            };
+          },
+          tenant: TenantContextService,
+        ) => ({
+          get available() {
+            const resolution = resolver.state();
+            const currentTenant = tenant.tenantId();
+            return (
+              resolution.resolved &&
+              resolution.available &&
+              typeof currentTenant === 'string' &&
+              resolution.tenantId === currentTenant
+            );
+          },
+        }),
+        deps: [TEAT_WEB_ROUTE_CONTEXT_RESOLVER, TenantContextService],
+      },
+    ],
+  };
+}
+
+export const appConfig: ApplicationConfig = createTeatWebAppConfig(TEAT_ROUTES);
 
 export const teatAuthenticatedProvider = provideDetranAuthenticatedApp({
   angular: { apiBaseUrl: '', sessionMode: 'bearer' },

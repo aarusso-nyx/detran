@@ -10,6 +10,8 @@ interface AdapterOperation {
   readonly path: string;
   readonly args: readonly unknown[];
   readonly expectedHeaders?: Readonly<Record<string, string>>;
+  readonly wireResponse?: unknown;
+  readonly expectedResponse?: unknown;
 }
 
 const IDEMPOTENT = { 'Idempotency-Key': 'caller-key-A' } as const;
@@ -77,6 +79,16 @@ const OPERATIONS: readonly AdapterOperation[] = [
     verb: 'GET',
     path: '/v1/ops/offline-sync/receipts/tenant-001/by-idempotency/key-001',
     args: ['tenant-001', 'key-001'],
+    wireResponse: {
+      local_entity_id: 'local-001',
+      idempotency_key: 'key-001',
+      status: 'applied',
+    },
+    expectedResponse: {
+      localEntityId: 'local-001',
+      idempotencyKey: 'key-001',
+      status: 'applied',
+    },
   },
   {
     modulePath: 'data/api/offline-sync.client',
@@ -99,8 +111,12 @@ const OPERATIONS: readonly AdapterOperation[] = [
     method,
     verb: 'POST' as const,
     path: `/v1/inf/ait/aits/ait-001/${method === 'recordScience' ? 'science' : method === 'recordPrintEvent' ? 'print-events' : method === 'queueTransmission' ? 'queue-transmission' : 'finalize'}`,
-    args: ['ait-001', {}, IDEMPOTENT],
-    expectedHeaders: IDEMPOTENT,
+    args: [
+      'ait-001',
+      {},
+      method === 'recordPrintEvent' ? CONDITIONAL : IDEMPOTENT,
+    ],
+    expectedHeaders: method === 'recordPrintEvent' ? CONDITIONAL : IDEMPOTENT,
   })),
   {
     modulePath: 'data/api/ait.client',
@@ -242,6 +258,9 @@ for (const operation of OPERATIONS) {
       (new (http: unknown) => Record<string, unknown>) | undefined;
     expect(Constructor).toBeTypeOf('function');
     const http = new FaithfulHttpClientDouble();
+    if (operation.wireResponse !== undefined) {
+      http.respond(operation.wireResponse);
+    }
     const instance = new (
       Constructor as new (http: unknown) => Record<string, unknown>
     )(http);
@@ -251,7 +270,9 @@ for (const operation of OPERATIONS) {
       call,
       `${operation.exportName}.${operation.method} ausente`,
     ).toBeTypeOf('function');
-    await expect(call?.(...operation.args)).resolves.toEqual({ ok: true });
+    await expect(call?.(...operation.args)).resolves.toEqual(
+      operation.expectedResponse ?? { ok: true },
+    );
     expect(http.calls).toContainEqual(
       expect.objectContaining({ method: operation.verb, path: operation.path }),
     );

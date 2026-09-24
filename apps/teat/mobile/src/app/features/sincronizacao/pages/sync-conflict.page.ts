@@ -4,13 +4,16 @@ import {
   mobilePageContract,
   MobilePageRuntime,
 } from '../../../shared/mobile-page.component.js';
+import { HomologationSyncPanelComponent } from '../../../shared/homologation-sync-panel.component.js';
 
 @Component({
   standalone: true,
+  imports: [HomologationSyncPanelComponent],
   template: `
     <main [attr.data-screen]="screenId">
       <h1>{{ title }}</h1>
       <p role="status">{{ status }}</p>
+      <teat-homologation-sync-panel [screenId]="screenId" />
     </main>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

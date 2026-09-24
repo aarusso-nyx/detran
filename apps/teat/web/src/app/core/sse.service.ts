@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { catchError, EMPTY, Observable, timer } from 'rxjs';
+import { inject, Injectable, signal } from '@angular/core';
+import { catchError, defer, EMPTY, Observable, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { TEAT_WEB_HOMOLOGATION } from '../shared/homologation-http.interceptor.js';
+import { TEAT_WEB_HOMOLOGATION_EVENTS } from '../shared/homologation-events.port.js';
 
 const STREAM_URL = '/v1/ops/stream';
 const POLLING_INTERVAL_MS = 15_000;
@@ -14,8 +16,28 @@ export interface SseStreamOptions {
 @Injectable({ providedIn: 'root' })
 export class SseService {
   private readonly http = inject(HttpClient);
+  private readonly homologation = inject(TEAT_WEB_HOMOLOGATION, {
+    optional: true,
+  });
+  private readonly homologationEvents = inject(TEAT_WEB_HOMOLOGATION_EVENTS, {
+    optional: true,
+  });
+  private readonly fallbackActive = signal(false);
+  readonly homologationFallbackActive = this.fallbackActive.asReadonly();
 
   stream(options: SseStreamOptions = {}): Observable<unknown> {
+    if (this.homologation === true) {
+      const events = this.homologationEvents;
+      if (events === null) return EMPTY;
+      return defer(() => events.stream(options)).pipe(
+        catchError(() => {
+          this.fallbackActive.set(true);
+          return timer(POLLING_INTERVAL_MS, POLLING_INTERVAL_MS).pipe(
+            switchMap(() => events.fallback?.(options) ?? EMPTY),
+          );
+        }),
+      );
+    }
     return new Observable<unknown>((observer) => {
       const topics = options.topics ?? [];
       const streamUrl =

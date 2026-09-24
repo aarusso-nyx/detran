@@ -1,9 +1,8 @@
 // CTG-0002 §5.1–§5.3 e §6 (M9, R-0008, TASK-0005) — `GET /v1/ops/
 // mobile-bootstrap`: o retrato que o coletor recebe antes de operar.
 //
-// Os dois campos de prazo do `snapshot` saem **null**: o valor da origem é
-// constante interna sem linha no `parameter-catalogue.md` (OD-T14) e não se
-// inventa prazo.
+// Os campos de prazo do `snapshot` só recebem valor de uma linha tenant/TEAT
+// vigente e completa do catálogo; qualquer outra condição falha fechada.
 import { createHash } from 'node:crypto';
 import type { OpsRow } from '@detran/ops-core';
 import { DetranError } from '@detran/shared';
@@ -24,6 +23,7 @@ export const MOBILE_BOOTSTRAP_PROTOCOL_VERSION = 'teat-mobile-bootstrap.v1';
 const SNAPSHOT_AUTHORITY = 'server-snapshot';
 /** Chave do `parameter-catalogue.md` §TEAT (H.55). */
 const HOMOLOGATION_BEHAVIOR_KEY = 'teat.homologation.expired_behavior';
+const SNAPSHOT_MAX_AGE_KEY = 'teat.bootstrap.snapshot_max_age_seconds';
 
 /** §5.3 — os dez bloqueadores saem exatamente nesta ordem. */
 export const BLOCKER_ORDER = [
@@ -54,6 +54,7 @@ export interface BootstrapWorld {
   appVersions: OpsRow[];
   packages: OpsRow[];
   reservations: OpsRow[];
+  numberingRanges: OpsRow[];
   shifts: OpsRow[];
   handoffs: OpsRow[];
 }
@@ -84,14 +85,14 @@ export class MobileBootstrapService {
     const warnings = await this.warnings(world, today);
     const capabilities = this.capabilities(world, blockers, query);
     const normativePackage = publishedPackage(world.packages);
+    const snapshot = await this.snapshot(now);
     return {
       protocolVersion: MOBILE_BOOTSTRAP_PROTOCOL_VERSION,
       requestedProtocolVersion: requested,
       snapshot: {
         capturedAt: now,
-        // OD-T14: sem linha no catálogo, não há prazo de validade do retrato.
-        validUntil: null,
-        maxAgeSeconds: null,
+        validUntil: snapshot.validUntil,
+        maxAgeSeconds: snapshot.maxAgeSeconds,
         authority: SNAPSHOT_AUTHORITY,
       },
       context: {
@@ -130,16 +131,20 @@ export class MobileBootstrapService {
             contentPath: `/v1/inf/normative/mobile-packages/${String(normativePackage.id)}/content`,
           }
         : null,
-      numberingReservations: validReservations(world, query, now).map(
-        (row) => ({
+      numberingReservations: validReservations(world, query, now).map((row) => {
+        const range = authoritativeRange(world, row);
+        if (!range) throw new Error('authoritative-numbering-range-required');
+        return {
           id: String(row.id),
           rangeId: row.range_id ?? null,
+          shiftId: row.shift_id ?? null,
+          series: String(range.series).trim(),
           startNumber: Number(row.start_number),
           endNumber: Number(row.end_number),
           validUntil: isoOf(row.valid_until),
           status: row.status ?? null,
-        }),
-      ),
+        };
+      }),
       readiness: {
         preShiftReady: capabilities.canOpenShift,
         offlineReady: capabilities.canOperateOffline,
@@ -194,6 +199,9 @@ export class MobileBootstrapService {
         await storeOf(this.deps, 'reservations').list(),
         tenantId,
       ),
+      numberingRanges: ofAgency(
+        ownedBy(await storeOf(this.deps, 'numberingRanges').list(), tenantId),
+      ),
       shifts: ownedBy(await storeOf(this.deps, 'shifts').list(), tenantId),
       handoffs: ownedBy(await storeOf(this.deps, 'handoffs').list(), tenantId),
     };
@@ -221,7 +229,10 @@ export class MobileBootstrapService {
       blockers.push('APP_VERSION_NOT_ALLOWED');
     if (!publishedPackage(world.packages))
       blockers.push('NORMATIVE_PACKAGE_MISSING');
-    if (validReservations(world, query, now).length === 0)
+    const reservations = openShiftHere(world, query)
+      ? validReservations(world, query, now)
+      : reservableReservations(world, query, now);
+    if (reservations.length === 0)
       blockers.push('NUMBERING_RESERVATION_REQUIRED');
     const agent = world.agent;
     const credential = dateOf(agent?.credential_valid_until);
@@ -266,6 +277,58 @@ export class MobileBootstrapService {
     const value = row?.value_json;
     if (value === null || value === undefined) return null;
     return String(value).startsWith('warn') ? 'warn' : String(value);
+  }
+
+  private async snapshot(
+    capturedAt: string,
+  ): Promise<{ maxAgeSeconds: number | null; validUntil: string | null }> {
+    let row:
+      | Awaited<ReturnType<NonNullable<FieldDeps['parameters']>['get']>>
+      | undefined;
+    try {
+      row = await this.deps.parameters?.get(SNAPSHOT_MAX_AGE_KEY, {
+        on: capturedAt.slice(0, 10),
+      });
+    } catch {
+      return { maxAgeSeconds: null, validUntil: null };
+    }
+    const tenantId = tenantScope(this.deps).tenantId;
+    if (
+      !row ||
+      row.key !== SNAPSHOT_MAX_AGE_KEY ||
+      row.tenant_id !== tenantId ||
+      row.traffic_agency_id !== null ||
+      row.scope !== 'tenant' ||
+      row.surface !== 'teat' ||
+      row.status !== 'vigente' ||
+      row.source_pending !== false ||
+      row.value_type !== 'int' ||
+      typeof row.value_json !== 'number' ||
+      !Number.isSafeInteger(row.value_json) ||
+      row.value_json <= 0
+    ) {
+      return { maxAgeSeconds: null, validUntil: null };
+    }
+    const capturedAtMillis = Date.parse(capturedAt);
+    const durationMillis = row.value_json * 1_000;
+    if (
+      !Number.isFinite(capturedAtMillis) ||
+      !Number.isSafeInteger(durationMillis) ||
+      !Number.isSafeInteger(capturedAtMillis + durationMillis)
+    ) {
+      return { maxAgeSeconds: null, validUntil: null };
+    }
+    const validUntil = new Date(capturedAtMillis + durationMillis);
+    if (
+      !Number.isFinite(validUntil.getTime()) ||
+      validUntil.getTime() <= capturedAtMillis
+    ) {
+      return { maxAgeSeconds: null, validUntil: null };
+    }
+    return {
+      maxAgeSeconds: row.value_json,
+      validUntil: validUntil.toISOString(),
+    };
   }
 
   private capabilities(
@@ -399,13 +462,72 @@ export function validReservations(
   query: MobileBootstrapQuery,
   now: string,
 ): OpsRow[] {
+  const shift = openShiftHere(world, query);
+  if (!shift) return [];
+  return reservableReservations(world, query, now).filter(
+    (row) =>
+      typeof row.shift_id === 'string' &&
+      row.shift_id.trim().length > 0 &&
+      String(row.shift_id) === String(shift.id),
+  );
+}
+
+function reservableReservations(
+  world: BootstrapWorld,
+  query: MobileBootstrapQuery,
+  now: string,
+): OpsRow[] {
   const agentId = world.agent ? String(world.agent.id) : null;
   return world.reservations.filter((row) => {
     if (String(row.status) !== 'reserved') return false;
     if (String(row.device_id) !== String(query.device_id)) return false;
     if (agentId && String(row.agent_id) !== agentId) return false;
     const validUntil = isoOf(row.valid_until);
-    return validUntil !== null && new Date(validUntil) > new Date(now);
+    const validUntilTimestamp = Date.parse(validUntil ?? '');
+    const nowTimestamp = Date.parse(now);
+    if (
+      !Number.isFinite(validUntilTimestamp) ||
+      !Number.isFinite(nowTimestamp) ||
+      validUntilTimestamp <= nowTimestamp
+    )
+      return false;
+    return authoritativeRange(world, row) !== undefined;
+  });
+}
+
+function authoritativeRange(
+  world: BootstrapWorld,
+  reservation: OpsRow,
+): OpsRow | undefined {
+  if (
+    typeof reservation.range_id !== 'string' ||
+    reservation.range_id.trim().length === 0 ||
+    typeof reservation.traffic_agency_id !== 'string' ||
+    String(reservation.traffic_agency_id) !== world.agencyId
+  ) {
+    return undefined;
+  }
+  const reservationStart = Number(reservation.start_number);
+  const reservationEnd = Number(reservation.end_number);
+  return world.numberingRanges.find((range) => {
+    const rangeStart = Number(range.start_number);
+    const rangeEnd = Number(range.end_number);
+    return (
+      typeof range.id === 'string' &&
+      range.id.trim().length > 0 &&
+      String(range.id) === String(reservation.range_id) &&
+      typeof range.traffic_agency_id === 'string' &&
+      String(range.traffic_agency_id) === world.agencyId &&
+      typeof range.series === 'string' &&
+      range.series.trim().length > 0 &&
+      Number.isSafeInteger(reservationStart) &&
+      Number.isSafeInteger(reservationEnd) &&
+      Number.isSafeInteger(rangeStart) &&
+      Number.isSafeInteger(rangeEnd) &&
+      reservationStart <= reservationEnd &&
+      reservationStart >= rangeStart &&
+      reservationEnd <= rangeEnd
+    );
   });
 }
 

@@ -7,7 +7,11 @@ import {
   signal,
   type OnInit,
 } from '@angular/core';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { TeatI18n } from '../../../core/i18n.service.js';
+import { TEAT_HOMOLOGATION_AIT } from '../../../shared/homologation-ait.port.js';
+import { dispatchTransition } from '../../../navigation/transitions.js';
 import {
   mobilePageContract,
   type MobileCommandContext,
@@ -17,25 +21,69 @@ import {
 @Component({
   standalone: true,
   template: `
-    <main [attr.data-screen]="screenId" [attr.data-state]="state()">
+    <main
+      [attr.data-screen]="screenId"
+      [attr.data-state]="state()"
+      [attr.data-profile]="homologation ? 'homologation' : 'production'"
+    >
+      @if (homologation) {
+        <p role="note">{{ profileLabel() }}</p>
+      }
       <h1>{{ title() }}</h1>
       <p role="status">{{ status() }}</p>
-      <form (submit)="onSubmit($event)">
+      @if (homologation) {
+        <p>
+          {{ labels['teat.forms.homologationAit.scenarioPlate'] }}
+          {{ snapshot()?.plate }}
+        </p>
+        <p data-scenario-hash>
+          {{ labels['teat.forms.homologationAit.syntheticId'] }}
+          {{ snapshot()?.scenarioHash }}
+        </p>
+      }
+      <form
+        [attr.data-homologation-workflow-step]="
+          homologation ? 'ait-review' : null
+        "
+        (submit)="onSubmit($event)"
+      >
+        @if (homologation) {
+          <label
+            >{{ labels['teat.forms.homologationAit.explicitAction'] }}
+            <select name="explicit_action">
+              <option value="">
+                {{ labels['teat.forms.homologationAit.select'] }}
+              </option>
+              <option value="finalize">
+                {{ labels['teat.forms.homologationAit.finalizeSimulation'] }}
+              </option>
+            </select>
+          </label>
+        }
         <button type="submit">{{ submitLabel() }}</button>
+        @if (error()) {
+          <p role="alert">{{ error() }}</p>
+        }
       </form>
     </main>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AitReviewPageComponent implements OnInit {
+  readonly labels = new Proxy({} as Readonly<Record<string, string>>, {
+    get: (_target, key) => this.injector.get(TeatI18n).translate(String(key)),
+  });
   private readonly runtime = inject(MobilePageRuntime);
   private readonly injector = inject(Injector);
   private readonly pendingTasks = inject(PendingTasks);
+  private readonly router = inject(Router, { optional: true });
+  private readonly location = inject(Location, { optional: true });
+  private readonly homologationPort = inject(TEAT_HOMOLOGATION_AIT, {
+    optional: true,
+  });
+  readonly homologation =
+    inject(TEAT_HOMOLOGATION_AIT, { optional: true }) !== null;
   private i18n?: TeatI18n;
-  private loadedAction?: Readonly<{
-    input: Record<string, unknown>;
-    context: MobileCommandContext;
-  }>;
   readonly screenId = 'ait-review';
   readonly contract = mobilePageContract(this.screenId);
   readonly schema = this.contract.schemaId;
@@ -46,50 +94,90 @@ export class AitReviewPageComponent implements OnInit {
     const result = await this.integration.submit!(input, context);
     if (result.kind === 'persisted' && this.i18n !== undefined) {
       this.status.set(this.i18n.translate('teat.states.finalizado_local'));
+    } else if (result.kind === 'demonstrated' && this.i18n !== undefined) {
+      this.status.set(this.i18n.translate('teat.states.demonstrated'));
     }
     return result;
   };
   readonly title = signal('');
   readonly submitLabel = signal('');
+  readonly profileLabel = signal('');
   readonly status = signal('');
+  readonly error = signal('');
+  readonly snapshot = () => this.homologationPort?.snapshot?.();
   readonly state = signal<
-    'loading' | 'ready' | 'persisted' | 'blocked' | 'error'
+    'loading' | 'ready' | 'persisted' | 'demonstrated' | 'blocked' | 'error'
   >('loading');
 
   ngOnInit(): void {
     const i18n = this.injector.get(TeatI18n);
     this.i18n = i18n;
     void this.pendingTasks.run(async () => {
-      const load = this.integration.load();
       await i18n.initialize();
       this.title.set(i18n.translate('teat.screens.ait-review.title'));
       this.submitLabel.set(i18n.translate('teat.common.confirm'));
-      this.status.set(i18n.translate('teat.common.loading'));
-      const loaded = await load;
-      this.loadedAction = reviewActionFromQueue(loaded.value);
-      this.state.set('ready');
-      this.status.set(i18n.translate('teat.common.save'));
+      this.profileLabel.set(i18n.translate('teat.shell.homologation'));
+      this.state.set(this.homologation ? 'ready' : 'blocked');
+      this.status.set(
+        i18n.translate(
+          this.homologation ? 'teat.common.loading' : 'teat.readiness.blocker',
+        ),
+      );
     });
   }
 
   onSubmit(event: SubmitEvent): void {
     event.preventDefault();
+    const explicitAction = (
+      (event.target as HTMLFormElement).elements.namedItem(
+        'explicit_action',
+      ) as HTMLSelectElement | null
+    )?.value;
+    if (
+      this.homologation &&
+      this.homologationPort?.snapshot !== undefined &&
+      explicitAction !== 'finalize'
+    ) {
+      this.error.set(
+        this.injector
+          .get(TeatI18n)
+          .translate('teat.forms.homologationAit.finalizeRequired'),
+      );
+      return;
+    }
     void this.pendingTasks.run(async () => {
       const i18n = this.i18n;
-      if (i18n === undefined || this.loadedAction === undefined) {
+      if (i18n === undefined) {
         this.state.set('blocked');
-        if (i18n !== undefined) {
-          this.status.set(i18n.translate('teat.readiness.blocker'));
-        }
+        return;
+      }
+      if (!this.homologation) {
+        this.state.set('blocked');
+        this.status.set(i18n.translate('teat.readiness.blocker'));
         return;
       }
       try {
         const result = await this.submit(
-          this.loadedAction.input,
-          this.loadedAction.context,
+          this.homologation ? { explicit_action: explicitAction } : undefined,
         );
-        if (result.kind === 'persisted') {
-          this.state.set('persisted');
+        if (result.kind === 'demonstrated') {
+          this.state.set('demonstrated');
+          this.error.set('');
+          if (
+            this.homologationPort?.snapshot !== undefined &&
+            this.router !== null &&
+            this.location !== null
+          ) {
+            await dispatchTransition(
+              {
+                from: 'ait-review',
+                action: 'Continuar',
+                conditionSatisfied: true,
+              },
+              this.router,
+              this.location,
+            );
+          }
         } else {
           this.state.set('blocked');
           this.status.set(i18n.translate('teat.readiness.blocker'));
@@ -97,65 +185,8 @@ export class AitReviewPageComponent implements OnInit {
       } catch {
         this.state.set('error');
         this.status.set(i18n.translate('teat.errors.internal'));
+        this.error.set(this.labels['teat.forms.homologationAit.invalidStep']);
       }
     });
   }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function reviewActionFromQueue(value: unknown):
-  | Readonly<{
-      input: Record<string, unknown>;
-      context: MobileCommandContext;
-    }>
-  | undefined {
-  if (!Array.isArray(value)) return undefined;
-  const item = value.find(
-    (candidate) => isRecord(candidate) && candidate['entityType'] === 'ait',
-  );
-  if (!isRecord(item)) return undefined;
-  const input = item['payloadJson'];
-  const context = item['commandContext'];
-  if (!isRecord(input) || !isMobileCommandContext(context)) return undefined;
-  return { input, context };
-}
-
-function isMobileCommandContext(value: unknown): value is MobileCommandContext {
-  if (!isRecord(value)) return false;
-  const session = value['session'];
-  const location = value['location'];
-  if (!isRecord(session) || !isRecord(location)) return false;
-  const sessionKeys = [
-    'tenantId',
-    'orgUnitId',
-    'agentId',
-    'deviceId',
-    'shiftId',
-    'appVersion',
-  ] as const;
-  return (
-    (!sessionKeys.every((key) => typeof session[key] === 'string') ||
-      !Array.isArray(session['roles']) ||
-      !session['roles'].every((role) => typeof role === 'string') ||
-      typeof value['localEntityId'] !== 'string' ||
-      value['entityType'] !== 'ait' ||
-      typeof value['version'] !== 'number' ||
-      typeof value['idempotencyKey'] !== 'string' ||
-      typeof value['payloadHash'] !== 'string' ||
-      typeof value['createdLocallyAt'] !== 'string' ||
-      typeof value['normativePackageId'] !== 'string' ||
-      typeof value['normativePackageVersion'] !== 'string' ||
-      typeof value['reservationId'] !== 'string' ||
-      typeof value['reservedNumber'] !== 'number' ||
-      typeof value['ifMatch'] !== 'string' ||
-      typeof location['latitude'] !== 'number' ||
-      typeof location['longitude'] !== 'number' ||
-      typeof location['accuracyMeters'] !== 'number' ||
-      typeof location['capturedAt'] !== 'string' ||
-      !['gps', 'network', 'manual'].includes(String(location['source']))) ===
-    false
-  );
 }

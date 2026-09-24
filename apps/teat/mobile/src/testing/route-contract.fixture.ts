@@ -15,6 +15,7 @@ export type TeatStaffRole = (typeof TEAT_STAFF_ROLES)[number];
 
 export interface TeatRouteFixture {
   readonly path: string;
+  readonly clientId?: string;
   readonly uxCode: string;
   readonly sourceSheet: string;
   readonly guards: string;
@@ -27,7 +28,7 @@ export const TEAT_ROUTE_FIXTURE = [
     path: 'auth-login',
     uxCode: 'UX-MOB-001',
     sourceSheet: 'IU-TEAT-auth-login.md',
-    guards: 'R',
+    guards: 'E',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component: 'features/turno/pages/auth-login.page.ts#AuthLoginPageComponent',
   },
@@ -35,7 +36,7 @@ export const TEAT_ROUTE_FIXTURE = [
     path: 'auth-mfa',
     uxCode: 'UX-MOB-002',
     sourceSheet: 'IU-TEAT-auth-mfa.md',
-    guards: 'R',
+    guards: 'E',
     allowedRoles: ['field-agent', 'field-supervisor'],
     component: 'features/turno/pages/auth-mfa.page.ts#AuthMfaPageComponent',
   },
@@ -68,6 +69,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'open-shift',
+    clientId: 'MobileBootstrapClient',
     uxCode: 'UX-MOB-006',
     sourceSheet: 'IU-TEAT-open-shift.md',
     guards: 'B',
@@ -84,6 +86,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'close-shift',
+    clientId: 'MobileBootstrapClient',
     uxCode: 'UX-MOB-008',
     sourceSheet: 'IU-TEAT-close-shift.md',
     guards: 'B+S',
@@ -102,6 +105,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'device-handoff',
+    clientId: 'MobileBootstrapClient',
     uxCode: 'source_pending',
     sourceSheet: 'ARCH-TEAT-FRONTENDS §4 (D-01)',
     guards: 'B',
@@ -111,6 +115,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'vehicle-search',
+    clientId: 'OpsSnapshotsClient',
     uxCode: 'UX-MOB-010',
     sourceSheet: 'IU-TEAT-vehicle-search.md',
     guards: 'B+S',
@@ -120,6 +125,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'vehicle-result',
+    clientId: 'OpsSnapshotsClient',
     uxCode: 'UX-MOB-011',
     sourceSheet: 'IU-TEAT-vehicle-result.md',
     guards: 'B+S',
@@ -129,6 +135,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'vehicle-divergence',
+    clientId: 'OpsSnapshotsClient',
     uxCode: 'UX-MOB-012',
     sourceSheet: 'IU-TEAT-vehicle-divergence.md',
     guards: 'B+S',
@@ -138,6 +145,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'driver-search',
+    clientId: 'OpsSnapshotsClient',
     uxCode: 'UX-MOB-013',
     sourceSheet: 'IU-TEAT-driver-search.md',
     guards: 'B+S',
@@ -147,6 +155,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'driver-result',
+    clientId: 'OpsSnapshotsClient',
     uxCode: 'UX-MOB-014',
     sourceSheet: 'IU-TEAT-driver-result.md',
     guards: 'B+S',
@@ -156,6 +165,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'query-failure',
+    clientId: 'OpsSnapshotsClient',
     uxCode: 'UX-MOB-015',
     sourceSheet: 'IU-TEAT-query-failure.md',
     guards: 'B+S',
@@ -292,6 +302,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'ait-cancel-request',
+    clientId: 'AitClient',
     uxCode: 'D-04',
     sourceSheet: 'IU-TEAT-ait-cancel-request.md',
     guards: 'B+S',
@@ -310,6 +321,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'measure-start',
+    clientId: 'MeasuresClient',
     uxCode: 'UX-MOB-040',
     sourceSheet: 'IU-TEAT-measure-start.md',
     guards: 'B+S',
@@ -319,6 +331,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'retention',
+    clientId: 'MeasuresClient',
     uxCode: 'UX-MOB-041',
     sourceSheet: 'IU-TEAT-retention.md',
     guards: 'B+S',
@@ -372,6 +385,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'alcohol-start',
+    clientId: 'AlcoholClient',
     uxCode: 'UX-MOB-050',
     sourceSheet: 'IU-TEAT-alcohol-start.md',
     guards: 'B+S',
@@ -560,6 +574,7 @@ export const TEAT_ROUTE_FIXTURE = [
   },
   {
     path: 'sync-conflict',
+    clientId: 'OfflineSyncClient',
     uxCode: 'UX-MOB-082',
     sourceSheet: 'IU-TEAT-sync-conflict.md',
     guards: 'B+S',

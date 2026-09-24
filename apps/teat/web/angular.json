@@ -27,6 +27,25 @@
             "styles": ["src/styles.css"]
           },
           "configurations": {
+            "homologation": {
+              "browser": "src/main.homologation.ts",
+              "optimization": true,
+              "sourceMap": false,
+              "extractLicenses": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "600kB",
+                  "maximumError": "1MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "4kB",
+                  "maximumError": "8kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
             "production": {
               "optimization": true,
               "sourceMap": false,
@@ -52,11 +71,14 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "homologation"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
+            "homologation": {
+              "buildTarget": "teat-web:build:homologation"
+            },
             "production": {
               "buildTarget": "teat-web:build:production"
             },
@@ -64,7 +86,7 @@
               "buildTarget": "teat-web:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "homologation"
         }
       }
     }

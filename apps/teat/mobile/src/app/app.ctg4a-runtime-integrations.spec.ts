@@ -35,7 +35,7 @@ import {
 } from './shared/mobile-printer.port';
 import { TEAT_BODYCAM_STATE } from './core/bodycam-indicator.component';
 import { TeatI18n } from './core/i18n.service';
-import type { MobileCommandContext } from './shared/mobile-page.component';
+import { TEAT_HOMOLOGATION_AIT } from './shared/homologation-ait.port';
 
 const headers = { 'Idempotency-Key': 'idem-ctg4a-001' } as const;
 
@@ -94,6 +94,10 @@ it('F003/F007/F008 grafo root de produção resolve stores, workers, serviços, 
     }
     expect.soft(resolved !== undefined, `provider root ${label}`).toBe(true);
   }
+  expect(
+    TestBed.inject(TEAT_HOMOLOGATION_AIT, null),
+    'bootstrap comum não pode selecionar uma fixture de homologação implicitamente',
+  ).toBeNull();
 });
 
 it('F003 NormativePackageService usa a assinatura real, o manifesto assinado e Idempotency-Key no validate', async () => {
@@ -313,7 +317,7 @@ it('F003/F007 impressora root falha fechado; PrinterDialog registra rejeição a
   http.verify();
 });
 
-it('F004/F009 MobilePageRuntime devolve objetos executáveis e prova ação real, não strings ou shells', async () => {
+it('F004/F009 MobilePageRuntime mantém bindings executáveis e bloqueia finalização produtiva sem validador AIT', async () => {
   const runtime = await loadMobileRuntime('shared/mobile-page.component');
   const encrypted = new EncryptedStoreFixture();
   const store = new LocalActStore(encrypted);
@@ -443,28 +447,9 @@ it('F004/F009 MobilePageRuntime devolve objetos executáveis e prova ação real
       context: typeof commandContext,
     ) => Promise<unknown>
   )(reviewInput, commandContext);
-  expect(action).toMatchObject({ kind: 'persisted' });
-  expect(await encrypted.list('draft')).toEqual([
-    expect.objectContaining({
-      localId: commandContext.localEntityId,
-      entityType: commandContext.entityType,
-      tenantId: commandContext.session.tenantId,
-      idempotencyKey: commandContext.idempotencyKey,
-      localContentHash: commandContext.payloadHash,
-      normativePackageId: commandContext.normativePackageId,
-      payload: expect.objectContaining(reviewInput),
-      location: commandContext.location,
-    }),
-  ]);
-  expect(await encrypted.list('queue')).toEqual([
-    expect.objectContaining({
-      localEntityId: commandContext.localEntityId,
-      idempotencyKey: commandContext.idempotencyKey,
-      payloadHash: commandContext.payloadHash,
-      payloadJson: expect.objectContaining(reviewInput),
-      location: commandContext.location,
-    }),
-  ]);
+  expect(action).toEqual({ kind: 'blocked', reason: 'not-ready' });
+  expect(await encrypted.list('draft')).toEqual([]);
+  expect(await encrypted.list('queue')).toEqual([]);
 
   const pageModule = await loadMobileRuntime(
     'features/ait/pages/ait-review.page',
@@ -482,7 +467,7 @@ it('F004/F009 MobilePageRuntime devolve objetos executáveis e prova ação real
         context: typeof commandContext,
       ) => Promise<unknown>
     )(reviewInput, commandContext),
-  ).resolves.toMatchObject({ kind: 'persisted' });
+  ).resolves.toEqual({ kind: 'blocked', reason: 'not-ready' });
 
   for (const screenId of ['support', 'messages', 'local-settings']) {
     const blocked = pageRuntime.load({
@@ -494,60 +479,37 @@ it('F004/F009 MobilePageRuntime devolve objetos executáveis e prova ação real
       reason: 'source_pending',
     });
   }
-  expect(
-    (await encrypted.list('draft')).length +
-      (await encrypted.list('queue')).length,
-    'submit local precisa persistir no MobileEncryptedStorePort',
-  ).toBeGreaterThan(0);
+  expect(await encrypted.list('draft')).toEqual([]);
+  expect(await encrypted.list('queue')).toEqual([]);
   TestBed.inject(HttpTestingController).verify();
 });
 
-it('F004 AIT Review carrega contexto real e submete exclusivamente pelo evento DOM', async () => {
+it('F004 AIT Review demonstra conclusão somente com port de homologação explícito e evento DOM', async () => {
   const runtime = await loadMobileRuntime('shared/mobile-page.component');
   const pageModule = await loadMobileRuntime(
     'features/ait/pages/ait-review.page',
   );
   const encrypted = new EncryptedStoreFixture();
   const store = new LocalActStore(encrypted);
-  const input = {
-    validation_blockers: [],
-    reserved_number: 'AIT-002',
-    explicit_action: 'finalize',
-  };
-  const context = {
-    session: {
-      tenantId: 'tenant-001',
-      orgUnitId: 'agency-001',
-      agentId: 'agent-001',
-      deviceId: 'device-001',
-      shiftId: 'shift-001',
-      appVersion: '1.0.0',
-      roles: ['field-agent'],
-    },
-    localEntityId: 'ui-review-001',
-    entityType: 'ait',
-    version: 1,
-    idempotencyKey: 'ui-idem-001',
-    payloadHash: 'sha256:ui-review',
-    createdLocallyAt: '2026-09-22T00:00:00Z',
-    normativePackageId: 'pkg-001',
-    normativePackageVersion: '2026.09',
-    reservationId: 'reservation-001',
-    reservedNumber: 102,
-    ifMatch: '"version-1"',
-    location: {
-      latitude: -15.793889,
-      longitude: -47.882778,
-      accuracyMeters: 4,
-      capturedAt: '2026-09-22T00:00:00Z',
-      source: 'gps',
-    },
-  } as const satisfies MobileCommandContext;
+  const start = vi.fn(async () => ({
+    kind: 'demonstrated' as const,
+    localEntityId: 'demo-ait-001',
+  }));
+  const review = vi.fn(async () => ({
+    kind: 'demonstrated' as const,
+    localEntityId: 'demo-ait-001',
+  }));
   TestBed.configureTestingModule({
     imports: [pageModule['AitReviewPageComponent'] as never],
     providers: [
+      provideHttpClient(),
+      provideHttpClientTesting(),
       { provide: LocalActStore, useValue: store },
       runtime['MobilePageRuntime'],
+      {
+        provide: TEAT_HOMOLOGATION_AIT,
+        useValue: { profile: 'homologation', start, review },
+      },
       {
         provide: STYNX_I18N_OPTIONS,
         useValue: {
@@ -560,69 +522,33 @@ it('F004 AIT Review carrega contexto real e submete exclusivamente pelo evento D
       TeatI18n,
     ],
   });
-  const Runtime = runtime['MobilePageRuntime'] as new (...args: never[]) => {
-    load(contract: { screenId: string; sourceSheet: string }): {
-      submit?(input: unknown, command: MobileCommandContext): Promise<unknown>;
-    };
-  };
-  const producer = TestBed.inject(Runtime).load({
-    screenId: 'ait-start',
-    sourceSheet: 'IU-TEAT-ait-start.md',
-  });
-  await expect(producer.submit?.(input, context)).resolves.toMatchObject({
-    kind: 'persisted',
-    localEntityId: context.localEntityId,
-  });
-  const preexistingDraft = await store.draft(context.localEntityId);
-  expect.soft(preexistingDraft).toMatchObject({
-    localId: context.localEntityId,
-    status: 'draft',
-    payload: input,
-  });
-  const originalQueue =
-    await encrypted.list<Readonly<Record<string, unknown>>>('queue');
-  expect(originalQueue).toHaveLength(1);
   const fixture = TestBed.createComponent(
     pageModule['AitReviewPageComponent'] as never,
   );
   fixture.detectChanges();
   await fixture.whenStable();
+  const main = fixture.nativeElement.querySelector('main') as HTMLElement;
+  expect(main.getAttribute('data-profile')).toBe('homologation');
+  expect(main.textContent).toContain('HOMOLOGAÇÃO — SIMULAÇÃO');
   const form = fixture.nativeElement.querySelector(
     'form',
   ) as HTMLFormElement | null;
   expect(form).not.toBeNull();
+  expect(review).not.toHaveBeenCalled();
   form?.dispatchEvent(
     new SubmitEvent('submit', { bubbles: true, cancelable: true }),
   );
   fixture.detectChanges();
   await fixture.whenStable();
-  await vi.waitFor(async () =>
-    expect(await store.draft(context.localEntityId)).toMatchObject({
-      localId: context.localEntityId,
-      status: 'finalized',
-      payload: input,
-      location: context.location,
-    }),
-  );
-  const transitionedQueue =
-    await encrypted.list<Readonly<Record<string, unknown>>>('queue');
-  expect(transitionedQueue).toHaveLength(2);
-  expect(transitionedQueue).toContainEqual(originalQueue[0]);
-  expect(transitionedQueue).toContainEqual(
-    expect.objectContaining({
-      queueItemId: `${context.localEntityId}:v2`,
-      localEntityId: context.localEntityId,
-      payloadJson: input,
-      location: context.location,
-    }),
-  );
-  const main = fixture.nativeElement.querySelector('main') as HTMLElement;
-  expect(main.getAttribute('data-state')).toBe('persisted');
-  expect(
-    (
-      main.querySelector('[role="status"]') as HTMLElement | null
-    )?.textContent?.trim(),
-  ).toBe('Finalizado localmente');
+  expect(review).toHaveBeenCalledTimes(1);
+  expect(start).not.toHaveBeenCalled();
+  expect(main.getAttribute('data-state')).toBe('demonstrated');
+  expect(main.textContent).toContain('HOMOLOGAÇÃO — SIMULAÇÃO');
+  expect(main.textContent).not.toContain('Finalizado localmente');
+  expect(await encrypted.list('draft')).toEqual([]);
+  expect(await encrypted.list('queue')).toEqual([]);
+  expect(await encrypted.list('print-receipt')).toEqual([]);
+  TestBed.inject(HttpTestingController).verify();
 });
 
 it('F004 AIT Review publica blocked pelo evento DOM sem contexto carregado', async () => {
@@ -669,52 +595,31 @@ it('F004 AIT Review publica blocked pelo evento DOM sem contexto carregado', asy
   ).toBe('blocked');
 });
 
-it('F004 AIT Review publica error quando persistência real falha após submit DOM', async () => {
+it('F004 AIT Review publica error quando port de homologação falha, sem ato oficial parcial', async () => {
   const runtime = await loadMobileRuntime('shared/mobile-page.component');
   const pageModule = await loadMobileRuntime(
     'features/ait/pages/ait-review.page',
   );
   const encrypted = new EncryptedStoreFixture();
   const store = new LocalActStore(encrypted);
-  const input = {
-    validation_blockers: [],
-    reserved_number: 'AIT-003',
-    explicit_action: 'finalize',
-  };
-  const context = {
-    session: {
-      tenantId: 'tenant-001',
-      orgUnitId: 'agency-001',
-      agentId: 'agent-001',
-      deviceId: 'device-001',
-      shiftId: 'shift-001',
-      appVersion: '1.0.0',
-      roles: ['field-agent'],
-    },
-    localEntityId: 'ui-error',
-    entityType: 'ait',
-    version: 1,
-    idempotencyKey: 'ui-error-idem',
-    payloadHash: 'sha256:ui-error',
-    createdLocallyAt: '2026-09-22T00:00:00Z',
-    normativePackageId: 'pkg-001',
-    normativePackageVersion: '2026.09',
-    reservationId: 'reservation-001',
-    reservedNumber: 103,
-    ifMatch: '"version-1"',
-    location: {
-      latitude: -15.793889,
-      longitude: -47.882778,
-      accuracyMeters: 4,
-      capturedAt: '2026-09-22T00:00:00Z',
-      source: 'gps',
-    },
-  } as const satisfies MobileCommandContext;
+  const review = vi.fn(async () => {
+    throw new Error('synthetic-scenario-unavailable');
+  });
   TestBed.configureTestingModule({
     imports: [pageModule['AitReviewPageComponent'] as never],
     providers: [
+      provideHttpClient(),
+      provideHttpClientTesting(),
       { provide: LocalActStore, useValue: store },
       runtime['MobilePageRuntime'],
+      {
+        provide: TEAT_HOMOLOGATION_AIT,
+        useValue: {
+          profile: 'homologation',
+          start: vi.fn(),
+          review,
+        },
+      },
       {
         provide: STYNX_I18N_OPTIONS,
         useValue: {
@@ -727,27 +632,11 @@ it('F004 AIT Review publica error quando persistência real falha após submit D
       TeatI18n,
     ],
   });
-  const Runtime = runtime['MobilePageRuntime'] as new (...args: never[]) => {
-    load(contract: { screenId: string; sourceSheet: string }): {
-      submit?(input: unknown, command: MobileCommandContext): Promise<unknown>;
-    };
-  };
-  const producer = TestBed.inject(Runtime).load({
-    screenId: 'ait-start',
-    sourceSheet: 'IU-TEAT-ait-start.md',
-  });
-  await expect(producer.submit?.(input, context)).resolves.toMatchObject({
-    kind: 'persisted',
-    localEntityId: context.localEntityId,
-  });
   const fixture = TestBed.createComponent(
     pageModule['AitReviewPageComponent'] as never,
   );
   fixture.detectChanges();
   await fixture.whenStable();
-  vi.spyOn(encrypted, 'put').mockRejectedValueOnce(
-    new Error('indexeddb-write-failed'),
-  );
   (
     fixture.nativeElement.querySelector('form') as HTMLFormElement
   ).dispatchEvent(
@@ -760,4 +649,9 @@ it('F004 AIT Review publica error quando persistência real falha após submit D
       'data-state',
     ),
   ).toBe('error');
+  expect(review).toHaveBeenCalledTimes(1);
+  expect(await encrypted.list('draft')).toEqual([]);
+  expect(await encrypted.list('queue')).toEqual([]);
+  expect(await encrypted.list('print-receipt')).toEqual([]);
+  TestBed.inject(HttpTestingController).verify();
 });

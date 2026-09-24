@@ -18,6 +18,12 @@ const BOAT_ROUTE_PATHS = new Set([
   'crash-review',
 ]);
 
+const PRE_SHIFT_ROUTE_PATHS = new Set([
+  'shift-context',
+  'operation-select',
+  'open-shift',
+]);
+
 export const TEAT_BOAT_EXTENSION = new InjectionToken<BoatExtensionPort>(
   'TEAT_BOAT_EXTENSION',
   {
@@ -54,7 +60,7 @@ export const readinessGuard: CanMatchFn = (route) => {
     provisioning: context.provisioning(),
     now: new Date().toISOString(),
     destination: route.path ?? '',
-    preShift: route.path === 'shift-context',
+    preShift: PRE_SHIFT_ROUTE_PATHS.has(route.path ?? ''),
   });
   if (!result.allowed) return false;
   if (requiresBoat && boat?.installed() !== true) {

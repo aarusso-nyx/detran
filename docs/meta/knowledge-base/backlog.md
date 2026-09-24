@@ -54,7 +54,9 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
 
 ### Corpus legal a capturar (inf/est)
 
-- [ ] Requisitos legais do talonário além da 918 art.3º (fé pública, formato do AIT impresso, homologação de equipamento)
+- [ ] Requisitos legais do talonário além da 918 art.3º (fé pública, formato do AIT impresso,
+      critérios gerais para outros equipamentos); esta pesquisa não condiciona nem reabre a
+      homologação incondicional do Gertec GMS820 decidida pelo Owner em R-0013
 - [ ] Base legal do saneamento de AIT; condições/ator de cancelamento de AIT finalizado
 - [ ] Catálogo fechado de no_approach_reason (constatação sem abordagem)
 - [ ] Base normativa do RENAEST (nada localizado além de contrato técnico)
@@ -74,7 +76,7 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
 - [ ] pec: rastreabilidade divergente (BP-juntas referencia SUC-UC-13/15 vs UC-J1/J2)
 - [ ] teat: exclusão de intervalos de numeração SEM constraint de banco (só validação de app) — risco de sobreposição sob concorrência
 - [ ] teat/boat: crash_record_id em medidas administrativas sem FK rígida (nota explícita nos docs)
-- [ ] teat: comportamento do pacote normativo expirado offline (bloquear vs avisar) — decisão de produto
+- [x] teat: comportamento do pacote normativo expirado offline (bloquear vs avisar) — E.29 confirmado pelo Owner também sob E2: aviso visível e registrado, sem bloqueio por expiração isolada após prova válida do pacote; ADR-0031 (2026-09-23)
 - [ ] teat/rait: **R-0007 `rait-backend` rebaseia sobre `main` pós-CTG-0001** (`DetranError` em
       `backend/domains/shared/src/errors/`, `policy-routes.e2e.spec.ts` seção RAIT a acrescentar) e, após
       o merge de CTG-0004/CTG-0005, sobre `tools/contracts/check-commands.mjs`, `contracts:clients` e
@@ -83,8 +85,19 @@ Formato: `- [ ] <pergunta ou id> — <por quê> (added YYYY-MM-DD)`
       tem FK à infração, não à medida; a persistência fica para R-0007 (M14, CTG-0004 §2)
 - [ ] teat: **conteúdo "assinado" do pacote normativo mobile é `sha256` local** (`signer='detran-backend-local'`,
       `signature.kind='local-unsigned'`) enquanto o substrato de assinatura (ADR-0018) não estiver ligado — OD-T16
-- [ ] teat: **`snapshot.maxAgeSeconds`/`validUntil` do bootstrap saem `null`** até haver linha no catálogo de
-      parâmetros para a constante que a origem usa sem fonte normativa — OD-T14
+- [ ] teat: **implementar OD-T14 / `1A-300-E2`** — linha de catálogo aprovada para 300 s de frescor
+      online, e o backend já deriva `validUntil` do parâmetro válido sem fallback; o mobile ainda
+      bloqueia snapshots vencidos. Integrar prova offline local real (grant, reserva e pacote)
+      antes de substituir esse comportamento fail-closed. Owner selecionou Android como única
+      plataforma E2 e, incondicionalmente, homologou o Gertec GMS820 como primeiro modelo.
+      Perfil selecionado em ADR-0032 (status 900 s; janela 3600 s); portas, chaves públicas,
+      dados e provas de execução E2 ainda pendem, sem reabrir a homologação — ADR-0029,
+      R-0013 `plan.md`
+- [ ] teat: **executar matriz AIT V01–V11 autorizada pelo Owner** — a matriz revisada é fonte
+      executável no seu recorte, sem promover integralmente as RN `draft`. ADR-0032 escolheu
+      a política de execução; faltam DSL materializada, caminhos, fatos e pacote normativo
+      verificável; finalização AIT permanece bloqueada — ADR-0030,
+      R-0013 `plan.md`
 - [ ] teat: **`batches/{id}/retransmit` e `GET certificates`** (route contract §4.6) ficam fora por falta de
       entidade de lote de integração em `ops` e de fonte para validade mTLS — OD-T43
 - [ ] portal/rait: **R-0007 `rait-backend` precisa mesclar em `main` para as delegações reais do Portal**
@@ -540,21 +553,28 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       antes do fechamento; os consumidores R-0011/R-0012 podem usar as superfícies publicadas.
 - [ ] **R-0013 `teat-frontends` — integração final pendente**: CTG-0001/PR #70, CTG-0002/PR #73
       (incluindo 126 fichas, i18n e transições) e CTG-0003/PR #82 estão em `main`. Os candidatos
-      mobile e web e a documentação de CTG-0005 receberam PASS independente, mas ainda aguardam
-      a única PR final da rodada; não foram mesclados nem implantados. KMS, Keystore,
-      criptografia/envelope/attestation de produção, bodycam real, hardware de impressão e
-      integrações nacionais não foram comprovados por fixtures/ports (updated 2026-09-22)
+      mobile e web e a documentação de CTG-0005 receberam PASS independente anterior,
+      mas a decisão do Owner de 2026-09-23 redefine CTG-0004a/b/5 como **homologação de UI
+      e workflows**, não app de campo (ADR-0033). A adenda exige novos oráculos/gates e
+      review no candidato atual antes da única PR final; nada foi mesclado ou implantado.
+      Produção mobile requer round próprio posterior (R-0017 apenas candidato), nas issues
+      [#108](https://github.com/aarusso-nyx/detran/issues/108),
+      [#109](https://github.com/aarusso-nyx/detran/issues/109),
+      [#110](https://github.com/aarusso-nyx/detran/issues/110),
+      [#111](https://github.com/aarusso-nyx/detran/issues/111) e
+      [#112](https://github.com/aarusso-nyx/detran/issues/112). GMS820 permanece
+      homologado como equipamento; integração do app nele não foi provada.
 - [x] **R-0011 `dashboard-backend` fechada como `PC-0009`** (2026-09-22; Fable, troca Sol → Fable, Owner 2026-09-21): CTG-0001
       (`BP-DASH-MONITOR-001`, projeções, seeds, gate `verify:domain-boundaries`, PR #83) e CTG-0002 (ciclo do alerta, deveres,
       frescor, exportação, SSE, contratos, PR #87); fechamento PR #88; handoffs OD-D17/D33/D35/D50/D58 no PR #101 (issues #96…#100)
-- [ ] **Rodada ainda não aberta**: só **R-0015 `boat-mobile`** — trocada para Sol/Codex pelo Owner em 2026-09-21 (plano e prompt
-      regenerados: maestro GPT-5.6 Sol, workers Terra/Luna, reviewer `claude opus`); CTG-0001 (17 fichas, i18n, transições) livre,
-      CTG-0002 (biblioteca mobile e módulo `sinistros`) espera os apps do TEAT (R-0013 CTG-0004) (updated 2026-09-22)
-- [ ] **Estado da campanha em 2026-09-22**: 11 de 14 rodadas fechadas (R-0003…R-0012, R-0014; PC-0001…PC-0011); em curso
-      R-0013 (Codex) e R-0016 (Fable, CTG-0002 no PR #103); não aberta R-0015 (Codex). Nada mais para abrir em Claude além de
-      acompanhar R-0016; o que resta da carteira é Codex: R-0013 CTG-0002/0004/0005 e R-0015. Após as três, a onda de
-      integração (SSE real, impressora, provisionamento em dispositivo, homologação RENAEST/SNE/gov.br) e os handoffs
-      OD-R12-_, OD-D_, OD-P15/16/17 seguem em `§Handoffs` (added 2026-09-22)
+- [ ] **R-0015 `boat-mobile` em curso (Sol/Codex)**: CTG-0001 (17 fichas, i18n e transições)
+      entrou em `main` pelo PR #107; CTG-0002 (biblioteca mobile e módulo `sinistros`) depende da
+      integração dos apps TEAT de R-0013 (updated 2026-09-22)
+- [ ] **Estado da campanha em 2026-09-22**: 12 de 14 rodadas fechadas (R-0003…R-0012,
+      R-0014 e R-0016); R-0013 aguarda a integração e o fechamento final, e R-0015 segue em
+      curso após CTG-0001/PR #107. Depois dessas duas rodadas, a onda de integração real (SSE,
+      impressora, provisionamento em dispositivo, homologação RENAEST/SNE/gov.br) e os handoffs
+      OD-R12-_, OD-D_, OD-P15/16/17 seguem em `§Handoffs` (updated 2026-09-22)
 - [x] **R-0012 `rait-web` fechada como `PC-0010`** (2026-09-22; Fable): CTG-0001 (63 fichas IU-RAIT-002…064 e manifesto de rotas,
       PR #79), CTG-0002a (núcleo: 74 rotas, guardas, shell, SSE, error boundary, i18n + allowlist `rait.*`, PR #81), CTG-0002b-1
       (8 clientes, 11 facades, 26 componentes, PR #85), CTG-0002b-2 (50 páginas, rotas por módulo, matriz ação × papel, PR #90),

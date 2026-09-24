@@ -13,6 +13,10 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '../../..');
 const fixture = join(root, 'tools/parameters/fixtures/minimal-catalogue.txt');
 const generator = join(root, 'tools/parameters/generate-seed.mjs');
 const verifier = join(root, 'tools/parameters/verify.mjs');
+const approvedCatalogue = join(
+  root,
+  'docs/framework/arch/parameter-catalogue.md',
+);
 
 async function run(script, args = []) {
   try {
@@ -37,6 +41,120 @@ async function temporarySource(mutator = (value) => value) {
   await writeFile(source, mutator(original), 'utf8');
   return { directory, source };
 }
+
+test('OD-T14 seed uses its first installation date and stays idempotent on later days', async () => {
+  const key = 'teat.bootstrap.snapshot_max_age_seconds';
+  const model = await parseCatalogue(approvedCatalogue);
+  const rows = model.entries.filter((entry) => entry.key === key);
+  assert.equal(
+    rows.length,
+    1,
+    'approved catalogue must contain exactly one OD-T14 row',
+  );
+  assert.deepEqual(
+    {
+      surface: rows[0].surface,
+      value_type: rows[0].value_type,
+      value_json: rows[0].value_json,
+      status: rows[0].status,
+      source_pending: rows[0].source_pending,
+      legal_readonly: rows[0].legal_readonly,
+      decision_ref: rows[0].decision_ref,
+      decision_tokens: rows[0].decision_tokens,
+    },
+    {
+      surface: 'teat',
+      value_type: 'int',
+      value_json: 300,
+      status: 'vigente',
+      source_pending: false,
+      legal_readonly: false,
+      decision_ref: 'OD-T14',
+      decision_tokens: ['OD-T14'],
+    },
+  );
+
+  const directory = await mkdtemp('/tmp/detran-od-t14-');
+  try {
+    const generated = await run(generator, [
+      '--source',
+      approvedCatalogue,
+      '--out-dir',
+      directory,
+    ]);
+    assert.equal(generated.status, 0, generated.stderr);
+    const seed = await readFile(join(directory, '05-parameters.sql'), 'utf8');
+    const secondDirectory = join(directory, 'second-generation');
+    const repeated = await run(generator, [
+      '--source',
+      approvedCatalogue,
+      '--out-dir',
+      secondDirectory,
+    ]);
+    assert.equal(repeated.status, 0, repeated.stderr);
+    assert.equal(
+      await readFile(join(secondDirectory, '05-parameters.sql'), 'utf8'),
+      seed,
+      'seed generation must be deterministic',
+    );
+
+    const rowPrefix =
+      "('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'teat', " +
+      "'teat.bootstrap.snapshot_max_age_seconds', '300', 'int', 'vigente', false, false, " +
+      "'OD-T14', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, ";
+    assert.equal(
+      seed.split(rowPrefix).length - 1,
+      1,
+      'OD-T14 must produce exactly one correctly scoped seed row',
+    );
+    const rowTail = seed.slice(seed.indexOf(rowPrefix) + rowPrefix.length);
+    const effectiveFrom = rowTail.match(
+      /^([\s\S]*?),\s*'00000000-0000-4000-8000-0000b0000016'/,
+    )?.[1];
+    assert.ok(
+      effectiveFrom,
+      'OD-T14 row must have an effective_from expression',
+    );
+    assert.match(
+      effectiveFrom,
+      /\bCURRENT_DATE\b|\bCURRENT_TIMESTAMP\s*::\s*date\b|\bnow\(\)\s*::\s*date\b/i,
+      'first installation must use its execution date, not a fixed decision date',
+    );
+    assert.doesNotMatch(
+      effectiveFrom,
+      /'2026-09-(?:13|23)'/,
+      'OD-T14 must not be backdated or activated on a presumed decision date',
+    );
+
+    const hasSeedIdentity = (sql) =>
+      /\btenant_id\b/i.test(sql) &&
+      /\btraffic_agency_id\b\s+IS\s+NULL/i.test(sql) &&
+      /\bscope\b\s*=\s*'tenant'/i.test(sql) &&
+      /\bsurface\b\s*=\s*'teat'/i.test(sql) &&
+      /\bkey\b\s*=\s*'teat\.bootstrap\.snapshot_max_age_seconds'/i.test(sql);
+    const reusesFirstDate =
+      /\bCOALESCE\s*\(/i.test(effectiveFrom) &&
+      /\bSELECT\s+MIN\s*\(\s*(?:\w+\.)?effective_from\s*\)/i.test(
+        effectiveFrom,
+      ) &&
+      /\bFROM\s+ops\.parameter\b/i.test(effectiveFrom) &&
+      hasSeedIdentity(effectiveFrom) &&
+      /\bON\s+CONFLICT\b/i.test(seed);
+    const absentIdentityGuard = seed.match(
+      /\bWHERE\s+NOT\s+EXISTS\s*\(([\s\S]*?)\)\s*(?:ON\s+CONFLICT|;)/i,
+    )?.[1];
+    const insertsOnlyOnce =
+      absentIdentityGuard &&
+      hasSeedIdentity(absentIdentityGuard) &&
+      !/\beffective_from\b/i.test(absentIdentityGuard);
+    assert.ok(
+      reusesFirstDate || insertsOnlyOnce,
+      'later-day reruns must preserve the first effective_from and avoid a second row for the same tenant/scope/surface/key',
+    );
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
 
 const legalBases = {
   schemaVersion: 1,

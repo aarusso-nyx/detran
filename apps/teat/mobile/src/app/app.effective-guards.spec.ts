@@ -1,5 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import type { CanMatchFn, Route, UrlSegment } from '@angular/router';
+import {
+  provideRouter,
+  type CanMatchFn,
+  type Route,
+  type UrlSegment,
+} from '@angular/router';
 import { expect, it } from 'vitest';
 import * as bootstrapRuntime from './core/bootstrap.store';
 import { authGuard } from './navigation/guards/auth.guard';
@@ -19,6 +24,7 @@ import {
   fixtureRoleDenied,
   fixtureRoleContext,
   fixtureTenantContext,
+  guardContextPort,
   type GuardContextFixture,
 } from '../testing/guard-fixtures';
 import {
@@ -36,7 +42,10 @@ function invoke(guard: CanMatchFn, context: GuardContextFixture): unknown {
   expect(token).toBeDefined();
   TestBed.resetTestingModule();
   TestBed.configureTestingModule({
-    providers: [{ provide: token, useValue: context }],
+    providers: [
+      provideRouter([]),
+      { provide: token, useValue: guardContextPort(context) },
+    ],
   });
   return TestBed.runInInjectionContext(() =>
     guard(route, segments, {} as Parameters<CanMatchFn>[2]),

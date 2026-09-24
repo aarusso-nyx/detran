@@ -24,7 +24,17 @@ export interface ParameterPort {
   get(
     key: string,
     options?: Record<string, unknown>,
-  ): Promise<{ value_json?: unknown; source_pending?: boolean }>;
+  ): Promise<{
+    key?: unknown;
+    tenant_id?: unknown;
+    traffic_agency_id?: unknown;
+    scope?: unknown;
+    surface?: unknown;
+    value_json?: unknown;
+    value_type?: unknown;
+    status?: unknown;
+    source_pending?: boolean;
+  }>;
 }
 
 export interface FieldDeps {

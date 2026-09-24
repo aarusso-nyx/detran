@@ -3,6 +3,12 @@ import { TestBed } from '@angular/core/testing';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, it, vi } from 'vitest';
+import type {
+  MobileEntityDraft,
+  MobileSessionContext,
+} from '@stynx-nyx/mobile-runtime';
+import { EncryptedStoreFixture } from '../testing/encrypted-store.fixture';
+import { LocalActStore } from './data/local/local-act.store';
 import { readMobileProductionSource } from '../testing/mobile-source';
 import { loadMobileRuntime } from '../testing/runtime-module';
 import * as printerRuntime from './shared/mobile-printer.port';
@@ -56,51 +62,95 @@ it('dado i18n de produção quando carregado então delega ao runtime STYNX por 
 });
 
 it('dada porta de impressão de produção quando PrinterDialog imprime, falha e reimprime então registra o mesmo AIT sem criar outro', async () => {
-  const PrinterDialog = (printerRuntime as unknown as Record<string, unknown>)[
-    'PrinterDialog'
-  ] as
-    | (new (
-        printer: unknown,
-        ait: unknown,
-      ) => {
-        print?: (
-          aitId: string,
-        ) => Promise<{ eventType: string; failureReason?: string }>;
-      })
-    | undefined;
+  const PrinterDialog = printerRuntime.PrinterDialog;
   expect(PrinterDialog).toBeTypeOf('function');
-  const print = vi
-    .fn()
-    .mockResolvedValue({ eventType: 'printed', receiptHash: 'receipt-001' });
+  const session: MobileSessionContext = {
+    tenantId: 'tenant-001',
+    orgUnitId: 'agency-001',
+    agentId: 'agent-001',
+    deviceId: 'device-001',
+    shiftId: 'shift-001',
+    appVersion: '1.0.0',
+    roles: ['field-agent'],
+  };
+  const draft: MobileEntityDraft<'ait'> = {
+    localId: 'local-ait-001',
+    entityType: 'ait',
+    tenantId: session.tenantId,
+    orgUnitId: session.orgUnitId,
+    agentId: session.agentId,
+    deviceId: session.deviceId,
+    shiftId: session.shiftId,
+    status: 'finalized',
+    reservedNumber: 101,
+    reservationId: 'reservation-001',
+    idempotencyKey: 'draft-idem-001',
+    normativePackageId: 'pkg-001',
+    normativePackageVersion: '2026.09',
+    localContentHash: 'sha256:ait-content',
+    payload: {},
+    location: {
+      latitude: -15,
+      longitude: -47,
+      accuracyMeters: 3,
+      capturedAt: '2026-09-22T00:00:00Z',
+      source: 'gps',
+    },
+    evidence: [],
+    createdAt: '2026-09-22T00:00:00Z',
+    updatedAt: '2026-09-22T00:00:00Z',
+  };
+  const printReceipt = vi.fn(async () => ({
+    receiptId: 'receipt-001',
+    localEntityId: draft.localId,
+    reservedNumber: draft.reservedNumber,
+    printerAdapter: 'paired-printer',
+    status: 'printed' as const,
+    printedAt: '2026-09-22T00:00:01Z',
+    contentHash: draft.localContentHash,
+  }));
   const recordPrintEvent = vi.fn().mockResolvedValue({});
-  const dialog = new (
-    PrinterDialog as new (
-      printer: unknown,
-      ait: unknown,
-    ) => { print: (aitId: string) => Promise<{ eventType: string }> }
-  )({ print }, { recordPrintEvent });
-  await expect(dialog.print('ait-001')).resolves.toMatchObject({
+  const encrypted = new EncryptedStoreFixture();
+  const dialog = new PrinterDialog(
+    { adapterName: 'paired-printer', printReceipt },
+    { recordPrintEvent } as never,
+    new LocalActStore(encrypted),
+  );
+  const attempt = (eventIdempotencyKey: string) => ({
+    aitId: 'ait-001',
+    aitVersion: '"version-7"',
+    eventIdempotencyKey,
+    session,
+    draft,
+    contentHash: draft.localContentHash,
+  });
+  await expect(dialog.print(attempt('print-idem-001'))).resolves.toMatchObject({
     eventType: 'printed',
   });
-  await expect(dialog.print('ait-001')).resolves.toMatchObject({
+  await expect(dialog.print(attempt('print-idem-002'))).resolves.toMatchObject({
     eventType: 'printed',
   });
-  expect(print).toHaveBeenCalledTimes(2);
+  expect(printReceipt).toHaveBeenCalledTimes(2);
+  expect(await encrypted.list('print-receipt')).toHaveLength(1);
   expect(recordPrintEvent).toHaveBeenCalledWith(
     'ait-001',
-    expect.objectContaining({ eventType: 'printed' }),
+    expect.objectContaining({ event_type: 'printed' }),
+    expect.objectContaining({ 'If-Match': '"version-7"' }),
   );
-  print.mockResolvedValueOnce({
+  printReceipt.mockRejectedValueOnce(new Error('paper-jam'));
+  await expect(dialog.print(attempt('print-idem-003'))).resolves.toMatchObject({
     eventType: 'print-failed',
-    failureReason: 'paper-jam',
-  });
-  await expect(dialog.print('ait-001')).resolves.toMatchObject({
     failureReason: 'paper-jam',
   });
   expect(recordPrintEvent).toHaveBeenLastCalledWith(
     'ait-001',
-    expect.objectContaining({ failureReason: 'paper-jam' }),
+    expect.objectContaining({
+      event_type: 'print-failed',
+      failure_reason: 'paper-jam',
+    }),
+    expect.objectContaining({ 'Idempotency-Key': 'print-idem-003' }),
   );
+  expect(await encrypted.list('print-receipt')).toHaveLength(1);
 });
 
 for (const state of ['recording', 'paused-exception', 'failure'] as const) {

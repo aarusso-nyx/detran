@@ -17,6 +17,8 @@ import { ErrorBoundary } from '../core/error-boundary/error-boundary.service.js'
 import { SseService } from '../core/sse.service.js';
 import { AitClient, type AitAcceptResponse } from '../data/ait.client.js';
 import { WebClientRegistry } from '../data/web-client.registry.js';
+import { TEAT_WEB_HOMOLOGATION_AIT_ACCEPT } from './homologation-ait-accept.port.js';
+import { TEAT_WEB_HOMOLOGATION_SCENARIO } from './homologation-scenario.port.js';
 
 interface RenderedError {
   readonly code: string;
@@ -95,6 +97,11 @@ interface AitRecord {
             {{ translate('teat.common.confirm') }}
           </button>
         }
+        @if (demonstratedAit()) {
+          <p data-ait-outcome="demonstrated" role="note">
+            {{ translate('teat.states.demonstrated') }}
+          </p>
+        }
         @if (endpoint !== undefined) {
           <button type="button" (click)="load()">
             {{ translate('teat.sync.resend') }}
@@ -117,6 +124,13 @@ export class ProductPageComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly i18n = inject(StynxI18nService);
   private readonly pendingTasks = inject(PendingTasks);
+  private readonly scenario = inject(TEAT_WEB_HOMOLOGATION_SCENARIO, {
+    optional: true,
+  });
+  private readonly homologationAitAccept = inject(
+    TEAT_WEB_HOMOLOGATION_AIT_ACCEPT,
+    { optional: true },
+  );
 
   readonly titleKey = String(
     this.route.snapshot.data['titleKey'] ?? 'teat.navigation.error',
@@ -143,6 +157,7 @@ export class ProductPageComponent {
     );
   });
   readonly error = signal<RenderedError | undefined>(undefined);
+  readonly demonstratedAit = signal(false);
 
   constructor() {
     if (this.isLogin) {
@@ -151,6 +166,9 @@ export class ProductPageComponent {
     }
     if (this.endpoint !== undefined) this.load();
     if (this.route.snapshot.data['sse'] === true) this.observeStream();
+    this.scenario?.updates
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.load());
   }
 
   translate(key: string): string {
@@ -173,13 +191,21 @@ export class ProductPageComponent {
 
   acceptAit(): void {
     const record = this.selectedAit();
+    if (record === undefined || !this.canAcceptSelectedAit()) {
+      this.presentError({ code: 'TEAT.AUTH_REQUIRED' });
+      return;
+    }
+    if (this.homologationAitAccept !== null) {
+      const outcome = this.homologationAitAccept.accept({
+        id: record.id,
+        version: record.version,
+      });
+      this.demonstratedAit.set(outcome.kind === 'demonstrated');
+      return;
+    }
     const claims = this.session.state().claims;
     const userRef = claims?.['sub'];
-    if (
-      record === undefined ||
-      typeof userRef !== 'string' ||
-      userRef.length === 0
-    ) {
+    if (typeof userRef !== 'string' || userRef.length === 0) {
       this.presentError({ code: 'TEAT.AUTH_REQUIRED' });
       return;
     }
@@ -192,6 +218,7 @@ export class ProductPageComponent {
   selectAit(id: string): void {
     if (this.aitRecords().some((record) => record.id === id)) {
       this.selectedAitId.set(id);
+      this.demonstratedAit.set(false);
     }
   }
 
@@ -250,7 +277,11 @@ export class ProductPageComponent {
 
   private presentLoadedValue(value: unknown): void {
     if (!this.isAitValidation) {
-      this.content.set(renderValue(value));
+      this.content.set(
+        Array.isArray(value) && value.length === 0
+          ? this.translate('teat.common.empty')
+          : renderValue(value),
+      );
       return;
     }
     const records = Array.isArray(value) ? value.filter(isAitRecord) : [];

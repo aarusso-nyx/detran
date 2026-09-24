@@ -3,7 +3,7 @@ id: ARCH-TEAT-WEB-CONTRACT
 title: Contrato executável do console web TEAT
 status: draft
 apps: [teat]
-updated: 2026-09-22
+updated: 2026-09-23
 ---
 
 # Contrato do console web TEAT
@@ -12,6 +12,41 @@ Este é o único manifesto de rotas do console `apps/teat/web`. Ele fecha 56
 fichas de produto da matriz web e quatro rotas operacionais: **60 rotas**. A
 matriz é a autoridade de telas, `roles.ts` é a autoridade dos papéis e
 `teat-route-contract.md` é a autoridade de APIs, estados e erros.
+
+## Adenda de homologação UI/workflows — ADR-0033
+
+O aceite de CTG-0004b nesta rodada é de **homologação de UI e workflows**, não
+de operação produtiva. A build padrão seleciona uma entrada explícita de
+homologação, com token `TEAT_WEB_HOMOLOGATION` e marcador visível
+`HOMOLOGAÇÃO — SIMULAÇÃO`; a entrada comum mantém o token ausente. O interceptor
+`webHomologationHttpBlockInterceptor` rejeita todo HTTP de backend/remoto,
+inclusive leituras GET, e permite somente assets locais. A composição de
+homologação não instala OIDC: sessão, tenant, catálogo e consultas de rota são
+sintéticos e mantidos em memória, sem reutilizar auth storage ou redirecionar ao
+IdP. A UI oferece seletor visível de persona sintética em memória para navegar
+as classes de papel da matriz; ele não escreve claims nem persiste identidade.
+Os guards reais continuam aplicando RBAC; papel omitido é negado. `ng serve`
+sem argumento usa a mesma composição de homologação; a entrada comum com OIDC
+exige escolha explícita de configuração. O
+`SseService` recebe exclusivamente nesse perfil um port de eventos sintéticos
+determinísticos para demonstrar atualização de UI; sem port, retorna fluxo vazio.
+Não abre `EventSource` nem polling remoto (ambos contornariam ou gerariam
+requests). Fixtures de homologação não criam atos, decisões ou recibos oficiais. Essa
+fronteira não altera 60 rotas, 56 fichas, papéis ou a ordem dos guards;
+integrações reais não são declaradas a partir de doubles. O app de produção e
+suas dependências pertencem ao round posterior dedicado, nas issues #108–#112.
+
+As consultas sintéticas são roteadas por `runtimeClient` e `endpoint`, não por
+uma resposta AIT única: cada classe de módulo recebe dado identificado como
+demo, e um cenário em memória seleciona estados `data`, `empty` ou `error`.
+O usuário pode acionar na UI uma atualização por evento sintético e observar o
+fallback demonstrativo sem `EventSource` ou polling de backend. Inspector prova
+payload/estado pelo DOM em amostras de todos os 12 módulos, inclusive BOAT como
+extensão indisponível, sem inferir integração real de uma fixture.
+O port em memória permite provocar indisponibilidade do SSE sintético: após
+15 s de relógio, o fallback emite atualização sintética periódica e a UI
+exibe marcador explícito. Nem esse fallback nem o evento inicial consultam
+backend ou abrem `EventSource`; o perfil comum mantém o contrato produtivo.
 
 ## Invariantes de implementação
 
@@ -27,8 +62,9 @@ matriz é a autoridade de telas, `roles.ts` é a autoridade dos papéis e
 - H.39 é preservado: a tela de cancelamento somente apresenta o fluxo e a
   política do servidor, inclusive `addressedTo`; não reinterpreta a autoridade.
   H.54 é preservado: parâmetros, prazos, flags e catálogos são consumidos do
-  contrato/servidor, nunca recalculados pelo cliente. H.55 é preservado: pacote
-  normativo vencido em campo é aviso de prontidão, não bloqueio criado pelo web.
+  contrato/servidor, nunca recalculados pelo cliente. E.29/ADR-0031 são preservados:
+  pacote normativo vencido em campo é aviso de prontidão, não bloqueio criado pelo web.
+  H.55 rege separadamente a homologação de software vencida.
 - `ErrorBoundary` é o classificador exclusivo de `StynxError`; usa somente
   `teat-error-catalog.md` e `teat.errors.*`. Páginas não classificam códigos.
   SSE é `GET /v1/ops/stream`; a reconexão indisponível usa polling de 15 s.

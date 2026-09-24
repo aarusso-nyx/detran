@@ -171,13 +171,22 @@ for (const [modulePath, exportName] of [
   ['data/sync/sync.worker', 'SyncWorker'],
   ['data/normative/normative-package.service', 'NormativePackageService'],
   ['core/bodycam-indicator.component', 'BodycamIndicator'],
-  ['shared/mobile-printer.port', 'MobilePrinterPort'],
+  ['shared/mobile-printer.port', 'TEAT_MOBILE_PRINTER'],
 ] as const) {
   it(`dado ${modulePath} quando o runtime é carregado então expõe ${exportName}`, async () => {
     const runtime = await loadMobileRuntime(modulePath);
     expect(runtime[exportName]).toBeDefined();
   });
 }
+
+it('dada porta de impressão tipada quando carregada então mantém diálogo executável e exportação apenas de tipo', async () => {
+  const runtime = await loadMobileRuntime('shared/mobile-printer.port');
+  expect(runtime['PrinterDialog']).toBeTypeOf('function');
+  expect(runtime['MobilePrinterPort']).toBeUndefined();
+  expect(readMobileProductionSource('shared/mobile-printer.port.ts')).toContain(
+    'export type { MobilePrinterPort }',
+  );
+});
 
 it('dado o catálogo i18n canônico quando o runtime é carregado então preserva todas as chaves TEAT', async () => {
   const runtime = await loadMobileRuntime('core/i18n-catalog');
