@@ -197,7 +197,11 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   a fronteira do Inspector inclui explicitamente
   `apps/teat/mobile/src/app/app.a11y.spec.ts`, somente no ramo BOAT: montar os 12 boundaries reais
   e executar axe, sem alterar os casos TEAT existentes. Esta adenda atribui à TASK-0012 a
-  transcrição que encerrou OD-R15-002 em `IU-BOAT-W-01.md`.
+  transcrição que encerrou OD-R15-002 em `IU-BOAT-W-01.md`. **OD-R15-006** registra a lacuna de
+  consumo das portas nativas: as fontes definem seis `InjectionToken`s e seus métodos e exigem
+  doubles, mas não atribuem consumidor/chamada a uma tela específica. Nesta entrega TASK-0008
+  prova a DI e os métodos executáveis; Engineers não inventam consumidor. Hardware real e binding
+  futuro permanecem fora da rodada.
 
 ## Concorrência
 
