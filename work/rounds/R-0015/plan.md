@@ -217,6 +217,8 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   `app.homologation.spec.ts` na fronteira de TASK-0008 e um quarto prompt-review somente desse
   residual. A correção fica limitada à expectativa do outlet BOAT real, preservando persona,
   papéis, a11y e zero HTTP.
+- `plant-bug` resolvido — após a terceira iteração de TASK-0010 e a Emenda 3 de TASK-0008, a suíte
+  TEAT web passou 609/609 e o `pnpm check` integral do candidato CTG-0002 terminou com exit 0.
 - `sensor-error` — a checagem focada pós-review passou `05-parameters.sql` diretamente ao
   Prettier, que não possui parser SQL neste repositório. O arquivo é gerado e foi validado por
   `parameters:generate`/`verify:parameter-catalogue`; a repetição correta exclui o SQL da chamada
