@@ -36,11 +36,11 @@
         "validUntil": {
           "type": ["string", "null"],
           "format": "date-time",
-          "description": "source_pending (OD-T14)."
+          "description": "OD-T14: online freshness expiry from tenant/TEAT parameter; null when parameter authority is unavailable or invalid. Offline E2 proof is separate."
         },
         "maxAgeSeconds": {
           "type": ["integer", "null"],
-          "description": "source_pending (OD-T14)."
+          "description": "OD-T14: positive integer seconds from tenant/TEAT parameter; null when parameter authority is unavailable or invalid. No hardcoded fallback."
         },
         "authority": {
           "type": "string",
@@ -51,7 +51,14 @@
     "context": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["tenantId", "trafficAgencyId", "agent", "device", "session"],
+      "required": [
+        "tenantId",
+        "trafficAgencyId",
+        "agent",
+        "device",
+        "activeShift",
+        "session"
+      ],
       "properties": {
         "tenantId": {
           "type": "string",
@@ -110,6 +117,15 @@
         "activeShift": {
           "type": ["object", "null"],
           "additionalProperties": false,
+          "required": [
+            "id",
+            "operationalUnitId",
+            "teamId",
+            "patrolVehicleId",
+            "operationId",
+            "startedAt",
+            "status"
+          ],
           "properties": {
             "id": {
               "type": "string",
@@ -141,7 +157,7 @@
           }
         },
         "session": {
-          "type": "object",
+          "type": ["object", "null"],
           "additionalProperties": false,
           "required": ["id", "startedAt", "exclusive"],
           "properties": {
@@ -314,6 +330,16 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "id",
+          "rangeId",
+          "shiftId",
+          "series",
+          "startNumber",
+          "endNumber",
+          "validUntil",
+          "status"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -322,6 +348,14 @@
           "rangeId": {
             "type": "string",
             "format": "uuid"
+          },
+          "shiftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "series": {
+            "type": "string",
+            "minLength": 1
           },
           "startNumber": {
             "type": "integer"

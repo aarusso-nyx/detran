@@ -1,0 +1,105 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0004a",
+  "role": "Auditor/Reviewer",
+  "candidate_commit": "a48868266854205e86a18fac0a052f4e4872c70a",
+  "candidate_tree": "c0b36c5a849bc38b39a29368a17d32e63241353a",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "id": "CTG4A-R2-F001",
+      "severity": "critical",
+      "file": "apps/teat/mobile/src/app/core/bootstrap.store.ts",
+      "line": 150,
+      "claim": "O contexto dos guardas captura uma fotografia única; nenhum código de produção chama refresh/setProvisioning e auth-login já é protegida sem executar o fluxo STYNX.",
+      "impact": "O aplicativo nasce sem bootstrap e não possui caminho para adquirir ou propagar sessão e provisionamento.",
+      "fix": "Definir bootstrap/autenticação operacional, contexto reativo e rota de entrada capaz de estabelecer o estado antes dos guardas protegidos."
+    },
+    {
+      "id": "CTG4A-R2-F002",
+      "severity": "critical",
+      "file": "apps/teat/mobile/src/app/data/sync/sync.worker.ts",
+      "line": 49,
+      "claim": "O request e a resposta usados pelo SyncWorker divergem do SubmitSyncBatchDto e do envelope de receipts no OpenAPI.",
+      "impact": "O backend rejeita o batch ou os receipts retornados não são aplicados.",
+      "fix": "Mapear campos locais para o wire snake_case obrigatório, incluir identidades exigidas e consumir o envelope real de resposta."
+    },
+    {
+      "id": "CTG4A-R2-F003",
+      "severity": "critical",
+      "file": "apps/teat/mobile/src/app/data/normative/normative-package.service.ts",
+      "line": 96,
+      "claim": "NormativePackageService e MobilePrinterPort chamam clients reais sem CommandHeaders/Idempotency-Key obrigatórios e não estão ligados integralmente aos providers de produção.",
+      "impact": "Validação normativa e registro de impressão quebram em runtime apesar dos doubles verdes.",
+      "fix": "Alinhar assinaturas aos clients reais, fornecer headers pelo caller e registrar todos os adapters no grafo de produção."
+    },
+    {
+      "id": "CTG4A-R2-F004",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/shared/mobile-page.component.ts",
+      "line": 108,
+      "claim": "As páginas apenas resolvem referências de schema/client e renderizam shell genérico; não executam leitura, validação, persistência ou comando por folha.",
+      "impact": "As experiências funcionais das folhas TEAT não são entregues.",
+      "fix": "Vincular cada folha ao comportamento autorizado e provar ações/validação observáveis, sem inventar produto."
+    },
+    {
+      "id": "CTG4A-R2-F005",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/core/field-shell.component.ts",
+      "line": 34,
+      "claim": "FieldShell.capture não é acionado pelo runtime; D-05 não renderiza indisponibilidade e BOAT não tem fallback acessível explícito.",
+      "impact": "Erros e extensões indisponíveis não produzem os estados acessíveis contratados.",
+      "fix": "Integrar captura global real e componentes/redirects explícitos para D-05 e BOAT."
+    },
+    {
+      "id": "CTG4A-R2-F006",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/navigation/guards/readiness.guard.ts",
+      "line": 46,
+      "claim": "O guarda de readiness duplica uma checagem reduzida e não usa ReadinessGateService.",
+      "impact": "Rotas B podem abrir sem todos os requisitos de sessão, postura, pacote e reserva.",
+      "fix": "Fazer o guarda depender da decisão única e fail-closed do ReadinessGateService."
+    },
+    {
+      "id": "CTG4A-R2-F007",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/app.component.ts",
+      "line": 21,
+      "claim": "Bodycam permanece fixada em failure e não existe provider concreto operacional da porta de impressão.",
+      "impact": "Chrome de bodycam e impressão permanecem apenas nominais.",
+      "fix": "Ligar adapters/estado reais ao shell e provar recording, pausa excepcional, êxito e falha."
+    },
+    {
+      "id": "CTG4A-R2-F008",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/data/local/local-act.store.ts",
+      "line": 23,
+      "claim": "A persistência cifrada cobre somente acts, receipts e sync e não está ligada ao aplicativo para todo o modelo offline contratado.",
+      "impact": "Draft, queue, evidence, reservation, package e print-receipt não têm armazenamento operacional demonstrado.",
+      "fix": "Cobrir o modelo offline fechado e registrar o store no grafo de produção."
+    },
+    {
+      "id": "CTG4A-R2-F009",
+      "severity": "high",
+      "file": "apps/teat/mobile/src/app/app.mobile-runtime-surfaces.spec.ts",
+      "line": 1,
+      "claim": "Sensores usam busca nominal e doubles incompatíveis com os clients reais para páginas, bootstrap, D-05/BOAT, sync, normativo, impressão e ErrorBoundary.",
+      "impact": "972/972 PASS não detecta os defeitos de integração acima.",
+      "fix": "Substituir os falso-positivos por provas comportamentais contra os contratos reais antes de nova implementação."
+    }
+  ],
+  "accepted_corrections": [
+    "headers de comando fornecidos pelo caller nas superfícies já corrigidas",
+    "oito módulos carregados por loadChildren sem ciclo",
+    "adapter legado de armazenamento removido",
+    "conteúdo normativo re-hasheado após reinício",
+    "i18n delegado ao runtime STYNX por DI",
+    "ait-done nega retorno inseguro"
+  ],
+  "verification": {
+    "tests": "972/972 PASS em 14 arquivos",
+    "working_tree": "clean before review",
+    "reviewer_mutations": "none"
+  }
+}

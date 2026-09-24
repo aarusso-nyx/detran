@@ -22,12 +22,17 @@ function sql(value) {
 function sqlJson(value) {
   return sql(JSON.stringify(value));
 }
+function firstInstallationDate(entry) {
+  if (entry.key !== 'teat.bootstrap.snapshot_max_age_seconds') {
+    return sql('2026-09-13');
+  }
+  return `COALESCE((SELECT MIN(p.effective_from) FROM ops.parameter p WHERE p.tenant_id = ${sql('00000000-0000-7000-8000-00000000a001')} AND p.traffic_agency_id IS NULL AND p.scope = 'tenant' AND p.surface = ${sql(entry.surface)} AND p.key = ${sql(entry.key)}), CURRENT_DATE)`;
+}
 function renderSeed(model) {
   const rows = model.entries
-    .map(
-      (entry) =>
-        `(${sql('00000000-0000-7000-8000-00000000a001')}, NULL, 'tenant', ${sql(entry.surface)}, ${sql(entry.key)}, ${sqlJson(entry.value_json)}, ${sql(entry.value_type)}, ${sql(entry.status)}, ${entry.source_pending}, ${entry.legal_readonly}, ${sql(entry.decision_ref)}, NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', ${sql('00000000-0000-4000-8000-0000b0000016')}, now())`,
-    )
+    .map((entry) => {
+      return `(${sql('00000000-0000-7000-8000-00000000a001')}, NULL, 'tenant', ${sql(entry.surface)}, ${sql(entry.key)}, ${sqlJson(entry.value_json)}, ${sql(entry.value_type)}, ${sql(entry.status)}, ${entry.source_pending}, ${entry.legal_readonly}, ${sql(entry.decision_ref)}, NULL, 'ARCH-PARAMETER-CATALOGUE', 1, ${firstInstallationDate(entry)}, ${sql('00000000-0000-4000-8000-0000b0000016')}, now())`;
+    })
     .join(',\n');
   return `-- Generated from parameter-catalogue.md sha256:${model.sourceHash}\n-- Applied by backend/database/seed.sh after apply.sh: the tenant context below satisfies auth.enforce_tenant_id().\nselect set_config('app.role', 'owner', false);\nselect set_config('app.tenant_id', '00000000-0000-7000-8000-00000000a001', false);\nINSERT INTO ops.parameter\n  (tenant_id, traffic_agency_id, scope, surface, key, value_json, value_type, status, source_pending, legal_readonly, decision_ref, legal_basis, reason, version, effective_from, changed_by, created_at)\nVALUES\n${rows}\nON CONFLICT (tenant_id, coalesce(traffic_agency_id, '00000000-0000-0000-0000-000000000000'::uuid), surface, key, effective_from) DO NOTHING;\n`;
 }

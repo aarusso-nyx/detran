@@ -24,6 +24,7 @@ const OPS_TABLES = {
   shifts: 'ops.ops_shift',
   handoffs: 'ops.ops_session_handoff',
   reservations: 'ops.numbering_reservation',
+  numberingRanges: 'ops.ait_numbering_range',
   units: 'ops.agency_unit',
   teams: 'ops.ops_team',
   patrolVehicles: 'ops.ops_patrol_vehicle',

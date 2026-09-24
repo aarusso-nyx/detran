@@ -15,7 +15,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
  * Canônico aqui: `MOBILE_BOOTSTRAP_PROTOCOL_VERSION`, os códigos do
  * `teat-error-catalog.md` §2, os dez tokens de `readiness.blockers[]` **na
  * ordem** da §5.3, os avisos, as três `capabilities` e os campos nulos de
- * `snapshot` (OD-T14). Proposta do Inspector, não valor canônico: o nome do
+ * `snapshot` (OD-T14: prazo online somente com parâmetro válido). Proposta do
+ * Inspector, não valor canônico: o nome do
  * símbolo exportado, o nome do método e a forma do objeto de dependências —
  * o carregador tolera qualquer nome plausível (OD no relatório da tarefa).
  */
@@ -34,12 +35,15 @@ const APP_VERSION_ID = '00000000-0000-7000-8000-0000e2300001';
 const SHIFT_OPEN = '00000000-0000-7000-8000-0000e3000001';
 const RESERVATION_RESERVED = '00000000-0000-7000-8000-0000e6000001';
 const RANGE_ID = '00000000-0000-7000-8000-0000e5000001';
+const RANGE_TWO = '00000000-0000-7000-8000-0000e5000002';
+const RESERVATION_TWO = '00000000-0000-7000-8000-0000e6000002';
 const PACKAGE_ID = '00000000-0000-7000-8000-0000e7000001';
 const CATALOG_ID = '00000000-0000-7000-8000-0000e0000001';
 
 /** Constante da origem, preservada em CTG-0002 §5.2. */
 const PROTOCOL_VERSION = 'teat-mobile-bootstrap.v1';
 const APP_VERSION = '1.0.0';
+const SNAPSHOT_MAX_AGE_KEY = 'teat.bootstrap.snapshot_max_age_seconds';
 
 /** Relógio fixo: "hoje" das fixtures é 2026-09-14 (America/Manaus). */
 const NOW = '2026-09-14T14:00:00.000Z';
@@ -147,6 +151,37 @@ function reservation(
   };
 }
 
+function openShift(
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> {
+  return {
+    id: SHIFT_OPEN,
+    tenant_id: TENANT_ID,
+    traffic_agency_id: AGENCY_ID,
+    agent_id: AGENT_ID,
+    device_id: DEVICE_AUTHORIZED,
+    operational_unit_id: UNIT_ID,
+    started_at: '2026-09-14T12:00:00.000Z',
+    status: 'open',
+    ...overrides,
+  };
+}
+
+function numberingRange(
+  overrides: Record<string, unknown> = {},
+): Record<string, unknown> {
+  return {
+    id: RANGE_ID,
+    tenant_id: TENANT_ID,
+    traffic_agency_id: AGENCY_ID,
+    series: 'F',
+    start_number: 2026000001,
+    end_number: 2026000001,
+    status: 'active',
+    ...overrides,
+  };
+}
+
 interface World {
   devices: Record<string, unknown>[];
   agents: Record<string, unknown>[];
@@ -155,6 +190,7 @@ interface World {
   shifts: Record<string, unknown>[];
   handoffs: Record<string, unknown>[];
   reservations: Record<string, unknown>[];
+  numberingRanges: Record<string, unknown>[];
   packages: Record<string, unknown>[];
 }
 
@@ -181,6 +217,7 @@ function world(overrides: Partial<World> = {}): World {
     shifts: [],
     handoffs: [],
     reservations: [reservation()],
+    numberingRanges: [numberingRange()],
     packages: [
       {
         id: PACKAGE_ID,
@@ -198,6 +235,31 @@ function world(overrides: Partial<World> = {}): World {
   };
 }
 
+interface ParameterFixture extends Record<string, unknown> {
+  value_json?: unknown;
+  source_pending?: boolean;
+}
+
+function snapshotMaxAgeParameter(
+  overrides: Record<string, unknown> = {},
+): ParameterFixture {
+  return {
+    tenant_id: TENANT_ID,
+    traffic_agency_id: null,
+    scope: 'tenant',
+    surface: 'teat',
+    key: SNAPSHOT_MAX_AGE_KEY,
+    value_json: 300,
+    value_type: 'int',
+    status: 'vigente',
+    source_pending: false,
+    legal_readonly: false,
+    decision_ref: 'OD-T14',
+    effective_from: '2026-09-23',
+    ...overrides,
+  };
+}
+
 function deps(state: World = world()) {
   const repositories = {
     devices: repository(state.devices),
@@ -207,6 +269,7 @@ function deps(state: World = world()) {
     shifts: repository(state.shifts),
     handoffs: repository(state.handoffs),
     reservations: repository(state.reservations),
+    numberingRanges: repository(state.numberingRanges),
     packages: repository(state.packages),
     units: repository([
       {
@@ -234,11 +297,16 @@ function deps(state: World = world()) {
       snapshot: () => ({ tenantId: TENANT_ID, actorId: AGENT_ID }),
     },
     parameters: {
-      get: vi.fn(async (key: string) => ({
-        key,
-        value_json: 'warn (lavra com flag de risco; autoridade decide)',
-        source_pending: false,
-      })),
+      get: vi.fn(
+        async (
+          key: string,
+          _options?: Record<string, unknown>,
+        ): Promise<ParameterFixture> => ({
+          key,
+          value_json: 'warn (lavra com flag de risco; autoridade decide)',
+          source_pending: false,
+        }),
+      ),
     },
     outbox: { append: vi.fn(async () => ({ id: 'outbox-row-1' })) },
     clock: { now: () => NOW, today: () => NOW.slice(0, 10) },
@@ -246,6 +314,34 @@ function deps(state: World = world()) {
 }
 
 type Deps = ReturnType<typeof deps>;
+
+function withSnapshotMaxAgeParameter(value: ParameterFixture | Error): Deps {
+  const dependencies = deps();
+  dependencies.clock.now = () => '2026-09-24T14:00:00.000Z';
+  dependencies.clock.today = () => '2026-09-24';
+  const fallback = dependencies.parameters.get;
+  dependencies.parameters.get = vi.fn(
+    async (key: string, options?: Record<string, unknown>) => {
+      if (key === SNAPSHOT_MAX_AGE_KEY) {
+        if (value instanceof Error) throw value;
+        const on =
+          typeof options?.on === 'string'
+            ? options.on
+            : dependencies.clock.today();
+        if (
+          typeof value.effective_from !== 'string' ||
+          on < value.effective_from ||
+          (typeof value.effective_to === 'string' && on > value.effective_to)
+        ) {
+          throw new Error(`Parameter ${key} not effective on ${on}`);
+        }
+        return value;
+      }
+      return fallback(key, options);
+    },
+  );
+  return dependencies;
+}
 
 /**
  * `import()` com especificador **variável** de propósito: o módulo só nasce em
@@ -421,6 +517,140 @@ describe('CTG-0002 §5.1/§5.2 — escopo e protocolo do bootstrap (C-0002-19/20
 });
 
 describe('CTG-0002 §5.3/§6 — bloqueadores, avisos e capabilities (C-0002-21…25)', () => {
+  it('RN-TEAT-113 — a série da reserva vem somente da faixa autoritativa do mesmo tenant e órgão', async () => {
+    const dependencies = deps(world({ shifts: [openShift()] }));
+    const response = await bootstrap(dependencies);
+    expect(response.numberingReservations).toEqual([
+      expect.objectContaining({
+        id: RESERVATION_RESERVED,
+        rangeId: RANGE_ID,
+        shiftId: SHIFT_OPEN,
+        series: 'F',
+        startNumber: 2026000001,
+        endNumber: 2026000001,
+      }),
+    ]);
+    expect(dependencies.repositories.numberingRanges.list).toHaveBeenCalled();
+  });
+
+  it('WF-TEAT-002 — duas reservas do turno corrente herdam séries distintas das respectivas faixas autoritativas', async () => {
+    const response = await bootstrap(
+      deps(
+        world({
+          shifts: [openShift()],
+          numberingRanges: [
+            numberingRange(),
+            numberingRange({
+              id: RANGE_TWO,
+              series: 'G',
+              start_number: 2026000101,
+              end_number: 2026000102,
+            }),
+          ],
+          reservations: [
+            reservation(),
+            reservation({
+              id: RESERVATION_TWO,
+              range_id: RANGE_TWO,
+              start_number: 2026000101,
+              end_number: 2026000102,
+            }),
+          ],
+        }),
+      ),
+    );
+    expect(response.numberingReservations).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: RESERVATION_RESERVED,
+          rangeId: RANGE_ID,
+          series: 'F',
+          shiftId: SHIFT_OPEN,
+        }),
+        expect.objectContaining({
+          id: RESERVATION_TWO,
+          rangeId: RANGE_TWO,
+          series: 'G',
+          shiftId: SHIFT_OPEN,
+        }),
+      ]),
+    );
+    expect(response.numberingReservations as unknown[]).toHaveLength(2);
+  });
+
+  it.each([
+    ['ausente', []],
+    ['outro tenant', [numberingRange({ tenant_id: OTHER_TENANT_ID })]],
+    ['outro órgão', [numberingRange({ traffic_agency_id: 'other-agency' })]],
+    ['série vazia', [numberingRange({ series: '' })]],
+  ])(
+    'RN-TEAT-113 — faixa %s não concede reserva utilizável sem série autoritativa',
+    async (_scenario, numberingRanges) => {
+      const response = await bootstrap(
+        deps(world({ numberingRanges, shifts: [openShift()] })),
+      );
+      expect(response.numberingReservations).toEqual([]);
+      expect(readiness(response).blockers).toContain(
+        'NUMBERING_RESERVATION_REQUIRED',
+      );
+      expect(capabilities(response).canOperateOffline).toBe(false);
+    },
+  );
+
+  it.each([
+    ['range_id ausente', { range_id: undefined }],
+    ['validUntil inválido', { valid_until: 'not-a-date' }],
+    [
+      'órgão divergente da faixa/dispositivo',
+      { traffic_agency_id: 'other-agency' },
+    ],
+    ['limites fora da faixa', { start_number: 2025999999 }],
+  ])(
+    'RN-TEAT-113 — reserva com %s não recebe série nem habilita numeração offline',
+    async (_scenario, change) => {
+      const response = await bootstrap(
+        deps(
+          world({ reservations: [reservation(change)], shifts: [openShift()] }),
+        ),
+      );
+      expect(response.numberingReservations).toEqual([]);
+      expect(readiness(response).blockers).toContain(
+        'NUMBERING_RESERVATION_REQUIRED',
+      );
+      expect(capabilities(response).canOperateOffline).toBe(false);
+    },
+  );
+
+  it('WF-TEAT-002 — pré-turno não publica reserva para pin local antes de existir turno aberto', async () => {
+    const response = await bootstrap(deps());
+    expect(response.numberingReservations).toEqual([]);
+    expect(capabilities(response).canOpenShift).toBe(true);
+    expect(capabilities(response).canReserveNumbering).toBe(false);
+  });
+
+  it.each([
+    ['turno anterior', { shift_id: 'prior-shift' }],
+    ['turno ausente', { shift_id: undefined }],
+    ['outro agente no turno', { agent_id: 'foreign-agent' }],
+    ['outro dispositivo no turno', { device_id: DEVICE_BLOCKED }],
+  ])(
+    'WF-TEAT-002 — reserva de %s não aparece no snapshot de numeração do turno corrente',
+    async (_scenario, change) => {
+      const response = await bootstrap(
+        deps(
+          world({
+            shifts: [openShift()],
+            reservations: [reservation(change)],
+          }),
+        ),
+      );
+      expect(response.numberingReservations).toEqual([]);
+      expect(readiness(response).blockers).toContain(
+        'NUMBERING_RESERVATION_REQUIRED',
+      );
+    },
+  );
+
   it('C-0002-21 — dado o device …e4000004 (tamper) então blockers traz DEVICE_TAMPER_DETECTED na ordem fixa da §5.3 e canOperateOffline = false', async () => {
     const response = await bootstrap(deps(), { device_id: DEVICE_TAMPERED });
     const { blockers } = readiness(response);
@@ -451,7 +681,7 @@ describe('CTG-0002 §5.3/§6 — bloqueadores, avisos e capabilities (C-0002-21�
   });
 
   it('C-0002-22 — dado o agente …b0000001 com reserva vigente então NUMBERING_RESERVATION_REQUIRED não aparece e canOpenShift = true', async () => {
-    const response = await bootstrap(deps());
+    const response = await bootstrap(deps(world({ shifts: [openShift()] })));
     const { blockers } = readiness(response);
     expect(blockers).not.toContain('NUMBERING_RESERVATION_REQUIRED');
     expect(capabilities(response).canOpenShift).toBe(true);
@@ -493,8 +723,104 @@ describe('CTG-0002 §5.3/§6 — bloqueadores, avisos e capabilities (C-0002-21�
     expect(blockers).not.toContain('NORMATIVE_PACKAGE_MISSING');
   });
 
-  it('C-0002-25 — dado o bootstrap completo então snapshot.maxAgeSeconds e snapshot.validUntil são null (OD-T14) e protocolVersion ecoa a constante', async () => {
-    const response = await bootstrap(deps());
+  it.each([
+    ['2026-09-24T14:00:00.001Z', '2026-09-24T14:05:00.001Z'],
+    ['2026-09-24T14:00:00.999Z', '2026-09-24T14:05:00.999Z'],
+  ])(
+    'OD-T14 — linha tenant/TEAT vigente 300 em %s fixa capturedAt e validUntil exato %s com uma leitura do relógio',
+    async (capturedAt, expectedValidUntil) => {
+      const dependencies = withSnapshotMaxAgeParameter(
+        snapshotMaxAgeParameter(),
+      );
+      const now = vi.fn(() => capturedAt);
+      dependencies.clock.now = now;
+
+      const response = await bootstrap(dependencies);
+      const snapshot = (response.snapshot ?? {}) as Record<string, unknown>;
+      expect(snapshot).toMatchObject({
+        capturedAt,
+        maxAgeSeconds: 300,
+        validUntil: expectedValidUntil,
+      });
+      expect(now).toHaveBeenCalledTimes(1);
+      const lookups = dependencies.parameters.get.mock.calls.filter(
+        ([key]) => key === SNAPSHOT_MAX_AGE_KEY,
+      );
+      expect(lookups).toHaveLength(1);
+      expect(lookups[0]?.[1]).toMatchObject({
+        on: capturedAt.slice(0, 10),
+      });
+      expect(lookups[0]?.[1] ?? {}).not.toHaveProperty('agencyId');
+    },
+  );
+
+  it('OD-T14 — lookup usa o dia UTC de capturedAt ao cruzar meia-noite, não o today independente do parâmetro', async () => {
+    const capturedAt = '2026-09-25T00:00:00.001Z';
+    const dependencies = withSnapshotMaxAgeParameter(snapshotMaxAgeParameter());
+    const now = vi.fn(() => capturedAt);
+    dependencies.clock.now = now;
+    dependencies.clock.today = vi.fn(() => '2026-09-24');
+
+    const response = await bootstrap(dependencies);
+    const snapshot = (response.snapshot ?? {}) as Record<string, unknown>;
+    expect(snapshot).toMatchObject({
+      capturedAt,
+      maxAgeSeconds: 300,
+      validUntil: '2026-09-25T00:05:00.001Z',
+    });
+    expect(now).toHaveBeenCalledTimes(1);
+    const lookups = dependencies.parameters.get.mock.calls.filter(
+      ([key]) => key === SNAPSHOT_MAX_AGE_KEY,
+    );
+    expect(lookups).toEqual([[SNAPSHOT_MAX_AGE_KEY, { on: '2026-09-25' }]]);
+  });
+
+  it.each([
+    ['linha ausente', new Error('Parameter not found')],
+    ['consulta rejeitada', new Error('parameter lookup unavailable')],
+  ])(
+    'OD-T14 — %s mantém maxAgeSeconds e validUntil nulos, sem fallback',
+    async (_reason, failure) => {
+      const response = await bootstrap(withSnapshotMaxAgeParameter(failure));
+      const snapshot = (response.snapshot ?? {}) as Record<string, unknown>;
+      expect(snapshot.maxAgeSeconds).toBeNull();
+      expect(snapshot.validUntil).toBeNull();
+    },
+  );
+
+  it.each([
+    ['source_pending', { source_pending: true }],
+    ['status incorreto', { status: 'revogado' }],
+    ['tipo incorreto', { value_type: 'decimal' }],
+    ['escopo incorreto', { scope: 'surface' }],
+    ['surface incorreta', { surface: 'rait' }],
+    ['agência presente', { traffic_agency_id: AGENCY_ID }],
+    ['tenant incorreto', { tenant_id: OTHER_TENANT_ID }],
+    ['metadado ausente', { tenant_id: undefined }],
+    ['zero', { value_json: 0 }],
+    ['string', { value_json: '300' }],
+    ['fração', { value_json: 300.5 }],
+    ['inteiro não seguro', { value_json: Number.MAX_SAFE_INTEGER + 1 }],
+    [
+      'prazo fora do intervalo de Date',
+      { value_json: Number.MAX_SAFE_INTEGER },
+    ],
+  ])(
+    'OD-T14 — %s mantém maxAgeSeconds e validUntil nulos, sem fallback',
+    async (_reason, override) => {
+      const response = await bootstrap(
+        withSnapshotMaxAgeParameter(snapshotMaxAgeParameter(override)),
+      );
+      const snapshot = (response.snapshot ?? {}) as Record<string, unknown>;
+      expect(snapshot.maxAgeSeconds).toBeNull();
+      expect(snapshot.validUntil).toBeNull();
+    },
+  );
+
+  it('C-0002-25 — dado parâmetro OD-T14 ausente então snapshot.maxAgeSeconds e snapshot.validUntil são null e protocolVersion ecoa a constante', async () => {
+    const response = await bootstrap(
+      withSnapshotMaxAgeParameter(new Error('Parameter not found')),
+    );
     const snapshot = (response.snapshot ?? {}) as Record<string, unknown>;
     expect(snapshot.maxAgeSeconds).toBeNull();
     expect(snapshot.validUntil).toBeNull();
@@ -503,7 +829,7 @@ describe('CTG-0002 §5.3/§6 — bloqueadores, avisos e capabilities (C-0002-21�
     expect(response.requestedProtocolVersion).toBe(PROTOCOL_VERSION);
   });
 
-  it('C-0002-25 — dado mobile-bootstrap.service.ts então a constante 300 de maxAgeSeconds da origem não aparece no código (OD-T14: o valor é source_pending)', async () => {
+  it('C-0002-25 — dado mobile-bootstrap.service.ts então 300 não é fallback hardcoded de maxAgeSeconds', async () => {
     const path = fileURLToPath(
       new URL('./mobile-bootstrap.service.ts', import.meta.url),
     );
@@ -518,7 +844,7 @@ describe('CTG-0002 §5.3/§6 — bloqueadores, avisos e capabilities (C-0002-21�
     }
     expect(
       /\bmaxAgeSeconds\b[^\n]*\b300\b/.test(source),
-      'maxAgeSeconds não pode voltar a 300: sem linha no parameter-catalogue o campo é null (OD-T14)',
+      'maxAgeSeconds deve vir do parâmetro OD-T14, nunca de constante hardcoded',
     ).toBe(false);
   });
 

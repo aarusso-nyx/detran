@@ -1,5 +1,26 @@
 # Prompt do maestro — orquestra `teat-frontends` (rodada `R-0013`)
 
+## Retomada obrigatória — decisão posterior do Owner (2026-09-23)
+
+Este prompt contém instruções históricas de bootstrap já executadas. Na retomada,
+**não** recrie worktree/rodada, não exija árvore limpa nem reexecute TASK-0010–0018
+como se fossem inéditas. Leia primeiro a adenda vinculante no topo de
+`work/rounds/R-0013/plan.md` e ADR-0033. CTG-0004a/b e CTG-0005 passam a entregar
+**homologação de UI e workflows**, não apps de campo. Despache a correção pelos novos
+`prompts/CTG-0004a-homologation.md`, `CTG-0004b-homologation.md` e
+`CTG-0005-homologation.md`, com Architect/Inspector/Engineer/Reviewer segregados,
+REDs honestos, gates integrais e review no candidato atual. As composições e
+relatórios TASK antigos permanecem provas históricas e não são recalculados para
+simular uma execução nova. O futuro app mobile produtivo será round dedicado
+(R-0017 apenas candidato) e está rastreado em issues; não marcar WP-T6 de campo
+como entregue nem declarar E2, AIT real ou GMS820 integrado.
+
+Por exceção explícita do Owner para esta sessão, o REVIEWER usa a **família Codex**
+com modelo/esforço adequados, mantendo independência de papel; as instruções de
+reviewer Claude abaixo não se aplicam a esta retomada. Nenhum PASS anterior cobre
+a mudança de escopo. Não fazer push/PR/merge/fechamento antes de gates e revisão
+completos do candidato e dos limites de autorização aplicáveis.
+
 > Cole este prompt inteiro numa sessão **nova e sem contexto** da CLI da família `OpenAI — Codex CLI com GPT-5.6 Sol`
 > (Claude Code com Fable 5.1, ou Codex CLI com GPT-5.6 Sol), aberta na worktree `/Volumes/Thiamat II/stech/detran-worktrees/teat-frontends`.
 > Você é o **maestro** desta orquestra. Tudo o que você precisa saber está nos arquivos citados;
