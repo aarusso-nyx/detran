@@ -144,9 +144,21 @@ export const TEAT_WEB_SSE_TOPICS_BY_PATH = Object.fromEntries(
   ]),
 ) as Readonly<Record<string, readonly string[]>>;
 
-export const TEAT_WEB_I18N = JSON.parse(
+const TEAT_I18N = JSON.parse(
   readFileSync(
     resolve(repositoryRoot, 'docs/framework/arch/i18n/teat.pt-BR.json'),
     'utf8',
   ),
 ) as Readonly<Record<string, string>>;
+const BOAT_I18N = JSON.parse(
+  readFileSync(
+    resolve(repositoryRoot, 'docs/framework/arch/i18n/boat.pt-BR.json'),
+    'utf8',
+  ),
+) as Readonly<Record<string, string>>;
+
+// Runtime merge: BOAT keys remain byte-identical, including source_pending markers.
+export const TEAT_WEB_I18N = {
+  ...TEAT_I18N,
+  ...BOAT_I18N,
+} as Readonly<Record<string, string>>;
