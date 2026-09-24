@@ -1,0 +1,55 @@
+{
+  "action": "Deliver R-0013 CTG-0004a, CTG-0004b and CTG-0005 as ADR-0033 UI and workflow homologation with synthetic authority, AIT and sync, explicit production negatives and deferred production issues",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0004a-0004b-0005",
+  "role": "engineer",
+  "commits": ["8656ea615d3d7aedca2bab9c6e16108faaa51046"],
+  "artifacts": [
+    {
+      "path": "docs/meta/adr/ADR-0033-teat-ui-workflow-homologation-scope.md",
+      "sha256": "b9746accd8eb40d662663dc75dc667aa179ab04d1700bc18632a040c415cb686"
+    },
+    {
+      "path": "docs/framework/arch/teat-build-pack.md",
+      "sha256": "0ed054ffee08ddaa2f5a3527fc8978291e9da64872a47f11cedcdbd98037bf6e"
+    },
+    {
+      "path": "apps/teat/mobile/src/app/shared/homologation-ait-workflow.component.ts",
+      "sha256": "9a6f8596b28eb4aab8bb3b9881df7ca39840f69b6a61704953c7e99b911df0ed"
+    },
+    {
+      "path": "apps/teat/mobile/src/app/shared/homologation-transition-panel.component.ts",
+      "sha256": "6d762fc0ca9f8c8f909ec86734d8e7aacbcae58cda57a14063bf4e6ac5d28574"
+    },
+    {
+      "path": "apps/teat/mobile/src/app/shared/homologation-sync-panel.component.ts",
+      "sha256": "132a70fcf7ebb1b777a5b95b3c9cb23982fd9e79b45f4a49ef6bf29da313384f"
+    },
+    {
+      "path": "apps/teat/web/src/app/app.homologation.spec.ts",
+      "sha256": "4d3ea534e89184f81d632e66787b5f8f0e71e014a3ccb45ffd26f3e90ea19fa6"
+    },
+    {
+      "path": "work/rounds/R-0013/plan.md",
+      "sha256": "4d65c0d7b8ec07dd84c77ae6ec47c38014303e6f305f0dc9a8451a8a5c3f72d9"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Exact candidate passed format, orchestration bridge, knowledge base, blueprints, contracts, generated consistency, typecheck, UI lint/tests/build, RLS and workspace tests; mobile 1157/1157, web 594/594"
+    },
+    {
+      "name": "pnpm exec devai doctor and evidence verify",
+      "result": "pass",
+      "note": "Tier 3 doctor and pre-record chain verification passed"
+    },
+    {
+      "name": "independent delivery review",
+      "result": "pass",
+      "note": "Owner-authorized Codex reviewer PASS on exact Git tree bba592ecf0750f4da0525c990668dc16b5cb0d18; no blocking findings"
+    },
+    { "name": "git diff --check", "result": "pass" }
+  ]
+}

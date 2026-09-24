@@ -3,7 +3,7 @@ id: ARCH-TEAT-FRONTENDS
 title: apps/teat/mobile e apps/teat/web — especificação completa dos frontends do TEAT (módulos, telas, navegação, componentes, jornadas, ações)
 status: draft
 apps: [teat]
-updated: 2026-09-13
+updated: 2026-09-22
 ---
 
 # Frontends do TEAT — talão eletrônico de campo e retaguarda
@@ -265,37 +265,38 @@ local_entity_id, idempotency_key, payload_hash, payload_json}`); recibos `receiv
 
 ## 10. Estrutura de pastas
 
+Estado entregue no candidato R-0013 (não uma árvore planejada): os clientes dos apps são adapters
+`HttpClient` manuscritos — mobile em `data/api/*.client.ts` e web em `data/*.client.ts` — que
+aplicam os contratos do backend unificado. Eles não são clientes gerados. O mobile também entrega
+`core/`, `data/local/`, `data/normative/`, `data/sync/`, `navigation/`, `features/`, `shared/` e
+`i18n/`; o web entrega `core/`, `data/`, `features/`, `shared/` e `i18n/`.
+
+O bloco abaixo é o layout histórico de planejamento; não descreve paths nem clients do candidato
+entregue.
+
 ```text
-apps/teat/mobile/src/app/
-  core/            field-shell, readiness-gate, bootstrap.store, local-act.store, sync.worker, normative-package.service, bodycam-indicator
-  navigation/      app.routes.ts, transitions.ts (576), guards/
-  features/        turno/ consultas/ ait/ medidas/ alcoolemia/ sincronizacao/ complementares/ (sinistro/ → BOAT)
-  shared/          paired-value, closed-enum-picker, proposed-value-field, outcome-selector, evidence-capture, signature-capture, location-field, framing-picker, validation-panel, printer-dialog, queue-item-card, conflict-resolver, device-handoff-form, term-preview
-  data/            api/ (clientes gerados: ait, normative, measures, alcohol, speed, ops, offline-sync, mobile-bootstrap), local/ (schemas zod dos agregados locais)
-  i18n/            teat.pt-BR.json
-apps/teat/web/src/app/
-  core/            shell (@detran/ui), sse.service, error-boundary, role-home
-  features/        operacoes/ fiscalizacao/ medidas/ alcoolemia/ evidencias/ sincronizacao/ auditoria/ inteligencia/ administracao/ normativos/ tecnico/
-  shared/          (§6.3)
-  data/            api/
+apps/teat/mobile/src/app/{core,data/{api,local,normative,sync},features,navigation,shared,i18n}
+apps/teat/web/src/app/{core/{error-boundary},data,features,shared,i18n}
 ```
 
-## 11. Dependências de backend (pré-requisitos de release)
+## 11. Dependências de backend e estado de entrega R-0013
 
-| Dependência                                                                                                                                                          | Situação                                                                                      |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Rotas de comando do AIT (`finalize`, `science`, `queue-transmission`, `receive-protocol`, `request-correction`, `approve-correction`, `accept`, `reject`, `archive`) | existem (handwritten `AitCommandsController`), **não montadas** no `AitModule`                |
-| Prefixo das rotas CRUD geradas (`v1/inf/aitaits`)                                                                                                                    | **defeito do gerador**; corrigir em WP-T0                                                     |
-| Numeração, reservas, lotes de sincronização, conflitos, recibos (`/v1/ops/offline-sync/*`)                                                                           | pendente — `@stynx-nyx/offline-sync` + blueprint `BP-OPS-OFFLINE-SYNC-001`                    |
-| Bootstrap e turno (`/v1/ops/mobile-bootstrap`)                                                                                                                       | pendente — handwritten sobre `ops/operations`                                                 |
-| Pedidos de cancelamento (`ait-cancel-requests`) e apuração de concorrência                                                                                           | pendente — entidade nova no blueprint do AIT                                                  |
-| Requisições de acesso a bodycam (`evidence-access-requests`)                                                                                                         | pendente — entidade nova em `ops/evidence-custody`                                            |
-| Módulo `speed` (blueprint sem código) e política                                                                                                                     | pendente — fora do MVP (DT-014/medidores), rota D-05 desligada                                |
-| Papel Diretoria de Fiscalização                                                                                                                                      | OD-T01                                                                                        |
-| Pacote normativo: geração/publicação/validação; tabelas metrológicas                                                                                                 | comandos `normative` handwritten existem parcialmente; `MetrologicalTable` falta no blueprint |
-| Provisionamento offline (grant, chaves, pacote assinado)                                                                                                             | plano P0–P6 da origem; ADR própria em WP-T5                                                   |
+ADR-0033 redefine o aceite dos frontends de R-0013 como **homologação de UI e
+workflows**. Fluxos positivos com fixtures devem ser explícitos, sintéticos e
+segregados; não comprovam autoridade para ato real. App Android de produção,
+segredos/chaves, port de localização, validador AIT, ciclo de sincronização e
+prova no GMS820 (modelo já homologado como equipamento) pertencem a round
+posterior dedicado, R-0017 apenas candidato; issues
+[#108](https://github.com/aarusso-nyx/detran/issues/108)–[#112](https://github.com/aarusso-nyx/detran/issues/112).
 
-Enquanto uma dependência não existe, a rota é registrada e exibe "indisponível nesta versão".
+As superfícies de AIT, bootstrap/turno, numeração/sincronização, evidência, pacote normativo e
+provisionamento foram entregues nos CTGs precedentes; CTG-0003 foi mesclado pela PR #82. Mobile e
+web usam adapters `HttpClient` manuscritos, respectivamente em `data/api/*.client.ts` e
+`data/*.client.ts`, para aplicar os contratos do backend unificado. Os PASS anteriores de CTG-0004a e
+CTG-0004b não cobrem a adenda e permanecem candidatos sem merge, publicação ou deploy. KMS, Keystore,
+criptografia/envelope/attestation de produção, bodycam real, adapters de hardware (inclusive
+impressora) e serviços nacionais continuam fora do escopo comprovado por fixtures/ports; lacunas
+de produto permanecem `source_pending` ou nas ODs já registradas.
 
 ## 12. Testes e critérios de pronto
 

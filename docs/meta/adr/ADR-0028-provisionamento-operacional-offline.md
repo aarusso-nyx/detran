@@ -12,9 +12,15 @@ The monorepo owns operational offline provisioning at `/v1/ops/provisioning/*` t
 `/v1/mobile-provisioning/*` naming; no origin route name is retained as an alias.
 
 The server persists only public device-key material, fingerprint and attestation evidence. Private
-device keys never exist server-side. KMS/HSM signing and envelope encryption are ports. JOSE/COSE,
-algorithms, key sizes and wire encoding are `source_pending`, block real integration, and may use
-only explicitly non-production fixture ports until a cross-platform security decision exists.
+device keys never exist server-side. KMS/HSM signing and envelope encryption are ports. At the
+time of this ADR, JOSE/COSE, algorithms, key sizes and wire encoding were `source_pending` and
+blocked real integration; only explicitly non-production fixture ports could run. The later
+Android/GMS820 policy decision below resolves those format choices for R-0013, not the absent
+production ports.
+For R-0013 Android/Gertec GMS820, the Owner subsequently selected the JOSE/JCS/JWS/JWE profile
+and associated trust/enrollment policy in ADR-0032. That selection resolves the policy choice
+for this scope; the production ports and cryptographic evidence remain absent and may not be
+replaced with the fixture implementation.
 
 Every provisioning aggregate is tenant-scoped and receives forced RLS. The request tenant is
 derived from context, never from a payload. Grant issuance links device, authorized agents,
@@ -65,8 +71,9 @@ command resolves package, grant and device in the authenticated tenant and rejec
 contracted 410 `TEAT.VALIDATION_FAILED` when the package is expired, its grant is expired or
 revoked, the device is revoked, or the package schema is not supported by the runtime. A package
 from another tenant remains indistinguishable from absent data. The envelope is returned only when
-its persisted grant/device/digest relationship remains valid; cryptographic algorithm and wire
-format remain `source_pending`.
+its persisted grant/device/digest relationship remains valid. The algorithm and wire format
+were `source_pending` at this ADR's adoption; ADR-0032 later selects them for R-0013
+Android/GMS820, while the production envelope and verification ports remain unimplemented.
 
 Readiness computes two non-negative persisted budgets: `remaining_acts` is `maximum_acts` minus
 all `ops.numbering_consumption` rows bound to a grant reservation, and

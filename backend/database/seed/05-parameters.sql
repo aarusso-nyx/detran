@@ -1,4 +1,4 @@
--- Generated from parameter-catalogue.md sha256:696588f80836b8e089c637941e2454bec834603c9bb187be971081f202284dd1
+-- Generated from parameter-catalogue.md sha256:2407e73b06674892a07a9b295b23852948fea76fe460e3bbef1cfc671f8e1aed
 -- Applied by backend/database/seed.sh after apply.sh: the tenant context below satisfies auth.enforce_tenant_id().
 select set_config('app.role', 'owner', false);
 select set_config('app.tenant_id', '00000000-0000-7000-8000-00000000a001', false);
@@ -43,6 +43,7 @@ VALUES
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'deadline.sweeper_interval_minutes', '15', 'int', 'vigente', false, false, 'DT-133', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'rait', 'deadline.optional_day_policy', '"business_day_for_citizen"', 'enum', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'teat', 'sync.concurrency_window_minutes', 'null', 'int', 'proposta', true, false, 'OD-T03', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
+('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'teat', 'teat.bootstrap.snapshot_max_age_seconds', '300', 'int', 'vigente', false, false, 'OD-T14', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, COALESCE((SELECT MIN(p.effective_from) FROM ops.parameter p WHERE p.tenant_id = '00000000-0000-7000-8000-00000000a001' AND p.traffic_agency_id IS NULL AND p.scope = 'tenant' AND p.surface = 'teat' AND p.key = 'teat.bootstrap.snapshot_max_age_seconds'), CURRENT_DATE), '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'teat', 'teat.homologation.expired_behavior', '"warn (lavra com flag de risco; autoridade decide)"', 'enum', 'vigente', false, false, 'OD-T04', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'teat', 'teat.homologation.tolerance_days', '0', 'int', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),
 ('00000000-0000-7000-8000-00000000a001', NULL, 'tenant', 'teat', 'teat.numbering.reservation_ttl_hours', '72', 'int', 'vigente', false, false, 'H.54', NULL, 'ARCH-PARAMETER-CATALOGUE', 1, '2026-09-13', '00000000-0000-4000-8000-0000b0000016', now()),

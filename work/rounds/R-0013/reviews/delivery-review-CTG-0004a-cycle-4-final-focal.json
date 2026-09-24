@@ -1,0 +1,48 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0004a",
+  "role": "Auditor/REVIEWER independente",
+  "verdict": "FAIL",
+  "candidate_commit": "408ab438fdd940eed6bd46296daad0a141d5a222",
+  "candidate_digest": "f1c61d9ad8adfdb8dabdfbec7904f1fd7c989fc9dfda1140b08d2131377cf787",
+  "verification": {
+    "focal_specs": "3 arquivos, 18/18 PASS",
+    "git_diff_check": "PASS",
+    "candidate_digest_recomputed": "MATCH",
+    "reviewer_mutations": "none",
+    "broad_gates": "not executed"
+  },
+  "findings": [
+    {
+      "id": "CTG4A-R2-F001",
+      "severity": "high",
+      "claim": "Login sem evento UI e callback incompatível com rotas lazy/destinos contratuais."
+    },
+    {
+      "id": "CTG4A-R2-F004",
+      "severity": "high",
+      "claim": "AIT Review e páginas ainda não produzem submissão/operações reais sem fatos fabricados."
+    },
+    {
+      "id": "CTG4A-R2-F005",
+      "severity": "medium",
+      "claim": "Entrada direta D-05/BOAT não retorna a /auth-login."
+    },
+    {
+      "id": "CTG4A-R2-F006",
+      "severity": "medium",
+      "claim": "Warning duplicado é apresentado como erro interno."
+    },
+    {
+      "id": "CTG4A-R2-F008",
+      "severity": "high",
+      "claim": "Conflito de storage não compara conteúdo e não é atômico."
+    },
+    {
+      "id": "CTG4A-R2-F009",
+      "severity": "high",
+      "claim": "Sensores ainda permitem falsos verdes nos resíduos materiais."
+    }
+  ]
+}

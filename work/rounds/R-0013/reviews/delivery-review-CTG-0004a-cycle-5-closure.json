@@ -1,0 +1,36 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0004a",
+  "verdict": "FAIL",
+  "candidate_commit": "408ab438fdd940eed6bd46296daad0a141d5a222",
+  "candidate_digest": "6b8b036321298ee250a11f44d8308b34746ce2eaadce6496f596738958f47876",
+  "verification": {
+    "focal_specs": "3 arquivos, 26/26 PASS",
+    "git_diff_check": "PASS",
+    "candidate_digest_recomputed": "MATCH",
+    "reviewer_mutations": "none"
+  },
+  "findings": [
+    {
+      "id": "CTG4A-R2-F001",
+      "severity": "high",
+      "claim": "Callback ainda incompatível com rotas produtivas lazy."
+    },
+    {
+      "id": "CTG4A-R2-F004",
+      "severity": "high",
+      "claim": "Formulário real não fornece dados/contexto operacional."
+    },
+    {
+      "id": "CTG4A-R2-F008",
+      "severity": "high",
+      "claim": "Serialização por instância não é transação IndexedDB atômica."
+    },
+    {
+      "id": "CTG4A-R2-F009",
+      "severity": "high",
+      "claim": "Sensores evitam os três caminhos defeituosos."
+    }
+  ]
+}

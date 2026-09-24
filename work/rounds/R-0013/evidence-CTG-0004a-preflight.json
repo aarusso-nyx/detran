@@ -1,0 +1,58 @@
+{
+  "action": "Open R-0013 CTG-0004a after integrating current origin/main and certifying the complete baseline",
+  "round": "R-0013",
+  "coupled_task_group": "CTG-0004a",
+  "role": "engineer",
+  "commits": [
+    "7cce33a74251d0feb1252e922ebaff95c74631fd",
+    "2a21087e4ef1f02d8acf3a6fef145ce98d6760e5",
+    "f56f86f908faa1f8b45000d984ad7f51f5b6d3e3"
+  ],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0013/plan.md",
+      "sha256": "5ecb2046e60025e7fddf7051e5f8e30d8df58b992112f101877878aa8ed5b24c"
+    },
+    {
+      "path": "work/rounds/R-0013/budget.json",
+      "sha256": "2936c8dec325194a9225073e453b5c4d407c608969a1aa05e067b6422651e2b4"
+    },
+    {
+      "path": "work/rounds/R-0013/tasks/TASK-0010.json",
+      "sha256": "6ca8d547f64d34ee36818b5a24b39f35bbae5e4ac6998c1f086de11e4859ee9b"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm install --frozen-lockfile",
+      "result": "pass",
+      "note": "DEVAI 1.5.5 lockfile was already current"
+    },
+    {
+      "name": "pnpm check baseline",
+      "result": "pass",
+      "note": "756 KB artifacts; 203 operations and 65 clients; 59 typechecked projects; 1009 handlers; RLS 267/2; portal 1314 pass and 14 todo; RAIT 2263 pass and 134 todo; builds passed"
+    },
+    {
+      "name": "pnpm exec devai doctor",
+      "result": "pass",
+      "note": "Tier 3 profile OK on DEVAI 1.5.5"
+    },
+    {
+      "name": "TASK-0010 composition identity",
+      "result": "pass",
+      "note": "PC-4cec35ce8ad3aa18 matches the complete prompt sha256"
+    },
+    {
+      "name": "devai evidence verify",
+      "result": "pass",
+      "note": "Canonical main chain head before this record: 465f59b031288520e23f246267f35c9db3ba49b3da48a8475afc4839e1744e0a"
+    }
+  ],
+  "tasks": ["TASK-0010"],
+  "decisions": [
+    "The published continuity branch integrated origin/main by merge without history rewriting.",
+    "The sole evidence-chain conflict was resolved from origin/main exactly and this record reanchors R-0013 on the canonical chain.",
+    "TASK-0010 may proceed; TASK-0011 through TASK-0018 remain queued behind their singular upstream barriers."
+  ]
+}

@@ -229,10 +229,10 @@ export interface operations {
               capturedAt: string;
               /**
                * Format: date-time
-               * @description source_pending (OD-T14).
+               * @description OD-T14: online freshness expiry from tenant/TEAT parameter; null when parameter authority is unavailable or invalid. Offline E2 proof is separate.
                */
               validUntil?: string | null;
-              /** @description source_pending (OD-T14). */
+              /** @description OD-T14: positive integer seconds from tenant/TEAT parameter; null when parameter authority is unavailable or invalid. No hardcoded fallback. */
               maxAgeSeconds?: number | null;
               /** @constant */
               authority: 'server-snapshot';
@@ -257,20 +257,20 @@ export interface operations {
                 tamperDetected: boolean;
                 appVersion: string;
               };
-              activeShift?: {
+              activeShift: {
                 /** Format: uuid */
-                id?: string;
+                id: string;
                 /** Format: uuid */
-                operationalUnitId?: string;
+                operationalUnitId: string;
                 /** Format: uuid */
-                teamId?: string | null;
+                teamId: string | null;
                 /** Format: uuid */
-                patrolVehicleId?: string | null;
+                patrolVehicleId: string | null;
                 /** Format: uuid */
-                operationId?: string | null;
+                operationId: string | null;
                 /** Format: date-time */
-                startedAt?: string;
-                status?: string;
+                startedAt: string;
+                status: string;
               } | null;
               session: {
                 /** Format: uuid */
@@ -278,7 +278,7 @@ export interface operations {
                 /** Format: date-time */
                 startedAt: string;
                 exclusive: boolean;
-              };
+              } | null;
             };
             catalog: {
               operationalUnits: {
@@ -331,14 +331,17 @@ export interface operations {
             } | null;
             numberingReservations: {
               /** Format: uuid */
-              id?: string;
+              id: string;
               /** Format: uuid */
-              rangeId?: string;
-              startNumber?: number;
-              endNumber?: number;
+              rangeId: string;
+              /** Format: uuid */
+              shiftId: string;
+              series: string;
+              startNumber: number;
+              endNumber: number;
               /** Format: date-time */
-              validUntil?: string | null;
-              status?: string;
+              validUntil: string | null;
+              status: string;
             }[];
             readiness: {
               preShiftReady: boolean;

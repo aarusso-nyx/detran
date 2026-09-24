@@ -82,3 +82,42 @@ recipient agents while proving reservation ownership; enforcing the persisted pa
 manifest digest relation on download; and reconciling every terminal obligation for a device so a
 newer grant cannot hide older unreconciled history. All earlier amendments and repository,
 cryptography, publication and release boundaries remain in force.
+
+## Amendment 5 — CTG-0004a definitive focal corrective cycle (2026-09-22)
+
+After the second CTG-0004a delivery review returned `FAIL`, the Owner explicitly authorized one
+extraordinary corrective cycle aimed at effective and definitive elimination of findings
+`CTG4A-R2-F001` through `CTG4A-R2-F009`. The exhausted limits are reset once to Architect `4/4`,
+Inspector `4/4` and Engineer `3/3`, followed by narrow tests and an independent narrow review.
+
+This amendment authorizes only the mobile corrections identified by that review: operational and
+reactive bootstrap/authentication; OpenAPI-conformant sync; real-client headers and production DI;
+behavioral page execution; ErrorBoundary/D-05/BOAT integration; a single readiness decision;
+operational bodycam and printing; the complete contracted offline store; and sensors that exercise
+those real integrations. It explicitly replaces the full-suite acceptance gate for this cycle with
+tests narrowly covering those corrections. After a focal `PASS`, CTG-0004b and CTG-0005 may proceed
+without intermediate push or PR; publication is deferred to one final Round push and PR. Existing
+repository, generated-artifact, no-test-weakening, release and deployment boundaries remain in force.
+
+## Amendment 6 — continuation after focal review (2026-09-22)
+
+The Owner's standing instruction to perform every action necessary to finish R-0013 authorizes
+continuing the same focal corrective scope after the cycle-3 review exposed seven residual defects.
+This resets once the same Architect/Inspector/Engineer tasks to `5/5`, `5/5` and `4/4`; it does not
+broaden beyond `CTG4A-R2-F001…F009`, does not authorize broad test suites for this correction and
+retains the requirement for an independent zero-finding focal review before CTG-0004b.
+
+## Amendment 7 — UI/workflow homologation and final closure (2026-09-23)
+
+The Owner explicitly decided that the mobile application being built in R-0013 is a UI and
+workflow homologation version. A production mobile application requiring institutional keys,
+secrets and device integration is a dedicated later round (R-0017 is a candidate only).
+ADR-0033 and the corrective CTG-0004a/b/5 prompts record the revised acceptance boundary;
+issues #108–#112 carry the postponed work. The Owner then directed resolution of the six
+remaining REDs and the procedure to close R-0013. This authorizes the scoped
+Architect → Inspector → Engineer correction, full gates, independent Codex-family review
+under the session-specific reviewer exception, and the original normal push/PR/merge/audit/
+round-close sequence when its gates actually pass. It does not authorize a production
+mobile release, protected keys/secrets in the repository, fixture-based official acts,
+force-push, bypass of checks, or weakening of tests. Prior narrow PASS verdicts do not
+cover this new candidate.

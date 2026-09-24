@@ -1,12 +1,256 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
-**Status:** CTG-0001 e CTG-0002 mesclados e observados; CTG-0003 é a próxima fronteira.
-Nesta sessão, por exceção explícita do Owner, reviewer Codex/Sol/high.
-**Concorrência:** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
+## Adenda vinculante de escopo — decisão do Owner de 2026-09-23
+
+**Objeto final de CTG-0004a/b e CTG-0005:** homologação de **UI e workflows** TEAT,
+não aplicativos aptos à operação produtiva. ADR-0033 governa a separação. O app mobile
+produtivo, dependente de chaves/segredos institucionais e da integração/prova em
+dispositivos homologados, exige round próprio posterior (R-0017 é apenas candidato,
+não ID reservado). Gertec GMS820 continua homologado incondicionalmente como
+equipamento; isso não homologa a build nem autoriza operação de campo. As decisões
+ADR-0028–0032 continuam válidas como requisitos do futuro round.
+
+| CTG   | Meta revisada                                                                                                                                                                  | Aceite específico, além dos gates existentes                                                                                                                                                                                                                                                                                     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0004a | Android mobile navegável e demonstrável com dados sintéticos segregados; 70 fichas/rotas, 576 transições, papéis, formulários, AIT e offline em modo de homologação explícito. | Seis REDs AIT fechados mediante positivo **somente** na trilha de homologação, com negativos produtivos preservados; nenhuma emissão, assinatura, numeração, impressão ou sync oficiais por fixture; produção sem provas E2/AIT/localização permanece fail-closed; suíte integral, lint, typecheck e build verdes e novo review. |
+| 0004b | Web de homologação de UI/workflows correlatos, com 56 fichas, 60 rotas, 12 módulos e estados/guards/SSE demonstrados.                                                          | Dados/eventos simulados identificados, fixtures segregadas, nenhuma integração real inferida; oráculos de papéis, erro, a11y e SSE, gates integrais e novo review verdes.                                                                                                                                                        |
+| 0005  | Documentar apenas a homologação provada e transferir toda capacidade produtiva para issues completas.                                                                          | Build pack, arquitetura e backlog distinguem demonstração de operação; links às issues, gates de documentação e `pnpm check`, review no candidato atual; PR/closure não afirmam app de produção.                                                                                                                                 |
+
+Para execução corretiva, usar `prompts/CTG-0004a-homologation.md`,
+`prompts/CTG-0004b-homologation.md` e `prompts/CTG-0005-homologation.md` após
+os prompts históricos TASK-0010–0018. Os registros `TASK-*.json`, IDs de composição,
+reviews e commits concluídos são imutáveis como história; novos oráculos/reviews
+devem ter identidade e evidência próprias, sem reciclar um PASS estreito. Nenhum
+RED pode virar skip/todo nem fixture silenciosa. A saída desta adenda não é um
+waiver do `pnpm check`: os gates integrais continuam condição de fechamento.
+
+**Backlog produtivo aberto:** [E2/trust #108](https://github.com/aarusso-nyx/detran/issues/108),
+[Android/GMS820 #109](https://github.com/aarusso-nyx/detran/issues/109),
+[catálogo/validador AIT #110](https://github.com/aarusso-nyx/detran/issues/110),
+[ciclo transacional/sync #111](https://github.com/aarusso-nyx/detran/issues/111) e
+[gate de campo/release #112](https://github.com/aarusso-nyx/detran/issues/112).
+Nenhum item recebe data, round definitivo ou estado `done` por esta decisão.
+
+**Retomada corretiva de 2026-09-23 (substitui o status de seis REDs abaixo):**
+o Architect fixou a separação de homologação nos contratos; o Inspector congelou
+oráculos de RouterOutlet, RBAC negativo, rede/IdP/storage e SSE sintético antes
+da correção. O Engineer eliminou os seis REDs AIT originais com port exclusivo de
+homologação e negativos produtivos preservados, removeu OIDC real dos dois
+entrypoints de homologação, instalou contexto sintético em memória só nessas
+entradas e emitiu eventos SSE determinísticos sem rede. As suítes completas
+passaram em **mobile 1138/1138** e **web 584/584**; lint, typecheck e build de
+ambos passaram naquele candidato parcial. A revisão independente descobriu
+lacunas adicionais e reabriu o gate: rotas de persona e pré-turno, entrada `/`,
+formulários AIT completos, sync sintético, 576 ações DOM/197 condições negadas,
+dados web por módulo, fallback SSE, i18n e a11y do shell. A correção atual
+passou mobile **1157/1157** e web **594/594**, incluindo login/MFA/pré-turno,
+AIT, sync, 576 transições, fallback SSE e a11y focal. `pnpm check` integral
+terminou com código **0** depois das últimas edições; `devai doctor` e cadeia
+DEVAI também passaram (head `98a55808…15b53eff72`). Review independente do
+candidato integral, evidência, push, PR, CI e observação pós-merge ainda são
+gates abertos. Não
+declarar fechamento a partir de PASS focal ou dos números históricos.
+
+**Estado anterior (2026-09-23; histórico abaixo):** CTG-0001, CTG-0002 e
+CTG-0003 foram mesclados e observados; CTG-0004a e CTG-0004b passaram review independente no
+candidato `408ab438fdd940eed6bd46296daad0a141d5a222`; CTG-0005 passou review documental.
+O branch integrou `origin/main` no merge `666dd63e`; a única PR/push final da rodada segue
+pendente dos gates do candidato completo. Nesta sessão, por exceção explícita do Owner, reviewer
+Codex/Sol/high. ADR-0032 registra todas as escolhas do questionário (inclusive 6A), mas ainda
+não há prova E2 produtiva nem avaliador agregado AIT. A suíte mobile reexecutada permaneceu
+em 1116/1122, com seis REDs; nenhum gate integral ou PR final foi liberado por esse despacho.
+
+**Gate de integração reaberto:** a última suíte mobile completa antes dos novos REDs técnicos
+estava em 1016/1019; três oráculos F004 de finalização positiva do AIT continuam RED. A
+pré-checagem independente de reserva/pacote/contexto e o pin atômico local estão implementados,
+mas a finalização permanece fail-closed: as fontes atuais não definem avaliador executável do
+agregado AIT. OD-T14 agora tem parâmetro e cálculo de frescor online aprovados em review estreito,
+mas o gate mobile ainda nega snapshots vencidos sem prova local E2; B/B+S offline após 300 s
+seguem bloqueadas em produção. Não
+usar os reviews focais anteriores como PASS do candidato de integração, nem fazer push/PR antes
+da execução dos contratos aprovados e dos gates integrais.
+
+O caminho real de abertura de turno foi implementado e aprovado apenas em review estreito:
+`activeShift/session` obrigatórios `object|null`, `null/null` pré-turno, POST idempotente, refresh
+autenticado, reserva durável e só então `/home`. `ait-start` continua display-only e `ait-review`
+agora bloqueia sem `localEntityId` explícito, sem buscar ação na fila pendente; esta limpeza
+fail-closed passou review estreito (2/2), mas não entrega revisão funcional. Três REDs DOM de
+`ait-start` continuam abertos. Essas páginas seguem pendentes de identidade persistida,
+localização/proveniência, revisão local e validador agregado, sem inventar dados.
+
+**Histórico corretivo (supersedido pelo PASS estreito abaixo):** a tranche de reserva/faixa e pin atômico passou
+89/89 testes mobile e 32/32 backend, mas o REVIEWER independente retornou `NOT PASS` por dois
+gaps de autoridade: `ait-start` não revalidava freshness do snapshot e blockers de
+provisionamento/readiness no limite da ação; o join de reserva com faixa não conferia agência nem
+limites numéricos. Ambos exigem negativos focais e novo review. Separadamente, o RED pré-turno
+prova que `shift-context` B é negada antes de existir reserva; B+S deve permanecer negada até
+abertura e bootstrap autenticado. Nenhum desses resultados estreitos substitui a suíte integral.
+
+**Histórico corretivo (supersedido pelo PASS estreito abaixo):** os dois gaps de autoridade acima foram corrigidos em escopo focal
+(backend 34/34; mobile 90/90), mas o veredito continua `NOT PASS`: o bootstrap real antes do
+turno retorna `activeShift: null` e `session: null`, enquanto o cliente ainda aceita apenas
+`undefined` para o turno ausente e o gate desreferencia `session.exclusive`. Os fixtures anteriores
+usavam turno `undefined` e sessão não nula. Architect → Inspector RED com payload real → Engineer
+→ novo review devem fechar essa contradição sem relaxar segurança nem OD-T14.
+
+**Re-review independente mais recente:** PASS **somente** para reserva/faixa, pin, wire
+`activeShift/session` real-null, guard pré-turno e UI de abertura. O REVIEWER reproduziu 114/114
+mobile (38/38 abertura/autoridade/F001 + 76/76 pin), 34/34 backend, `contracts:check`,
+typechecks, lint, Prettier e diff-check. O veredito não cobre OD-T14, avaliador agregado AIT,
+as páginas AIT restantes nem a suíte integral; nenhum push/PR foi feito.
+
+**Pendências identificadas para fechamento:** integração executável da prova offline E2; regras
+executáveis e dados do validador do agregado AIT; seleção/retomada e ciclo de vida do
+`localEntityId` persistido (o marcador cifrado atual não possui leitura/liberação), aquisição de
+localização com proveniência e revisão local/ETag sem valores sintéticos. O destino de números
+fixados em rascunhos abandonados também precisa de regra explícita antes de afirmar ciclo completo
+de numeração. Até essas fontes/decisões existirem, B/B+S offline após o frescor online e
+finalização AIT continuam fail-closed; não há gate integral nem autorização de PR final.
+
+**Resposta do Owner (2026-09-23):** `1A-300-E2` aprova chave
+`teat.bootstrap.snapshot_max_age_seconds`, inteiro `300`, escopo tenant/TEAT sem override por
+agência, status `vigente`, `source_pending=false`, `legal_readonly=false`, decisão `OD-T14`, sem
+alegar fundamento legal. A vigência operacional começa na instalação/ativação da linha, não na
+data da decisão se a implantação ocorrer depois; o backend calcula
+`validUntil = capturedAt + 300 s` em UTC, sem fallback hardcoded se o parâmetro faltar ou for
+inválido. Os 300 s limitam o frescor **online**, não constituem expiração universal da autoridade
+offline. Depois desse prazo, o mobile só pode prosseguir offline com grant, reserva e pacote
+íntegros, localmente verificáveis e vigentes, sem bloqueio conhecido; ausência de qualquer prova
+bloqueia. Esta decisão não autoriza tratar `offlineReady` ou assinatura ainda `local-unsigned`
+como prova criptográfica. Contrato, implementação e testes E2 continuam pendentes até existir
+verificador local real; o backend já emite prazo quando a linha é válida, e o gate atual continua
+estrito após esse prazo.
+
+2A autoriza Architect a propor matriz
+executável do agregado a partir das fontes aprovadas, com aprovação do Owner **antes** de
+implementá-la; 3A escolhe handoff explícito do `localEntityId` persistido, revisão local
+monotônica/durável e marcador cifrado somente como trava de um rascunho ativo por
+tenant/agente/dispositivo/turno, liberada atomicamente ao finalizar/cancelar (`If-Match` apenas
+com ETag real do servidor); 4A escolhe GPS/rede com coordenadas, precisão medida, horário e origem
+registrados, bloqueando criação sem esses dados; 5A proíbe reutilização automática de número
+fixado, exige registro de abandono/consumo auditável e reconciliação backend.
+
+Architect registrou a proposta 2A em
+`contracts/CTG-0004a-ait-validation-matrix-proposal.md`: 11 predicados candidatos, fontes e
+status, fatos ausentes e quatro decisões residuais. Em 2026-09-23 o Owner **aprovou a intenção
+da matriz V01–V11 e os requisitos mínimos de prova E2 propostos**; posteriormente autorizou
+a matriz como fonte executável no seu recorte exato. Não aprovou por omissão a gramática ainda inexistente, caminhos
+de dados ausentes ou algoritmos/trust anchors `source_pending`. A finalização AIT segue bloqueada
+até existir contrato executável. REVIEWER independente
+deu **PASS estreito da fidelidade da proposta às fontes** após corrigir V01/V10 e explicitar
+`local-unsigned`; a aprovação de conteúdo pelo Owner veio depois e não equivale a avaliador
+executável nem a aprovação dos detalhes normativos residuais.
+
+Architect documentou o perfil E2 e o ciclo 3A/4A/5A em propostas restritas de CTG-0004a;
+REVIEWER independente deu PASS **documental estreito**, sem achados abertos, após explicitar
+início autenticado da janela offline, limite de conhecimento sobre turno/revogação, enrollment
+da chave de cifragem, seletor transacional, hashes distintos e cancelamento durável. Naquele
+momento, a aprovação não selecionava A/JOSE ou B/COSE, runtime, âncora de confiança/tempo,
+TTL de revogação/turno nem mapas/DSL normativos; ADR-0032 registra o despacho posterior.
+Os ports, dados e testes reais seguem necessários; nenhum positivo E2/AIT ou gate integral
+decorre do PASS documental.
+
+**Despacho adicional do Owner (2026-09-23):** pacote normativo vencido permanece como
+advertência visível e registrada também sob E2; vencimento isolado não bloqueia quando
+identidade, versão, digest e assinatura confiável do pacote forem demonstrados. ADR-0031
+confirma E.29 e distingue H.55, que trata da homologação do software. Ausência, divergência,
+adulteração ou revogação conhecida do pacote continuam bloqueantes. O gate E2 permanece
+estrito enquanto não houver verificador local real; não existe positivo obtido só com esse
+despacho.
+
+**Despacho posterior do Owner (2026-09-23):** Android é a plataforma-alvo E2; iOS fica fora
+do escopo desta rodada. Por decisão **incondicional** do Owner, o Gertec GMS820 atende aos
+requisitos de homologação do equipamento e é o primeiro modelo homologado; não reabrir sua
+elegibilidade por falta de inventário Android/API ou novo parecer sobre o modelo.
+A matriz AIT V01–V11 revisada é fonte executável autorizada, inclusive
+o conteúdo das RN citadas **na extensão expressa pela matriz**, sem promoção indiscriminada
+do restante dos documentos `draft`. ADR-0029 e ADR-0030 registram esses limites. Permanecem
+pendentes o perfil criptográfico de prova E2 e sua execução (enrollment, chave, assinatura,
+escopo, confiança, tempo e revogação), eventual ampliação da lista de aparelhos e os
+caminhos/DSL/fatos que a matriz marca como ausentes.
+Nenhuma dessas lacunas ganha valor provisório por ser Android ou por a matriz ter autoridade;
+o gate integral continua RED.
+
+**Despacho consolidado posterior do Owner (ADR-0032, 2026-09-23):** adotadas 1A–5A e
+7A–16A do questionário de fechamento, e 6A por resposta explícita: status assinados de
+revogação/turno até 900 s cada e janela offline do grant até 3600 s, sempre limitados pelo
+menor `validUntil`/reserva/grant aplicável. Perfil JOSE/JCS/JWS/JWE, raízes públicas
+independentes, chaves Android por uso, afirmações assinadas, refresh autenticado como início,
+âncora temporal com bloqueio após reinício, assinatura normativa, DSL JSON fechada e
+semântica AIT restante estão aprovados. **As escolhas de política do questionário estão
+despachadas; não estão implementadas.** Faltam identidades de confiança institucional e
+portas produtivas, catálogo/fichas exatos e dados tipados, validador local/backend, captura
+real de localização, ciclo transacional do AIT e provas/gates completos no GMS820. O
+equipamento permanece homologado incondicionalmente; testes E2 não reabrem essa decisão.
+
+**3A, tranche de seletor/retomada (2026-09-23):** Inspector reproduziu RED para ausência de
+seletor no pin; Engineer incluiu seletor cifrado na mesma transação IndexedDB de reserva,
+rascunho e trava, escopou a trava por tenant/agente/dispositivo/turno e ligou a chave de
+idempotência ao digest imutável do primeiro comando. Retomada e retry pós-crash com novo ID
+devolvem o ID/número originais; seletor parcial, conteúdo divergente e cursor incoerente
+bloqueiam. REVIEWER independente deu PASS **estreito** após novos REDs de replay/corrupção:
+88/88 testes focais, typecheck, lint, Prettier e diff-check. Não cobre UI handoff, revisão
+monotônica, localização, finalização, cancelamento ou E2.
+
+**3A, microtranche de handoff do runtime:** Inspector RED demonstrou que `ait-start` devolvia
+o ID recém-gerado pelo caller mesmo quando o pin retornava um ID persistido distinto após
+replay. Engineer passou a devolver `pinned.localId`; REVIEWER independente deu PASS estreito
+com 88/88 focal, typecheck, lint, Prettier e diff-check. A página DOM continua display-only,
+sem fonte de localização; este ajuste não a declara funcional.
+
+**3A, microtranche de revisão local:** Inspector RED demonstrou ausência de revisão durável.
+O pin inicial grava `localRevision=1`; a transição AIT rascunho→rascunho exige CAS atômico,
+revisão exatamente `+1` e preservação de identidade, escopo, reserva, número, pacote e
+localização. O runtime de edição exige a revisão corrente. Gravações AIT genéricas de draft
+e queue foram fechadas enquanto não há port de finalização atômica. REVIEWER independente
+deu PASS **estreito**, não de ciclo AIT completo. Um RED posterior demonstrou que uma fila
+AIT legada podia contornar o novo guard de gravação; `pending()` agora rejeita tais itens
+ativos, tanto no alias camel quanto snake. Esta última proteção passou 174/174 testes focais,
+typecheck, lint, Prettier e diff-check, mas o REVIEWER apontou falso bloqueio de item AIT
+histórico `snake_case` já terminal. O novo RED reproduziu o problema, o filtro foi alinhado
+ao alias de idempotência do `SyncWorker` e a verificação subiu para 175/175 focais, com
+typecheck, lint, Prettier e diff-check. O re-review independente deu **PASS estreito**
+(14/14 reproduzidos), sem afirmar finalização AIT ou aprovação da suíte integral.
+
+**Suíte mobile integral após essas tranches:** 1116/1122 passaram, com seis REDs ainda abertos:
+três de ação DOM em `ait-start` sem port real de localização e três de finalização em
+`ait-review` sem validador executável do agregado. Não converter esses REDs em skips nem
+promover a tranche a PASS do Round.
+
+**OD-T14, tranche de decisão/catálogo:** ADR-0029, linha do catálogo e artefatos gerados
+registram `1A-300-E2`. O seed usa a data da primeira instalação e a conserva em reaplicações;
+Inspector provou a estrutura por teste focal, Engineer corrigiu o gerador, 27/27 testes de
+geração e `verify:parameter-catalogue` passaram; REVIEWER independente deu **PASS estreito**.
+Não houve teste de banco atravessando dias nem implementação do verificador offline; não é PASS do
+CTG ou do Round.
+
+**OD-T14, tranche online backend:** Architect fixou seleção tenant/TEAT vigente no dia UTC de
+`capturedAt`, sem segundo relógio/override de agência. Inspector RED demonstrou ausência de
+prazo e depois divergência de data no lookup; Engineer implementou derivação exata do parâmetro,
+falha `null`/`null` em linha ausente/inválida e correção da fronteira de meia-noite. A fixture
+passou a respeitar `effective_from` da linha hipoteticamente instalada. REVIEWER independente
+deu **PASS estreito**; 52/52 testes backend, typecheck, Prettier e diff-check passaram. E2,
+validador AIT e gate integral seguem pendentes.
+
+Checklist de execução após o despacho ADR-0032 (não são novas escolhas implícitas do Owner):
+
+1. **OD-T14 (online implementado, E2 pendente):** implementar perfil criptográfico, confiança,
+   revogação e tempo selecionados; manter fail-closed após o prazo até o verificador existir.
+2. **Validação AIT (matriz V01–V11 executável aprovada):** publicar DSL fechada, identificadores,
+   caminhos, condições, fichas e blockers vinculados ao pacote exato; construir avaliador puro
+   local e verificação backend. Array aberto de `validation_rules` não basta.
+3. **Rascunho/revisão (3A aprovado):** seletor, trava escopada, handoff de ID e revisão local
+   monotônica já têm PASS estreito; ainda faltam UI positiva, finalização/cancelamento atômicos
+   e reconciliação. `If-Match` só usa ETag real do servidor.
+4. **Localização/numeração (4A/5A aprovados):** integrar port que reporte proveniência real
+   GPS/rede durante o ato; não inferir a fonte de `navigator.geolocation`. Fechar evento e
+   reconciliação backend do número consumido/abandonado, sem reutilização automática.
+
+**Concorrência histórica (supersedida pelo estado atual acima):** abre já e **nenhum grupo está preso**: CTG-0001 (corpus), CTG-0002
 (matrizes, 126 fichas e i18n canônico), CTG-0003 (provisionamento), CTG-0004a (mobile),
 CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar todos os joins no
 `upstream_task_id` singular. R-0012 não abriu; não há lock concorrente em `packages/ui`.
-**Janelas previstas:** 5 (o maior da carteira; um PR por grupo).
+**Janelas previstas (histórico, supersedido):** 5 (o maior da carteira; um PR por grupo).
 
 ## Metas
 
@@ -30,11 +274,13 @@ CTG-0004b (web) e CTG-0005 (fechamento). O grafo foi serializado para codificar 
    `provisioning_receipt`, `device_revocation`; DDL `21-ops-provisioning.sql`); rotas
    `/v1/ops/provisioning/*` (desafio, registro de chave, emissão, download, recibo, prontidão,
    revogação, reconciliação); `ReadinessGate` integrado. Fases P0–P6 da origem como plano.
-4. **Apps** (WP-T6): `apps/teat/mobile` (`@detran/teat-mobile`; Capacitor via `@stynx-nyx/mobile-runtime`;
+4. **Apps — meta original, agora limitada pela adenda acima à homologação UI/workflows** (WP-T6): `apps/teat/mobile` (`@detran/teat-mobile`; Capacitor via `@stynx-nyx/mobile-runtime`;
    `FieldShell`, `ReadinessGate`, `LocalActStore`, `SyncWorker`, `NormativePackageService`,
    `BodycamIndicator`; 8 módulos; 70 rotas; formulários; impressora via porta com `FixturePrinter`
    nos testes) e `apps/teat/web` (`@detran/teat-web`; `@detran/ui`; 12 módulos; 56 + 4 rotas). Scripts
-   `build|test|lint|typecheck` criados nesta rodada e ligados a `pnpm check`. O módulo `sinistros`
+   `build|test|lint|typecheck` criados nesta rodada. O `pnpm check` raiz agora inclui typecheck
+   de workspaces e lint/test/build completos de ambos os apps. Os 30 testes focais mobile são
+   evidência separada do ciclo corretivo. O módulo `sinistros`
    da web e a biblioteca de sinistro mobile são de R-0015 (BOAT): aqui só os pontos de extensão do shell.
 5. Documentação: `teat-build-pack.md` §WP-T4…T6 executados (gates reais); `teat-frontends.md` §10–§12;
    ADR nova; backlog.
@@ -64,9 +310,10 @@ package/config/shell vazio compilável: nenhum comportamento, rota de produto ou
 | TASK-0015 | Engineer             | engineer-frontend   | Luna/baixo     | CTG-0004b | 0014       | scaffold web não comportamental, compilável e com harness vazio                              |
 | TASK-0016 | Inspector            | inspector-tests     | Terra/alto     | CTG-0004b | 0015       | RED web: 60 rotas, 56/56 fichas, papéis cartesianos, a11y e componentes compartilhados       |
 | TASK-0017 | Engineer             | engineer-frontend   | Terra/médio    | CTG-0004b | 0016       | implementação web em caminhos de produção exatos; testes intocáveis                          |
-| TASK-0018 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0005  | 0017       | fechamento documental somente após merges/gates reais                                        |
+| TASK-0018 | Architect (transcr.) | transcriber-docs    | Luna/baixo     | CTG-0005  | 0017       | transcrever estado entregue/revisto e a integração final pendente                            |
 
-CTG-0001, CTG-0002, CTG-0003, CTG-0004a, CTG-0004b e CTG-0005 são seis fronteiras de PR. O
+As seis CTGs abaixo são fronteiras históricas de entrega/review, não seis PRs correntes. A
+integração atual usa uma única PR final após CTG-0005. O
 scaffold de CTG-0004a/b é substrato não comportamental autorizado pelo Architect do mesmo CTG;
 depois do scaffold, o Inspector escreve RED e os testes ficam congelados antes do Engineer de
 feature. O maestro roda `pnpm install`, guarda `pnpm-lock.yaml` e estende `pnpm check`
@@ -76,6 +323,9 @@ checkpoint de instalação/lockfile posterior a TASK-0007. Banco da rodada:
 
 ## Critérios de aceitação (comandos → resultado)
 
+Os comandos abaixo preservam os critérios históricos e os gates da integração final; não afirmam
+que TASK-0018 executou `pnpm check` ou gates dos apps durante esta transcrição.
+
 - após TASK-0004: `pnpm docs:kb:check` → exatamente 675 artefatos/446 tokens; publish-check OK;
 - após TASK-0006: `pnpm parameters:test` → 25/25; `pnpm verify:parameter-catalogue` → 89
   parâmetros e namespaces `teat.*` declarados; somente os três gerados documentados mudam;
@@ -83,10 +333,11 @@ checkpoint de instalação/lockfile posterior a TASK-0007. Banco da rodada:
   shared policy, RLS, decorators, reset + dois seeds idempotentes em `detran_r13`; toda a matriz
   P0–P6, não apenas quatro rejeitos; `contracts:check` admite exatamente oito `missing-route` após
   o Architect, como RED da fronteira manuscrita, e deve ficar integralmente verde no Engineer;
-- mobile: comandos separados `lint`, `typecheck`, `test`, `build`; 70/70 rotas/fichas, 576/576
-  transições e produto cartesiano de papéis permitidos/omitidos;
-- web: comandos separados `lint`, `typecheck`, `test`, `build`; 60/60 rotas, 56/56 fichas e
-  produto cartesiano de papéis;
+- mobile de homologação: comandos separados `lint`, `typecheck`, `test`, `build`; 70/70
+  rotas/fichas, 576/576 transições e produto cartesiano de papéis permitidos/omitidos;
+  jornadas positivas só em modo explícito/sintético e negativas produtivas fail-closed;
+- web de homologação: comandos separados `lint`, `typecheck`, `test`, `build`; 60/60
+  rotas, 56/56 fichas, produto cartesiano de papéis e segregação das simulações;
 - ao fim de cada CTG: `pnpm check`; CTG-0003 também `pnpm backend:test:ci`; zero skip/todo novo.
 
 ## Mapa entregável → definições
@@ -903,6 +1154,594 @@ Checkpoint 38 (janela 3, integração RAIT web e recertificação combinada):
   arquivos, portal 1314 testes, RAIT 2263 testes com 134 todo e ambos os builds;
 - o worktree permaneceu limpo após o merge e os gates. O candidato está liberado para regravar a
   evidência CTG-0003 sobre a cadeia atual, publicar a branch e exigir nova CI integral verde.
+
+Checkpoint 39 (janela 3, merge e observação governada de CTG-0003):
+
+- a PR #82 foi mesclada em `b8920457…` após os sete jobs obrigatórios passarem, incluindo
+  `backend-kernel` e `verified-local-rc`; a branch de continuidade foi sincronizada por
+  fast-forward com esse merge exato;
+- o Auditor observou o merge exato em `EV-1925d89b5640ab91`, sequência 68, e materializou os cinco
+  artefatos em `.devai/state/audit-observations/b8920457…`; a cadeia permaneceu válida no head
+  `893bbe9e…` antes do registro de integração;
+- a avaliação conservadora YELLOW, com 43 células UNKNOWN por lacunas de sensores e
+  `readiness_promoting=false`, descreve somente a introspecção pós-merge e não reabre o delivery
+  review ciclo 9 PASS nem os gates verdes do candidato;
+- a observação e seu evidence record foram publicados na branch preservada para continuidade de
+  CTG-0004a/CTG-0004b/CTG-0005; a cadeia final permaneceu válida em `109bca0c…` e a identidade
+  local/remota da branch foi confirmada em `0be1fee9…`. CTG-0003 está completamente encerrada.
+
+Checkpoint 40 (janela 4, preflight CTG-0004a):
+
+- o Owner autorizou CTG-0004a e os grupos subsequentes; a janela 4 foi aberta com orçamento novo
+  de 800.000 tokens de entrada e a exceção vigente de Reviewer da família CODEX;
+- `origin/main` avançou até `7cce33a7…` com o fechamento R-0011/dashboard e DEVAI 1.5.5; o upstream
+  foi integrado por merge normal `2a21087e…`, com conflito somente em `record/proofs/chain.json`,
+  resolvido pela versão canônica de `main` conforme a regra da orquestra;
+- `pnpm install --frozen-lockfile`, DEVAI doctor tier 3 e o baseline `pnpm check` passaram; o gate
+  confirmou 756 artefatos KB, 203 operações/65 clientes, 59 projetos, 1009 handlers, RLS 267/2,
+  portal 1314 testes, RAIT 2263 testes e ambos os builds;
+- o primeiro `pnpm check` foi descartado antes dos gates por formatação pendente nos dois JSONs
+  pós-merge de CTG-0003; Prettier foi aplicado somente nesses arquivos e a repetição integral passou;
+- TASK-0009 permanece `completed`; composição TASK-0010 confere no hash
+  `4cec35ce8ad3aa18efa16c067d87cee040244c2c601c61dad523fae32ba026b8`; TASK-0010 abriu a
+  tentativa 1/2 em papel Architect, enquanto TASK-0011…TASK-0018 permanecem `queued`.
+
+Checkpoint 41 (janela 4, contrato mobile congelado):
+
+- TASK-0010 criou `ARCH-TEAT-MOBILE-CONTRACT` com 70 rotas/fontes/componentes, oráculo cartesiano
+  sobre os nove papéis TEAT, oito módulos, 14 schemas e importação content-addressed das 576
+  transições no hash `a3175e63…`;
+- o maestro rejeitou ownership divergente do prompt e a ampliação de `sync-conflict` para agente;
+  o contrato final enumera a allowlist exata, registra o handoff sequencial de `app.routes.ts` e
+  mantém `sync-conflict` exclusivamente para `field-supervisor`;
+- a divergência residual da folha IU foi registrada como proposta
+  `OD-TEAT-MOBILE-SYNC-CONFLICT-ROLE`, sem mudar a autoridade vigente de `teat-frontends` §3/§8;
+- `pnpm format:check`, `pnpm docs:kb:check`, o oráculo focal 70/70/576 e `git diff --check`
+  passaram. TASK-0010 está `completed`; TASK-0011 abriu a tentativa 1/2 e TASK-0012…0018 ficam
+  `queued`.
+
+Checkpoint 42 (janela 4, scaffold mobile e lockfile):
+
+- TASK-0011 criou somente o scaffold Angular 22 standalone/OnPush/zoneless; `app.routes.ts`
+  permanece array vazio e nenhum teste ou comportamento de produto foi criado;
+- o maestro rejeitou antes do install a ausência de `angularJitApplicationTransform` e das
+  dependências cuja declaração pertence exclusivamente ao scaffold; o worker corrigiu o Vitest e
+  declarou forms, API clients, UI, STYNX 1.3.1, mobile-runtime, Zod e axe sem implementar feature;
+- `pnpm install` reconheceu 61 projetos e atualizou `pnpm-lock.yaml`; lint, typecheck e build do
+  pacote passaram, e o oráculo focal confirmou array de rotas vazio e zero specs de produto;
+- TASK-0011 está `completed` e seu scaffold/lockfile foi congelado antes do RED. TASK-0012 abriu a
+  tentativa 1/2 em papel Inspector; TASK-0013…0018 permanecem `queued`.
+
+Checkpoint 43 (janela 4, reference-gap antes do RED):
+
+- o Inspector detectou antes de qualquer escrita que o contrato §3 enumerava 14 schemas, mas
+  remetia seus campos/gates a `teat-frontends` §8, fonte deliberadamente ausente da lista fechada
+  de TASK-0012; criar sensores assim exigiria inventar ou ler fora da autoridade;
+- triagem: `reference-gap`. TASK-0012 retornou a `queued` sem consumir tentativa e sem alterar
+  arquivo; TASK-0010 reabriu a tentativa final 2/2 somente para tornar os 14 contratos de
+  formulário autocontidos;
+- a correção Architect não pode mudar as 70 rotas, RBAC, D-05/BOAT, hash/matriz 576, ownership nem
+  qualquer decisão de produto. TASK-0013…0018 permanecem `queued`.
+
+Checkpoint 44 (janela 4, contrato de forms autocontido):
+
+- TASK-0010 tentativa 2/2 transcreveu no contrato os campos obrigatórios/opcionais, validações de
+  forma e gates/comandos dos 14 schemas; lacunas reais ficaram `source_pending` literais;
+- o maestro corrigiu uma interpretação permissiva: justificativa de `ait-frame` é obrigatória
+  somente em `caso_3` e proibida/ausente fora desse ramo, nunca opcional geral;
+- Prettier, KB, o oráculo de 14 linhas autocontidas e `git diff --check` passaram; as 70 rotas,
+  RBAC, D-05/BOAT, matriz/hash 576 e ownership permaneceram inalterados;
+- TASK-0010 está `completed`; TASK-0012 retomou sua tentativa 1/2 agora com fontes suficientes.
+  TASK-0013…0018 permanecem `queued`.
+
+Checkpoint 45 (janela 4, RED mobile congelado):
+
+- TASK-0012 materializou oito specs e sete helpers independentes: 70 rotas, matriz cartesiana
+  70×9, hash/igualdade ordenada das 576 transições, 14 schemas com payload positivo e remoção de
+  cada obrigatória, ramos condicionais, axe/a11y, FixturePrinter e superfícies de runtime;
+- o primeiro RED revelou 794/797 falhas, mas a auditoria do maestro rejeitou três lacunas de
+  sensor: `B+S` com sufixo BOAT/disabled, required fields não exercitados e superfícies centrais
+  não verificadas. O Inspector corrigiu sem tocar produção/configuração;
+- RED final: typecheck PASS; 865/868 falhas atribuídas exclusivamente ao comportamento ausente e
+  três oráculos independentes verdes; zero skip/todo. Hashes dos 14 sensores foram capturados no
+  relatório TASK-0012 e ficam congelados;
+- TASK-0012 está `completed`; TASK-0013 abriu a tentativa 1/2 em papel Engineer, proibido de
+  alterar qualquer spec, `src/testing/**`, configuração, lockfile, contrato ou gerado.
+
+Checkpoint 46 (janela 4, correção higiênica do sensor):
+
+- a implementação da tentativa 1 de TASK-0013 levou os oito arquivos de teste a 868/868 PASS,
+  além de typecheck e build verdes, mas o lint independente revelou uma variável local não usada
+  em `app.transitions.spec.ts`, caminho congelado e fora da autoridade do Engineer;
+- TASK-0012 reabriu sua tentativa final 2/2 somente para remover a atribuição morta, sem tocar
+  produção, configuração ou qualquer asserção. O novo hash do único sensor alterado é
+  `dd6ea3eb3577e49a63a9873e416fb566b1b7bc8acaf0a55621099a3f12f19781`;
+- lint, typecheck e 868/868 testes passaram, com zero skip/todo. TASK-0012 retornou a `completed`;
+  TASK-0013 permanece `in_progress` até auditoria do maestro, `pnpm check` integral e REVIEW.
+
+Checkpoint 47 (janela 4, delivery review CTG-0004a ciclo 1):
+
+- o REVIEWER CODEX independente reproduziu 868/868 testes, mas retornou **FAIL** com treze achados
+  `high`: guardas permissivos; oito clientes vazios; store/sync/normativo sem comportamento; 70
+  aliases de um placeholder e oito módulos vazios; i18n sem integração; FieldShell sem
+  ErrorBoundary; readiness parcial; matriz sem validação/dispatcher; schemas permissivos;
+  impressão/bodycam apenas nominais; D-05/BOAT apenas metadados; sensores falso-positivos; e
+  divergência entre a allowlist exata do contrato e o prompt;
+- o candidato de produção permanece deliberadamente sem commit. Gates verdes não substituem os
+  comportamentos ausentes, e `pnpm check` integral não foi consumido sobre candidato rejeitado;
+- a correção exige nova ordem Architect → Inspector → Engineer → gates integrais → REVIEW. Como
+  TASK-0010 e TASK-0012 já consumiram `2/2`, TASK-0013 fica `blocked` e o CTG escala ao Owner antes
+  de qualquer reset extraordinário de limites. Não há autorização para push, PR ou merge do FAIL.
+
+Checkpoint 48 (janela 4, autorização corretiva extraordinária CTG-0004a):
+
+- em 2026-09-22, o Owner autorizou explicitamente o reset extraordinário necessário para eliminar
+  os treze achados `CTG4A-R1…R13` do delivery review ciclo 1;
+- TASK-0010 e TASK-0012 recebem excepcionalmente limite `3/3`; TASK-0013 preserva sua tentativa
+  final `2/2`. A ordem vinculante é Architect → Inspector RED → Engineer GREEN → gates integrais →
+  novo REVIEW independente;
+- o Architect pode corrigir apenas a allowlist e tornar executáveis, sem inventar produto, os
+  contratos já exigidos de guards, clientes, offline/sync/normativo, módulos/telas, i18n,
+  ErrorBoundary, readiness, transições, forms, printer/bodycam, D-05 e BOAT;
+- o Inspector deve substituir os falsos positivos nominais por provas comportamentais que falhem
+  contra o candidato rejeitado. O Engineer não pode tocar sensores. Produção só será commitada após
+  todos os gates e REVIEW PASS.
+
+Checkpoint 49 (janela 4, Architect extraordinário 3/3):
+
+- TASK-0010 reconciliou a allowlist fechada com todas as superfícies intencionais de TASK-0013 e
+  tornou expressamente comportamentais os oráculos de guards, adapters, offline/sync/normativo,
+  módulos/telas/i18n, ErrorBoundary, readiness, transições, forms, impressão/bodycam, D-05 e BOAT;
+- a correção não alterou as 70 rotas, a matriz 576/hash, RBAC ou decisões de produto. Lacunas
+  literais de D-01, schemas e chave específica D-05/BOAT continuam `source_pending` e não autorizam
+  fallback permissivo ou texto inventado;
+- Prettier focal, KB `756/446` e oráculo 70/576/hash passaram. TASK-0010 está `completed` em 3/3;
+  TASK-0012 abriu a tentativa extraordinária final 3/3 para substituir sensores nominais por RED
+  comportamental. TASK-0013 permanece `queued`.
+
+Checkpoint 50 (janela 4, reference-gap técnico dentro da tentativa extraordinária):
+
+- o Inspector criou 23 REDs diretos contra os stubs, mas parou antes de positivos completos porque
+  §1.1 ainda não fixava tokens/contexto dos guards, operações dos clients, interfaces de store,
+  sync/normativo, dispatcher, ErrorBoundary, printer/bodycam e extensão; isso foi classificado como
+  `reference-gap`, sem consumir nova iteração de TASK-0012;
+- TASK-0010 completou o mesmo handoff 3/3 com §1.2: APIs públicas, fixtures grant/deny, tabela
+  método/verbo/path/headers/retorno dos oito clients, contratos de persistência/sync/normativo,
+  transições, diagnósticos, impressão/bodycam, módulos/i18n e BOAT, todos mapeados à allowlist;
+- caminhos realmente elididos, representação criptográfica e chaves ausentes permanecem
+  `source_pending` e falham fechados. Prettier, KB `756/446` e oráculo 70/576/hash passaram;
+  TASK-0012 retoma a mesma tentativa 3/3 para substituir o RED parcial por provas completas.
+
+Checkpoint 51 (janela 4, RED comportamental extraordinário congelado):
+
+- TASK-0012 substituiu sensores nominais por 951 provas: 720 REDs atribuíveis à produção rejeitada
+  e 231 oráculos independentes verdes, com zero skip/todo e lint/typecheck PASS;
+- os REDs cobrem os cinco guards efetivos e RBAC 70×9, 28 operações HTTP, store/sync/normativo,
+  oito módulos e 69 classes de página distintas, i18n, ErrorBoundary, readiness, validações de
+  schemas, impressão/bodycam, dispatcher, 11 rotas BOAT e D-05 fail-closed;
+- todos os 23 hashes finais de specs/helpers estão congelados no relatório Inspector. TASK-0012
+  está `completed` em 3/3; TASK-0013 abriu a tentativa final 2/2 e não pode alterar qualquer
+  sensor/helper, configuração, contrato, lockfile ou gerado.
+
+Checkpoint 52 (janela 4, correção de paths nos sensores congelados):
+
+- a auditoria do maestro detectou que dois sensores extraordinários ainda importavam paths do
+  candidato rejeitado, fora da allowlist fechada: bodycam em `shared/` e normativo em `data/local/`;
+- o Inspector alterou somente esses dois imports para `core/bodycam-indicator.component` e
+  `data/normative/normative-package.service`, sem mudar asserções. Os novos hashes são
+  `2856a554…` e `c470fd38…`; os outros 21 permanecem byte-idênticos;
+- lint e typecheck passaram; o RED focal ficou em 4/951 falhas atribuíveis ao bodycam ainda não
+  movido pela produção. TASK-0012 permanece `completed` 3/3 e TASK-0013 continua na mesma tentativa
+  final 2/2, ainda não aceita pelo maestro.
+
+Checkpoint 53 (janela 4, delivery review CTG-0004a ciclo 2 extraordinário):
+
+- o candidato exato `a48868266854205e86a18fac0a052f4e4872c70a` passou lint, typecheck, build,
+  972/972 testes e `pnpm check` integral, mas o REVIEWER CODEX independente retornou **FAIL** com
+  três achados `critical` e seis `high` de integração e cobertura comportamental;
+- bootstrap/auth não têm caminho operacional e o contexto dos guardas congela o estado inicial;
+  sync diverge do OpenAPI; normativo/impressão omitem headers obrigatórios; páginas,
+  ErrorBoundary/D-05/BOAT, readiness, bodycam/impressão e persistência seguem nominais ou sem wiring;
+- o verde foi rejeitado porque os sensores ainda aceitam doubles e busca textual incompatíveis com
+  os clients/runtime reais. Nenhuma evidência de entrega, push ou PR foi emitida;
+- TASK-0013 fica `blocked` em 2/2. TASK-0012 já está em 3/3; nova sequência Architect → Inspector
+  → Engineer → gates integrais → REVIEW exige reset extraordinário explícito do Owner.
+
+Checkpoint 54 (janela 4, autorização definitiva e gates focais CTG-0004a):
+
+- o Owner autorizou explicitamente um último ciclo extraordinário para eliminar somente
+  `CTG4A-R2-F001…F009`, com reset de TASK-0010 para 4/4, TASK-0012 para 4/4 e TASK-0013 para 3/3;
+- a sequência permanece Architect → Inspector RED → Engineer GREEN → review independente, mas os
+  testes e o review desta iteração são estreitos e restritos às nove correções; o `pnpm check`
+  integral já verde no candidato anterior não será repetido como gate deste ciclo;
+- um `PASS` focal libera imediatamente CTG-0004b e CTG-0005. Nenhum push ou PR intermediário será
+  feito: a integração remota ocorrerá uma única vez ao final da rodada, seguida dos gates e da
+  evidência exigidos para o candidato completo;
+- o escopo fechado cobre bootstrap/auth reativos, DTO/envelope real de sync, headers/DI reais,
+  páginas comportamentais, ErrorBoundary/D-05/BOAT, readiness única, bodycam/printer operacionais,
+  modelo offline completo e sensores compatíveis com integrações reais.
+
+Checkpoint 55 (janela 4, Architect corretivo definitivo 4/4):
+
+- TASK-0010 fechou no contrato, sem alterar 70 rotas, RBAC ou as 576 transições, os nove achados
+  `CTG4A-R2-F001…F009`: entrada auth pública e bootstrap reativo; DTO/envelope sync gerado;
+  headers/DI reais; binding comportamental de página; ErrorBoundary/D-05/BOAT; readiness única;
+  bodycam/printer operacionais; oito coleções offline; e oráculos contra contratos reais;
+- Prettier focal, KB `756/446` e o oráculo focal `70/70/576` com hash canônico `a3175e63…d71013`
+  passaram. TASK-0010 está `completed` em 4/4;
+- TASK-0012 abriu a tentativa 4/4 para criar apenas sensores estreitos que reproduzam as nove
+  falhas do candidato e sejam incompatíveis com os doubles/regex/metadata nominais rejeitados.
+
+Checkpoint 56 (janela 4, Inspector focal definitivo 4/4):
+
+- TASK-0012 criou somente três specs focais densos para `F001…F009`, corrigidos na própria
+  tentativa após auditoria do maestro para exigir login/completion STYNX e bootstrap no mesmo
+  injector, render real de D-05/BOAT, providers root de printer/bodycam e hash normativo real;
+- o comando focal reproduziu `9/9 RED`, zero erro não tratado: Coordinator/ErrorBoundary/providers
+  ausentes, readiness sem delegação, DTO sync incompatível, normativo sem validate real, páginas
+  nominais e store incompleto. Typecheck permaneceu verde;
+- nenhum teste anterior foi alterado e nenhuma suíte ampla foi executada. TASK-0012 está
+  `completed` em 4/4; TASK-0013 abriu a tentativa 3/3, limitado à produção e ao mesmo comando focal.
+
+Checkpoint 57 (janela 4, Engineer focal definitivo 3/3):
+
+- o primeiro GREEN `9/9` foi rejeitado pelo maestro antes do REVIEW porque ainda permitia printer
+  fictício, store/grafo root incompletos, páginas sobre `Map` e runtime config ausente; os mesmos
+  três specs foram reforçados, sem alterar suites anteriores, até reproduzirem cinco REDs reais;
+- TASK-0011 usou sua tentativa final 2/2 somente para integrar `public/runtime-config.js` vazio e
+  sem segredos no `src/index.html`, seguindo RAIT/Portal; o sensor isolado passou;
+- TASK-0013 fechou os REDs com IndexedDB + AES-GCM e chave WebCrypto não exportável, providers root,
+  sync/normativo/printer/store reais, impressão fail-closed com evento de falha, páginas sem `Map`,
+  ErrorBoundary/readiness reativos e diagnóstico bodycam. A correção role-correct de timing esperou
+  a Promise da porta sem mudar expectativa;
+- o gate autorizado e reproduzido pelo maestro passou: três arquivos focais, `11/11 PASS`, zero
+  erro; typecheck, ESLint focal, Prettier focal e `git diff --check` também passaram. Nenhuma suite
+  ampla, build ou `pnpm check` foi executado. TASK-0013 está `completed` em 3/3 e segue para REVIEW
+  independente estritamente focal.
+
+Checkpoint 58 (janela 4, review focal ciclo 3 e continuação autorizada):
+
+- o Reviewer CODEX independente reproduziu `11/11 PASS` e o digest exato, mas emitiu `FAIL` por
+  sete resíduos dentro de `F001…F009`: lifecycle/navegação OIDC; recovery/primeiro cursor sync;
+  operações reais de página; D-05/BOAT; validade/warnings readiness; conflito de store; sensores;
+- F003, headers/providers root, impressão fail-closed, bodycam e a estrutura AES-GCM/oito coleções
+  foram aceitos e não serão reabertos;
+- a autorização geral do Owner para concluir R-0013 mantém o mesmo escopo focal e reseta uma vez
+  TASK-0010 para 5/5, TASK-0012 para 5/5 e TASK-0013 para 4/4. Nenhuma suite ampla será executada;
+  o próximo REVIEW só ocorre após sensores cobrirem os sete resíduos e passarem.
+
+Checkpoint 59 (janela 4, correção focal final CTG-0004a):
+
+- Architect, Inspector e Engineer fecharam os sete resíduos do ciclo 3 sem reabrir F003/F007:
+  callback `/auth-mfa` com lifecycle e ordem estrita, sync cursor/recovery, operações reais de
+  página, D-05/BOAT, validade/warnings, conflitos persistentes e sensores fortes;
+- o Inspector corrigiu três defeitos do próprio harness sem relaxar expectativas: montagem real do
+  componente MFA, controle separado das etapas assíncronas e fixture com snapshot/rota válidos;
+- o maestro corrigiu também o `redirectUrl` produtivo para `/auth-mfa` e reproduziu exatamente os
+  três specs focais em `18/18 PASS`, além de typecheck, ESLint focal, Prettier focal e
+  `git diff --check` verdes;
+- TASK-0013 fecha em 4/4 e o candidato segue para o review independente final, ainda sem push/PR.
+
+Checkpoint 60 (janela 4, review focal ciclo 4 e correção concentrada):
+
+- o REVIEWER independente confirmou digest, `18/18 PASS` e integridade, mas rejeitou o candidato
+  por quatro achados `high` e dois `medium`: login/lazy navigation, submit/operações reais, fallback
+  de entrada direta, warning duplicado/interno, conflito não atômico e sensores permissivos;
+- F002 foi fechado e F003/F007 permaneceram aceitos. A correção não os reabre e continua limitada
+  aos mesmos três specs e às superfícies produtivas já autorizadas;
+- sob a autorização geral do Owner para concluir a rodada sem nova burocracia intermediária,
+  TASK-0012 recebe tentativa 6/6 e TASK-0013 recebe tentativa 5/5, em sequência Inspector RED →
+  Engineer GREEN → review independente final. Nenhum push/PR ocorre antes do fechamento da rodada.
+
+Checkpoint 61 (janela 4, Inspector final 6/6):
+
+- os mesmos três specs focais cresceram para 26 testes e reproduzem `8 RED` exclusivamente
+  atribuíveis aos seis findings: evento/login e destino sem turno; estado pós-submit; cold fallback
+  D-05/BOAT; warning deduplicado/não assertivo; payload divergente e corrida atômica;
+- os 18 sensores anteriores seguem verdes e o typecheck passa. Os novos testes usam rotas lazy,
+  UI, runtime/store/adapter e concorrência reais, sem alterar produção, configuração ou suíte antiga;
+- TASK-0012 fecha em 6/6 e TASK-0013 abre 5/5, limitado a tornar esses oito casos verdes.
+
+Checkpoint 62 (janela 4, Engineer final 5/5):
+
+- produção fechou os oito REDs: login/lazy destinations; submit observável sem fatos fabricados;
+  cold fallback; warning canônico deduplicado; comparação canônica e serialização atômica;
+- o maestro reproduziu `26/26 PASS`, typecheck, ESLint focal, Prettier focal e
+  `git diff --check`. TASK-0013 fecha em 5/5;
+- o candidato de produto digest `6b8b0363…f47876` segue para review independente final, sem
+  executar suíte ampla e sem push/PR intermediário.
+
+Checkpoint 63 (janela 4, review focal ciclo 5):
+
+- o REVIEWER confirmou digest e `26/26 PASS`, mas encontrou quatro `high`: callback ainda
+  dependia de rotas planas; evento AIT não fornecia dados/contexto; atomicidade era somente por
+  instância; e os sensores ocultavam exatamente esses caminhos;
+- F005/F006 foram fechados e F002/F003/F007 permanecem aceitos. A correção finalíssima remove os
+  três atalhos de harness antes de tocar produção: rotas lazy puras, evento DOM real e duas
+  conexões IndexedDB independentes;
+- a autorização geral do Owner mantém a execução contínua: TASK-0012 7/7 e TASK-0013 6/6,
+  seguidas de review independente, sem push/PR intermediário.
+
+Checkpoint 64 (janela 4, Inspector finalíssimo 7/7):
+
+- 29 sensores focais agora usam exclusivamente TEAT_ROUTES lazy, submit por evento DOM com fila e
+  contexto reais e duas conexões IndexedDB; a tabela atômica cobre as sete famílias mutáveis;
+- o resultado honesto é `21 PASS / 8 RED`, todos atribuíveis aos quatro findings do ciclo 5;
+  typecheck permanece verde e produção/configuração não foram tocadas;
+- TASK-0012 fecha em 7/7 e TASK-0013 abre 6/6 para corrigir somente esses oito casos.
+
+Checkpoint 65 (janela 4, Engineer finalíssimo 6/6):
+
+- os oito REDs foram fechados em produção: navegação lazy direta com guardas; submit DOM a partir
+  de fila/contexto duráveis; estados observáveis; e operação condicional atômica na mesma transação
+  para sete famílias entre conexões independentes;
+- maestro reproduziu `29/29 PASS`, typecheck, ESLint focal, Prettier focal e diff-check. TASK-0013
+  fecha em 6/6 e segue ao review final do digest `ac6bb9d2…1b235f`.
+
+Checkpoint 66 (janela 4, review ciclo 6):
+
+- atomicidade F008 foi aceita, mas o REVIEWER encontrou três `high` em estados fabricados pelo
+  harness (blocked e queue) e reabriu F006 `medium` porque o guard sobrepôs o decisor único;
+- a próxima prova substitui os doubles por falha real de bootstrap e ciclo produtivo
+  producer → queue/draft → review → DOM, além de exigir a política pre-shift dentro do serviço;
+- TASK-0012 8/8 e TASK-0013 7/7 seguem sob autorização geral, sem ampliar o escopo nem publicar.
+
+Checkpoint 67 (janela 4, Inspector end-to-end 8/8):
+
+- os três specs preservam 25 verdes e expõem somente quatro REDs reais: bootstrap 503 não alcança
+  recuperação; guard não delega destino ao serviço; produtor real não gera revisão finalizável;
+  e falha de persistência aparece como blocked em vez de error;
+- não há principal/bootstrap artificial, cast de queue nem chamada direta de submit. F008 segue
+  integralmente verde e typecheck passa;
+- TASK-0012 fecha em 8/8 e TASK-0013 inicia 7/7, restrito a esses quatro casos.
+
+Checkpoint 68 (janela 4, Engineer end-to-end 7/7):
+
+- os quatro REDs foram fechados: identidade/tenancy sobrevivem ao bloqueio de readiness; política
+  pre-shift voltou ao serviço único; produtor e review compartilham contexto durável tipado; draft
+  transiciona atomicamente e falha real chega ao estado error;
+- maestro reproduziu `29/29 PASS`, typecheck, lint/formatação focais e diff-check. TASK-0013 fecha
+  em 7/7; digest `fb479698…5bd9d1` segue ao review final.
+
+Checkpoint 69 (janela 4, review ciclo 7):
+
+- F004/F006/F008/F009 foram aceitos e o caminho 503 de F001 está correto; resta somente um `high`:
+  mismatch posterior entre tenant STYNX e snapshot de outro tenant ainda expõe contexto operacional;
+- correção mínima e fechada: preservar identidade para recuperação, negar tenant/bootstrap/
+  provisioning operacionais no mismatch. TASK-0012 9/9 e TASK-0013 8/8 sob autorização geral.
+
+Checkpoint 70 (janela 4, sensor tenant mínimo 9/9):
+
+- um único sensor novo reproduz o mismatch: identidade e `/device-blocked` permanecem disponíveis,
+  mas bootstrap/provisioning antigos continuam expostos e `/home` ainda autoriza;
+- bootstrap focal ficou `13 PASS / 1 RED`, typecheck verde. TASK-0012 fecha em 9/9 e TASK-0013
+  abre 8/8 somente para invalidar o contexto operacional divergente.
+
+Checkpoint 71 (janela 4, correção tenant mínima 8/8):
+
+- identidade autenticada segue disponível para recuperação, enquanto snapshots operacionais são
+  expostos somente com igualdade exata de tenant; `/home` mismatched é negado e
+  `/device-blocked` permanece alcançável;
+- maestro reproduziu bootstrap `14/14`, três focais `30/30`, typecheck, lint/formatação e
+  diff-check. TASK-0013 fecha em 8/8; digest `d9382578…dd32ea` segue ao review residual final.
+
+Checkpoint 72 (janela 4, fechamento CTG-0004a e abertura CTG-0004b):
+
+- REVIEWER independente confirmou digest, `30/30 PASS`, diff-check e zero achado
+  `critical/high/medium`; CTG-0004a está aprovado no escopo focal final;
+- TASK-0014 abre em 1/2 como Architect para fixar o contrato executável do app web antes de
+  scaffold, Inspector e Engineer. Push/PR continuam deferidos ao encerramento da rodada.
+
+Checkpoint 73 (janela 4, Architect web 1/2):
+
+- TASK-0014 fixou o contrato web com 60 rotas, 56 fichas, 540 decisões rota×papel, i18n, SSE e
+  ownerships disjuntos; gates focal, KB e formatação global passam;
+- TASK-0014 fecha em 1/2 e TASK-0015 abre em 1/2 para criar somente o scaffold Angular
+  não comportamental, com zero rota de produto.
+
+Checkpoint 74 (janela 4, scaffold web 1/2):
+
+- TASK-0015 criou o scaffold Angular 22 em 13 paths allowlisted, shell standalone/OnPush/zoneless
+  e zero rota de produto;
+- o maestro integrou o novo importer ao `pnpm-lock.yaml` e reproduziu lint, typecheck e build no
+  workspace real, sem symlink temporário. TASK-0015 fecha em 1/2;
+- TASK-0016 abre em 1/2 para criar os primeiros testes RED de 60 rotas, RBAC cartesiano,
+  ErrorBoundary, clients, i18n e a11y.
+
+Checkpoint 75 (janela 4, Inspector web 1/2):
+
+- TASK-0016 congelou 549 testes: 5 oráculos independentes verdes e 544 REDs atribuíveis à
+  produção ausente, cobrindo 60 rotas, 56 fichas, 540 pares rota×papel, metadata, ErrorBoundary e
+  nove shared components; typecheck e formatação focal passam, zero skip/todo;
+- TASK-0016 fecha em 1/2 e TASK-0017 abre em 1/2 para implementar as 12 áreas, 56 telas, quatro
+  rotas operacionais, guardas/facades, boundary e SSE sem tocar testes/configuração.
+
+Checkpoint 76 (janela 4, Engineer web 1/2):
+
+- TASK-0017 implementou 12 módulos lazy, 60 rotas/56 fichas, 540 decisões RBAC, ErrorBoundary,
+  SSE/fallback, facades, shared e i18n canônico; 549/549 testes, lint, typecheck e build passam;
+- o maestro restaurou a instalação congelada removida pelo worker e reproduziu os quatro gates no
+  workspace real. TASK-0017 fecha em 1/2;
+- CTG-0004b segue para review independente antes de abrir CTG-0005.
+
+Checkpoint 77 (janela 4, review CTG-0004b ciclo 1):
+
+- REVIEWER confirmou gates e inventário, mas rejeitou o falso verde com cinco `high` e um
+  `medium`: providers/auth/HTTP ausentes; páginas/facades nominais; ErrorBoundary desconectada;
+  SSE não real; i18n paralelo; e sensores que não exercitam produção;
+- TASK-0016 abre 2/2 para fortalecer os mesmos testes contra runtime real; TASK-0017 fica
+  preparado em 2/2 para corrigir somente F001…F006, sem alterar testes/configuração.
+
+Checkpoint 78 (janela 4, Inspector web corretivo 2/2):
+
+- a suíte foi fortalecida para 564 testes com `296 PASS / 268 RED`: 540 casos executam guard e
+  Router reais; 12 páginas representativas montam produção, clients/DOM/axe; providers bootstrap,
+  ErrorBoundary canônica e EventSource/fallback/cleanup são exigidos;
+- typecheck e formatação focal passam, zero skip/todo. TASK-0016 fecha em 2/2 e TASK-0017 abre
+  tentativa 2/2 para tornar verdes somente esses REDs, sem tocar sensores/configuração.
+
+Checkpoint 79 (janela 4, Engineer web corretivo 2/2):
+
+- F001…F006 foram implementados em produção: providers STYNX/HTTP/context, RBAC real, páginas dos
+  12 grupos com facade/DOM, ErrorBoundary canônica, SSE/fallback/cleanup, i18n STYNX e BOAT;
+- lint, typecheck, `564/564`, build com 12 chunks e `pnpm check` integral passam; sensores,
+  configuração e lockfile não foram alterados pelo Engineer;
+- TASK-0017 fecha em 2/2 e o digest `c0d0d57a…b581e6` segue ao review final CTG-0004b.
+
+Checkpoint 80 (janela 4, review CTG-0004b ciclo 2):
+
+- F005/i18n foi aceito, mas cinco `high` permanecem: entrada/contexto, páginas/clients, boundary,
+  consumo SSE e sensores permissivos/Proxy artificial;
+- sob autorização geral do Owner, TASK-0016 e TASK-0017 recebem tentativa 3/3 estritamente para
+  F001/F002/F003/F004/F006, sem reabrir i18n ou inventário.
+
+Checkpoint 81 (janela 4, Inspector web 3/3):
+
+- os 564 testes agora deixam `514 PASS / 50 RED`: 36 detectam o terceiro guard oculto/Proxy,
+  login inativo é negado, boundary não renderiza e 12 grupos não usam endpoints/clients próprios;
+- sensores exigem payload/resposta/DOM/erro, consumo SSE/fallback/cleanup, BOAT source_pending e axe;
+  inventários 60/56/540, i18n e zero skip/todo permanecem verdes;
+- TASK-0016 fecha em 3/3 e TASK-0017 abre 3/3 para esses 50 REDs.
+
+Checkpoint 82 (janela 4, Engineer web 3/3):
+
+- produção fechou os 50 REDs: login/contexto, guard chain sem Proxy, clients/endpoints dos 12
+  grupos, payload/DOM/erro, boundary, SSE observado e BOAT source_pending;
+- lint, typecheck, `564/564`, build e `pnpm check` integral passam. TASK-0017 fecha em 3/3;
+- digest `1d1562b6…6c15878` segue ao review independente final CTG-0004b.
+
+Checkpoint 83 (janela 4, review CTG-0004b ciclo 3):
+
+- F003/F005 foram fechados; quatro `high` permanecem em contexto/callback, ações de ficha,
+  protocolo SSE e sensores ainda genéricos;
+- TASK-0016 e TASK-0017 recebem tentativa 4/4, limitada a callback completo, contexto negativo,
+  fluxo contratual AIT representativo e eventos SSE nomeados com polling do recurso aberto.
+
+Checkpoint 84 (janela 4, Inspector web 4/4):
+
+- a suíte preserva 60/56/540 e reduz o escopo a `562 PASS / 2 RED`: callback/contexto real e
+  fluxo AIT completo com POST accept, headers, evento `ait.changed`, reload/polling do recurso;
+- fixtures genéricas foram removidas, F003/F005 permanecem verdes e typecheck passa;
+- TASK-0016 fecha em 4/4 e TASK-0017 abre 4/4 apenas para esses dois cenários.
+
+Checkpoint 85 (janela 4, Engineer web 4/4):
+
+- callback/contexto e fluxo AIT/SSE foram fechados em produção, incluindo POST/headers/body,
+  evento nomeado, reload/polling do recurso e cleanup;
+- lint, typecheck, `564/564`, build e `pnpm check` passam. TASK-0017 fecha em 4/4;
+- digest `7b7d5866…223070e` segue ao review independente final CTG-0004b.
+
+Checkpoint 86 (janela 4, review CTG-0004b ciclo 4):
+
+- callback, POST AIT, boundary e cleanup foram aceitos, mas quatro `high` e uma regressão `medium`
+  restam em contexto ausente, seleção/autoridade AIT, SSE não-AIT, cobertura reduzida e i18n;
+- TASK-0016/0017 recebem tentativa 5/5 para fechar todos esses resíduos de forma abrangente,
+  restaurando cobertura dos 12 grupos e tópicos/recursos de cada página SSE.
+
+Checkpoint 87 (janela 4, Inspector web 5/5):
+
+- cobertura integral foi restaurada; `561 PASS / 3 RED` provam context provider ausente/null,
+  SSE por rota/tópico/recurso e seleção/autoridade/estado AIT sem envelope como recurso;
+- os 12 grupos voltaram a validar resposta, refresh e erro específicos; typecheck, 60/56/540,
+  callback/POST/boundary/i18n permanecem verdes;
+- TASK-0016 fecha em 5/5 e TASK-0017 abre 5/5 para esses três cenários.
+
+Checkpoint 88 (janela 4, Engineer web 5/5):
+
+- contexto estrito, metadados SSE completos e seleção/autoridade/estado AIT foram fechados;
+  envelope somente invalida, fallback/reload usam recurso e confirmação usa STYNX canônico;
+- `564/564`, lint, typecheck, build e `pnpm check` integral passam. TASK-0017 fecha em 5/5;
+- digest `62054b45…eb4851` segue ao review final CTG-0004b.
+
+Checkpoint 89 (janela 4, review CTG-0004b ciclo 5):
+
+- quatro `high` e um `medium` permanecem em provider contextual real, estados AIT, tópicos SSE,
+  rótulos i18n e oráculos que espelham os atalhos;
+- TASK-0016/0017 recebem tentativa 6/6 para derivar contexto/eventos/estados diretamente das
+  fontes autoritativas e eliminar todos os literais fora do runtime STYNX.
+
+Checkpoint 90 (janela 4, Inspector web 6/6):
+
+- 565 testes deixam `562 PASS / 3 RED`: resolver contextual produtivo ausente; tópicos SSE por
+  página incompletos; estados RECEBIDO/CORRIGIDO e rótulos AIT fora do catálogo;
+- oráculos vêm de `teat-route-contract.md` e catálogo canônico, preservando 60/56/540, 12 grupos,
+  stale/fallback/cleanup/BOAT e typecheck verde;
+- TASK-0016 fecha em 6/6 e TASK-0017 abre 6/6 somente para esses três casos.
+
+Checkpoint 91 (janela 4, Engineer web 6/6):
+
+- resolver contextual real, catálogo SSE §7 por página e estados/rótulos AIT foram implementados;
+- `565/565`, lint, typecheck, build e `pnpm check` integral passam. TASK-0017 fecha em 6/6;
+- digest `4ecd760d…15d82d7` segue ao review independente final CTG-0004b.
+
+Checkpoint 92 (janela 4, review CTG-0004b ciclo 6):
+
+- F002/F005 foram fechados; três `high` restam em resolver sem integração, override de tópicos AIT
+  e sensores que acionam o setter/aceitam assinatura reduzida;
+- TASK-0016/0017 recebem tentativa 7/7 para provar resolução durante navegação por client/recurso e
+  tenant, e assinatura runtime idêntica ao manifesto completo.
+
+Checkpoint 93 (janela 4, Inspector web 7/7):
+
+- `562 PASS / 3 RED`: navegação G* real não aciona client/context resolver, e AIT registra 10
+  tópicos mas runtime abre só um, omitindo `ait.concurrency-suspected`;
+- teste usa appConfig+Router+HttpTestingController reais, sem setter/double, e preserva todos os
+  demais contratos. TASK-0016 fecha em 7/7; TASK-0017 abre 7/7 para os três REDs.
+
+Checkpoint 94 (janela 4, Engineer web 7/7):
+
+- resolução contextual produtiva foi integrada à navegação G* com client/endpoint, vínculo de tenant
+  e invalidação; AIT e demais páginas SSE consomem seus manifestos sem override;
+- `565/565`, lint, typecheck, build e `pnpm check` integral passam. TASK-0017 fecha em 7/7;
+- digest `35a8a39e…f9551f5` segue ao review final CTG-0004b.
+
+Checkpoint 95 (janela 4, review CTG-0004b ciclo 7):
+
+- F004 foi fechado e restam somente dois `medium`: contexto antes do role e GET duplicado/
+  descartado confundido pelo sensor com carga real;
+- TASK-0016/0017 recebem tentativa 8/8 estritamente para preservar a ordem
+  auth→tenant→role→context, remover duplicata e provar RouterOutlet/página real e 404.
+
+Checkpoint 96 (janela 4, Inspector web 8/8):
+
+- `564 PASS / 1 RED`: sensor com RouterOutlet real prova contexto antes do role, HTTP indevido em
+  role negado e dois GETs após resolução; 404/503/vazio/mismatch/troca de tenant e DOM estão cobertos;
+- runtime SSE está integralmente verde. TASK-0016 fecha em 8/8 e TASK-0017 abre 8/8 somente para
+  corrigir ordem e remover o GET duplicado.
+
+Checkpoint 97 (janela 4, Engineer web 8/8):
+
+- a resolução contextual passou à folha após auth→tenant→role, zero HTTP em deny e exatamente
+  resolução + carga real em allow, sem prefetch descartado;
+- `565/565`, lint, typecheck, build e `pnpm check` integral passam. TASK-0017 fecha em 8/8;
+- digest `2febf768…d5becb` segue ao review final CTG-0004b.
+
+Checkpoint 98 (janela 4, fechamento CTG-0004b e abertura CTG-0005):
+
+- REVIEWER independente confirmou digest, `565/565`, gates e zero achado bloqueante; CTG-0004b
+  está aprovado;
+- TASK-0018 abre em 1/2 para fechar a documentação WP-T4–T6 antes do review/integracão final da
+  rodada. Push/PR continuam deferidos ao encerramento.
+
+Checkpoint 99 (janela 4, transcrição documental CTG-0005):
+
+- TASK-0018 registrou o estado comprovado de WP-T4–T6: CTG-0002 e CTG-0003 integrados nos PRs
+  #73 e #82; CTG-0004a e CTG-0004b aprovados em review independente no candidato
+  `408ab438fdd940eed6bd46296daad0a141d5a222`;
+- a transcrição preserva a fronteira: os candidatos de frontend não foram mesclados, publicados
+  ou implantados, e fixtures/ports não demonstram KMS, Keystore, criptografia/envelope/attestation,
+  bodycam real ou adapters de hardware (inclusive impressora);
+- a única PR/push continua deferida ao encerramento da rodada. O maestro, após observação de
+  merge, é o responsável por atualizar a história de fechamento e não há alegação antecipada.
+
+Checkpoint 100 (janela 4, delivery review CTG-0005):
+
+- o primeiro review independente encontrou cinco correções documentais de precisão e completude;
+  Architect corrigiu os quatro documentos autorizados e o maestro completou o relatório da tarefa;
+- o re-review focal retornou **PASS**, sem finding high remanescente. Prettier focal, KB `756/446`,
+  publish-check `201` e diff-check passaram na versão corrigida;
+- `pnpm check` integral passou antes das últimas correções exclusivamente documentais. O candidato
+  completo será recertificado após integrar os avanços de `origin/main`, antes da PR única.
 
 ## Leitura
 
