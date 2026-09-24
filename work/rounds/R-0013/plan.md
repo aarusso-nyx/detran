@@ -16,6 +16,12 @@ formal está em `closure.json`; o fechamento não é release/deploy nem certific
 o app produtivo. E2, Android/GMS820 produtivo, validador/ciclo AIT e gate de
 campo permanecem abertos nas issues #108–#112 para round posterior.
 
+O registro PC-0013 e a observação do PR #113 foram integrados no PR #114,
+merge `48b9dad2c646400c0f6434e98d705c9d69d7e7b6`, após sete checks CI
+verdes e nova execução local integral de `pnpm check` com código 0. O Auditor
+observou esse merge de fechamento como `EV-21ccccfb102d5dac`; a última PR
+de observação não amplia o escopo nem reabre os CTG.
+
 ## Adenda vinculante de escopo — decisão do Owner de 2026-09-23
 
 **Objeto final de CTG-0004a/b e CTG-0005:** homologação de **UI e workflows** TEAT,
