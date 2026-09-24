@@ -91,11 +91,13 @@ schemas dos 14 formulários (`boat-frontends.md` §8); `transitions.ts` com as 1
 erros). TASK-0010 comprovou typecheck, lint, build e 12 testes do pacote mobile, além de
 typecheck/lint/build do `teat-web` e 561/561 testes web focais; TASK-0008 revisou a matriz de
 rotas e os negativos de segurança. O baseline do KB ficou em 773 artefatos e 446 tokens
-canônicos, com `source_pending:OD-R15-004` preservado. A entrega comprovada nesta rodada é
+canônicos, com `source_pending:OD-R15-004` preservado. A entrega comprovada até este ponto é
 estrutural: fichas, schemas, transições, catálogo, rotas e componentes existem e integram. O
-binding completo dos campos/formulários, a renderização de todo o catálogo i18n nas superfícies e
-a prova axe das 12 telas reais permanecem handoff futuro; a estrutura não é evidência desses três
-comportamentos. Gate documental: `docs:kb:check` e `docs:kb:publish-check`.
+binding completo dos campos/formulários permanece handoff futuro. Antes do segundo
+delivery-review desta entrega, Engineers corrigem a renderização/mescla runtime do catálogo
+byte a byte e o Inspector prova a orientação literal e axe nas 12 telas mobile e nas cinco web;
+a estrutura isolada não é evidência desses comportamentos. Gate documental: `docs:kb:check` e
+`docs:kb:publish-check`.
 
 ### WP-B5 — Frontends e camada nativa (Engineer-frontend) — executado no escopo comprovado
 
@@ -106,10 +108,10 @@ em `apps/teat/web` (5 telas); Portal T-18/T-19 já especificados. TASK-0009 comp
 build mobile/TEAT e 118 testes do shell; TASK-0010 comprovou os gates do pacote e do módulo web;
 TASK-0008 deixou a revisão focal com REDs de superfícies ainda ausentes no checkpoint, sem
 relaxar testes. Hardware real, release de campo e homologação RENAEST/SNE/gov.br não foram
-executados nesta rodada. O gate comprova estrutura, roteamento/transições e builds; não comprova
-campos/forms completos, renderização i18n integral nem axe nas 12 telas. Esses três itens ficam em
-handoff explícito para a próxima rodada frontend, sem reclassificar `assertBoatA11y` como prova de
-DOM ou axe.
+executados nesta rodada. O gate já comprova estrutura, roteamento/transições e builds. Apenas o
+binding completo de campos/forms fica em handoff futuro. A renderização/mescla i18n, a orientação
+literal e axe sobre as 12 telas mobile e cinco web são gates desta entrega e serão corrigidos por
+Engineers/Inspector antes do segundo delivery-review; `assertBoatA11y` não é prova de DOM ou axe.
 
 ## 3. Ordem e paralelismo
 

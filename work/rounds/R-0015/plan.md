@@ -190,10 +190,14 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   `sseDeniedReason: source_pending`, nunca no texto do cliente. `actionAllowedRoles` é metadado
   declarativo; o backend continua autoritativo e o Inspector prova presença/ausência para os nove
   papéis. A próxima iteração Engineer da TASK-0010 remove integralmente o módulo morto
-  `apps/teat/web/src/app/features/crashes/**`. WP-B4/B5 comprovam somente a entrega estrutural;
-  binding completo de campos/forms, renderização i18n integral e axe das 12 telas são handoff
-  futuro. Esta adenda atribui à TASK-0012 a transcrição que encerrou OD-R15-002 em
-  `IU-BOAT-W-01.md`.
+  `apps/teat/web/src/app/features/crashes/**`. WP-B4/B5 comprovam até aqui a entrega estrutural;
+  somente o binding completo de campos/forms é handoff futuro. Nesta entrega, antes do segundo
+  delivery-review, Engineers corrigem loaders e catálogo byte a byte, e o Inspector prova a
+  orientação literal e axe nas 12 telas mobile e cinco web. Para fechar o ownership do finding 2,
+  a fronteira do Inspector inclui explicitamente
+  `apps/teat/mobile/src/app/app.a11y.spec.ts`, somente no ramo BOAT: montar os 12 boundaries reais
+  e executar axe, sem alterar os casos TEAT existentes. Esta adenda atribui à TASK-0012 a
+  transcrição que encerrou OD-R15-002 em `IU-BOAT-W-01.md`.
 
 ## Concorrência
 
