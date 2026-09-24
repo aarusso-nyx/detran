@@ -81,22 +81,29 @@ fixtures; `renaest-mapping.md` como tabela campo a campo. Entrega comprovada: 13
 schema canônico, códigos BOAT do applier, clientes regenerados; `contracts:check` passou com 152
 operações e 61 clientes. O layout nacional permanece `source_pending` por DT-061/OD-B08.
 
-### WP-B4 — Telas, formulários e i18n (Transcriber-docs → Engineer-frontend)
+### WP-B4 — Telas, formulários e i18n (Transcriber-docs → Engineer-frontend) — executado
 
 Fichas `IU-BOAT-S-nn.md`/`IU-BOAT-W-nn.md` (17) no padrão da origem, com os estados obrigatórios,
 a regra de acesso a vítimas (perfil + finalidade + auditoria) e os textos fixos ("sinistro" nunca
 "acidente"; "fotografar a cena, não o sofrimento"; "registro nacional definitivo, sem correção");
 schemas dos 14 formulários (`boat-frontends.md` §8); `transitions.ts` com as 149 transições + S-12;
 `i18n/boat.pt-BR.json` (estados, regimes 176/177/178 em linguagem simples, catálogos de condição,
-erros). Gate: `docs:kb:check`, teste tela ↔ ficha ↔ rota, revisão do Owner.
+erros). TASK-0010 comprovou typecheck, lint, build e 12 testes do pacote mobile, além de
+typecheck/lint/build do `teat-web` e 561/561 testes web focais; TASK-0008 revisou a matriz de
+rotas e os negativos de segurança. O baseline do KB ficou em 773 artefatos e 446 tokens
+canônicos, com `source_pending:OD-R15-004` preservado. Gate documental: `docs:kb:check` e
+`docs:kb:publish-check`.
 
-### WP-B5 — Frontends e camada nativa (Engineer-frontend)
+### WP-B5 — Frontends e camada nativa (Engineer-frontend) — executado no escopo comprovado
 
 `apps/boat/mobile` como biblioteca de features carregada pelo shell de campo do TEAT (WP-T6): 12
-telas, componentes §6, `victimAccessGuard`, editor de croqui, GPS/câmera/assinatura nativos
+telas, componentes §6, `victimAccessGuard`, editor de croqui, portas GPS/câmera/assinatura
 (Capacitor), armazenamento cifrado e atestação de dispositivo (Fase 5 W5.2); módulo `sinistros`
-em `apps/teat/web` (5 telas); Portal T-18/T-19 já especificados. Gate: testes de roteamento e
-transições, TestBed dos compartilhados, `ng build`, a11y de campo.
+em `apps/teat/web` (5 telas); Portal T-18/T-19 já especificados. TASK-0009 comprovou lint,
+build mobile/TEAT e 118 testes do shell; TASK-0010 comprovou os gates do pacote e do módulo web;
+TASK-0008 deixou a revisão focal com REDs de superfícies ainda ausentes no checkpoint, sem
+relaxar testes. Hardware real, release de campo e homologação RENAEST/SNE/gov.br não foram
+executados nesta rodada. Gate: testes de roteamento/transições, builds e revisão a11y focal.
 
 ## 3. Ordem e paralelismo
 

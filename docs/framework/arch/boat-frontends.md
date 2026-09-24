@@ -143,14 +143,16 @@ Item `crash-record` na fila offline do TEAT (`teat-route-contract.md` §4.3), ap
 transacionalmente pelo módulo `est/crash`; evidências pelo protocolo de intenção do TEAT;
 recibos por item; projeções `dashboard.crashes` e `portal.crash_view` (ADR-0020); RENAEST via
 outbox + `RenaestPort` (`submitCrash`, `complementCrash`, `correctCrash`, `getCrashByProtocol`).
+R-0015 comprovou somente as portas e o fluxo de outbox/mock; não comprovou hardware real,
+release de campo nem homologação nacional.
 
 ## 10. Dependências de backend
 
-| Dependência                                                                                                                                      | Situação                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| `backend/domains/est/crash` (blueprint `BP-EST-CRASH-001`, DDL, CRUD)                                                                            | inexistente (só README); Fase 5 W5.1                        |
-| Comandos `start`, `add-*`, `attach-sketch`, `validate`, `close`, `transmit`, `complement`, `correct`, `record-duty`, `add-damage`, `add-witness` | pendentes (política parcial em `policy.ts`)                 |
-| Aplicação do item `crash-record` pela sincronização do TEAT                                                                                      | depende de WP-T2                                            |
-| RENAEST outbox + mapeamento campo a campo (Manuais RENAEST, DT-061)                                                                              | adapter existe (mock); mapeamento pendente                  |
-| PII estendida a todos os campos de vítima; prazos de retenção (DT-049)                                                                           | decisão pendente; tela S-06 e W-05 não vão a produção antes |
-| Editor de croqui, GPS, câmera nativos                                                                                                            | camada nativa nova do BOAT (Fase 5 W5.2)                    |
+| Dependência                                                                                                                                      | Situação                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| `backend/domains/est/crash` (blueprint `BP-EST-CRASH-001`, DDL, CRUD)                                                                            | inexistente (só README); Fase 5 W5.1                                      |
+| Comandos `start`, `add-*`, `attach-sketch`, `validate`, `close`, `transmit`, `complement`, `correct`, `record-duty`, `add-damage`, `add-witness` | pendentes (política parcial em `policy.ts`)                               |
+| Aplicação do item `crash-record` pela sincronização do TEAT                                                                                      | depende de WP-T2                                                          |
+| RENAEST outbox + mapeamento campo a campo (Manuais RENAEST, DT-061)                                                                              | adapter existe (mock); mapeamento pendente                                |
+| PII estendida a todos os campos de vítima; prazos de retenção (DT-049)                                                                           | decisão pendente; tela S-06 e W-05 não vão a produção antes               |
+| Editor de croqui, GPS, câmera nativos                                                                                                            | portas e fixtures implementadas; hardware real não executado nesta rodada |
