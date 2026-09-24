@@ -15,6 +15,7 @@ const BOAT_ROUTE_PATHS = new Set([
   'crash-sketch',
   'crash-evidence',
   'crash-ait-links',
+  'crash-damages',
   'crash-review',
 ]);
 

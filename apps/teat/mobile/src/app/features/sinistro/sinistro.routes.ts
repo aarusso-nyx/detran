@@ -150,6 +150,17 @@ export class CrashAitLinksBoundaryComponent extends BoatRouteBoundary {
 }
 
 @Component({
+  selector: 'teat-crash-damages-boundary',
+  standalone: true,
+  imports: [NgComponentOutlet],
+  template: '<ng-container *ngComponentOutlet="externalComponent()" />',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CrashDamagesBoundaryComponent extends BoatRouteBoundary {
+  protected readonly routePath = 'crash-damages';
+}
+
+@Component({
   selector: 'teat-crash-review-boundary',
   standalone: true,
   imports: [NgComponentOutlet],
@@ -290,6 +301,19 @@ export const SINISTRO_ROUTES: Routes = [
       boatExtension: true,
     },
     async () => CrashAitLinksBoundaryComponent,
+  ),
+  teatRoute(
+    {
+      path: 'crash-damages',
+      uxCode: 'source_pending',
+      sourceSheet: 'IU-BOAT-S-12.md',
+      guardPlan: 'B+S, BOAT',
+      allowedRoles: ['field-agent', 'field-supervisor'],
+      component:
+        'features/sinistro/sinistro.routes.ts#CrashDamagesBoundaryComponent',
+      boatExtension: true,
+    },
+    async () => CrashDamagesBoundaryComponent,
   ),
   teatRoute(
     {
