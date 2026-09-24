@@ -3,7 +3,7 @@ id: ARCH-BOAT-FRONTENDS
 title: BOAT — especificação dos frontends de sinistro (módulo mobile de campo, retaguarda web, toque cidadão)
 status: draft
 apps: [boat, teat, portal]
-updated: 2026-09-13
+updated: 2026-09-24
 ---
 
 # Frontends do BOAT — registro de sinistro
@@ -63,20 +63,20 @@ Rotas `/crash-*` no shell de campo; `crash-start` na barra inferior. Assistente 
 "Continuar" condicionado aos dados mínimos da etapa, `Voltar` contextual, ajuda MBFT, e saídas
 cruzadas para consulta veicular/condutor, AIT e medida.
 
-| id   | Tela (uxCode — `screenId`)              | Conteúdo                                                                                                                                                          | Gate / UC                                             |
-| ---- | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| S-01 | 060 `crash-start`                       | tipo (catálogo `crash_type`), gravidade (enum federal), turno; cria rascunho local                                                                                | `RASCUNHO → EM_ATENDIMENTO` (`start`) — [UC-BOAT-001] |
-| S-02 | 061 `crash-location`                    | `occurred_at`, `recorded_at` (pré-preenchido, editável), GPS + precisão, endereço, UF/município, via/km/sentido, referência                                       | AC-001-3                                              |
-| S-03 | 062 `crash-conditions`                  | via, clima, iluminação, sinalização (4 obrigatórias, catálogo)                                                                                                    | AC-001-4                                              |
-| S-04 | 063 `crash-vehicles`                    | lista; "+ Veículo" → `vehicle-search` (snapshot) ou manual; papel, sequência, dano aparente; **sem evadido**                                                      | [UC-BOAT-002] AC-2                                    |
-| S-05 | 064 `crash-people`                      | "+ Pessoa" → `driver-search` ou manual; papel (condutor/passageiro/pedestre/ciclista), vínculo a veículo, cinto/capacete; recusa registrada não bloqueia          | [UC-BOAT-002]                                         |
-| S-06 | 065 `crash-victims`                     | por pessoa: `severity` (enum), óbito no local/`death_at`, atendimento médico, hospital de destino, `health_notes` mínimo; acesso auditado; sem "permanente"       | [UC-BOAT-003]; abre só se gravidade com vítima        |
-| S-07 | 066 `crash-dynamics` (condutas de cena) | regime derivado (176 · 177 · 178) nomeado; cinco incisos do 176 como cinco registros por condutor; 177 sujeito distinto; 178 só remoção; narrativa não conclusiva | [UC-BOAT-007]                                         |
-| S-08 | 067 `crash-sketch`                      | editor simples ou anexo (evidência) ou mapa georreferenciado; `sketch_type`, `drawing_json`                                                                       | [UC-BOAT-004]                                         |
-| S-09 | 068 `crash-evidence`                    | fotos com hash e custódia (TEAT); orientação "cena, não sofrimento"                                                                                               | [UC-BOAT-004]                                         |
-| S-10 | 069 `crash-ait-links`                   | AITs e medidas do mesmo atendimento; "criar AIT decorrente" → `ait-start`; "criar medida" → `measure-start`; remoção 279-A                                        | [UC-BOAT-004], [UC-BOAT-006]                          |
-| S-12 | **novo** `crash-damages`                | danos materiais por natureza do bem (veículo de terceiro, mobiliário urbano, sinalização, edificação, outro); testemunhas (registro próprio, recusa registrada)   | [UC-BOAT-012]                                         |
-| S-11 | 070 `crash-review`                      | checklist de dados mínimos, vítimas (acesso restrito), relatório preliminar (PDF), **finalizar** → fila                                                           | `→ REGISTRADO/FECHADO` local; [UC-BOAT-005]           |
+| id   | Tela (uxCode — `screenId`)                  | Conteúdo                                                                                                                                                          | Gate / UC                                              |
+| ---- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| S-01 | 060 `crash-start`                           | tipo (catálogo `crash_type`), gravidade (enum federal), turno; cria rascunho local                                                                                | `RASCUNHO → EM_ATENDIMENTO` (`start`) — [UC-BOAT-001]  |
+| S-02 | 061 `crash-location`                        | `occurred_at`, `recorded_at` (pré-preenchido, editável), GPS + precisão, endereço, UF/município, via/km/sentido, referência                                       | AC-001-3                                               |
+| S-03 | 062 `crash-conditions`                      | via, clima, iluminação, sinalização (4 obrigatórias, catálogo)                                                                                                    | AC-001-4                                               |
+| S-04 | 063 `crash-vehicles`                        | lista; "+ Veículo" → `vehicle-search` (snapshot) ou manual; papel, sequência, dano aparente; **sem evadido**                                                      | [UC-BOAT-002] AC-2                                     |
+| S-05 | 064 `crash-people`                          | "+ Pessoa" → `driver-search` ou manual; papel (condutor/passageiro/pedestre/ciclista), vínculo a veículo, cinto/capacete; recusa registrada não bloqueia          | [UC-BOAT-002]                                          |
+| S-06 | 065 `crash-victims`                         | por pessoa: `severity` (enum), óbito no local/`death_at`, atendimento médico, hospital de destino, `health_notes` mínimo; acesso auditado; sem "permanente"       | [UC-BOAT-003]; abre só se gravidade com vítima         |
+| S-07 | 066 `crash-dynamics` (condutas de cena)     | regime derivado (176 · 177 · 178) nomeado; cinco incisos do 176 como cinco registros por condutor; 177 sujeito distinto; 178 só remoção; narrativa não conclusiva | [UC-BOAT-007]                                          |
+| S-08 | 067 `crash-sketch`                          | editor simples ou anexo (evidência) ou mapa georreferenciado; `sketch_type`, `drawing_json`                                                                       | [UC-BOAT-004]                                          |
+| S-09 | 068 `crash-evidence`                        | fotos com hash e custódia (TEAT); orientação "cena, não sofrimento"                                                                                               | [UC-BOAT-004]                                          |
+| S-10 | 069 `crash-ait-links`                       | AITs e medidas do mesmo atendimento; "criar AIT decorrente" → `ait-start`; "criar medida" → `measure-start`; remoção 279-A                                        | [UC-BOAT-004], [UC-BOAT-006]                           |
+| S-12 | **novo** `crash-damages` (`source_pending`) | danos materiais por natureza do bem (veículo de terceiro, mobiliário urbano, sinalização, edificação, outro); testemunhas (registro próprio, recusa registrada)   | [UC-BOAT-012]; `IU-BOAT-S-12.md`, boundary `B+S, BOAT` |
+| S-11 | 070 `crash-review`                          | checklist de dados mínimos, vítimas (acesso restrito), relatório preliminar (PDF), **finalizar** → fila                                                           | `→ REGISTRADO/FECHADO` local; [UC-BOAT-005]            |
 
 Transições: as 149 da matriz viram `transitions.ts` do módulo (cadeia do assistente, saídas
 cruzadas, barra inferior, ajuda); a nova S-12 entra entre S-10 e S-11.
