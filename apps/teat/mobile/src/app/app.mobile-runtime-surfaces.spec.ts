@@ -86,7 +86,7 @@ it('dada raiz do router quando carregada então contém somente oito mounts load
   );
 });
 
-it('dadas 58 páginas TEAT habilitadas, D-05 disabled e 11 boundaries BOAT quando módulos resolvem então páginas executam integração própria', async () => {
+it('dadas 58 páginas TEAT habilitadas, D-05 disabled e 12 boundaries BOAT quando módulos resolvem então páginas executam integração própria', async () => {
   const boat = TEAT_ROUTE_FIXTURE.filter((route) =>
     route.path.startsWith('crash-'),
   );
@@ -94,7 +94,7 @@ it('dadas 58 páginas TEAT habilitadas, D-05 disabled e 11 boundaries BOAT quand
     (route) =>
       !route.path.startsWith('crash-') && route.path !== D05_ROUTE_PATH,
   );
-  expect(boat).toHaveLength(11);
+  expect(boat).toHaveLength(12);
   expect(pages).toHaveLength(58);
   expect(
     TEAT_ROUTE_FIXTURE.filter((route) => !route.path.startsWith('crash-')),

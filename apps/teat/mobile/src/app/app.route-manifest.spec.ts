@@ -16,11 +16,11 @@ async function concreteRoutes() {
   return groups.flat();
 }
 
-it('dado o manifesto móvel quando comparado ao contrato então prova oito mounts e 70 rotas concretas em ordem', async () => {
-  expect(TEAT_ROUTE_FIXTURE).toHaveLength(70);
+it('dado o manifesto móvel quando comparado ao contrato então prova oito mounts e 71 rotas concretas em ordem', async () => {
+  expect(TEAT_ROUTE_FIXTURE).toHaveLength(71);
   expect(TEAT_ROUTES).toHaveLength(8);
   const routes = await concreteRoutes();
-  expect(routes).toHaveLength(70);
+  expect(routes).toHaveLength(71);
   expect(routes.map((route) => route.path)).toEqual(
     TEAT_ROUTE_FIXTURE.map((route) => route.path),
   );
@@ -50,9 +50,9 @@ it('dado D-05 desligada quando o manifesto é carregado então mantém a rota in
   expect(route?.loadComponent).toBeUndefined();
 });
 
-it('dadas as onze rotas crash quando o manifesto é carregado então preserva cada ponto de extensão BOAT', async () => {
+it('dadas as doze rotas crash quando o manifesto é carregado então preserva cada ponto de extensão BOAT', async () => {
   const routes = await concreteRoutes();
-  expect(BOAT_ROUTE_PATHS).toHaveLength(11);
+  expect(BOAT_ROUTE_PATHS).toHaveLength(12);
   for (const path of BOAT_ROUTE_PATHS) {
     const route = routes.find((candidate) => candidate.path === path);
     expect(route?.data).toMatchObject({ boatExtension: true });

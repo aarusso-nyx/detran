@@ -877,8 +877,10 @@ for (const contract of representativeContracts) {
     fixture.detectChanges();
     await fixture.whenStable();
     if (boat) {
-      expect(root.textContent).toContain('source_pending');
-      expect(root.querySelector('a[href], button')).not.toBeNull();
+      expect(root.textContent).not.toContain('source_pending');
+      expect(root.querySelector('h1')?.textContent?.trim()).toBe(
+        TEAT_WEB_I18N[representative.titleKey ?? ''],
+      );
     } else if (representative.path === '/ux/web/ait-validation') {
       expect
         .soft(TestBed.inject(StynxI18nService).translate('teat.common.confirm'))
