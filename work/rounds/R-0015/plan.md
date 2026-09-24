@@ -162,7 +162,8 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   este registro não afirma novo veredito do reviewer.
 - **A3 — prompt-review CTG-0002 ciclo 1 (2026-09-24):** a integração preserva as identidades já
   publicadas por PC-0013 e acrescenta somente o que BOAT já especificou. Mobile passa de 70 para
-  71 rotas concretas, de 11 para 12 boundaries BOAT e de 58 para 59 páginas habilitadas. S-12 usa
+  71 rotas concretas, de 11 para 12 boundaries BOAT e mantém 58 páginas TEAT habilitadas. Há 59
+  entradas não-BOAT quando se inclui D-05 desligada. S-12 usa
   `path: crash-damages`, `sourceSheet: IU-BOAT-S-12.md` e `uxCode: source_pending`; a ausência de
   uxCode autoritativo é `OD-R15-005`, nunca um número presumido. Web mantém W-01…W-04 expostas nos
   mounts PC-0013 `/ux/web/crashes-list`, `/ux/web/crash-detail`, `/ux/web/crash-complement` e
@@ -181,6 +182,18 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   `BOAT_PT_BR_CATALOG`; o loader mobile e o provider web mesclam esse catálogo ao catálogo TEAT,
   sem substituir chaves nem transformar os 13 marcadores `source_pending:OD-R15-004` em texto de
   interface. TASK-0009 é dona do catálogo/export e loader mobile; TASK-0010, da mescla web.
+- **A5 — TASK-0012, delivery-review CTG-0002 ciclo 1 (2026-09-24):** a contagem mobile fica
+  reconciliada em 71 rotas totais: 58 páginas TEAT habilitadas, D-05 como a 59ª entrada não-BOAT
+  desligada e 12 boundaries BOAT. W-01…W-04 preservam os mounts PC-0013, mas o runtime entregue é
+  `features/sinistros` com client `@detran/boat-mobile`; `data.titleKey` conserva a chave TEAT e o
+  `h1` renderiza a chave BOAT correspondente. W-04 ancora a negação de SSE em `extension: BOAT` e
+  `sseDeniedReason: source_pending`, nunca no texto do cliente. `actionAllowedRoles` é metadado
+  declarativo; o backend continua autoritativo e o Inspector prova presença/ausência para os nove
+  papéis. A próxima iteração Engineer da TASK-0010 remove integralmente o módulo morto
+  `apps/teat/web/src/app/features/crashes/**`. WP-B4/B5 comprovam somente a entrega estrutural;
+  binding completo de campos/forms, renderização i18n integral e axe das 12 telas são handoff
+  futuro. Esta adenda atribui à TASK-0012 a transcrição que encerrou OD-R15-002 em
+  `IU-BOAT-W-01.md`.
 
 ## Concorrência
 

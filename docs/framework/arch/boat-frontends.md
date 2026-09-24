@@ -11,7 +11,7 @@ updated: 2026-09-24
 Especificação de construção das superfícies do BOAT (Boletim de Acidentalidade de Trânsito,
 domínio `est`): o **módulo de sinistro do aplicativo de campo** (grupo `sinistros` da matriz
 oficial de 67 telas, 11 telas existentes + 1 nova, empacotado em `apps/boat/mobile` e carregado
-pelo mesmo shell de campo do TEAT), o **módulo de retaguarda web** (grupo `crashes`, 4 telas + 1
+pelo mesmo shell de campo do TEAT), o **módulo de retaguarda web** (grupo `sinistros`, 4 telas + 1
 nova, no console `apps/teat/web`) e o **toque cidadão** (consulta e download do BAT, já
 especificado em `portal-frontends.md` T-18/T-19). Companheiros: `boat-route-contract.md`,
 `boat-error-catalog.md`, `boat-build-pack.md`.
@@ -27,7 +27,7 @@ terminal sem correção, DT-020), [UC-BOAT-001]…[012], [RN-BOAT-001]…[132], 
 | Item            | Decisão                                                                                                                                                                                                                                                                  |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Empacotamento   | `apps/boat/mobile` = biblioteca de features Angular 22 (`@detran/boat-mobile`) com o módulo `sinistro`, carregada lazy pelo shell de campo de `apps/teat/mobile` (`teat-frontends.md` §1); mesma sessão, mesmo bootstrap, mesma fila offline, mesmo indicador de bodycam |
-| Retaguarda      | módulo `sinistros` em `apps/teat/web/features/` (rotas `/fiscalizacao/sinistros*`), mesmo kit `@detran/ui`                                                                                                                                                               |
+| Retaguarda      | módulo `sinistros` em `apps/teat/web/features/`; W-01…W-04 preservam os mounts `/ux/web/*` de PC-0013 e W-05 usa `/fiscalizacao/sinistros/titular`, no mesmo kit `@detran/ui`                                                                                            |
 | Runtime mobile  | `@stynx-nyx/mobile-runtime`: GPS real, câmera, editor de croqui, assinatura, armazenamento cifrado (a camada nativa nova é a do BOAT, `apps/boat/mobile/README.md`)                                                                                                      |
 | API             | `/v1/est/crash/*` (`boat-route-contract.md`); RENAEST só pelo adapter (`RenaestPort`, ADR-0003); nenhuma máquina RENAEST local (a nacional é do mock/União)                                                                                                              |
 | Estado mobile   | agregado local versionado `crash-record` na fila do TEAT (`entity_type=crash-record`, um item por sinistro; vítimas, veículos, pessoas, condutas, danos, testemunhas e croqui no mesmo payload canônico)                                                                 |
@@ -83,14 +83,19 @@ cruzadas, barra inferior, ajuda); a nova S-12 entra entre S-10 e S-11.
 
 ## 5. Web — módulo `sinistros` (5 telas)
 
-| id   | Rota                                             | Conteúdo                                                                                                                               | UC / estado                                  |
-| ---- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| W-01 | `/fiscalizacao/sinistros` (060)                  | lista com filtros (estado, gravidade, município, período, agente), destaque `PENDENTE_COMPLEMENTO`                                     | [JRN-BOAT-004]                               |
-| W-02 | `/fiscalizacao/sinistros/:id` (061)              | abas: dados, veículos, pessoas, vítimas (guardada), condutas, danos/testemunhas, croqui e evidências, AITs/medidas, histórico, RENAEST | qualquer estado                              |
-| W-03 | `/fiscalizacao/sinistros/:id/complementar` (062) | complemento de dados mínimos; validar                                                                                                  | `PENDENTE_COMPLEMENTO → REGISTRADO/VALIDADO` |
-| W-04 | `/fiscalizacao/sinistros/:id/renaest` (063)      | cascata de validação (municipal → estadual → nacional) e situação nacional; transmitir, complementar, corrigir; terminal explicado     | [WF-BOAT-003], [UC-BOAT-009], [UC-BOAT-011]  |
-| W-05 | **novo** `/fiscalizacao/sinistros/titular`       | pedidos do titular (acesso, correção, eliminação) com finalidade e trilha                                                              | [RN-BOAT-126] (UC-BOAT-013 a criar)          |
-| —    | `/tecnico/integracoes?system=renaest`            | fila da outbox RENAEST (compartilhada com o TEAT)                                                                                      | [UC-BOAT-011]                                |
+| id   | Rota                                       | Conteúdo                                                                                                                               | UC / estado                                  |
+| ---- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| W-01 | `/ux/web/crashes-list` (060)               | lista com filtros (estado, gravidade, município, período, agente), destaque `PENDENTE_COMPLEMENTO`                                     | [JRN-BOAT-004]                               |
+| W-02 | `/ux/web/crash-detail` (061)               | abas: dados, veículos, pessoas, vítimas (guardada), condutas, danos/testemunhas, croqui e evidências, AITs/medidas, histórico, RENAEST | qualquer estado                              |
+| W-03 | `/ux/web/crash-complement` (062)           | complemento de dados mínimos; validar                                                                                                  | `PENDENTE_COMPLEMENTO → REGISTRADO/VALIDADO` |
+| W-04 | `/ux/web/renaest-integration` (063)        | cascata de validação (municipal → estadual → nacional) e situação nacional; transmitir, complementar, corrigir; terminal explicado     | [WF-BOAT-003], [UC-BOAT-009], [UC-BOAT-011]  |
+| W-05 | **novo** `/fiscalizacao/sinistros/titular` | pedidos do titular (acesso, correção, eliminação) com finalidade e trilha                                                              | [RN-BOAT-126] (UC-BOAT-013 a criar)          |
+| —    | `/tecnico/integracoes?system=renaest`      | fila da outbox RENAEST (compartilhada com o TEAT)                                                                                      | [UC-BOAT-011]                                |
+
+Os quatro mounts PC-0013 implementam W-01…W-04 diretamente no módulo `sinistros`, sem aliases
+`/fiscalizacao/sinistros*`. O diretório legado `apps/teat/web/src/app/features/crashes/**` não é
+uma segunda implementação: ficou sem consumidores após a integração e deve ser removido pela
+iteração de reconciliação do Engineer da TASK-0010.
 
 ## 6. Componentes
 

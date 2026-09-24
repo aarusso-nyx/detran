@@ -95,7 +95,8 @@ atalho ao app BOAT quando instalado; fora disso, oculto).
 | chrome               | `BodycamIndicator` (não é tela)                                                                                                                                                                                                                                                                                                                                                                                   | [IU-TEAT-001] §C                              |
 
 Total portado: 62 numeradas + 5 complementares + 2 novas (D-01, D-04) + 1 registrada e desligada
-(D-05) + o boundary BOAT S-12 = **71 rotas**, 12 boundaries BOAT e 59 páginas habilitadas.
+(D-05) + o boundary BOAT S-12 = **71 rotas**: 59 entradas não-BOAT, das quais 58 páginas TEAT
+estão habilitadas e D-05 permanece desligada, mais 12 boundaries BOAT.
 
 O módulo BOAT espelha o catálogo runtime de 114 chaves em `BOAT_PT_BR_CATALOG` e o mescla ao
 loader mobile e ao provider web do TEAT. Os 13 marcadores

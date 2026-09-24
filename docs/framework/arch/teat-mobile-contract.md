@@ -217,7 +217,7 @@ MobileIdPort.uuid('sync-batch'), batchSequence: 1 }` antes do POST. Rede,
 5. **Telas, módulos e i18n.** Os oito módulos lazy possuem e exportam suas próprias
    rotas, sem importar, filtrar ou fechar ciclo com `app.routes.ts`; a raiz os
    importa somente por `loadChildren`. Cada rota habilitada instancia o componente
-   daquela linha, nunca um alias ou placeholder comum. Cada uma das 59 páginas TEAT
+   daquela linha, nunca um alias ou placeholder comum. Cada uma das 58 páginas TEAT
    habilitadas não-BOAT executa sua leitura/ação aplicável através de referências ao objeto de
    schema e à instância real do client/store, nunca seus nomes em `string`.
    Páginas cuja ação permanece `source_pending` exibem estado bloqueado e não
@@ -1098,7 +1098,7 @@ produção do Feature Engineer.
 OD-R15-005 registra que S-12 não possui `uxCode` autoritativo publicado; por isso o manifesto
 usa literalmente `source_pending` e não cria `UX-MOB-071`.
 
-### 2.1 Binding comportamental das 59 páginas TEAT habilitadas
+### 2.1 Binding comportamental das 58 páginas TEAT habilitadas
 
 `MobilePageRuntime` não retorna nomes. Ele injeta as instâncias root e devolve uma
 união fechada cujo `schema`, `client` e `store` são objetos executáveis:
@@ -1157,8 +1157,8 @@ stores root já validados. Se qualquer dependência estiver ausente, `submit` re
 `blocked/not-ready` antes de `putDraft`/`putQueueItem`; se a fonte não define a
 operação, retorna `blocked/source_pending`. Nunca persiste string vazia,
 `source_pending` como identidade nem objeto genérico `{ id, payload }`.
-A tabela abaixo é exaustiva para as 59 páginas habilitadas; D-05 é a entrada
-adicional não-BOAT e segue exclusivamente o estado disabled da §1.2:
+A tabela abaixo é exaustiva para as 58 páginas TEAT habilitadas; D-05 completa as 59 entradas
+não-BOAT e segue exclusivamente o estado disabled da §1.2:
 
 | screenIds                                                                                                                                                                  | objeto executável e comportamento mínimo autorizado                                                                                                         |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1282,7 +1282,8 @@ de ErrorBoundary/runtime montada por `app.component.ts`.
 
 Todos os paths desta lista são relativos a `apps/teat/mobile/`; nenhum diretório,
 glob ou arquivo implícito é gravável. A coluna `componente` do manifesto contém
-71 entradas: 59 paths de páginas TEAT distintas e doze classes boundary no único
+71 entradas: 59 paths de entradas não-BOAT distintas — 58 páginas habilitadas e D-05 desligada —
+e doze classes boundary no único
 path `features/sinistro/sinistro.routes.ts`. Não existe
 `features/sinistro/pages/*.page.ts`; os nomes de classe após `#` não criam paths
 adicionais. Isso é parte desta allowlist, não autorização por `features/`.
@@ -1297,7 +1298,7 @@ adicionais. Isso é parte desta allowlist, não autorização por `features/`.
 | shared de campo                | `src/app/shared/mobile-page.component.ts`; `src/app/shared/mobile-printer.port.ts`; `src/app/shared/paired-value.component.ts`; `src/app/shared/closed-enum-picker.component.ts`; `src/app/shared/proposed-value-field.component.ts`; `src/app/shared/outcome-selector.component.ts`; `src/app/shared/evidence-capture.component.ts`; `src/app/shared/signature-capture.component.ts`; `src/app/shared/location-field.component.ts`; `src/app/shared/framing-picker.component.ts`; `src/app/shared/validation-panel.component.ts`; `src/app/shared/printer-dialog.component.ts`; `src/app/shared/queue-item-card.component.ts`; `src/app/shared/conflict-resolver.component.ts`; `src/app/shared/device-handoff-form.component.ts`; `src/app/shared/term-preview.component.ts` |
 | catálogo de runtime            | `src/app/i18n/teat.pt-BR.json`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | schemas locais                 | os 14 paths completos da primeira coluna da tabela §3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| páginas TEAT                   | os 59 paths completos não-BOAT da coluna `componente` do manifesto §2, sem `#Component`; as doze classes BOAT pertencem ao path já listado `src/app/features/sinistro/sinistro.routes.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| entradas não-BOAT              | os 59 paths completos da coluna `componente` do manifesto §2, sem `#Component`: 58 páginas TEAT habilitadas e D-05 desligada; as doze classes BOAT pertencem ao path já listado `src/app/features/sinistro/sinistro.routes.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 O handoff do Scaffold para o Feature Engineer transfere explicitamente
 `src/main.ts`, `src/app/app.component.ts` e `src/app/app.routes.ts`; nenhuma outra
