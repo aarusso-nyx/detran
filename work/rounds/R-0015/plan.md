@@ -207,6 +207,12 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
 
 ## Triagem
 
+- `plant-bug` — o primeiro `pnpm check` integral de CTG-0002 passou os gates estruturais, backend,
+  typecheck e TEAT mobile, mas falhou no teste integral TEAT web: as páginas reais de `sinistros`
+  não preservaram `role="status"` para a11y nem os metadados `extension: BOAT`/
+  `sseDeniedReason: source_pending` de W-04; TASK-0010 sobe de Luna/médio para Luna/alto na terceira
+  iteração. O mesmo gate revelou `app.homologation.spec.ts` ainda pinado ao outlet provisório; esse
+  teste está fora da fronteira vigente do Inspector e permanece isolado para decisão humana.
 - `sensor-error` — a checagem focada pós-review passou `05-parameters.sql` diretamente ao
   Prettier, que não possui parser SQL neste repositório. O arquivo é gerado e foi validado por
   `parameters:generate`/`verify:parameter-catalogue`; a repetição correta exclui o SQL da chamada

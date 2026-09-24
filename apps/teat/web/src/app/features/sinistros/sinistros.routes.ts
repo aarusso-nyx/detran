@@ -43,6 +43,8 @@ const route = (
     page: component.name,
     boat: true,
     sse,
+    extension: 'BOAT',
+    sseDeniedReason: sse ? 'source_pending' : undefined,
     purpose: contextual,
     audit: contextual,
     actionAllowedRoles:

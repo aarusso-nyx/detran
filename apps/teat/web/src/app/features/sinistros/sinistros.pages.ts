@@ -15,7 +15,7 @@ export class SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p>{{ translate('boat.screens.sinistros.ready') }}</p>
+    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,7 +28,7 @@ export class CrashesListPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p>{{ translate('boat.screens.sinistros.ready') }}</p>
+    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -41,7 +41,7 @@ export class CrashDetailPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p>{{ translate('boat.screens.sinistros.ready') }}</p>
+    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -54,7 +54,7 @@ export class CrashComplementPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p>{{ translate('boat.screens.sinistros.ready') }}</p>
+    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -67,7 +67,7 @@ export class RenaestIntegrationPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p>{{ translate('boat.screens.sinistros.ready') }}</p>
+    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
