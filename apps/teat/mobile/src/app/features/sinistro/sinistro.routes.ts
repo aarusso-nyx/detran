@@ -1,9 +1,11 @@
 import { NgComponentOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Directive,
   inject,
+  PendingTasks,
   type OnInit,
   signal,
   type Type,
@@ -29,12 +31,17 @@ abstract class BoatRouteBoundary implements OnInit {
   readonly externalComponent = signal<Type<unknown> | null>(null);
   protected abstract readonly routePath: string;
   private readonly extension = inject(TEAT_BOAT_EXTENSION);
+  private readonly changeDetector = inject(ChangeDetectorRef);
+  private readonly pendingTasks = inject(PendingTasks);
 
   ngOnInit(): void {
-    void resolveBoatRoute(this.routePath, this.extension).then((result) => {
-      if (result.kind === 'loaded' && typeof result.component === 'function') {
-        this.externalComponent.set(result.component as Type<unknown>);
+    void this.pendingTasks.run(async () => {
+      const result = await resolveBoatRoute(this.routePath, this.extension);
+      if (result.kind !== 'loaded' || typeof result.component !== 'function') {
+        return;
       }
+      this.externalComponent.set(result.component as Type<unknown>);
+      this.changeDetector.detectChanges();
     });
   }
 }
@@ -147,6 +154,17 @@ export class CrashEvidenceBoundaryComponent extends BoatRouteBoundary {
 })
 export class CrashAitLinksBoundaryComponent extends BoatRouteBoundary {
   protected readonly routePath = 'crash-ait-links';
+}
+
+@Component({
+  selector: 'teat-crash-damages-boundary',
+  standalone: true,
+  imports: [NgComponentOutlet],
+  template: '<ng-container *ngComponentOutlet="externalComponent()" />',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CrashDamagesBoundaryComponent extends BoatRouteBoundary {
+  protected readonly routePath = 'crash-damages';
 }
 
 @Component({
@@ -290,6 +308,19 @@ export const SINISTRO_ROUTES: Routes = [
       boatExtension: true,
     },
     async () => CrashAitLinksBoundaryComponent,
+  ),
+  teatRoute(
+    {
+      path: 'crash-damages',
+      uxCode: 'source_pending',
+      sourceSheet: 'IU-BOAT-S-12.md',
+      guardPlan: 'B+S, BOAT',
+      allowedRoles: ['field-agent', 'field-supervisor'],
+      component:
+        'features/sinistro/sinistro.routes.ts#CrashDamagesBoundaryComponent',
+      boatExtension: true,
+    },
+    async () => CrashDamagesBoundaryComponent,
   ),
   teatRoute(
     {

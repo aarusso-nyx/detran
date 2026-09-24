@@ -17,7 +17,7 @@ async function concreteRoutes() {
 
 it('dado cada rota concreta quando os guardas são registrados então preservam entrada pública e auth, tenant, papel, readiness e turno nesta ordem', async () => {
   const routes = await concreteRoutes();
-  expect(routes).toHaveLength(70);
+  expect(routes).toHaveLength(71);
   for (const route of routes) {
     if (route.data?.['featureEnabled'] === false) {
       expect(route.canMatch).toBeUndefined();

@@ -286,9 +286,9 @@ describe('manifesto TEAT Web independente', () => {
     http.verify();
   });
 
-  it('dado o contrato do Architect quando o manifesto é carregado então existem exatamente 60 rotas', () => {
-    expect(TEAT_WEB_ROUTE_FIXTURE).toHaveLength(60);
-    expect(actualByPath.size).toBe(60);
+  it('dado o contrato do Architect quando o manifesto é carregado então existem exatamente 61 rotas', () => {
+    expect(TEAT_WEB_ROUTE_FIXTURE).toHaveLength(61);
+    expect(actualByPath.size).toBe(61);
     expect([...actualByPath.keys()]).toEqual(
       TEAT_WEB_ROUTE_FIXTURE.map((entry) => entry.path),
     );
@@ -296,7 +296,7 @@ describe('manifesto TEAT Web independente', () => {
 
   it('dada a matriz web quando as fichas são reconciliadas então existem exatamente 56 sheets distintas', () => {
     const productRoutes = TEAT_WEB_ROUTE_FIXTURE.filter(
-      (entry) => entry.sheet !== undefined,
+      (entry) => entry.sheet?.startsWith('IU-TEAT-') === true,
     );
     expect(TEAT_WEB_MATRIX.expectedScreens).toBe(56);
     expect(TEAT_WEB_MATRIX.screens).toHaveLength(56);

@@ -3,7 +3,7 @@ id: ARCH-TEAT-FRONTENDS
 title: apps/teat/mobile e apps/teat/web — especificação completa dos frontends do TEAT (módulos, telas, navegação, componentes, jornadas, ações)
 status: draft
 apps: [teat]
-updated: 2026-09-22
+updated: 2026-09-24
 ---
 
 # Frontends do TEAT — talão eletrônico de campo e retaguarda
@@ -95,7 +95,12 @@ atalho ao app BOAT quando instalado; fora disso, oculto).
 | chrome               | `BodycamIndicator` (não é tela)                                                                                                                                                                                                                                                                                                                                                                                   | [IU-TEAT-001] §C                              |
 
 Total portado: 62 numeradas + 5 complementares + 2 novas (D-01, D-04) + 1 registrada e desligada
-(D-05) = **70 rotas**, 11 delas do BOAT.
+(D-05) + o boundary BOAT S-12 = **71 rotas**: 59 entradas não-BOAT, das quais 58 páginas TEAT
+estão habilitadas e D-05 permanece desligada, mais 12 boundaries BOAT.
+
+O módulo BOAT espelha o catálogo runtime de 114 chaves em `BOAT_PT_BR_CATALOG` e o mescla ao
+loader mobile e ao provider web do TEAT. Os 13 marcadores
+`source_pending:OD-R15-004` permanecem bloqueados como tradução e nunca são exibidos como texto.
 
 ### 4.1 Navegação (máquina de estados como rotas)
 

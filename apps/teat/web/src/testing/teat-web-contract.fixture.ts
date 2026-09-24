@@ -25,6 +25,7 @@ export interface TeatWebRouteFixture {
   readonly module: string;
   readonly sse: boolean;
   readonly titleKey?: string;
+  readonly h1TitleKey?: string;
 }
 
 interface WebMatrix {
@@ -87,6 +88,17 @@ function parseGuards(value: string): readonly string[] {
   return value.split('→').map((guard) => guard.trim());
 }
 
+function parseTitleKeys(
+  value: string,
+): Readonly<{ titleKey?: string; h1TitleKey?: string }> {
+  const normalized = unquote(value);
+  if (normalized.includes('source_pending')) return {};
+  const split = normalized.match(/^data:\s*([^;]+);\s*h1:\s*(.+)$/);
+  return split?.[1] !== undefined && split[2] !== undefined
+    ? { titleKey: split[1].trim(), h1TitleKey: split[2].trim() }
+    : { titleKey: normalized };
+}
+
 const routeRows = contract
   .split('\n')
   .filter((line) => /^\|\s+`(?:\/|\*\*)/.test(line));
@@ -112,9 +124,7 @@ export const TEAT_WEB_ROUTE_FIXTURE: readonly TeatWebRouteFixture[] =
       client: unquote(cells[4] ?? ''),
       module: unquote(cells[6] ?? ''),
       sse: unquote(cells[7] ?? '') === 'sim',
-      ...((cells[5] ?? '').includes('source_pending')
-        ? {}
-        : { titleKey: unquote(cells[5] ?? '') }),
+      ...parseTitleKeys(cells[5] ?? ''),
     };
   });
 
@@ -144,9 +154,21 @@ export const TEAT_WEB_SSE_TOPICS_BY_PATH = Object.fromEntries(
   ]),
 ) as Readonly<Record<string, readonly string[]>>;
 
-export const TEAT_WEB_I18N = JSON.parse(
+const TEAT_I18N = JSON.parse(
   readFileSync(
     resolve(repositoryRoot, 'docs/framework/arch/i18n/teat.pt-BR.json'),
     'utf8',
   ),
 ) as Readonly<Record<string, string>>;
+const BOAT_I18N = JSON.parse(
+  readFileSync(
+    resolve(repositoryRoot, 'docs/framework/arch/i18n/boat.pt-BR.json'),
+    'utf8',
+  ),
+) as Readonly<Record<string, string>>;
+
+// Runtime merge: BOAT keys remain byte-identical, including source_pending markers.
+export const TEAT_WEB_I18N = {
+  ...TEAT_I18N,
+  ...BOAT_I18N,
+} as Readonly<Record<string, string>>;

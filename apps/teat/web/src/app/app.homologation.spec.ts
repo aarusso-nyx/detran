@@ -834,12 +834,15 @@ describe('ADR-0033 — jornadas web navegáveis sem sessão OIDC ou backend real
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain(
-      'source_pending · BOAT',
-    );
+    expect(
+      (fixture.nativeElement.querySelector('main h1') as HTMLElement | null)
+        ?.textContent,
+    ).toContain('boat.screens.crash_list.title');
+    expect(fixture.nativeElement.textContent).not.toContain('source_pending');
     expect(fixture.nativeElement.textContent).not.toContain(
       'homologation-demo-record',
     );
+    await expectTeatA11yState(fixture.nativeElement as HTMLElement);
     expect(
       TestBed.inject(HttpTestingController).match(() => true),
     ).toHaveLength(0);

@@ -1,11 +1,11 @@
 {
   "round": "R-0015",
-  "window": 1,
+  "window": 3,
   "window_input_budget": 800000,
   "checkpoint_threshold": 640000,
-  "estimated_input_total": 795000,
-  "estimated_output_total": 145000,
-  "note": "Tokens únicos estimados. Janela 1: maestro GPT-5.6 Sol, sete workers Terra/Luna nativos, reviewer claude opus pela ponte. O delivery-review exigiu um ciclo de correção e uma escalada Luna média; o limiar de checkpoint foi cruzado e a janela para ao fim do CTG-0001. CTG-0002 fica fora até R-0013 CTG-0004.",
+  "estimated_input_total": 1160000,
+  "estimated_output_total": 215000,
+  "note": "Tokens únicos estimados. Janela 1: 795k entrada e 145k saída; encerrou após CTG-0001. Janela 2: scaffold, integração PC-0013 e prompt-review-5 FAIL exaustivo; checkpoint antes dos workers. Janela 3: correções A3/A4 e execução CTG-0002 autorizada. Maestro GPT-5.6 Sol, workers Terra/Luna e reviewer claude opus pela ponte.",
   "entries": [
     {
       "kind": "maestro-planning",
@@ -126,6 +126,86 @@
       "input_tokens": 35000,
       "output_tokens": 7000,
       "note": "Segundo e último ciclo, restrito aos achados corrigidos; inclui retry da mesma invocação após a ponte recusar objeto inteiro em base64."
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "window2-resume+r0013-integration",
+      "model": "gpt-5.6-sol",
+      "input_tokens": 60000,
+      "output_tokens": 10000,
+      "note": "Revalidação de R-0013/PC-0013, merge de origin/main, reconciliação da cadeia e audit observe EV-ae5f871a64e2c6d8; atualização do plano e contrato antes do scaffold."
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "window2-scaffold+prompts-0008..0011",
+      "model": "gpt-5.6-sol",
+      "input_tokens": 95000,
+      "output_tokens": 18000,
+      "note": "Scaffold @detran/boat-mobile, pnpm install, baseline, migração mecânica do harness pelo Inspector e quatro prompts."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-5",
+      "model": "claude-opus",
+      "input_tokens": 45000,
+      "output_tokens": 12000,
+      "note": "Primeiro ciclo CTG-0002 exaustivo: FAIL com 10 high e 7 low; revelou contagens e contratos pinados de PC-0013 sem dono."
+    },
+    {
+      "kind": "maestro-planning",
+      "id": "window3-a3+a4+prompt-corrections",
+      "model": "gpt-5.6-sol",
+      "input_tokens": 65000,
+      "output_tokens": 12000,
+      "note": "Checkpoint de janela; A3/A4, TASK-0012 Architect, serialização dos Engineers, dependências workspace e correção integral dos 17 achados."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-6",
+      "model": "claude-opus",
+      "input_tokens": 25000,
+      "output_tokens": 5000,
+      "note": "Ciclo 2 restrito: FAIL; 16/17 achados resolvidos, residual único no spec web de runtime sem dono; escalado ao humano conforme §5."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-7",
+      "model": "claude-opus",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Terceiro ciclo excepcional autorizado pelo Owner, restrito ao residual único da fronteira do Inspector sobre app.runtime-foundations.spec.ts; primeira saída inválida por leitura fora da lista fechada, repetição válida PASS sem findings."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-8",
+      "model": "claude-opus",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Quarto ciclo excepcional autorizado pelo Owner, restrito ao residual único de app.homologation.spec.ts e sua fronteira na TASK-0008."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002",
+      "model": "claude-opus",
+      "input_tokens": 75000,
+      "output_tokens": 12000,
+      "note": "Primeiro ciclo exaustivo da entrega CTG-0002 após hard gate integral verde."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-2",
+      "model": "claude-opus",
+      "input_tokens": 45000,
+      "output_tokens": 8000,
+      "note": "Segundo e último ciclo, restrito ao fechamento dos 16 findings do primeiro delivery-review CTG-0002."
+    },
+    {
+      "kind": "projected",
+      "id": "window3-ctg0002-delivery",
+      "model": "terra+luna+claude-opus",
+      "input_tokens": 75000,
+      "output_tokens": 13000,
+      "note": "Reserva para prompt-review restrito, cinco workers, delivery-review, gates e fechamento; valores serão substituídos pelos reais."
     }
   ]
 }

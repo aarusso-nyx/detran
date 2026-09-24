@@ -3,7 +3,7 @@ id: ARCH-TEAT-MOBILE-CONTRACT
 title: Contrato executável do aplicativo móvel TEAT
 status: draft
 apps: [teat]
-updated: 2026-09-23
+updated: 2026-09-24
 ---
 
 # Contrato executável do aplicativo móvel TEAT
@@ -20,7 +20,7 @@ As cláusulas abaixo prevalecem sobre qualquer positivo anterior de finalizaçã
 produtiva neste documento. R-0013 não entrega app de campo. O perfil produtivo
 continua fail-closed sem E2, localização real, validador agregado e serviços
 institucionais; o futuro round dedicado está nas issues #108–#112. Não reduzir
-70 rotas, 576 transições, RBAC, acessibilidade, estados ou os gates integrais.
+71 rotas, 576 transições, RBAC, acessibilidade, estados ou os gates integrais.
 
 O token opcional `TEAT_HOMOLOGATION_AIT` é **ausente por padrão** e sua interface
 fechada é `HomologationAitPort { profile: 'homologation'; start(input?,
@@ -924,6 +924,7 @@ interface BoatExtensionPort {
   load(route: string): Promise<unknown>;
 }
 export const TEAT_BOAT_EXTENSION: InjectionToken<BoatExtensionPort>;
+export const BOAT_PT_BR_CATALOG: Readonly<Record<string, string>>;
 type BoatRouteResolution =
   | Readonly<{ kind: 'loaded'; component: unknown }>
   | Readonly<{ kind: 'unavailable' }>;
@@ -957,6 +958,11 @@ não pode ser declarada pronta nem receber texto/`aria-label` inventado antes de
 chave ser aprovada. O gate deve falhar fechado nesse ponto em vez de contar um
 container vazio como fallback acessível.
 
+O catálogo `src/app/i18n/boat.pt-BR.json` é espelhado byte a byte pela biblioteca BOAT como
+`BOAT_PT_BR_CATALOG` e mesclado ao loader mobile e ao provider web do TEAT sem substituir chaves.
+As 13 chaves com valor `source_pending:OD-R15-004` permanecem bloqueadas e nunca são exibidas
+como tradução.
+
 `PrinterDialog` chama o `MobilePrinterPort.printReceipt` real de
 `@stynx-nyx/mobile-runtime` com `session`, `draft` e `contentHash`, persiste o
 `MobilePrintReceipt` em `print-receipt` e chama
@@ -968,7 +974,7 @@ chave de evento e o mesmo `aitId`/número, sem criar AIT. Um adapter de Inspecto
 implementa a interface exata e um teste de integração usa o provider de produção;
 objeto com método ad hoc `print(aitId)` não satisfaz o oráculo.
 
-`resolveBoatRoute` aceita somente os onze paths `crash-*` do manifesto. Para path
+`resolveBoatRoute` aceita somente os doze paths `crash-*` do manifesto. Para path
 fora desse conjunto devolve `{ kind: 'unavailable' }` sem chamar `installed` ou
 `load`; para path BOAT com `installed() === false`, devolve o mesmo resultado sem
 chamar `load`; somente para BOAT instalado chama `load(path)` uma vez e devolve
@@ -1005,7 +1011,7 @@ Como a chave i18n acessível desses dois estados permanece `source_pending`, o
 Inspector mantém o caso RED/blocked para apresentação acessível até a decisão de
 produto; ele ainda prova agora que não houve load, comando, placeholder ou literal.
 
-## 2. Manifesto de 70 rotas
+## 2. Manifesto de 71 rotas
 
 `allowedRoles` é o conjunto completo permitido em cada linha; todos os demais
 papéis canônicos de `TEAT_STAFF_ROLES` são negados. Nas duas entradas `E`, o rol é
@@ -1075,6 +1081,7 @@ produção do Feature Engineer.
 | `/crash-sketch`          | `UX-MOB-067`     | `IU-TEAT-crash-sketch.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashSketchBoundaryComponent`                       |
 | `/crash-evidence`        | `UX-MOB-068`     | `IU-TEAT-crash-evidence.md`        | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashEvidenceBoundaryComponent`                     |
 | `/crash-ait-links`       | `UX-MOB-069`     | `IU-TEAT-crash-ait-links.md`       | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashAitLinksBoundaryComponent`                     |
+| `/crash-damages`         | `source_pending` | `IU-BOAT-S-12.md`                  | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashDamagesBoundaryComponent`                      |
 | `/crash-review`          | `UX-MOB-070`     | `IU-TEAT-crash-review.md`          | B+S, BOAT     | `field-agent`, `field-supervisor` | `features/sinistro/sinistro.routes.ts#CrashReviewBoundaryComponent`                       |
 | `/sync`                  | `UX-MOB-080`     | `IU-TEAT-sync.md`                  | B+S           | `field-agent`, `field-supervisor` | `features/sincronizacao/pages/sync.page.ts#SyncPageComponent`                             |
 | `/sync-item`             | `UX-MOB-081`     | `IU-TEAT-sync-item.md`             | B+S           | `field-agent`, `field-supervisor` | `features/sincronizacao/pages/sync-item.page.ts#SyncItemPageComponent`                    |
@@ -1087,6 +1094,9 @@ produção do Feature Engineer.
 | `/special-inspection`    | `UX-MOB-C03`     | `IU-TEAT-special-inspection.md`    | B+S           | `field-agent`, `field-supervisor` | `features/complementares/pages/special-inspection.page.ts#SpecialInspectionPageComponent` |
 | `/context-help`          | `UX-MOB-C04`     | `IU-TEAT-context-help.md`          | R             | `field-agent`, `field-supervisor` | `features/complementares/pages/context-help.page.ts#ContextHelpPageComponent`             |
 | `/local-settings`        | `UX-MOB-C05`     | `IU-TEAT-local-settings.md`        | B             | `field-agent`, `field-supervisor` | `features/complementares/pages/local-settings.page.ts#LocalSettingsPageComponent`         |
+
+OD-R15-005 registra que S-12 não possui `uxCode` autoritativo publicado; por isso o manifesto
+usa literalmente `source_pending` e não cria `UX-MOB-071`.
 
 ### 2.1 Binding comportamental das 58 páginas TEAT habilitadas
 
@@ -1147,8 +1157,8 @@ stores root já validados. Se qualquer dependência estiver ausente, `submit` re
 `blocked/not-ready` antes de `putDraft`/`putQueueItem`; se a fonte não define a
 operação, retorna `blocked/source_pending`. Nunca persiste string vazia,
 `source_pending` como identidade nem objeto genérico `{ id, payload }`.
-A tabela abaixo é exaustiva para as 58 páginas habilitadas; D-05 é a 59ª
-entrada não-BOAT e segue exclusivamente o estado disabled da §1.2:
+A tabela abaixo é exaustiva para as 58 páginas TEAT habilitadas; D-05 completa as 59 entradas
+não-BOAT e segue exclusivamente o estado disabled da §1.2:
 
 | screenIds                                                                                                                                                                  | objeto executável e comportamento mínimo autorizado                                                                                                         |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1272,7 +1282,8 @@ de ErrorBoundary/runtime montada por `app.component.ts`.
 
 Todos os paths desta lista são relativos a `apps/teat/mobile/`; nenhum diretório,
 glob ou arquivo implícito é gravável. A coluna `componente` do manifesto contém
-70 entradas: 59 paths de páginas TEAT distintas e onze classes boundary no único
+71 entradas: 59 paths de entradas não-BOAT distintas — 58 páginas habilitadas e D-05 desligada —
+e doze classes boundary no único
 path `features/sinistro/sinistro.routes.ts`. Não existe
 `features/sinistro/pages/*.page.ts`; os nomes de classe após `#` não criam paths
 adicionais. Isso é parte desta allowlist, não autorização por `features/`.
@@ -1287,7 +1298,7 @@ adicionais. Isso é parte desta allowlist, não autorização por `features/`.
 | shared de campo                | `src/app/shared/mobile-page.component.ts`; `src/app/shared/mobile-printer.port.ts`; `src/app/shared/paired-value.component.ts`; `src/app/shared/closed-enum-picker.component.ts`; `src/app/shared/proposed-value-field.component.ts`; `src/app/shared/outcome-selector.component.ts`; `src/app/shared/evidence-capture.component.ts`; `src/app/shared/signature-capture.component.ts`; `src/app/shared/location-field.component.ts`; `src/app/shared/framing-picker.component.ts`; `src/app/shared/validation-panel.component.ts`; `src/app/shared/printer-dialog.component.ts`; `src/app/shared/queue-item-card.component.ts`; `src/app/shared/conflict-resolver.component.ts`; `src/app/shared/device-handoff-form.component.ts`; `src/app/shared/term-preview.component.ts` |
 | catálogo de runtime            | `src/app/i18n/teat.pt-BR.json`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | schemas locais                 | os 14 paths completos da primeira coluna da tabela §3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| páginas TEAT                   | os 59 paths completos não-BOAT da coluna `componente` do manifesto §2, sem `#Component`; as onze classes BOAT pertencem ao path já listado `src/app/features/sinistro/sinistro.routes.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| entradas não-BOAT              | os 59 paths completos da coluna `componente` do manifesto §2, sem `#Component`: 58 páginas TEAT habilitadas e D-05 desligada; as doze classes BOAT pertencem ao path já listado `src/app/features/sinistro/sinistro.routes.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 O handoff do Scaffold para o Feature Engineer transfere explicitamente
 `src/main.ts`, `src/app/app.component.ts` e `src/app/app.routes.ts`; nenhuma outra
@@ -1307,7 +1318,8 @@ classe/interface pública necessária já pertence a path da allowlist.
 
 ## 6. Oráculos obrigatórios para implementação
 
-1. O manifesto contém exatamente 70 linhas de rota; 67 têm uxCode da matriz, D-01
+1. O manifesto contém exatamente 71 linhas de rota; S-12 usa `source_pending` e
+   `IU-BOAT-S-12.md`, sem UX-MOB-071; D-01
    é `source_pending`, D-04 é `D-04` e D-05 é `D-05` desligada.
 2. O oráculo cartesiano é `for each route × TEAT_STAFF_ROLES`: permitir somente
    `allowedRoles` da linha e negar todos os omitidos; em `sync-conflict`, o

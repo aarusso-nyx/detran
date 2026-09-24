@@ -27,7 +27,8 @@ Papel: Architect (transcrição).
 
 ## Papéis, finalidade e auditoria
 
-- Papéis: OD-R15-002 (papéis não fechados).
+- Papéis: `field-supervisor`, `processing-operator`, `traffic-authority`, `agency-admin`, conforme
+  a rota `crashes-list` publicada por PC-0013 e incorporada pela Adenda A2 de R-0015.
 - Abertura e ações sensíveis exigem trilha de auditoria; não há elevação implícita.
 
 ## Dados e campos
@@ -76,5 +77,6 @@ Papel: Architect (transcrição).
 
 - Correspondência exigida: manifesto → ficha → rota → gate → navegação → chaves i18n.
 - Fontes reais: [IU-BOAT-001], boat-frontends.md §5.
-- Proposta: OD-R15-002 (papéis não fechados), sem decisão; screenId/rota não são proposta.
+- OD-R15-002 encerrada pela Adenda A2 de R-0015: PC-0013 publicou a matriz de quatro papéis acima;
+  `screenId` e rota já eram canônicos.
 - Lacunas não resolvidas permanecem como OD-R15 propostas, sem valor inventado.

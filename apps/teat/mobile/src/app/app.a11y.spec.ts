@@ -3,6 +3,7 @@ import type { Type } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { StynxSessionService } from '@stynx-nyx/angular-auth';
 import { StynxI18nService } from '@stynx-nyx/angular-i18n';
+import { createBoatExtension } from '@detran/boat-mobile';
 import { expect, it } from 'vitest';
 import { AitClient } from './data/api/ait.client';
 import { AlcoholClient } from './data/api/alcohol.client';
@@ -20,8 +21,8 @@ import {
   type TeatRouteFixture,
 } from '../testing/route-contract.fixture';
 import { expectTeatA11yState } from '../testing/a11y-state.spec-helper';
-import { readMobileProductionSource } from '../testing/mobile-source';
 import { loadConcreteRoutes } from '../testing/concrete-routes';
+import { TEAT_BOAT_EXTENSION } from './navigation/guards/readiness.guard';
 
 const FORM_SCREENS = new Set([
   'open-shift',
@@ -100,17 +101,23 @@ for (const expected of TEAT_ROUTE_FIXTURE) {
       expect(route?.loadComponent).toBeUndefined();
     });
   } else if (BOAT_ROUTE_PATHS.includes(expected.path)) {
-    it(`dada /${expected.path} BOAT sem extensão local quando verificada então preserva loader boundary e não importa placeholder`, async () => {
+    it(`dada /${expected.path} BOAT quando montada pelo boundary real então mantém invariantes a11y e axe`, async () => {
       const route = (await loadConcreteRoutes()).find(
         (candidate) => candidate.path === expected.path,
       );
       expect(route?.data).toMatchObject({ boatExtension: true });
       expect(route?.loadComponent).toBeTypeOf('function');
-      const source = readMobileProductionSource(
-        'features/sinistro/sinistro.routes.ts',
-      );
-      expect(source).not.toContain('./features/sinistro/pages/');
-      expect(source).not.toMatch(/<[^>]*>\s*TEAT\s*<\//);
+      const component = (await route?.loadComponent?.()) as Type<unknown>;
+      const fixture = TestBed.configureTestingModule({
+        imports: [component],
+        providers: [
+          { provide: TEAT_BOAT_EXTENSION, useFactory: createBoatExtension },
+        ],
+      }).createComponent(component);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      await expectTeatA11yState(fixture.nativeElement as HTMLElement);
     });
   } else {
     it(`dada /${expected.path} quando renderizada então mantém invariantes a11y e axe`, async () => {

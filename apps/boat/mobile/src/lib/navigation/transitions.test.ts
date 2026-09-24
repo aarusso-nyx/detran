@@ -1,7 +1,6 @@
-import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { test } from 'node:test';
+import { expect, it } from 'vitest';
 
 import { crashDamagesTransitions, transitions } from './transitions.js';
 
@@ -55,37 +54,33 @@ const implementationTransitions = transitions as readonly Transition[];
 const implementationDamagesTransitions =
   crashDamagesTransitions as readonly Transition[];
 
-test('dado a matriz mobile quando extraio o grupo sinistros então preservo as 149 linhas na ordem', () => {
-  assert.equal(expectedTransitions.length, 149);
-  assert.deepEqual(implementationTransitions, expectedTransitions);
-  assert.equal(implementationTransitions.length, 149);
+it('dado a matriz mobile quando extraio o grupo sinistros então preservo as 149 linhas na ordem', () => {
+  expect(expectedTransitions.length).toBe(149);
+  expect(implementationTransitions).toEqual(expectedTransitions);
+  expect(implementationTransitions.length).toBe(149);
 });
 
-test('dado a união das transições quando conto suas fronteiras então preservo origem, destino e internas', () => {
-  assert.equal(
+it('dado a união das transições quando conto suas fronteiras então preservo origem, destino e internas', () => {
+  expect(
     implementationTransitions.filter(({ from }) => crashScreens.has(from))
       .length,
-    94,
-  );
-  assert.equal(
+  ).toBe(94);
+  expect(
     implementationTransitions.filter(({ to }) => crashScreens.has(to)).length,
-    78,
-  );
-  assert.equal(
+  ).toBe(78);
+  expect(
     implementationTransitions.filter(
       ({ from, to }) => crashScreens.has(from) && crashScreens.has(to),
     ).length,
-    23,
-  );
-  assert.equal(
+  ).toBe(23);
+  expect(
     new Set(
       implementationTransitions.map((transition) => JSON.stringify(transition)),
     ).size,
-    149,
-  );
+  ).toBe(149);
 });
 
-test('dado S-12 quando verifico suas transições aditivas então ela entra entre S-10 e S-11 sem alterar a matriz', () => {
+it('dado S-12 quando verifico suas transições aditivas então ela entra entre S-10 e S-11 sem alterar a matriz', () => {
   const expectedDamagesTransitions: Transition[] = [
     {
       from: 'crash-ait-links',
@@ -105,17 +100,13 @@ test('dado S-12 quando verifico suas transições aditivas então ela entra entr
     },
   ];
 
-  assert.deepEqual(
-    implementationDamagesTransitions,
-    expectedDamagesTransitions,
-  );
-  assert.equal(implementationDamagesTransitions.length, 2);
-  assert.equal(
+  expect(implementationDamagesTransitions).toEqual(expectedDamagesTransitions);
+  expect(implementationDamagesTransitions.length).toBe(2);
+  expect(
     implementationTransitions.some(
       ({ from, to }) => from === 'crash-damages' || to === 'crash-damages',
     ),
-    false,
-  );
+  ).toBe(false);
 });
 
 const screens = [
@@ -367,7 +358,7 @@ const pendingI18nKeys = [
   'boat.errors.BOAT.VERSION_CONFLICT',
 ] as const;
 
-test('dado o catálogo i18n BOAT quando verifico as chaves então preservo exatamente a ordem e as contagens por namespace', () => {
+it('dado o catálogo i18n BOAT quando verifico as chaves então preservo exatamente a ordem e as contagens por namespace', () => {
   const i18n = JSON.parse(
     readFileSync(
       path.join(repoRoot, 'docs/framework/arch/i18n/boat.pt-BR.json'),
@@ -379,13 +370,13 @@ test('dado o catálogo i18n BOAT quando verifico as chaves então preservo exata
     const actual = Object.keys(i18n).filter((key) =>
       key.startsWith(`${namespace}.`),
     );
-    assert.deepEqual(actual, expected);
-    assert.equal(actual.length, expected.length);
+    expect(actual).toEqual(expected);
+    expect(actual.length).toBe(expected.length);
   }
-  assert.equal(Object.keys(i18n).length, 114);
+  expect(Object.keys(i18n).length).toBe(114);
 });
 
-test('dado o catálogo de erros BOAT quando comparo a fonte normativa então os 61 códigos são exatamente iguais', () => {
+it('dado o catálogo de erros BOAT quando comparo a fonte normativa então os 61 códigos são exatamente iguais', () => {
   const i18n = JSON.parse(
     readFileSync(
       path.join(repoRoot, 'docs/framework/arch/i18n/boat.pt-BR.json'),
@@ -399,37 +390,34 @@ test('dado o catálogo de erros BOAT quando comparo a fonte normativa então os 
   const catalogCodes = [...errorCatalog.matchAll(/BOAT\.[A-Z0-9_]+/g)].map(
     ([code]) => `boat.errors.${code}`,
   );
-  assert.deepEqual(
-    [...catalogCodes].sort(),
+  expect([...catalogCodes].sort()).toEqual(
     [...expectedI18nKeys['boat.errors']].sort(),
   );
-  assert.deepEqual(
+  expect(
     Object.keys(i18n).filter((key) => key.startsWith('boat.errors.')),
-    expectedI18nKeys['boat.errors'],
-  );
-  assert.equal(catalogCodes.length, 61);
+  ).toEqual(expectedI18nKeys['boat.errors']);
+  expect(catalogCodes.length).toBe(61);
 });
 
-test('dado o catálogo i18n BOAT quando verifico os valores então há 13 pendências exatas e nenhum valor vazio', () => {
+it('dado o catálogo i18n BOAT quando verifico os valores então há 13 pendências exatas e nenhum valor vazio', () => {
   const i18n = JSON.parse(
     readFileSync(
       path.join(repoRoot, 'docs/framework/arch/i18n/boat.pt-BR.json'),
       'utf8',
     ),
   ) as Record<string, string>;
-  assert.deepEqual(
+  expect(
     Object.keys(i18n).filter((key) => i18n[key].startsWith('source_pending:')),
-    pendingI18nKeys,
-  );
-  assert.equal(pendingI18nKeys.length, 13);
+  ).toEqual(pendingI18nKeys);
+  expect(pendingI18nKeys.length).toBe(13);
   for (const [key, value] of Object.entries(i18n)) {
-    assert.notEqual(value, '');
+    expect(value).not.toBe('');
     if (!pendingI18nKeys.includes(key as (typeof pendingI18nKeys)[number]))
-      assert.doesNotMatch(value, /^source_pending:/);
+      expect(value).not.toMatch(/^source_pending:/);
   }
 });
 
-test('dado as 17 fichas quando verifico identidade rota e i18n então cada par do contrato existe', () => {
+it('dado as 17 fichas quando verifico identidade rota e i18n então cada par do contrato existe', () => {
   const i18n = JSON.parse(
     readFileSync(
       path.join(repoRoot, 'docs/framework/arch/i18n/boat.pt-BR.json'),
@@ -437,7 +425,7 @@ test('dado as 17 fichas quando verifico identidade rota e i18n então cada par d
     ),
   ) as Record<string, string>;
 
-  assert.equal(screens.length, 17);
+  expect(screens.length).toBe(17);
   for (const { id, screenId, proposal, route, slug } of screens) {
     const ficha = readFileSync(
       path.join(
@@ -447,13 +435,13 @@ test('dado as 17 fichas quando verifico identidade rota e i18n então cada par d
       'utf8',
     );
     if (proposal) {
-      assert.equal(screenId, 'source_pending');
-      assert.match(ficha, new RegExp(proposal));
+      expect(screenId).toBe('source_pending');
+      expect(ficha).toMatch(new RegExp(proposal));
     } else {
-      assert.match(ficha, new RegExp(`Identidade: screenId ${screenId}[,.]`));
+      expect(ficha).toMatch(new RegExp(`Identidade: screenId ${screenId}[,.]`));
     }
-    assert.match(ficha, new RegExp(`Rota: ${route.replaceAll('/', '\\/')}`));
-    assert.match(ficha, new RegExp(`Slug/i18n: ${slug}[;.]`));
-    assert.ok(`boat.screens.${slug}.title` in i18n);
+    expect(ficha).toMatch(new RegExp(`Rota: ${route.replaceAll('/', '\\/')}`));
+    expect(ficha).toMatch(new RegExp(`Slug/i18n: ${slug}[;.]`));
+    expect(`boat.screens.${slug}.title` in i18n).toBeTruthy();
   }
 });

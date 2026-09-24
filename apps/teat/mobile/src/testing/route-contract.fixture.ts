@@ -547,6 +547,15 @@ export const TEAT_ROUTE_FIXTURE = [
       'features/sinistro/sinistro.routes.ts#CrashAitLinksBoundaryComponent',
   },
   {
+    path: 'crash-damages',
+    uxCode: 'source_pending',
+    sourceSheet: 'IU-BOAT-S-12.md',
+    guards: 'B+S, BOAT',
+    allowedRoles: ['field-agent', 'field-supervisor'],
+    component:
+      'features/sinistro/sinistro.routes.ts#CrashDamagesBoundaryComponent',
+  },
+  {
     path: 'crash-review',
     uxCode: 'UX-MOB-070',
     sourceSheet: 'IU-TEAT-crash-review.md',

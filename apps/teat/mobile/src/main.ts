@@ -3,6 +3,7 @@ import { ErrorHandler, inject } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideDetranAuthenticatedApp } from '@detran/ui';
+import { BOAT_PT_BR_CATALOG, createBoatExtension } from '@detran/boat-mobile';
 import { AppComponent } from './app/app.component';
 import { TEAT_ROUTES } from './app/app.routes';
 import {
@@ -16,6 +17,7 @@ import {
   TeatErrorHandler,
 } from './app/core/field-shell.component';
 import { ReadinessGateService } from './app/core/readiness-gate.service';
+import { TEAT_BOAT_EXTENSION } from './app/navigation/guards/readiness.guard';
 import { readRuntimeConfig } from './app/core/runtime-config';
 import { MobileBootstrapClient } from './app/data/api/mobile-bootstrap.client';
 import { OpsSnapshotsClient } from './app/data/api/ops-snapshots.client';
@@ -58,7 +60,10 @@ bootstrapApplication(AppComponent, {
       tenancy: { defaultTenantResolver: () => runtime.tenantId },
       i18n: {
         loadCatalog: () =>
-          import('./app/i18n/teat.pt-BR.json').then((module) => module.default),
+          import('./app/i18n/teat.pt-BR.json').then((module) => ({
+            ...module.default,
+            ...BOAT_PT_BR_CATALOG,
+          })),
       },
     }),
     {
@@ -99,6 +104,7 @@ bootstrapApplication(AppComponent, {
     TeatErrorBoundaryState,
     TeatErrorHandler,
     { provide: ErrorHandler, useExisting: TeatErrorHandler },
+    { provide: TEAT_BOAT_EXTENSION, useFactory: createBoatExtension },
     {
       provide: TEAT_MOBILE_ENCRYPTED_STORE,
       useFactory: () => new BrowserEncryptedStoreAdapter(),

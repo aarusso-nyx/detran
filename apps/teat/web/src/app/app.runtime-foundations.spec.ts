@@ -568,7 +568,10 @@ it('F005 dado SSE indisponível quando passam 15 s então usa polling resiliente
       const route = routeByPath.get(expected.path);
       const data = route?.data as Readonly<Record<string, unknown>> | undefined;
       const endpoint = data?.['endpoint'];
-      if (expected.client.includes('source_pending')) {
+      if (
+        data?.['extension'] === 'BOAT' &&
+        data?.['sseDeniedReason'] === 'source_pending'
+      ) {
         expect.soft(data?.['extension']).toBe('BOAT');
         expect.soft(data?.['sseDeniedReason']).toBe('source_pending');
         continue;
@@ -648,9 +651,9 @@ const representativeContracts = [
     response: { result_classification: 'administrativo' },
   },
   {
-    module: 'crashes',
+    module: 'sinistros',
     path: '/ux/web/crashes-list',
-    client: 'source_pending (BOAT)',
+    client: '@detran/boat-mobile',
     endpoint: 'source_pending',
   },
   {
@@ -837,7 +840,7 @@ for (const contract of representativeContracts) {
     const http = TestBed.inject(HttpTestingController);
     const root = fixture.nativeElement as HTMLElement;
     expect(root.querySelector('h1')?.textContent?.trim()).toBe(
-      TEAT_WEB_I18N[representative.titleKey ?? ''],
+      TEAT_WEB_I18N[representative.h1TitleKey ?? representative.titleKey ?? ''],
     );
     expect(root.textContent).not.toContain(representative.titleKey);
     const boat = contract.endpoint === 'source_pending';
@@ -877,8 +880,12 @@ for (const contract of representativeContracts) {
     fixture.detectChanges();
     await fixture.whenStable();
     if (boat) {
-      expect(root.textContent).toContain('source_pending');
-      expect(root.querySelector('a[href], button')).not.toBeNull();
+      expect(root.textContent).not.toContain('source_pending');
+      expect(root.querySelector('h1')?.textContent?.trim()).toBe(
+        TEAT_WEB_I18N[
+          representative.h1TitleKey ?? representative.titleKey ?? ''
+        ],
+      );
     } else if (representative.path === '/ux/web/ait-validation') {
       expect
         .soft(TestBed.inject(StynxI18nService).translate('teat.common.confirm'))
