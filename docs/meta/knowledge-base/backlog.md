@@ -568,13 +568,12 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [x] **R-0011 `dashboard-backend` fechada como `PC-0009`** (2026-09-22; Fable, troca Sol → Fable, Owner 2026-09-21): CTG-0001
       (`BP-DASH-MONITOR-001`, projeções, seeds, gate `verify:domain-boundaries`, PR #83) e CTG-0002 (ciclo do alerta, deveres,
       frescor, exportação, SSE, contratos, PR #87); fechamento PR #88; handoffs OD-D17/D33/D35/D50/D58 no PR #101 (issues #96…#100)
-- [ ] **R-0015 `boat-mobile` em curso (Sol/Codex)**: CTG-0001 (17 fichas, i18n e transições)
-      entrou em `main` pelo PR #107; a dependência de integração dos apps TEAT de R-0013 para
-      CTG-0002 (biblioteca mobile e módulo `sinistros`) foi satisfeita pelo PR #113, sem inferir
-      conclusão do CTG-0002 (updated 2026-09-24)
-- [ ] **Estado da campanha em 2026-09-22**: 12 de 14 rodadas fechadas (R-0003…R-0012,
-      R-0014 e R-0016); R-0013 aguarda a integração e o fechamento final, e R-0015 segue em
-      curso após CTG-0001/PR #107. Depois dessas duas rodadas, a onda de integração real (SSE,
+- [x] **R-0015 `boat-mobile` fechada como `PC-0014` (Sol/Codex)**: CTG-0001 (17 fichas, i18n e
+      transições) entrou em `main` pelo PR #107; CTG-0002 entregou `@detran/boat-mobile`, as 12
+      boundaries BOAT do TEAT mobile e as cinco páginas `sinistros` do TEAT web pelo PR #116,
+      merge `50626da5` e observação `EV-3f6a7b6febe2d92a` (updated 2026-09-24)
+- [x] **Estado da campanha em 2026-09-24**: 14 de 14 rodadas fechadas (R-0003…R-0016).
+      Depois dessas rodadas, a onda de integração real (SSE,
       impressora, provisionamento em dispositivo, homologação RENAEST/SNE/gov.br) e os handoffs
       OD-R12-_, OD-D_, OD-P15/16/17 seguem em `§Handoffs` (updated 2026-09-22)
 - [x] **R-0012 `rait-web` fechada como `PC-0010`** (2026-09-22; Fable): CTG-0001 (63 fichas IU-RAIT-002…064 e manifesto de rotas,
@@ -599,7 +598,7 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
 - [ ] **RAIT-WEB OD-R12-052 — sem comando para iniciar triagem**: `PROTOCOLADO → TRIAGEM_ADMISSIBILIDADE` sem M8; dono Architect (R-0007); fonte `contracts/CTG-0002c.md` §9.2.
 - [ ] **RAIT-WEB OD-R12-054 — facades sem pool/joins/query por órgão**: `QueueFacade`/`SessionFacade` sem `defesa_previa`, joins de relógios/casos e `load*(orgao)`; `claimNext` sem `pool_id`; ratificado como default até R-0007 CTG-0004; dono Architect (R-0007); fonte `reports/TASK-0015.md`; `plan.md` A14.
 - [x] **WP-T1 ops-agency (R-0005)**: agência, modelos ops, deltas inf e fixtures entregues nos CTG-0001/0002 (PRs #40/#41, 2026-09-14), CTG-0003 (PR #42), documentação final (PR #44) e fechamento `PC-0003` em 2026-09-15; `shift.status`, demais vocabulários source-pending e provisioning (R-0013/WP-T5) permanecem roteados a WP-T2+.
-- [x] **R-0015 `boat-mobile` — CTG-0001 entregue e CTG-0002 implementado/revisado no escopo local (2026-09-24)**: TASK-0009 comprovou a biblioteca `@detran/boat-mobile` e sua carga pelo shell TEAT; TASK-0010 comprovou o módulo web `sinistros` e os 14 schemas/15 gates; TASK-0008 revisou rotas, segurança e a11y focal. CTG-0002 ainda não tem PR ou merge nesta entrada. Permanecem fora: hardware real, release de campo e homologação real RENAEST/SNE/gov.br. Handoffs explícitos: `OD-R15-003` (W-05), `OD-R15-004` (13 marcadores `source_pending`) e `OD-R15-005` (uxCode/S-12).
+- [x] **R-0015 `boat-mobile` — CTG-0001 e CTG-0002 integrados (2026-09-24)**: TASK-0009 comprovou a biblioteca `@detran/boat-mobile` e sua carga pelo shell TEAT; TASK-0010 comprovou o módulo web `sinistros` e os 14 schemas/15 gates; TASK-0008 revisou rotas, segurança e a11y focal. PR #116 verde e integrado como `50626da5`. Permanecem fora: hardware real, release de campo e homologação real RENAEST/SNE/gov.br. Handoffs explícitos: `OD-R15-003` (W-05), `OD-R15-004` (13 marcadores `source_pending`), `OD-R15-005` (uxCode/S-12) e `OD-R15-006` (consumidores de portas nativas por tela).
 - [ ] **PORTAL OD-P15 — gov.br real**: credenciais e retorno institucional; dono Architect-backend/Owner; fonte `plan.md` A14 e CTG-0004 §10.
 - [ ] **PORTAL OD-P16 — SNE real**: homologar `SnePort` além do mock; dono Architect-backend; fonte `plan.md` A14 e CTG-0004 §10.
 - [ ] **PORTAL OD-P17 — privacy**: montar `@stynx-nyx/privacy`; dono Architect-backend/Owner; fonte CTG-0004 §10.
