@@ -1,33 +1,32 @@
 {
   "schemaVersion": "2.0.0",
-  "id": "TASK-0011",
+  "id": "TASK-0012",
   "round_id": "R-0015",
   "status": "pending",
   "discipline": "architect",
-  "discipline_specialization": "transcriber-docs",
-  "title": "Registrar execução WP-B4/B5 e a troca de família do maestro",
-  "description": "Após TASK-0009 e TASK-0010, atualizar build pack, frontends, backlog e waves.md com gates reais e a troca Fable para Sol, sem nova decisão.",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Reconciliar contratos TEAT com as extensões BOAT de CTG-0002",
+  "description": "Transcrever S-12, W-05, mounts, papéis, contagens e runtime i18n a partir de A3/A4 antes do Inspector, sem inventar identidades pendentes.",
   "lifecycle": "supported",
-  "target_modules": ["MOD-docs"],
+  "target_modules": ["MOD-teat-boat-integration-contracts"],
   "target_substrates": ["F2"],
   "target_invariants": [],
   "coupled_task_group": "CTG-0002",
   "coupled_pipeline_position": "architect",
-  "upstream_task_id": "TASK-0010",
+  "upstream_task_id": "TASK-0007",
   "db_isolation": "none",
   "iteration_count": 0,
   "max_iterations": 2,
-  "priority": 7,
-  "tags": ["wp-b4", "wp-b5", "ctg-0002"],
+  "priority": 5,
+  "tags": ["wp-b4", "wp-b5", "ctg-0002", "prompt-review-correction"],
   "branch": "orchestra/boat-mobile",
   "worktree_id": "WT-boat-mobile",
-  "prompt_composition_id": "PC-7dc4da577f140ea0",
+  "prompt_composition_id": "PC-b27a698c1a450994",
   "acceptance_commands": [
-    ["pnpm", "format:check"],
     ["pnpm", "docs:kb:check"],
-    ["pnpm", "docs:kb:publish-check"]
+    ["pnpm", "format:check"]
   ],
-  "created_at": "2026-09-22T20:00:00.000Z",
+  "created_at": "2026-09-24T09:00:00.000Z",
   "executor": {
     "kind": "agent",
     "runtime": "codex-cli",
@@ -37,7 +36,7 @@
       "mode": "exact",
       "registry_id": "gpt-5.6-luna"
     },
-    "prompt_composition_id": "PC-7dc4da577f140ea0",
+    "prompt_composition_id": "PC-b27a698c1a450994",
     "max_iterations": 2,
     "capabilities": ["read", "local-write"]
   }

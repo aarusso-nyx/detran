@@ -8,3 +8,11 @@ Workers autorizados: Terra e Luna.
 
 Reviewer autorizado: `claude opus`, pela ponte
 `tools/orchestra/bridge.sh claude`.
+
+## Emenda 1 — retomada após R-0013
+
+Owner Antonio A. Russo informou, em 2026-09-24, que R-0013 foi completada e autorizou prosseguir
+com as ações necessárias até a conclusão de R-0015. A autorização mantém o maestro GPT-5.6 Sol,
+workers Terra/Luna, reviewer `claude opus`, a separação de papéis, um PR por CTG e todos os gates
+do prompt original. Ela não amplia R-0015 para release produtivo de campo, hardware real ou
+homologação real RENAEST/SNE/gov.br.
