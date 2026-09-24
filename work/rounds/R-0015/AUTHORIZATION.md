@@ -26,3 +26,12 @@ permitida nesse spec limita-se a substituir as expectativas provisórias do outl
 páginas reais, preservando ou fortalecendo a cobertura existente de axe, papéis, SSE e ausência
 de fallback. A emenda não autoriza remover casos, relaxar testes, alterar produção nem ampliar o
 escopo do CTG-0002.
+
+## Emenda 3 — residual de homologação e quarto prompt-review
+
+Owner Antonio A. Russo autorizou, em 2026-09-24, a inclusão excepcional de
+`apps/teat/web/src/app/app.homologation.spec.ts` na fronteira de TASK-0008 e a execução de um
+quarto prompt-review restrito somente a esse residual. A mudança permitida nesse spec limita-se
+a atualizar a expectativa do outlet BOAT para a página real, preservando persona, papéis,
+acessibilidade e zero HTTP. A emenda não autoriza remover casos, relaxar testes, alterar produção
+nem ampliar o escopo do CTG-0002.

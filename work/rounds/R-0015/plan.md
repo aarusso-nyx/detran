@@ -213,6 +213,10 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   `sseDeniedReason: source_pending` de W-04; TASK-0010 sobe de Luna/médio para Luna/alto na terceira
   iteração. O mesmo gate revelou `app.homologation.spec.ts` ainda pinado ao outlet provisório; esse
   teste está fora da fronteira vigente do Inspector e permanece isolado para decisão humana.
+- `policy-issue` resolvido — o Owner autorizou pela Emenda 3 a inclusão estrita de
+  `app.homologation.spec.ts` na fronteira de TASK-0008 e um quarto prompt-review somente desse
+  residual. A correção fica limitada à expectativa do outlet BOAT real, preservando persona,
+  papéis, a11y e zero HTTP.
 - `sensor-error` — a checagem focada pós-review passou `05-parameters.sql` diretamente ao
   Prettier, que não possui parser SQL neste repositório. O arquivo é gerado e foi validado por
   `parameters:generate`/`verify:parameter-catalogue`; a repetição correta exclui o SQL da chamada
