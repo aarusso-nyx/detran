@@ -551,13 +551,14 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       `main` pelo PR #69; CTG-0003 fechou comandos, consumidores e timers da infração; CTG-0004 fechou organização,
       arrecadação, integrações, SSE, sete contratos canônicos e clientes gerados. A adoção DEVAI/evidência local foi integrada
       antes do fechamento; os consumidores R-0011/R-0012 podem usar as superfícies publicadas.
-- [ ] **R-0013 `teat-frontends` — integração final pendente**: CTG-0001/PR #70, CTG-0002/PR #73
-      (incluindo 126 fichas, i18n e transições) e CTG-0003/PR #82 estão em `main`. Os candidatos
-      mobile e web e a documentação de CTG-0005 receberam PASS independente anterior,
-      mas a decisão do Owner de 2026-09-23 redefine CTG-0004a/b/5 como **homologação de UI
-      e workflows**, não app de campo (ADR-0033). A adenda exige novos oráculos/gates e
-      review no candidato atual antes da única PR final; nada foi mesclado ou implantado.
-      Produção mobile requer round próprio posterior (R-0017 apenas candidato), nas issues
+- [x] **R-0013 `teat-frontends` fechada como `PC-0013` (2026-09-24)**: CTG-0001/PR #70,
+      CTG-0002/PR #73 (incluindo 126 fichas, i18n e transições), CTG-0003/PR #82 e
+      CTG-0004a/b/5/PR #113 (merge `646c6c28`) estão em `main`. Os seis REDs AIT foram
+      resolvidos na trilha explícita de **homologação de UI e workflows** definida pelo Owner
+      e ADR-0033, com negativos produtivos preservados, review independente PASS e sete
+      checks CI verdes. A observação do merge é `EV-33ead2fd8120f724`; o fechamento não
+      representa app de campo nem implantação. Produção mobile requer round próprio posterior
+      (R-0017 apenas candidato), nas issues
       [#108](https://github.com/aarusso-nyx/detran/issues/108),
       [#109](https://github.com/aarusso-nyx/detran/issues/109),
       [#110](https://github.com/aarusso-nyx/detran/issues/110),
@@ -568,8 +569,9 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
       (`BP-DASH-MONITOR-001`, projeções, seeds, gate `verify:domain-boundaries`, PR #83) e CTG-0002 (ciclo do alerta, deveres,
       frescor, exportação, SSE, contratos, PR #87); fechamento PR #88; handoffs OD-D17/D33/D35/D50/D58 no PR #101 (issues #96…#100)
 - [ ] **R-0015 `boat-mobile` em curso (Sol/Codex)**: CTG-0001 (17 fichas, i18n e transições)
-      entrou em `main` pelo PR #107; CTG-0002 (biblioteca mobile e módulo `sinistros`) depende da
-      integração dos apps TEAT de R-0013 (updated 2026-09-22)
+      entrou em `main` pelo PR #107; a dependência de integração dos apps TEAT de R-0013 para
+      CTG-0002 (biblioteca mobile e módulo `sinistros`) foi satisfeita pelo PR #113, sem inferir
+      conclusão do CTG-0002 (updated 2026-09-24)
 - [ ] **Estado da campanha em 2026-09-22**: 12 de 14 rodadas fechadas (R-0003…R-0012,
       R-0014 e R-0016); R-0013 aguarda a integração e o fechamento final, e R-0015 segue em
       curso após CTG-0001/PR #107. Depois dessas duas rodadas, a onda de integração real (SSE,
