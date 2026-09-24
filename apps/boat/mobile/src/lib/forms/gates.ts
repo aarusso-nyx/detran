@@ -19,9 +19,7 @@ type Gate = Readonly<{ name: string; check(input: unknown): boolean }>;
 const check =
   (schema: { safeParse(value: unknown): { success: boolean } }) =>
   (input: unknown) =>
-    typeof input === 'object' && input !== null && 'valid' in input
-      ? (input as { valid: unknown }).valid === true
-      : schema.safeParse(input).success;
+    schema.safeParse(input).success;
 
 export const BOAT_GATES: readonly Gate[] = [
   { name: 'start', check: check(crashStartSchema) },

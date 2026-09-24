@@ -15,7 +15,10 @@ export class SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
+    <p role="status">
+      {{ translate('boat.legal.photo_scene_not_suffering') }} ·
+      {{ translate('boat.screens.crash_detail.title') }}
+    </p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,7 +31,10 @@ export class CrashesListPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
+    <p role="status">
+      {{ translate('boat.legal.photo_scene_not_suffering') }} ·
+      {{ translate('boat.screens.crash_detail.title') }}
+    </p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -41,7 +47,10 @@ export class CrashDetailPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
+    <p role="status">
+      {{ translate('boat.legal.photo_scene_not_suffering') }} ·
+      {{ translate('boat.screens.crash_detail.title') }}
+    </p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -54,7 +63,10 @@ export class CrashComplementPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
+    <p role="status">
+      {{ translate('boat.legal.photo_scene_not_suffering') }} ·
+      {{ translate('boat.screens.crash_detail.title') }}
+    </p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -67,7 +79,10 @@ export class RenaestIntegrationPage extends SinistroPage {
   standalone: true,
   template: `<main>
     <h1>{{ translate(titleKey) }}</h1>
-    <p role="status">{{ translate('teat.readiness.bootstrap') }}</p>
+    <p role="status">
+      {{ translate('boat.legal.photo_scene_not_suffering') }} ·
+      {{ translate('boat.screens.crash_detail.title') }}
+    </p>
   </main>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
