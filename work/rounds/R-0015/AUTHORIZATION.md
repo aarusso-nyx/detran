@@ -16,3 +16,13 @@ com as ações necessárias até a conclusão de R-0015. A autorização mantém
 workers Terra/Luna, reviewer `claude opus`, a separação de papéis, um PR por CTG e todos os gates
 do prompt original. Ela não amplia R-0015 para release produtivo de campo, hardware real ou
 homologação real RENAEST/SNE/gov.br.
+
+## Emenda 2 — residual do Inspector e terceiro prompt-review
+
+Owner Antonio A. Russo autorizou, em 2026-09-24, a inclusão excepcional de
+`apps/teat/web/src/app/app.runtime-foundations.spec.ts` na fronteira de TASK-0008 e a execução de
+um terceiro prompt-review restrito somente ao residual apontado por `prompt-review-6`. A mudança
+permitida nesse spec limita-se a substituir as expectativas provisórias do outlet BOAT pelas
+páginas reais, preservando ou fortalecendo a cobertura existente de axe, papéis, SSE e ausência
+de fallback. A emenda não autoriza remover casos, relaxar testes, alterar produção nem ampliar o
+escopo do CTG-0002.

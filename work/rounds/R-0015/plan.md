@@ -191,11 +191,11 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
 - `R-0016`: fechado em `main`; seu avanço e o de R-0013 foram integrados pelo merge
   `ffe2606208920c432e74c3f27c41be890e8515d9` e observados como `EV-ae5f871a64e2c6d8`.
 - CTG-0002 está preparado sobre `orchestra/boat-mobile`; o despacho aguarda TASK-0012 e o
-  prompt-review restrito PASS das correções A3/A4.
+  terceiro prompt-review excepcional, restrito ao residual do spec de runtime, com veredito PASS.
 
 ## Bloqueios
 
-- **Escalada humana — prompt-review-6 FAIL (2026-09-24):** após a correção de 16/17 achados, o
+- **Escalada humana resolvida — prompt-review-6 FAIL (2026-09-24):** após a correção de 16/17 achados, o
   único residual é `apps/teat/web/src/app/app.runtime-foundations.spec.ts`, que ainda fixa o outlet
   BOAT `source_pending`, ausência de HTTP e metadados da extensão nas quatro rotas PC-0013. A
   entrega de páginas reais exige que o Inspector possa atualizar somente essas expectativas, sem
@@ -236,8 +236,17 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   os Engineers foram serializados e o segundo ciclo fica restrito aos 17 achados.
 - `prompt-review` ciclo 2 restrito = FAIL — 16/17 achados resolvidos; permaneceu somente o spec web
   de runtime do outlet sem dono. Classificação `policy-issue`: correção mecânica conhecida, mas o
-  §5 do prompt do maestro exige escalada humana antes de alterar fronteira e revisar pela terceira
-  vez.
+  §5 do prompt do maestro exigia escalada humana antes de alterar fronteira e revisar pela terceira
+  vez. O Owner autorizou em 2026-09-24 exatamente a inclusão desse spec na fronteira de TASK-0008
+  e um terceiro prompt-review restrito ao residual. A autorização está registrada na Emenda 2 de
+  `AUTHORIZATION.md`; nenhuma mudança de produto, redução de cobertura ou ampliação de escopo foi
+  autorizada.
+- `sensor-error` — a primeira invocação do ciclo 3 confirmou os cinco pontos autorizados, mas
+  abriu `app.homologation.spec.ts` fora da leitura fechada e emitiu FAIL exclusivamente por essa
+  superfície. O retorno foi preservado como `prompt-review-7-invalid-scope.json`; a repetição do
+  mesmo ciclo reforça a vedação de busca/leitura externa e não amplia a fronteira autorizada.
+- `prompt-review` ciclo 3 excepcional = PASS — a repetição válida ficou restrita ao residual
+  autorizado, confirmou os cinco pontos e encerrou o bloqueio de despacho sem findings.
 
 ## Retomada
 
