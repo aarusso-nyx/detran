@@ -350,6 +350,12 @@ observação pós-merge e fechamento DEVAI.
 - **Triage do gate agregado (2026-09-24):** o teste de scaffold do RAIT preserva seus três
   comandos como sufixo do `check`. Os três gates BOAT foram mantidos e reposicionados
   imediatamente antes desse sufixo; nenhum gate foi removido ou relaxado.
+- **Fechamento (2026-09-24):** CTG-0002 passou o segundo delivery-review restrito sem findings,
+  `pnpm check` e os sete checks do PR #116. Duas falhas de CI do próprio checkpoint foram
+  corrigidas sem alterar produto: formatação do JSON de evidência e build de
+  `@detran/boat-mobile` antes do typecheck dos hosts em checkout limpo. O PR foi integrado como
+  `50626da5967c703a035aff6ce469a3e59511648c` e observado imediatamente pelo Auditor como
+  `EV-3f6a7b6febe2d92a`.
 
 ## Leitura
 
