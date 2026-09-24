@@ -1,5 +1,21 @@
 # R-0013 — frente `teat-frontends` (WP-T4, WP-T5, WP-T6 do TEAT: fichas, formulários, i18n, provisionamento offline e apps mobile/web)
 
+## Fechamento governado — 2026-09-24
+
+R-0013 fechada como **PC-0013** no escopo de homologação de UI/workflows da
+ADR-0033. CTG-0001/0002/0003 foram integrados pelos PRs #70/#73/#82;
+CTG-0004a/0004b/0005 pelo PR #113, merge
+`646c6c2897f1dff275ebe513dfa15f62d5a2befb`. Os seis REDs AIT foram
+resolvidos somente na trilha de homologação, com os negativos de produção
+preservados. O REVIEWER independente Codex autorizado pelo Owner deu PASS
+na árvore `bba592ecf0750f4da0525c990668dc16b5cb0d18`; `pnpm check`
+integral, sete checks do CI, DEVAI doctor e verificação da cadeia passaram.
+Evidência generic sequência 15 e observação de Auditor
+`EV-33ead2fd8120f724` registram o candidato e o merge exato. A declaração
+formal está em `closure.json`; o fechamento não é release/deploy nem certifica
+o app produtivo. E2, Android/GMS820 produtivo, validador/ciclo AIT e gate de
+campo permanecem abertos nas issues #108–#112 para round posterior.
+
 ## Adenda vinculante de escopo — decisão do Owner de 2026-09-23
 
 **Objeto final de CTG-0004a/b e CTG-0005:** homologação de **UI e workflows** TEAT,
