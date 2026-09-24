@@ -240,6 +240,10 @@ lockfile e só então libera TASK-0008. Antes de cada PR, integra `origin/main` 
   papéis, a11y e zero HTTP.
 - `plant-bug` resolvido — após a terceira iteração de TASK-0010 e a Emenda 3 de TASK-0008, a suíte
   TEAT web passou 609/609 e o `pnpm check` integral do candidato CTG-0002 terminou com exit 0.
+- `delivery-review` ciclo 1 — FAIL com sete high e nove low. A5 reconciliou contratos/ownership;
+  TASK-0008 iteração 4 substituiu oráculos por schema/DI/DOM/axe reais; TASK-0009 iteração 2 e
+  TASK-0010 iteração 4 fecharam os REDs de produção. O segundo `pnpm check` integral terminou com
+  exit 0; o ciclo 2 fica restrito aos 16 findings já emitidos.
 - `sensor-error` — a checagem focada pós-review passou `05-parameters.sql` diretamente ao
   Prettier, que não possui parser SQL neste repositório. O arquivo é gerado e foi validado por
   `parameters:generate`/`verify:parameter-catalogue`; a repetição correta exclui o SQL da chamada
