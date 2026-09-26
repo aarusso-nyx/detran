@@ -1,0 +1,37 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0018",
+  "ctg": "CTG-0001",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/docs/state-index/check.mjs",
+      "line": 434,
+      "claim": "O gate confere apenas as colunas 2 e 4 de §Aliases. Trocar os IDs das colunas 1 ou 3, ou acrescentar uma linha obsoleta, não produz C-01-05, embora o contrato exija coerência dessas colunas e rejeição de aliases inválidos.",
+      "fix": "O Inspector deve acrescentar casos negativos; depois, o Engineer deve validar os quatro campos e todas as linhas de §Aliases."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/docs/state-index/check.mjs",
+      "line": 646,
+      "claim": "As linhas reais da série law/adr usam um caminho entre crases (DESIGN-DECISIONS.md:58; docs/meta/adr/README.md:63). A verificação de status as ignora por exigir um link Markdown. Alterar Accepted para Proposed nessas linhas deixa o gate verde, contrariando C-01-15/16. A mesma limitação impede verificar nelas ID, alvo e duplicação.",
+      "fix": "O Inspector deve testar alterações nas linhas reais da série; depois, o Engineer deve reconhecer caminhos entre crases nas verificações de status e integridade dos índices."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/docs/state-index/check.mjs",
+      "line": 558,
+      "claim": "No modo migrated, o gate exige que o arquivo de law/adr seja um stub válido, mas não exige sua linha em §Aliases, como determina C-01-11. Também não detecta a linha da série que usa caminho entre crases.",
+      "fix": "O Inspector deve cobrir os dois negativos do modo migrated; depois, o Engineer deve conferir o alias do stub e rejeitar qualquer linha remanescente da série."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor (Constituição DEVAI, Art. 18).",
+    "Nesta worktree, verify:state-index passou com 39 ADRs, 3 redirecionamentos, 33 rodadas e 14 closures; adr:renumber indicou 0 pending e 10 review.",
+    "Não foi possível reproduzir test:state-index: o sandbox de leitura negou mkdtemp (EPERM). Os relatórios da rodada registram 86/86."
+  ]
+}

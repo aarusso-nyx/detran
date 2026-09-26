@@ -49,7 +49,7 @@ As decisões anteriores permanecem registradas para rastreabilidade.
 
 A premissa histórica da tabela acima permanece registrada. O Owner resolveu a
 ordem relativa e a semântica dos casos não apurados em
-[ADR-0024](../adr/ADR-0024-rait-legal-priority-owner-policy.md): após risco de
+[ADR-0037](../adr/ADR-0037-rait-legal-priority-owner-policy.md): após risco de
 prescrição, PCD e 80+ no mesmo nível, depois 60+, depois ausência de prioridade
 comprovada; desempate por `protocolled_at` e `id`. Preservam-se todas as bases
 comprovadas, usando o maior nível aplicável para ordenar. `legal_priority = null`
@@ -65,7 +65,7 @@ abrangidas nem libera os requisitos técnicos de despacho da campanha R-0007.
 
 O ciclo de implementação deve reconciliar o placeholder textual preexistente de
 `rait.priority.legal_bases` no catálogo/seed com a política aprovada, sua validação
-e os dados existentes, sem inferir defaults do texto (ver ADR-0024).
+e os dados existentes, sem inferir defaults do texto (ver ADR-0037).
 
 #### Emenda do Owner em 2026-09-16 — arranjo de menor esforço
 
@@ -93,7 +93,7 @@ para concluir "ausência de prioridade comprovada"; definir com o Owner o
 tratamento de prova apresentada após o protocolo antes de implementar esse
 fluxo. A emenda não institui fila, endpoint ou autoridade para a secretaria
 rever prioridade já confirmada. Detalhes e fronteiras em
-[ADR-0024](../adr/ADR-0024-rait-legal-priority-owner-policy.md).
+[ADR-0037](../adr/ADR-0037-rait-legal-priority-owner-policy.md).
 
 #### Emenda do Owner em 2026-09-16 — política de comprovação
 
@@ -144,7 +144,7 @@ recálculo automático posterior. Encerra-se essa pendência de decisão.
 Restam fechamento técnico do vocabulário, migração auditável do acervo `null`
 sem conversão indiscriminada em `none`, aplicação da política vigente ao
 mecanismo de revisões preservado e reconciliação do contrato. Ver
-[ADR-0024](../adr/ADR-0024-rait-legal-priority-owner-policy.md).
+[ADR-0037](../adr/ADR-0037-rait-legal-priority-owner-policy.md).
 
 #### Emenda do Owner em 2026-09-16 — validação jurídica de PCD = 80+
 
@@ -352,3 +352,12 @@ sem distinguir; demais valores seguem a convenção da §F.
 | OD-R12-052 | Não há comando M8 para `PROTOCOLADO → TRIAGEM_ADMISSIBILIDADE` ("iniciar triagem", §6.6; secretaria confere conteúdo mínimo)                                                                                                                                                                | Os gates de triagem partem de `TRIAGEM_ADMISSIBILIDADE`                                                                                                                                                    | R-0007          | `contracts/CTG-0002c.md` §9.2                                                                                      |
 | OD-R12-053 | Rótulos para tokens sem namespace pelo nome do campo (`non_admission_reason`, `direction`/`reason`, `modality`)                                                                                                                                                                             | Rótulo pelo nome do campo, sem namespace de token dedicado (mesmo tratamento de OD-R12-028)                                                                                                                | Owner           | `reports/TASK-0015.md`; `plan.md` A14                                                                              |
 | OD-R12-054 | `QueueFacade`/`SessionFacade` não expõem pool `defesa_previa`, joins de relógios/casos nem `load*(orgao)` com query; `claimNext` sem `pool_id`                                                                                                                                              | Ratificado como default até R-0007 CTG-0004                                                                                                                                                                | R-0007          | `reports/TASK-0015.md`; `plan.md` A14                                                                              |
+
+## R-0018 — índice de ADRs e índices de estado (C-0002)
+
+| ID         | Questão                                                                                                                                                                                                                                                                                        | Premissa adotada                                                                                                                                                                                                                               | Destrava/bloqueia                                                                     | Afeta                                                                                                                                                 |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OD-R18-001 | Destino da série `law/adr/` (`ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md`): (a) renumerar para `docs/meta/adr/` pelo próximo número livre (hoje ADR-0039), com redirecionamento em `law/adr/`; ou (b) manter como série DEVAI distinta, declarada nos dois índices com o prefixo `LAW-ADR-`. | Pendente: o arquivo não muda; os dois índices o listam como `LAW-ADR-0001` em §Série `law/adr` com "Destino pendente de OD-R18-001"; `law/adr/README.md` declara a pendência; `lawAdrMode: "pending"` em `tools/docs/state-index/config.json`. | Destrava a forma final dos índices e de `law/adr/README.md`; não bloqueia o CTG-0001. | `law/adr/**`, `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`, `tools/docs/state-index/config.json`, `tools/docs/adr/renumber.config.json` (opção a) |
+| OD-R18-002 | Aceitar a ADR-0022 (execução por orquestras), `Proposed` desde 2026-09-14 e seguida por R-0003…R-0016?                                                                                                                                                                                         | Os índices mostram `Proposed`, lido do arquivo. No aceite, o `## Status` da ADR-0022 e os dois índices mudam no mesmo commit (o gate exige, C-01-15/16).                                                                                       | Destrava a coerência formal do método; não bloqueia o CTG-0001.                       | `docs/meta/adr/ADR-0022-orchestra-execution-model.md`, `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`                                               |
+| OD-R18-003 | Aplicar `work/rounds/R-0018/proposals/CLAUDE.md.patch` e `AGENTS.md.patch` (CTG-0002: DEVAI 1.4.5 → 1.5.6, papéis, `packages/` completo, `pnpm check` descrito)?                                                                                                                               | Nenhum patch aplicado sem aceite explícito do Owner registrado em §Decisões do maestro; `CLAUDE.md` e `AGENTS.md` intocados.                                                                                                                   | Bloqueia só a Meta 8 (CTG-0002).                                                      | `CLAUDE.md`, `AGENTS.md`                                                                                                                              |
+| OD-R18-004 | Aceitar a ADR-0035 (política de numeração de ADRs)?                                                                                                                                                                                                                                            | A ADR-0035 entra `Proposed`; renumeração 0036…0038, redirecionamentos, §Aliases e gate executam a Meta 1 do plano autorizado de R-0018. Em caso de rejeição, o Owner decide o tratamento dos números já atribuídos.                            | Destrava o status `Accepted` da política; não bloqueia o CTG-0001.                    | `docs/meta/adr/ADR-0035-adr-numbering-policy.md`, índices                                                                                             |

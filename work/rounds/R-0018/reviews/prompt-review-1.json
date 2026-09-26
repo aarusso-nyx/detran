@@ -1,0 +1,75 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0018",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0001.md",
+      "line": 118,
+      "claim": "A lista fechada omite AGENTS.md e CODESTYLE.md e manda ler o manual primeiro, contrariando a ordem obrigatória de docs/meta/agents/README.md §Regras comuns, item 2.",
+      "fix": "Incluir AGENTS.md e CODESTYLE.md antes do manual na leitura obrigatória."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0002.md",
+      "line": 26,
+      "claim": "A lista fechada omite AGENTS.md e coloca CODESTYLE.md depois do manual, contrariando docs/meta/agents/README.md §Regras comuns, item 2.",
+      "fix": "Abrir a leitura com AGENTS.md, CODESTYLE.md e, em seguida, o manual."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0003.md",
+      "line": 26,
+      "claim": "A lista fechada omite AGENTS.md e coloca CODESTYLE.md depois do manual, contrariando docs/meta/agents/README.md §Regras comuns, item 2.",
+      "fix": "Abrir a leitura com AGENTS.md, CODESTYLE.md e, em seguida, o manual."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0004.md",
+      "line": 35,
+      "claim": "A lista fechada omite AGENTS.md e CODESTYLE.md e manda ler o manual primeiro, contrariando docs/meta/agents/README.md §Regras comuns, item 2.",
+      "fix": "Incluir AGENTS.md e CODESTYLE.md antes do manual na leitura obrigatória."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0001.md",
+      "line": 184,
+      "claim": "O contrato deve atribuir os maestros reais usando waves.md §Plano de ondas e §Histórico, mas waves.md não consta da lista fechada de leitura.",
+      "fix": "Incluir essas duas seções de docs/meta/agents/orchestra/waves.md na leitura obrigatória."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0018/prompts/TASK-0004.md",
+      "line": 60,
+      "claim": "O prompt autoriza editar qualquer linha de documento vivo listada no checkpoint, mas proíbe backend/** e docs/framework/** na linha 69. Há citações sem slug nesses caminhos, deixando a fronteira de escrita contraditória.",
+      "fix": "Limitar a revisão manual a caminhos explicitamente permitidos; encaminhar os demais ao dono do módulo ou mantê-los resolvidos por alias conforme o contrato."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0018/tasks/TASK-0003.json",
+      "line": 25,
+      "claim": "O acceptance_command passa diretórios a node --test. No Node 24 instalado, um diretório é tratado como módulo e o comando falha com MODULE_NOT_FOUND, mesmo com os testes presentes.",
+      "fix": "Usar os padrões de arquivos do prompt TASK-0003.md:75 ou pnpm test:state-index após a criação do script."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "work/rounds/R-0018/prompts/TASK-0003.md",
+      "line": 63,
+      "claim": "A caracterização é enviada apenas no relatório do Engineer. O plan.md:221–222 exige que a lista de divergências entre no contrato antes das correções do TASK-0004; não há checkpoint que faça essa incorporação.",
+      "fix": "Exigir que o maestro registre a caracterização em adenda do contrato antes de liberar TASK-0004."
+    }
+  ],
+  "notes": [
+    "A ordem Architect → Inspector → Engineer → transcriber está declarada e os hashes de compositions.json correspondem aos quatro prompts.",
+    "A ausência dos prompts de CTG-0002/0003 e dos scripts novos antes de TASK-0003 está dentro do escopo previsto."
+  ]
+}
