@@ -1,0 +1,109 @@
+{
+  "action": "Deliver R-0018 CTG-0002 (C-0002 action 3): state documents (build packs, waves, start, BUILD-PLAN) reconciled with closures and merges, model-ladder with Sol 6 / Opus 5.5 CLI ids, .gitignore re-including worker reports with a matching .prettierignore rule, and CLAUDE/AGENTS patches proposed for Owner decision OD-R18-003",
+  "round": "R-0018",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": ["2450a590f2d6b1494246f8291a6c39b3e802eab2"],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0018/contracts/CTG-0002.md",
+      "sha256": "06ee31859febe1d332d198b95673f765bae4cbb2e1e756f0d6a95ea2e36eeb6e"
+    },
+    {
+      "path": "work/rounds/R-0018/contracts/CTG-0003.md",
+      "sha256": "94319d3e13982ab1aaf682359da02ceb035e39f272102ee3aec59e696d56b596"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "39a1a0becd329a6161cae94997ec4dc128490929d7755f5ae2a9a861d2a308aa"
+    },
+    {
+      "path": ".prettierignore",
+      "sha256": "2f40cd6aca784539653043abb9f2f5b626b1832c0e66c97fe8b4380e37178d01"
+    },
+    {
+      "path": "BUILD-PLAN.md",
+      "sha256": "e1045d03871f03a53145712a09ffa5709a3ac967a1e1e7b0b1bb784ed9f9f827"
+    },
+    {
+      "path": "docs/start/index.md",
+      "sha256": "f8753aa1df7ed643896203eeec28ce7dd3456a4e30dccb1ee161ecdfd830d9b9"
+    },
+    {
+      "path": "docs/meta/agents/orchestra/model-ladder.md",
+      "sha256": "3caeb8b7bcb051b2a91dfd07e0df75492731a4ec94a8147c5bf8e80a3677d48b"
+    },
+    {
+      "path": "docs/meta/agents/orchestra/waves.md",
+      "sha256": "b7ace8a117b4d228311cf3119253783bd8249aa76dd548142f6609ab67e11055"
+    },
+    {
+      "path": "docs/framework/arch/teat-build-pack.md",
+      "sha256": "af569af00722c887b190121680de770108a97c6b869ee49949d4ea5b262cf888"
+    },
+    {
+      "path": "docs/framework/arch/rait-build-pack.md",
+      "sha256": "df0c36568e1fb0fd78350b598aa3f56909517bef18a4e49287eef7f3ca641662"
+    },
+    {
+      "path": "docs/framework/arch/boat-build-pack.md",
+      "sha256": "2b7c831b16560d3102875eeb48c7789495c53e570f426150966f465b12f8805f"
+    },
+    {
+      "path": "docs/framework/arch/dashboard-build-pack.md",
+      "sha256": "cddcacad785680f42c02bec98be6a1334ef52fb82aae18514ad53a881b86039e"
+    },
+    {
+      "path": "work/rounds/README.md",
+      "sha256": "66af06504006e2cca8205711e3209b2a439e59c6d0f1d738162e0c9e55712550"
+    },
+    {
+      "path": "work/rounds/R-0018/proposals/CLAUDE.md.patch",
+      "sha256": "68545f64df3e30466ea1dfcdf9a4c11bc3f3482ac749080c83469c8f9d046526"
+    },
+    {
+      "path": "work/rounds/R-0018/proposals/AGENTS.md.patch",
+      "sha256": "1fbdc0f347b0cc280dc76b8661ee29b268213c4e89554f6fbc7bb008ef137f5f"
+    },
+    {
+      "path": "work/rounds/R-0018/reviews/delivery-review-CTG-0002-2.json",
+      "sha256": "016226b98f08b657edddd8f7a71f5b1720579ed8042d826ce6aa96121b13b5d0"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Exit 0 on the CTG-0002 tree before commit (identical content)"
+    },
+    {
+      "name": "pnpm verify:state-index",
+      "result": "pass",
+      "note": "OK: 39 ADRs, 3 redirecionamentos, 33 rodadas, 14 closures"
+    },
+    {
+      "name": "pnpm docs:check / docs:kb:check / docs:kb:publish-check",
+      "result": "pass"
+    },
+    {
+      "name": "checkpoint (b)",
+      "result": "pass",
+      "note": "git status --ignored shows nothing ignored under work/rounds; find × git ls-files differ only by CTG-0003 artefacts left for the next group"
+    },
+    {
+      "name": "git check-ignore --no-index (C-02-20..23)",
+      "result": "pass",
+      "note": "reports exit 1 (tracked), dist/x reports/x coverage/x exit 0, features/reports exit 1"
+    },
+    {
+      "name": "plan.md criteria `git check-ignore -v <report>` / `git check-ignore -v dist`",
+      "result": "fail",
+      "note": "Not met as literally written (dist/ only matches directories; -v on a tracked file proves nothing); substitute proof C-02-20..23; recorded as not met in the closure"
+    },
+    {
+      "name": "delivery-review cycle 2 restricted (codex gpt-6-sol)",
+      "result": "pass",
+      "note": "Cycle 1 FAIL (Art. 6→7 heading; TASK-0005 attempt 1 boundary violation T8); addenda A1/A2, isolated redo with byte-identical patches; cycle 2 PASS"
+    }
+  ]
+}
