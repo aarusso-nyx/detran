@@ -37,5 +37,6 @@ binding; supersede only by a new ADR.
 | [ADR-0026](ADR-0026-r0007-owner-review-waiver-and-model-routing.md)    | R-0007 Owner delivery waiver for SQL2 legacy-queue finding and economical model routing    |
 | [ADR-0027](ADR-0027-rait-session-minutes-signers.md)                   | RAIT session minutes signers                                                               |
 | [ADR-0028](ADR-0028-provisionamento-operacional-offline.md)            | Operational offline provisioning                                                           |
+| [ADR-0034](ADR-0034-pec-web-frontend.md)                               | PEC gets a web frontend: consoles in `apps/pec/web`, candidate surfaces in the Portal      |
 
 ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definition round was open on its branch; the infractions ADRs were renumbered 0014…0021 on merge (2026-09-13).
