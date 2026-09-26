@@ -1,0 +1,243 @@
+# R-0026 — frente `dashboard-wiring` (ação 6 da C-0002 — DASHBOARD: console L0 → L2 sobre `BP-DASH-MONITOR-001`)
+
+**Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner.** Planejada em 2026-09-26
+pelo Architect (`work/campaigns/C-0002-consolidacao.md` §2, fase D). Maestro **Opus 5.5** (Claude
+Code), workers da escada Claude (Opus 5.5 grande/médio, Sonnet 5 pequeno), reviewer **Sol 6** pela
+ponte `tools/orchestra/bridge.sh codex` (OD-C2-003; ids de CLI confirmados no bootstrap). Worktree
+`/Volumes/Thiamat II/stech/detran-worktrees/dashboard-wiring`, branch `orchestra/dashboard-wiring`.
+Rastreio: #123 (reconciliação), #124 (L0 → L2), #96 (produtores RAIT, OD-D17), #97 (OD-D33), #98
+(OD-D35), #99 (OD-D50, job de relatórios), #100 (OD-D58). `AUTHORIZATION.md`, `tasks/` e
+`compositions.json` só nascem no bootstrap, depois da autorização.
+**Concorrência (upstreams da campanha):**
+
+- **Abertura:** R-0024 `stynx-dedup` mesclada (`docs/framework/arch/frontend-wiring-pattern.md`,
+  cliente de comando único, costura SSE e shell em `@detran/ui`); transitivamente R-0022 (SSE de
+  fonte única, pin 1.5.0) e R-0023 (`StynxAuthorizationModule`; `policy.ts` como dados). Fase A e
+  R-0020 em `main`.
+- **Locks compartilhados (C-0002 §3.5):** o CTG-0002, se criar chave em `policy.ts`, e o CTG-0003
+  (backend RAIT: `backend/domains/inf/rait-*`, `inf/deadlines`) são **serializados** com o CTG-0002
+  de R-0025 `rait-web-wiring` e com os CTGs backend de R-0027 `portal-delegations`. O CTG-0003
+  interessa também a R-0027: `rait.decision.published` é consumido por
+  `backend/app/src/portal-stream.service.ts`. Os demais CTGs correm livres (`apps/dashboard/web` e
+  `backend/domains/dashboard/*` são exclusivos desta rodada).
+- **Manifesto de disponibilidade:** forma e caminho fixados em
+  `work/rounds/R-0030/availability-manifest.schema.md` (§1 caminho canônico, §3–§4 forma e JSON
+  Schema, §6 selos, §7 obrigações da fase D). Superfície desta rodada: `dashboard-web`.
+
+**Janelas previstas:** 4 (1 planejamento + CTG-0001; 1 CTG-0002 ∥ CTG-0003; 1–2 CTG-0004; CTG-0005 no fim).
+
+## Decisões do Owner (2026-09-26)
+
+- **OD-R26-001 = (a).** O CTG-0003 é **incondicional**. A própria rodada cria e publica os eventos
+  RAIT `rait.clock.flag-changed`, `rait.decision.published` e `rait.case.created` (#96, OD-D17), na
+  transação do comando, com varredura de bandeira. Lock `MOD-shared-policy` e backend RAIT
+  serializados com R-0025 e R-0027. Os ramos "se (b)" deste plano ficam sem efeito.
+
+## Estado de partida (verificado em 2026-09-26 sobre `a92ef731`; o maestro remede no bootstrap)
+
+- **App:** `apps/dashboard/web` (R-0016, PC-0012): 18 telas, **22 entradas** em
+  `src/app/app.route-manifest.ts` (18 + 2 filhas de detalhe + `sem-permissao` + `auth/callback`),
+  **todas `level: 'L0'`**; `DashboardRouteLevel = 'L0' | 'L2'` (linhas 95–96). Nenhum
+  `*.client.ts` nem facade em `features/` (10 módulos: `audit`, `catalogue`, `comparison`, `crashes`,
+  `duties`, `integrations`, `radar`, `reports`, `transparency`, `triage`); `HttpClient` só em
+  `main.ts`, `core/error-boundary.ts`, `core/sse/stream-transport.ts`, `forms/form-gate.ts` e specs.
+  9 schemas em `forms/`; `testing/command-matrix.fixture.ts` com 16 comandos × 36 papéis;
+  `core/layer-table.ts` transcreve `DASHBOARD_LAYER_BY_ROLE` (OD-D16-006); SSE local
+  (`core/sse/sse.service.ts`, polling 30 s) — substituído pela costura canônica de R-0022/R-0024.
+  2042 testes em R-0016. `apps/dashboard/web/README.md:65` afirma que R-0011 "não tem código" (falso).
+- **Backend:** `backend/domains/dashboard/monitor` ≈ 19,4 mil linhas TS fora de specs (≈ 30 mil com
+  testes); `docs/framework/contracts/BP-DASH-MONITOR-001.commands.openapi.json` com **43 operações**
+  (23 `GET`, 18 `POST`, 2 `PATCH`) e tipos em `packages/api-clients/src/generated/BP-DASH-MONITOR-001.commands.ts`
+  — **sem consumidor**. `GET /v1/dashboard/stream` (`backend/app/src/dashboard-stream.controller.ts:75`).
+  `GET generated-reports` e `GET generated-reports/{id}` já estão no contrato (OD-D16-010 fecha por fonte).
+  Não há `GET exports` (OD-D16-001) nem `GET` próprio de radares/P-09 (OD-D16-002).
+- **Bloco A (`legal-ceiling`) 2/11 conectados** (`backend/database/seed/80-fixtures-dashboard-catalog.sql`):
+  IND-DASH-101…105 (relógios RAIT A, B-JARI, B-CETRAN, C, D; projeção `dashboard.prescription_risk`)
+  `connected=false`; 106–107 (PEC) `false`; 108–109 (TEAT) `true`; 110–111 (TEAT) `false`. Causa
+  dos cinco RAIT (#96, OD-D17): `rait.clock.flag-changed`, `rait.decision.published` e
+  `rait.case.created` (`docs/framework/arch/rait-events-sse-contract.md` §2) não têm produtor; os
+  produtores atuais são `rait.case.changed|admitted|received|withdrawn` e `rait.assignment.changed`.
+  Nenhum código calcula `inf.rait_clock.flag` (só o repositório gerado a lê): a bandeira exige a
+  varredura de `docs/framework/arch/rait-deadline-engine.md` §4–§5, com escadas aprovadas em
+  `WF-RAIT-002` §4.1–§4.3 (steering A.1) e §Decisão H.46 (relógio D).
+- **ODs abertas desta frente:** OD-D16-001…019 (`docs/meta/knowledge-base/backlog.md`, seção DASHBOARD);
+  OD-D17, OD-D33, OD-D35, OD-D50, OD-D58 e demais em `docs/framework/arch/dashboard-build-pack.md` §4.
+  O único `it.todo` do backend DASHBOARD está em `backend/app/tests/e2e/dashboard-domain-boundary.e2e.spec.ts:476` (OD-D58).
+  `@stynx-nyx/jobs` não está instalado no pin 1.3.1 (`backend/app/src/boat-renaest-job.service.ts:58`
+  explica por que o BOAT não o usou); o pin da fase D é 1.5.0 — o maestro confere no bootstrap.
+
+## Metas
+
+1. **Reconciliação (CTG-0001, #123):** `read-map.md` (22 rotas → `operationId` de leitura, facade,
+   cliente de feature, tópicos SSE, frescor, nível-alvo, OD) e `command-map.md` (16 comandos de UI ×
+   20 mutações do contrato: chave de política, schema de formulário, If-Match/Idempotency-Key, erros de
+   `dashboard-error-catalog.md`). Triagem de OD-D16-001…019 e decisões de Architect para OD-D33 (#97),
+   OD-D35 (#98) e OD-D58 (#100); ODs novas `OD-R26-nnn` e a triagem **no build pack §4** (registro
+   canônico do app) no mesmo PR.
+2. **Backend DASHBOARD (CTG-0002, #98/#99/#100):** códigos de estado por recurso ou confirmação de
+   `DASH.VALIDATION_FAILED`; guarda de `DASH.ALERT_BUSINESS_ACT_FORBIDDEN` ou retirada do código (o
+   `it.todo` deixa de existir); job de geração de relatórios chamando `complete`/`fail` de
+   `backend/domains/dashboard/monitor/src/handwritten/surface/report.service.ts`; rotas de leitura
+   faltantes só se TASK-0001 as decidir (com chave de política → lock compartilhado).
+3. **Produtores RAIT (CTG-0003, #96 — OD-R26-001 = (a), decidida pelo Owner em 2026-09-26):** os três eventos publicados na
+   transação do comando (outbox) com o envelope de `rait-events-sse-contract.md` §1; bandeira de
+   relógio calculada pela varredura; `connected=true` no seed só para os indicadores cujo replay
+   passa. Meta: bloco A de 2/11 para 7/11 (os 4 restantes são PEC/TEAT, fora desta frente).
+4. **Console L0 → L2 (CTG-0004, #124):** `features/<módulo>/<módulo>.client.ts` + facades pelo padrão
+   de ligação; dados reais nas 18 telas; comandos dos 9 formulários; SSE canônico e frescor; camada
+   do usuário pela fonte de autorização de R-0023 (fecha ou reclassifica OD-D16-006/015/016);
+   supressão primária e secundária ponta a ponta em D-13; `L1` só como nível parcial com OD.
+5. **Documentação e delta (CTG-0005):** build pack §1/§2/§4, `dashboard-frontends.md` §10,
+   `dashboard-route-contract.md` §6, `dashboard-error-catalog.md`, `apps/dashboard/web/README.md`
+   reescrito (sem "não tem código"), `backlog.md`, `waves.md`; **delta do manifesto de
+   disponibilidade** da superfície `dashboard-web` em
+   `docs/framework/arch/availability/dashboard-web.availability.json` (caminho canônico do §1 do
+   anexo de R-0030; C-0002 §3.5 cita `docs/framework/arch/availability/dashboard-web.availability.json` — ver OD-R26-005);
+   não manuais.
+
+## Tarefas (proposta — o maestro deriva `tasks/*.json` e `prompts/TASK-nnnn.md` no bootstrap)
+
+| Tarefa    | Papel                | Perfil              | Modelo/esforço   | Lock `MOD-*`                                                                                                                                                                     | Depende de                                | Entrega                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| --------- | -------------------- | ------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TASK-0001 | Architect            | architect-blueprint | Opus 5.5 / alto  | `MOD-r26-read-map`, `MOD-r26-command-map`                                                                                                                                        | —                                         | `read-map.md`, `command-map.md`; triagem OD-D16-001…019 (fechada por fonte / Architect / Owner / aberta); decisões OD-D33, OD-D35, OD-D58; nível-alvo das 22 rotas (L2; L1 ou L0 só com OD); `contracts/CTG-0001.md`                                                                                                                                                                                                                                                              |
+| TASK-0002 | Architect (transcr.) | transcriber-docs    | Sonnet 5 / baixo | `MOD-dashboard-build-pack`, `MOD-dashboard-route-contract`, `MOD-dashboard-error-catalog`, `MOD-dashboard-i18n`                                                                  | TASK-0001                                 | Build pack §4 (triagem OD-D16 e `OD-R26-nnn`); route contract §6 (OD-D33); catálogo de erros (OD-D35); chaves de OD-D16-012 em `docs/framework/arch/i18n/dashboard.pt-BR.json` nos namespaces allowlistados                                                                                                                                                                                                                                                                       |
+| TASK-0003 | Architect            | architect-blueprint | Opus 5.5 / alto  | `MOD-r26-contract-ctg2`                                                                                                                                                          | TASK-0001                                 | `contracts/CTG-0002.md`: códigos por recurso, guarda ou retirada de `ALERT_BUSINESS_ACT_FORBIDDEN`, job de relatórios (substrato `@stynx-nyx/jobs` do pin vigente se carregar o ator técnico; senão porta no padrão de `boat-renaest-job`, com OD), rotas de leitura decididas; critérios C-26-2-nn                                                                                                                                                                               |
+| TASK-0004 | Inspector            | inspector-tests     | Opus 5.5 / médio | `MOD-app-e2e-dashboard`, `MOD-dashboard-monitor-tests`                                                                                                                           | TASK-0003                                 | e2e/unit: estado inválido por recurso; 403 ou retirada (o `it.todo` de `dashboard-domain-boundary.e2e.spec.ts` some); job (`processing` → `complete`/`fail`, idempotência, tenant); rotas novas com presença/ausência por papel                                                                                                                                                                                                                                                   |
+| TASK-0005 | Engineer             | engineer-backend    | Opus 5.5 / médio | `MOD-dashboard-monitor`, `MOD-contracts-dashboard` (+ `MOD-shared-policy` se houver chave nova)                                                                                  | TASK-0004                                 | Implementação; `pnpm contracts:openapi`/`contracts:clients` quando o contrato mudar; nenhum gerado editado à mão                                                                                                                                                                                                                                                                                                                                                                  |
+| TASK-0006 | Architect            | architect-blueprint | Opus 5.5 / alto  | `MOD-r26-contract-ctg3`                                                                                                                                                          | TASK-0001, OD-R26-001                     | `contracts/CTG-0003.md`: ponto de emissão de cada evento (comando e transação), payload de `rait-events-sse-contract.md` §2, varredura de bandeira (§4–§5 do motor; escadas WF-RAIT-002 §4.1–§4.3 e H.46; limiar sem fonte = `source_pending`), `docs/framework/schemas/events/rait.*.schema.json` se o padrão exigir, regra do seed `connected`                                                                                                                                  |
+| TASK-0007 | Inspector            | inspector-tests     | Opus 5.5 / médio | `MOD-inf-rait-tests`, `MOD-dashboard-monitor-tests`                                                                                                                              | TASK-0006                                 | Outbox com envelope válido; escada por relógio com relógio fixo (presença e ausência de mudança); idempotência da varredura; replay nas projeções `prescription-risk`/`production`; consumo do Portal intacto (`backend/app/tests/e2e/portal-stream.e2e.spec.ts`)                                                                                                                                                                                                                 |
+| TASK-0008 | Engineer             | engineer-backend    | Opus 5.5 / médio | `MOD-inf-rait-backend`, `MOD-inf-deadlines`, `MOD-dashboard-seed`                                                                                                                | TASK-0007                                 | Produtores e varredura; `connected=true` para IND-DASH-101…105 cujo replay passa; `seed.sh` provado duas vezes                                                                                                                                                                                                                                                                                                                                                                    |
+| TASK-0009 | Architect            | architect-blueprint | Opus 5.5 / alto  | `MOD-r26-contract-ctg4`                                                                                                                                                          | TASK-0001                                 | `contracts/CTG-0004.md`: aplicação de `frontend-wiring-pattern.md` aos 10 módulos (sem variante); estados de tela; tópicos SSE por tela; frescor; camada por R-0023; `X-Purpose` do `LayerGate` N2; D-13; jornadas do smoke; critérios C-26-4-nn                                                                                                                                                                                                                                  |
+| TASK-0010 | Inspector            | inspector-tests     | Opus 5.5 / médio | `MOD-dashboard-web-tests`                                                                                                                                                        | TASK-0009                                 | Por operação: verbo/path/headers lidos do OpenAPI em disco; facades (vazio, carregando, erro, indisponível, desatualizado, bloqueado por decisão); nível de rota = `read-map.md`; matriz papel × camada × rota regenerada (caracterização); supressão primária e secundária sobre carga no formato do contrato; SSE + frescor                                                                                                                                                     |
+| TASK-0011 | Engineer             | engineer-frontend   | Opus 5.5 / médio | `MOD-dashboard-web-triage`, `MOD-dashboard-web-radar`, `MOD-dashboard-web-integrations`, `MOD-dashboard-web-duties`, `MOD-dashboard-web-catalogue`                               | TASK-0010                                 | Clientes, facades e páginas desses 5 módulos; `app.route-manifest.ts` (níveis)                                                                                                                                                                                                                                                                                                                                                                                                    |
+| TASK-0012 | Engineer             | engineer-frontend   | Opus 5.5 / médio | `MOD-dashboard-web-comparison`, `MOD-dashboard-web-audit`, `MOD-dashboard-web-transparency`, `MOD-dashboard-web-crashes`, `MOD-dashboard-web-reports`, `MOD-dashboard-web-forms` | TASK-0011                                 | Idem para os outros 5 módulos; 9 formulários ligados aos comandos; remoção do SSE/camada locais substituídos                                                                                                                                                                                                                                                                                                                                                                      |
+| TASK-0013 | Inspector            | inspector-tests     | Sonnet 5 / médio | `MOD-r26-stack-smoke`                                                                                                                                                            | TASK-0012 (e TASK-0008 se OD-R26-001 = a) | Smoke na stack (`pnpm stack:start` + runbook de R-0017): 18 telas com dado real, um comando por formulário, evento SSE observado, D-13 suprimida; `reports/TASK-0013.md`; nenhum código                                                                                                                                                                                                                                                                                           |
+| TASK-0014 | Architect (transcr.) | transcriber-docs    | Sonnet 5 / baixo | `MOD-availability-dashboard-web`, `MOD-availability-schema`                                                                                                                      | TASK-0013                                 | `docs/framework/arch/availability/dashboard-web.availability.json` (anexo de R-0030 §3; `measuredAt` sobre o `main` integrado, `history` iniciado): 22 rotas + comandos com `operationId`, selo (`disponivel`, `parcial`, `indisponivel_nesta_versao`, `bloqueado_por_decisao`) e `decision`; se for a primeira da fase D a mesclar, transcreve o §4 para `docs/framework/schemas/availability-manifest.schema.json` + linha em `docs/framework/schemas/README.md`; nenhum manual |
+| TASK-0016 | Inspector            | inspector-tests     | Sonnet 5 / médio | `MOD-dashboard-web-tests-availability`                                                                                                                                           | TASK-0014                                 | Spec do app que prova R1 (rotas de `app.route-manifest.ts` = `path` do arquivo) e R3 (perfis) do anexo §6, e selo × `level` × marcador de indisponibilidade (§6.1)                                                                                                                                                                                                                                                                                                                |
+| TASK-0015 | Architect (transcr.) | transcriber-docs    | Sonnet 5 / baixo | `MOD-dashboard-build-pack`, `MOD-docs-dashboard-arch`, `MOD-docs`                                                                                                                | TASK-0013                                 | Build pack §1/§2 (WP-D5 em L2, gates reais), `dashboard-frontends.md` §10, README do app, `backlog.md` (#123/#124/#96–#100 fechadas ou com OD), `waves.md` §Histórico                                                                                                                                                                                                                                                                                                             |
+
+- CTG-0001 = 0001 → 0002.
+- CTG-0002 = 0003 → 0004 → 0005 (serializado com R-0025/R-0027 **só** se tocar `MOD-shared-policy`).
+- CTG-0003 = 0006 → 0007 → 0008 (**lock compartilhado, serializado** com R-0025 CTG-0002 e R-0027).
+  Se OD-R26-001 = (b), o CTG-0003 não existe: TASK-0002 registra a OD e o seed segue `connected=false`.
+- CTG-0004 = 0009 → 0010 → 0011 → 0012 → 0013.
+- CTG-0005 = 0014 → 0016, ∥ 0015.
+
+Um PR por CTG. TASK-0003, TASK-0006 e TASK-0009 podem correr em paralelo (locks disjuntos); no
+máximo três tarefas simultâneas.
+
+**Checkpoints do maestro (Engineer):**
+(a) bootstrap: `frontend-wiring-pattern.md` em `origin/main`; contagens do Estado de partida; linha
+de base `pnpm --filter @detran/dashboard-web test` e `pnpm --filter @detran/dashboard-monitor test`
+em §Leitura; versão de `@stynx-nyx/*` e presença de `@stynx-nyx/jobs` nos manifestos;
+(b) depois de TASK-0002: `pnpm verify:parameter-catalogue`, `pnpm docs:kb:check`;
+(c) depois de TASK-0005 e de TASK-0008: `pnpm contracts:check`, `pnpm blueprints:check`,
+`pnpm --filter @detran/shared test`, `pnpm backend:test:ci`, `bash backend/database/seed.sh` duas vezes;
+(d) antes de TASK-0013: `pnpm stack:start` e `pnpm stack:status` verdes.
+
+## Critérios de aceitação (comandos → resultado; imutáveis, C-0002 §4)
+
+1. `grep -rn "level: 'L0'" apps/dashboard/web/src/app/app.route-manifest.ts` → só rotas listadas em
+   `read-map.md` com OD aberta (meta: 0 entre as 18 telas); nenhuma rota `L1` sem OD.
+2. Cada módulo de `apps/dashboard/web/src/app/features/` tem `<módulo>.client.ts` e facade no formato
+   de `frontend-wiring-pattern.md`; `grep -rn "HttpClient" apps/dashboard/web/src/app/features` só em
+   arquivos que o padrão admite.
+3. `pnpm --filter @detran/dashboard-web typecheck`, `lint`, `test`, `build` → verdes; nº de testes ≥
+   linha de base (a).
+4. Spec de conformidade (TASK-0010): cada `operationId` usado em `read-map.md`/`command-map.md` emite
+   verbo e path de `BP-DASH-MONITOR-001.commands.openapi.json`; mutações com `Idempotency-Key` e
+   `If-Match` onde o contrato exige (exceção `export_log`, OD-D37).
+5. D-13: supressão primária e secundária provadas sobre dado no formato do contrato
+   (`dashboard.cell_threshold`, OD-D02), sem `0` nem `—` isolados.
+6. Matriz papel × camada × rota: gerada antes e depois; divergência só a declarada em `read-map.md`;
+   N3 nunca é camada de rota.
+7. `grep -rn "it.todo" backend/app/tests/e2e/dashboard-domain-boundary.e2e.spec.ts` → nenhuma linha.
+8. `pnpm --filter @detran/dashboard-monitor test`, `pnpm --filter @detran/app test:e2e`,
+   `pnpm backend:test:ci` → verdes; `bash backend/database/seed.sh` passa duas vezes seguidas.
+9. Se OD-R26-001 = (a): `grep -rn "'rait.clock.flag-changed'\|'rait.decision.published'\|'rait.case.created'" backend/domains/inf --include=*.ts`
+   encontra produtor fora de testes; IND-DASH-101…105 com `connected=true` só onde o replay passa;
+   bloco A reportado no closure (esperado 7/11). Se (b): OD-R26-001 registrada e seed inalterado.
+10. `pnpm contracts:check`, `pnpm blueprints:check` → sem diff; `pnpm contracts:test` → verde;
+    `pnpm verify:parameter-catalogue` → `0 errors`; `pnpm docs:kb:check`, `pnpm docs:kb:publish-check`
+    → OK; `pnpm format:check` → sem diffs; `pnpm check` → verde.
+11. Smoke (TASK-0013) com `pnpm stack:start` (e `pnpm stack:smoke`, versionado por R-0017): o PR do
+    CTG-0004 não abre sem `reports/TASK-0013.md`.
+12. `docs/framework/arch/availability/dashboard-web.availability.json` válido contra o JSON Schema do
+    anexo de R-0030 §4 (JSON parseável; enums conferidos); spec de TASK-0016 verde (R1, R3); selo coerente
+    com `level` e com `command-map.md`.
+13. `apps/dashboard/web/README.md` sem a frase "não tem código"; #123/#124 com checklist fechado ou
+    OD por item.
+14. DEVAI: `evidence record`/`verify` por CTG; `audit observe` por merge; `round close` + `round seal`;
+    âncora da prova na cadeia.
+
+## Mapa entregável → definições
+
+| Entregável             | Definição (caminhos verificados)                                                                                                                                                                                                                                                                                                                                            |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| padrão de ligação      | `docs/framework/arch/frontend-wiring-pattern.md` (**entregável de R-0024**; lido no bootstrap)                                                                                                                                                                                                                                                                              |
+| telas e rotas          | `docs/framework/arch/dashboard-frontends.md` §3–§10; fichas `docs/framework/product/transversal/dashboard/screens/IU-DASH-D-01…18.md`; `work/rounds/R-0016/route-manifest.md`                                                                                                                                                                                               |
+| leitura e comandos     | `docs/framework/contracts/BP-DASH-MONITOR-001.commands.openapi.json`; `docs/framework/arch/dashboard-route-contract.md` §1–§5; `backend/domains/shared/src/policy.ts` (`DASHBOARD_RULES`, `dashboardLayerFor`)                                                                                                                                                              |
+| erros                  | `docs/framework/arch/dashboard-error-catalog.md`; OD-D35, OD-D58                                                                                                                                                                                                                                                                                                            |
+| eventos DASHBOARD      | `dashboard-route-contract.md` §6; `docs/framework/schemas/events/dashboard.{alert,duty}.changed.schema.json`; OD-D33                                                                                                                                                                                                                                                        |
+| SSE e frescor          | `dashboard-route-contract.md` §5; OD-D16-013; costura canônica de R-0022/R-0024                                                                                                                                                                                                                                                                                             |
+| supressão (D-13)       | [RN-DASH-161], [RN-DASH-172]; OD-D02/DT-029; `IU-DASH-D-13.md`                                                                                                                                                                                                                                                                                                              |
+| relatórios (job)       | `dashboard-route-contract.md` §4; `backend/domains/dashboard/monitor/src/handwritten/surface/report.service.ts`; precedente `backend/app/src/boat-renaest-job.service.ts`; OD-D50                                                                                                                                                                                           |
+| produtores RAIT        | `docs/framework/arch/rait-events-sse-contract.md` §1–§2; `docs/framework/arch/rait-deadline-engine.md` §4–§5; `docs/framework/product/domains/inf/rait/workflows/WF-RAIT-002.md` §4; projeções `backend/domains/dashboard/monitor/src/handwritten/projections/{prescription-risk,production}.projection.ts`; seed `backend/database/seed/80-fixtures-dashboard-catalog.sql` |
+| manifesto de disponib. | C-0002 §3.5; `work/rounds/R-0030/availability-manifest.schema.md` §1–§7 (planejamento de R-0030)                                                                                                                                                                                                                                                                            |
+
+## Decisões pendentes (ODs novas; TASK-0002 registra no build pack §4)
+
+| OD         | Pergunta                                                                                                                                                                                                                          | Opções                                                                                                                                                                                                                                                              | Recomendação do Architect                                                                                                                                                                                                                                                                                                | Decisor                            |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| OD-R26-001 | **Decidida pelo Owner em 2026-09-26: (a).** Bloco A em 2/11 (#96, OD-D17): quem publica os três eventos RAIT                                                                                                                      | (a) CTG-0003 nesta rodada: produtores na transação do comando + varredura de bandeira; seed `connected` por replay aprovado; lock serializado com R-0025/R-0027; (b) indicadores seguem `DESCONECTADA` com OD e #96 vai a uma rodada de backend RAIT fora da C-0002 | **(a)**: projetores e testes de replay já existem, as escadas têm fonte aprovada (WF-RAIT-002 §4, steering A.1, H.46), o MVP exige 100 % do bloco A (DT-030) e R-0027 ganha `rait.decision.published` para o Portal; (b) deixa 5/11 desconectados sem dono e contraria o critério "nenhuma página L0 sem OD" em espírito | **Owner — bloqueante do CTG-0003** |
+| OD-R26-002 | `L1` no DASHBOARD                                                                                                                                                                                                                 | (a) admitir `L1` (leitura real sem comando) só como nível parcial com OD por rota; (b) só L0/L2                                                                                                                                                                     | (a), alinhado a M13 de R-0012 e ao critério 1                                                                                                                                                                                                                                                                            | Architect                          |
+| OD-R26-003 | Job de relatórios (#99)                                                                                                                                                                                                           | (a) `@stynx-nyx/jobs` do pin 1.5.0, se carregar o ator técnico ao handler; (b) porta própria no padrão BOAT                                                                                                                                                         | (a) se verificado no bootstrap; senão (b) com OD que aponta a lacuna ao STYNX                                                                                                                                                                                                                                            | Architect                          |
+| OD-R26-004 | Rotas de leitura sem `GET` próprio (OD-D16-001 exportações; OD-D16-002 radares e P-09)                                                                                                                                            | (a) criar `GET` + chave de leitura no CTG-0002 (lock `MOD-shared-policy`); (b) manter a chave provisória e a leitura por `alerts`/`comparisons`                                                                                                                     | (b) nesta rodada, com as telas em L2 sobre as rotas existentes; (a) só se a leitura provisória não cobrir a ficha                                                                                                                                                                                                        | Owner                              |
+| OD-R26-005 | Caminho do manifesto: C-0002 §3.5 (`docs/framework/arch/availability/dashboard-web.availability.json`) × anexo de R-0030 §1 (`docs/framework/arch/availability/dashboard-web.availability.json`, "nenhum outro caminho é aceito") | (a) caminho do anexo; (b) caminho da campanha                                                                                                                                                                                                                       | (a): o gate de R-0030 lê só o caminho canônico; a campanha é corrigida por adenda (mesma decisão de OD-R25-005)                                                                                                                                                                                                          | Owner (ratificar)                  |
+
+As OD-D16 que o console ainda tinha como provisório executado (006 camada, 013 protocolo SSE, 015
+wildcard, 016 interceptors) são reavaliadas contra R-0023/R-0024: fechadas por fonte quando o padrão
+as resolver, nunca por inferência.
+
+## Riscos
+
+- **Envelope da carga real × view-models `source_pending`** (OD-D16-017): o campo sem forma é
+  exibido como token, nunca calculado; divergência vira OD, não adaptação silenciosa.
+- **Passe global** (OD-D16-005/OD-D76): se R-0023 mantiver `'*'` para `GLOBAL_ADMIN_ROLES`, a matriz
+  papel × camada muda; o Inspector declara a diferença, o Owner decide.
+- **Varredura de bandeira** é código novo no backend RAIT sob lock compartilhado: CTG-0003 espera a
+  vez e integra `origin/main` por merge; conflito em `policy.ts` mantém os dois blocos.
+- **Seed** faz parte do CI: `connected=true` sem replay verde é proibido.
+- **Padrão de ligação ausente** (R-0024 não mesclada) → parada no checkpoint (a).
+- **Anexo de R-0030 ausente em `main`** → TASK-0014 espera; CTG-0005 não fecha sem ele.
+
+## Lições aplicadas (C-0001 → C-0002 §4; `waves.md` §Histórico)
+
+- **Relatórios versionados** com `git add -f` enquanto `reports/` for ignorado e conferência
+  `find` × `git ls-files` depois de cada `add` (R-0016 perdeu o módulo `features/reports/` do app para
+  o mesmo padrão; o `.gitignore` já tem a negação — conferir que continua valendo).
+- **Critérios imutáveis**; critério substituído vai ao closure como **não cumprido**; proibido repetir
+  as substituições de R-0013/R-0014 e o waiver SQL2 de R-0007.
+- **ODs no registro canônico** (build pack §4 do DASHBOARD; `open-decisions-rait.md` para OD que
+  toque o RAIT) no mesmo PR; OD só em `contracts/` não conta.
+- **Âncora da prova**, `round close` + `round seal`; **orçamento** com `budget.json` e parada a 80 %.
+- **Caracterização antes de troca** da camada e do SSE locais pelos canônicos.
+- **Padrão único** de ligação; nenhum cliente, interceptor ou SSE local novo.
+- **Inspector de matriz grande** em nível médio (R-0014); sem asserção por conjunto.
+- **Proibições:** Engineer não testa o próprio artefato; nenhum gerado editado; nenhum `--force`;
+  nenhum valor normativo inventado; nenhuma integração externa real.
+- **Ciclos de review** a partir do segundo restritos aos itens corrigidos.
+
+## Adendas
+
+## Decisões do maestro
+
+## Concorrência
+
+## Bloqueios
+
+## Triagem
+
+## Retomada
+
+## Leitura
