@@ -150,7 +150,7 @@ do bootstrap. Gate: `pnpm contracts:check` (gerador CRUD + `tools/contracts/chec
 
 ### WP-T4 — Telas, formulários e i18n (Transcriber-docs → Engineer-frontend)
 
-**Entregue e revisto em R-0013; integração final da rodada pendente.** CTG-0002 registrou as
+**Entregue e revisto em R-0013; integrado em `main` no PR #113 (merge `646c6c28`; fechamento PC-0013).** CTG-0002 registrou as
 matrizes imutáveis, as 126 fichas (70 mobile e 56 web), o catálogo pt-BR e os parâmetros
 correlatos. Seu fechamento documental foi mesclado no PR #73
 (`3da2b61ee8e418e634a7364417175a1e86a8c9e0`). As fichas preservam as fronteiras BOAT e as
@@ -167,7 +167,7 @@ ficha e rota; revisão do Owner.
 
 ### WP-T5 — Provisionamento offline e dispositivo (Architect → Engineer; ADR própria)
 
-**Entregue e mesclado em R-0013/CTG-0003.** O provisionamento foi fechado por ADR-0028,
+**Entregue e mesclado em R-0013/CTG-0003.** O provisionamento foi fechado por ADR-0038,
 `BP-OPS-PROVISIONING-001`, DDL, contratos e implementação tenant-scoped, com revisão final
 independente PASS antes da integração. O merge observado é o da PR #82 (`b8920457…` no registro
 da rodada). A prova cobre contratos, persistência, RLS, idempotência, readiness e ports; não
@@ -185,19 +185,19 @@ pacote copiado/alterado/expirado/revogado rejeitado em teste; sem chave privada 
 
 **Escopo revisto pelo Owner em 2026-09-23: homologação de UI e workflows, não app de
 campo** (ADR-0033; adenda de R-0013). O app mobile produtivo terá round dedicado
-posterior (R-0017 apenas candidato) e backlog nas issues
+posterior (o candidato R-0017 da ADR-0033 não foi usado: a C-0002 atribuiu R-0017 a `local-stack`) e backlog nas issues
 [#108](https://github.com/aarusso-nyx/detran/issues/108)–[#112](https://github.com/aarusso-nyx/detran/issues/112).
 GMS820 está homologado como equipamento por decisão incondicional do Owner, mas a
 integração da aplicação nele ainda não foi provada. CTG-0004a/b/5 devem demonstrar
 fluxos somente com fixtures explícitas e segregadas; caminhos produtivos sem provas
-continuam bloqueados. O fechamento exige novos testes e reviews no candidato atual,
+continuam bloqueados. O fechamento (PC-0013) exigiu novos testes e reviews no candidato final,
 sem converter REDs de produção em skips.
 
-**Candidatos históricos entregues e revistos; não mesclados nem implantados.** O candidato conjunto
+**Candidatos históricos entregues, revistos e mesclados em `main` no PR #113 (merge `646c6c28`; fechamento PC-0013); não implantados.** O candidato conjunto
 `408ab438fdd940eed6bd46296daad0a141d5a222` recebeu PASS independente em CTG-0004a
 (mobile, 30/30 specs focais; digest `d9382578…dd32ea`) e CTG-0004b (web, lint, typecheck,
-565/565 testes e build; digest `2febf768…d5becb`). A única publicação/PR da rodada permanece
-deferida até o encerramento; portanto este registro não afirma merge, deploy, KMS/Keystore,
+565/565 testes e build; digest `2febf768…d5becb`). A publicação da rodada ocorreu no
+encerramento, no PR #113; este registro não afirma deploy, KMS/Keystore,
 criptografia/envelope ou attestation reais, bodycam real nem adaptadores de hardware (inclusive
 impressora).
 

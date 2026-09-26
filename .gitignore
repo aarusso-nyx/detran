@@ -8,9 +8,12 @@ dist/
 build/
 coverage/
 reports/
-# Código de aplicação chamado `reports` é rastreado: o padrão acima existe para saídas de
-# ferramenta e para os relatórios de worker de `work/rounds/*/reports/` (R-0016: o módulo
-# `features/reports` do console — telas D-16/D-17 — ficou fora de um commit por causa dele).
+# `reports/` ignora saídas de ferramenta em qualquer nível. Exceções rastreadas: os relatórios de
+# worker de `work/rounds/*/reports/` (evidência versionada; R-0007 perdeu 24 relatórios, C-0002
+# §4; R-0018 CTG-0002) e o código de aplicação `features/reports` (R-0016: o módulo do console —
+# telas D-16/D-17 — ficou fora de um commit por causa dele).
+!work/rounds/*/reports/
+!work/rounds/*/reports/**
 !apps/*/*/src/app/features/reports/
 !apps/*/*/src/app/features/reports/**
 tmp/

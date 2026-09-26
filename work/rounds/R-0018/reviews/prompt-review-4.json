@@ -1,0 +1,21 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0018",
+  "scope": "TASK-0006",
+  "cycle": 2,
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0018/prompts/TASK-0006.md",
+      "line": 100,
+      "claim": "A Tarefa 2(b) exige uma tabela com valores e fontes para cada um dos 51 READMEs, mas a lista fechada de leitura permite apenas um exemplo de cada tipo de fonte. O Architect não consegue extrair os valores por módulo necessários ao contrato.",
+      "fix": "Permitir explicitamente a leitura das fontes de cada módulo listado na Tarefa 2(b), mantendo a extração literal pelos transcribers."
+    }
+  ],
+  "notes": [
+    "Os achados 1, 2 e 4 foram corrigidos.",
+    "O SHA-256 de TASK-0006.md corresponde ao registro em compositions.json; ele e tasks/TASK-0006.json usam PC-badab14ecb35527f."
+  ]
+}

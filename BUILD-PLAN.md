@@ -31,3 +31,31 @@ build packs in `docs/framework/arch/`: `rait-build-pack.md` (WP-0, WP-A…WP-F, 
 (WP-B0…B5) and `dashboard-build-pack.md` (WP-D0…D5), plus the shared parameter store of
 ADR-0021 (WP-A). Entry conditions and open decisions: `docs/meta/knowledge-base/decision-closure-plan.md`
 (gate closed by the Owner on 2026-09-13, steering §H).
+
+## Work-package state (R-0018, 2026-09-26)
+
+State of every work package of the five build packs in `docs/framework/arch/`, read from
+`docs/meta/agents/orchestra/waves.md` (wave plan and history) and the round closures in
+`record/proofs/compliance/closures/`. "Merged" means the round's pull requests are merged into
+`main`; the delivered scope, and what stayed out, is the one recorded in the build-pack section of
+each work package. Campaign C-0002 (R-0017…R-0032): `work/campaigns/C-0002-consolidacao.md`; round
+state: `work/rounds/README.md`.
+
+| App       | Work packages          | Round               | Merge PRs               | Closure | State                                                    |
+| --------- | ---------------------- | ------------------- | ----------------------- | ------- | -------------------------------------------------------- |
+| RAIT      | WP-0                   | R-0001 (pre-method) | #28                     | —       | merged                                                   |
+| RAIT      | WP-A (parameter store) | R-0004              | #37                     | PC-0002 | merged                                                   |
+| RAIT      | WP-A (rest)            | R-0006              | #39, #43                | PC-0004 | merged                                                   |
+| RAIT      | WP-B, WP-C             | R-0007              | #69, #94                | PC-0011 | merged                                                   |
+| RAIT      | WP-D, WP-E, WP-F       | R-0012              | #79, #81, #85, #90, #92 | PC-0010 | merged                                                   |
+| TEAT      | WP-T0                  | R-0001 (pre-method) | #29                     | —       | merged                                                   |
+| TEAT      | WP-T1                  | R-0005              | #40, #41, #42, #44      | PC-0003 | merged                                                   |
+| TEAT      | WP-T2, WP-T3           | R-0008              | #47, #48, #49, #50, #51 | PC-0005 | merged                                                   |
+| TEAT      | WP-T4, WP-T5, WP-T6    | R-0013              | #70, #73, #82, #113     | PC-0013 | merged; WP-T6 as UI and workflow homologation (ADR-0033) |
+| PORTAL    | WP-P0…WP-P3            | R-0009              | #54, #56                | PC-0006 | merged                                                   |
+| PORTAL    | WP-P4…WP-P6            | R-0014              | #60…#66                 | PC-0007 | merged                                                   |
+| BOAT      | WP-B0…WP-B3            | R-0010              | #55, #71                | PC-0008 | merged                                                   |
+| BOAT      | WP-B4, WP-B5           | R-0015              | #107, #116              | PC-0014 | merged                                                   |
+| DASHBOARD | WP-D0                  | R-0003              | #32                     | PC-0001 | merged                                                   |
+| DASHBOARD | WP-D1…WP-D3            | R-0011              | #83, #87                | PC-0009 | merged                                                   |
+| DASHBOARD | WP-D4, WP-D5           | R-0016              | #80, #103               | PC-0012 | merged; console screens at level L0                      |

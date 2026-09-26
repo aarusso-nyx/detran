@@ -1,0 +1,49 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0006",
+  "round_id": "R-0018",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar os contratos do CTG-0002 (estado, escada, .gitignore, patches) e do CTG-0003 (READMEs)",
+  "description": "contracts/CTG-0002.md e contracts/CTG-0003.md: tabela-verdade por documento de estado, model-ladder, .gitignore/.prettierignore, patches de CLAUDE/AGENTS, lista recontada e esqueleto de README (Metas 5-9).",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r18-contract"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0004",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 5,
+  "tags": ["c-0002", "action-3", "ctg-0002", "ctg-0003"],
+  "branch": "orchestra/index-state",
+  "worktree_id": "WT-index-state",
+  "prompt_composition_id": "PC-1a72a1c9d1601ffd",
+  "acceptance_commands": [
+    ["test", "-f", "work/rounds/R-0018/contracts/CTG-0002.md"],
+    ["test", "-f", "work/rounds/R-0018/contracts/CTG-0003.md"],
+    [
+      "node_modules/.bin/prettier",
+      "--check",
+      "work/rounds/R-0018/contracts/CTG-0002.md",
+      "work/rounds/R-0018/contracts/CTG-0003.md"
+    ]
+  ],
+  "created_at": "2026-09-26T23:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-1a72a1c9d1601ffd",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

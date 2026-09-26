@@ -1,0 +1,21 @@
+diff --git a/AGENTS.md b/AGENTS.md
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -43,10 +43,14 @@ the phase plan and Decisions Ledger live in the orchestrator handoff plan and ar
+   `BUILD-PLAN.md`, `DESIGN-DECISIONS.md`, `docs/meta/adr/` (ADR-0001…0004),
+   `docs/start/index.md`, `docs/framework/schemas`, `.devai/config/project.json`.
+ - Layout: `backend/` (app + domains + ddl), `apps/` (frontends only),
+-  `packages/` (senatran-adapter, ui), `senatran-mock/`, `tools/`, `docs/` (7-section
++  `packages/` (api-clients, sefaz-adapter, senatran-adapter, ui), `senatran-mock/`, `tools/`, `docs/` (7-section
+   IA per `docs/_ia/categories.json`).
+-- Checks: `pnpm check` (format + typecheck), `pnpm devai:doctor`,
++- Checks: `pnpm check` (the root `package.json` `check` chain: format, orchestra
++  bridge, KB and publish checks, state index, blueprints, contracts, parameters, UI and
++  app builds, typecheck, app lint and tests, decorators, RLS DDL, role catalogue,
++  lifecycle vocabulary, SENATRAN boundary and contracts, PEC parity and superset),
++  `pnpm devai:doctor`,
+   `pnpm exec devai evidence verify --scope chain --repo-root . --show-head --format human`.
+-- Declare the active Constitution Article 6 role (Owner/Architect/Engineer/
++- Declare the active Constitution Article 7 role (Owner/Architect/Engineer/
+   Inspector/Auditor) before scoped work; do not introduce a second governance
+   framework.
