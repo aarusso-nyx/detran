@@ -231,24 +231,111 @@ Verificações de arquivo:
 
 ## Decisões do maestro
 
-(vazio — M1 obrigatória: ids de CLI confirmados ou copiados de R-0017)
+- **M0 — autorização (2026-09-26).** O Owner autorizou explicitamente a abertura de R-0018 na
+  sessão do maestro; registrada em `AUTHORIZATION.md`.
+- **M1 — ids de CLI (2026-09-26, confirmados nesta rodada; R-0017 ainda não os registrou).**
+  Provas com `codex exec -m <id> "responda ok"` e `claude -p --model <id> "responda ok"`:
+
+  | Família | Nível   | Nome     | Id de CLI         | Resultado                                                                              |
+  | ------- | ------- | -------- | ----------------- | -------------------------------------------------------------------------------------- |
+  | Codex   | grande  | Sol 6    | `gpt-6-sol`       | `ok` com `codex-cli` 0.157.1; ponte provada (`bridge.sh codex gpt-6-sol`, `{ok:true}`) |
+  | Codex   | médio   | Terra    | `gpt-5.6-terra`   | `ok`; `gpt-6-terra` responde "not supported when using Codex with a ChatGPT account"   |
+  | Codex   | pequeno | Luna     | `gpt-6-luna`      | `ok` (0.157.1); `gpt-5.6-luna` também responde                                         |
+  | Claude  | grande  | Opus 5.5 | `claude-opus-5-5` | `ok` (`claude` 2.1.283)                                                                |
+  | Claude  | pequeno | Sonnet 5 | `claude-sonnet-5` | `ok`                                                                                   |
+
+  Sol 6 é o sucessor de GPT-5.6 Sol (mesma linha `gpt-*-sol`). `codex-cli` 0.151.0 rejeitava
+  `gpt-6-sol`/`gpt-6-luna` ("not supported") e `gpt-6-astra` ("requires a newer version of
+  Codex"); o maestro atualizou o CLI global para 0.157.1 (`npm i -g @openai/codex@0.157.1`), que
+  `devai doctor` confirma em `llm-bridges`. Insumo de `model-ladder.md` (Meta 9, TASK-0005): a
+  escada Codex fica Sol 6 / Terra (`gpt-5.6-terra`, sem sucessor 6 disponível) / Luna
+  (`gpt-6-luna`).
+
+- **M2 — worktree.** O volume `/Volumes/Thiamat II` não está montado nesta máquina; a worktree foi
+  criada no caminho da convenção do método (`orchestra/README.md` §1, `../detran-worktrees/<frente>`):
+  `/Users/aarusso/Development/detran-worktrees/index-state`, branch `orchestra/index-state` a
+  partir de `origin/main` `220a4020`. Todo prompt desta rodada usa esse caminho.
+- **M3 — scaffold.** `devai round plan --scaffold` responde `ROUND_ALREADY_EXISTS` (o `plan.md`
+  já está versionado em `main`); nada a criar. `devai doctor`: todos `[✓]`. Linha de base
+  `pnpm check` em `220a4020`: exit 0.
+- **M4 — adenda de caracterização (prompt-review-1, achado 8).** Entre TASK-0003 e o checkpoint
+  (a), o maestro (Architect) transcreve a lista integral de `pnpm verify:state-index` em modo
+  relatório sobre a worktree (relatório de TASK-0003) como adenda numerada em
+  `contracts/CTG-0001.md` §Caracterização; só então roda o checkpoint (a) e libera TASK-0004.
+- **M5 — CTG-0001 entregue (2026-09-26).** Tríade + transcrição concluídas com adendas A1–A4 e
+  iterações restritas (T1–T7); `pnpm verify:state-index` → `OK: 39 ADRs, 3 redirecionamentos, 33
+rodadas, 14 closures`; `pnpm test:state-index` → 98/98; `pnpm check` e `pnpm docs:check` verdes;
+  delivery-review PASS no ciclo 3. OD-R18-001, OD-R18-002 e OD-R18-004 **pendentes** (pedidas ao Owner
+  no PR do CTG-0001); OD-R18-003 no CTG-0002.
 
 ## Concorrência
 
-(preenchida no bootstrap)
+Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):
+
+- `git log --oneline -30 origin/main`: último merge #127 (campanha C-0002 + ADR-0034). Nenhum
+  commit de R-0017 ou R-0019 em `main`.
+- `gh pr list --state open`: vazio. `git ls-remote --heads origin`: nenhum `orchestra/*` (nem
+  `orchestra/local-stack`, nem `orchestra/law-corpus`).
+- **CTG-0001:** sem upstream — liberado para merge. **CTG-0002:** sem upstream; nasce após o merge
+  do CTG-0001 (ou empilhado). **CTG-0003:** após o CTG-0002; `tools/README.md` cita a stack só se
+  `orchestra/local-stack` estiver em `main` no momento da tarefa (hoje não está).
+- Próximo número livre de ADR: **0035** (`docs/meta/adr` vai até 0034). Reconferir antes de
+  TASK-0004 e de cada PR.
+- `law/invariants/` só tem `README.md` (sem `INV-*`): `target_invariants` = `[]` em todas as
+  tarefas.
 
 ## Bloqueios
 
-(vazio)
+- **B1 — prompt-review-1 FAIL (2026-09-26, `codex gpt-6-sol`).** Oito achados `high`, todos
+  estruturais e corrigíveis sem mudar o plano: (1–4) leitura sem `AGENTS.md`/`CODESTYLE.md` antes
+  do manual; (5) `waves.md` fora da leitura de TASK-0001; (6) fronteira de TASK-0004 contraditória
+  para citações sem slug fora de `docs/meta/**`; (7) `node --test` com diretórios em
+  `TASK-0003.json`; (8) caracterização sem passo que a leve ao contrato. Nenhum achado de
+  contradição canônica ou decisão do Owner. Correções aplicadas nos prompts, na tarefa e em M4.
+  Pelo §5 do prompt do maestro, FAIL → parar e reportar ao humano; ciclo 2 (restrito aos itens
+  corrigidos) só com decisão do Owner.
 
 ## Triagem
 
-(vazio)
+- **T1 (TASK-0004, `reference-gap`).** `DESIGN-DECISIONS.md:15` com `` `mock\|real` `` (literal do §9.1)
+  × `split('|')` do §6.5 → C-01-15 falso. Adenda A2 + C-01-36; iteração 1 de TASK-0002 (teste) e de
+  TASK-0003 (desescape).
+- **T2 (TASK-0004, `reference-gap`).** Ilustração `[ADR-nnnn](…)` na ADR-0035 reprova
+  `docs:kb:check`. Adenda A3; iteração 1 de TASK-0004.
+- **T3 (TASK-0004, omissão do prompt).** Nota de status da ADR-0006 (contrato §9) fora da fronteira
+  de TASK-0004. Adenda A4; iteração 1 de TASK-0004.
+- **T4 (TASK-0004, `sensor-error`).** `docs:check` sem dependências em `docs/site`; o maestro rodou
+  `npm ci` em `docs/site` (ambiente, sem mudança versionada).
+- **T5 (`pnpm check`, `sensor-error`).** `verify:parameter-catalogue` varreu `docs/site/build/` (saída
+  local do `docs:check`, ignorada pelo git, inexistente no CI); o maestro apagou a saída de build.
+  Também `format:check` pegou `prompts/TASK-0006.md` sem Prettier (erro do maestro; formatado).
+- **T6 (delivery-review-CTG-0001, REVIEW, 3 achados `high` de detecção do gate).** Iteração 2 do
+  Inspector (8 negativos) e do Engineer; rotulagem do id exibido divergente = C-01-09 (decisão do
+  Architect, leitura literal §6.5/§7.2; iteração 2b retirou do comentário uma OD inexistente).
+- **T7 (delivery-review-CTG-0001-2, REVIEW, 1 achado parcial: §Aliases só na 1ª linha por stub).**
+  Dois ciclos esgotados → escalada (método §6; `AUTHORIZATION.md` Emenda 2): iteração 3 do Inspector
+  (4 negativos) e do Engineer em **Opus 5.5**; delivery-review-CTG-0001-3 → **PASS**.
 
 ## Retomada
 
-(vazio)
+**Checkpoint 2 — 2026-09-26, janela 2.** CTG-0001 concluído e commitado em `orchestra/index-state`
+(M5): tarefas 0001…0004 `completed`; delivery-review PASS (ciclo 3). Próximos passos: evidência do
+CTG-0001, integração de `origin/main`, push, PR (pedir OD-R18-001/002/004), CI, merge,
+`audit observe`; CTG-0002 empilhado — corrigir `prompts/TASK-0006.md` pelos 4 achados de
+`reviews/prompt-review-3.json` (FAIL estrutural) e revisar de novo antes de disparar.
+
+(Checkpoint 1, janela 1: bootstrap, M1–M4, prompts CTG-0001 com prompt-review-2 PASS.)
 
 ## Leitura
 
-(vazio)
+Hash: `220a4020` (`origin/main`, worktree `orchestra/index-state`). Lido pelo maestro, uma vez,
+nesta ordem: `AGENTS.md`, `CLAUDE.md`, `CODESTYLE.md`, `docs/meta/agents/README.md`;
+`docs/meta/agents/orchestra/{README,model-ladder,waves,task.template.json,worker-prompt.template,reviewer-prompt.template}.md`;
+`work/campaigns/C-0002-consolidacao.md`; `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`, o
+status de cada `docs/meta/adr/ADR-*.md` e `law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md`,
+`law/adr/README.md`, `work/rounds/README.md`, `record/proofs/compliance/closures/PC-*.json`
+(`round_id`, `closed_at`, `merged_as`), `tools/docs/kb/check.mjs` (cabeçalho), `.gitignore`,
+`.prettierignore`; `docs/meta/knowledge-base/steering.md` §H,
+`docs/meta/knowledge-base/open-decisions-rait.md` (cabeçalho, §A, §F), índice de
+`decision-closure-plan.md`; `docs/meta/agents/{architect-blueprint,engineer-backend,inspector-tests,transcriber-docs}.md`;
+este `plan.md`; `task.schema.json` 2.0.0 (campos e enums); `work/rounds/R-0015/{AUTHORIZATION.md,compositions.json,tasks/TASK-0001.json}` (forma).

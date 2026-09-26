@@ -4,6 +4,7 @@
 
 Accepted for Phase 2 implementation (W2.4, 2026-08-24). Package pins amended by
 `law/adr/ADR-0001-devai-1.4.5-stynx-1.1.1-adoption.md` on 2026-08-31.
+Angular and STYNX pins superseded by [ADR-0015](ADR-0015-stynx-1-3-1-angular-22-and-rait-role-catalogue.md) (Angular 22, STYNX 1.3.1; WP-0, 2026-09-13).
 
 ## Context
 

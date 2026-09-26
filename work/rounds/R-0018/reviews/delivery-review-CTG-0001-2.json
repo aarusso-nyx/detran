@@ -1,0 +1,22 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0018",
+  "ctg": "CTG-0001",
+  "cycle": 2,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/docs/state-index/check.mjs",
+      "line": 469,
+      "claim": "O achado 1 foi corrigido parcialmente. A validação das quatro colunas usa apenas a primeira linha encontrada para cada stub de docs/meta/adr. Uma segunda linha para o mesmo stub, com ID ou alvo divergente, passa pela checagem das linhas em §Aliases sem produzir C-01-05. As colunas 1 e 3 dos aliases de law/adr em modo migrated também não são validadas.",
+      "fix": "Validar as quatro colunas de cada linha de §Aliases contra o stub e seu alvo, inclusive os de law/adr, e exigir exatamente uma linha por stub."
+    }
+  ],
+  "notes": [
+    "Papel: Auditor (Art. 18).",
+    "Os casos específicos dos achados 2 e 3 estão cobertos pelas mudanças e pelos novos testes.",
+    "A verificação direta de state-index passou: 39 ADRs, 3 redirecionamentos, 33 rodadas e 14 closures."
+  ]
+}
