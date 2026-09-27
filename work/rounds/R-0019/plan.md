@@ -333,7 +333,67 @@ PR CTG-0002 e repetir os gates aplicáveis.
 
 - Gates pós-merge `c479ca4e`: oito membros DEVAI PASS (invariants 9, trace 1, test-trace 0, glossary 44, journeys 40; demais sem erro), `pnpm law:test` 56/56, `pnpm verify:law-corpus`, `docs:kb:check` (773 artefatos), `docs:kb:publish-check` (201 arquivos), `devai doctor` e `sense run spec_depth` PASS (9 INV, 41 ADR, 6 bundles). `pnpm check` completo **exit 0**; `git status --porcelain` antes/depois **idêntico** (nenhum arquivo gerado).
 
+- Prova CTG-0002 emitida via DEVAI: generic sequência 3, EV-c561d9518d772941, ancorada na cadeia após R-0017, head `f2837ad860fb93388846c2651c8d12c193a5546f252e1c6fcaa75e1d8a2d84b0`; `evidence verify --scope chain` PASS. Commit separado `38624d90`. Branch publicada por push normal; PR proposta [#137](https://github.com/aarusso-nyx/detran/pull/137) aberta e anexada ao chat. Aceite explícito do Owner foi solicitado sobre o PR, pendente. Primeira execução CI #36299883531 falhou em segundos antes de qualquer step, com `runner_name` vazio e logs indisponíveis em seis jobs; triagem `sensor-error` de alocação de runner/GitHub Actions. `gh run rerun 36299883531 --failed` disparado uma vez. CTG-0003 liberado pelo checkpoint deste PR e TASK-0011 em curso; PR #136 de R-0018 ainda aberto toca `backlog.md`, exigindo reconciliação antes do próximo PR.
+
+- Rerun CI #36299883531 tentativa 2 falhou pelo mesmo motivo: seis jobs com `steps=[]`, sem runner; backend-kernel skipped. As execuções recentes #36299515986 (PR #136) e #36298263128 (`main`) apresentam as mesmas falhas sem steps, confirmando efeito externo ao diff R-0019. Nenhum check é verde neste candidate; merge PR #137 continua proibido. Esperar recuperação da infraestrutura e rerodar, sem enfraquecer gate.
+
+- CTG-0003 TASK-0011 concluída com uma correção restrita: backlog, histórico `waves.md` e só a linha R-0019 do índice de rodadas registram CTG-0001 PR #132 integrado, CTG-0002 PR #137 aberto aguardando aceite e CI, CTG-0003 em andamento. Pré-aceite achou omissão de #132 e `ativa` fora do vocabulário do gate; o índice conserva `proposta (C-0002)` e a narrativa deixa clara a execução corrente. `pnpm docs:kb:check`, `pnpm format:check` e `pnpm verify:state-index` PASS, repetidos pelo maestro. Relatórios `TASK-0011-initial.md` e `TASK-0011.md`. Delivery-review CTG-0003 ainda pendente.
+
+- Delivery-review CTG-0003 ciclo 1 (Claude Opus 5.5): **REVIEW**, um high — abertura de R-0019 registrada erradamente em 2026-09-27 em `waves.md`, enquanto autorização, plano e baseline provam 2026-09-26. Quatro low sobre orçamento instantâneo, histórico de escaladas/iterações, data/SHA do PR #132 e diagnóstico do CI no backlog. TASK-0011 recebe correção restrita 2/2; ciclo 2 do reviewer se limita a esses achados.
+
+- TASK-0011 correção 2/2 concluída: abertura `2026-09-26 (retomada 2026-09-27)`, PR #132 com data/SHA, PR #137 aberto, escaladas e iterações conhecidas, orçamento remetido à estimativa corrente em `budget.json`, diagnóstico runner `sensor-error` no backlog. `pnpm docs:kb:check`, `pnpm format:check`, `pnpm verify:state-index` PASS. Relatório `TASK-0011-delivery-correction.md`; aguarda delivery-review restrita ciclo 2.
+
+- Delivery-review CTG-0003 ciclo 2 restrito (Claude Opus 5.5): **PASS**, sem achados. O revisor confirmou a data de abertura, a data/SHA do PR #132, a condição de proposta aberta do PR #137, o histórico de escaladas, o ponteiro de orçamento e o diagnóstico do CI. Diff final SHA-256 `e13e64a9a0170be5c47dd53241a3cd0acd3c3d82ceeeadefd97b4af946d8ae98`; ver `reviews/delivery-review-CTG-0003-2.json`. Naquele ponto faltavam o `pnpm check` final do grupo e o PR separado após o checkpoint/merge de CTG-0002.
+
+- Checkpoint pós-review CTG-0003: `pnpm check` completo exit 0, com `git status --porcelain` byte-idêntico antes/depois. Após o PASS, a célula de contagem em `waves.md` foi atualizada mecanicamente de cinco revisões para seis (dois ciclos por CTG); não mudou a decisão ou conteúdo técnico revisado. `pnpm docs:kb:check` PASS (773 artefatos, 446 tokens), `pnpm verify:state-index` PASS (39 ADRs, três redirects, 33 rodadas, 15 closures) e `pnpm format:check` PASS após Prettier na linha da tabela. Commit local dos índices `b1438bc5`; sem push para não adicionar CTG-0003 ao PR #137. A prova e o PR próprios de CTG-0003 aguardam a sequência de merge CTG-0002.
+
+- Pós-merge CTG-0002: o Owner aceitou o conteúdo no PR #137; sete checks CI PASS, merge `2804b0791dcef403c15fbb56caa5169e07bf49a8`. `devai audit observe` no HEAD exato emitiu EV-3daec8ee7e1bb267; cadeia válida, head `1d8cd9d5df914ba0b21900edb3159f965b68d9d2b877a627e4d19a48348041b2`; commit local `ea7a6165`. CTG-0003 atualizou só os três índices de TASK-0011 com fatos posteriores ao PASS da revisão (aceite, checks e SHA de merge), sem alterar regras ou corpus revisados; commit `8003ca14`. Gates integrados: `pnpm docs:kb:check` PASS (773/446), `docs:kb:publish-check` PASS (201), `verify:state-index` PASS (39/3/33/15), `format:check` PASS, `evidence verify --scope chain` PASS e `pnpm check` completo exit 0 com status Git antes/depois byte-idêntico. Falta prova e PR CTG-0003.
+
 ## Retomada
+
+**Estado corrente após CTG-0002 — 2026-09-27.** O Owner concedeu aceite
+explícito do conteúdo de `product/` e `law/glossary/` em resposta à
+solicitação específica; a emenda está em `AUTHORIZATION.md` e no PR #137.
+PR #136 avançou `main` durante o CI; a branch publicou merge normal
+`153ff231`, repetiu `pnpm check` completo com status Git idêntico antes/depois,
+os oito membros DEVAI, doctor e `spec_depth`, e emitiu pela fronteira DEVAI
+a prova generic sequência 4, EV-0b3c3bafff3df3f5, head
+`0649894111ac47526277e504d5b2e3edf60746e56725408ea2179a9219b898c1`.
+Os sete checks CI do candidate `e36fce11` passaram; PR #137 mesclou como
+`2804b0791dcef403c15fbb56caa5169e07bf49a8`. `devai audit observe`
+no HEAD integrado exato emitiu EV-3daec8ee7e1bb267, head de cadeia
+`1d8cd9d5df914ba0b21900edb3159f965b68d9d2b877a627e4d19a48348041b2`;
+observação e cadeia foram commitadas localmente em `ea7a6165`, ainda sem PR.
+CTG-0003 tem TASK-0011, delivery-review ciclo 2 PASS e gates finais PASS;
+seus três índices agora registram #137 integrado. Próximo passo: prova
+generic própria, PR separado, CI e merge; depois observar o SHA do PR
+e fechar R-0019. PR #138 de R-0018 ainda pode avançar `main`; nesse caso,
+integrar por merge normal, aceitar a cadeia de `main` sem edição manual e
+reemitir a prova.
+
+**Checkpoint histórico CTG-0002/CTG-0003 — 2026-09-27.** CTG-0001 está mesclado
+no PR #132 (`968f07296a49f27f7bfccc8f453b36c44ded0373`). CTG-0002
+(TASK-0006…0010) está em proposta no PR #137, com delivery-review ciclo 2
+PASS, prova DEVAI generic sequência 3 ancorada e gates locais PASS.
+Seu merge aguarda **aceite explícito do Owner para `product/` e
+`law/glossary/`** e todos os checks CI verdes. O CI falhou duas vezes
+antes de iniciar qualquer step, sem runner designado; runs contemporâneos de
+`main` e PR #136 tiveram o mesmo defeito externo. Não enfraquecer gates.
+CTG-0003 (TASK-0011) está concluído localmente, com delivery-review ciclo 2
+PASS e `pnpm check` completo exit 0, status Git idêntico antes/depois.
+Os artefatos CTG-0003 permanecem nesta worktree, sem push no branch remoto
+de #137 e sem PR próprio, para não misturar os dois grupos. Depois do aceite
+e da recuperação do CI: repetir CI de #137, integrar qualquer avanço de
+`origin/main`, repetir gates/evidência necessários, mesclar #137; reconciliar
+`backlog.md` com PR #136 se ele mesclar; publicar CTG-0003 em PR separado,
+aguardar CI e reviewer aplicável, mesclar, observar o SHA integrado e fechar
+a rodada pela fronteira DEVAI. Último veredito: CTG-0003 ciclo 2 PASS.
+Orçamento: 1.642.823 tokens de entrada e 292.004 de saída estimados,
+limite dispensado pelo Owner. Nenhum worker em curso.
+
+**Fotografias históricas abaixo:** os estados e próximos passos antigos
+foram registrados quando cada checkpoint foi produzido; o primeiro parágrafo
+desta seção é a posição corrente.
 
 **Estado corrente — CTG-0002:** CTG-0001 está integrado e observado no HEAD
 exato. TASK-0006…0010 concluídas; `pnpm law:test` 37/37,

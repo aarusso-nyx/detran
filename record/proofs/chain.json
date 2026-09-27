@@ -1,5 +1,5 @@
 {
-  "head": "218df5ef80d8d7ba40dda6881361273fe2e9168c33d1ece791df01b69c858793",
+  "head": "0c169a2d578bd0ff075f310a53cc401979b8c3fe30c1edcdeedca9ee9b6976a9",
   "records": [
     {
       "schemaVersion": "1.0.0",
@@ -4980,30 +4980,88 @@
     },
     {
       "schemaVersion": "1.0.0",
-      "id": "EV-27e392bda4d61061",
-      "timestamp": "2026-09-27T16:10:59.278Z",
+      "id": "EV-3daec8ee7e1bb267",
+      "timestamp": "2026-09-27T16:03:49.760Z",
+      "actor": "devai-cli",
+      "actor_role": "harness",
+      "action": "audit.observe",
+      "status": "completed",
+      "context": {
+        "repo_root": "/Users/aarusso/.codex/worktrees/r19-owner-acceptance/detran",
+        "git": {
+          "head_sha": "2804b0791dcef403c15fbb56caa5169e07bf49a8",
+          "dirty_files": [
+            ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/assessment.json",
+            ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/backlog.json",
+            ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/inventory.json",
+            ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/scorecard.json",
+            ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/status.json"
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "path": ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/inventory.json",
+          "sha256": "c447db0d818b7d1e0366374889aeffa4fc138a5c24ecfadb899bc84088698709",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/scorecard.json",
+          "sha256": "33a30fec9dd0b3ce223462091d24d260805a2d9b2125010dd5cdba0422e8d783",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/backlog.json",
+          "sha256": "bb6e984e1931cd4dcc7a083b711d0c97bc13e340896313075b4d5e26bbe792b5",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/assessment.json",
+          "sha256": "a0ae70f3672cbf23b3a6f7ff578995d114cb35327e09530bcbe7124c142a0b2d",
+          "kind": "audit"
+        },
+        {
+          "path": ".devai/state/audit-observations/2804b0791dcef403c15fbb56caa5169e07bf49a8/status.json",
+          "sha256": "fab50aee213cd00ba80e2f250770f306934b7ba8b5ab69d85be5bcb24e77188e",
+          "kind": "audit"
+        }
+      ],
+      "notes": [
+        "exact_sha=2804b0791dcef403c15fbb56caa5169e07bf49a8",
+        "readiness_promoting=false"
+      ],
+      "previous_run_hash": "0649894111ac47526277e504d5b2e3edf60746e56725408ea2179a9219b898c1",
+      "manifest_hash": "1d8cd9d5df914ba0b21900edb3159f965b68d9d2b877a627e4d19a48348041b2",
+      "sequence": 101,
+      "previous_hash": "0649894111ac47526277e504d5b2e3edf60746e56725408ea2179a9219b898c1"
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "id": "EV-ed9b4af319e0eec6",
+      "timestamp": "2026-09-27T16:22:52.650Z",
       "actor": "devai-cli",
       "actor_role": "harness",
       "action": "evidence.record.generic",
       "status": "completed",
       "context": {
-        "repo_root": "/Users/aarusso/Development/detran-worktrees/index-state",
+        "repo_root": "/Users/aarusso/.codex/worktrees/law-corpus/detran",
         "git": {
-          "head_sha": "0b6c0ecf5e05e33f24a18ea1f3512e4b12104635",
+          "head_sha": "20c52333fd4aaa70769b6444aff89e55f2b2490a",
           "dirty_files": [
-            "record/proofs/work/generic/R-0018.jsonl"
+            "record/proofs/work/generic/R-0019.jsonl",
+            "work/rounds/R-0019/evidence-CTG-0003.json"
           ]
         }
       },
       "artifacts": [],
       "notes": [
-        "round_id=R-0018",
-        "proof_sequence=4"
+        "round_id=R-0019",
+        "proof_sequence=5"
       ],
-      "previous_run_hash": "0649894111ac47526277e504d5b2e3edf60746e56725408ea2179a9219b898c1",
-      "manifest_hash": "218df5ef80d8d7ba40dda6881361273fe2e9168c33d1ece791df01b69c858793",
-      "sequence": 101,
-      "previous_hash": "0649894111ac47526277e504d5b2e3edf60746e56725408ea2179a9219b898c1"
+      "previous_run_hash": "1d8cd9d5df914ba0b21900edb3159f965b68d9d2b877a627e4d19a48348041b2",
+      "manifest_hash": "0c169a2d578bd0ff075f310a53cc401979b8c3fe30c1edcdeedca9ee9b6976a9",
+      "sequence": 102,
+      "previous_hash": "1d8cd9d5df914ba0b21900edb3159f965b68d9d2b877a627e4d19a48348041b2"
     }
   ]
 }
