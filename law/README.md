@@ -11,8 +11,8 @@ references.
   catalog.
 - [`trace.json`](./trace.json) maps invariant records to their authority
   documents and tests.
-- [`glossary/`](./glossary/README.md) is the glossary index; its corpus is
-  pending CTG-0002.
+- [`glossary/`](./glossary/README.md) indexes 44 draft `GE` entries under joint
+  Owner and Architect authority; explicit Owner acceptance is still pending.
 - [`schemas/`](./schemas/README.md) contains the DEVAI 1.5.6 schema roster and
   its digest manifest. Domain schemas remain indexed in
   [`docs/framework/schemas/`](../docs/framework/schemas/README.md).
@@ -21,7 +21,7 @@ references.
   implementation sources.
 - [`adr/`](./adr/README.md) contains architecture decision records.
 
-**Gate:** `pnpm verify:law-corpus` enforces law corpus rules (a), (b), and (e).
-DEVAI members `invariants`, `invariant-strategies`, `trace`, `glob-guards`, and
-`schemas` validate their respective catalog, trace, schema roster, and adopter
-policy inputs.
+**Gate:** `pnpm verify:law-corpus` enforces law corpus rules (a)–(e).
+DEVAI members `invariants`, `invariant-strategies`, `trace`, `glossary`,
+`journeys`, `glob-guards`, and `schemas` validate their respective catalog,
+trace, glossary, journey, schema roster, and adopter policy inputs.

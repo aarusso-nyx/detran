@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-021",
+  "title": "Abordagem mediada por bodycam — gravação obrigatória, ciência ao cidadão e vínculo com a evidência",
+  "persona": {
+    "role": "field-agent"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Início do turno — câmera liga antes do primeiro ato: Ao abrir turno (JRN-TEAT-001 passo 1), a tela de status precisa mostrar, de forma persistente (não um toggle discreto), que a bodycam está gravando — porque a obrigação é \"durante todo o período de serviço operacional\", entendido como todo o tempo uniformizado/escalado/disponível, não só durante um AIT (REF-DETRANAM-TALAO-BODYCAM art. 5º)."
+    },
+    {
+      "seq": 2,
+      "action": "Toda interação aciona o mesmo regime: Wallace atende um chamado que não vira autuação (abordagem sem autuação, tela `approach-no-ait`) — a gravação é obrigatória do mesmo jeito, já que a norma cobre \"toda interação entre agente de trânsito e condutor ou usuário da via\" (art. 4º, VIII), não apenas os casos que terminam em AIT."
+    },
+    {
+      "seq": 3,
+      "action": "Abordagem tensa. Um condutor se recusa a apresentar documentos, levanta a voz, questiona a legitimidade da parada. Wallace sabe que está sendo gravado e mantém o tom — a bodycam funciona nos dois sentidos: protege o cidadão de eventual abuso e protege Wallace de alegação falsa depois. O app não interfere na interação humana; o papel do desenho aqui é só garantir que o indicador de gravação continue visível e que nada na interface sugira que Wallace pode pausar a câmera para \"resolver informalmente\" — é vedado (art. 8º, III)."
+    },
+    {
+      "seq": 4,
+      "action": "Vedações durante o serviço: Wallace não pode desligar a câmera (salvo exceção prevista, como uso de banheiro — art. 8º, I), nem alterar configuração, metadados, hora, data, geolocalização, nem editar/copiar/excluir/transferir arquivos (art. 8º, II e IV) — a interface do TEAT não deveria oferecer nenhum atalho que pareça permitir isso, mesmo que o controle real da câmera seja de outro sistema."
+    },
+    {
+      "seq": 5,
+      "action": "Falha do equipamento em campo. No meio de uma abordagem, o indicador muda para \"gravação interrompida\" — bateria, memória ou falha de transmissão. Wallace precisa comunicar imediatamente a falha (art. 9º), registrada em sistema próprio ou relatório diário (§1º). A jornada aqui replica o mesmo princípio já usado para evidência anexada pelo agente (RN-TEAT-002): a falha não invalida o ato legal em curso (o AIT continua podendo ser lavrado e finalizado), mas gera uma pendência explícita que não pode ficar silenciosa — Wallace não deveria precisar \"lembrar depois\" de relatar; a tela deveria forçar o registro da falha antes de deixá-lo prosseguir sem indicador de gravação ativo."
+    },
+    {
+      "seq": 6,
+      "action": "Vínculo com o ato legal: Quando adotada como evidência formal, a gravação da janela de tempo da abordagem deveria se vincular automaticamente ao AIT/medida/procedimento de etilômetro correspondente — não como anexo pontual escolhido pelo agente (o modelo de `EvidenceLink` de hoje), mas como fluxo contínuo e paralelo, correlacionado por timestamp e identidade do agente/dispositivo. Este é o ponto de maior mudança estrutural em relação ao modelo de evidências atual — proposta `RN-TEAT-007`, pendente de decisão de escopo."
+    },
+    {
+      "seq": 7,
+      "action": "Câmera veicular (viatura): Quando tecnicamente viável, o mesmo regime se estende à câmera da viatura (art. 15) — Wallace não opera essa câmera diretamente, mas o app deveria refletir o status dela no mesmo painel, quando aplicável, para não criar dois lugares diferentes de verificação."
+    },
+    {
+      "seq": 8,
+      "action": "Fim do turno: Wallace só pode desligar a câmera ao sair de status operacional (`close-shift`) — o app não deveria permitir encerrar turno sem confirmar que a gravação foi devidamente finalizada, análogo ao encerramento de qualquer outro recurso do turno."
+    }
+  ],
+  "postconditions": [],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "100% do período de serviço operacional com gravação ativa (proxy: zero janelas de tempo sem indicador, exceto exceções previstas); 100% das falhas de gravação comunicadas no mesmo turno; zero atos legais bloqueados por falha de bodycam (a falha gera pendência, nunca impede a lavratura)."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-TEAT-005",
+    "docs/framework/product/domains/inf/teat/journeys/JRN-TEAT-005.md"
+  ]
+}

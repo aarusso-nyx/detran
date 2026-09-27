@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-036",
+  "title": "Condutor obtém o BAT do próprio sinistro — dados de terceiros sempre mascarados",
+  "persona": {
+    "role": "condutor envolvido"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Busca por vocabulário coloquial, não pelo nome técnico: A busca no PORTAL reconhece \"boletim de acidente\", \"sinistro carro batida\", \"boletim de ocorrência de trânsito\" e \"BAT\" como o mesmo pedido — ninguém fora do órgão usa a nomenclatura formal da Lei 14.599/2023 no dia a dia."
+    },
+    {
+      "seq": 2,
+      "action": "Localização restrita a sinistros em que Fábio consta como envolvido: Nunca uma busca aberta por data/local que exponha sinistro de terceiros — a chave de busca (CPF/CNH + dado do veículo, ou protocolo já recebido) é deliberadamente estreita, mesmo padrão de JRN-BOAT-005 passo 2."
+    },
+    {
+      "seq": 3,
+      "action": "O que Fábio vê depende de quem ele é no sinistro, não de um campo fixo: Como um dos condutores envolvidos, Fábio vê dados do próprio veículo, dados objetivos do sinistro (local, data/hora, dinâmica, croqui, classificação de gravidade) — mas não vê `hospital_destination` nem `health_notes` da vítima, nem os dados pessoais completos do outro condutor além do estritamente necessário para o seguro (placa e seguradora, não CPF/endereço). Se fosse a própria vítima consultando, ela veria seus próprios dados de saúde — a máscara é por identidade do titular consultando, nunca por uma lista estática de campos públicos/privados (JRN-BOAT-005 passo 4; `est/boat/_intake/ux-notes.md` §d.3)."
+    },
+    {
+      "seq": 4,
+      "action": "Resumo em linguagem simples primeiro, documento oficial disponível, nunca obrigatório de ler: A tela de consulta mostra um resumo direto (sinistro registrado, protocolo, data) antes de qualquer coisa; o BAT oficial fica disponível para download, útil para Fábio entregar à seguradora tal como está — mesmo princípio já fixado para decisões de recurso em `transversal/portal/_intake/ux-notes.md` §c."
+    },
+    {
+      "seq": 5,
+      "action": "Status honesto quando o registro ainda não está fechado, sem prazo inventado: Se o registro do agente ainda está em andamento (não validado/fechado), a tela mostra \"em andamento — aguardando finalização pelo órgão\", nunca uma data de disponibilização inventada — nenhum prazo legal confirmado existe para o caso estadual, e prometer um prazo sem base cria uma expectativa que o órgão pode não conseguir cumprir (JRN-BOAT-005 passo 6)."
+    },
+    {
+      "seq": 6,
+      "action": "Vocabulário de bastidor nunca vaza: \"Pendente de complemento de vítima\", `pending_complement`, RENAEST, os estados internos `RECEBIDO`/`CONSOLIDADO` — nada disso aparece cru para Fábio; ele vê \"sinistro registrado — em processamento\" e, quando concluído, \"concluído e arquivado\" (JRN-BOAT-005 passos 7-8)."
+    },
+    {
+      "seq": 7,
+      "action": "Encaminhamento direto à seguradora, sem passo extra do cidadão: Depois de baixado, o documento está pronto para anexar ao pedido de sinistro do seguro de Fábio — o PORTAL não exige que ele volte ao balcão físico para autenticar nada além do que já está assinado digitalmente pelo agente que registrou o BAT."
+    }
+  ],
+  "postconditions": [
+    "Encaminhamento direto à seguradora, sem passo extra do cidadão: Depois de baixado, o documento está pronto para anexar ao pedido de sinistro do seguro de Fábio — o PORTAL não exige que ele volte ao balcão físico para autenticar nada além do que já está assinado digitalmente pelo agente que registrou o BAT."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Zero exposição de dado sensível de terceiro (saúde de vítima, PII de outro envolvido) na consulta cidadã; zero prazo de disponibilização exibido sem base normativa confirmada; % de consultas que terminam em download sem contato humano com o órgão; zero vocabulário de estado interno exposto cru na tela do cidadão — os mesmos quatro critérios já fixados por JRN-BOAT-005, agora medidos do lado PORTAL."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-PORTAL-007",
+    "docs/framework/product/transversal/portal/journeys/JRN-PORTAL-007.md"
+  ]
+}

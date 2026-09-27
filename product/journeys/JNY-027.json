@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-027",
+  "title": "Auditor reconstrói o que se sabia e quando — trilha sem exposição desnecessária de dado sensível",
+  "persona": {
+    "role": "auditora"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Ponto de partida — um desfecho, não uma pessoa: Beatriz abre a investigação a partir de um caso RAIT que atingiu `PRESCRITO_OPERACIONAL` — o próprio WF-RAIT-002 §4.1 já trata esse estado como \"falha de processo — registro de incidente, apuração de causa, comunicação ao LEGAL/auditoria; nunca deveria ocorrer\". A trilha de auditoria é, portanto, um requisito embutido no desenho da escada, não um extra que Beatriz precisa pedir."
+    },
+    {
+      "seq": 2,
+      "action": "A linha do tempo é reconstruída por eventos, não por opinião: O DASHBOARD mostra, em ordem: quando o processo entrou em `ALERTA_N1` (12 meses), quem foi notificado, quando passou a `ALERTA_N2` (18 meses, coordenador), `ALERTA_N3` (21 meses, gestor), `CRITICO` (23 meses, presidente) — cada transição com timestamp e destinatário, exatamente a cadeia descrita em WF-RAIT-002 §6. Beatriz não precisa perguntar a ninguém \"quando você soube\" — o sistema já registrou."
+    },
+    {
+      "seq": 3,
+      "action": "Onde a trilha esbarra em dado sensível, ela não para — ela se adapta: Se a investigação tocar um caso BOAT com dado de saúde de vítima, a trilha mostra que houve acesso ao dado bruto, por quem e com que finalidade declarada (RN-BOAT-003 item de auditoria), mas não expande automaticamente o conteúdo clínico na tela de Beatriz — ela vê o fato do acesso, não o conteúdo acessado, a menos que a finalidade da própria investigação exija e ela declare isso explicitamente (mesmo princípio de \"revelação auditada por identidade\" de `est/boat/_intake/ux-notes.md` §d, aplicado agora ao papel de auditor, não só ao operador comum)."
+    },
+    {
+      "seq": 4,
+      "action": "Falha de alerta é distinta de falha de ação: A trilha separa duas perguntas que costumam ser confundidas: \"o sistema alertou a tempo?\" (pergunta sobre o desenho do DASHBOARD/WF) e \"a pessoa notificada agiu?\" (pergunta sobre desempenho individual). Beatriz precisa das duas respostas separadas — se o alerta nunca chegou, a falha é do sistema; se chegou e ninguém agiu, é outra investigação, com outro escopo."
+    },
+    {
+      "seq": 5,
+      "action": "Nenhuma reconstrução aceita \"não lembro\" como resposta do sistema: Se um evento de notificação não tiver registro (por exemplo, uma notificação fora do sistema, por telefone), o DASHBOARD mostra essa lacuna como lacuna — não preenche silenciosamente com uma suposição do que \"provavelmente\" aconteceu."
+    },
+    {
+      "seq": 6,
+      "action": "Fechamento — relatório de trilha, não de culpa: O produto da investigação de Beatriz é uma linha do tempo verificável, entregue a quem decide a apuração de responsabilidade — o DASHBOARD fornece o fato, não a conclusão disciplinar, que é decisão humana fora do escopo do sistema."
+    }
+  ],
+  "postconditions": [
+    "Fechamento — relatório de trilha, não de culpa: O produto da investigação de Beatriz é uma linha do tempo verificável, entregue a quem decide a apuração de responsabilidade — o DASHBOARD fornece o fato, não a conclusão disciplinar, que é decisão humana fora do escopo do sistema."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "100% das transições de nível de alerta (qualquer escada, qualquer domínio) com timestamp e destinatário registrados; zero investigação bloqueada por falta de trilha (a lacuna, quando existe, é visível, não motivo de impasse); zero exposição de dado clínico/sensível bruto na trilha de auditoria sem finalidade declarada e registrada."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-DASH-005",
+    "docs/framework/product/transversal/dashboard/journeys/JRN-DASH-005.md"
+  ]
+}

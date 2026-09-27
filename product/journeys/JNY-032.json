@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-032",
+  "title": "Cidadão acompanha o processo e recebe a decisão — provido ou negado",
+  "persona": {
+    "role": "cidadão"
+  },
+  "preconditions": [
+    "O cidadão protocolou uma defesa ou recurso e aguarda decisão."
+  ],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Painel de acompanhamento único: Toda multa com processo em andamento aparece com um status em linguagem cidadã e uma linha do tempo simples (protocolado → em análise → decidido), nunca com o nome interno do estado do workflow. O cidadão não vê \"DISTRIBUIDO(analista)\" — vê \"Em análise desde DD/MM\"."
+    },
+    {
+      "seq": 2,
+      "action": "Notificações, não busca ativa: Cada mudança relevante de estado dispara notificação (push/ e-mail, e SNE quando aderido — REF-CONTRAN-931 art.4º) — o cidadão não precisa entrar no PORTAL todo dia para saber se algo mudou. Isso inclui abertura de diligência (com o prazo próprio para responder) e julgamento marcado em pauta."
+    },
+    {
+      "seq": 3,
+      "action": "Transparência sobre o que está pendente de quem: Quando o processo está em diligência aguardando prova do cidadão, a tela diferencia claramente \"está com você\" (ação pendente, prazo correndo) de \"está com o órgão\" (ação pendente, sem nada a fazer da parte dele) — erro comum a evitar é deixar ambíguo de quem é a bola."
+    },
+    {
+      "seq": 4,
+      "action": "Decisão — provido. A multa é cancelada. A tela de resultado é positiva e definitiva: \"Multa cancelada. Você não precisa fazer mais nada.\" Se o pagamento já tinha sido feito antecipadamente (permitido, sem prejuízo do recurso — 918 art.33), o caminho de restituição corrigida (REF-CTB-extracts-raw art.286 §2º) é mostrado junto, não como um processo separado que o cidadão tem que descobrir sozinho."
+    },
+    {
+      "seq": 5,
+      "action": "Decisão — negado, ainda cabe recurso: Se negado na JARI, a tela de resultado já abre com o próximo passo possível: recorrer ao CETRAN em 30 dias (REF-CTB-extracts-raw art.288), com o parecer e a conclusão da JARI já anexados de ofício ao próximo requerimento — o cidadão nunca junta de novo documentos que o órgão já tem (RN-RAIT-003; reforçado por REF-LEI-14129-2021 art.3º XIII/art.26, condicionado à adesão do AM — ver nota de revisão). Recorrer é ato de assinatura avançada (REF-DECRETO-10543-2020 art.4º, II, \"h\") — o mesmo passo guiado de elevação de JRN-PORTAL-001 aparece aqui se necessário, embutido no botão \"Recorrer ao CETRAN\"."
+    },
+    {
+      "seq": 6,
+      "action": "Decisão — negado, definitivo (CETRAN): Última instância administrativa (REF-CTB-extracts-raw art.290) — a tela é honesta sobre não haver mais recurso administrativo, mostra o valor final a pagar com os juros aplicáveis só a partir do encerramento da instância (918 art.23 §4º), e as formas de pagamento — sem jargão de \"consolidação\" sem explicação."
+    },
+    {
+      "seq": 7,
+      "action": "Rastro completo, a qualquer momento: Em qualquer ponto da jornada, o cidadão pode abrir o histórico completo do processo (documentos enviados, decisões, prazos cumpridos) — modelo de referência de completude é MG (processo 100% digital, decisão visível no portal — REF-BENCH-ESTADOS)."
+    }
+  ],
+  "postconditions": [
+    "Rastro completo, a qualquer momento: Em qualquer ponto da jornada, o cidadão pode abrir o histórico completo do processo (documentos enviados, decisões, prazos cumpridos) — modelo de referência de completude é MG (processo 100% digital, decisão visível no portal — REF-BENCH-ESTADOS)."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Zero contato de suporte perguntando \"o que está acontecendo com meu processo\" para casos com notificação já disparada; tempo entre decisão assinada no RAIT e visibilidade no PORTAL (meta: mesmo dia); % de decisões \"provido com pagamento antecipado\" que resultam em restituição sem o cidadão precisar abrir chamado à parte."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-PORTAL-003",
+    "docs/framework/product/transversal/portal/journeys/JRN-PORTAL-003.md"
+  ]
+}

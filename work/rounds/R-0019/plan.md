@@ -287,14 +287,62 @@ interpretação. Correções em andamento antes de revisão restrita ciclo 2.
   trace; DEVAI `invariants` e `trace` PASS. Revisão restrita ciclo 2 da outra
   família: **PASS**, zero findings; 28/28 testes reexecutados pelo reviewer.
 
+- TASK-0006, `reference-gap`: pré-aceite detectou GE-004 abreviada em relação à linha 27 de `domain.md`; Architect corrigiu o termo para “Defesa prévia (defesa da autuação)”. Paridade literal 44/44 e `prettier --check` PASS. Contrato CTG-0002 aceito para transcrição; TASK-0007 e TASK-0008 iniciadas em locks disjuntos.
+
+- CTG-0002, `plant-bug` contratual: pré-transcrição comparou o contrato aos esquemas DEVAI instalados e encontrou `authority: "Architect"` inválido para GE e `AC-<JNY>-NNN` inválido para JNY. Adenda A-02-01 fixa `authority: "joint"` e `AC-NNN` local a cada jornada, preservando os critérios; workers 0007/0008 foram avisados.
+
+- TASK-0008, `reference-gap` no prompt: o contrato exigia transcrição integral de 40 JRN e 110 UC, mas a lista fechada de leitura omitia as fichas-fonte. Antes de qualquer escrita, ampliou-se somente a lista de leitura para os 12 globs exatos de `journeys/JRN-*.md` e `use-cases/UC-*.md` nos seis apps; `compositions.json` e `prompt_composition_id` foram recalculados. Nenhuma fronteira de escrita, critério ou fonte normativa mudou. Primeira tentativa reportou bloqueio sem artefatos; iteração restrita fará a transcrição.
+
+- TASK-0007 concluída: 44 GE `draft`, `authority: joint`, `devai check --only glossary` 44/44 sem erros e `pnpm format:check` PASS. Correção pré-aceite alinhou `law/glossary/README.md` à autoridade conjunta; `source_pending` em GE-010/026/036. TASK-0008 segue na iteração com as 150 fichas-fonte liberadas.
+
+- TASK-0008, `plant-bug` semântico após iteração Luna: 40 JNY e 110 UC passaram schema/contagem/formato e títulos/proveniência exatos, mas a extração mecânica preencheu `postconditions` de todos os JNY com o último passo, incluindo restrições contínuas (JNY-008) e regra de apresentação (JNY-040); alguns atores ainda incluem condição/objetivo. Escalação Architect Terra/high restrita a `product/**` para revisão das 150 fichas e classificação fiel, antes de TASK-0009.
+
+- TASK-0008 concluída após escalação Architect Terra/high: `devai check --only journeys` 40/40 sem erros, `pnpm format:check` PASS, UC 110/110 IDs únicos e títulos exatos; 12 JNY com pré-condição e 22 com pós-condição explícita, JNY-008/040 `[]`/`[]`. Os seis bundles cobrem todos os atores sem duplicatas. TASK-0009 Inspector liberada.
+
+- TASK-0009 Inspector concluída em RED legítimo: `pnpm law:test` 37 totais, 31 PASS e seis negativos novos RED ligados a termo/ID específico; positivos novos e testes CTG-0001 verdes; `node --check` e `pnpm format:check` PASS. TASK-0010 Engineer liberada para implementar regras (c)/(d) sem editar testes.
+
+- TASK-0010 Engineer concluída: `pnpm law:test` 37/37 PASS, `pnpm verify:law-corpus` PASS no corpus real, `pnpm check` exit 0 pelo worker. Regras (c)/(d) cobrem contagens fechadas, seis apps, mapa fixo JRN→JNY, paridade de título/bundle, duplicatas e role containment. Maestro repetirá gates de grupo e pedirá delivery-review cross-family antes de qualquer commit.
+
+- CTG-0002, `sensor-error` operacional: quatro árvores antigas de `pnpm check` da execução Engineer permaneceram em `blueprints:check` e competiam pela CPU. O maestro identificou os PIDs e o cwd exato desta worktree, encerrou só essas quatro árvores e preservou a execução de gate corrente. Nenhum arquivo gerado apareceu no status.
+
+**Gates CTG-0002 pelo maestro, antes do delivery-review:** `pnpm law:test`
+37/37 PASS; `pnpm verify:law-corpus` PASS; DEVAI `glossary` 44/44,
+`journeys` 40/40 e os seis membros anteriores PASS; `devai doctor` OK;
+`docs:kb:check` e `docs:kb:publish-check` PASS; `sense spec_depth` PASS com
+9 invariantes e inventário UC não vazio; `pnpm check` completo PASS (exit 0),
+incluindo `blueprints:check`, typecheck, lint, testes e builds. O status Git
+antes/depois da repetição completa ficou idêntico. `git fetch` encontrou
+`bf337148` (PR #135 de R-0018) em `origin/main`; integrar por merge antes do
+PR CTG-0002 e repetir os gates aplicáveis.
+
+- Delivery-review CTG-0002 ciclo 1 pela outra família (Claude Opus 5.5): **REVIEW**, quatro high e cinco low. High: 45 passos JNY perdem detalhes materiais de fonte; ramos de rejeição (c)/(d) sem testes diretos; `law/README.md` desatualizado; `product/README.md` sem linha explícita de autoridade Owner. Correções segregadas: Architect produto escalado Sol/high, Inspector testes Luna/medium, Architect índice law Luna/low. Revisor ciclo 2 fica restrito aos achados corrigidos. Nenhum commit de conteúdo ou PR antes de PASS.
+
+- TASK-0007, iteração 2/2: Architect corrigiu `law/README.md` e o cabeçalho de autoridade do índice do glossário; links relativos e `pnpm format:check` PASS. Registro em `reports/TASK-0007-delivery-correction.md`.
+
+- Architect, achado low da revisão: GE-010 e seu contrato agora dizem que “Registro Nacional de Infrações” é a expansão dada pela fonte e que a **fonte normativa** segue pendente (`source_pending`); `docs/framework/glossary/domain.md:33` permanece intacto. Relatório TASK-0010 foi ajustado para descrever a verificação efetiva de paridade GE com linhas fonte e descoberta dos bundles, sem alegar contador/whitelist próprios.
+
+- TASK-0008, escalada Sol/high de correção de entrega: auditoria 40/40 JNY e 294/294 passos de narrativa, com 49 passos restaurados em 26 jornadas; 110 UC/532 passos de fluxo conferidos. Autoridade Owner do índice `product/` restaurada, papéis equivalentes normalizados e presidente incluído em UC-RAIT-026. `devai check --only journeys` 40/40 e `pnpm format:check` PASS. Relatório em `reports/TASK-0008-delivery-correction.md`.
+
+- TASK-0009, iteração Inspector 1/2: 19 negativos diretos acrescentados; `pnpm law:test` 56/56 PASS. Em cópia descartável do verificador, cada caso ficou RED quando o respectivo código de violação foi suprimido (19/19). `pnpm format:check` do maestro PASS após formatação do prompt de review ciclo 2. Relatório em `reports/TASK-0009-delivery-correction.md`.
+
+- Delivery-review CTG-0002 ciclo 2 restrito, Claude Opus 5.5: **PASS**. O Auditor comparou 294/294 passos JNY com as fontes, confirmou os quatro high resolvidos, 19 testes diretos (56/56 green), índices de autoridade e correções low. Restam só duas observações low: validação mais estrita de proveniência/nome do GE e granularidade da prova de mutação por disjunção; fora da lista imutável de rejeições §5. Ver `reviews/delivery-review-CTG-0002-2.json`; diff de correção SHA-256 `559214bb2624c1ea080e85a8a3c98842cb1a903836158b73f747b2927b8c5bd1`.
+
+- Gates após correção e revisão: `pnpm law:test` 56/56, `pnpm verify:law-corpus`, `pnpm format:check`, DEVAI `glossary` 44/44 e `journeys` 40/40 PASS. `pnpm check` completo PASS (exit 0, inclusive blueprints, contracts, typecheck, lint, testes e builds). A diferença do status antes/depois do check contém só os arquivos de relatório, revisão e status de tarefa escritos pelo maestro durante a execução; nenhum gerado ou código fora do escopo apareceu. Repetir após integração de `origin/main` com snapshot estável.
+
+- Integração pré-PR CTG-0002: commits segregados `17ee8e27` (product), `102d48fe` (law/glossário), `7f5451f4` (gate) e `c18ec88e` (contrato, OD e trilha). `origin/main` avançou até `b1268a35` com PRs #135 (R-0018) e #133 (R-0017). Merge normal `c479ca4e` conservou OD-R19-001…006 e OD-R17-001/002; conflito de `record/proofs/chain.json` foi resolvido aceitando integralmente a versão máquina de `main`, sem edição manual. `evidence verify --scope chain` PASS, head `ff127d27a3905ae2799fa5a7a4c97b5cf98e833481bc9ee75459eb305bc4a73f`. A observação CTG-0001 EV-8749e9ca5c3e75bf fora emitida no SHA integrado exato antes desta integração; tentativa de reemissão agora devolveu `AUDIT_OBSERVE_EXACT_HEAD_REQUIRED` porque o HEAD atual já avançou. Os cinco artefatos de observação permanecem e serão referenciados na próxima prova genérica gerada pela fronteira DEVAI para manter a âncora na cadeia de `main`.
+
+- Gates pós-merge `c479ca4e`: oito membros DEVAI PASS (invariants 9, trace 1, test-trace 0, glossary 44, journeys 40; demais sem erro), `pnpm law:test` 56/56, `pnpm verify:law-corpus`, `docs:kb:check` (773 artefatos), `docs:kb:publish-check` (201 arquivos), `devai doctor` e `sense run spec_depth` PASS (9 INV, 41 ADR, 6 bundles). `pnpm check` completo **exit 0**; `git status --porcelain` antes/depois **idêntico** (nenhum arquivo gerado).
+
 ## Retomada
 
-**Estado corrente após delivery-review ciclo 1:** TASK-0001…0005 concluídas,
-com escaladas Inspector e Engineer para os achados high. `pnpm law:test`
-28/28 e `pnpm verify:law-corpus` PASS após correção; revisão restrita ciclo 2
-**PASS** e `pnpm check` completo em execução. O Checkpoint 1 abaixo é histórico.
-Próximo passo: gates finais, commits segregados, evidência e
-PR CTG-0001. CTG-0002 só começa após seu merge.
+**Estado corrente — CTG-0002:** CTG-0001 está integrado e observado no HEAD
+exato. TASK-0006…0010 concluídas; `pnpm law:test` 37/37,
+`pnpm verify:law-corpus`, DEVAI `glossary` 44/44 e `journeys` 40/40,
+`docs:kb:check` e `docs:kb:publish-check` passaram. `pnpm check` completo
+também passou na repetição pelo maestro. Próximos passos:
+delivery-review cross-family, commits segregados, evidência e PR da proposta
+CTG-0002; o merge exige aceite explícito do Owner. O restante desta seção
+preserva snapshots históricos da integração CTG-0001 e do Checkpoint 1.
 
 **Integração pré-PR CTG-0001:** commits segregados por autoridade; branch
 local ainda não publicado rebaseado em `origin/main` `4bd1d553` (R-0018
@@ -328,6 +376,14 @@ sequência 2. Ambas as linhas R-0019 (sequências 1 e 2) têm âncora em
 `record/proofs/chain.json`; `evidence verify --scope chain` PASS com head
 `022a6994a3e49f8c59cd44d3e2bb32d46cefbf96a1580b182f7cd246c6ffc787`.
 Os gates do novo candidate e CI serão repetidos antes do merge.
+
+**CTG-0001 integrado:** PR #132 mesclado em `origin/main` como
+`968f07296a49f27f7bfccc8f453b36c44ded0373` após os sete checks
+obrigatórios PASS e delivery-review ciclo 2 PASS. `devai audit observe` no
+HEAD exato integrou EV-8749e9ca5c3e75bf; a observação gerada e a cadeia
+atualizada entraram em commit separado `chore(devai)`. TASK-0006 de CTG-0002
+foi liberada depois desse merge. A proposta CTG-0002 ainda requer aceite
+explícito do Owner antes de seu próprio merge.
 
 **Emenda de orçamento — Owner, 2026-09-26:** o Owner escreveu nesta conversa
 “waive token budget to allow this round to finish”. O limite de 650.000 tokens

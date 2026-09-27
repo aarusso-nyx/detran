@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-028",
+  "title": "Gestor compara unidades e circuitos sem transformar pessoas em ranking punitivo",
+  "persona": {
+    "role": "gestor DETRAN"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "A tela nunca abre em ranking: Roberto não vê uma lista ordenada de \"melhor para pior\" assim que entra — vê uma distribuição (quantas unidades estão dentro da faixa esperada, quantas fora) antes de qualquer comparação nomeada. A primeira leitura é sobre o sistema como um todo, não sobre quem está no topo ou na base."
+    },
+    {
+      "seq": 2,
+      "action": "Quando ele pede o detalhe por unidade, o contexto vem junto com o número: Uma unidade do BOAT com taxa de `pending_complement` acima da média aparece ao lado do volume que ela processa e da composição da equipe (rotatividade recente, por exemplo) — nunca o número isolado, que convida à leitura mais simples e mais injusta (\"essa unidade é pior\")."
+    },
+    {
+      "seq": 3,
+      "action": "Produtividade nunca aparece sozinha — sempre pareada com qualidade: No RAIT, o mecanismo de accountability de WF-RAIT-002 §5 (`ADVERTIDO`→`AFASTADO_TEMP`, modelo CETRAN-ES) existe para atraso reincidente na relatoria — mas o DASHBOARD nunca apresenta \"casos julgados por relator\" como métrica isolada de mérito, porque isso incentivaria decisões apressadas. Volume de julgamento só aparece ao lado de indicador de qualidade (taxa de decisão anulada em instância superior, quando existir esse dado) — nunca um sem o outro."
+    },
+    {
+      "seq": 4,
+      "action": "Nenhum indicador individual nomeado é exposto fora do canal de gestão direta: Roberto pode ver o desempenho agregado de um pool ou de uma unidade; o desempenho de uma pessoa física específica (um relator, um agente de campo) fica num nível de acesso mais restrito, com finalidade declarada — o mesmo princípio de revelação auditada já usado para dado sensível de saúde (ver `ux-notes.md` §e), aplicado aqui a dado de desempenho individual."
+    },
+    {
+      "seq": 5,
+      "action": "\"Correr para julgar sem instruir\" é um padrão que o painel precisa conseguir mostrar, não esconder atrás de um número de produtividade alto: Se uma unidade decide rápido mas com alta taxa de diligência reaberta ou decisão revertida depois, o DASHBOARD expõe esse padrão junto — velocidade sem qualidade aparece como alerta de processo, não como destaque de desempenho."
+    },
+    {
+      "seq": 6,
+      "action": "A conversa que a tela habilita é \"o que essa unidade precisa\", não \"quem é o pior\": Quando Roberto identifica uma unidade fora da faixa esperada, a ação sugerida pelo desenho da tela é abrir um plano de apoio/treinamento — não existe, no DASHBOARD, um botão de ação disciplinar diretamente vinculado ao ranking, porque essa vinculação automática é exatamente o incentivo perverso que a jornada busca evitar."
+    }
+  ],
+  "postconditions": [],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Nenhum indicador de produtividade exibido sem indicador de qualidade pareado; zero ranking nomeado de indivíduos acessível fora do canal de gestão direta; adoção de planos de apoio/treinamento originados de uma leitura do painel (sinal de que a tela está gerando ação construtiva, não ansiedade de ranking)."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-DASH-006",
+    "docs/framework/product/transversal/dashboard/journeys/JRN-DASH-006.md"
+  ]
+}

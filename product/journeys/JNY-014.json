@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-014",
+  "title": "Relator prepara voto e conduz a sessão de julgamento da JARI",
+  "persona": {
+    "role": "relator JARI"
+  },
+  "preconditions": [
+    "Raimundo foi designado relator de um lote de recursos por sorteio."
+  ],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Recebimento do lote: Raimundo vê os recursos distribuídos a ele com prazo interno de parecer sinalizado (proposta de desenho: 20 dias, referência CETRAN-ES; não é o teto legal — o teto legal real do julgamento colegiado é 24 meses, REF-CTB-extracts-raw art.285 §6º/art.289 — o prazo interno existe só para o órgão nunca chegar perto do teto). O sistema mostra, para cada processo, quantos dias já correram desde a interposição do recurso."
+    },
+    {
+      "seq": 2,
+      "action": "Leitura do dossiê: Cada processo chega com o parecer da autoridade de 1ª instância (quando aplicável), os fatos, anexos e a instrução já feita pelo analista (JRN-RAIT-001) — Raimundo não parte do zero; o dossiê é montado para leitura corrida, não uma pasta de documentos soltos."
+    },
+    {
+      "seq": 3,
+      "action": "Redação do voto: Ele registra resumo descritivo + análise fundamentada + voto (provimento / não provimento), no mesmo padrão estruturado para todos os relatores — facilita a leitura pelos demais membros na sessão."
+    },
+    {
+      "seq": 4,
+      "action": "Fechamento de pauta: A secretaria monta a pauta da sessão a partir dos votos prontos (WF-RAIT-002 — marcador de backlog do BPO); Raimundo confirma disponibilidade e recebe a pauta com antecedência para revisão dos votos dos colegas."
+    },
+    {
+      "seq": 5,
+      "action": "Sessão da JARI. Presencial ou por videoconferência. O sistema verifica quorum antes de abrir (maioria simples com presença obrigatória do presidente ou suplente — REF-CONTRAN-357 item 8.2) e bloqueia a abertura se não atingido, evitando decisão inválida por vício de quorum. Para cada processo pautado: Raimundo apresenta o voto, os demais deliberam, o resultado (provido/negado) é registrado ao vivo — não depois, de memória."
+    },
+    {
+      "seq": 6,
+      "action": "Ata: A ata é gerada a partir dos registros da sessão (não redigida do zero depois) — resultado por processo, votos, presença, ressalvas. Fundamentação e publicidade são obrigatórias (REF-CONTRAN-357 item 8.3)."
+    },
+    {
+      "seq": 7,
+      "action": "Comunicação: Ao encerrar a sessão, os resultados dos processos disparam a comunicação ao cidadão pelo PORTAL no mesmo dia (REF-CONTRAN-918 art.17) — Raimundo não precisa de nenhuma ação extra para isso acontecer."
+    }
+  ],
+  "postconditions": [
+    "Comunicação: Ao encerrar a sessão, os resultados dos processos disparam a comunicação ao cidadão pelo PORTAL no mesmo dia (REF-CONTRAN-918 art.17) — Raimundo não precisa de nenhuma ação extra para isso acontecer."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Tempo entre distribuição e voto pronto; % de sessões abertas sem retrabalho de quorum; ata publicada no mesmo dia da sessão; zero processo pautado que não teve comunicação de resultado disparada em até 24h."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-RAIT-002",
+    "docs/framework/product/domains/inf/rait/journeys/JRN-RAIT-002.md"
+  ]
+}

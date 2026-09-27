@@ -1,0 +1,368 @@
+{
+  "schemaVersion": "1.0.0",
+  "roles": [
+    "Agente de trânsito (field-agent)",
+    "Agente de trânsito",
+    "Operador de processamento/autoridade",
+    "Um parceiro facultativo já credenciado",
+    "Coordenador de RENAEST (municipal, onde aplicável, ou estadual — DETRAN-AM)",
+    "Encarregado",
+    "Operadores autorizados do órgão"
+  ],
+  "cases": [
+    {
+      "id": "UC-BOAT-001",
+      "title": "Agente inicia e classifica o registro de sinistro",
+      "goal": "Agente de trânsito (field-agent) chega ao local de um sinistro e inicia o registro estruturado, classificando tipo, momento, local e condições ambientais/de via.",
+      "actors": ["Agente de trânsito (field-agent)"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-001-001",
+          "action": "Agente inicia registro — `POST .../:id/start` (de `draft`) → `CrashRecord` move para `in_attendance` (tela `crash-start`, UX-MOB-060)."
+        },
+        {
+          "id": "UC-BOAT-001-002",
+          "action": "Classifica o tipo de sinistro (`crash_type`)."
+        },
+        {
+          "id": "UC-BOAT-001-003",
+          "action": "Registra data/hora do sinistro (`occurred_at`) e horário de registro (`recorded_at`)."
+        },
+        {
+          "id": "UC-BOAT-001-004",
+          "action": "Registra local (`location_description`, `location_json`, `municipality_code`, `uf`, `road`, `km`, `direction`) — tela `crash-location`, UX-MOB-061."
+        },
+        {
+          "id": "UC-BOAT-001-005",
+          "action": "Registra condições de via, clima, iluminação e sinalização (`road_condition`, `weather_condition`, `lighting_condition`, `signage_condition`) — tela `crash-conditions`, UX-MOB-062."
+        },
+        {
+          "id": "UC-BOAT-001-006",
+          "action": "Registra dinâmica preliminar (`dynamics_description`), passível de complemento posterior."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-002",
+      "title": "Agente registra veículos e pessoas envolvidas",
+      "goal": "Agente registra todos os veículos e pessoas envolvidas no sinistro (condutores, passageiros, pedestres, ciclistas), com seus papéis e vínculos entre si.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-002-001",
+          "action": "Agente adiciona cada veículo envolvido (`crash-vehicles`, UX-MOB-063): `vehicle_snapshot_id`, `role`, `sequence`, `apparent_damage`. A conduta de cena não é capturada aqui — o antigo booleano `evaded` foi substituído pela captura estruturada dos três regimes dos arts. 176-178 em UC-BOAT-007 (RN-BOAT-117)."
+        },
+        {
+          "id": "UC-BOAT-002-002",
+          "action": "Agente adiciona cada pessoa envolvida (`crash-people`, UX-MOB-064): `person_id`, `role` (condutor/passageiro/pedestre/ciclista), vínculo opcional a `crash_vehicle_id`, `used_seatbelt_or_helmet`."
+        },
+        {
+          "id": "UC-BOAT-002-003",
+          "action": "Captura evidências associadas a veículos/pessoas quando aplicável (ver UC-TEAT-003 em `inf/teat/use-cases/`)."
+        },
+        {
+          "id": "UC-BOAT-002-004",
+          "action": "Registro avança para `recorded` quando a captura de campo é considerada completa."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-003",
+      "title": "Agente registra vítimas e classifica gravidade",
+      "goal": "Agente registra cada vítima do sinistro, classificando gravidade e circunstâncias de atendimento, com controle de acesso reforçado aos dados sensíveis coletados.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-003-001",
+          "action": "Agente registra vítima a partir de uma pessoa envolvida (`crash-victims`, UX-MOB-065): `CrashVictim.crash_person_id`."
+        },
+        {
+          "id": "UC-BOAT-003-002",
+          "action": "Classifica gravidade (`severity`, obrigatório) — RN-BOAT-001."
+        },
+        {
+          "id": "UC-BOAT-003-003",
+          "action": "Registra óbito no local, se aplicável (`death_at_scene`, `death_at`)."
+        },
+        {
+          "id": "UC-BOAT-003-004",
+          "action": "Registra se houve atendimento médico (`medical_care`)."
+        },
+        {
+          "id": "UC-BOAT-003-005",
+          "action": "Registra destino de remoção hospitalar, se houver (`hospital_destination` — dado de alta sensibilidade, retenção permanente)."
+        },
+        {
+          "id": "UC-BOAT-003-006",
+          "action": "Registra observações de saúde relevantes (`health_notes` — mesma sensibilidade)."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-004",
+      "title": "Agente captura croqui, evidências e associa AITs/medidas",
+      "goal": "Agente documenta o sinistro visualmente (croqui, fotos) e associa AITs e medidas administrativas lavrados no mesmo atendimento.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-004-001",
+          "action": "Agente anexa croqui (`crash-sketch`, UX-MOB-067): `CrashSketch.sketch_type`, `drawing_json` (croqui estruturado) e/ou `evidence_id` (referência a evidência TEAT — ver UC-TEAT-003)."
+        },
+        {
+          "id": "UC-BOAT-004-002",
+          "action": "Agente captura fotos/evidências do sinistro (`crash-evidence`, UX-MOB-068), seguindo o mesmo fluxo de hash e custódia do núcleo TEAT (RN-TEAT-002)."
+        },
+        {
+          "id": "UC-BOAT-004-003",
+          "action": "Agente associa AIT(s) lavrado(s) no mesmo atendimento (`crash-ait-links`, UX-MOB-069) — vínculo por `crash_record_id`, hoje sem FK rígida em nível de banco (nota de risco em WF-BOAT-001)."
+        },
+        {
+          "id": "UC-BOAT-004-004",
+          "action": "Agente associa medida(s) administrativa(s) relacionada(s) (ex.: remoção de veículo), mesma observação de vínculo não rígido."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-005",
+      "title": "Registro é transmitido, complementado e encerrado",
+      "goal": "Operador de processamento/autoridade valida o registro, encerra-o administrativamente e o sistema o transmite à base nacional RENAEST, com possibilidade de complemento/correção posterior.",
+      "actors": ["Operador de processamento/autoridade"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-005-001",
+          "action": "Sistema/operador valida o registro — `POST .../:id/validate` (de `recorded`, `pending_complement`; atores processing-operator, traffic-authority) → move a `validated`."
+        },
+        {
+          "id": "UC-BOAT-005-002",
+          "action": "Autoridade ou supervisor encerra o registro — `POST .../:id/close` (atores field-supervisor, traffic-authority) → move a `closed`; exige ao menos 1 veículo/pessoa (RN-BOAT-004)."
+        },
+        {
+          "id": "UC-BOAT-005-003",
+          "action": "Sistema transmite o sinistro à RENAEST — `POST /v1/renaest/sinistros` no mock/base nacional, com chave natural `(uf, codigoMunicipio, dataHoraSinistro, orgaoResponsavel)`; registro nacional nasce em `RECEBIDO` (fonte: senatran-mock contracts)."
+        },
+        {
+          "id": "UC-BOAT-005-004",
+          "action": "`CrashRecord` local move a `integrated`; protocolo RENAEST é armazenado."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-006",
+      "title": "Agente registra sinistro com vítima em via que exige remoção de veículo",
+      "goal": "Agente de trânsito atende um sinistro com vítima em que, além do socorro, é necessário remover um ou mais veículos da via — cenário em que o dever de preservar o local para a perícia (CTB art. 176, III) tensiona com a necessidade operacional de liberar a via. Este UC documenta a fronteira de campo entre o registro BOAT e a medida administrativa de remoção (TEAT), sem remodelar a remoção em si.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-006-001",
+          "action": "Agente avalia se o veículo sinistrado tem responsável no local. Se sim, a remoção segue o regime comum de medida administrativa (CTB arts. 269-271, WF-TEAT-004) — reuso por referência, não remodelado aqui."
+        },
+        {
+          "id": "UC-BOAT-006-002",
+          "action": "Se não há responsável no local, aplica-se o regime específico de veículo sinistrado (CTB art. 279-A — RN-BOAT-120) — remoção ao depósito independentemente de infração, nos termos da regulamentação do CONTRAN, com as mesmas disposições do art. 328 (CTB art. 279-A §2º)."
+        },
+        {
+          "id": "UC-BOAT-006-003",
+          "action": "Agente registra, no `CrashRecord`, que houve remoção associada e referencia a medida administrativa/`Termo de Recolhimento` correspondente — mesmo vínculo não rígido já descrito em UC-BOAT-004 (`crash_record_id` sem FK rígida em medidas administrativas)."
+        },
+        {
+          "id": "UC-BOAT-006-004",
+          "action": "Preservação do local para perícia (art. 176, III) é registrada como conduta observada — ver UC-BOAT-007 — antes da remoção ser efetivada, sempre que operacionalmente possível."
+        },
+        {
+          "id": "UC-BOAT-006-005",
+          "action": "Se veículo envolvido possui registrador instantâneo de velocidade/tempo (tacógrafo) e o sinistro tem vítima, somente perito oficial pode retirar o disco/unidade de registro (CTB art. 279 — RN-BOAT-119) — agente de campo não remove esse componente."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-007",
+      "title": "Agente captura as três condutas de cena estruturadas (arts. 176-178) em substituição a `evaded`",
+      "goal": "Agente registra, de forma estruturada, qual dos três regimes de dever da cena do sinistro (CTB arts. 176, 177 e 178) foi observado por cada condutor/veículo envolvido — substituindo o campo booleano único `evaded` de `CrashVehicle` por dados que distinguem os três regimes jurídicos distintos. Este UC é o refinamento de produto mais consequente desta rodada BPO (ver `_intake/bpo-notes.md`).",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-007-001",
+          "action": "Sistema determina o regime aplicável a cada veículo/condutor a partir da presença de vítima no sinistro: - Sinistro com vítima (ao menos uma `CrashVictim` registrada) → regime do art. 176 aplica-se ao condutor envolvido. - Sinistro sem vítima → regime do art. 178 aplica-se."
+        },
+        {
+          "id": "UC-BOAT-007-002",
+          "action": "Para regime art. 176 (sinistro com vítima — RN-BOAT-114), agente registra, para cada condutor, se foram observadas as cinco condutas do caput: - I — prestou ou providenciou socorro à vítima, podendo fazê-lo; - II — adotou providências para evitar novo perigo no local; - III — preservou o local para a perícia; - IV — adotou providências para remover o veículo quando determinado por policial/agente; - V — identificou-se ao policial e prestou informações para o boletim de ocorrência. Omissão em qualquer inciso, podendo o condutor tê-lo feito, caracteriza a infração gravíssima do art. 176 (multa 5x + suspensão do direito de dirigir)."
+        },
+        {
+          "id": "UC-BOAT-007-003",
+          "action": "Registra separadamente se houve recusa de socorro mediante solicitação expressa da autoridade (art. 177 — RN-BOAT-115) — hipótese autônoma e distinta da omissão espontânea do inciso I do art. 176: aqui há ordem direta da autoridade, não apenas dever geral de socorro; e o sujeito ativo é qualquer condutor solicitado, não necessariamente envolvido no sinistro."
+        },
+        {
+          "id": "UC-BOAT-007-004",
+          "action": "Para regime art. 178 (sinistro sem vítima — RN-BOAT-116), agente registra apenas se o condutor adotou providências para remover o veículo, quando necessário à segurança e fluidez do trânsito — dever único e mais leve deste regime (sem exigência de socorro, sem exigência de preservação para perícia)."
+        },
+        {
+          "id": "UC-BOAT-007-005",
+          "action": "Sistema não infere mais evasão a partir de um único booleano — cada conduta observada/omitida é um dado próprio, vinculado ao regime correto pela presença ou ausência de vítima no sinistro."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-008",
+      "title": "Parceiro de saúde credenciado submete dado de sinistro/vítima",
+      "goal": "Um parceiro facultativo já credenciado (secretaria de saúde estadual/municipal, SAMU, corpo de bombeiros ou polícia civil — CTB/Res. 808/2020 art. 6º §1º, II-IV) submete dado de sinistro ou de vítima ao DETRAN-AM, que o concilia com o registro BOAT correspondente, quando existir.",
+      "actors": ["Um parceiro facultativo já credenciado"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-008-001",
+          "action": "Parceiro submete dado de sinistro/vítima ao canal disponibilizado pelo DETRAN-AM — formato de payload não normado nesta rodada (PROPOSTA OPERACIONAL, ver WF-BOAT-002)."
+        },
+        {
+          "id": "UC-BOAT-008-002",
+          "action": "Processing-operator do DETRAN-AM recebe a submissão e tenta conciliá-la com um `CrashRecord` existente, por chave natural (uf, município, instante, órgão) — mesma chave usada na submissão nacional RENAEST."
+        },
+        {
+          "id": "UC-BOAT-008-003",
+          "action": "Caso haja correspondência: dado do parceiro complementa `CrashVictim`/`CrashPerson` do registro já aberto (ex.: destino hospitalar, evolução clínica) — sujeito ao mesmo controle de acesso reforçado de RN-BOAT-003, independentemente da origem do dado."
+        },
+        {
+          "id": "UC-BOAT-008-004",
+          "action": "Caso não haja correspondência: processing-operator decide, conforme critério de produto ainda não fixado, entre abrir novo `CrashRecord` com origem=parceiro ou registrar a submissão como pendente de conciliação manual."
+        },
+        {
+          "id": "UC-BOAT-008-005",
+          "action": "Processing-operator confirma a incorporação; submissão do parceiro move a `INCORPORADO_ REGISTRO_EXISTENTE` ou `NOVO_REGISTRO_ORIGEM_PARCEIRO` (WF-BOAT-002)."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-009",
+      "title": "Coordenador de RENAEST valida e retifica registro em nível municipal/estadual",
+      "goal": "Coordenador de RENAEST (municipal, onde aplicável, ou estadual — DETRAN-AM) atesta a consistência dos dados de um sinistro recebido antes de encaminhá-lo ao próximo nível da cascata de validação (municipal→estadual→federal — Res. CONTRAN 808/2020 art. 5º §1º), podendo solicitar retificação.",
+      "actors": [
+        "Coordenador de RENAEST (municipal, onde aplicável, ou estadual — DETRAN-AM)"
+      ],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-009-001",
+          "action": "Sistema determina o nível de entrada: `VALIDACAO_MUNICIPAL` se o município é integrado ao SNT (art. 5º §1º, I), ou `VALIDACAO_ESTADUAL` diretamente, quando não integrado (art. 5º §2º)."
+        },
+        {
+          "id": "UC-BOAT-009-002",
+          "action": "Coordenador do nível correspondente revisa os dados do BAT (pessoa/vítima/condutor; veículo; via; sinistro — art. 4º, I-IV) e atesta a consistência dos dados coletados (art. 4º §3º)."
+        },
+        {
+          "id": "UC-BOAT-009-003",
+          "action": "Se inconsistência é encontrada, coordenador solicita retificação ao órgão de origem — mecanismo exato de retificação não normado nesta rodada (PROPOSTA OPERACIONAL: reenvio ao processing-operator do registro local, análogo ao `pending_complement` de WF-BOAT-001)."
+        },
+        {
+          "id": "UC-BOAT-009-004",
+          "action": "Coordenador municipal, satisfeito com a consistência, envia ao órgão estadual (art. 10, II); coordenador estadual (DETRAN-AM, art. 7º), satisfeito, envia à União (art. 9º, II) — `ENVIADO_NACIONAL`."
+        },
+        {
+          "id": "UC-BOAT-009-005",
+          "action": "Registro entra na submáquina nacional de WF-BOAT-001 em `RECEBIDO`, onde a homologação federal ocorre."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-010",
+      "title": "Bodycam no atendimento a sinistro",
+      "goal": "O agente de trânsito mantém a câmera corporal ativa durante todo o atendimento a um sinistro, vinculando o trecho de gravação correlato ao `CrashRecord` — mesma doutrina de bodycam já integralmente modelada em UC-TEAT-010 (núcleo TEAT), aqui apenas referenciada e ancorada ao domínio de sinistro, sem remodelagem.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-010-001",
+          "action": "\"Atendimento a sinistros de trânsito\" é listado nominalmente pela Portaria Normativa DETRAN-AM 003/2026 (art. 4º, I) como situação de uso obrigatório de bodycam — a mais explícita das oito hipóteses do artigo em relação ao domínio BOAT."
+        },
+        {
+          "id": "UC-BOAT-010-002",
+          "action": "Todo o fluxo de captura, vínculo ao ato, indicador de gravação, falha e vedação de edição segue exatamente UC-TEAT-010 — não há passo específico de sinistro além do gatilho do art. 4º, I. O trecho de gravação é vinculado ao `CrashRecord` (e a cada ato legal associado, ex. AIT por omissão de socorro — UC-BOAT-007) da mesma forma que a um AIT autônomo."
+        },
+        {
+          "id": "UC-BOAT-010-003",
+          "action": "Ao final do atendimento, o vínculo evidência↔sinistro é fechado sob o mesmo regime de cadeia de custódia apensa e não editável de RN-TEAT-002."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-011",
+      "title": "Sistema transmite à RENAEST e acompanha pendência de validação",
+      "goal": "Após o encerramento local (UC-BOAT-005), operador de processamento/autoridade acompanha o sinistro pela cascata de validação em três níveis e pela submáquina nacional até a decisão terminal (`CONSOLIDADO`/`REJEITADO`), agindo sobre pendências e retificações — complementa UC-BOAT-005 com a visão de acompanhamento, hoje ausente do corpus.",
+      "actors": ["Operador de processamento/autoridade"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-011-001",
+          "action": "Sistema exibe o estado corrente do sinistro na cascata de validação (WF-BOAT-003): `RECEBIDO_LOCAL` → `VALIDACAO_MUNICIPAL` (se aplicável) → `VALIDACAO_ESTADUAL` → `ENVIADO_NACIONAL` → submáquina nacional (`RECEBIDO`/`EM_ANALISE`/`CONSOLIDADO`/`REJEITADO`)."
+        },
+        {
+          "id": "UC-BOAT-011-002",
+          "action": "Operador consulta pendências abertas: retificação solicitada por coordenador municipal/ estadual (UC-BOAT-009), ou rejeição nacional por dados incompletos (`RENAEST.CRASH. INCOMPLETE_DATA`, RN-BOAT-002)."
+        },
+        {
+          "id": "UC-BOAT-011-003",
+          "action": "Para pendência de retificação, operador complementa o registro local e reencaminha — mecanismo exato de reencaminhamento a partir de um nível intermediário não normado (PROPOSTA OPERACIONAL, mesmo padrão do `pending_complement` local)."
+        },
+        {
+          "id": "UC-BOAT-011-004",
+          "action": "Para rejeição nacional definitiva (`REJEITADO`), sistema mantém o estado como terminal — nenhuma norma prevê caminho de correção pós-terminal (WF-BOAT-003 §Gap); operador é informado explicitamente de que eventual correção exigiria novo registro formal (PROPOSTA-PENDENTE-DE-NORMA)."
+        },
+        {
+          "id": "UC-BOAT-011-005",
+          "action": "Sistema mede, para fins de KPI operacional (APP-BOAT §KPIs), o tempo decorrido entre `closed` e `CONSOLIDADO`/`REJEITADO`, contra o SLA operacional proposto `T-BOAT-TRANSM` (WF-BOAT-001 §Prazos) — sem consequência normativa formal por descumprimento."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-012",
+      "title": "Agente registra danos materiais e testemunhas do sinistro",
+      "goal": "Agente de trânsito (field-agent), durante ou logo após o atendimento de campo, registra os danos materiais decorrentes do sinistro — bens de terceiros, mobiliário urbano, sinalização — e identifica as testemunhas presenciais, com o mínimo necessário para posterior localização.",
+      "actors": ["Agente de trânsito (field-agent)"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-012-001",
+          "action": "Agente registra cada dano material observado: natureza do bem (veículo de terceiro não envolvido, mobiliário urbano, sinalização, edificação, outro), descrição do dano, e — quando identificável — o responsável pelo bem."
+        },
+        {
+          "id": "UC-BOAT-012-002",
+          "action": "Para dano a equipamento viário (sinalização, poste, defensa, semáforo), o sistema sinaliza a necessidade de comunicação ao responsável pela via, como pendência operacional do registro."
+        },
+        {
+          "id": "UC-BOAT-012-003",
+          "action": "Agente registra cada testemunha presencial: identificação, forma de contato e relato sumário, quando a pessoa concorda em prestá-lo."
+        },
+        {
+          "id": "UC-BOAT-012-004",
+          "action": "Testemunha é registrada como entidade distinta de `CrashPerson` — não é envolvida no sinistro, e o papel de envolvido não se aplica a ela."
+        },
+        {
+          "id": "UC-BOAT-012-005",
+          "action": "Dano a veículo envolvido permanece em `CrashVehicle.apparent_damage` (UC-BOAT-002); este UC trata do que está fora dos veículos envolvidos."
+        }
+      ]
+    },
+    {
+      "id": "UC-BOAT-013",
+      "title": "Órgão atende pedido de acesso, correção ou eliminação do titular",
+      "goal": "Encarregado e operadores autorizados do órgão recebem e tratam pedido do titular, de seu representante ou familiar legitimado, relativo aos dados pessoais do registro de sinistro. O caso cobre confirmação de tratamento, acesso, correção e anonimização, bloqueio ou eliminação quando cabível, com finalidade declarada e trilha auditável (RN-BOAT-126). A interface de retaguarda é W-05 (IU-BOAT-001).",
+      "actors": ["Encarregado", "Operadores autorizados do órgão"],
+      "mainFlow": [
+        {
+          "id": "UC-BOAT-013-001",
+          "action": "O órgão recebe o pedido e registra o titular, o registro de sinistro, o tipo de pedido e a finalidade declarada."
+        },
+        {
+          "id": "UC-BOAT-013-002",
+          "action": "O operador autorizado consulta os dados e a trilha de operações sob controle de acesso reforçado; qualquer acesso a dado de vítima é auditado com finalidade (RN-BOAT-126)."
+        },
+        {
+          "id": "UC-BOAT-013-003",
+          "action": "Para acesso, o sistema prepara a resposta com os dados do próprio titular e suprime dados sensíveis de terceiros, salvo requisição de autoridade (RN-BOAT-126)."
+        },
+        {
+          "id": "UC-BOAT-013-004",
+          "action": "Para correção, o pedido é encaminhado ao fluxo de análise do órgão e o resultado é registrado junto ao pedido. Para anonimização, bloqueio ou eliminação, o sistema registra a decisão e a execução quando cabível."
+        },
+        {
+          "id": "UC-BOAT-013-005",
+          "action": "O órgão comunica ao solicitante a decisão e mantém a trilha do atendimento."
+        }
+      ]
+    }
+  ]
+}
