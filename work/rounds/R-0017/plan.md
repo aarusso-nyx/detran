@@ -256,6 +256,13 @@ Verificações de arquivo:
 
 ## Decisões do maestro
 
+- **Owner, OD-R17-001/002/003 (2026-09-27):** aceitas as tres recomendacoes
+  da rodada: mock SEFAZ-AM minimo de seis rotas, PAdES clinico/biometria/
+  conselho explicitamente `off` com 503 fail-closed no smoke, e job
+  `stack-smoke` manual/opcional fora da protecao de `main`. Registro canonico
+  em `docs/meta/knowledge-base/open-decisions-rait.md` §R-0017. O CTG-0001
+  permanece historicamente `pending`/`proposed_off`; CTG-0002 implementa os
+  estados decididos. Nenhum servico externo real foi autorizado.
 - **M1 (2026-09-26):** `codex-cli 0.157.1` confirmou `gpt-6-sol`,
   `gpt-5.6-terra` e `gpt-5.6-luna` com `codex exec -m <id> 'responda ok'`
   (saída `ok`, exit 0 para os três). `Claude Code 2.1.283` confirmou
@@ -321,16 +328,7 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Bloqueios
 
-- **OD-R17-001/002 (Owner, CTG-0002):** escolher SEFAZ-AM no perfil
-  `local-sandbox` entre mock minimo das seis rotas (proposta) e provider `off`
-  fail-closed; escolher PAdES clinico, biometria e conselho entre
-  desligamento explicito com 503 (proposta) e mocks locais. O steering §H
-  nao responde essas ODs. TASK-0004…0007 nao devem fixar contrato, testes
-  ou implementacao por inferencia do maestro.
-- **OD-R17-003 (Owner, CTG-0003):** confirmar `stack-smoke` manual/opcional
-  (proposta da Meta 7) ou exigir gate de CI obrigatorio. TASK-0008…0010,
-  fechamento e selo ficam pendentes; a dispensa de limite de tokens nao
-  substitui decisao de autoridade.
+(vazio; OD-R17-001/002/003 decididas pelo Owner em 2026-09-27)
 
 ## Triagem
 
@@ -374,6 +372,12 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **Retomada autorizada pelo Owner (2026-09-27):** as tres ODs impeditivas
+  foram decididas conforme as recomendacoes e registradas na secao canonica.
+  CTG-0001 continua mesclado e observado; TASK-0004 esta liberada. Executar
+  CTG-0002 pela triade 0004 → 0005 → 0006/0007, checkpoint (b), revisao,
+  evidencia, PR/CI/merge e observacao; depois CTG-0003 e fechamento completo.
+  O checkpoint de bloqueio abaixo e historico, nao a situacao atual.
 - **Checkpoint apos merge CTG-0001 (2026-09-27):** PR #133 mesclado em
   `b1268a35c7758e9d017cf297039ba4cdbf95ba27`; TASK-0001 Architect,
   TASK-0002 Inspector e TASK-0003 Engineer estao concluidas. Ultimo
