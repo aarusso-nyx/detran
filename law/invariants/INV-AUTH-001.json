@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-AUTH-001",
+  "domain": "AUTH",
+  "lifecycle": "supported",
+  "severity": "hard-fail",
+  "type": "rbac",
+  "title": "AUTH enforces the declared policy matrix",
+  "statement": "AUTH MUST enforce the declared policy matrix for RAIT and portal command resources.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["unit"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+        "anchor": "decision"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["shared-policy"],
+    "code_areas": ["backend/domains/shared/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["ADR-0002", "WF-INF-003"]
+}

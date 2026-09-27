@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-DASH-001",
+  "domain": "DASH",
+  "lifecycle": "supported",
+  "severity": "gate",
+  "type": "security",
+  "title": "DASH Auditor and DPO access is read-only",
+  "statement": "DASH Auditor and DPO access MUST be read-only.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["unit"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/framework/product/transversal/dashboard/APP.md",
+        "anchor": "atores"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["dashboard-authorization"],
+    "code_areas": ["backend/domains/shared/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["APP-DASHBOARD", "RN-DASH-171"]
+}

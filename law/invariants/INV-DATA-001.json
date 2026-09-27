@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-DATA-001",
+  "domain": "DATA",
+  "lifecycle": "supported",
+  "severity": "hard-fail",
+  "type": "tenancy",
+  "title": "DATA accesses BOAT tenant data inside the current tenant transaction",
+  "statement": "DATA MUST execute BOAT tenant data access inside the current tenant transaction.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["int"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+        "anchor": "decision"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["est-crash", "tenant-transaction"],
+    "code_areas": ["backend/domains/est/crash/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["ADR-0002", "OD-R19-002"]
+}

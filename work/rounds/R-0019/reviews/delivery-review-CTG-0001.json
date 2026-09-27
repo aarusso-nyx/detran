@@ -1,0 +1,54 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0019",
+  "ctg": "CTG-0001",
+  "cycle": 1,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/law/verify.mjs",
+      "line": 164,
+      "claim": "Rule (b) accepts a near-match anchor with diacritics removed, which contract §5 forbids ('does not accept ... a near match as an anchor') and the installed DEVAI resolver rejects. markdownSlugs() adds a second slug for each heading after NFD normalization and mark stripping. DEVAI 1.5.6 anchor-resolver (release-host.js:172322-172345) builds only slugify(heading) and then tests anchor or slugify(anchor). For the heading '## Decisão', DEVAI's slug is 'deciso', so DEVAI rejects the anchor 'decisao'. This gate accepts it. The gate is therefore more permissive than both the contract and `devai check --only invariants`. `pnpm check` runs only this gate, so it would pass an anchor that DEVAI fails.",
+      "fix": "Inspector first: in tools/law/tests/verify.test.mjs, change the positive fixture anchor for '## Decisão' to the DEVAI-resolvable form. Add a negative case asserting that 'decisao' against '## Decisão' produces AUTHORITY_ANCHOR_UNRESOLVED. Engineer then: delete the NFD variant so heading slugs equal DEVAI extractHeadingSlugs exactly, keeping only the DEVAI-equivalent anchor||slugify(anchor) test. Architect records in CTG-0001 §5 that anchor matching is defined as DEVAI anchorExists equivalence."
+    },
+    {
+      "severity": "high",
+      "item": 7,
+      "file": "tools/law/tests/verify.test.mjs",
+      "line": 218,
+      "claim": "The rule (b) positive test requires the gate to accept anchor 'decisao' for heading '## Decisão' (line 193). This is the Inspector locking in the near-match leniency described above. It is a test encoding a weaker rule than the contract, not a neutral fixture.",
+      "fix": "Replace it with an anchor that the DEVAI resolver accepts, and add the negative diacritic-stripped case, as part of the fix above. Engineer changes follow the test change."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "tools/law/verify.mjs",
+      "line": 204,
+      "claim": "OD resolution is hard-coded to the '## R-0019 — law-corpus' section. Contract §5's resolution table says an OD resolves to 'a table row in docs/meta/knowledge-base/open-decisions-rait.md', without limiting it to one section. Any valid canonical OD cited in provenance from another section (for example OD-R18-001 at open-decisions-rait.md:368) is reported as REFERENCE_UNRESOLVED. This permanent gate will then fail valid CTG-0002 and later provenance, and pressure authors to duplicate ODs into R-0019. No test covers an OD registered outside the R-0019 section.",
+      "fix": "Inspector: add a positive test with an OD row in another '## ...' section and keep the negative test for an unregistered OD. Engineer: resolve an OD ID against the first cell of any table row in the registry file. C-01-05's specific requirement that OD-R19-* resolve in the R-0019 section is then covered by the existing positive test."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "law/README.md",
+      "line": 6,
+      "claim": "Plan Meta 8 requires the law/ READMEs to be rewritten to state authority (Art. 6), content, source and gate. law/README.md indexes only schemas/, policy/ and adr/. It omits invariants/ and trace.json, which this same CTG delivers, and also constitution.md and glossary/. None of law/README.md, law/invariants/README.md, law/schemas/README.md or law/policy/README.md names the gate that governs it (`pnpm verify:law-corpus` rules (a)/(b)/(e), or the DEVAI members invariants/trace/glob-guards/schemas). No §Fora de escopo entry records the gap.",
+      "fix": "Transcriber (Architect) adds invariants/ + trace.json (and constitution.md, plus glossary/ as pending CTG-0002) to law/README.md. Add a 'Gate' line to law/README.md, law/invariants/README.md (verify:law-corpus rule (b); devai invariants/invariant-strategies/trace), law/schemas/README.md (rule (a); devai glob-guards) and law/policy/README.md (devai schemas with adopter binding). Leave law/adr/README.md untouched (R-0018 lock)."
+    }
+  ],
+  "notes": [
+    "Independent check: the 89 law/schemas/*.schema.json filenames equal the DEVAI 1.5.6 package roster, `cmp` found 0 byte differences, manifest.json has 89 sha256 entries with 0 mismatches, devai_version 1.5.6, and the .prettierignore entry covers only law/schemas/*.schema.json.",
+    "low (item 10) docs/meta/knowledge-base/open-decisions-rait.md:3 — the R-0019 section was inserted between the H1 and the register's preamble ('Compilado a partir de…'), so the preamble now sits under the R-0019 heading. R-0018 appended its section at line 364. Move the R-0019 section after the R-0018 section.",
+    "low (item 10) OD-R19-001 is satisfied by R-0018 PR #128 (289a072f), but its register row still reads as pending. Record the resolution (merge SHA) in its Encaminhamento.",
+    "low (item 7) verify.test.mjs asserts only `violations.length > 0` per rule, not the specific code (SCHEMA_MISSING, MANIFEST_HASH_DIVERGENT, etc.). MANIFEST_ROSTER_DIVERGENT (extra or missing manifest key with correct copies) and MANIFEST_INVALID have no test. Tighten the assertions to the code and add those cases.",
+    "low (item 7) verify.mjs:231 checks the RN/WF/UC/JRN family directory with `path.split(sep).includes(...)` on the absolute path. A 'rules'/'workflows' segment in repoRoot's ancestors would satisfy the check for a misplaced file. Test segments of the path relative to docs/framework/product instead.",
+    "low (item 5) INV-EST-001 authority anchor BOAT APP §'Ciclo de vida — visão geral' lists lifecycle states but does not state a persistent contract or tenant transaction. The claim rests on ADR-0002 provenance. Consider an ADR-0002 §Decision authority_doc or a narrower statement in a later iteration.",
+    "low (item 10) C-01-06.1 narrows where rule (e) applies (placeholder-only trees are exempt). It is consistent with plan Meta 7's 'com conteúdo presente', but plan §Lições requires criterion changes to be numbered addenda with an Owner decision. Record Owner acknowledgment or state explicitly in AUTHORIZATION.md §Emendas that it is interpretive.",
+    "low (item 11) plan.md §Retomada lines 314-321 ('Pendentes: TASK-0004…', 'binding … ainda não executado', rule (e) 'ficará RED') contradict the later text and the gates section. Refresh the checkpoint text before closure.",
+    "Pending for closure, not findings: the whole group is currently staged in one index. M5 requires separate commits for law/**, tools/law/** + package.json + .prettierignore, chore(devai) binding, and work/ + docs/meta. Still to do: devai evidence record/verify and the PR; the untracked delivery-review *.raw/*.formatted temp files must not be committed.",
+    "Verified with no finding: Architect → Inspector → Engineer order, including the C-01-06.1 re-iteration; no skip, no weakened pre-existing test, and no hand-edited generated file (the binding and domains.json come from devai init bind); no SENATRAN or cross-domain code touched; the nine invariants' tests exist and exercise the stated facts (CH CHECKED_IN, INF FINALIZADO_LOCAL, OPS pending queue, BOAT victim purpose, DASH N2 Auditor/DPO); OD-R19-001..003 are in the canonical register; law/adr/** and .devai/config/project.json were not touched.",
+    "MCP servers claude.ai Google Drive and claude.ai Mermaid Chart need authorization through claude.ai connector settings and were not used."
+  ]
+}

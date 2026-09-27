@@ -1,0 +1,189 @@
+{
+  "round": "R-0019",
+  "window": 1,
+  "status": "waived_by_owner",
+  "checkpoint_at": "2026-09-26",
+  "window_input_budget": 650000,
+  "checkpoint_threshold": 520000,
+  "estimated_input_total": 844823,
+  "estimated_output_total": 136504,
+  "note": "Owner waived the token budget on 2026-09-26 to allow R-0019 to finish. Estimates remain for audit only; actual per-worker usage was not exposed by the subagent interface. The Claude alias opus resolved to claude-opus-5-5 during bootstrap.",
+  "entries": [
+    {
+      "kind": "maestro-planning",
+      "id": "bootstrap+plan+tasks+prompts",
+      "model": "gpt-6-sol",
+      "input_tokens": 210000,
+      "output_tokens": 35000,
+      "note": "Estimated mandatory reading, bootstrap, task decomposition, prompt composition and local checks; calibration will be updated at checkpoint."
+    },
+    {
+      "kind": "model-confirmation",
+      "id": "claude-opus-5-5-resolution",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10823,
+      "output_tokens": 4,
+      "note": "CLI reported 2 uncached + 10821 cache-creation input tokens, 10234 cache-read tokens, and 4 output tokens."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 45000,
+      "output_tokens": 3000,
+      "note": "First exhaustive review: REVIEW, 6 high + 5 low; 83,726-byte prompt plus repository reads; unique tokens estimated."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2-invalid-output",
+      "model": "claude-opus-5-5",
+      "input_tokens": 50000,
+      "output_tokens": 2500,
+      "note": "Second-cycle judgment said PASS but bridge rejected Markdown-fenced JSON; sensor-error, no formal verdict or bridge record."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-2-retry",
+      "model": "claude-opus-5-5",
+      "input_tokens": 50000,
+      "output_tokens": 3000,
+      "note": "Restricted transport retry produced raw JSON PASS with 0 findings; bridge hashes recorded."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0001",
+      "model": "gpt-5.6-terra/high",
+      "input_tokens": 90000,
+      "output_tokens": 18000,
+      "note": "Initial delivery; unique-token estimate. Architect contract and OD registry section."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0001-reference-gap",
+      "model": "gpt-5.6-terra/high",
+      "input_tokens": 20000,
+      "output_tokens": 2000,
+      "note": "Restricted source-anchor and test-link repair after maestro's pre-acceptance inspection; provisional estimate."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0002",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 24000,
+      "output_tokens": 6000,
+      "note": "Law invariant and trace transcription; provisional unique-token estimate."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0003",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Schema byte copies, manifest and adopter policy; provisional unique-token estimate."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0004",
+      "model": "gpt-6-luna/medium",
+      "input_tokens": 30000,
+      "output_tokens": 6000,
+      "note": "Inspector tests for rules a/b/e; provisional unique-token estimate after Owner waiver."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0004-fixture-repair",
+      "model": "gpt-6-luna/medium",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Restricted repair of invalid temp-fixture directory setup and invariant file layout."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005",
+      "model": "gpt-5.6-terra/medium",
+      "input_tokens": 60000,
+      "output_tokens": 14000,
+      "note": "Engineer implementation of law verifier and package scripts on rebased origin/main."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0005-anchor-slug",
+      "model": "gpt-5.6-terra/medium",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Aligned markdown slug resolution with installed DEVAI checker; removed two false anchor violations."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0001-readme-clarification",
+      "model": "gpt-5.6-terra/high",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Formal C-01-06.1 interpretation of placeholder-only README before substantive content."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0004-readme-fixtures",
+      "model": "gpt-6-luna/medium",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Inspector second iteration tests rule e on empty and populated directories."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0005-readme-condition",
+      "model": "gpt-5.6-terra/medium",
+      "input_tokens": 20000,
+      "output_tokens": 4000,
+      "note": "Engineer second iteration implements C-01-06.1 and runs all CTG-0001 gates."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 50000,
+      "output_tokens": 5000,
+      "note": "Cross-family first exhaustive delivery review; full diff attached by path, including 89 schema copies."
+    },
+    {
+      "kind": "worker-escalation",
+      "id": "TASK-0004-delivery-findings",
+      "model": "gpt-6-sol/high",
+      "input_tokens": 35000,
+      "output_tokens": 9000,
+      "note": "Inspector escalation after two Luna iterations for strict anchor and all-section OD tests, plus low-strengthening."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0003-delivery-readmes",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 25000,
+      "output_tokens": 5000,
+      "note": "Transcriber correction of four law README indexes and gate references."
+    },
+    {
+      "kind": "worker-escalation",
+      "id": "TASK-0005-delivery-findings",
+      "model": "gpt-6-sol/high",
+      "input_tokens": 30000,
+      "output_tokens": 6000,
+      "note": "Engineer escalation for exact DEVAI anchors, all-section OD resolution, and relative source paths."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0002-est-authority",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Architect transcriber aligns INV-EST-001 and trace authorities with corrected contract."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0001-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 25000,
+      "output_tokens": 4000,
+      "note": "Restricted second-cycle review of cycle-1 high findings and their corrections."
+    }
+  ]
+}
