@@ -1,7 +1,7 @@
 # Architecture
 
-Stub — Phase 2 (W2.1) documents the composition root, adapter kernel, runtime
-profiles, policy matrix and tenancy enforcement here.
+Índice dos documentos de arquitetura de `docs/framework/arch/`: cada outro `*.md` do diretório
+aparece uma vez abaixo.
 
 - [apps/rait/web — especificação do frontend](./rait-web-frontend.md) (2026-09-12, draft).
 - [apps/rait/web — diagramas de módulos, rotas e componentes](./rait-web-structure-diagrams.md) (2026-09-12, draft; SVGs em `./diagrams/`).
@@ -16,3 +16,4 @@ profiles, policy matrix and tenancy enforcement here.
 - DASHBOARD (2026-09-13): [frontend de monitoramento](./dashboard-frontends.md) · [contrato de rotas](./dashboard-route-contract.md) · [catálogo de erros](./dashboard-error-catalog.md) · [pacote de construção](./dashboard-build-pack.md).
 - Portão de implementação (2026-09-13): [pontos de atenção e decisões abertas](../../meta/knowledge-base/implementation-gate-2026-09-13.md).
 - Fechamento de decisões (2026-09-13): [plano em três vias](../../meta/knowledge-base/decision-closure-plan.md) · [catálogo de parâmetros e flags](./parameter-catalogue.md) (ADR-0021) · [cédulas do Owner](../../meta/knowledge-base/owner-ballots/README.md).
+- Complementos: [Contrato do comando de alteração de parâmetro OPS](./ops-parameter-command-contract.md) (2026-09-14, draft) · [apps/rait/web — formulários, validação de forma e gates de transição (WP-E, consolidado do CTG-0002c)](./rait-web-forms.md) (2026-09-22, draft) · [Contrato executável do aplicativo móvel TEAT](./teat-mobile-contract.md) (2026-09-24, draft) · [Contrato executável do console web TEAT](./teat-web-contract.md) (2026-09-24, draft) · [Estrutura de navegação web do TEAT](./teat-web-structure-diagrams.md) (2026-09-21, draft).

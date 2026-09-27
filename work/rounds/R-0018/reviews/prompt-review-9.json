@@ -1,0 +1,21 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0018",
+  "scope": "TASK-0008…0011",
+  "cycle": 2,
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0008.md",
+      "line": 34,
+      "claim": "A correção acrescentou `git fetch -q origin`, que escreve referências locais e contradiz a proibição de executar comandos `git` que escrevam nas linhas 6–8.",
+      "fix": "Remover o `git fetch` do prompt do worker. Se a atualização de `origin/main` for necessária, atribuí-la ao maestro antes do despacho; manter a verificação com `git log origin/main --oneline -- tools/detran-stack.sh tools/stack`."
+    }
+  ],
+  "notes": [
+    "Os cinco achados do ciclo anterior foram corrigidos.",
+    "Os SHA-256 dos quatro prompts conferem com `compositions.json`."
+  ]
+}

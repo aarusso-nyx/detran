@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0018",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Transcrever as linhas de fechamento de R-0018 (fase 1)",
+  "description": "Contrato CTG-0003 (Transcrever as linhas de fechamento de R-0018 (fase 1)). Barreira do maestro: começa após TASK-0008, TASK-0009 e TASK-0010.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-waves", "MOD-docs"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": null,
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 11,
+  "tags": ["c-0002", "action-3", "ctg-0003"],
+  "branch": "orchestra/index-state-ctg3",
+  "worktree_id": "WT-index-state",
+  "prompt_composition_id": "PC-ffd59f2406156196",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "verify:state-index"]
+  ],
+  "created_at": "2026-09-27T01:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-ffd59f2406156196",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

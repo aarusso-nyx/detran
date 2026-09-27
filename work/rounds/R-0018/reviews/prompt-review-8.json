@@ -1,0 +1,49 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0018",
+  "scope": "TASK-0008…0011",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0018/prompts/TASK-0008.md",
+      "line": 24,
+      "claim": "Os quatro prompts afirmam que TASK-0008…0011 podem correr em paralelo, mas o plano §Tarefas e o contrato CTG-0003 exigem TASK-0008 ∥ 0009 ∥ 0010 → 0011.",
+      "fix": "Nos quatro prompts, limitar o paralelismo a TASK-0008…0010 e declarar que TASK-0011 só começa após as três entregas."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0018/tasks/TASK-0011.json",
+      "line": 16,
+      "claim": "O único upstream registrado é TASK-0006; a tarefa pode ser considerada pronta antes de TASK-0008…0010, contrariando a dependência do plano e do contrato.",
+      "fix": "Registrar no despacho do maestro uma barreira explícita para as três tarefas e ajustar os metadados de dependência compatíveis com o esquema."
+    },
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0008.md",
+      "line": 32,
+      "claim": "A leitura fechada manda consultar `git ls-remote` para a stack, mas o contrato §3.6 exige verificar se `tools/detran-stack.sh` ou `tools/stack` já entrou em `origin/main` com `git log origin/main --oneline -- ...`. A existência do branch remoto não responde isso.",
+      "fix": "Incluir o comando de `git log origin/main` do contrato na leitura e instruir o worker a parar se houver histórico desses caminhos."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0018/prompts/TASK-0009.md",
+      "line": 53,
+      "claim": "“C-03-03 … C-03-09, restritos aos seus 26 arquivos” inclui `backend/domains/integration/README.md` em critérios do esqueleto de módulo que, pelo contrato §6, se aplicam apenas às 25 linhas da tabela §2.2. O README de domínio tem formato próprio (§2.3).",
+      "fix": "Aplicar C-03-03…07 aos 25 READMEs da tabela; C-03-08 aos 26; C-03-09 somente ao README de domínio."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0018/prompts/TASK-0010.md",
+      "line": 32,
+      "claim": "A instrução de usar `test -f` nos caminhos de testes também alcança entradas `tests/`, que são diretórios; TASK-0009 contém a mesma instrução.",
+      "fix": "Reservar `test -f` a DDL e contratos; usar `test -d` para `tests/` e contagem de arquivos para `src/**/*.spec.ts`."
+    }
+  ],
+  "notes": []
+}

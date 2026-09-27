@@ -15,3 +15,17 @@ lookup snapshots; and polymorphic evidence custody.
 The minimum `ops/agency` cut contains `agency_unit`, `agency_jurisdiction` and
 `agency_competence`; agreements are outside this delivery. `shift.status` remains
 `source_pending` until the canonical source vocabulary is published.
+
+## Modules
+
+| Module          | Package                    | Blueprint                 |
+| --------------- | -------------------------- | ------------------------- |
+| `agency/`       | `@detran/ops-agency`       | `BP-OPS-AGENCY-001`       |
+| `core/`         | `@detran/ops-core`         | —                         |
+| `evidence/`     | `@detran/ops-evidence`     | `BP-OPS-EVIDENCE-001`     |
+| `example/`      | `@detran/ops-example`      | `BP-OPS-EXAMPLE-001`      |
+| `field/`        | `@detran/ops-field`        | `BP-OPS-FIELD-001`        |
+| `offline-sync/` | `@detran/ops-offline-sync` | `BP-OPS-OFFLINE-SYNC-001` |
+| `parameter/`    | `@detran/ops-parameter`    | `BP-OPS-PARAMETER-001`    |
+| `provisioning/` | `@detran/ops-provisioning` | `BP-OPS-PROVISIONING-001` |
+| `snapshots/`    | `@detran/ops-snapshots`    | `BP-OPS-SNAPSHOTS-001`    |
