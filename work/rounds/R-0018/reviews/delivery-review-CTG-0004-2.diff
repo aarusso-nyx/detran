@@ -1,0 +1,208 @@
+diff --git a/backend/database/ddl/README.md b/backend/database/ddl/README.md
+index eee499af..6c7a19a8 100644
+--- a/backend/database/ddl/README.md
++++ b/backend/database/ddl/README.md
+@@ -1,6 +1,6 @@
+ # Unified backend DDL
+ 
+-Applied in lexical order by `../apply.sh` (every numbered file, `20-rls-policies.sql` last); the domain DDL 30…60 (`inf`, `ch`, `portal`) follow the foundations below:
++Applied by `../apply.sh` in one `psql --single-transaction` run: every `*.sql` file in lexical order (`LC_ALL=C sort`), except that `19-rait-priority-pre.sql` runs immediately before `34-inf-rait-case.sql` and that `20-rls-policies.sql`, a second application of `21-ops-provisioning.sql`, `19-rait-priority-enforce.sql` and `19-rait-priority-verify.sql` run last, in that order. Each file is listed once below, at its first application, so the list follows the order above and not the file numbers alone. Generated files are described by their `Generated from <blueprint> v<version>` header.
+ 
+ 1. `00-extensions.sql` — pgcrypto, uuid-ossp, citext and PostGIS.
+ 2. `01-schemas.sql` — shared plus empty `inf`/`est`/`ch`/`ops` domain schemas.
+@@ -16,18 +16,75 @@ Applied in lexical order by `../apply.sh` (every numbered file, `20-rls-policies
+    `enforce_tenant_id` trigger installer.
+ 9. `12-audit-functions.sql` — serialized per-tenant hash-chain persistence and
+    verification.
+-10. `13-ops-field-operations.sql` — Phase 2 field operations, frozen external
+-    lookup snapshots and evidence custody, all owned by `ops.*`.
+-11. `14-inf-lifecycle-vocabulary.sql` — reference tables of the infraction lifecycle
++10. `13-ops-agency.sql` — Generated from BP-OPS-AGENCY-001 v1.0.0
++11. `13-ops-field-operations.sql` — Generated from BP-OPS-FIELD-001 v1.2.0
++12. `14-inf-lifecycle-vocabulary.sql` — reference tables of the infraction lifecycle
+     (`inf.infraction_*_ref`, `inf.notification_channel_ref`): states, sub-states,
+     closure motives, timers, transitions and events of `WF-INF-003`/`WF-INF-002 §9`
+     (`pnpm verify:lifecycle-vocabulary`).
+-12. `20-rls-policies.sql` — forced RLS, trigger installation and least-privilege
+-    grants.
+-13. `75-boat-renaest-job.sql` — `jobs` control substrate for the BOAT RENAEST
++13. `15-ops-parameter.sql` — Generated from BP-OPS-PARAMETER-001 v1.0.0
++14. `16-ops-snapshots.sql` — Generated from BP-OPS-SNAPSHOTS-001 v1.1.0
++15. `17-ops-evidence.sql` — Generated from BP-OPS-EVIDENCE-001 v1.1.0
++16. `18-ops-offline-sync.sql` — Generated from BP-OPS-OFFLINE-SYNC-001 v1.3.0
++17. `19-dashboard-lifecycle-vocabulary.sql` — Vocabulário do DASHBOARD para o estado próprio de BP-DASH-MONITOR-001 (WF-DASH-001 ciclo do alerta, WF-DASH-002 calendário de deveres periódicos, WF-DASH-003 frescor; RN-DASH-142 classificação; RN-DASH-170 camadas; dashboard-route-contract.md §2/§3; parameter-catalogue.md §DASHBOARD; plan R-0011 M3 e M7; adendas A4 e A7; contrato work/rounds/R-0011/contracts/CTG-0001.md §3).
++18. `19-est-lifecycle-vocabulary.sql` — Vocabulário do BOAT para o agregado est.crash (WF-BOAT-001, WF-BOAT-003; H.42, H.43 e H.45).
++19. `19-portal-platform.sql` — 19-portal-platform.sql — plataforma do Portal (DDL manuscrito, faixa 1x; CODESTYLE §Backend SQL).
++20. `21-ops-provisioning.sql` — Generated from BP-OPS-PROVISIONING-001 v1.0.3
++21. `30-inf-normative.sql` — Generated from BP-INF-NORMATIVE-001 v1.1.0
++22. `30-ops-example.sql` — Generated from BP-OPS-EXAMPLE-001 v1.0.0
++23. `31-inf-ait.sql` — Generated from BP-INF-AIT-001 v1.2.0
++24. `32-inf-measures.sql` — Generated from BP-INF-MEASURES-001 v1.2.0
++25. `33-inf-alcohol.sql` — Generated from BP-INF-ALCOHOL-001 v1.2.0
++26. `19-rait-priority-pre.sql` — CTG-0001-C4-OD V3.
++27. `34-inf-rait-case.sql` — Generated from BP-INF-RAIT-CASE-001 v1.1.7
++28. `35-inf-rait-worklist.sql` — Generated from BP-INF-RAIT-WORKLIST-001 v1.4.1
++29. `36-inf-rait-session.sql` — Generated from BP-INF-RAIT-SESSION-001 v1.2.2
++30. `37-inf-speed.sql` — Generated from BP-INF-SPEED-001 v1.1.0
++31. `38-inf-infraction.sql` — Generated from BP-INF-INFRACTION-001 v1.1.2
++32. `39-inf-rait-org.sql` — Generated from BP-INF-RAIT-ORG-001 v1.0.1
++33. `40-ch-clinical-network.sql` — Generated from BP-CH-CLINICAL-NETWORK-001 v1.1.1
++34. `41-ch-patients.sql` — Generated from BP-CH-PATIENTS-001 v1.1.0
++35. `42-ch-encounters.sql` — Generated from BP-CH-ENCOUNTERS-001 v1.2.0
++36. `43-ch-exams.sql` — Generated from BP-CH-EXAMS-001 v1.1.0
++37. `44-ch-reports.sql` — Generated from BP-CH-REPORTS-001 v1.3.0
++38. `45-ch-biometrics.sql` — Generated from BP-CH-BIOMETRICS-001 v1.1.0
++39. `46-ch-scheduling.sql` — Generated from BP-CH-SCHEDULING-001 v1.0.0
++40. `47-ch-restrictions.sql` — Generated from BP-CH-RESTRICTIONS-001 v1.0.0
++41. `48-ch-retention.sql` — Generated from BP-CH-RETENTION-001 v1.0.0
++42. `49-ch-process-blocks.sql` — Generated from BP-CH-PROCESS-BLOCKS-001 v1.0.0
++43. `50-ch-telehealth.sql` — Generated from BP-CH-TELEHEALTH-001 v1.0.0
++44. `51-ch-billing.sql` — Generated from BP-CH-BILLING-001 v1.0.0
++45. `52-ch-clinical-controls.sql` — Generated from BP-CH-CLINICAL-CONTROLS-001 v1.0.0
++46. `53-ch-inconsistencies.sql` — Generated from BP-CH-INCONSISTENCIES-001 v1.0.0
++47. `54-ch-operational-controls.sql` — Generated from BP-CH-OPERATIONAL-CONTROLS-001 v1.0.0
++48. `55-ch-juntas.sql` — Generated from BP-CH-JUNTAS-001 v1.0.0
++49. `56-ch-toxicology.sql` — Generated from BP-CH-TOXICOLOGY-001 v1.0.0
++50. `57-inf-collection.sql` — Generated from BP-INF-COLLECTION-001 v1.0.2
++51. `58-inf-rait-integration.sql` — Generated from BP-INF-RAIT-INTEGRATION-001 v1.0.1
++52. `59-inf-notification.sql` — Generated from BP-INF-NOTIFICATION-001 v1.1.1
++53. `60-portal-complaints.sql` — Generated from BP-PORTAL-COMPLAINTS-001 v1.0.0
++54. `61-portal-identity.sql` — Generated from BP-PORTAL-IDENTITY-001 v1.0.2
++55. `62-portal-requests.sql` — Generated from BP-PORTAL-REQUESTS-001 v1.0.2
++56. `63-portal-inbox.sql` — Generated from BP-PORTAL-INBOX-001 v1.0.2
++57. `64-portal-citizen-service.sql` — Generated from BP-PORTAL-CITIZEN-SERVICE-001 v1.0.1
++58. `65-portal-projections.sql` — Generated from BP-PORTAL-PROJECTIONS-001 v1.0.2
++59. `70-est-crash.sql` — Generated from BP-EST-CRASH-001 v1.0.0
++60. `71-dashboard-crashes.sql` — Generated from BP-DASHBOARD-CRASHES-001 v1.0.0
++61. `72-integration-renaest-mirror.sql` — Generated from BP-INTEGRATION-RENAEST-MIRROR-001 v1.0.0
++62. `75-boat-renaest-job.sql` — `jobs` control substrate for the BOAT RENAEST
+     monthly executor: audited per-tenant technical identities, restricted active
+     tenant discovery, execution ledger and forced RLS. It grants no administrative
+     access to BOAT domain data.
++63. `80-dashboard.sql` — Generated from BP-DASH-MONITOR-001 v1.1.0
++64. `20-rls-policies.sql` — forced RLS, trigger installation and least-privilege
++    grants.
++65. `19-rait-priority-enforce.sql` — CTG-0001-C4-OD V3.
++66. `19-rait-priority-verify.sql` — CTG-0001-C4-OD V3.
++
++Application notes (`../apply.sh`):
++
++- `21-ops-provisioning.sql` is applied twice: at its lexical position and again right after `20-rls-policies.sql`. From `apply.sh`: "DDL20 grants its broad baseline after the ordered inventory. Reapply this generated DDL so its applicationAppendOnly revocations are the final, idempotent privilege state both on first application and on reapplication."
++- `19-rait-priority-pre.sql`, `19-rait-priority-enforce.sql` and `19-rait-priority-verify.sql` are skipped by the lexical loop: `19-rait-priority-pre.sql` runs immediately before `34-inf-rait-case.sql`; `19-rait-priority-enforce.sql` and `19-rait-priority-verify.sql` run after the second application of `21-ops-provisioning.sql`, `19-rait-priority-verify.sql` last.
+ 
+ `auth.tenants` is the canonical DETRAN tenant table. `tenancy.tenants` is a
+ simple, automatically updatable compatibility view exposing the columns used by
+diff --git a/docs/meta/knowledge-base/backlog.md b/docs/meta/knowledge-base/backlog.md
+index 43dbf8dc..aeb4c0f6 100644
+--- a/docs/meta/knowledge-base/backlog.md
++++ b/docs/meta/knowledge-base/backlog.md
+@@ -634,5 +634,5 @@ citação de regras fechada em cinco dos seis apps (RAIT em 32/43 — ver abaixo
+ - [ ] **DASHBOARD OD-D16-018 — campo `parent` em `DashboardRouteEntry`**: necessário para manter as filhas de detalhe (D-14/D-16) dentro do manifesto sem estourar a contagem de 18 fichas; ratificado pelo maestro (precedente `level`, R-0012 `CTG-0002a.md` §2); sem ação pendente além do registro; dono Architect (ratificado); fonte `contracts/CTG-0002.md` §14.1.
+ - [ ] **DASHBOARD OD-D16-019 — fichas × semente i18n, `intro`/`empty` divergentes**: `dashboard.screens.<slug_>.intro`/`.empty` divergem em 34 dos 36 textos entre as 18 fichas §12 e a semente (títulos iguais 18/18) porque TASK-0002 (fichas) e TASK-0003 (i18n) transcreveram em paralelo a partir do mesmo contrato; a semente prevalece no app (M5); falta alinhar as fichas ao texto da semente (ou o Owner escolhe o texto e a semente é corrigida por adenda); dono Architect (transcr.) / Owner; fonte `contracts/CTG-0002.md` §14.1.
+ - [ ] **DASHBOARD frente — subida do console de L0 a L2**: `apps/dashboard/web` foi entregue em nível L0 nesta rodada (R-0016, PR #103); a subida a L2 exige facades e `<feature>.client.ts` sobre os clientes gerados de `BP-DASH-MONITOR-001` (upstream já em `main`, R-0011 CTG-0002 mesclado durante esta rodada, PC-0009), dados reais nas 18 telas e teste de supressão secundária ponta a ponta (D-13); dono Architect / próxima rodada; fonte `plan.md` A5, `dashboard-build-pack.md` §WP-D5.
+-- [x] **R-0018 `index-state` — CTG-0001, CTG-0002 e CTG-0003 integrados (2026-09-26)**: numeração de ADRs racionalizada (ADR-0035…0038, redirecionamentos, §Aliases) e gate `verify:state-index`; índices de estado (build packs, `waves.md`, `docs/start/index.md`, `BUILD-PLAN.md`, `work/rounds/README.md`) sincronizados com os closures; relatórios de worker versionados; `model-ladder.md` com Sol 6 / Opus 5.5; 52 READMEs novos e 12 atualizados. OD em aberto: OD-R18-005 (OD-R18-001 opção b, OD-R18-002, OD-R18-003 e OD-R18-004 decididas pelo Owner em 2026-09-27).
+-- [ ] **OD-R18-005 — `backend/database/ddl/README.md` desatualizado**: faltam as faixas `13-ops-agency`, `15`–`19`, `21`, `61`–`65`, `70`–`72` e `80`; fora de R-0018 pelo lock de R-0017; fonte `work/rounds/R-0018/contracts/CTG-0003.md` §4.
++- [x] **R-0018 `index-state` — CTG-0001, CTG-0002 e CTG-0003 integrados (2026-09-26)**: numeração de ADRs racionalizada (ADR-0035…0038, redirecionamentos, §Aliases) e gate `verify:state-index`; índices de estado (build packs, `waves.md`, `docs/start/index.md`, `BUILD-PLAN.md`, `work/rounds/README.md`) sincronizados com os closures; relatórios de worker versionados; `model-ladder.md` com Sol 6 / Opus 5.5; 52 READMEs novos e 12 atualizados. Todas as ODs de R-0018 decididas pelo Owner em 2026-09-27 (OD-R18-001 opção b, OD-R18-002, OD-R18-003, OD-R18-004 e OD-R18-005).
++- [x] **OD-R18-005 — `backend/database/ddl/README.md` desatualizado**: resolvido no CTG-0004 de R-0018 (pós-fechamento, `plan.md` M9) depois do merge de R-0017 (#133): o README lista os 66 `*.sql` na ordem de `apply.sh`; `tools/README.md` recontado (42 scripts) e com a stack local; fontes `work/rounds/R-0018/contracts/CTG-0003.md` §4 e `CTG-0004.md` §1-§2.
+diff --git a/docs/meta/knowledge-base/open-decisions-rait.md b/docs/meta/knowledge-base/open-decisions-rait.md
+index 7ae01f3a..eedba039 100644
+--- a/docs/meta/knowledge-base/open-decisions-rait.md
++++ b/docs/meta/knowledge-base/open-decisions-rait.md
+@@ -361,7 +361,7 @@ sem distinguir; demais valores seguem a convenção da §F.
+ | OD-R18-002 | Aceitar a ADR-0022 (execução por orquestras), `Proposed` desde 2026-09-14 e seguida por R-0003…R-0016?                                                                                                                                                                                                                                                                                                                      | **Decidida pelo Owner em 2026-09-27: aceita.** `## Status` da ADR-0022 passa a `Accepted` (histórico `Proposed` preservado) e os dois índices mudam no mesmo commit (C-01-15/16).                                                                                                                                      | Destrava a coerência formal do método; não bloqueia o CTG-0001.                                                                                      | `docs/meta/adr/ADR-0022-orchestra-execution-model.md`, `DESIGN-DECISIONS.md`, `docs/meta/adr/README.md`                                               |
+ | OD-R18-003 | Aplicar `work/rounds/R-0018/proposals/CLAUDE.md.patch` e `AGENTS.md.patch` (CTG-0002: DEVAI 1.4.5 → 1.5.6, papéis, `packages/` completo, `pnpm check` descrito)?                                                                                                                                                                                                                                                            | **Decidida pelo Owner em 2026-09-27: aceita.** Patches aplicados sem alteração (`git apply`), `CLAUDE.md` e `AGENTS.md` passam a DEVAI 1.5.6, papéis no Art. 7 (com a cláusula "Article 6 governs authority by path", exigida pelo `devai doctor` `agents-claude-sync`), `packages/` completo e `pnpm check` descrito. | Bloqueia só a Meta 8 (CTG-0002).                                                                                                                     | `CLAUDE.md`, `AGENTS.md`                                                                                                                              |
+ | OD-R18-004 | Aceitar a ADR-0035 (política de numeração de ADRs)?                                                                                                                                                                                                                                                                                                                                                                         | **Decidida pelo Owner em 2026-09-27: aceita.** `## Status` da ADR-0035 passa a `Aceita` (histórico da proposta preservado) e os dois índices mudam no mesmo commit (C-01-15/16).                                                                                                                                       | Destrava o status `Accepted` da política; não bloqueia o CTG-0001.                                                                                   | `docs/meta/adr/ADR-0035-adr-numbering-policy.md`, índices                                                                                             |
+-| OD-R18-005 | `backend/database/ddl/README.md` está desatualizado: lista `00`–`05`, `10`–`12`, `13-ops-field-operations`, `14`, `20` e `75` e cita a faixa "30…60", mas o diretório tem também `13-ops-agency.sql`, `15`–`19` (dez arquivos), `21-ops-provisioning.sql`, `61`–`65`, `70`–`72` e `80-dashboard.sql` (medido em 2026-09-26). O arquivo está sob o lock de R-0017 (`backend/database/**`). Quem o atualiza, e em que rodada? | Pendente: R-0018 não toca o arquivo (lock de R-0017; `work/rounds/R-0018/plan.md` §Concorrência); o README segue como está.                                                                                                                                                                                            | Não bloqueia R-0018; destrava a Meta 6 do plano de R-0018 para esse arquivo, que fica registrada como não cumprida no closure se continuar pendente. | `backend/database/ddl/README.md`                                                                                                                      |
++| OD-R18-005 | `backend/database/ddl/README.md` está desatualizado: lista `00`–`05`, `10`–`12`, `13-ops-field-operations`, `14`, `20` e `75` e cita a faixa "30…60", mas o diretório tem também `13-ops-agency.sql`, `15`–`19` (dez arquivos), `21-ops-provisioning.sql`, `61`–`65`, `70`–`72` e `80-dashboard.sql` (medido em 2026-09-26). O arquivo está sob o lock de R-0017 (`backend/database/**`). Quem o atualiza, e em que rodada? | **Decidida pelo Owner em 2026-09-27: atualizar no CTG-0004 de R-0018** (`work/rounds/R-0018/plan.md` M9). Com R-0017 em `main` (#133), o lock de `backend/database/**` caiu; o README passa a listar os 66 `*.sql` na ordem de `backend/database/apply.sh` (`work/rounds/R-0018/contracts/CTG-0004.md` §1).            | Não bloqueia R-0018; destrava a Meta 6 do plano de R-0018 para esse arquivo, que fica registrada como não cumprida no closure se continuar pendente. | `backend/database/ddl/README.md`                                                                                                                      |
+ 
+ ## R-0019 — law-corpus
+ 
+diff --git a/tools/README.md b/tools/README.md
+index 85c766da..365025bf 100644
+--- a/tools/README.md
++++ b/tools/README.md
+@@ -26,38 +26,52 @@ Checks with their own entry below (the complete gate chain is the `check` script
+ 
+ Scripts of the root `package.json` that call `tools/`:
+ 
+-| Script                        | Command                                                                                                                                             |
+-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+-| `verify:decorators`           | `tsx tools/verify-controller-decorators.ts`                                                                                                         |
+-| `verify:rls-ddl`              | `tsx tools/check-rls-ddl.ts`                                                                                                                        |
+-| `verify:role-catalog`         | `tsx tools/check-role-catalog.ts`                                                                                                                   |
+-| `verify:lifecycle-vocabulary` | `tsx tools/check-lifecycle-vocabulary.ts`                                                                                                           |
+-| `verify:senatran-boundary`    | `tsx tools/verify-senatran-boundary.ts`                                                                                                             |
+-| `verify:pec-parity`           | `tsx tools/verify-pec-parity.ts`                                                                                                                    |
+-| `verify:pec-superset`         | `tsx tools/verify-pec-superset.ts`                                                                                                                  |
+-| `verify:orchestra-bridge`     | `bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh`                                                                        |
+-| `backend:rls-smoke`           | `tsx tools/check-rls-smoke.ts`                                                                                                                      |
+-| `ci:backend-full`             | `bash tools/ci/run-backend-kernel.sh`                                                                                                               |
+-| `ci:backend-kernel:local`     | `node tools/ci/run-backend-kernel-local.mjs`                                                                                                        |
+-| `devai:rc:prepare`            | `node tools/ci/prepare-local-rc.mjs`                                                                                                                |
+-| `devai:rc:publish`            | `node tools/ci/publish-local-rc.mjs`                                                                                                                |
+-| `blueprints:generate`         | `node tools/blueprints/generate.mjs`                                                                                                                |
+-| `parameters:generate`         | `node tools/parameters/generate-seed.mjs`                                                                                                           |
+-| `parameters:test`             | `node --test tools/parameters/tests/*.test.mjs`                                                                                                     |
+-| `verify:parameter-catalogue`  | `node tools/parameters/verify.mjs --check-generated --check-usage`                                                                                  |
+-| `blueprints:check`            | `node tools/blueprints/check.mjs`                                                                                                                   |
+-| `contracts:openapi`           | `node tools/contracts/generate-openapi.mjs`                                                                                                         |
+-| `contracts:check`             | `node tools/contracts/generate-openapi.mjs --check && node tools/contracts/check-commands.mjs && node tools/contracts/generate-clients.mjs --check` |
+-| `contracts:test`              | `node --test tools/contracts/tests/*.test.mjs`                                                                                                      |
+-| `contracts:clients`           | `node tools/contracts/generate-clients.mjs`                                                                                                         |
+-| `docs:kb:check`               | `node tools/docs/kb/check.mjs`                                                                                                                      |
+-| `docs:kb:cutover-check`       | `node tools/docs/kb/check.mjs --cutover`                                                                                                            |
+-| `docs:kb:publish-check`       | `node tools/docs/kb/publish-dry-run.mjs`                                                                                                            |
+-| `verify:state-index`          | `node tools/docs/state-index/check.mjs`                                                                                                             |
+-| `test:state-index`            | `node --test tools/docs/state-index/tests/*.test.mjs tools/docs/adr/tests/*.test.mjs`                                                               |
+-| `adr:renumber`                | `node tools/docs/adr/renumber.mjs`                                                                                                                  |
+-
+-Local stack (`tools/detran-stack*`, `tools/stack/`): pendente R-0017.
++| Script                        | Command                                                                                                                                                                                  |
++| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
++| `law:test`                    | `node --test tools/law/tests/*.test.mjs`                                                                                                                                                 |
++| `verify:law-corpus`           | `node tools/law/verify.mjs --repo-root . --package-schemas-dir node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas --od-registry docs/meta/knowledge-base/open-decisions-rait.md` |
++| `verify:decorators`           | `tsx tools/verify-controller-decorators.ts`                                                                                                                                              |
++| `verify:rls-ddl`              | `tsx tools/check-rls-ddl.ts`                                                                                                                                                             |
++| `verify:role-catalog`         | `tsx tools/check-role-catalog.ts`                                                                                                                                                        |
++| `verify:lifecycle-vocabulary` | `tsx tools/check-lifecycle-vocabulary.ts`                                                                                                                                                |
++| `verify:senatran-boundary`    | `tsx tools/verify-senatran-boundary.ts`                                                                                                                                                  |
++| `verify:pec-parity`           | `tsx tools/verify-pec-parity.ts`                                                                                                                                                         |
++| `verify:pec-superset`         | `tsx tools/verify-pec-superset.ts`                                                                                                                                                       |
++| `verify:orchestra-bridge`     | `bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh`                                                                                                             |
++| `stack`                       | `bash tools/detran-stack.sh`                                                                                                                                                             |
++| `stack:start`                 | `bash tools/detran-stack.sh start`                                                                                                                                                       |
++| `stack:stop`                  | `bash tools/detran-stack.sh stop`                                                                                                                                                        |
++| `stack:restart`               | `bash tools/detran-stack.sh restart`                                                                                                                                                     |
++| `stack:status`                | `bash tools/detran-stack.sh status`                                                                                                                                                      |
++| `stack:logs`                  | `bash tools/detran-stack.sh logs`                                                                                                                                                        |
++| `stack:build`                 | `bash tools/detran-stack.sh build`                                                                                                                                                       |
++| `stack:db-init`               | `bash tools/detran-stack.sh db-init`                                                                                                                                                     |
++| `stack:db-reset`              | `bash tools/detran-stack.sh db-reset`                                                                                                                                                    |
++| `stack:config`                | `bash tools/detran-stack.sh config`                                                                                                                                                      |
++| `stack:health`                | `bash tools/detran-stack.sh health`                                                                                                                                                      |
++| `test:stack`                  | `node --test tools/stack/*.test.mjs`                                                                                                                                                     |
++| `backend:rls-smoke`           | `tsx tools/check-rls-smoke.ts`                                                                                                                                                           |
++| `ci:backend-full`             | `bash tools/ci/run-backend-kernel.sh`                                                                                                                                                    |
++| `ci:backend-kernel:local`     | `node tools/ci/run-backend-kernel-local.mjs`                                                                                                                                             |
++| `devai:rc:prepare`            | `node tools/ci/prepare-local-rc.mjs`                                                                                                                                                     |
++| `devai:rc:publish`            | `node tools/ci/publish-local-rc.mjs`                                                                                                                                                     |
++| `blueprints:generate`         | `node tools/blueprints/generate.mjs`                                                                                                                                                     |
++| `parameters:generate`         | `node tools/parameters/generate-seed.mjs`                                                                                                                                                |
++| `parameters:test`             | `node --test tools/parameters/tests/*.test.mjs`                                                                                                                                          |
++| `verify:parameter-catalogue`  | `node tools/parameters/verify.mjs --check-generated --check-usage`                                                                                                                       |
++| `blueprints:check`            | `node tools/blueprints/check.mjs`                                                                                                                                                        |
++| `contracts:openapi`           | `node tools/contracts/generate-openapi.mjs`                                                                                                                                              |
++| `contracts:check`             | `node tools/contracts/generate-openapi.mjs --check && node tools/contracts/check-commands.mjs && node tools/contracts/generate-clients.mjs --check`                                      |
++| `contracts:test`              | `node --test tools/contracts/tests/*.test.mjs`                                                                                                                                           |
++| `contracts:clients`           | `node tools/contracts/generate-clients.mjs`                                                                                                                                              |
++| `docs:kb:check`               | `node tools/docs/kb/check.mjs`                                                                                                                                                           |
++| `docs:kb:cutover-check`       | `node tools/docs/kb/check.mjs --cutover`                                                                                                                                                 |
++| `docs:kb:publish-check`       | `node tools/docs/kb/publish-dry-run.mjs`                                                                                                                                                 |
++| `verify:state-index`          | `node tools/docs/state-index/check.mjs`                                                                                                                                                  |
++| `test:state-index`            | `node --test tools/docs/state-index/tests/*.test.mjs tools/docs/adr/tests/*.test.mjs`                                                                                                    |
++| `adr:renumber`                | `node tools/docs/adr/renumber.mjs`                                                                                                                                                       |
++
++Local stack: `tools/detran-stack.sh` (references `tools/detran-stack.proxy.json` and `tools/stack/senatran-mock.compose.yml`) runs through the `stack` and `stack:*` scripts above; `tools/stack/` also holds its tests (`test:stack`).
+ 
+ Keep entries small and single-purpose; anything platform-generic belongs in stynx or
+ devai, not here.

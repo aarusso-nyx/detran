@@ -1,0 +1,48 @@
+{
+  "action": "Deliver R-0018 CTG-0004 (post-closure, Owner-authorized): OD-R18-005 — DDL README listing all 66 files in apply.sh order — and the tools README refreshed after R-0017 and R-0019 merged",
+  "round": "R-0018",
+  "coupled_task_group": "CTG-0004",
+  "role": "engineer",
+  "commits": ["080039642e0435a6eb7db93f9a666e2ec6ca3273"],
+  "artifacts": [
+    {
+      "path": "work/rounds/R-0018/contracts/CTG-0004.md",
+      "sha256": "9c6f4d843098a7ee86bae16ab6a555c59219370c07d2750c34810ed3488f43a4"
+    },
+    {
+      "path": "backend/database/ddl/README.md",
+      "sha256": "40e5a7552ba2c7d3d7942ec62b81e9988232b01dcc108aa3d3e0df693b5209c2"
+    },
+    {
+      "path": "tools/README.md",
+      "sha256": "d4fb125807220a2a01fce400e76b6cb1b08ab9690c334a58c1a95e4e752cd756"
+    },
+    {
+      "path": "docs/meta/knowledge-base/open-decisions-rait.md",
+      "sha256": "378c3995a06bd66703f6e35afd18bfa159d0bef5c43c33301daf3a274612c118"
+    },
+    {
+      "path": "docs/meta/knowledge-base/backlog.md",
+      "sha256": "52be1d4e0d395488a49cbe95abed2f69409335c6ccbadfd6b7fdd880a3d9e73b"
+    },
+    {
+      "path": "work/rounds/R-0018/reviews/delivery-review-CTG-0004-2.json",
+      "sha256": "62d2632ff1e2d7cd994d17defc5da55498b877fe32f54e0d6d315edb97313f99"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass"
+    },
+    {
+      "name": "C-04-01..C-04-17",
+      "result": "pass"
+    },
+    {
+      "name": "delivery-review cycle 2 (codex gpt-6-sol)",
+      "result": "pass",
+      "note": "Cycle 1 REVIEW (intro sentence, backlog summary), addendum A1, cycle 2 PASS"
+    }
+  ]
+}
