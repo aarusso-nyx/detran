@@ -321,7 +321,16 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Bloqueios
 
-(vazio)
+- **OD-R17-001/002 (Owner, CTG-0002):** escolher SEFAZ-AM no perfil
+  `local-sandbox` entre mock minimo das seis rotas (proposta) e provider `off`
+  fail-closed; escolher PAdES clinico, biometria e conselho entre
+  desligamento explicito com 503 (proposta) e mocks locais. O steering §H
+  nao responde essas ODs. TASK-0004…0007 nao devem fixar contrato, testes
+  ou implementacao por inferencia do maestro.
+- **OD-R17-003 (Owner, CTG-0003):** confirmar `stack-smoke` manual/opcional
+  (proposta da Meta 7) ou exigir gate de CI obrigatorio. TASK-0008…0010,
+  fechamento e selo ficam pendentes; a dispensa de limite de tokens nao
+  substitui decisao de autoridade.
 
 ## Triagem
 
@@ -365,6 +374,20 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **Checkpoint apos merge CTG-0001 (2026-09-27):** PR #133 mesclado em
+  `b1268a35c7758e9d017cf297039ba4cdbf95ba27`; TASK-0001 Architect,
+  TASK-0002 Inspector e TASK-0003 Engineer estao concluidas. Ultimo
+  delivery-review = `PASS` (ciclo 3); CI final 7/7 verde, inclusive os cinco
+  checks obrigatorios. `audit observe --at` no SHA integrado concluiu
+  `EV-46bd42141d6f82c5`; sua saida gerada e cadeia foram preservadas no
+  commit local `286db9c7`. Evidencia CTG-0001 = generic sequencia 4, head
+  antes do merge `ff127d27a3905ae2799fa5a7a4c97b5cf98e833481bc9ee75459eb305bc4a73f`;
+  apos a observacao, cadeia valida em
+  `609ddca1882f481ad7a7d30a260aeb7a6420ec1b3f8c1853d89f16800de0d032`.
+  TASK-0004…0010 seguem `queued`. Proximo: Owner responde OD-R17-001/002/003;
+  registrar respostas no cadastro canonico, compor e revisar prompts CTG-0002,
+  executar TASK-0004…0007, checkpoint (b), delivery-review e PR/CI/merge;
+  depois CTG-0003 e fechamento. Nenhuma tarefa CTG-0002/0003 foi iniciada.
 - **CTG-0001 pos-PR #132/#135 (2026-09-27):** a terceira rodada de CI
   do PR #133 passou integralmente, mas R-0019 CTG-0001 entrou em `main`
   durante o CI e exigiu reconciliar `package.json` (`test:stack` junto de
