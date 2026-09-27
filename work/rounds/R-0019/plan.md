@@ -318,6 +318,17 @@ sem âncora após a integração, foi substituída pela saída de
 `evidence verify --scope chain` PASS. O novo candidate aguarda repetição dos
 gates e CI antes de merge.
 
+**Nova integração pré-merge:** durante o segundo CI, PR #134 de R-0018
+integrou `AGENTS.md`, `CLAUDE.md` e a resolução de `OD-R18-003` ao registro
+canônico. A branch publicada integrou `origin/main` por merge `5c7a6d86`,
+preservando essa resolução e as três linhas OD-R19. A cadeia de provas não
+teve conflito; o hash do registro OD mudou, então o Engineer atualizou
+`evidence-CTG-0001.json` e emitiu pela fronteira DEVAI a prova generic
+sequência 2. Ambas as linhas R-0019 (sequências 1 e 2) têm âncora em
+`record/proofs/chain.json`; `evidence verify --scope chain` PASS com head
+`022a6994a3e49f8c59cd44d3e2bb32d46cefbf96a1580b182f7cd246c6ffc787`.
+Os gates do novo candidate e CI serão repetidos antes do merge.
+
 **Emenda de orçamento — Owner, 2026-09-26:** o Owner escreveu nesta conversa
 “waive token budget to allow this round to finish”. O limite de 650.000 tokens
 de entrada e a parada em 80% ficam dispensados para R-0019. O maestro mantém
