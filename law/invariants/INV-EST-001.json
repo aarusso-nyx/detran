@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-EST-001",
+  "domain": "EST",
+  "lifecycle": "supported",
+  "severity": "gate",
+  "type": "data_contract",
+  "title": "EST crash records preserve the BOAT persistent contract",
+  "statement": "EST crash records MUST preserve the BOAT persistent contract within the tenant transaction.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["int"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/framework/product/domains/est/boat/APP.md",
+        "anchor": "modelo-de-dados--conceitos-centrais"
+      },
+      {
+        "doc": "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+        "anchor": "decision"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["est-crash", "boat-persistence"],
+    "code_areas": ["backend/domains/est/crash/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["APP-BOAT", "ADR-0002"]
+}

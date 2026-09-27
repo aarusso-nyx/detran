@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-OPS-001",
+  "domain": "OPS",
+  "lifecycle": "supported",
+  "severity": "gate",
+  "type": "lifecycle",
+  "title": "OPS checks the pending queue before shift closure",
+  "statement": "OPS MUST enforce the pending-queue guard before closing a shift.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["int"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-close-shift.md",
+        "anchor": "contrato-transcrito"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["ops-field"],
+    "code_areas": ["backend/domains/ops/field/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["APP-TEAT", "JRN-TEAT-001"]
+}

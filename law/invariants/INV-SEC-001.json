@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-SEC-001",
+  "domain": "SEC",
+  "lifecycle": "supported",
+  "severity": "hard-fail",
+  "type": "security",
+  "title": "SEC protects BOAT victim data with reinforced access control",
+  "statement": "SEC MUST protect BOAT victim data with reinforced access control.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["e2e"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/framework/product/domains/est/boat/APP.md",
+        "anchor": "atores"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["authorization", "boat-access"],
+    "code_areas": ["backend/app/**", "backend/domains/shared/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["APP-BOAT", "ADR-0002"]
+}
