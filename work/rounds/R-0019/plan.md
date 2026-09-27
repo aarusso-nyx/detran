@@ -307,6 +307,17 @@ verify:law-corpus, blueprints:check, typecheck, frontends). O veredito
 delivery-review ciclo 2 continua aplicável: a única integração foi o novo
 OD-R18-005 no registro canônico e nenhuma regra revisada mudou.
 
+**PR CTG-0001:** [#132](https://github.com/aarusso-nyx/detran/pull/132)
+teve delivery-review ciclo 2 PASS e sete checks CI PASS no primeiro
+candidate. Durante o CI, R-0018 fechou como PC-0015 no PR #131. A branch
+publicada integrou `origin/main` por merge `d7acb94e`, preservando o
+registro e aceitando a cadeia de provas de `main`. A prova R-0019 antiga,
+sem âncora após a integração, foi substituída pela saída de
+`devai evidence record` (generic sequência 1, âncora na cadeia; head
+`25cb264e3a7613fc84461f4305777dd82158fae7b56853bfab6c494d34e6c4ad`).
+`evidence verify --scope chain` PASS. O novo candidate aguarda repetição dos
+gates e CI antes de merge.
+
 **Emenda de orçamento — Owner, 2026-09-26:** o Owner escreveu nesta conversa
 “waive token budget to allow this round to finish”. O limite de 650.000 tokens
 de entrada e a parada em 80% ficam dispensados para R-0019. O maestro mantém
