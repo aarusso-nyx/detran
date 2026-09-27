@@ -357,17 +357,21 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
   como strings vazias. Os doze achados do ciclo 1 estao sanados. A3 autoriza
   um sensor Inspector antes da segunda e ultima correcao Engineer, escalada
   para Sol 6. `pnpm test:stack` passou 42/42 antes desse novo sensor.
+- `sensor-error` (gate pos-rebase): `pnpm docs:check` deixou
+  `docs/site/build/` ignorado na worktree; `verify:parameter-catalogue`
+  varreu seu JavaScript gerado e acusou literais desconhecidos. O artefato
+  criado nesta sessao foi removido; o verificador isolado e `pnpm check`
+  completo passaram no mesmo codigo, sem alterar sensor, teste ou politica.
 
 ## Retomada
 
 - **Checkpoint CTG-0001 (2026-09-26):** TASK-0001…0003 concluidas;
   caracterizacao 13/13 verde na adocao, revisao 42/42 verde apos A3.
   Delivery-review ciclos 1/2 = `REVIEW`, ciclo 3 = `PASS` sem achados
-  bloqueantes. `pnpm check` pre-merge e `pnpm docs:check` passaram; este
-  ultimo exigiu `npm ci --prefix docs/site` sem mudanca rastreada. Commit de
-  CTG-0001, evidencia, integracao de `origin/main`, PR/CI/merge e CTG-0002/3
-  ainda pendentes. `origin/main` ja contem PR #128/#129 de R-0018, com novos
-  gates que devem ser preservados e executados apos o merge.
+  bloqueantes. `pnpm check` e `pnpm docs:check` passaram apos rebase sobre
+  `origin/main` (PR #128/#129/#130 de R-0018); o ultimo exigiu
+  `npm ci --prefix docs/site` sem mudanca rastreada. Commits de CTG-0001
+  existem; evidencia, PR/CI/merge e CTG-0002/3 ainda pendentes.
 - **Progresso apos a dispensa:** escalada Terra da TASK-0002 concluida,
   relatorio em `reports/TASK-0002-escalation.md`: caracterizacao 13/13 verde
   sobre a adocao, revisao 3 verdes/10 vermelhos apenas por funcionalidade
@@ -392,7 +396,8 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
   `claude-opus-5-5`; bridge funcionou. Prompt-review CTG-0001 ciclo 2 =
   `PASS`; nenhum delivery-review ainda.
 - **Concluido:** TASK-0001 Architect (CTG-0001 e A1); adocao verbatim no
-  commit `470730d60fa5a07fab486d6570a1ed2457c35f0e` (primeiro commit de
+  commit `58d6698a202a348aa2bc5c7844f80fc1a6bb74ff` apos rebase nao publicado (antes,
+  `470730d60fa5a07fab486d6570a1ed2457c35f0e`; primeiro commit de
   CTG-0001), com tres hashes ancorados conferidos e caracterizacao 13/13 verde
   antes da revisao. `pnpm format:check` passou. O commit contem somente
   `package.json`, `tools/detran-stack.sh` e `tools/detran-stack.proxy.json`.
