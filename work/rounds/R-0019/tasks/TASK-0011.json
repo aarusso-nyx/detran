@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0011",
+  "round_id": "R-0019",
+  "status": "queued",
+  "discipline": "architect",
+  "discipline_specialization": "transcriber-docs",
+  "title": "Atualizar índices da rodada",
+  "description": "Atualizar backlog, histórico da orquestra e apenas a linha R-0019 do índice de rodadas.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-docs"],
+  "target_substrates": ["F1"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0003",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": "TASK-0010",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 3,
+  "tags": [
+    "campaign:C-0002",
+    "round:R-0019",
+    "ctg:CTG-0003",
+    "ref:transcriber-docs"
+  ],
+  "branch": "orchestra/law-corpus",
+  "worktree_id": "WT-law-corpus",
+  "prompt_composition_id": "PC-b9169888ac6ce998",
+  "acceptance_commands": [
+    ["pnpm", "docs:kb:check"],
+    ["pnpm", "format:check"]
+  ],
+  "created_at": "2026-09-26T19:58:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "codex-cli",
+    "model": "gpt-6-luna",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "gpt-6-luna"
+    },
+    "prompt_composition_id": "PC-b9169888ac6ce998",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}
