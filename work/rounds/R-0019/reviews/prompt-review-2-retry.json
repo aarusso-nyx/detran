@@ -1,0 +1,20 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0019",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Item 1 (high) resolved: rule (e) stays full over law/*. TASK-0001 fixes both obsolete phrases, registers OD-R19-001 and states the R-0018 dependency. TASK-0004 covers law/adr/README.md with RED expected. TASK-0005 implements (e) in full, cannot claim PASS for verify:law-corpus or pnpm check until R-0018 merges, and does not touch law/adr/**. Plan M7 and §Concorrência record this as an operational dependency, not a criterion change. law/adr/README.md:5 still contains both phrases, and R-0018/plan.md:175 only greps for 'intentionally empty', so OD-R19-001 is justified.",
+    "Item 2 (high) resolved: .prettierignore was removed from TASK-0003 'Pode tocar' and added to TASK-0005 (Engineer). tasks/TASK-0005.json has MOD-prettierignore. TASK-0003 and TASK-0004 record format:check as RED expected, without reformatting the copies.",
+    "Item 3 (high) resolved: TASK-0001's closed list now includes package.json, tools/check-rls-smoke.ts, backend/database/ddl/20-rls-policies.sql, one representative test each for EST, CH, OPS, PORTAL and DASH, idempotency tests (pec-idempotency.e2e, idempotency.service.spec) and errors/if-match.ts. All of these paths exist in the worktree. The escape rule (OD-R19 plus floor marked not met, never an active INV without a source) is explicit.",
+    "Item 4 (high) resolved: TASK-0001 fixes the CLI (--repo-root, --package-schemas-dir, --od-registry, exit 0/1), the synchronous export verifyLawCorpus returning {violations:[{rule,code,path,detail}]}, the id regexes and file mapping, the canonical OD section, and the exact phrases for (e).",
+    "Item 5 (high) resolved: open-decisions-rait.md is in 'Pode tocar' for TASK-0001 and TASK-0006 (MOD-od-r19 in both task files). It is in the reading list of TASK-0004, TASK-0005, TASK-0009 and TASK-0010.",
+    "Item 6 (high) resolved: TASK-0006 reads contracts/CTG-0001.md and law/invariants/INV-*.json, and TASK-0007 and TASK-0008 read law/invariants/INV-*.json. The rule 'only cite published IDs, empty lists allowed' is explicit.",
+    "Item 7 (low) resolved in the prompts: TASK-0001 and TASK-0002 agree that test_corpus is exactly what the contract fixes (empty while DEVAI discovery = 0), tests[] holds suite+path, and there are no manual hashes. Residual: plan.md Meta 2 still says 'test_corpus com digest de asserções'. The binding prompts override it, and aligning the plan text at the next opportunity would be good. This is not blocking.",
+    "Item 8 (low) resolved: TASK-0003 now reads the four policy files (devai-local-rc-*, mutation-strength) and .devai/config/glob-guards.json. All exist.",
+    "Item 9 (low) resolved: tasks/TASK-0004.json has the tag depends:TASK-0002, and the prompt requires TASK-0002, TASK-0003 and the binding checkpoint.",
+    "Item 10 (low) resolved as a registered deferral: M8 and TASK-0004 record classifying tools/law/tests as an OD for R-0020, keeping the Inspector/Engineer separation.",
+    "Item 11 (low) resolved: TASK-0007 fixes the handling of conflicting expansions (definition only from domain.md plus provenance to the open OD, as draft) and of terms without a source (no GE entry).",
+    "Integrity: the SHA-256 of all 11 prompts matches compositions.json. Each pc_id equals PC plus the first 16 hex characters of the SHA and appears in the matching tasks/*.json. No new finding was raised: no constitutional or canonical contradiction was found in the corrected text."
+  ]
+}
