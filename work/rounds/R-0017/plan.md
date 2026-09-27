@@ -1,6 +1,6 @@
 # R-0017 — frente `local-stack` (C-0002, ação 4: stack local versionada)
 
-**Status:** **proposta — C-0002 rev. 2, aguardando autorização do Owner.** Planejada em 2026-09-26
+**Status:** **em execução — C-0002 rev. 2, autorizada pelo Owner em 2026-09-26.** Planejada em 2026-09-26
 pelo Architect a partir de `work/campaigns/C-0002-consolidacao.md` §2 (fase A, primeira linha) e da
 inspeção (b) de 2026-09-25 (`work/campaigns/C-0002-inspecao-2026-09-25/b-camadas.md`, versionado na campanha: achados A5, M3,
 M4). Nenhum `AUTHORIZATION.md`, `tasks/` ou `compositions.json` existe: o maestro os cria no
@@ -238,15 +238,86 @@ Verificações de arquivo:
 
 ## Adendas
 
-(vazio)
+- **A1 (CTG-0001, Architect, 2026-09-26):** `pnpm` imprime banner no comando
+  normal; o JSON puro de `stack:config` e verificado por `pnpm -s` ou pelo
+  script direto. Os hashes da adocao sao apenas checkpoint (a), nunca assercao
+  persistente em `tools/stack/*.test.mjs`. Sem mudanca de escopo ou esquema.
+- **A2 (CTG-0001, Architect, 2026-09-26):** apos TASK-0003, o
+  `delivery-review-CTG-0001.json` encontrou sensores incompletos de
+  C-01-03/07/10/11/12. Autoriza o Inspector a corrigir **somente** os dois
+  `tools/stack/*.test.mjs`, sem enfraquecer teste ou mudar producao. Os casos
+  novos ficam vermelhos ate a correcao do Engineer. O contrato registra a
+  mesma autorizacao; a adocao verbatim e o primeiro commit nao mudam.
+- **A3 (CTG-0001, Architect, 2026-09-26):** o segundo delivery-review
+  encontrou regressao de `env -i`: opcionais ausentes viram strings vazias e
+  contornam os defaults do backend. Inspector acrescenta sensor offline apenas
+  em `revision.test.mjs`; Engineer inclui cada opcional no ambiente somente
+  quando ela estiver definida. Nenhuma chave de config ou criterio muda.
 
 ## Decisões do maestro
 
-(vazio — M1 obrigatória: ids de CLI confirmados)
+- **M1 (2026-09-26):** `codex-cli 0.157.1` confirmou `gpt-6-sol`,
+  `gpt-5.6-terra` e `gpt-5.6-luna` com `codex exec -m <id> 'responda ok'`
+  (saída `ok`, exit 0 para os três). `Claude Code 2.1.283` confirmou
+  `claude-opus-5-5` com `claude -p --model claude-opus-5-5 'responda ok'`
+  (saída `ok`, exit 0). `tools/orchestra/bridge.sh claude claude-opus-5-5`
+  também passou: `reviews/m1-bridge.json` contém
+  `{"status":"ok","message":"ok"}` e o hash da invocação está em
+  `reviews/m1-bridge.bridge.json`. O maestro atua como Architect no planejamento
+  e na revisão e como Engineer nos commits; o reviewer externo atua como Auditor.
+- **Ambiente:** o volume `/Volumes/Thiamat II` não está montado nesta máquina.
+  A worktree isolada desta sessão foi criada pelo Codex em
+  `/Users/aarusso/.codex/worktrees/local-stack/detran` sobre
+  `orchestra/local-stack` a partir de `origin/main`. Todo caminho de execução
+  da rodada usa essa raiz; o checkout principal segue como insumo somente leitura.
+- **Insumo conferido:** `tools/detran-stack.sh` =
+  `e91977b024b83327f69fde9af065491b8311e6d3c1b1121dd02e09f11f193001`,
+  `tools/detran-stack.proxy.json` =
+  `74a36b5c6250020a8636248dc8a41eac65ae6caa28231178b9e14ec362317957`
+  e `git diff package.json` no checkout principal =
+  `b882f80d2448ff0232575520d173930af5d52db102ad8d4aeddebb7bf64eb832`;
+  todos coincidem com a ancora do plano.
+- **Revisao escalonada por CTG:** esta janela compoe e revisa os prompts
+  TASK-0001…0003 de CTG-0001 antes de despacha-los. Os prompts CTG-0002/0003
+  serao compostos sobre os contratos e commits ja integrados de cada CTG e
+  receberao prompt-review propria antes de seus workers. As dez tarefas foram
+  materializadas e validadas no esquema DEVAI 2.0.0; as ainda nao despachaveis
+  mantem `PC-0000000000000000` ate seu prompt final existir.
+- **Prompt-review CTG-0001, ciclo 1:** o reviewer externo marcou `REVIEW` com
+  tres achados altos: estado SEFAZ antes de TASK-0007, literal do banco antigo
+  em testes persistentes e ODs citadas sem registro no PR. Os prompts foram
+  corrigidos para SEFAZ `pending` sem sonda em CTG-0001, testes sem esse
+  literal e registro das ODs antes do PR; os achados baixos foram incorporados.
+  O ciclo 2 verificara os novos hashes antes do despacho.
+- **Prompt-review CTG-0001, ciclo 2:** `reviews/prompt-review-2.json` = `PASS`,
+  sem achados; os tres hashes conferem com `compositions.json` e com os IDs das
+  tarefas. A primeira tentativa do ciclo 2 gerou JSON invalido e foi
+  descartada pela bridge (exit 4); o retry com saida estrita passou (exit 0).
+- **ODs no CTG-0001:** apos TASK-0001, o maestro/transcritor registra
+  OD-R17-001 e OD-R17-002 e qualquer OD nova proposta no contrato na secao
+  R-0017 de `docs/meta/knowledge-base/open-decisions-rait.md`, sob lock
+  `MOD-open-decisions`, no proprio PR de CTG-0001. TASK-0010 completa a secao
+  no CTG-0003 sem substituir o registro inicial.
+- **RAIT serve:** CTG-0001 corrige o comando efetivo no tooling e nao edita
+  `apps/rait/web/angular.json`, fora do escopo de TASK-0003. O reparo da
+  referencia `serve.buildTarget` no app entra no backlog em TASK-0010.
+- **TASK-0001:** Architect entregou `contracts/CTG-0001.md` com C-01-01…13;
+  `test -s` e `pnpm format:check` passaram. As ODs citadas sao OD-R17-001/002
+  e OD-P88 ja existente. A secao R-0017 de
+  `docs/meta/knowledge-base/open-decisions-rait.md` foi criada para as duas
+  ODs abertas no proprio CTG-0001.
 
 ## Concorrência
 
-(preenchida no bootstrap)
+`origin/main` em `220a4020` inclui C-0002 rev. 2 e ADR-0034 (PR #127) e o
+baseline `a92ef731`. Nenhum branch ou PR `orchestra/local-stack` preexistia;
+R-0017 continha apenas plano e prompt, sem checkpoint. A frente
+`orchestra/index-state` de R-0018 possui worktree separada, sem PR aberto no
+bootstrap; R-0019 não apareceu na lista de worktrees. CTG-0001 e CTG-0002
+estão livres de upstream; CTG-0003 segue CTG-0002. O branch integrará avanços
+de `origin/main` por merge depois de publicado, preservando as linhas
+partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
+`work/rounds/README.md`.
 
 ## Bloqueios
 
@@ -254,12 +325,117 @@ Verificações de arquivo:
 
 ## Triagem
 
-(vazio)
+- `reference-gap` (bootstrap): `devai round plan --scaffold --round R-0017`
+  retornou `ROUND_ALREADY_EXISTS` (exit 2), pois o plano autorizado ja existe
+  em `origin/main`. A rodada foi mantida; `tasks/` e os demais artefatos sao
+  criados pelo maestro conforme o esquema DEVAI 2.0.0.
+- `sensor-error` (TASK-0002, primeira tentativa): 14/14 testes de
+  caracterizacao verdes, mas a suite fixa hash do script permanentemente,
+  contem uma assercao tautologica de porta e usa um harness que em uma
+  iteracao chamou Docker/psql local; 9 vermelhos de revisao incluem checagens
+  da fonte inteira incompatíveis com o contrato. Nenhum container ou processo
+  ficou ativo. Uma tentativa corretiva do Inspector antecede checkpoint (a).
+- `sensor-error` (TASK-0002, retry Luna): a suite segura de caracterizacao
+  passou 13/13 e nao deixou Docker/processo, mas `revision.test.mjs` ainda
+  testa o caso antigo autorizado em vez do banco novo, acessa
+  `config.services.rait` apesar de o contrato fixar `services.frontends[]`,
+  e valida saude sobretudo por regex de fonte. O `PATH` extra de um caso pode
+  contornar stubs. A verificacao de ausencia do literal antigo, incluida por
+  engano no prompt de retry, so e exigivel **apos** TASK-0003. O relatorio de
+  retry apontou caminhos curtos inexistentes no proprio prompt; a leitura
+  correta usa o prefixo `work/rounds/R-0017/`. Pela regra §7, a correcao
+  seguinte vai a Terra (mesma familia, nivel acima), antes do Engineer.
+- `plant-bug` + `sensor-error` (CTG-0001 delivery-review ciclo 1): veredito
+  `REVIEW` com oito achados altos e quatro baixos em
+  `reviews/delivery-review-CTG-0001.json`. A correcao segue a ordem Inspector
+  (A2, somente testes) -> Engineer (implementacao). O primeiro `pnpm check`
+  do Engineer foi interrompido durante check longo; o maestro o repetiu em
+  sessao propria, ainda sem resultado no momento desta anotacao.
+- `plant-bug` + `sensor-error` (CTG-0001 delivery-review ciclo 2):
+  `reviews/delivery-review-CTG-0001-2.json` = `REVIEW` por uma regressao
+  diretamente causada pela allowlist: cinco opcionais ausentes foram enviados
+  como strings vazias. Os doze achados do ciclo 1 estao sanados. A3 autoriza
+  um sensor Inspector antes da segunda e ultima correcao Engineer, escalada
+  para Sol 6. `pnpm test:stack` passou 42/42 antes desse novo sensor.
 
 ## Retomada
 
-(vazio)
+- **Checkpoint CTG-0001 (2026-09-26):** TASK-0001…0003 concluidas;
+  caracterizacao 13/13 verde na adocao, revisao 42/42 verde apos A3.
+  Delivery-review ciclos 1/2 = `REVIEW`, ciclo 3 = `PASS` sem achados
+  bloqueantes. `pnpm check` pre-merge e `pnpm docs:check` passaram; este
+  ultimo exigiu `npm ci --prefix docs/site` sem mudanca rastreada. Commit de
+  CTG-0001, evidencia, integracao de `origin/main`, PR/CI/merge e CTG-0002/3
+  ainda pendentes. `origin/main` ja contem PR #128/#129 de R-0018, com novos
+  gates que devem ser preservados e executados apos o merge.
+- **Progresso apos a dispensa:** escalada Terra da TASK-0002 concluida,
+  relatorio em `reports/TASK-0002-escalation.md`: caracterizacao 13/13 verde
+  sobre a adocao, revisao 3 verdes/10 vermelhos apenas por funcionalidade
+  ausente, `pnpm format:check` verde. A verificacao independente do maestro
+  repetiu 13/13. TASK-0002 e `completed`; TASK-0003 Engineer esta liberada e
+  em curso. `origin/main` avancou pelo PR #128 (R-0018 CTG-0001); preservar
+  seus gates de state-index ao integrar antes do PR deste CTG.
+- **Retomada autorizada (2026-09-26):** o usuario dispensou o limite de
+  tokens para permitir concluir R-0017. O checkpoint abaixo permanece como
+  registro historico; a parada por `480000` nao se aplica mais. Continuar
+  pela escalada Inspector de TASK-0002 e os gates subsequentes.
+- **Escalada TASK-0002:** o prompt corretivo esta em
+  `prompts/TASK-0002-escalation.md` (`PC-5f2365599a206e82`); Terra/alto e a
+  mesma familia no nivel acima de Luna/medio, conforme §7. A tarefa preserva
+  os dois relatos anteriores e admite uma terceira iteracao extraordinaria
+  sob `MOD-stack-tests`, sem mudar o escopo do Inspector.
+- **Checkpoint da janela 1 (2026-09-26):** estimativa de entrada unica
+  `434051/600000` tokens (`budget.json`), com limite operacional de 80 % em
+  `480000`. O proximo worker Inspector escalado deve demandar mais que os
+  `45949` tokens restantes; nenhuma chamada longa e iniciada nesta janela.
+  M1 confirmou `gpt-6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna` e
+  `claude-opus-5-5`; bridge funcionou. Prompt-review CTG-0001 ciclo 2 =
+  `PASS`; nenhum delivery-review ainda.
+- **Concluido:** TASK-0001 Architect (CTG-0001 e A1); adocao verbatim no
+  commit `470730d60fa5a07fab486d6570a1ed2457c35f0e` (primeiro commit de
+  CTG-0001), com tres hashes ancorados conferidos e caracterizacao 13/13 verde
+  antes da revisao. `pnpm format:check` passou. O commit contem somente
+  `package.json`, `tools/detran-stack.sh` e `tools/detran-stack.proxy.json`.
+  As ODs abertas 001/002 foram registradas em `open-decisions-rait.md`, ainda
+  sem resposta do Owner. O checkout principal permanece intocado.
+- **Em curso:** TASK-0002 Inspector esta em `checkpoint` apos duas tentativas
+  Luna; os dois arquivos de teste existem mas **nao estao aceitos**. O proximo
+  maestro compoe prompt de escalada para Terra com caminhos completos, corrige
+  os sensores de revisao sem enfraquecer C-01-05…13, exige testes offline e
+  revalida caracterizacao verde e revisao vermelha somente pelo codigo ainda
+  ausente. Nao reexecute os prompts Luna; leia `reports/TASK-0002*.md`,
+  `tools/stack/*.test.mjs`, §Triagem e Adenda A1. A suite de caracterizacao
+  contem regex estrutural de `with_mock=1` que deve virar verificacao de
+  argumento com stubs antes de TASK-0003. A suite de revisao deve testar
+  autorizacao do banco `detran_local_stack`/flag propria, array
+  `services.frontends`, portas e comandos, override Compose efetivo e
+  health/timeout por comportamento offline; evite caminhos fixos e stubs
+  contornaveis. O teste Compose pode usar `docker compose config`, sem daemon.
+- **Pendente:** marcar TASK-0002 concluida, entao TASK-0003 Engineer; somente
+  depois CTG-0001 `pnpm check`, `pnpm docs:check`, delivery-review, commits de
+  contrato/testes/implementacao, evidencia, PR, CI e merge. CTG-0002/0003 e
+  fechamento da rodada seguem pendentes. A resposta do Owner para
+  OD-R17-001/002/003 pode chegar durante a retomada; mantenha premissas
+  abertas ate la. Nao faca `db-reset` real fora do banco descartavel da stack.
+  `reports/` e ignorado pelo Git; adicionar os relatorios necessarios com
+  `git add -f` no commit de entrega, sem versionar transcripts temporarios se
+  a politica da rodada nao os pedir.
 
 ## Leitura
 
-(vazio)
+Base lida: `220a40202bf4ab17a5ce28b882ad96d60755842f` (`origin/main`,
+2026-09-26). Ordem do §2 cumprida para: `AGENTS.md`, `CODESTYLE.md`,
+`docs/meta/agents/README.md`, `docs/meta/agents/orchestra/{README.md,model-ladder.md,waves.md}`,
+`work/campaigns/C-0002-consolidacao.md`, o insumo fora do git ancorado em §Insumo,
+`backend/database/{apply.sh,seed.sh,seed/*.sql}` (cabecalhos de seed),
+`senatran-mock/docker-compose.yml`, `backend/app/src/{detran-runtime.ts,app.module.ts}`,
+`packages/sefaz-adapter/src/{http-adapter,domain}.ts`,
+`docs/meta/pec-external-environment-contract.md` §SEFAZ-AM,
+`backend/domains/ch/README.md`, `.github/workflows/ci.yml`,
+`docs/dev/operations/README.md`,
+`docs/meta/knowledge-base/{decision-closure-plan.md,steering.md,open-decisions-rait.md}`
+nas secoes pedidas, `docs/meta/adr/ADR-0034-pec-web-frontend.md`, os quatro manuais
+de papel e este `plan.md`. Foram conferidos ainda os quatro `angular.json`,
+`backend/domains/shared/src/roles.ts` e os adapters locais para a matriz do
+CTG-0001. `apps/rait/web/angular.json` referencia `portal-web` no `serve` de
+`rait-web`; o contrato deve tratar esse defeito antes do checkpoint (b).

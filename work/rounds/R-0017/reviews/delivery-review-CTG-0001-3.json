@@ -1,0 +1,15 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "The high finding from cycle 2 is fixed. In tools/detran-stack.sh:411-422 the base backend_env array no longer contains DETRAN_LOCAL_ACTOR_ID, DETRAN_LOCAL_CPF, DETRAN_LOCAL_ASSURANCE_LEVEL, SENATRAN_MOCK_CPF_USUARIO or SENATRAN_MOCK_CLIENT_CERT_CN. Lines 423-427 add each one only when it is set, using ${VAR+x}. Line 428 runs exec env -i \"${backend_env[@]}\". When a variable is not set it is now absent from the backend process, so the ?? defaults apply: detran-runtime.ts:321-323 falls back to the actor id 00000000-0000-4000-8000-000000000002, and senatran-adapter/src/config.ts:80-82 falls back to 12345678909 and senatran-dev-client.",
+    "A value the operator sets explicitly still reaches the backend unchanged. Because the check is ${VAR+x}, a variable set to an empty string is also passed through. That matches the behaviour of the adopted version and the contract's 'explicitly defined' surface.",
+    "This does not trip set -Eeuo pipefail (l.2). A false [[ ]] && ... line that is not the last command in the subshell does not abort it, and under set -u the expansion $VAR is only reached after the variable has been confirmed to exist.",
+    "The allowlist gained nothing new. It only has PATH, HOME, DETRAN_TEST_STUB_CALLS (a low item already noted in cycle 2), variables with stack defaults, DATABASE_URL, PORT and the five optional variables above. Nothing else from the environment is inherited.",
+    "The sensor looks at the real process environment. The pnpm stub dumps `env | sort` for the backend process (revision.test.mjs:108-110). The test at revision.test.mjs:552-561 asserts that there is no ^VAR= line for any of the five variables. invoke (l.126-138) does not inherit process.env beyond HOME and PATH, so the host shell cannot contaminate the result.",
+    "Low, non-blocking: the C-01-07 test reads '' when backend-environment.log does not exist (l.546-548), so it could pass without checking anything. It also has no positive case showing that an explicitly defined variable reaches the backend. An assert.ok(existsSync(...)) plus one case with DETRAN_LOCAL_ACTOR_ID set would make it stronger.",
+    "I did not treat pnpm check as PASS. I also did not assess the merge of origin/main or its gates. I did not rerun pnpm test:stack because this session was read-only; I relied on the maestro's 42/42 result."
+  ]
+}
