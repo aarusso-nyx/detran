@@ -49,6 +49,8 @@ legalBasis?, …campos do comando }`; resposta `200` com o recurso pós-transiç
 
 ### WP-0 — Migração do substrato (Engineer)
 
+**Mesclado em `main` em 2026-09-13 (PR #28, merge `cbdc75a6`; rodada pré-método R-0001, sem closure).**
+
 | Ler                                                                                            | Produzir                                                                                                                                                                                 | Gate                                                                  |
 | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | `wp0-stynx-1-3-1-migration.md`; ADR-0015; `packages/ui/package.json`; `backend/*/package.json` | pins `@stynx-nyx/*@1.3.1`; `@detran/ui` peer `>=22 <23`, Angular/ng-packagr 22 dev; `pnpm-lock.yaml`; ajustes de tipos se houver; `AGENTS.md`/`README.md` sem a ressalva "pins em 1.1.1" | `pnpm check`, `pnpm backend:test:ci`, `pnpm --filter @detran/ui test` |
@@ -61,7 +63,7 @@ Entregável **A**. Ler: ADR-0014 §Consequências, `WF-INF-003` §1-§6, `WF-INF
 
 Subentrega de parâmetros concluída em R-0004 / PR #37: `BP-OPS-PARAMETER-001`,
 `ops.parameter`, catálogo/seed, serviço e comando compartilhados. Os demais itens de WP-A abaixo
-continuam pendentes e não são implicitamente fechados por essa subentrega.
+foram executados depois, em R-0006 (parágrafo após a tabela); não são fechados por essa subentrega.
 
 | Blueprint (novo/alterado)            | Entidades                                                                                                                                                                                                                                                                                                                                       | Observações                                                                                                                                                                   |
 | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -78,7 +80,7 @@ Também em WP-A: `apply.sh` aplica todo `ddl/*.sql` em ordem lexicográfica — 
 manualmente. DDL reais desta rodada (R-0006): `38-inf-infraction.sql`, `39-inf-rait-org.sql`,
 `57-inf-collection.sql`, `58-inf-rait-integration.sql`, `59-inf-notification.sql` (40–56 e 60
 ocupados por `ch`/`portal`); e acrescentar fixtures por estado em `backend/database/seed/`.
-Executado em R-0006 (CTG-0001: PR #39; CTG-0002: PR pendente); ficou fora: projeções da
+Executado em R-0006 (CTG-0001: PR #39; CTG-0002: PR #43, merge `515a5e3d`; fechamento PC-0004); ficou fora: projeções da
 `integration.outbox` por consumidor e migração de `rait_communication` para projeção de
 `inf.notice` (M10 → WP-P); tabela `signature_policy` e a generalização de
 `normative_document_template` (→ R-0008). Gate: `pnpm blueprints:check`, `verify:rls-ddl`,
@@ -155,7 +157,7 @@ pré-condições, comando, pós-estado) como tabela no cabeçalho do arquivo e e
 `docs/framework/arch/rait-web-forms.md` (consolidado). Gate: testes unitários dos schemas; nenhum
 prazo legal calculado no cliente (`RN-RAIT-005`, lint rule).
 
-Executado em R-0012 (CTG-0002c: PR do CTG-0002c, a abrir; TASK-0010 Architect, TASK-0011 Inspector,
+Executado em R-0012 (CTG-0002c: PR #92, merge `828331d4`, fechamento PC-0010; TASK-0010 Architect, TASK-0011 Inspector,
 TASK-0012 Engineer): 16 `apps/rait/web/src/app/forms/<formulario>.schema.ts` (zod, decisão M11) com
 `FormGate` no cabeçalho e `docs/framework/arch/rait-web-forms.md` consolidado; regra ESLint local
 `rait/no-client-deadline-math` ([RN-RAIT-005]) e `rait/no-static-token-i18n-key` (A1) em

@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0007",
+  "round_id": "R-0018",
+  "status": "completed",
+  "discipline": "engineer",
+  "discipline_specialization": "engineer-backend",
+  "title": "Liberar work/rounds/*/reports/ no .gitignore e excluí-los do Prettier",
+  "description": "Contrato CTG-0002 §5: .gitignore re-inclui relatórios de worker, preserva features/reports e saídas de ferramenta; .prettierignore exclui os relatórios verbatim.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-gitignore"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0002",
+  "coupled_pipeline_position": "engineer",
+  "upstream_task_id": "TASK-0006",
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 7,
+  "tags": ["c-0002", "action-3", "ctg-0002"],
+  "branch": "orchestra/index-state-ctg2",
+  "worktree_id": "WT-index-state",
+  "prompt_composition_id": "PC-94be6e2533eeeb54",
+  "acceptance_commands": [
+    ["pnpm", "format:check"],
+    ["git", "check-ignore", "--no-index", "dist/x"]
+  ],
+  "created_at": "2026-09-27T00:30:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "sonnet",
+    "effort": "low",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-sonnet-5"
+    },
+    "prompt_composition_id": "PC-94be6e2533eeeb54",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

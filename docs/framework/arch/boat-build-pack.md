@@ -67,7 +67,7 @@ com `purpose` e auditoria; `transmit`/`rectify` via outbox + `RenaestPort` com m
 campo documentado em `docs/framework/contracts/renaest-mapping.md` (marcando os campos que
 dependem dos Manuais RENAEST, DT-061); espelho da situação nacional; job `T-BOAT-TRANSM`; relatório
 preliminar/BAT em PDF/A (ADR-0018); projeções `portal.crash_view`, `dashboard.crashes` (com limiar
-de célula), `integration.renaest_mirror`; SSE. R-0010 comprovou comandos, sincronização, mock,
+de célula), `integration.renaest_mirror`; SSE. R-0010 (PR #55, merge `4f034553`; PR #71, merge `1c24657b`; fechamento PC-0008) comprovou comandos, sincronização, mock,
 projeções e envelope canônico; o job ainda depende de autoridade administrativa para descoberta de
 tenants, e PDF/A e homologação real permanecem sem entrega comprovada. Gate: matriz de transições de `WF-BOAT-001` e
 `WF-BOAT-003`, testes de gravidade × vítimas, duplicidade por chave natural, terminal sem

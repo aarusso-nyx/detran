@@ -1,0 +1,352 @@
+diff --git a/.gitignore b/.gitignore
+index d6872c50..74d9315d 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -8,9 +8,12 @@ dist/
+ build/
+ coverage/
+ reports/
+-# Código de aplicação chamado `reports` é rastreado: o padrão acima existe para saídas de
+-# ferramenta e para os relatórios de worker de `work/rounds/*/reports/` (R-0016: o módulo
+-# `features/reports` do console — telas D-16/D-17 — ficou fora de um commit por causa dele).
++# `reports/` ignora saídas de ferramenta em qualquer nível. Exceções rastreadas: os relatórios de
++# worker de `work/rounds/*/reports/` (evidência versionada; R-0007 perdeu 24 relatórios, C-0002
++# §4; R-0018 CTG-0002) e o código de aplicação `features/reports` (R-0016: o módulo do console —
++# telas D-16/D-17 — ficou fora de um commit por causa dele).
++!work/rounds/*/reports/
++!work/rounds/*/reports/**
+ !apps/*/*/src/app/features/reports/
+ !apps/*/*/src/app/features/reports/**
+ tmp/
+diff --git a/.prettierignore b/.prettierignore
+index c7d8b25e..eaf530f4 100644
+--- a/.prettierignore
++++ b/.prettierignore
+@@ -66,3 +66,7 @@ work/rounds/R-0007/reviews/attempt-2/ctg-0001-final-upgrade-catalog-delta.raw.js
+ work/rounds/R-0007/reviews/attempt-2/ctg-0001-final-ci-orchestration.raw.json
+ work/rounds/R-0007/reviews/attempt-2/ctg-0001-final-ci-fixture-delta.raw.json
+ work/rounds/R-0007/reviews/attempt-2/ctg-0001-final-delivery.raw.json
++
++# Worker delivery reports are verbatim evidence (R-0018 CTG-0002): tracked by git since
++# `.gitignore` re-includes `work/rounds/*/reports/`, never reformatted.
++work/rounds/*/reports/
+diff --git a/BUILD-PLAN.md b/BUILD-PLAN.md
+index 1304a840..e4c0c7d7 100644
+--- a/BUILD-PLAN.md
++++ b/BUILD-PLAN.md
+@@ -31,3 +31,31 @@ build packs in `docs/framework/arch/`: `rait-build-pack.md` (WP-0, WP-A…WP-F,
+ (WP-B0…B5) and `dashboard-build-pack.md` (WP-D0…D5), plus the shared parameter store of
+ ADR-0021 (WP-A). Entry conditions and open decisions: `docs/meta/knowledge-base/decision-closure-plan.md`
+ (gate closed by the Owner on 2026-09-13, steering §H).
++
++## Work-package state (R-0018, 2026-09-26)
++
++State of every work package of the five build packs in `docs/framework/arch/`, read from
++`docs/meta/agents/orchestra/waves.md` (wave plan and history) and the round closures in
++`record/proofs/compliance/closures/`. "Merged" means the round's pull requests are merged into
++`main`; the delivered scope, and what stayed out, is the one recorded in the build-pack section of
++each work package. Campaign C-0002 (R-0017…R-0032): `work/campaigns/C-0002-consolidacao.md`; round
++state: `work/rounds/README.md`.
++
++| App       | Work packages          | Round               | Merge PRs               | Closure | State                                                    |
++| --------- | ---------------------- | ------------------- | ----------------------- | ------- | -------------------------------------------------------- |
++| RAIT      | WP-0                   | R-0001 (pre-method) | #28                     | —       | merged                                                   |
++| RAIT      | WP-A (parameter store) | R-0004              | #37                     | PC-0002 | merged                                                   |
++| RAIT      | WP-A (rest)            | R-0006              | #39, #43                | PC-0004 | merged                                                   |
++| RAIT      | WP-B, WP-C             | R-0007              | #69, #94                | PC-0011 | merged                                                   |
++| RAIT      | WP-D, WP-E, WP-F       | R-0012              | #79, #81, #85, #90, #92 | PC-0010 | merged                                                   |
++| TEAT      | WP-T0                  | R-0001 (pre-method) | #29                     | —       | merged                                                   |
++| TEAT      | WP-T1                  | R-0005              | #40, #41, #42, #44      | PC-0003 | merged                                                   |
++| TEAT      | WP-T2, WP-T3           | R-0008              | #47, #48, #49, #50, #51 | PC-0005 | merged                                                   |
++| TEAT      | WP-T4, WP-T5, WP-T6    | R-0013              | #70, #73, #82, #113     | PC-0013 | merged; WP-T6 as UI and workflow homologation (ADR-0033) |
++| PORTAL    | WP-P0…WP-P3            | R-0009              | #54, #56                | PC-0006 | merged                                                   |
++| PORTAL    | WP-P4…WP-P6            | R-0014              | #60…#66                 | PC-0007 | merged                                                   |
++| BOAT      | WP-B0…WP-B3            | R-0010              | #55, #71                | PC-0008 | merged                                                   |
++| BOAT      | WP-B4, WP-B5           | R-0015              | #107, #116              | PC-0014 | merged                                                   |
++| DASHBOARD | WP-D0                  | R-0003              | #32                     | PC-0001 | merged                                                   |
++| DASHBOARD | WP-D1…WP-D3            | R-0011              | #83, #87                | PC-0009 | merged                                                   |
++| DASHBOARD | WP-D4, WP-D5           | R-0016              | #80, #103               | PC-0012 | merged; console screens at level L0                      |
+diff --git a/docs/framework/arch/boat-build-pack.md b/docs/framework/arch/boat-build-pack.md
+index 2cffe409..11b76423 100644
+--- a/docs/framework/arch/boat-build-pack.md
++++ b/docs/framework/arch/boat-build-pack.md
+@@ -67,7 +67,7 @@ com `purpose` e auditoria; `transmit`/`rectify` via outbox + `RenaestPort` com m
+ campo documentado em `docs/framework/contracts/renaest-mapping.md` (marcando os campos que
+ dependem dos Manuais RENAEST, DT-061); espelho da situação nacional; job `T-BOAT-TRANSM`; relatório
+ preliminar/BAT em PDF/A (ADR-0018); projeções `portal.crash_view`, `dashboard.crashes` (com limiar
+-de célula), `integration.renaest_mirror`; SSE. R-0010 comprovou comandos, sincronização, mock,
++de célula), `integration.renaest_mirror`; SSE. R-0010 (PR #55, merge `4f034553`; PR #71, merge `1c24657b`; fechamento PC-0008) comprovou comandos, sincronização, mock,
+ projeções e envelope canônico; o job ainda depende de autoridade administrativa para descoberta de
+ tenants, e PDF/A e homologação real permanecem sem entrega comprovada. Gate: matriz de transições de `WF-BOAT-001` e
+ `WF-BOAT-003`, testes de gravidade × vítimas, duplicidade por chave natural, terminal sem
+diff --git a/docs/framework/arch/dashboard-build-pack.md b/docs/framework/arch/dashboard-build-pack.md
+index ae65448a..f83c1490 100644
+--- a/docs/framework/arch/dashboard-build-pack.md
++++ b/docs/framework/arch/dashboard-build-pack.md
+@@ -83,7 +83,7 @@ como propostas em `docs/framework/contracts/dashboard-feeds/*.md`, no formato
+ `{indicador_id, caso_id, estado_anterior, estado_novo, timestamp, base_legal}`; exemplos com
+ fixtures. Gate: `contracts:check`, clientes gerados.
+ 
+-### WP-D4 — Fichas de tela, formulários e i18n (Transcriber-docs → Engineer-frontend) — **executado em 2026-09-21/22** (`R-0016`: fichas e i18n no CTG-0001, PR #80, merge `6a50f026`; os 9 schemas no CTG-0002, PR #103, em CI)
++### WP-D4 — Fichas de tela, formulários e i18n (Transcriber-docs → Engineer-frontend) — **executado em 2026-09-21/22** (`R-0016`: fichas e i18n no CTG-0001, PR #80, merge `6a50f026`; os 9 schemas no CTG-0002, PR #103, merge `973e78c3`; rodada fechada como PC-0012)
+ 
+ Executado com estas diferenças em relação ao texto abaixo: as 18 fichas nasceram diretamente com o
+ id promovido `IU-DASH-D-nn` (arquivo `docs/framework/product/transversal/dashboard/screens/IU-DASH-D-nn.md`,
+@@ -110,7 +110,7 @@ definido"; "prazo do candidato, preclusivo"; "registro manual de ciência"); sch
+ formulários (`dashboard-frontends.md` §7); `i18n/dashboard.pt-BR.json` (estados, severidades,
+ blocos, 42 nomes de indicador, camadas, erros). Gate: `docs:kb:check`, teste tela ↔ ficha ↔ rota.
+ 
+-### WP-D5 — Console (Engineer-frontend) — **executado em 2026-09-22** (`R-0016` CTG-0002, PR #103, em CI)
++### WP-D5 — Console (Engineer-frontend) — **executado em 2026-09-22** (`R-0016` CTG-0002, PR #103, merge `973e78c3`, mesclado em `main`; rodada fechada como PC-0012)
+ 
+ Executado com estas diferenças em relação ao texto abaixo: as 18 telas sobem em nível **L0**
+ (A5/`AUTHORIZATION.md` Amendment 1 — sem contrato/seed de `dashboard-backend` R-0011 no início do
+diff --git a/docs/framework/arch/rait-build-pack.md b/docs/framework/arch/rait-build-pack.md
+index 28d4423a..92140702 100644
+--- a/docs/framework/arch/rait-build-pack.md
++++ b/docs/framework/arch/rait-build-pack.md
+@@ -49,6 +49,8 @@ legalBasis?, …campos do comando }`; resposta `200` com o recurso pós-transiç
+ 
+ ### WP-0 — Migração do substrato (Engineer)
+ 
++**Mesclado em `main` em 2026-09-13 (PR #28, merge `cbdc75a6`; rodada pré-método R-0001, sem closure).**
++
+ | Ler                                                                                            | Produzir                                                                                                                                                                                 | Gate                                                                  |
+ | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+ | `wp0-stynx-1-3-1-migration.md`; ADR-0015; `packages/ui/package.json`; `backend/*/package.json` | pins `@stynx-nyx/*@1.3.1`; `@detran/ui` peer `>=22 <23`, Angular/ng-packagr 22 dev; `pnpm-lock.yaml`; ajustes de tipos se houver; `AGENTS.md`/`README.md` sem a ressalva "pins em 1.1.1" | `pnpm check`, `pnpm backend:test:ci`, `pnpm --filter @detran/ui test` |
+@@ -61,7 +63,7 @@ Entregável **A**. Ler: ADR-0014 §Consequências, `WF-INF-003` §1-§6, `WF-INF
+ 
+ Subentrega de parâmetros concluída em R-0004 / PR #37: `BP-OPS-PARAMETER-001`,
+ `ops.parameter`, catálogo/seed, serviço e comando compartilhados. Os demais itens de WP-A abaixo
+-continuam pendentes e não são implicitamente fechados por essa subentrega.
++foram executados depois, em R-0006 (parágrafo após a tabela); não são fechados por essa subentrega.
+ 
+ | Blueprint (novo/alterado)            | Entidades                                                                                                                                                                                                                                                                                                                                       | Observações                                                                                                                                                                   |
+ | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+@@ -78,7 +80,7 @@ Também em WP-A: `apply.sh` aplica todo `ddl/*.sql` em ordem lexicográfica —
+ manualmente. DDL reais desta rodada (R-0006): `38-inf-infraction.sql`, `39-inf-rait-org.sql`,
+ `57-inf-collection.sql`, `58-inf-rait-integration.sql`, `59-inf-notification.sql` (40–56 e 60
+ ocupados por `ch`/`portal`); e acrescentar fixtures por estado em `backend/database/seed/`.
+-Executado em R-0006 (CTG-0001: PR #39; CTG-0002: PR pendente); ficou fora: projeções da
++Executado em R-0006 (CTG-0001: PR #39; CTG-0002: PR #43, merge `515a5e3d`; fechamento PC-0004); ficou fora: projeções da
+ `integration.outbox` por consumidor e migração de `rait_communication` para projeção de
+ `inf.notice` (M10 → WP-P); tabela `signature_policy` e a generalização de
+ `normative_document_template` (→ R-0008). Gate: `pnpm blueprints:check`, `verify:rls-ddl`,
+@@ -155,7 +157,7 @@ pré-condições, comando, pós-estado) como tabela no cabeçalho do arquivo e e
+ `docs/framework/arch/rait-web-forms.md` (consolidado). Gate: testes unitários dos schemas; nenhum
+ prazo legal calculado no cliente (`RN-RAIT-005`, lint rule).
+ 
+-Executado em R-0012 (CTG-0002c: PR do CTG-0002c, a abrir; TASK-0010 Architect, TASK-0011 Inspector,
++Executado em R-0012 (CTG-0002c: PR #92, merge `828331d4`, fechamento PC-0010; TASK-0010 Architect, TASK-0011 Inspector,
+ TASK-0012 Engineer): 16 `apps/rait/web/src/app/forms/<formulario>.schema.ts` (zod, decisão M11) com
+ `FormGate` no cabeçalho e `docs/framework/arch/rait-web-forms.md` consolidado; regra ESLint local
+ `rait/no-client-deadline-math` ([RN-RAIT-005]) e `rait/no-static-token-i18n-key` (A1) em
+diff --git a/docs/framework/arch/teat-build-pack.md b/docs/framework/arch/teat-build-pack.md
+index 72d00288..0b5a6d52 100644
+--- a/docs/framework/arch/teat-build-pack.md
++++ b/docs/framework/arch/teat-build-pack.md
+@@ -150,7 +150,7 @@ do bootstrap. Gate: `pnpm contracts:check` (gerador CRUD + `tools/contracts/chec
+ 
+ ### WP-T4 — Telas, formulários e i18n (Transcriber-docs → Engineer-frontend)
+ 
+-**Entregue e revisto em R-0013; integração final da rodada pendente.** CTG-0002 registrou as
++**Entregue e revisto em R-0013; integrado em `main` no PR #113 (merge `646c6c28`; fechamento PC-0013).** CTG-0002 registrou as
+ matrizes imutáveis, as 126 fichas (70 mobile e 56 web), o catálogo pt-BR e os parâmetros
+ correlatos. Seu fechamento documental foi mesclado no PR #73
+ (`3da2b61ee8e418e634a7364417175a1e86a8c9e0`). As fichas preservam as fronteiras BOAT e as
+@@ -167,7 +167,7 @@ ficha e rota; revisão do Owner.
+ 
+ ### WP-T5 — Provisionamento offline e dispositivo (Architect → Engineer; ADR própria)
+ 
+-**Entregue e mesclado em R-0013/CTG-0003.** O provisionamento foi fechado por ADR-0028,
++**Entregue e mesclado em R-0013/CTG-0003.** O provisionamento foi fechado por ADR-0038,
+ `BP-OPS-PROVISIONING-001`, DDL, contratos e implementação tenant-scoped, com revisão final
+ independente PASS antes da integração. O merge observado é o da PR #82 (`b8920457…` no registro
+ da rodada). A prova cobre contratos, persistência, RLS, idempotência, readiness e ports; não
+@@ -185,19 +185,19 @@ pacote copiado/alterado/expirado/revogado rejeitado em teste; sem chave privada
+ 
+ **Escopo revisto pelo Owner em 2026-09-23: homologação de UI e workflows, não app de
+ campo** (ADR-0033; adenda de R-0013). O app mobile produtivo terá round dedicado
+-posterior (R-0017 apenas candidato) e backlog nas issues
++posterior (o candidato R-0017 da ADR-0033 não foi usado: a C-0002 atribuiu R-0017 a `local-stack`) e backlog nas issues
+ [#108](https://github.com/aarusso-nyx/detran/issues/108)–[#112](https://github.com/aarusso-nyx/detran/issues/112).
+ GMS820 está homologado como equipamento por decisão incondicional do Owner, mas a
+ integração da aplicação nele ainda não foi provada. CTG-0004a/b/5 devem demonstrar
+ fluxos somente com fixtures explícitas e segregadas; caminhos produtivos sem provas
+-continuam bloqueados. O fechamento exige novos testes e reviews no candidato atual,
++continuam bloqueados. O fechamento (PC-0013) exigiu novos testes e reviews no candidato final,
+ sem converter REDs de produção em skips.
+ 
+-**Candidatos históricos entregues e revistos; não mesclados nem implantados.** O candidato conjunto
++**Candidatos históricos entregues, revistos e mesclados em `main` no PR #113 (merge `646c6c28`; fechamento PC-0013); não implantados.** O candidato conjunto
+ `408ab438fdd940eed6bd46296daad0a141d5a222` recebeu PASS independente em CTG-0004a
+ (mobile, 30/30 specs focais; digest `d9382578…dd32ea`) e CTG-0004b (web, lint, typecheck,
+-565/565 testes e build; digest `2febf768…d5becb`). A única publicação/PR da rodada permanece
+-deferida até o encerramento; portanto este registro não afirma merge, deploy, KMS/Keystore,
++565/565 testes e build; digest `2febf768…d5becb`). A publicação da rodada ocorreu no
++encerramento, no PR #113; este registro não afirma deploy, KMS/Keystore,
+ criptografia/envelope ou attestation reais, bodycam real nem adaptadores de hardware (inclusive
+ impressora).
+ 
+diff --git a/docs/meta/agents/orchestra/model-ladder.md b/docs/meta/agents/orchestra/model-ladder.md
+index 660e3898..a7f6951c 100644
+--- a/docs/meta/agents/orchestra/model-ladder.md
++++ b/docs/meta/agents/orchestra/model-ladder.md
+@@ -3,17 +3,32 @@
+ **Autoridade:** Architect. Heurística revisável a cada rodada (registrar ajustes em `waves.md`
+ §Histórico); não é texto constitucional (Art. 23: famílias concretas são política F5).
+ 
+-## Famílias e níveis (decisão do Owner, 2026-09-14)
++## Famílias e níveis (OD-C2-003, decisão do Owner de 2026-09-26)
+ 
+ | Nível       | OpenAI (Codex CLI) | Anthropic (Claude Code) | Uso na orquestra                                                                   |
+ | ----------- | ------------------ | ----------------------- | ---------------------------------------------------------------------------------- |
+-| **Grande**  | GPT-5.6 **Sol**    | **Fable 5.1**           | maestro; reviewer quando a frente muda DDL, política ou contrato; RGR              |
+-| **Médio**   | GPT-5.6 **Terra**  | **Opus 5**              | architect-blueprint, guardas de estado, engineer-frontend, reviewer padrão         |
+-| **Pequeno** | GPT-5.6 **Luna**   | **Sonnet 5**            | transcriber-docs, inspector-tests, engineer-backend em tarefas de contrato fechado |
++| **Grande**  | **Sol 6**          | **Opus 5.5**            | maestro; reviewer quando a frente muda DDL, política ou contrato; RGR              |
++| **Médio**   | GPT-5.6 **Terra**  | **Opus 5.5**            | architect-blueprint, guardas de estado, engineer-frontend, reviewer padrão         |
++| **Pequeno** | **Luna**           | **Sonnet 5**            | transcriber-docs, inspector-tests, engineer-backend em tarefas de contrato fechado |
++
++Maestros da C-0002: Sol 6 e Opus 5.5, alternados; reviewer sempre da outra família, nível grande,
++pela ponte `tools/orchestra/bridge.sh` (`work/campaigns/C-0002-consolidacao.md` §4). A escada
++anterior (2026-09-14) está em §Histórico da escada.
+ 
+-Identificadores na CLI: Codex usa `gpt-5.6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna`; Claude aceita os apelidos `fable`, `opus`, `sonnet` em `--model`; Codex
+-usa o id do modelo em `-m` (confirmar o id exato de Sol/Terra/Luna com `codex --help` ou
+-`~/.codex/config.toml` antes da primeira ponte; registrar em `waves.md` §Histórico).
++Identificadores na CLI (confirmados em R-0018, `work/rounds/R-0018/plan.md` §Decisões do maestro
++M1, 2026-09-26, com `codex exec -m <id>` e `claude -p --model <id>`):
++
++| Família | Nível          | Nome     | Id de CLI         | Observação                                                                     |
++| ------- | -------------- | -------- | ----------------- | ------------------------------------------------------------------------------ |
++| Codex   | grande         | Sol 6    | `gpt-6-sol`       | sucessor de GPT-5.6 Sol (mesma linha `gpt-*-sol`)                              |
++| Codex   | médio          | Terra    | `gpt-5.6-terra`   | `gpt-6-terra` responde "not supported when using Codex with a ChatGPT account" |
++| Codex   | pequeno        | Luna     | `gpt-6-luna`      | —                                                                              |
++| Claude  | grande e médio | Opus 5.5 | `claude-opus-5-5` | —                                                                              |
++| Claude  | pequeno        | Sonnet 5 | `claude-sonnet-5` | —                                                                              |
++
++Codex usa o id em `-m` e exige `codex-cli` ≥ 0.157.1 para `gpt-6-*` (0.151.0 responde "not
++supported"); Claude usa o id em `--model`. Reconfirmar os ids no bootstrap de cada rodada e
++registrar divergência em `waves.md` §Histórico.
+ 
+ Esforço (reasoning/effort): **baixo** para transcrição e testes de contrato fechado; **médio** para
+ implementação de comandos; **alto** para modelagem, guardas e revisão; **máximo** só no maestro na
+@@ -21,21 +36,21 @@ fase de planejamento.
+ 
+ ## Escolha por tipo de tarefa
+ 
+-| Tipo de tarefa                                                                | Papel Art. 6              | Nível                                                | Esforço | Família                                                                                   |
+-| ----------------------------------------------------------------------------- | ------------------------- | ---------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------- |
+-| Decompor a frente, escrever prompts, decidir modelagem em RGR                 | Architect                 | grande                                               | máximo  | a do maestro                                                                              |
+-| Blueprint, DDL, guardas de transição, contrato de comando                     | Architect                 | médio                                                | alto    | mesma do maestro                                                                          |
+-| Testes de matriz de transição, política, RLS, prazos, SSE                     | Inspector                 | pequeno (médio para matrizes grandes)                | médio   | mesma do maestro                                                                          |
+-| Comando de backend com contrato e testes já escritos                          | Engineer                  | pequeno                                              | médio   | mesma do maestro                                                                          |
+-| Regeneração de blueprints/contratos e refatorações amplas guiadas por scripts | Engineer                  | pequeno                                              | baixo   | mesma do maestro (Codex tende a render melhor em execução de scripts e refatoração ampla) |
+-| Fichas de tela, contratos de payload, i18n, glossários                        | Owner delegado / Engineer | pequeno                                              | baixo   | mesma do maestro (Claude tende a render melhor em coerência com o corpus e documentação)  |
+-| Frontend Angular 22 sobre `@detran/ui` e STYNX                                | Engineer                  | médio                                                | médio   | mesma do maestro                                                                          |
+-| Revisão de prompts e de entregas                                              | Auditor (soft gate)       | médio; grande se a frente muda DDL/política/contrato | alto    | **outra** família                                                                         |
+-| Auditoria pós-merge (`audit observe`)                                         | Auditor                   | rotina DEVAI                                         | —       | —                                                                                         |
++| Tipo de tarefa                                                                | Papel Art. 7                                                     | Nível                                                | Esforço | Família                                                                                   |
++| ----------------------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------- | ------- | ----------------------------------------------------------------------------------------- |
++| Decompor a frente, escrever prompts, decidir modelagem em RGR                 | Architect                                                        | grande                                               | máximo  | a do maestro                                                                              |
++| Blueprint, DDL, guardas de transição, contrato de comando                     | Architect                                                        | médio                                                | alto    | mesma do maestro                                                                          |
++| Testes de matriz de transição, política, RLS, prazos, SSE                     | Inspector                                                        | pequeno (médio para matrizes grandes)                | médio   | mesma do maestro                                                                          |
++| Comando de backend com contrato e testes já escritos                          | Engineer                                                         | pequeno                                              | médio   | mesma do maestro                                                                          |
++| Regeneração de blueprints/contratos e refatorações amplas guiadas por scripts | Engineer                                                         | pequeno                                              | baixo   | mesma do maestro (Codex tende a render melhor em execução de scripts e refatoração ampla) |
++| Fichas de tela, contratos de payload, i18n, glossários                        | Architect (`transcriber-docs`); Engineer para contrato em código | pequeno                                              | baixo   | mesma do maestro (Claude tende a render melhor em coerência com o corpus e documentação)  |
++| Frontend Angular 22 sobre `@detran/ui` e STYNX                                | Engineer                                                         | médio                                                | médio   | mesma do maestro                                                                          |
++| Revisão de prompts e de entregas                                              | Auditor (soft gate)                                              | médio; grande se a frente muda DDL/política/contrato | alto    | **outra** família                                                                         |
++| Auditoria pós-merge (`audit observe`)                                         | Auditor                                                          | rotina DEVAI                                         | —       | —                                                                                         |
+ 
+ ## Desempate (Art. 23, em nomes)
+ 
+-1. Mesma pergunta ao modelo da **outra família, mesmo nível** (Sol ↔ Fable, Terra ↔ Opus, Luna ↔ Sonnet).
++1. Mesma pergunta ao modelo da **outra família, mesmo nível** (Sol 6 ↔ Opus 5.5, Terra ↔ Opus 5.5, Luna ↔ Sonnet 5).
+ 2. Se persistir: **nível acima da mesma família** do maestro.
+ 3. Se persistir: **nível acima da outra família**.
+ 4. Humano (Owner ou Architect), registrado como `escalated`.
+@@ -54,3 +69,20 @@ Regra prática por janela de 5 h de uma família: **um** planejamento de maestro
+ tarefas de worker pequeno com suas revisões. Contabilize em `budget.json` os tokens **únicos** (convenção
+ de R-0003/R-0006: ≈ ¼ dos brutos do subagente) e registre os brutos na nota da entrada. Duas frentes simultâneas só se forem de famílias
+ diferentes.
++
++## Histórico da escada
++
++**2026-09-14 — decisão do Owner; substituída em 2026-09-26 por OD-C2-003 (seções acima).** Texto
++original:
++
++| Nível       | OpenAI (Codex CLI) | Anthropic (Claude Code) | Uso na orquestra                                                                   |
++| ----------- | ------------------ | ----------------------- | ---------------------------------------------------------------------------------- |
++| **Grande**  | GPT-5.6 **Sol**    | **Fable 5.1**           | maestro; reviewer quando a frente muda DDL, política ou contrato; RGR              |
++| **Médio**   | GPT-5.6 **Terra**  | **Opus 5**              | architect-blueprint, guardas de estado, engineer-frontend, reviewer padrão         |
++| **Pequeno** | GPT-5.6 **Luna**   | **Sonnet 5**            | transcriber-docs, inspector-tests, engineer-backend em tarefas de contrato fechado |
++
++Identificadores na CLI de então: Codex `gpt-5.6-sol`, `gpt-5.6-terra`, `gpt-5.6-luna`; Claude
++apelidos `fable`, `opus`, `sonnet` em `--model`. Pares de desempate de então: Sol ↔ Fable, Terra ↔
++Opus, Luna ↔ Sonnet. Na tabela "Escolha por tipo de tarefa", a transcrição de fichas, contratos de
++payload, i18n e glossários constava como "Owner delegado / Engineer" (corrigido: é ato de Architect,
++`transcriber-docs`, ajuste de R-0006).
+diff --git a/docs/meta/agents/orchestra/waves.md b/docs/meta/agents/orchestra/waves.md
+index d78c8c0d..b50c1e02 100644
+--- a/docs/meta/agents/orchestra/waves.md
++++ b/docs/meta/agents/orchestra/waves.md
+@@ -63,4 +63,6 @@ ficam ativas ao mesmo tempo (ondas 5 e 6).
+ | R-0013 | `teat-frontends`    | 2026-09-19                       | PR #70 (CTG-0001), #73 (CTG-0002), #82 (CTG-0003), #113 (CTG-0004a/b e CTG-0005; merge `646c6c28`); fechamento PC-0013 em 2026-09-24                                                                                                                          | TASK-0001…0018, adenda de homologação ADR-0033 e correções dos seis REDs AIT                              | Revisões por CTG no plano; último REVIEWER Codex autorizado pelo Owner deu PASS na árvore `bba592ec…`; sete checks CI verdes | Exceção do Owner para REVIEWER da mesma família; escopo produtivo postergado explicitamente, sem waiver de gate                                                                                                 | Ver `work/rounds/R-0013/budget.json`; consumo da janela final não aferido                                                                                                       | Separar homologação de UI/workflows de release de campo, preservar negativos produtivos e vincular a postergação às issues #108–#112; observar merge exato antes de fechar                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+ | R-0014 | `portal-pwa`        | 2026-09-17                       | PRs #60…#66; PC-0007                                                                                                                                                                                                                                          | 0012 + fechamento; WP-P4…P6                                                                               | 8…11                                                                                                                         | B1 Lighthouse; B2 reviewer; B3 Codex                                                                                                                                                                            | ~4.93M únicos acumulados; janela 4                                                                                                                                              | `gpt-5.6-sol\|gpt-5.6-terra\|gpt-5.6-luna`; comandos longos em segundo plano; app isolado por arquivo; asserções por conjunto vedadas; Sonnet/médio (ou Terra/médio) para Inspectors de matriz grande.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+ | R-0015 | `boat-mobile`       | 2026-09-22 (retomada 2026-09-24) | PR #107 (CTG-0001, merge `1dc8b630`); PR #116 (CTG-0002, merge `50626da5`); fechamento PC-0014                                                                                                                                                                | TASK-0001…0012; dois CTGs entregues e observados                                                          | 8 prompt-review; 4 delivery-review (dois por CTG)                                                                            | 2 humanas: Emendas 2 e 3 do Owner; terceiro e quarto prompt-review restritos às duas fronteiras residuais do Inspector                                                                                          | estimativa em `work/rounds/R-0015/budget.json`                                                                                                                                  | Troca Fable → Sol decidida pelo Owner em 2026-09-21; corrigir ownership Inspector/Engineer antes de redespachar; matchers de rotas específicas precedem wildcard; checkout limpo exige construir pacote workspace novo antes do typecheck dos consumidores; manter `source_pending`; portas nativas sem consumidor por tela ficam como OD; hardware real, release de campo e homologação RENAEST/SNE/gov.br permanecem fora.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+-| R-0016 | `dashboard-console` | 2026-09-21                       | 2026-09-21 PR #80 (CTG-0001, merge `6a50f026`); PR #103 (CTG-0002, em CI); fechamento PC-0012                                                                                                                                                                 | 8 planejadas/executadas (0001…0006, 0008) + iterações restritas: TASK-0004 ×4, TASK-0005 ×3, TASK-0006 ×2 | 6 prompt-review + 4 delivery-review                                                                                          | 0 humanas (desvios registrados: FAIL de estrutura em prompt-review 1/3/5; delivery-review CTG-0001 e CTG-0002 em ciclo 1; fronteira do maestro em `src/app/**` corrigida por A9; queda de API 529 em TASK-0005) | ≈1,692 M entrada / ≈0,368 M saída únicos, janela 1 de 3 previstas (`budget.json`)                                                                                               | `.gitignore` com `reports/` escondeu `apps/dashboard/web/src/app/features/reports/` do git **e** do Prettier ao mesmo tempo — depois de `git add` de um grupo, comparar `find <dir> -type f` com `git ls-files <dir>`; dois apps não podem exigir cada um que a linha `check` **termine** com a própria tripla — o sensor de scaffold deve afirmar **contenção** (A11); o maestro não escreve em `src/app/**` nem para correção mecânica — achado de gate volta ao dono da fronteira em iteração restrita (A9); contradições entre critérios do próprio contrato resolvidas por adenda numerada do Architect antes de redespachar o Inspector (A7); sensores que varrem literais não podem citar o literal que procuram, e literais de outro domínio em spec colidem com `verify:parameter-catalogue`; transcrever fichas e semente i18n em paralelo a partir do mesmo contrato produziu 34/36 textos divergentes em `intro`/`empty` (OD-D16-019) — a semente deve nascer antes das fichas, ou o contrato fixa os textos; queda de API (529) no meio de uma tarefa longa não é achado do worker — redespachar com o mesmo `PC-` e registrar em §Triagem.                                                                                                                                                                                                        |
++| R-0016 | `dashboard-console` | 2026-09-21                       | 2026-09-21 PR #80 (CTG-0001, merge `6a50f026`); 2026-09-22 PR #103 (CTG-0002, merge `973e78c3`); fechamento PC-0012                                                                                                                                           | 8 planejadas/executadas (0001…0006, 0008) + iterações restritas: TASK-0004 ×4, TASK-0005 ×3, TASK-0006 ×2 | 6 prompt-review + 4 delivery-review                                                                                          | 0 humanas (desvios registrados: FAIL de estrutura em prompt-review 1/3/5; delivery-review CTG-0001 e CTG-0002 em ciclo 1; fronteira do maestro em `src/app/**` corrigida por A9; queda de API 529 em TASK-0005) | ≈1,692 M entrada / ≈0,368 M saída únicos, janela 1 de 3 previstas (`budget.json`)                                                                                               | `.gitignore` com `reports/` escondeu `apps/dashboard/web/src/app/features/reports/` do git **e** do Prettier ao mesmo tempo — depois de `git add` de um grupo, comparar `find <dir> -type f` com `git ls-files <dir>`; dois apps não podem exigir cada um que a linha `check` **termine** com a própria tripla — o sensor de scaffold deve afirmar **contenção** (A11); o maestro não escreve em `src/app/**` nem para correção mecânica — achado de gate volta ao dono da fronteira em iteração restrita (A9); contradições entre critérios do próprio contrato resolvidas por adenda numerada do Architect antes de redespachar o Inspector (A7); sensores que varrem literais não podem citar o literal que procuram, e literais de outro domínio em spec colidem com `verify:parameter-catalogue`; transcrever fichas e semente i18n em paralelo a partir do mesmo contrato produziu 34/36 textos divergentes em `intro`/`empty` (OD-D16-019) — a semente deve nascer antes das fichas, ou o contrato fixa os textos; queda de API (529) no meio de uma tarefa longa não é achado do worker — redespachar com o mesmo `PC-` e registrar em §Triagem.                                                                                                                                                                                                        |
++
++**Troca de família de maestros (C-0002, OD-C2-003, decisão do Owner de 2026-09-26; ids confirmados em R-0018, `plan.md` M1):** a partir de R-0017, os maestros são Sol 6 (Codex, `gpt-6-sol`, sucessor de GPT-5.6 Sol) e Opus 5.5 (Claude Code, `claude-opus-5-5`), alternados, no lugar de GPT-5.6 Sol e Fable 5.1; reviewer sempre da outra família, nível grande. Escada Codex: Sol 6 grande, Terra `gpt-5.6-terra` médio (`gpt-6-terra` indisponível na conta), Luna `gpt-6-luna` pequeno; escada Claude: Opus 5.5 grande e médio, Sonnet 5 `claude-sonnet-5` pequeno. `codex-cli` ≥ 0.157.1 exigido para `gpt-6-*`. `model-ladder.md` atualizado em R-0018 CTG-0002.
+diff --git a/docs/start/index.md b/docs/start/index.md
+index 4c8ad1af..e1aa06d2 100644
+--- a/docs/start/index.md
++++ b/docs/start/index.md
+@@ -15,6 +15,9 @@ integration boundary. DEVAI-governed (`@aarusso-nyx/devai@1.5.6`, Constitution
+ 
+ ## Status
+ 
+-Phase 0 skeleton: workspace layout, governance root, founding ADRs and staged CI.
+-Consolidation and app build-out proceed per the phase plan; see the
+-[founding ADRs](../meta/adr/) for the binding architecture decisions.
++The implementation backlog of campaign C-0001 is merged into `main`: WP-0 and WP-T0 (pre-method
++round R-0001) and the governed rounds R-0003…R-0016, each closed with a DEVAI compliance closure
++(PC-0001…PC-0014), built the work packages of the RAIT, TEAT, PORTAL, BOAT and DASHBOARD build
++packs, within the scope each round recorded. Campaign C-0002 (consolidation, rounds R-0017…R-0032)
++is in progress. Work-package state: `BUILD-PLAN.md`; round state: `work/rounds/README.md` (both at
++the repository root). Binding architecture decisions: the [ADR index](../meta/adr/).
+diff --git a/work/rounds/README.md b/work/rounds/README.md
+index 643f6bfb..b5680705 100644
+--- a/work/rounds/README.md
++++ b/work/rounds/README.md
+@@ -53,17 +53,17 @@ the method (no closure; R-0002 has no folder).
+ 
+ ## Folder convention (`R-nnnn/`)
+ 
+-| Path                    | Content                                                                                                       |
+-| ----------------------- | ------------------------------------------------------------------------------------------------------------- |
+-| `plan.md`               | goals, task table, acceptance commands, map deliverable → definitions, risks, §Bloqueios, §Retomada, §Leitura |
+-| `prompts/00-maestro.md` | the single prompt that opens the orchestra (instantiated template)                                            |
+-| `prompts/TASK-nnnn.md`  | worker prompts composed by the maestro                                                                        |
+-| `tasks/TASK-nnnn.json`  | tasks in the DEVAI `task.schema.json` (2.0.0)                                                                 |
+-| `compositions.json`     | prompt composition ids (`PC-<16hex>`) per task                                                                |
+-| `reviews/`              | reviewer prompts, verdicts (JSON) and bridge records                                                          |
+-| `reports/`              | worker delivery reports — versioned (`git add -f` until R-0018 CTG-0002 frees them in `.gitignore`)           |
+-| `evidence-*.json`       | payloads recorded through `devai evidence record`                                                             |
+-| `budget.json`           | token accounting per task and reviewer call                                                                   |
+-| `closure.json`          | phase-closure draft for `devai round close`                                                                   |
++| Path                    | Content                                                                                                                                                         |
++| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
++| `plan.md`               | goals, task table, acceptance commands, map deliverable → definitions, risks, §Bloqueios, §Retomada, §Leitura                                                   |
++| `prompts/00-maestro.md` | the single prompt that opens the orchestra (instantiated template)                                                                                              |
++| `prompts/TASK-nnnn.md`  | worker prompts composed by the maestro                                                                                                                          |
++| `tasks/TASK-nnnn.json`  | tasks in the DEVAI `task.schema.json` (2.0.0)                                                                                                                   |
++| `compositions.json`     | prompt composition ids (`PC-<16hex>`) per task                                                                                                                  |
++| `reviews/`              | reviewer prompts, verdicts (JSON) and bridge records                                                                                                            |
++| `reports/`              | worker delivery reports — tracked by git since R-0018 CTG-0002 (`.gitignore` re-includes `work/rounds/*/reports/`); excluded from Prettier as verbatim evidence |
++| `evidence-*.json`       | payloads recorded through `devai evidence record`                                                                                                               |
++| `budget.json`           | token accounting per task and reviewer call                                                                                                                     |
++| `closure.json`          | phase-closure draft for `devai round close`                                                                                                                     |
+ 
+ Seal: `devai round seal` (R-0020) seals R-0003…R-0019; its artefact and path are defined by R-0020.

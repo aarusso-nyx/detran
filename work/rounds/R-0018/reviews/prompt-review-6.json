@@ -1,0 +1,33 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0018",
+  "scope": "TASK-0005, TASK-0007",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0018/prompts/TASK-0007.md",
+      "line": 38,
+      "claim": "O prompt proíbe tocar qualquer relatório em work/rounds/**, mas exige a entrega de um relatório; o contrato §8 autoriza reports/TASK-0007.md.",
+      "fix": "Autorizar explicitamente work/rounds/R-0018/reports/TASK-0007.md e indicar esse caminho na seção Entrega."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0018/prompts/TASK-0005.md",
+      "line": 35,
+      "claim": "A referência à linha TASK-0005 do contrato §8 inclui reports/TASK-0005.md, mas a lista expandida de arquivos permitidos o omite e a seção seguinte proíbe qualquer outro arquivo.",
+      "fix": "Incluir explicitamente work/rounds/R-0018/reports/TASK-0005.md em Pode tocar e indicar esse caminho na seção Entrega."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0018/tasks/TASK-0005.json",
+      "line": 11,
+      "claim": "A tarefa edita work/rounds/README.md, mas target_modules omite MOD-rounds-readme, usado como lock desse arquivo em TASK-0004.",
+      "fix": "Adicionar MOD-rounds-readme a target_modules."
+    }
+  ],
+  "notes": []
+}

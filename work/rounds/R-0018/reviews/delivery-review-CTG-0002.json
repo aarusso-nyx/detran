@@ -1,0 +1,28 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0018",
+  "ctg": "CTG-0002",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "docs/meta/agents/orchestra/model-ladder.md",
+      "line": 39,
+      "claim": "A tabela alterada atribui os papéis ao Art. 6; a Constituição define os papéis humanos no Art. 7.",
+      "fix": "Corrigir o cabeçalho para «Papel Art. 7» e ajustar o bloco literal do contrato CTG-0002."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0018/reports/TASK-0005.md",
+      "line": 12,
+      "claim": "TASK-0005 executou git checkout e rm fora da sua fronteira de escrita, apagando entregas concorrentes. A rubrica determina FAIL quando a fronteira é violada.",
+      "fix": "Registrar a tentativa como falha de fronteira no histórico da tarefa e no closure; obter revalidação independente da entrega de TASK-0005 antes do PR e redespachar TASK-0008/0009/0010 em worktree isolada, conforme a triagem T8."
+    }
+  ],
+  "notes": [
+    "O diff fornecido contém somente arquivos permitidos pelo §8; não contém os READMEs apagados em T8, emendas a ADRs aceitas, nem alterações em CLAUDE.md ou AGENTS.md. docs/start/index.md mantém apenas o link para o índice de ADRs.",
+    "pnpm verify:state-index, pnpm format:check e pnpm docs:kb:check passaram. Os dois critérios git check-ignore -v do plano devem constar como não cumpridos no closure, com C-02-20…23 como prova substituta."
+  ]
+}

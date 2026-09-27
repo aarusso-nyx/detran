@@ -315,16 +315,26 @@ Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):
 - **T7 (delivery-review-CTG-0001-2, REVIEW, 1 achado parcial: §Aliases só na 1ª linha por stub).**
   Dois ciclos esgotados → escalada (método §6; `AUTHORIZATION.md` Emenda 2): iteração 3 do Inspector
   (4 negativos) e do Engineer em **Opus 5.5**; delivery-review-CTG-0001-3 → **PASS**.
+- **T8 (CTG-0002 × CTG-0003, `policy-issue` — erro do maestro).** O maestro despachou TASK-0008/0009/0010
+  (CTG-0003) enquanto TASK-0005 (CTG-0002) ainda rodava na mesma worktree. Ao conferir a própria
+  fronteira, TASK-0005 tomou os READMEs dos outros workers por efeito colateral do `pnpm check` e os
+  apagou com `git checkout --`/`rm` — escrita `git` vedada ao worker. Entregas de TASK-0005 conformes;
+  as de TASK-0008/0009/0010 perdidas (relatórios preservados como `*-tentativa1.md`). Correção: o
+  CTG-0002 é fechado e commitado primeiro; TASK-0008/0009/0010 são redespachados de forma idêntica
+  (mesmo `PC-`, sem contar iteração) num branch próprio; **regra adotada: nunca workers de dois CTGs
+  simultâneos na mesma worktree** (recomendação ao método).
 
 ## Retomada
 
-**Checkpoint 2 — 2026-09-26, janela 2.** CTG-0001 concluído e commitado em `orchestra/index-state`
-(M5): tarefas 0001…0004 `completed`; delivery-review PASS (ciclo 3). Próximos passos: evidência do
-CTG-0001, integração de `origin/main`, push, PR (pedir OD-R18-001/002/004), CI, merge,
-`audit observe`; CTG-0002 empilhado — corrigir `prompts/TASK-0006.md` pelos 4 achados de
-`reviews/prompt-review-3.json` (FAIL estrutural) e revisar de novo antes de disparar.
+**Checkpoint 3 — 2026-09-26/27, janela 2.** CTG-0001 mesclado (PR #128, merge `289a072f`, observado
+EV-5b4f8f7a4c723afa). CTG-0002 concluído (TASK-0006, TASK-0005 it. 1 isolada após T8, TASK-0007;
+delivery-review PASS no ciclo 2; `pnpm check` exit 0; checkpoint (b) sem arquivo ignorado em
+`work/rounds`) e commitado em `orchestra/index-state-ctg2`. Próximos passos: evidência do CTG-0002,
+integrar `origin/main`, push, PR (pedir OD-R18-003), merge, `audit observe`; CTG-0003 em
+`orchestra/index-state-ctg3`: redespacho idêntico de TASK-0008/0009/0010 (T8) → TASK-0011 fase 1 →
+gates → delivery-review → PR; fechamento (closure, `round close`, `round seal`, TASK-0011 fase 2).
 
-(Checkpoint 1, janela 1: bootstrap, M1–M4, prompts CTG-0001 com prompt-review-2 PASS.)
+(Checkpoint 2: CTG-0001 commitado; checkpoint 1: bootstrap, M1–M4.)
 
 ## Leitura
 

@@ -83,7 +83,7 @@ como propostas em `docs/framework/contracts/dashboard-feeds/*.md`, no formato
 `{indicador_id, caso_id, estado_anterior, estado_novo, timestamp, base_legal}`; exemplos com
 fixtures. Gate: `contracts:check`, clientes gerados.
 
-### WP-D4 — Fichas de tela, formulários e i18n (Transcriber-docs → Engineer-frontend) — **executado em 2026-09-21/22** (`R-0016`: fichas e i18n no CTG-0001, PR #80, merge `6a50f026`; os 9 schemas no CTG-0002, PR #103, em CI)
+### WP-D4 — Fichas de tela, formulários e i18n (Transcriber-docs → Engineer-frontend) — **executado em 2026-09-21/22** (`R-0016`: fichas e i18n no CTG-0001, PR #80, merge `6a50f026`; os 9 schemas no CTG-0002, PR #103, merge `973e78c3`; rodada fechada como PC-0012)
 
 Executado com estas diferenças em relação ao texto abaixo: as 18 fichas nasceram diretamente com o
 id promovido `IU-DASH-D-nn` (arquivo `docs/framework/product/transversal/dashboard/screens/IU-DASH-D-nn.md`,
@@ -110,7 +110,7 @@ definido"; "prazo do candidato, preclusivo"; "registro manual de ciência"); sch
 formulários (`dashboard-frontends.md` §7); `i18n/dashboard.pt-BR.json` (estados, severidades,
 blocos, 42 nomes de indicador, camadas, erros). Gate: `docs:kb:check`, teste tela ↔ ficha ↔ rota.
 
-### WP-D5 — Console (Engineer-frontend) — **executado em 2026-09-22** (`R-0016` CTG-0002, PR #103, em CI)
+### WP-D5 — Console (Engineer-frontend) — **executado em 2026-09-22** (`R-0016` CTG-0002, PR #103, merge `973e78c3`, mesclado em `main`; rodada fechada como PC-0012)
 
 Executado com estas diferenças em relação ao texto abaixo: as 18 telas sobem em nível **L0**
 (A5/`AUTHORIZATION.md` Amendment 1 — sem contrato/seed de `dashboard-backend` R-0011 no início do
