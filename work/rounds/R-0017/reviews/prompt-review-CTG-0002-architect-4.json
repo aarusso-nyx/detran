@@ -1,0 +1,26 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0017/prompts/TASK-0004.md",
+      "line": 115,
+      "claim": "Line 115 asks the worker to fix one persona that authorizes the four GETs and reaches the CH adapters. The local principal is one per process, and CTG-0001 line 265 fixes the stack default of DETRAN_LOCAL_ROLES as exactly five non-CH roles. A4 replaces only the SEFAZ/PAdES/biometrics/council states in C-01-07 and the SEFAZ exclusion in C-01-11. Without an explicit limit the worker may change the frozen default, which A4 and line 152 forbid without a numbered addendum.",
+      "fix": "State that the five-role default in CTG-0001 line 265 stays unchanged. Any smoke or 503 persona must use the DETRAN_LOCAL_ROLES override already accepted in the CTG-0001 env table, with an explicit backend restart sequence in checkpoint (b). If that is not possible, record the gap and propose an addendum or OD to the maestro instead of changing the default."
+    }
+  ],
+  "notes": [
+    "PC-508d8b9be31ced04 matches: the sha256 of prompts/TASK-0004.md is 508d8b9be31ced04bac1342c8ff7638169d731ed778b792335c0ccf39979c431, identical in compositions.json and in both fields of TASK-0004.json. The Terra/high model and effort match plan §Tarefas.",
+    "Role Architect, lock MOD-r17-contract and the single file contracts/CTG-0002.md are disjoint from TASK-0005/0006/0007. The do-not-touch list covers tools, backend, apps, packages, law, .devai and ADRs.",
+    "The six routes, methods and output DTOs match http-adapter.ts lines 41-61 and domain.ts. The /mock prefix and port 3999 match app.module.ts lines 946-958.",
+    "The 17 fresh files match seed.sh. The FK failure at 40-fixtures-rait-org.sql:27 (member 000021000008) and the clean run of file 60 on its own match the characterization. fresh and legacy-upgrade are preserved.",
+    "The four candidate GETs exist in their cited OpenAPI files. OD-R17-001/002/003 are followed as the Owner decided.",
+    "low: file 40 also references legacy session 000030000003 and minutes 000034000001, not only the member. Suggest naming all legacy FKs of 40 as an explicit inventory item.",
+    "low: app.module defaults to http://localhost:3999 while the mock binds to 127.0.0.1. Suggest a C-02 criterion proving the backend reaches the mock with the unchanged default, without adding the URL to the env allowlist.",
+    "low: revision.test.mjs has SEFAZ pending at lines 199 and 293 and a no-sefaz assertion at line 641. Suggest the prompt require all of them in the sensor list for TASK-0005.",
+    "low: the acceptance command in TASK-0004.json is pnpm format:check while the prompt runs prettier on the contract only. Untracked files in reviews/ may affect the global gate; align the two or document why they differ."
+  ]
+}

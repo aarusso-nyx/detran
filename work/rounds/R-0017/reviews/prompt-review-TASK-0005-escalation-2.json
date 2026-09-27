@@ -1,0 +1,46 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "1-ch-body-shape",
+      "file": "tools/stack/contract.test.mjs",
+      "line": 209,
+      "claim": "The three CH literals are now exact. They match pades-signing.http-adapter.ts:71, biometric-verification.http-adapter.ts:38 and council-verification.http-adapter.ts:27. But the mock returns them as `{ error: { message } }`, and the real backend never sends that shape. All three adapters throw Nest's `ServiceUnavailableException`, which is not a `DetranError`. The only global filter (`backend/app/src/detran-error.filter.ts`, `@Catch(DetranError)`) skips it, so the live body is Nest's default `{ statusCode: 503, message, error: 'Service Unavailable' }`. Item 1 now makes the smoke accept only a 503 whose message matches exactly. So an Engineer who reads `body.error.message` will pass offline, then in the live run classify all three CH probes as `blocked_before_adapter`. That breaks C-02-04/C-02-06 in TASK-0007, and this is iteration 3 of 3.",
+      "fix": "Add to item 1: the 503 mock must use the real Nest shape `{ statusCode: 503, message: '<literal>', error: 'Service Unavailable' }`, and the smoke compares the top-level `message`. Apply the same shape to the wrong-message 503 and to the CH 403."
+    },
+    {
+      "severity": "medium",
+      "item": "4-backend-down-vs-TypeError",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 40,
+      "claim": "A real stopped backend makes `fetch` reject with `TypeError: fetch failed` (ECONNREFUSED). It does not return a 503. The phrase 'Erro de import, TypeError ou fixture nao conta como negativa' can be read as forbidding that injection. Then the worker may keep the old 503 or never test that the smoke catches the rejection and turns it into a row. The contract (C-02-05:197) says 'backend ausente → nao-zero'.",
+      "fix": "Clarify: in 'backend parado', `fetchImpl` rejects on `/healthz` or `/readyz` (for example `throw new TypeError('fetch failed')`), and the smoke must record a row with reason `backend_unreachable`. Only a TypeError or import error in the child process or harness is excluded from counting as a negative."
+    },
+    {
+      "severity": "medium",
+      "item": "5-old-sensors-green",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 43,
+      "claim": "Item 5 requires 'sensores antigos verdes'. But retry-1 reports 3 older red sensors in `tools/stack/revision.test.mjs` (lines 277/291/623: profile `fresh-local-stack`, `sefaz_mock`, SEFAZ health timeout). They are red because TASK-0006/0007 production does not exist yet. The worker is limited to `contract.test.mjs`, so it cannot meet that criterion. It might declare failure, or be tempted to weaken those sensors.",
+      "fix": "Rephrase: 'sensores sem dependência de produção nova verdes; vermelhos somente por produção ausente (mock SEFAZ, smoke.mjs, perfil fresh-local-stack/health SEFAZ de TASK-0006/0007), listados nominalmente'."
+    },
+    {
+      "severity": "low",
+      "item": "1-literal-wrap",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 15,
+      "claim": "Two literals are split across a line break inside inline code (lines 15-16 and 16-17). Markdown renders the break as a space, but a worker reading the raw file might copy the newline and indentation.",
+      "fix": "Put each literal on its own line, or add 'espaço simples onde há quebra de linha'."
+    }
+  ],
+  "notes": [
+    "PC: sha256(prompts/TASK-0005-escalation.md) = 63d473045350cc302971a3916c670202575c3de8dd92b5ba2df904c0e0508c21, so PC-63d473045350cc30 matches the file. The same ID appears in compositions.json (last entry, gpt-5.6-terra/high) and in TASK-0005.json (prompt_composition_id and executor.prompt_composition_id). The previous PC-9315daaa2f9092c6 was replaced correctly.",
+    "Delta from the previous cycle: finding medium 1-ch-messages was applied. The three off/not-configured literals are exact against the adapters, with the rule '503 + other message → blocked_before_adapter, complete:false'. Finding medium 3-duplicate-happy-path was applied: GET `rootUrl + '/'` for 4200–4203, no call to 4204 while `not_built_r0031`, and `Bearer local` on the four proxy reads.",
+    "Proportionality: escalating to gpt-5.6-terra/high on the last iteration (iteration_count 2, max 3), after luna/medium failed twice, is proportional. Limiting writes to `tools/stack/contract.test.mjs` fits: the seed fix (minutes_id) is already in retry-1.",
+    "Preservation: items 1–5 keep the ephemeral IPv4 port, the `test-` marker, the DTOs, localhost→IPv4, SefazAdapterError NOT_FOUND/404, 400 BUSINESS_ERROR, 405+Allow, the temporary state dir, the no-secrets check, SENATRAN/SEFAZ health, PEC and the proxy check against direct :3001. The requestId fix (two identical calls without an ID, plus the explicit echo kept separately) matches CTG-0002:95-96. Negatives must now be injected at the correct endpoint, with a specific row and reason. No valid sensor is removed.",
+    "Single interface `runSmoke({ targets, fetchImpl })` matches TASK-0007.md:54. No conflict with contract CTG-0002 or with Owner decisions. The three mediums can be fixed in the prompt without escalating."
+  ]
+}

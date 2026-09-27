@@ -1,0 +1,57 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 62,
+      "claim": "The prompt requires verifying 'legacy-upgrade somente com sua precondicao adequada' but never says how to build that precondition, and it probably cannot be built honestly in the current harness. seed.sh:102-133 requires the 20 legacy cases to exist. The only source of those cases is seed/20-fixtures-rait.sql, which inserts 20 inf.rait_case rows and zero rait_priority_assessment rows. DDL19 installs rait_priority_case_complete as a DEFERRABLE INITIALLY DEFERRED constraint trigger that checks consistency on INSERT (ddl/19-rait-priority-enforce.sql:238), and apply.sh has no partial pre-DDL19 mode. The Inspector could build the baseline by disabling triggers, using session_replication_role=replica, or inserting invented assessments, which would weaken the DDL19 guard. It could also write a positive test that cannot pass.",
+      "fix": "Define the acceptable precondition explicitly. Forbid disabling triggers, session_replication_role, ALTER TABLE ... DISABLE TRIGGER, direct inserts into rait_priority_assessment, and any edit to the historical fixtures. If no legitimate baseline exists, keep the refusal test (spec:284-289) and the manifest comparison (spec:245-249), report the positive legacy-upgrade run as not measured, and leave C-02-01 pending for the maestro or an Architect addendum, as the delivery review suggested (delivery-review-CTG-0002.json:52)."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 66,
+      "claim": "The prompt asks for three separate scratch databases (_fresh, _local, _legacy) but then refers to 'URLs explicitas admin /postgres e scratch dedicado' (line 72), in the singular. The spec takes a single DETRAN_SEED_SCRATCH_DATABASE_URL pinned to one database name (spec:10, 98-99, 108-111), and commandEnvironment hardcodes DB_NAME (spec:118). The prompt does not say how each profile gets its URL. The Inspector could therefore derive the URLs from the admin URL, drop the name check, or reuse one database, which is exactly the isolation the round is trying to fix.",
+      "fix": "Fix the URL contract in the prompt: either one explicit variable per profile, or derivation from the admin URL that keeps the same checks (exact name, required host and user, no fallback). Parameterize runRunner and commandEnvironment by database. Keep the refusal of an existing database in beforeAll and drop only the created database in afterAll, as spec:222-262 already does."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 45,
+      "claim": "The prompt asks for proof that inherited DETRAN_LOCAL_* overrides are absent, but it does not require the parent environment to be poisoned. The current CLI sensor starts smoke.mjs with only DETRAN_STACK_STATE_DIR, DETRAN_TEST_RESTARTS and PATH (contract.test.mjs:530-538), and the bash stub records only ROLES and ACTOR_ID (contract.test.mjs:494-503). The restartEnvironment filter in smoke.mjs:431-442 could be removed and the sensor would still pass, so as written it checks nothing about inheritance.",
+      "fix": "Require the test to inject, for example, DETRAN_LOCAL_ACTOR_ID=poison, an empty DETRAN_LOCAL_ACTOR_ID variant, DETRAN_LOCAL_TENANT_ID, DETRAN_LOCAL_CPF and DETRAN_LOCAL_ASSURANCE_LEVEL into the smoke parent environment. The stub should record every DETRAN_LOCAL_* key it receives. Assert that only DETRAN_LOCAL_ROLES arrives in all eight restarts, plus ACTOR_ID=...b0000002 only in the MEDICO phase."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 51,
+      "claim": "The prompt caps the node stub at 50 attempts of 0.1 s, but the harness PATH replaces sleep with a stub that runs 'exit 0' (revision.test.mjs:51 and 130). A plain 'sleep 0.1' inside the node stub (revision.test.mjs:117-121) would run the 50 attempts with no delay, and would likely fail before detran-stack.sh writes sefaz-mock.pid. That produces a flaky or false red with no production defect behind it.",
+      "fix": "Say explicitly that the wait uses /bin/sleep 0.1 by absolute path (or a delay in process.execPath), not the PATH stub. On timeout, kill the background node started by the stub before exiting non-zero, so no process is left behind."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 48,
+      "claim": "The offline sensors for the conditional PEC and for an entrypoint path with spaces or a symlink depend on repoRoot, which smoke.mjs derives from import.meta.url (smoke.mjs:15-16, 618-619). The prompt does not forbid creating apps/pec/web/angular.json in the real worktree to test the positive branch, which would write outside the boundary and contaminate other suites.",
+      "fix": "Require the test to copy smoke.mjs into a temporary tree (tmp/with spaces/tools/stack/smoke.mjs), create apps/pec/web/angular.json and a symlink only inside that tree, and remove everything in finally. smoke.mjs imports only node: modules, so this is feasible."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 39,
+      "claim": "The prompt asks the Portal SQL sensors to check the order preflight, then fixture, then the four frontend phases. The current bash stub logs only backend-restart (contract.test.mjs:494-503), so the order cannot be observed unless the stub logs every subcommand. The prompt does not say this.",
+      "fix": "Tell the Inspector to make the stub log every $2 (fixture-portal, backend-restart, and so on) in sequence and to assert fixture-portal before the first frontend restart. The SQL checks (auth.users with an active .invalid e-mail, an active membership, ON CONFLICT, and no role or group insert) can be static assertions on portal-fixture.sh:26-39."
+    }
+  ],
+  "notes": [
+    "Parser: item 3 of the prompt (lines 54-58) correctly diagnoses the bug. contract.test.mjs:554-555 applies trim() to the whole log and drops the trailing tab of the final restore, so actorValue becomes undefined. The prompt keeps the default-actor rule intact: actorState must be exactly 'absent' in the six non-MEDICO phases and in the restore, a present-but-empty variable fails, and MEDICO alone is 'present' with ...b0000002. Nothing is weakened.",
+    "SEFAZ: item 1 (lines 31-38) is feasible. SefazHttpAdapter.lookupDebt has no local validation (http-adapter.ts:40-41), and providerError keeps category, retryable and providerStatus from the envelope (http-adapter.ts:134-151). Keeping raw fetch only for 405 is legitimate because the adapter cannot send a disallowed verb. The literal-command sensor correctly stays limited to markers and exit code.",
+    "Lifecycle: the start, stop and status sensors and the sefaz-mock.pid checks already exist in revision.test.mjs:429-462, and the prompt keeps them. The unbounded node-stub loop is fixed as intended, apart from the sleep-stub trap reported above.",
+    "Evidence: the prompt requires telling real green apart from production red and environmental block, forbids declaring C-02-01 green from an unexecuted spec, and requires docker ps -a to be empty afterwards. That matches delivery-review-CTG-0002.json:52 and 66-68.",
+    "Scratch database: pinned digest, linux/amd64, --rm, no volume, a loopback port distinct from the stack, and detran_local_stack forbidden. This repeats the isolated setup from TASK-0004-characterization.md:5-9. No real external resource is required; the only Docker use is the ephemeral PostGIS.",
+    "The target file list (lines 23-25) is consistent with TASK-0011.json (MOD-seed-tests, MOD-stack-tests; iteration_count 2 = max_iterations 2). This is the last Inspector iteration, which is why the undefined legacy precondition is rated high: an ambiguity found now cannot be fixed by a further iteration."
+  ]
+}

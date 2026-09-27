@@ -1,0 +1,71 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "work/rounds/R-0017/prompts/TASK-0011.md",
+      "line": 53,
+      "claim": "Item 2 requires the sensor to observe real calls to the 'CLI/factory', but tools/stack/smoke.mjs exports only runSmoke (line 95). There is no factory. restartFor/runCli (lines 423-431) are not exported and call spawnSync('bash', ['tools/detran-stack.sh','backend-restart']) with a relative path in process.cwd() and global fetch against the stack's fixed ports. The prompt forbids changing production (line 37), so it gives no safe way to meet item 2. A worker could add a seam to smoke.mjs, which breaks the boundary. A worker could also run the CLI in the repo cwd with a mocked preflight, which runs the real detran-stack.sh backend-restart (real processes/Docker, violating line 73) or binds the real ports 3000/4200-4203.",
+      "fix": "Say that the sensor runs `node tools/stack/smoke.mjs` as a child process. Use an --import preload that replaces globalThis.fetch, with no listener on the real ports. Use a temporary cwd or PATH whose `bash`/`tools/detran-stack.sh` is a stub that records argv and the env (DETRAN_LOCAL_ACTOR_ID present or absent, and its value) of each backend-restart. Forbid running the real detran-stack.sh and adding seams to smoke.mjs. If this is not feasible offline, the worker reports a gap and does not edit production. Replace 'CLI/factory' with 'CLI of smoke.mjs'."
+    },
+    {
+      "severity": "high",
+      "item": 4,
+      "file": "work/rounds/R-0017/prompts/TASK-0011.md",
+      "line": 60,
+      "claim": "The literal-command sensor requires only exit 0 and the success line. A7 (plan.md:292-293) and the delivery-review high item 3 (delivery-review-CTG-0002.json:35-36) require the literal command to run the errors too (NOT_FOUND, invalid body, 405/Allow, SefazAdapterError normalization) and to check DTOs/requestId. The current script (sefaz-adapter-smoke.mjs:13-25) calls only the six positive paths. An Engineer could fix only the .js→.ts import and turn the sensor green without meeting C-02-02. The parity check on line 62 covers the separate parity test, not the literal command.",
+      "fix": "Make the literal-command sensor observable too. It requires exit 0 plus stdout with one line per operation (6) and per error case (NOT_FOUND, invalid body, 405/Allow). Or it runs the command against a mock that is deliberately altered (for example, without Allow or with a wrong DTO) and requires exit != 0. Keep it red until the Engineer does the work. Do not fix product values, only the test's observable output."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "work/rounds/R-0017/prompts/TASK-0011.md",
+      "line": 44,
+      "claim": "The A6 Portal guard sensor at contract.test.mjs:13-30 asserts only exit, stderr message and empty stdout, with PATH=/usr/bin:/bin. On Linux, psql can sit in /usr/bin, so a broken guard would reach a real database. The prompt asks for 'sem acionar banco real' but does not require proof by process that psql/docker were never invoked.",
+      "fix": "In item 1, require psql and docker stubs first on PATH that record their invocation, and assert zero calls in the negative case. Add a positive case that records the right DB_NAME, also with the stub."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "work/rounds/R-0017/prompts/TASK-0011.md",
+      "line": 55,
+      "claim": "'harness do orquestrador' is ambiguous: it is createStackHarness in revision.test.mjs:81. A plain PATH stub for `node` also breaks config/status, because detran-stack.sh uses node to render JSON (lines 189, 192).",
+      "fix": "Name createStackHarness in tools/stack/revision.test.mjs. Say that the `node` stub intercepts only `tools/stack/mocks/sefaz-mock.mjs`, starts a long-lived process that records its PID without a listener, and delegates every other call to the real node."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0017/prompts/TASK-0011.md",
+      "line": 35,
+      "claim": "The prompt allows editing the integration spec rait-seed-profiles.integration.spec.ts, but forbids a real database (line 73), and acceptance_commands holds only format:check (TASK-0011.json:25). The spec change would be delivered without running, even though TASK-0011.json:18 declares db_isolation=database.",
+      "fix": "Either take the spec out of this iteration and leave the low finding to checkpoint (b), or state that the spec edit is delivered as not executed, with typecheck/format only and live execution scheduled in the checkpoint, and record it under 'Fora do escopo'."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0017/prompts/TASK-0011.md",
+      "line": 72,
+      "claim": "The prompt names the expected reds only for item 4 (line 61). The actor sensor (item 2, currently smoke.mjs:426 always sends fixtureActorId), the array tenant sensor (item 5) and possibly SEFAZ cleanup will also be red. Without that list, the worker could mistake a legitimate red for its own error, or relax the sensor.",
+      "fix": "List the expected reds up to TASK-0007 in the Criterios section: actor/restoration, literal adapter command, array tenant_mismatch, plus the lifecycle cases, each with its target file (smoke.mjs, sefaz-adapter-smoke.mjs, detran-stack.sh)."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0017/prompts/TASK-0011.md",
+      "line": 30,
+      "claim": "The closed read list does not include packages/sefaz-adapter/src (index.ts, and the error and DTO types), yet items 4 and 5 require asserting DTOs, requestId echo and SefazAdapterError normalization. Line 30 ('Nao leia outros modulos') forbids that read.",
+      "fix": "Add packages/sefaz-adapter/src/index.ts and the adapter's error/DTO file to the read list, read-only."
+    }
+  ],
+  "notes": [
+    "Model and effort match: plan.md:141 Terra/alto = TASK-0011.json:29-30 gpt-5.6-terra/high = compositions.json:133-134. The sha256 of the prompt matches PC-c1e81a14857cb4d0.",
+    "The role is exclusively Inspector (lines 10-14). Writes are limited to the two tools/stack/*.test.mjs and the RAIT spec. Production, SQL, shell, contract, plan, package.json, record/.devai/law are forbidden, and so is git.",
+    "The Inspector-owned highs from cycle 1 are covered: Portal test takeover (item 1), actor/restoration (item 2), SEFAZ lifecycle (item 3), literal command (item 4). Highs 1-2 of the review (TASK-0006/0007 ratification) belong to the Engineers and are correctly out of scope.",
+    "No new product value is decided. The default ID ...000000000002 comes from detran-runtime.ts:323. The literal command comes from A7, and the option `node --import tsx` suggested by the review was correctly not adopted.",
+    "The commands exist: format:check and test:stack in package.json:16/45. The prompt forbids skips and forbids weakening C-01 sensors.",
+    "This session was in plan mode without ExitPlanMode available. Read-only review, no file changed."
+  ]
+}

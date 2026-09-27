@@ -1,0 +1,52 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 91,
+      "claim": "O roteiro do PostGIS temporario (linhas 91-96) nao inclui o bootstrap dos roles de cluster. O spec chama apply.sh sem --full (rait-seed-profiles.integration.spec.ts:130-153 e beforeAll em :230). Nesse modo, o preflight de apply.sh:108-112 exige role_app_backend e role_auditor_min ja existentes e aborta com 'Existing operational roles required; global creation not authorized'. Esses roles so sao criados por ddl/01-schemas.sql em uma execucao --full. No CI isso acontece antes, via pnpm backend:db:reset (run-backend-kernel.sh; package.json:32). Num container novo o beforeAll falha sempre, e C-02-01 acaba como bloqueio ambiental previsivel, e nao como sensor medido.",
+      "fix": "Acrescentar um passo explicito e autorizado dentro do container descartavel antes do vitest, por exemplo `DB_NAME=detran_r7_ctg1_a2 DETRAN_PRIORITY_UPGRADE_FULL_AUTHORIZED=1 bash backend/database/apply.sh --full` contra o container efemero. A alternativa e autorizar expressamente a criacao dos dois roles NOLOGIN, nao superuser e sem BYPASSRLS so nesse cluster. Declarar esse passo como pre-condicao ambiental, fora do spec."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 42,
+      "claim": "O prompt pede provar que a fixture Portal roda apos o preflight. Mas o preflight e um fetch de /healthz (smoke.mjs:448-454, chamado em :471), nao um subcomando bash. O stub bash descrito nas linhas 44-46 so registra subcomandos e por isso nao consegue ordenar o preflight em relacao a fixture-portal. O Inspector pode acabar entregando uma prova parcial.",
+      "fix": "Instruir que o preload de fetch e o stub bash escrevam no mesmo log sequencial, ou que o sensor use um preflight falho e verifique zero chamadas bash, alem de um preflight ok com fixture-portal antes do primeiro backend-restart."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 85,
+      "claim": "Derivar as tres URLs a partir de DETRAN_SEED_ADMIN_DATABASE_URL deixa DETRAN_SEED_SCRATCH_DATABASE_URL sem uso em .github/workflows/ci.yml:197 e em tools/ci/run-backend-kernel-local.mjs:159. O Inspector nao pode editar esses arquivos. Alem disso, nomes com round/task (detran_r17_task0011_*) ficam permanentes num spec que roda no CI.",
+      "fix": "Pedir ao Inspector que registre a variavel morta como risco residual para uma iteracao Engineer/Architect, e aceitar ou justificar esses nomes como identificadores permanentes do sensor."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 92,
+      "claim": "--platform linux/amd64 em host Apple Silicon roda emulado. O runner tem SIGKILL a 120 s (spec :144) e o beforeAll e os it tambem tem 120_000 ms. Com tres scratches, cada um com apply e seed, pode haver timeout ambiental que seria lido como vermelho.",
+      "fix": "Permitir que o Inspector ajuste so os timeouts do spec, ou exigir que um timeout seja reportado como bloqueio ambiental e nao como vermelho de producao."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 76,
+      "claim": "O prompt condiciona o positivo de legacy-upgrade a um baseline legitimo, mas nao aponta o baseline historico que ja existe em backend/database/tests/fixtures/rait-priority-upgrade/v1.1.0 (usado pelos testes de priority-upgrade com DETRAN_PRIORITY_UPGRADE_*_AUTHORIZED). O Inspector pode concluir cedo demais que ele nao existe.",
+      "fix": "Citar esse diretorio como candidato e dizer se o caminho e as autorizacoes dele podem ser usados no scratch _legacy, sempre sem editar a fixture historica."
+    }
+  ],
+  "notes": [
+    "Parser: a linha 63 exige separar linhas sem trim() e as linhas 64-67 exigem actorState exatamente 'absent', vazio incluido, em 6 fases mais a restauracao, e 'present' so em MEDICO com ...b0000002. Isso corrige o defeito real de contract.test.mjs:554-559 (trim() come o ultimo campo vazio) e endurece a regra do ator default em vez de enfraquece-la. As linhas 49-54 acrescentam poison, ACTOR_ID vazio, TENANT_ID, CPF e ASSURANCE_LEVEL, e o que chega ao filho e coerente com smoke.mjs:431-443.",
+    "SEFAZ: adapter.lookupDebt({}) e viavel. O mock rejeita corpo vazio (sefaz-mock.mjs:143) com 400 BUSINESS_ERROR/invalid_body, e http-adapter.ts:150-167 transforma o envelope em SefazAdapterError, sem retry porque retryable=false. Assim o sensor passa a exercitar o adapter, e nao so fetch cru (contract.test.mjs:186-194). Separar o comando literal (so marcadores e exit code) do filho tsx esta correto.",
+    "Lifecycle: trocar o busy-wait sem limite de revision.test.mjs:120 por no maximo 50 x /bin/sleep 0.1, com cleanup do PID e sem listener real, e viavel e contorna o stub sleep 'exit 0' (:51/:130). /readyz (detran-stack.sh:581), tail -n (:374/376/584), relatorio de preflight separado e PEC por angular.json (smoke.mjs:16) podem ser testados offline.",
+    "Portal: portal-fixture.sh:5-15 valida o DB antes de docker e psql, usa o ator ...000000000002 fixo, e-mail .invalid e ON CONFLICT, e nao insere roles nem grupos. Todos os asserts pedidos na linha 39 sao satisfaziveis por inspecao do SQL.",
+    "PEC e symlink: smoke.mjs so importa builtins e deriva repoRoot de import.meta.url (:15). Copiar para uma arvore temporaria com apps/pec/web/angular.json e symlink e viavel e nao toca no slot PEC real.",
+    "Isolamento: tres scratches com nomes exclusivos, beforeAll que recusa banco ja existente, afterAll que remove so o que criou, URL admin explicita sem fallback, container --rm sem volume e verificacao docker ps -a vazia. Isso atende CTG-0002:72-77 e corrige o finding low do delivery-review (spec :292). apply.sh sem --full nunca recria banco.",
+    "Nao ha dependencia de recurso externo real: SEFAZ usa loopback efemero, CLI e stack usam stubs, e o unico Docker e o PostGIS descartavel. Nenhum teste pedido e impossivel. A excecao e o bootstrap de roles do finding alto, que e uma lacuna ambiental corrigivel no prompt.",
+    "prettier --check nos arquivos do round passa hoje. O bloqueio de format:check relatado em TASK-0007-delivery-fix.md nao se repete."
+  ]
+}

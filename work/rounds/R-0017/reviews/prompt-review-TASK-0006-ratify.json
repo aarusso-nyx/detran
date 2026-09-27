@@ -1,0 +1,49 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0017/compositions.json",
+      "line": 92,
+      "claim": "The prompt asks the Engineer to ratify the change 'sob este PC' (TASK-0006-delivery-ratify.md:43), but no PC exists for this prompt. compositions.json registers TASK-0006 only with prompts/TASK-0006.md (line 92) and has no entry for TASK-0006-delivery-ratify.md. Retries and delivery-fixes of other tasks do get their own PC (lines 20-68, 108-124). Without a new PC, the ratification the delivery-review requires ('ratify under its own PC') has no traceable anchor.",
+      "fix": "Register a new composition for prompts/TASK-0006-delivery-ratify.md with the executor (engineer-backend) and the report path in compositions.json. Cite that PC id in the prompt header, and record it in plan.md section Triagem as plant-bug with the owner named, as the delivery-review requires."
+    },
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0017/tasks/TASK-0006.json",
+      "line": 4,
+      "claim": "The task is already status 'completed' with iteration_count 1, and the maestro addendum declares 'Resultado final C-02-01: PASS' (TASK-0006-maestro-adenda.md:15) before the independent ratification. The worker's own report says FAIL/BLOCKED (TASK-0006.md:17). The state therefore anticipates the gate that this iteration is supposed to settle, which is effectively a loosening: if the Engineer does not ratify, the recorded state is already wrong.",
+      "fix": "Put TASK-0006 back to in-progress or awaiting ratification, and increment iteration_count to 2 (max 2). Mark completed only after the report TASK-0006-delivery-ratify.md says ratification 'sim'. Rewrite the addendum's conclusion as the maestro's provisional evidence, not the final result."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 36,
+      "claim": "The prompt says to run the spec 'conforme o relatorio original', but the original report (TASK-0006.md:14-15) has no runnable command: it was blocked. The command only appears in the addendum (TASK-0006-maestro-adenda.md:11), with the URLs elided ('.../postgres'). The addendum says the scratch needs 'os dois roles operacionais globais' (line 5) without naming them, and it does not give the image, port or container name. So the Engineer cannot honestly reproduce the scratch isolation and may improvise roles or a database.",
+      "fix": "Point to the addendum as the source of the command. Give the full scratch URL template (disposable local port and a unique scratch database name), the pinned PostGIS image, the exact names of the two roles and how to create them only in the container, and a container name that is distinct from detran-r17-task0006-verify, removed with --rm and checked afterwards with docker ps -a --filter name=."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 30,
+      "claim": "The prompt feeds the Engineer the maestro's conclusion (reading the addendum, which says PASS) and states up front that DO UPDATE is forbidden. This anchors the 'independent' assessment. The prompt also names the trigger 'rait_minutes_required_signer' (line 17), but the relevant rule is rait_minutes_immutable (36-inf-rait-session.sql:435, BEFORE UPDATE OF id, tenant_id, session_id, content, generated_at, document_hash). The prompt does not ask whether the fixture seeds required_signer, which is also immutable (line 459) and would need the same conflict policy.",
+      "fix": "Ask the Engineer to derive the rule from the DDL (lines 434-436 and 458-460) before reading the addendum. Ask them to check every insert into immutable tables in both *-fresh-local-stack.sql files, not only rait_minutes."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 50,
+      "claim": "Typo 'Ratifacao' in the report template field. It may break any sensor or grep that expects 'Ratificacao'.",
+      "fix": "Fix it to 'Ratificacao'."
+    }
+  ],
+  "notes": [
+    "Boundary is respected: the Engineer may write only the two *-fresh-local-stack.sql files (line 23). Tests, seed.sh, DDL, contracts, tools, record, .devai and law are explicitly off-limits (lines 24-27), so no Inspector or Architect boundary is crossed.",
+    "The change itself is technically correct: 40-fixtures-rait-org-fresh-local-stack.sql:65-74 inserts the minutes row with a fixed ID and uses ON CONFLICT (id) DO NOTHING, which is compatible with rait_minutes_immutable (DDL:435). DO UPDATE would touch content and generated_at and fire the trigger.",
+    "No gate is loosened in the text: format:check is kept, db-reset and --full are forbidden outside scratch, the persistent database is protected, and it separates historical evidence from a new measurement (lines 35-40).",
+    "The delivery-review 'Triagem' requirement (plant-bug with owner named) is not asked of the maestro in the prompt. It belongs to the maestro and is covered by the first high finding.",
+    "Reported in JSON only; the Google Drive and Mermaid Chart MCP servers are unauthenticated and were not needed."
+  ]
+}

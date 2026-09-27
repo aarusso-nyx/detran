@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": "A4 sensor mapping",
+      "file": "work/rounds/R-0017/prompts/TASK-0004.md",
+      "line": 157,
+      "claim": "The prompt names only the SEFAZ assertions at lines 293 and 641 and the source at line 199. A4 also replaces the proposed_off states for pades, biometrics and council, at revision.test.mjs lines 294-296 and detran-stack.sh lines 200-202. The word incluindo covers this, but the attribution to TASK-0007 is only implied.",
+      "fix": "Add revision.test.mjs lines 294-296 for TASK-0005 and detran-stack.sh lines 200-202 for TASK-0007 as the other targets of the narrow A4 replacement."
+    },
+    {
+      "severity": "low",
+      "item": "SEFAZ loopback",
+      "file": "work/rounds/R-0017/prompts/TASK-0004.md",
+      "line": 115,
+      "claim": "The mock binds to 127.0.0.1:3999, but the default in app.module.ts:949 is http://localhost:3999. Node can resolve localhost to ::1 first, and the prompt does not require the contract to state how the IPv4 connection is guaranteed.",
+      "fix": "Require a C-02-nn criterion that shows SefazHttpAdapter with the unchanged default reaching the IPv4 mock, or that records the dual-stack bind as a justified operational choice."
+    }
+  ],
+  "notes": [
+    "Both earlier lows are fixed. tools/detran-stack.sh:199 is the sefaz pending source. revision.test.mjs is in the closed reading list at lines 285-300 and 630-645, and the SEFAZ assertions are at lines 293 and 641.",
+    "PC-edef98f28fee211b matches the final file. The sha256 edef98f28fee211b0a968ed5c20a683b62fe6f458bdc46842ae7bf6e730c4ecf matches compositions.json and TASK-0004.json.",
+    "The six routes and DTOs match http-adapter.ts:41-61 and domain.ts. The /mock prefix and the localhost:3999 default match app.module.ts:941-957.",
+    "The fresh profile in seed.sh:21-39 has 17 files. The FK failure at 40:27 matches the characterization, and fresh and legacy-upgrade are preserved.",
+    "The four candidate GETs exist in the cited OpenAPI files. They stay candidates until policy and fixtures are proven.",
+    "The 503 probes require a trace through controller and service, and require a stated gap if a request fails before reaching the adapter. No RLS or policy relaxation, no PEC fixtures and no real integration.",
+    "The Architect role and write boundary (only CTG-0002.md) are disjoint. OD-R17-001/002/003 are respected. The narrow A4 replacement preserves the other sensors. gpt-5.6-terra with effort high is proportionate."
+  ]
+}

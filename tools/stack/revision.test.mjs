@@ -28,7 +28,7 @@ function makeStub(bin, name, body) {
   const path = join(bin, name);
   writeFileSync(
     path,
-    `#!/usr/bin/env bash\nset -euo pipefail\nprintf '${name} %s\\n' "$*" >> "$DETRAN_TEST_STUB_CALLS"\n${body}\n`,
+    `#!/usr/bin/env bash\nset -euo pipefail\nif [[ -n "${'${DETRAN_TEST_STUB_CALLS:-}'}" ]]; then\n  printf '${name} %s\\n' "$*" >> "$DETRAN_TEST_STUB_CALLS"\nfi\n${body}\n`,
     { mode: 0o755 },
   );
 }
@@ -114,6 +114,25 @@ if [[ "$*" == *'--filter @detran/app start'* || "$*" == *'exec ng serve'* ]]; th
   while :; do read -r -t 60 || :; done
 fi
 exit 0`,
+    node: `if [[ "${'${1:-}'}" == 'tools/stack/mocks/sefaz-mock.mjs' ]]; then
+  ${JSON.stringify(process.execPath)} --input-type=module -e 'setInterval(() => {}, 60_000)' &
+  mock_pid="$!"
+  for attempt in $(seq 1 50); do
+    [[ -f "${stateDir}/pids/sefaz-mock.pid" ]] && break
+    /bin/sleep 0.1
+  done
+  if [[ ! -f "${stateDir}/pids/sefaz-mock.pid" ]]; then
+    echo 'SEFAZ mock PID registration timed out: ${stateDir}/pids/sefaz-mock.pid' >&2
+    kill "$mock_pid" 2>/dev/null || true
+    wait "$mock_pid" 2>/dev/null || true
+    exit 1
+  fi
+  printf '%s\\n' "$mock_pid" > "${stateDir}/pids/sefaz-mock.pid"
+  printf '%s\\n' "$mock_pid" >> "${startedPids}"
+  wait "$mock_pid"
+  exit 0
+fi
+exec ${JSON.stringify(process.execPath)} "$@"`,
     psql: 'exit 0',
     curl: 'exit 0',
     tail: 'exit 0',
@@ -274,7 +293,7 @@ test('C-01-07 dado stack config quando é executado então retorna o JSON fechad
       'postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5',
     platform: 'linux/amd64',
   });
-  assert.deepEqual(config.seed, { profile: 'fresh' });
+  assert.deepEqual(config.seed, { profile: 'fresh-local-stack' });
   assert.deepEqual(config.timeouts, { health_seconds: 120 });
   assert.deepEqual(config.services.backend, {
     state: 'active',
@@ -288,12 +307,18 @@ test('C-01-07 dado stack config quando é executado então retorna o JSON fechad
     port: 3000,
     health: ['/health'],
   });
+  assert.deepEqual(config.services.sefaz_mock, {
+    state: 'active',
+    host: '127.0.0.1',
+    port: 3999,
+    health: ['/health'],
+  });
   assert.deepEqual(config.providers, {
     senatran: { provider: 'mock', state: 'adapter_only' },
-    sefaz: { state: 'pending', decision: 'OD-R17-001' },
-    pades: { state: 'proposed_off', decision: 'OD-R17-002' },
-    biometrics: { state: 'proposed_off', decision: 'OD-R17-002' },
-    council: { state: 'proposed_off', decision: 'OD-R17-002' },
+    sefaz: { provider: 'mock', state: 'active', decision: 'OD-R17-001' },
+    pades: { state: 'off', decision: 'OD-R17-002' },
+    biometrics: { state: 'off', decision: 'OD-R17-002' },
+    council: { state: 'off', decision: 'OD-R17-002' },
     bank: { provider: 'createMockBankPort', state: 'in_process' },
     normative_signer: { provider: 'local-unsigned', state: 'in_process' },
     authentication: {
@@ -406,6 +431,69 @@ test('C-01-09 dado status quando o slot PEC não possui angular.json então grav
     ),
   );
   assert.doesNotMatch(result.calls, /pec/);
+});
+
+test('C-02-03 dado start, status e stop quando o mock SEFAZ e controlado então registra PID sem listener e o encerra', async () => {
+  const harness = createStackHarness({ curl: 'exit 0' });
+  const sefazPidFile = join(
+    dirname(harness.startedPids),
+    'pids',
+    'sefaz-mock.pid',
+  );
+  try {
+    const started = harness.invoke(['start', '--no-mock'], {
+      DETRAN_STACK_HEALTH_TIMEOUT_SECONDS: '1',
+      PATH: '/intentionally-untrusted-path',
+    });
+    assert.equal(started.status, 0, started.stderr || started.stdout);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    assert.ok(existsSync(sefazPidFile), 'SEFAZ mock PID is registered');
+    const sefazPid = Number(readFileSync(sefazPidFile, 'utf8').trim());
+    assert.ok(Number.isInteger(sefazPid) && sefazPid > 0);
+    const startedProcessPids = readFileSync(harness.startedPids, 'utf8')
+      .split('\n')
+      .filter(Boolean)
+      .map(Number);
+    assert.ok(
+      startedProcessPids.includes(sefazPid),
+      'SEFAZ PID points to the mock process',
+    );
+    assert.doesNotThrow(() => process.kill(sefazPid, 0));
+
+    const status = harness.invoke(['status']);
+    assert.equal(status.status, 0, status.stderr);
+    assert.match(status.stdout, /sefaz-mock: running \(pid \d+\)/);
+    assert.match(status.stdout, /sefaz:\s+http:\/\/127\.0\.0\.1:3999\/health/);
+
+    const stopped = harness.invoke(['stop']);
+    assert.equal(stopped.status, 0, stopped.stderr || stopped.stdout);
+    assert.equal(existsSync(sefazPidFile), false, 'SEFAZ PID file is removed');
+    assert.throws(() => process.kill(sefazPid, 0));
+    assertRecordedProcessesStopped(harness.startedPids);
+  } finally {
+    harness.dispose();
+  }
+});
+
+test('C-02-05 dado backend-restart quando a persona muda então aguarda healthz e readyz', () => {
+  const harness = createStackHarness({ curl: 'exit 0' });
+  try {
+    const started = harness.invoke(['start', '--no-mock'], {
+      DETRAN_STACK_HEALTH_TIMEOUT_SECONDS: '1',
+      PATH: '/intentionally-untrusted-path',
+    });
+    assert.equal(started.status, 0, started.stderr || started.stdout);
+    writeFileSync(harness.callsPath, '');
+    const restarted = harness.invoke(['backend-restart'], {
+      DETRAN_STACK_HEALTH_TIMEOUT_SECONDS: '1',
+      PATH: '/intentionally-untrusted-path',
+    });
+    assert.equal(restarted.status, 0, restarted.stderr || restarted.stdout);
+    assert.match(restarted.calls, /http:\/\/127\.0\.0\.1:3001\/healthz/);
+    assert.match(restarted.calls, /http:\/\/127\.0\.0\.1:3001\/readyz/);
+  } finally {
+    harness.dispose();
+  }
 });
 
 test('C-01-10 dado o mock SENATRAN quando Compose resolve a configuração então o override publica somente loopback', () => {
@@ -582,7 +670,7 @@ test('C-01-11 dado start quando a saúde do backend expira então informa timeou
       `${result.stdout}${result.stderr}`,
       /backend-last-eighty-lines/,
     );
-    assert.match(result.calls, /^tail .*80/m);
+    assert.match(result.calls, /^tail -n 80 /m);
     assertRecordedProcessesStopped(harness.startedPids);
     for (const service of ['backend', 'portal', 'rait', 'dashboard', 'teat']) {
       assert.equal(
@@ -614,6 +702,32 @@ test('C-01-11 dado start quando somente a saúde do mock expira então pede os l
   }
 });
 
+test('C-02-03 dado start quando somente a saúde do mock SEFAZ expira então diagnostica o serviço e limpa processos', () => {
+  const harness = createStackHarness({
+    curl: '[[ "$*" == *":3999/health"* ]] && exit 22 || exit 0',
+    tail: 'printf "%s\\n" sefaz-last-eighty-lines',
+  });
+  try {
+    const result = harness.invoke(['start'], {
+      DETRAN_STACK_HEALTH_TIMEOUT_SECONDS: '1',
+      PATH: '/intentionally-untrusted-path',
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(`${result.stdout}${result.stderr}`, /sefaz/i);
+    assert.match(result.calls, /127\.0\.0\.1:3999\/health/);
+    assert.match(result.calls, /^tail .*sefaz-mock\.log/m);
+    assert.match(`${result.stdout}${result.stderr}`, /sefaz-last-eighty-lines/);
+    assertRecordedProcessesStopped(harness.startedPids);
+    assert.equal(
+      existsSync(join(dirname(harness.startedPids), 'pids', 'sefaz-mock.pid')),
+      false,
+      'failed start removes the SEFAZ PID file',
+    );
+  } finally {
+    harness.dispose();
+  }
+});
+
 test('C-01-11 dado health com respondentes locais quando todos respondem então sonda somente os endpoints ativos', () => {
   const result = runStack(
     ['health'],
@@ -628,6 +742,7 @@ test('C-01-11 dado health com respondentes locais quando todos respondem então 
     'http://127.0.0.1:3001/healthz',
     'http://127.0.0.1:3001/readyz',
     'http://127.0.0.1:3000/health',
+    'http://127.0.0.1:3999/health',
     'http://127.0.0.1:4200/',
     'http://127.0.0.1:4201/',
     'http://127.0.0.1:4202/',
@@ -638,7 +753,6 @@ test('C-01-11 dado health com respondentes locais quando todos respondem então 
       new RegExp(endpoint.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
     );
   }
-  assert.doesNotMatch(result.calls, /sefaz/i);
 });
 
 test('C-01-11 dado health quando backend não responde então respeita o timeout e diagnostica o culpado', () => {
@@ -653,7 +767,7 @@ test('C-01-11 dado health quando backend não responde então respeita o timeout
   assert.notEqual(result.status, 0);
   assert.match(`${result.stdout}${result.stderr}`, /backend/i);
   assert.match(result.calls, /^curl .*healthz/m);
-  assert.match(result.calls, /^tail .*80/m);
+  assert.match(result.calls, /^tail -n 80 /m);
   assert.match(`${result.stdout}${result.stderr}`, /last-eighty-lines/);
 });
 

@@ -1,0 +1,37 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 63,
+      "claim": "If the SQL is not changed (lines 43-44), the prompt lets the Engineer ratify the bytes the addendum measured and fill in 'Estado C-02-01: provado por medicao identificada'. That evidence would be the maestro's measurement only. The addendum's scratch host:port cannot be verified (TASK-0006-maestro-adenda.md:14), and the spec runs fresh-local-stack on a scratch database already seeded with fresh (delivery-review-CTG-0002.json low finding on rait-seed-profiles.integration.spec.ts:292; the spec calls seed.sh at 265 and then 293/307). So the 'provado' state could rest on a measurement that is neither independent nor isolated, while the prompt only asks for the limitation to be declared (lines 50-51).",
+      "fix": "In the unchanged-SQL path, allow only 'ratificado por bytes; medicao historica do maestro com limitacao declarada' or PENDING. Alternatively, let the Engineer, even without changing the SQL, run the spec again on a dedicated disposable PostGIS scratch database with teardown to reach 'provado'. The Inspector's isolation proof stays a separate requirement."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 15,
+      "claim": "The first reading list includes the 40-fixtures finding from the delivery review, which already says 'The change is technically correct' (delivery-review-CTG-0002.json:18). The Engineer reads that conclusion before the independent DDL derivation required at lines 25-28, which weakens the independence the prompt is trying to protect.",
+      "fix": "Move the delivery-review finding to the same point as the addendum (after the DDL derivation), or state that its technical assessment is not binding."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/tasks/TASK-0006.json",
+      "line": 35,
+      "claim": "The executor declares capabilities ['read','local-write'], but the path that changes SQL (prompt lines 45-47) needs a disposable PostGIS container (docker) and the admin/scratch variables. The addendum only shows these abbreviated, and the two global operational roles the scratch needs are not stated in the prompt (only in the addendum:5). The Engineer may fall into BLOCKED for lack of capability or an unwritten precondition.",
+      "fix": "Either state that PENDING/BLOCKED is the expected outcome without container capability, or list the exact command, the required roles and the teardown in the prompt."
+    }
+  ],
+  "notes": [
+    "Boundary respected: writing is limited to the two *-fresh-local-stack.sql files (prompt:30-33). Tests, seed.sh, DDL, contracts, docs, tools and law are explicitly forbidden, and there is no git or installation (prompt:5-6). The worker ratifies under its own PC, which answers the delivery-review high finding (delivery-review-CTG-0002.json:16-19).",
+    "PC checked: SHA-256 of the prompt = 2640674bbd29832f…ac19, which matches compositions.json:139-145 and tasks/TASK-0006.json:24,33.",
+    "Current SQL bytes match the addendum: 40 = c465743e…3f4f and 60 = e4aa2bc9…7fe6 (adenda:14). There is nothing to re-measure unless the Engineer changes them.",
+    "DDL confirms the basis for DO NOTHING: rait_minutes_immutable fires BEFORE UPDATE OF id, tenant_id, session_id, content, generated_at, document_hash OR DELETE (36-inf-rait-session.sql:434-436, function 421-424). The original DO UPDATE touching content would fail on reapply. The only insert into an immutable table in either fixture is 40-fixtures…:65-74 with on conflict (id) do nothing. There are no inserts into rait_minutes_required_signer or other immutable tables, and the 60 fixture only inserts into rait_reconciliation (60-…:6-22).",
+    "Gates are not loosened: DO UPDATE is forbidden as a mask (prompt:37-38); db-reset/--full on a non-scratch database and the persistent stack database are forbidden (prompt:48-49); a SQL change invalidates the historical 3/3 (prompt:44-47); format:check failures outside the SQL are reported, not fixed (prompt:42-43).",
+    "TASK-0006.json:18-19 has iteration_count=2 equal to max_iterations=2. This iteration uses up the budget, so a new rejection must escalate and cannot be retried.",
+    "Plan mode is active; this review was read-only and no files were changed."
+  ]
+}

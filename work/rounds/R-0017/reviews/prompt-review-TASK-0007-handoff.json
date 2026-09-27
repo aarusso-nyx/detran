@@ -1,0 +1,71 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": "A5/C-02-06 seed selection",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 51,
+      "claim": "The prompt only says that `stack:config` should report seed `fresh-local-stack`. It never tells the Engineer to change the real seed invocation. `tools/detran-stack.sh:265` (`seed_database`) still hardcodes `SEED_PROFILE=fresh`. The only sensor, `revision.test.mjs:277`, checks just the config literal. The Engineer can pass the offline tests with a config that does not match what the stack applies. Checkpoint (b) would then run `db-reset`/`start` with `fresh`, which contains the original `40-fixtures-rait-org.sql` that TASK-0004 characterized as failing on FK `fk_inf_rait_jeton_line_member`. This breaks C-02-06 and the task goal 'select the new seed as the stack default' (`tasks/TASK-0007.json:9`, CTG-0002:214).",
+      "fix": "In item 2, require `seed_database` (used by `db-init` and `db-reset`) to call `SEED_PROFILE=fresh-local-stack` and update the log and usage text. Take the value `seed.profile` from that same source so config and execution cannot diverge. Require the report to cite the line changed. Do not change `backend/database/seed.sh`."
+    },
+    {
+      "severity": "medium",
+      "item": "runSmoke evidence vs 'only does HTTP'",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 62,
+      "claim": "The prompt says `runSmoke` only does HTTP and that the CLI prepares CH data. It also says 'Emit a table and JSON in the state dir'. `contract.test.mjs:235-240` calls only the exported `runSmoke` and requires `.json` and non-JSON files in `DETRAN_STACK_STATE_DIR`. The phrase 'only does HTTP' can lead the Engineer to put evidence writing in the CLI, which fails the sensor.",
+      "fix": "Reword: `runSmoke` runs no SQL and does not start or stop processes. It does HTTP through `fetchImpl` and writes the table and JSON, without credentials, to `DETRAN_STACK_STATE_DIR`."
+    },
+    {
+      "severity": "medium",
+      "item": "expected fixture vs offline fixture",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 64,
+      "claim": "'non-empty JSON and expected fixture' does not say how the `fixture` field of `targets` is checked. In the happy path (`contract.test.mjs:132,207`) the targets carry `fixture: 'portal-fixture-001'` but the response returns `items:[{id:'fixture-001'}]` and expects `complete === true`. If the Engineer requires an exact fixture ID in the body, the offline test fails. If the Engineer ignores it, the live check against CTG-0002:182-185 gets weaker (for example, the RAIT case `RAIT-FRESH-2026-000001`).",
+      "fix": "State that in `runSmoke` the `fixture` and `persona` fields are recorded in the row. Validation is non-empty JSON plus `expectedTenant`, and optionally a match only when the target declares an explicit matcher. The CLI table supplies the real matchers from CTG-0002 §C-02-05."
+    },
+    {
+      "severity": "medium",
+      "item": "personas and negative checkpoint",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 69,
+      "claim": "The prompt covers the `DETRAN_LOCAL_ROLES` override with stop/restart only for CH (MEDICO, ADMIN_CLINICA). It omits the Portal `AUDITOR` override required by CTG-0002:182/187. It also does not forbid the CLI from starting a backend that is already stopped. If the CLI restarts the backend for personas, the step `stack:stop; stack:smoke` can revive the backend and return 0, which inverts C-02-06.",
+      "fix": "List all four personas, including Portal=AUDITOR. Split the CLI into phases, calling `runSmoke` once per persona and merging rows. Require a preflight: if `backend /healthz` fails before any restart, the CLI emits `backend_unreachable`, exits non-zero, and never starts a process. Restart only a backend the CLI itself found active, then restore the default."
+    },
+    {
+      "severity": "medium",
+      "item": "PC trail in plan",
+      "file": "work/rounds/R-0017/plan.md",
+      "line": 305,
+      "claim": "The plan's maestro decisions still record TASK-0007 as `PC-e47639d85c7a5c7f`, the hash approved in workers-final. The prompt now has sha256 `98a887406086a33ab1bd…`, which matches `PC-98a887406086a33a` in `compositions.json:101-102` and `tasks/TASK-0007.json:28,40`. The approval in the plan does not cover the dispatched PC.",
+      "fix": "After this review, the maestro records in `plan.md` the new approval for `PC-98a887406086a33a` and marks `PC-e47639d85c7a5c7f` as superseded."
+    },
+    {
+      "severity": "low",
+      "item": "import without side effects",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 39,
+      "claim": "`contract.test.mjs:35-40` imports the module and expects exit 0. If importing it binds to 3999, the child process hangs or collides. The prompt only implies a guarded CLI entry point.",
+      "fix": "Require an entry-point guard (`import.meta.url === pathToFileURL(process.argv[1]).href`) so that only CLI execution listens on `127.0.0.1:3999`."
+    },
+    {
+      "severity": "low",
+      "item": "C-02-02 command",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 45,
+      "claim": "CTG-0002:24 names `node tools/stack/sefaz-adapter-smoke.mjs` as the C-02-02 command. The prompt allows a 'child process or probe' without naming that artifact, so the contract command may not exist.",
+      "fix": "Name `tools/stack/sefaz-adapter-smoke.mjs` (run via `node --import tsx`) as the probe, or record a deviation from the contract in the report."
+    }
+  ],
+  "notes": [
+    "SHA verified: `shasum -a 256 prompts/TASK-0007.md` = 98a887406086a33ab1bdd8dc76029d9a582989aef322d78f01d28e20a4ab06c9, matching `PC-98a887406086a33a` in `compositions.json` and in both fields of `tasks/TASK-0007.json`.",
+    "The factory `createSefazMockServer({ host, port })` in the prompt matches `contract.test.mjs:49-65` (`address()` returns address/family/port, async `close()`, port 0, CLI on 127.0.0.1:3999, adapter at `localhost` with prefix `/mock`). `http-adapter.ts` sends no requestId of its own, so deterministic generation in the mock is feasible without touching `packages/**`.",
+    "`runSmoke({ targets, fetchImpl })` and `report{complete, pec.state, rows[{target,result,reason,status,adapterMessage}]}` in the prompt match `reports/TASK-0005-escalation.md` and the tests. The target names and reasons (`backend_unreachable`, `invalid_json`, `empty_json`, `tenant_mismatch`, `unauthorized`, `forbidden`, `unexpected_status_403`, `adapter_message_mismatch`) come only from the test and are implementable.",
+    "The guarded CH fixture (`DB_NAME=detran_local_stack`, guard before SQL, idempotent, deterministic IDs, outside `backend/database/seed/**`, outside RAIT/PEC) is consistent with CTG-0002 §C-02-04. The write boundary (`tools/detran-stack.sh`, `tools/stack/**` excluding `*.test.mjs`, `package.json` scripts) is enough for all sensors without touching backend/tests or relaxing RLS/policy.",
+    "The offline proof (`pnpm test:stack`, `pnpm check`) is correctly separated from checkpoint (b) and `ci:backend-kernel:local`, consistent with the plan's 'Gates TASK-0006/0007' decision. No finding conflicts with Owner OD-R17-001/002/003 or A4/A5; the single high is correctable in the prompt, hence REVIEW rather than FAIL.",
+    "Reviewer did not execute git or write to the repository."
+  ]
+}

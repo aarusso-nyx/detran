@@ -1,0 +1,45 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": "PC trail after this re-review",
+      "file": "work/rounds/R-0017/plan.md",
+      "line": 316,
+      "claim": "The plan still says `PC-f80aaf52cdbb9659` \"segue para re-review antes do despacho\". It does not record this review's verdict, and it does not mark `PC-03a8e3260dac9356` as superseded by the final PC. The ledger is otherwise consistent: `compositions.json:101-102` and `tasks/TASK-0007.json:28,40` both point to PC-f80aaf52cdbb9659.",
+      "fix": "Before dispatch, the maestro records in the plan.md decision log this review (`prompt-review-TASK-0007-handoff-3.json` = PASS), the approval of `PC-f80aaf52cdbb9659`, and `PC-03a8e3260dac9356` as superseded/not dispatched."
+    },
+    {
+      "severity": "low",
+      "item": "Order of preflight and CH fixture in the negative run",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 83,
+      "claim": "Item 4 requires the `/healthz` preflight before any restart. Separately, the CH fixture runs 'antes das sondas CH'. The prompt does not say explicitly that `backend_unreachable` also skips the CH fixture. In checkpoint (b), after `stack:stop`, the DB container may be stopped. Running `psql` then would fail with an unrelated error before the final report is written. The prompt already requires the final report even under `backend_unreachable`, so this is only a sequencing ambiguity and not a blocker.",
+      "fix": "Optional: add 'o preflight precede a fixture CH; com backend_unreachable, nenhuma SQL e executada'. Otherwise the maestro checks this in delivery-review, using the C-02-06 negative run."
+    },
+    {
+      "severity": "low",
+      "item": "No Inspector sensor for the real seed invocation or the DB guard",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 51,
+      "claim": "`revision.test.mjs` asserts only `config.seed.profile`. No `*.test.mjs` covers `seed_database` (today `tools/detran-stack.sh:265`, `SEED_PROFILE=fresh`) or the refusal of another DB by the CH fixture. The prompt already requires citing the invocation line and showing `DB_NAME=<outro>` with a non-zero exit and the `die` message (`detran-stack.sh:86`), so the proof comes from the report and checkpoint (b).",
+      "fix": "In delivery-review, confirm that `seed_database` and `config.seed.profile` derive from the same constant. Confirm that the usage text at `detran-stack.sh:64` ('apply fresh seed') was updated. Confirm the refusal transcript runs before any `psql`."
+    }
+  ],
+  "notes": [
+    "SHA verified: `shasum -a 256 prompts/TASK-0007.md` = f80aaf52cdbb96590a318e582dae6413d7c60abfb43f5e712b9b12cd1976685f. This matches `compositions.json:101-102` (pc_id `PC-f80aaf52cdbb9659`) and `tasks/TASK-0007.json:28` and `:40`.",
+    "The seed high from handoff-1 is still resolved. Item 2 (lines 50-55) requires `seed_database` (the `db-init`/`db-reset` path at `detran-stack.sh:262-288`) to really invoke `SEED_PROFILE=fresh-local-stack`. It derives `config.seed.profile` (today `:191`) from the same constant, updates log/usage, cites the line, and leaves `seed.sh` untouched.",
+    "The factory has no conflict with `contract.test.mjs:12-65,114`. The prompt specifies `createSefazMockServer({ host, port })`, `address()` returning address/family/port, async `close()`, port 0 in the test, and an import without side effects. The guarded CLI listens on `127.0.0.1:3999`. Parity goes through the real `SefazHttpAdapter` in `tools/stack/sefaz-adapter-smoke.mjs` with `node --import tsx`, with no new allowlist entry.",
+    "`runSmoke({ targets, fetchImpl })` has no conflict with `contract.test.mjs:124-353`. The targets are frontends/backend/senatran/sefaz/pec/ch. The report has `complete`, `pec.state`, and `rows[]{target,result,reason,status,adapterMessage}`. `runSmoke` runs no SQL and does not start or stop processes. It writes the table and JSON to `DETRAN_STACK_STATE_DIR`. The prompt forbids the literal `Bearer` and the words token/password/secret in evidence and uses `local-principal`, which satisfies `:239`. The request header stays `Bearer local`, which satisfies `:216`.",
+    "The CH route goes through the frontend proxy. `tools/detran-stack.proxy.json` sends `/v1` to 3001, and the prompt forbids calling `backend.url` directly, which satisfies `:220-221`. In the offline fixture, `ch[]` has no url or body; the CLI table supplies the bodies. The prompt states this explicitly at lines 87-90.",
+    "The fixture matchers are consistent. Offline, `persona`/`fixture` are row metadata and IDs are compared only through an explicit matcher, which is compatible with `items:[{id:'fixture-001'}]`. The CLI table supplies the real C-02-05 matchers (RAIT-FRESH-2026-000001, N1 alert, etc.).",
+    "The personas match the code. `AUDITOR`, `MEDICO` and `ADMIN_CLINICA` exist in `shared/src/roles.ts`. `policy.ts:192-194` grants `biometric` capture to `MEDICO`, which is compatible with CTG-0002 §C-02-04 and §C-02-05. The five default roles stay in the literal form `DETRAN_LOCAL_ROLES:-…` at `detran-stack.sh:417`. Personas are overridden only through env on a restart of a backend found running, and the default is restored at the end.",
+    "The CH fixture is idempotent, under `tools/stack/`, with deterministic test IDs. It runs only after `validate_database_name` (`detran-stack.sh:85-87`, called at `:120,269,283`), with a refusal transcript. It does not touch `backend/database/seed/**` and stays outside RAIT/PEC R-0031. SQL fixtures do not relax policy or RLS. Council is exempted if it reaches the adapter first.",
+    "The offline proof (`pnpm test:stack`, `pnpm check` = acceptance_commands) is separate from checkpoint (b) and `ci:backend-kernel:local`. Those are maestro gates after commit, push and a clean worktree, with no green declared from mocks. There is no `stack:db-reset` and no volume removal. This is consistent with plan.md 'Gates TASK-0006/0007' and CTG-0002 §C-02-06.",
+    "The write boundary is enough: `tools/detran-stack.sh`, production files under `tools/stack/` (excluding `*.test.mjs`), and `package.json` scripts. It covers the mock, adapter-smoke, smoke CLI, seed/config, SEFAZ lifecycle and CH fixture. No change to `backend/**`, `packages/**`, tests, policy or RLS is needed.",
+    "No conflict with Owner decisions OD-R17-001/002/003, A4/A5 or CTG-0002. There is no high finding, so the verdict is PASS.",
+    "Reviewer did not execute git or write to the repository."
+  ]
+}

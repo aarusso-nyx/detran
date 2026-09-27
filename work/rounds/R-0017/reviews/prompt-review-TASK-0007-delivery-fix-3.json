@@ -1,0 +1,51 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 84,
+      "claim": "Os itens 3 e 5 (L84, L96-98) pedem que o mock nao dependa do working directory e que o entrypoint seja robusto. Nao avisam que o stub node do Inspector em tools/stack/revision.test.mjs:117 so casa o argv literal relativo 'tools/stack/mocks/sefaz-mock.mjs'. Se o Engineer trocar para caminho absoluto, o stub cai em 'exec node \"$@\"' (linha 126) e sobe um listener real em 3999. O PID do stub deixa de ser registrado, o sensor de lifecycle (linhas 429-462) fica vermelho, e o Engineer nao pode editar o teste.",
+      "fix": "Declare que a independencia de cwd ja e atendida pelo 'cd \"$ROOT_DIR\"' no subshell (tools/detran-stack.sh:398-399). O argv passado a node deve continuar o literal relativo exigido por revision.test.mjs:117. A robustez de entrypoint vale apenas dentro do mock (pathToFileURL(realpathSync(argv[1]))), sem mudar a forma de invocacao."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 75,
+      "claim": "L75 diz 'Apenas metodo 405/Allow usa fetch cru'. Isso impede exercitar corpo JSON sintaticamente malformado, que o adapter nao consegue enviar porque serializa com JSON.stringify (packages/sefaz-adapter/src/http-adapter.ts:107), embora CTG-0002:99-101 exija envelope para 'corpo JSON malformado ou invalido'. Alem disso, para o 405 so pede status e Allow, sem o envelope {requestId,error:{category,code,message,retryable,providerStatus}} que CTG-0002:99-101 tambem exige para verbo nao permitido.",
+      "fix": "Permita um segundo fetch cru apenas para corpo malformado (esperado 400, BUSINESS_ERROR, retryable=false, providerStatus 400). No 405, confira status, Allow e o envelope completo, com categoria de errors.ts e retryable=false, imprimindo o marcador so apos o assert."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 56,
+      "claim": "O item 1 (L50-57) acrescenta auth.users e auth.memberships sem membership_roles e afirma que 'o token local ja fornece os roles'. Nenhum sensor Inspector cobre essas linhas: contract.test.mjs:70-96 so confere portal.complaint e os IDs de complaint e tenant. Com isso, a nova producao entra sem sensor. A premissa tambem nao e verificada: a membership fresh do ator de fixture tem role (00-fixtures-core.sql:44-45), e o interceptor de tenancy STYNX valida membership em rotas nao publicas (detran-runtime.ts:569-571). O prompt nao manda o Engineer citar o caminho de codigo que prova que uma membership sem roles basta para AUDITOR, rait-coordinator, dash-operator, field-agent, RECEPCAO e ADMIN_CLINICA. Se a premissa falhar, o live do maestro cai em 403 ou blocked_before_adapter.",
+      "fix": "Exija no relatorio a citacao, com arquivo e linha, do ponto do STYNX/runtime que valida a membership (existencia e is_active, sem roles). Se nao for demonstravel, o Engineer reporta BLOCKED em vez de inserir roles. Exija tambem que relate ao maestro a lacuna de sensor para users e membership, como ja faz para o body invalido em L77-79."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 45,
+      "claim": "O item 1 manda remover apenas DETRAN_LOCAL_ACTOR_ID do env filho. command() em smoke.mjs faz spread de process.env, e detran-stack.sh:454-463 repassa DETRAN_LOCAL_TENANT_ID, CPF, ASSURANCE_LEVEL e outros quando definidos na shell-pai. Esses overrides contaminariam as fases e a restauracao default exigida por CTG-0002:155/199-200. O sensor em contract.test.mjs:545-551 roda com env limpo e nao detectaria isso.",
+      "fix": "Instrua a remover do env filho todo DETRAN_LOCAL_* que nao seja o override da fase (ROLES, e ACTOR_ID so para PAdES), incluindo a restauracao final."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 77,
+      "claim": "O prompt manda imprimir 'cada marcador do sensor', mas nao lista os nomes. O sensor em contract.test.mjs:600-614 exige as palavras exatas lookupDebt, issueGuide, getPaymentStatus, submitRectification, submitRefundRequest, getRefundStatus, NOT_FOUND, invalid_body, method_405 e a frase 'SEFAZ adapter smoke passed'.",
+      "fix": "Liste os marcadores literais no prompt para evitar divergencia de nomenclatura."
+    }
+  ],
+  "notes": [
+    "Ratificacao: o Objetivo (L35-43) cobre todas as mudancas de producao do maestro listadas em reports/TASK-0007-maestro-adenda.md:6-8 e no achado alto 1 do delivery-review. O guard Portal em contract.test.mjs foi assumido por TASK-0011 (reports/TASK-0011.md:11) e a fixture seed 40 foi ratificada por TASK-0006 (plan.md, PC-2640674bbd29832f). O relatorio exige classificar cada mudanca como ratificada, corrigida ou revertida (L40-41, L121).",
+    "Vermelhos do Inspector atribuiveis sem editar testes: tenant em arrays (contract.test.mjs:461-483 contra smoke.mjs:199-203), ator ausente em todos os restarts exceto MEDICO (contract.test.mjs:485-592 contra smoke.mjs:423-428) e comando literal SEFAZ (contract.test.mjs:594-615 contra sefaz-adapter-smoke.mjs:2). Os tres estao dentro da fronteira de escrita (L23-25).",
+    "A6 preservada: guarda DB_NAME antes de SQL (portal-fixture.sh:14-15), fora dos perfis canonicos, tenant a001, persona AUDITOR, ID concreto via proxy e sem mudanca de policy/RLS (L56-57). A7 preservada: ator default nas quatro leituras e na restauracao, users/membership sinteticos somente no banco descartavel e ator de fixture apenas no PAdES, coerente com o sensor em contract.test.mjs:583-587.",
+    "C-02-02: register() de tsx/esm/api seguido de import dinamico de src/index.ts preserva o comando literal (tsx 4.x na raiz, package.json:90). A normalizacao em SefazAdapterError para NOT_FOUND 404 e BUSINESS_ERROR 400 e viavel: http-adapter.ts:134-153 usa o envelope, e retryable=false evita retries (linhas 76-82). lookupDebt({}) via adapter produz 400 no mock (sefaz-mock.mjs:141).",
+    "Sondas CH sem ator explicito: requireScope da biometria nao depende do ator (biometric-lifecycle.service.ts:321 e seguintes). ch-fixture.sh:38/99 usa b0000002 apenas para o profissional PAdES e o registro biometrico; a clausula BLOCKED (L26-27) cobre dependencia remanescente.",
+    "Lifecycle: o mock ja roda com env -i PATH/HOME e cd ROOT_DIR (detran-stack.sh:397-399). stop e cleanup usam sefaz_pid_file (linhas 551, 561). Pendentes e corretamente delegados: tail -n (linhas 374, 376, 583), /readyz em backend-restart (linha 580) e justificativa de build_stack (linha 527).",
+    "O prompt proibe corretamente declarar C-02 PASS, iniciar a stack ou rodar smoke live. Checkpoint (b), pnpm check e medicao live permanecem com o maestro."
+  ]
+}

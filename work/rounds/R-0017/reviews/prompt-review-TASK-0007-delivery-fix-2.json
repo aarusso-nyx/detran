@@ -1,0 +1,74 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": "C-02-02 errors through the adapter",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 66,
+      "claim": "The prompt says the invalid body and the 405 use raw fetch 'because the adapter verbs/body are fixed'. That is only true for the verb. packages/sefaz-adapter/src/http-adapter.ts:107 serializes the caller's body without validating it, so a semantically invalid body (for example adapter.lookupDebt({}) or issueGuide({debtId:'x'}), which the mock rejects at sefaz-mock.mjs:141/149) can go through the SefazHttpAdapter. CTG-0002:24 requires the adapter itself to pass 'in the six operations and errors', and CTG-0002:106-109 lists invalid body among the paths with SefazAdapterError normalization. As written, the literal command would never prove that the adapter normalizes BUSINESS_ERROR/400. The Inspector sensor has the same gap (contract.test.mjs:188-192 also uses raw fetch).",
+      "fix": "Replace the reason at lines 65-68 with: an invalid JSON body goes through the adapter and must end in a SefazAdapterError instance with category BUSINESS_ERROR, retryable=false and providerStatus 400. Only malformed JSON (optional) and the 405/Allow use raw fetch, because the adapter's verbs are fixed. Print invalid_body only after both asserts pass. Record the adapter gap in the parity sensor as a finding for the Inspector, without editing tests."
+    },
+    {
+      "severity": "medium",
+      "item": "write boundary vs mandatory item",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 25,
+      "claim": "The allowed-file list lets the Engineer change tools/stack/mocks/sefaz-mock.mjs only 'if needed for the lifecycle'. Item 5 (lines 86-87) makes the entrypoint guard fix in the mock mandatory (sefaz-mock.mjs:247, delivery-review low finding). The conditional wording invites BLOCKED or skipping the fix.",
+      "fix": "Allow sefaz-mock.mjs explicitly for the robust entrypoint guard and for the lifecycle/errors of item 2."
+    },
+    {
+      "severity": "low",
+      "item": "providerStatus not specified",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 63,
+      "claim": "The prompt requires the providerStatus field but not its values. The parity sensor requires providerStatus 404 for unknown reference (contract.test.mjs:186), and CTG-0002:103 requires 405 with Allow.",
+      "fix": "Set 404 for NOT_FOUND, 400 for BUSINESS_ERROR/invalid body and 405 plus Allow, all checked before printing the markers."
+    },
+    {
+      "severity": "low",
+      "item": "default-actor identity fixture",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 47,
+      "claim": "For auth.memberships the prompt fixes ON CONFLICT (tenant_id,user_id), but it does not say that a rerun must reactivate the row. It also says nothing about auth.users: conflict target, is_active, tenant_id, and the fact that email is a global UNIQUE (02-auth.sql:37). A bare DO NOTHING would keep an inactive membership or user, and the A7 identity would fail on rerun.",
+      "fix": "Require an auth.users row with a deterministic ID, tenant ...a001, a unique .invalid email and is_active=true, using ON CONFLICT (id) DO UPDATE SET is_active=true. Require the membership with DO UPDATE SET is_active=true, as in 00-fixtures-core.sql:42."
+    },
+    {
+      "severity": "low",
+      "item": "ratification scope",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 36,
+      "claim": "'CLI de smoke' is generic. TASK-0007-maestro-adenda.md:6-8 also lists the portal.complaint row in portal-fixture.sh (ON CONFLICT DO UPDATE), the real tenant/idempotency headers and the per-app Dashboard N1 filter. Without an explicit list, the report may not reach delivery-review finding 1 item by item.",
+      "fix": "List every maestro change (portal-fixture.sh complaint, fixture-portal, build_stack, pg_isready -h, env -i of the mock, headers, N1 filter, per-phase actor) and require ratified/corrected/reverted for each one."
+    },
+    {
+      "severity": "low",
+      "item": "test:stack and Docker",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 93,
+      "claim": "TASK-0011.md:18 says the full test:stack was not run because C-01 invokes real Docker Compose. The prompt requires test:stack first but authorizes only a read-only `docker compose config`. It does not say what to do if any other real Docker call appears.",
+      "fix": "State that if test:stack needs Docker beyond `config`, the Engineer stops, reports the test and line, and runs contract.test.mjs and revision.test.mjs separately, without calling it PASS."
+    },
+    {
+      "severity": "low",
+      "item": "stub hang",
+      "file": "tools/stack/revision.test.mjs",
+      "line": 120,
+      "claim": "The Inspector's node stub waits for sefaz-mock.pid in a loop with no bound. If a production change moves or skips writing the PID, the suite hangs instead of failing. The prompt does not tell the Engineer to keep start_sefaz_mock writing the pid_file (detran-stack.sh:388-399) or to treat a hang as a sensor failure outside its boundary.",
+      "fix": "Add: keep the sefaz-mock.pid write in start_sefaz_mock; report any hang as a failure to the Inspector, citing revision.test.mjs:120."
+    }
+  ],
+  "notes": [
+    "Engineer ratification: the write boundary (prompt:23-25) covers all TASK-0007 production the maestro touched (portal-fixture.sh, detran-stack.sh, smoke.mjs, sefaz-adapter-smoke.mjs). contract.test.mjs belongs to the Inspector and was taken over in TASK-0011 (TASK-0011.md:3). The TASK-0006 fixture is covered separately by TASK-0006-delivery-ratify.md. Delivery-review high finding 1 is correctly routed.",
+    "The Inspector's reds can be attributed without editing tests: the three reds in TASK-0011.md:13-16 (tenant in arrays, actor in the phases/restore, literal command) map to prompt items 4, 1 and 2. The prompt forbids editing tests (prompt:16-17, 30-31, 100-101).",
+    "A6 is preserved: the synthetic complaint stays only in tools/stack, behind the DB_NAME guard before any SQL (portal-fixture.sh:14-15, detran-stack.sh:304-308), with no canonical profile changed (prompt:39-41).",
+    "A7 is preserved: prompt:43-56 matches plan.md:288-296. Removing the variable (not passing an empty one) is necessary because detran-runtime.ts:322 uses `??` and detran-stack.sh:461 forwards the actor whenever it is defined. The sensor contract.test.mjs:562-586 fixes the order AUDITOR, rait-coordinator, dash-operator, field-agent, MEDICO (with b0000002), RECEPCAO, ADMIN_CLINICA, then restore of the five roles.",
+    "The default actor on the CH probes without an actor is viable: requireScope in biometric-lifecycle.service.ts:321 does not depend on the principal. Forbidding ch-fixture.sh with a BLOCKED fallback (prompt:26-27) is conservative and correct, since the fixture ties only the MEDICO professional to b0000002 (ch-fixture.sh:38).",
+    "Literal command: tsx ^4.23.13 is in package.json:90 and node_modules/tsx/dist/esm/api exists, so register() followed by a dynamic import of src/index.ts keeps `node tools/stack/sefaz-adapter-smoke.mjs` working without touching package.json. The markers the prompt asks for match contract.test.mjs:600-610.",
+    "RLS/policy: the prompt forbids any bypass or change of policy/RLS and any membership roles/groups/permissions (prompt:51-53). The membership only matters for rait-secretary resolution (app.module.ts:514-540), so it does not widen permissions.",
+    "Lifecycle and evidence: the prompt covers readyz on backend-restart, tail -n, the robust guard, separate preflight/positive reports, PEC via existsSync, observed or explicitly inferred CH preconditions, restore in finally, and no persistent stack or live smoke by the Engineer.",
+    "Not covered by this prompt and to be routed by the maestro: the RAIT spec low finding (rait-seed-profiles.integration.spec.ts:292), which belongs to the Inspector and was deferred by TASK-0011; the decision on build_stack against the C-01 criteria, to be recorded in Triagem; and the pending gates (pnpm check, docs:check, ci:backend-kernel:local, checkpoint b)."
+  ]
+}

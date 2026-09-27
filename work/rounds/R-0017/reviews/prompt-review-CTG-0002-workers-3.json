@@ -1,0 +1,60 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "No contracted test seam for offline smoke and SEFAZ mock tests on ephemeral ports",
+      "file": "work/rounds/R-0017/prompts/TASK-0005.md",
+      "line": 63,
+      "claim": "The prompt asks for fake HTTP fixtures on ephemeral ports and says 'Use seams de teste existentes', but no such seam exists. tools/stack/smoke.mjs and tools/stack/mocks/sefaz-mock.mjs do not exist yet. tools/detran-stack.sh fixes BACKEND_PORT='3001' and FRONTEND_PORTS=(4200..4204) and flags DETRAN_BACKEND_PORT/DB_PORT overrides (lines 10-14, 30, 40). C-02-02 fixes 127.0.0.1:3999 with no override, and C-02-03 forbids new URL variables. The Inspector will either invent an uncontracted interface (env var or exported function) that the Engineer has to guess, or bind the fixed ports 3999/3001/42xx inside test:stack. Fixed ports make pnpm check collide with a running stack and become flaky.",
+      "fix": "In TASK-0005.md:63-73 and TASK-0007.md:34-37/50-55, name the seam explicitly. Example: smoke.mjs and sefaz-mock.mjs export functions that take a target table or port as a parameter, with the CLI keeping the C-02 defaults. Alternatively, use test-only variables that are not in the backend allowlist and do not carry external URLs. State that the Inspector defines the seam in the test and the Engineer implements it verbatim. Recompute PC-bb017ff951cec692 and PC-208a69381c3766dc."
+    },
+    {
+      "severity": "medium",
+      "item": "How the synthetic CH data for the three 503 probes is created is not specified",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 59,
+      "claim": "Council reaches its adapter without any data: ProfessionalLifecycleService.create calls ensureCouncilCached before assertActiveClinic (professional-lifecycle.service.ts:50-53, 98-110). PAdES and biometrics are different. PAdES needs a finalized exam, a professional linked to the actor, and an approved professional biometric. Biometrics needs clinic, station, provider, certificate and LFD (biometric-lifecycle.service.ts:85-102). With biometrics and council off, that state cannot be created through the API. It can only be created by direct SQL in detran_local_stack, and the prompt neither authorizes nor bounds that path. The worker may set every probe to blocked_before_adapter, which is honest, stays non-zero and blocks checkpoint (b). Or the worker may improvise SQL writes without idempotency, name guard or a declared location.",
+      "fix": "In TASK-0007.md:56-63, state that preconditions go in a script under tools/stack/ (for example tools/stack/ch-probe-fixtures.sql or .mjs). The script must be idempotent with deterministic, test-marked IDs and run only against DB_NAME=detran_local_stack under the existing name guard. It must never go into backend/database/seed/**. The HTTP probe must still pass through the real policy, RLS and principal. Also allow the Council probe without clinical data. Recompute the PC."
+    },
+    {
+      "severity": "low",
+      "item": "'onde apropriado' softens the C-02-02 sensor",
+      "file": "work/rounds/R-0017/prompts/TASK-0005.md",
+      "line": 55,
+      "claim": "The C-02-02 Inspector sensor (CTG-0002.md:106-109) requires walking all six routes through SefazHttpAdapter itself. The prompt says 'offline e, onde apropriado, pelo proprio SefazHttpAdapter', which lets a worker justify covering some routes with raw fetch only.",
+      "fix": "Replace it with 'as seis rotas, o POST com requestId, os GETs sem corpo e os tres erros obrigatoriamente pelo proprio SefazHttpAdapter via node --import tsx; fetch direto apenas para health, 405/Allow e loopback'."
+    },
+    {
+      "severity": "low",
+      "item": "The plan's checkpoint (b) omits the negative step of C-02-06",
+      "file": "work/rounds/R-0017/plan.md",
+      "line": 147,
+      "claim": "plan.md:147-152 lists db-reset→start→health→smoke→stop. C-02-06 (CTG-0002.md:203-212) adds a final smoke that must exit non-zero with the backend stopped. The maestro could record checkpoint-b.md without the proof that the gate detects failure. The plan's acceptance criteria (plan.md:173-175) do require it, but not in the checkpoint section.",
+      "fix": "Add '→ pnpm stack:smoke (exit ≠ 0)' to the checkpoint (b) list in plan.md, aligned with C-02-06."
+    },
+    {
+      "severity": "low",
+      "item": "The TASK-0006 runner does not encode the seed proof",
+      "file": "work/rounds/R-0017/tasks/TASK-0006.json",
+      "line": 25,
+      "claim": "acceptance_commands contains only format:check. C-02-01 therefore depends on the worker's report and on the maestro gate (ci:backend-kernel:local after push, plus db-reset in checkpoint (b)). If the worker reports a Docker block, the task still passes acceptance.",
+      "fix": "Record in the maestro decisions that TASK-0006 only counts as done with the spec PASS reported with IDs and counts, or with ci:backend-kernel:local green after the push. A report of 'Bloqueio' requires rerunning the task before checkpoint (b)."
+    }
+  ],
+  "notes": [
+    "Hashes confirmed: sha256 of prompts/TASK-0005.md = bb017ff951cec692…, TASK-0006.md = 95cc7a37908fe373…, TASK-0007.md = 208a69381c3766dc…. They match compositions.json:83-105 and prompt_composition_id/executor.prompt_composition_id in the three task JSONs (PC-bb017ff951cec692, PC-95cc7a37908fe373, PC-208a69381c3766dc).",
+    "Models and effort match plan.md §Tarefas: TASK-0005 gpt-5.6-luna/medium, TASK-0006 gpt-5.6-luna/medium, TASK-0007 gpt-5.6-terra/medium.",
+    "Sequence confirmed: TASK-0005 upstream=TASK-0004, TASK-0006 upstream=TASK-0005, TASK-0007 upstream=TASK-0006, consistent with plan.md 'CTG-0002 = 0004 → 0005 → 0006 → 0007'. Locks are disjoint: MOD-seed-tests+MOD-stack-tests / MOD-seed / MOD-stack-tool+MOD-stack-mocks+MOD-root-package-scripts.",
+    "High 1 of workers-2 resolved: TASK-0006 no longer requires the RC runner. The spec runs directly with DETRAN_TEST_TIER=integration (vitest.config.ts:3-9 includes tests/integration/**), explicit admin/scratch URLs and a pinned PostGIS. ci:backend-kernel:local moved to the maestro after commit/push (TASK-0006.md:46-54), and tools/ci/run-backend-kernel-local.mjs:158-159 already injects the spec URLs.",
+    "High 2 of workers-2 resolved: TASK-0007.json has only test:stack and check. The prompt makes live smoke and checkpoint (b) maestro gates (TASK-0007.md:64-70) and separates C-02-01 from C-02-05 in the report.",
+    "Medium findings of workers-2 resolved: tsx is prescribed in both prompts (the root tsx devDependency, src/index.ts exists, no dist/). 0007 runs after 0006. The Inspector must require status 503 plus the exact messages, which match the source (pades-signing.http-adapter.ts:71, biometric-verification.http-adapter.ts:38, council-verification.http-adapter.ts:27).",
+    "Boundaries respected: the Inspector touches only the RAIT spec and tools/stack/*.test.mjs, and preserves C-01 outside A4. The seed Engineer does not touch specs, the 17 fresh files, the original 40/60, apply.sh or tools. The stack Engineer does not touch backend/**, packages/** or tests. These scopes cover C-02-01…07, including sefaz-adapter-smoke.mjs and the change of seed_database (detran-stack.sh:258-262, today SEED_PROFILE=fresh) to fresh-local-stack.",
+    "PAdES off does not break /readyz locally: detranClinicalTrustReadiness and its binder are registered only when not local (app.module.ts:716, 761).",
+    "The proxy /v1→127.0.0.1:3001 exists in tools/detran-stack.proxy.json. The DETRAN_LOCAL_ROLES and DETRAN_LOCAL_ACTOR_ID overrides pass through detran-stack.sh:417-425. restart exists (detran-stack.sh:594), though it restarts the whole stack.",
+    "prettier --check work/rounds/R-0017 passes on the current state, so the untracked round files do not block format:check or check.",
+    "No Owner OD reopened. No real integration, credential or PEC fixture is authorized in the three prompts."
+  ]
+}

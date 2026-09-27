@@ -1,0 +1,66 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "status": "new",
+      "item": "A7",
+      "file": "work/rounds/R-0017/plan.md",
+      "line": 288,
+      "claim": "A7 is an Architect clarification that lets the stack-only fixture create auth.users and auth.memberships for the default actor (tools/stack/portal-fixture.sh:26-39). OD-R17-004 (docs/meta/knowledge-base/open-decisions-rait.md:383) and CTG-0002 A6 authorize only a synthetic complaint. The identity rows stay confined to detran_local_stack, sit behind the DB_NAME guard (portal-fixture.sh:14-15), add no roles, groups or permissions (sensor contract.test.mjs:103), and do not touch the canonical profiles. So there is no boundary violation, but the extension has no Owner record next to OD-R17-004.",
+      "fix": "Record A7 as an OD-R17-004 note or have the Owner ratify it in the OD before closure.json. Alternatively, state in closure that A7 does not change OD-R17-004."
+    },
+    {
+      "severity": "low",
+      "status": "new",
+      "item": "C-02-05",
+      "file": "tools/stack/portal-fixture.sh",
+      "line": 34,
+      "claim": "Only fixture-portal, run by the smoke (smoke.mjs:523-532), creates the default actor's active membership. After pnpm stack:db-reset/start and before any smoke, the default actor still has no membership. Also, the RAIT, Dashboard and TEAT reads now run under the default actor (…000000000002) and not under b0000002, the actor used in the earlier live run recorded in the section Triagem. That change has not been measured live. It is a pending gate, not a defect proven by reading the code.",
+      "fix": "Record in checkpoint (b) the positive result of the four proxy reads under the default actor. If any of them returns empty or 403, send it to the section Triagem without changing policy or RLS."
+    },
+    {
+      "severity": "low",
+      "status": "new",
+      "item": "sensor",
+      "file": "tools/stack/revision.test.mjs",
+      "line": 31,
+      "claim": "The generic stub now writes calls only when DETRAN_TEST_STUB_CALLS is set, so it tolerates children started with env -i, such as the SEFAZ mock. Any future doesNotMatch over a process launched without that variable will pass trivially. The current sensors do not depend on that, and the SEFAZ lifecycle is covered by PID and pid-file checks (lines 436-476 and 705-728). This is residual risk, not weakening.",
+      "fix": "Optional: make stubs fail on an unset variable when the child is not the SEFAZ mock, or document the exception in the harness."
+    },
+    {
+      "severity": "low",
+      "status": "residual",
+      "item": "cycle1-13",
+      "file": "tools/detran-stack.sh",
+      "line": 527,
+      "claim": "start still always runs build_stack, the topological build at line 509. The TASK-0007 report lists it only as ratified, without the lifecycle justification the PC asked for. The section Triagem records the reason as a plant-bug (the root build did not order dependencies). No C-01 criterion requires a conditional build, so this is acceptable as residual.",
+      "fix": "No code change needed. When closing, keep the plant-bug in the section Triagem as the justification."
+    },
+    {
+      "severity": "low",
+      "status": "residual",
+      "item": "bookkeeping",
+      "file": "work/rounds/R-0017/tasks/TASK-0007.json",
+      "line": 5,
+      "claim": "TASK-0007 remains in_progress with iteration_count 3/3. Its acceptance commands include pnpm stack:smoke, which the maestro has not yet measured in checkpoint (b).",
+      "fix": "Close the task only after checkpoint (b) on a clean worktree."
+    }
+  ],
+  "notes": [
+    "Cycle 1 high 0 (maestro ownership) is closed. The production files (detran-stack.sh, smoke.mjs, portal-fixture.sh, sefaz-adapter-smoke.mjs, mocks/sefaz-mock.mjs) have mtimes between 15:57 and 15:59 local time, inside the TASK-0007-delivery-fix window (18:53-19:01Z). That report explicitly ratifies, corrects or reverts each maestro change, under PC-b855ce8a4d669db3. The sensors (contract.test.mjs, revision.test.mjs and the RAIT spec) were changed between 16:27 and 16:32, inside the TASK-0011-delivery-coverage window (19:20-19:32Z), under PC-8ac951eac4ff9e9d. TASK-0011 (PC-43f78fb54ba03f4a) took over the Portal and A6 sensors. No production or test edit is later than the worker windows; only plan.md changed afterwards (16:48). A7 (plan.md:288-296) records that the maestro no longer touches these files.",
+    "Cycle 1 high 1 (immutable minutes) is closed. TASK-0006 ratified ON CONFLICT DO NOTHING (40-fixtures-rait-org-fresh-local-stack.sql:74) under PC-2640674bbd29832f, with a technical justification based on the trigger. The two SQL SHA-256 hashes (c465743e…, e4aa2bc9…) match byte for byte the ones cited in the ratification.",
+    "The PC hashes match: TASK-0007-delivery-fix-dispatched.txt = b855ce8a4d669db3… equals compositions.json:147-150 and the worker.json prompt_sha256. The formatted .md has hash b8ee9489… and differs by exactly one line (line 80, the indentation of providerStatus), so it does not replace the PC. The TASK-0006-delivery-ratify, TASK-0011 and TASK-0011-delivery-coverage PCs and all four reports match their worker.json.",
+    "Cycle 1 high 2 (default actor and restore) is closed. restartEnvironment (smoke.mjs:431-443) removes every inherited DETRAN_LOCAL_* and passes only ROLES, plus ACTOR_ID for PAdES alone (smoke.mjs:366 and 580). restore passes the five default roles (smoke.mjs:491-494) in finally and on SIGINT/SIGTERM. start_backend adds ACTOR_ID only if it is set (detran-stack.sh:461), so the runtime uses …000000000002 (detran-runtime.ts:321-323). The sensor at contract.test.mjs:573-662 injects poison and empty values and requires actorState=absent in the seven non-MEDICO restarts and in the restore, the exact subcommand order, and the fixture before the first restart.",
+    "Cycle 1 high 3 (literal command and SEFAZ errors) is closed. I ran `node tools/stack/sefaz-adapter-smoke.mjs` read-only in this worktree (Node v24.20.0): exit 0 with all ten markers. The script registers tsx/esm/api before importing src/index.ts. It checks the six DTOs, the requestId echo, the deterministic requestId on GET, IPv4 loopback, NOT_FOUND/404 for reference and refund, and BUSINESS_ERROR/400 through adapter.lookupDebt({}) as a SefazAdapterError. It also checks malformed JSON and 405 with Allow: POST using a full envelope, and closes the mock in finally. The contract.test.mjs:672-692 sensor checks exit code and markers.",
+    "Cycle 1 high 4 (SEFAZ lifecycle) is closed. revision.test.mjs:436-476 checks the PID registered in pids/sefaz-mock.pid, that the PID is the stub process, status output (sefaz-mock running plus the URL 127.0.0.1:3999/health), and that stop removes the pid file and the process ends. Lines 705-728 check a timeout on SEFAZ health only, tail -n 80 of sefaz-mock.log, and cleanup that includes the pid file. The node stub uses no real listener and gives up after 50 attempts with /bin/sleep. Production matches: detran-stack.sh:390-402 (env -i, fixed cwd), 545-553 (cleanup), 561 (stop), 608 and 628 (status).",
+    "No sensor weakened. The only lines removed from revision.test.mjs are the literals superseded by A4/A5 (seed fresh, sefaz pending, proposed_off, doesNotMatch /sefaz/i, which was replaced by the positive 3999 probe) and tail .*80, which was tightened to tail -n 80. The rest of C-01-07/11 stays.",
+    "A6 is preserved. The complaint (portal-fixture.sh:41-55) is synthetic, deterministic and exclusive to detran_local_stack, with the guard before any docker/psql call. It is not in the fresh, legacy-upgrade or fresh-local-stack arrays of seed.sh, whose historical branches are unchanged in the diff. The smoke requires the concrete ID …c2050001 under AUDITOR and tenant a001.",
+    "Old lows: the tenant check in arrays is fixed (smoke.mjs:61-68). Separate reports are fixed (smoke-report-preflight and per-phase suffixes, smoke.mjs:90-106 and 486). The robust entrypoint is fixed (smoke.mjs:617-620, sefaz-mock.mjs:247-250). tail -n is fixed (detran-stack.sh:374, 376, 584). /readyz after restart is fixed (detran-stack.sh:572-586). PEC via angular.json is fixed (smoke.mjs:16 and 357-359). The precondition is fixed (not_observed, then inferred_from_adapter_message only after the exact message, smoke.mjs:253 and 292). The RAIT spec now uses three separate scratch databases, FK checks and legacy IDs in the three tables plus the fixture text; that low is fixed apart from the legacy positive. Always-build (item 13) remains residual.",
+    "C-02-01 is NOT PASS. The spec measured 5/5 (fresh, then fresh-local-stack in a separate scratch database run twice, and the legacy-upgrade refusal), but the legacy-upgrade positive with the v1.1.0 baseline was not measured (spec:358-376 only proves refusal and that the candidate exists). It depends on ci:backend-kernel:local on a published branch or clean worktree, which runs prepare-rait-priority-upgraded-legacy.mjs. This is a pending gate, not a code defect.",
+    "Pending gates, not judged as PASS: checkpoint (b) C-02-06 in full (db-reset, start, health, smoke with exit 0 on the four proxies under the default actor plus three 503s from the adapter, then stop and smoke with non-zero exit), live C-02-03/04/05, and local RC after a clean commit and push. The maestro's reported measurements (test:stack 58/58, check exit 0, docs:check exit 0) were accepted as reported. This review re-ran only the literal SEFAZ command.",
+    "The PASS verdict means no open high finding in code, ownership or sensors. It does not mean CTG-0002 is accepted, which still requires the pending gates above."
+  ]
+}
