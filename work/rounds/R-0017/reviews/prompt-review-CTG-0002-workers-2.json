@@ -1,0 +1,65 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": "TASK-0006 acceptance_commands: ci:backend-kernel:local cannot run for the worker",
+      "file": "work/rounds/R-0017/tasks/TASK-0006.json",
+      "line": 27,
+      "claim": "The earlier pnpm check correction is confirmed: the prompt hash is bcd8f5f0…, it matches compositions.json:93-94, and the task and prompt now ask only for ci:backend-kernel:local plus format:check. The new command still cannot pass at this point. tools/ci/run-backend-kernel-local.mjs:26-56,72 calls assertExactCandidate() before anything else. That check stops the run unless git status --porcelain is empty and HEAD equals the published upstream. It also stops the run unless DEVAI_DB_TESTS, DETRAN_RC_* and the other protected variables are already set (lines 10-16 and 73-76). TASK-0006 edits seed.sh and creates two SQL files without running git, so its worktree is always dirty and unpublished, and the runner reports BLOCKED. The worktree already has untracked R-0017 files today. prompts/TASK-0006.md:46-47 repeats the requirement ('pnpm ci:backend-kernel:local … devem passar'). Orchestra README §10, R-0011 lesson 7 already records that this command needs a published branch and a protected RC environment. The task can never be accepted as written, and it invites a 'presumed' green.",
+      "fix": "Replace it in tasks/TASK-0006.json and prompts/TASK-0006.md:46-48 with the seed-profile spec run directly against a fresh disposable container that uses the pinned image. Example: DEVAI_DB_TESTS=1 DETRAN_SEED_ADMIN_DATABASE_URL=postgresql://…/postgres DETRAN_SEED_SCRATCH_DATABASE_URL=postgresql://…/detran_r7_ctg1_a2_seed_profiles pnpm --filter @detran/inf-rait-case exec vitest run tests/integration/rait-seed-profiles.integration.spec.ts. Also run SEED_PROFILE=fresh-local-stack bash backend/database/seed.sh twice against that scratch database, with container cleanup proven. Move ci:backend-kernel:local to a maestro gate after the CTG-0002 commit and push, and before the PR. Recompute the PC."
+    },
+    {
+      "severity": "high",
+      "item": "TASK-0007 acceptance: pnpm stack:smoke on its own fails by construction",
+      "file": "work/rounds/R-0017/tasks/TASK-0007.json",
+      "line": 34,
+      "claim": "acceptance_commands runs pnpm stack:smoke as a standalone step. prompts/TASK-0007.md:63-64 tells the worker to stop, by exact PID, every process it started. C-02-06 (CTG-0002.md:212) defines smoke with the backend stopped as a required non-zero exit. When the runner re-runs acceptance, the stack is down, so this command fails. There is a second problem. The fresh-local-stack seed only reaches the database through db-init/db-reset (tools/detran-stack.sh:262-288). The prompt allows db-reset only in checkpoint (b), on a clean worktree, and the worker cannot guarantee that. The profile also depends on TASK-0006, which is not upstream of TASK-0007 (upstream_task_id=TASK-0005; plan.md:142 lists '0006 ∥ 0007'). The smoke result then depends on whatever state the database was left in, or it is impossible.",
+      "fix": "Remove pnpm stack:smoke from TASK-0007 acceptance_commands, or replace it with one wrapped command such as bash -c 'pnpm stack:start && pnpm stack:health && pnpm stack:smoke; rc=$?; pnpm stack:stop; exit $rc'. That command must only run after TASK-0006 has been integrated and detran_local_stack has been reset by the maestro. Record in the prompt and the task that the live proof belongs to checkpoint (b) (plan.md:147-152), and that the worker's acceptance is pnpm test:stack plus pnpm check. Recompute PC-fbe8f2587b35ff10."
+    },
+    {
+      "severity": "medium",
+      "item": "How to load the real SefazHttpAdapter from .mjs is not specified",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 39,
+      "claim": "C-02-02 and both prompts (TASK-0005.md:55-56, TASK-0007.md:38-39) require exercising the real SefazHttpAdapter from node tools/stack/*.mjs. packages/sefaz-adapter has no dist/ (dist is gitignored and not built), and package exports resolve to ./dist/index.js. The TypeScript source cannot be loaded by Node 24 type stripping: errors.ts uses constructor parameter properties, which are not erasable syntax, and the imports use .js specifiers. Without guidance, the worker may add a dependency, reimplement the client (a FAIL under C-02-02), or build dist/. A built dist/ breaks the git clean -ndx requirement of checkpoint (b).",
+      "fix": "In both prompts, specify the existing tsx root devDependency (package.json:89), for example node --import tsx in a child process started from the test or from sefaz-adapter-smoke.mjs, importing packages/sefaz-adapter/src/index.ts. Forbid building dist/, adding dependencies, and reimplementing the client."
+    },
+    {
+      "severity": "medium",
+      "item": "TASK-0006 ∥ TASK-0007 in the same worktree, with ordering dependencies",
+      "file": "work/rounds/R-0017/plan.md",
+      "line": 142,
+      "claim": "The write locks are disjoint, but TASK-0007 makes fresh-local-stack the default seed. init_database/seed_database would then fail with 'invalid SEED_PROFILE' until TASK-0006 is done. TASK-0007's pnpm check also runs format:check across the whole repository, including TASK-0006 files that are still in progress.",
+      "fix": "Either run 0006 before 0007, or state in prompts/TASK-0007.md that no live step (db-init, start, smoke) runs until TASK-0006 has passed, and that the TASK-0007 worker's format:check covers only its own files."
+    },
+    {
+      "severity": "low",
+      "item": "Smoke does not observe the derived RAIT data",
+      "file": "work/rounds/R-0017/contracts/CTG-0002.md",
+      "line": 180,
+      "claim": "All four smoke fixtures come from files that are already in fresh (21, 70, 26, 81). The smoke passes with the old seed, so the only proof of the 40/60 derivations is the scratch spec. This is acceptable, but the smoke must not be reported as proof of the new profile.",
+      "fix": "In the TASK-0007 report and in checkpoint (b), state that the new profile's proof is C-02-01 (the spec) and that the smoke only proves proxy, RLS and the base seed."
+    },
+    {
+      "severity": "low",
+      "item": "503 discriminator",
+      "file": "work/rounds/R-0017/prompts/TASK-0005.md",
+      "line": 67,
+      "claim": "The adapters return distinct fixed messages: 'Clinical PAdES signing service is not configured…', 'Biometric verification provider and processor contract are not configured', and 'Professional council verification service is not configured'. The prompt does not say to use these messages to tell an adapter 503 apart from a 503 raised earlier in the request.",
+      "fix": "Tell the Inspector to assert status 503 together with each adapter's exact message, and to treat any other 503 as blocked_before_adapter."
+    }
+  ],
+  "notes": [
+    "Correction confirmed: TASK-0006 no longer requires pnpm check. tasks/TASK-0006.json:24,34 = PC-bcd8f5f01487e8f7 = the prefix of the actual sha256 bcd8f5f01487e8f72359aa4377637d080f10d9e48f1cb919d26ac96269be2b07 (compositions.json:93-94).",
+    "The actual sha256 values for TASK-0005 (aa346dc9…) and TASK-0007 (fbe8f258…) match compositions.json and the task PCs.",
+    "Models and effort match plan.md, rows TASK-0005 to 0007: Luna/medium, Luna/medium, Terra/medium.",
+    "The sequence is Architect TASK-0004, then Inspector TASK-0005, then Engineers TASK-0006/0007. Locks MOD-seed-tests+MOD-stack-tests, MOD-seed, and MOD-stack-tool+MOD-stack-mocks+MOD-root-package-scripts are disjoint.",
+    "Boundaries: the Inspector may write only the RAIT spec and tools/stack/*.test.mjs, and must preserve C-01 outside A4. The seed Engineer does not touch specs, the 17 fresh files, 40/60 or tools. The stack Engineer does not touch backend/**, packages/** or tests. These scopes allow C-02-01 through C-02-06.",
+    "test:stack uses the glob tools/stack/*.test.mjs, so new top-level Inspector tests run without changes to package.json.",
+    "MEDICO, ADMIN_CLINICA and AUDITOR exist in roles.ts. The DETRAN_LOCAL_ROLES and DETRAN_LOCAL_ACTOR_ID overrides are already passed through by detran-stack.sh:417-425. On Node 24, fetch to localhost reaches the IPv4 listener through autoSelectFamily, and a test can prove this.",
+    "No Owner decision is reopened. No real integration or PEC fixture is authorized in the three prompts."
+  ]
+}

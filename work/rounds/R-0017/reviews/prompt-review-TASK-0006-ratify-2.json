@@ -1,0 +1,50 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 41,
+      "claim": "Lines 29 and 35-36 let the Engineer 'consertar' the two *-fresh-local-stack.sql files, but lines 41-42 waive rerunning the scratch spec. If the Engineer changes even one byte, the only C-02-01 proof becomes the maestro's historical 3/3 run (TASK-0006-maestro-adenda.md:11-12), which measured different bytes. The ratification would then close C-02-01 with no measurement of the delivered file. That loosens the C-02-01 gate (CTG-0002.md:23: seed.sh twice, both exit 0, plus integrity queries).",
+      "fix": "State conditionally: (a) if no SQL changes, ratify statically and report the SHA-256 of both SQL files, matching the bytes the adenda measured; (b) if any SQL changes, either rerun in scratch the same command as adenda:11 (disposable PostGIS container, dedicated scratch DB, never the persistent stack, teardown reported) or report C-02-01 as pending/BLOCKED. Do not ratify an unmeasured change."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 19,
+      "claim": "The prompt names a trigger on 'rait_required_signer', but the real table is inf.rait_minutes_required_signer (ddl/36-inf-rait-session.sql:458-460). The prompt also does not say that the rait_minutes trigger is column-scoped (before update of id, tenant_id, session_id, content, generated_at, document_hash or delete, line 435), and that scope is exactly the 'regra exata' the Engineer must report. With the wrong name, the DDL review may be incomplete.",
+      "fix": "Fix the name to inf.rait_minutes_required_signer. Point to ddl/36-inf-rait-session.sql:421-470 as the full set of immutable tables (rait_vote, rait_minutes, snapshot, manifest, required_signer, signature_receipt)."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/reports/TASK-0006-maestro-adenda.md",
+      "line": 11,
+      "claim": "The adenda abbreviates the URLs as '.../postgres' and '.../detran_r7_ctg1_a2_seed_profiles'. Without host and port, nobody can independently confirm that the scratch ran against the disposable container detran-r17-task0006-verify (line 13) and not the persistent stack DB. The prompt tells the Engineer to accept this proof as historical (ratify.md:42).",
+      "fix": "Before dispatch, the maestro adds the host:port of the disposable container to the adenda (as an addendum, with no secrets). Alternatively, the prompt requires the Engineer to record that the scratch isolation was not checked independently."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 49,
+      "claim": "The report template has no field for the SHA-256 of the two SQL files or for the C-02-01 status after the iteration. This makes it hard to trace which bytes the ratification under PC-3b919b021e20a792 covers.",
+      "fix": "Add the lines 'SHA-256 dos SQL ratificados: <40>, <60>' and 'Estado C-02-01: <provado por medicao X | pendente>'."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0006-delivery-ratify.md",
+      "line": 41,
+      "claim": "`pnpm format:check` runs 'prettier --check .' over the whole repo (package.json:16). It can fail because of files outside the Engineer's scope, and the prompt does not say what to do in that case.",
+      "fix": "Say that failures outside the two SQL files are reported, not fixed, or restrict the check to those two paths."
+    }
+  ],
+  "notes": [
+    "Boundary respected: writes only to the two *-fresh-local-stack.sql files, which are TASK-0006's own; tests, seed.sh, DDL, contracts and other modules are explicitly forbidden (ratify.md:29-33).",
+    "Independence is well structured: the Engineer derives the policy from the DDL before reading the adenda, and reads the adenda only as provisional, non-binding evidence (ratify.md:24-27).",
+    "The PC is consistent: the file's SHA-256 3b919b02...ac3e matches compositions.json:141-142 and tasks/TASK-0006.json:24,33.",
+    "The fix under review is technically correct: 40-fixtures-rait-org-fresh-local-stack.sql:74 uses 'on conflict (id) do nothing' on inf.rait_minutes. It is the only DO NOTHING; the other upserts target mutable tables.",
+    "The prompt forbids db-reset, --full and touching the persistent DB (ratify.md:43-44). No criterion in CTG-0002 is loosened in the text; the only risk is the unmeasured-change case in the high finding.",
+    "Verdict REVIEW: one high, fixable inside the prompt; no boundary violation and no violation of a canonical source."
+  ]
+}

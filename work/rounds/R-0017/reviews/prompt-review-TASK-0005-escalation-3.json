@@ -1,0 +1,39 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "4-proxy-ignorado-scenario",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 40,
+      "claim": "Item 4 only hints that the current 'proxy ignorado' negative should go (contract.test.mjs:273-277). It says 'cobrindo proxy sem um cenario indistinguivel do sucesso' but never names the scenario. That scenario returns the same valid tenant JSON as the success path, so no smoke can derive `proxy_bypassed` from the responses. A worker who keeps it keeps a sensor that demands wrong behavior. That is the same class of defect this escalation exists to fix. The contract (CTG-0002:196-197) still requires 'proxy quebrado → nao-zero', so the sensor needs a new form, not just deletion.",
+      "fix": "Say it explicitly. Remove the 'proxy ignorado' scenario as it stands. Replace it with a mutated fixture: one `frontends[].proxyUrl` points at the backend port (:3001), or any `/v1` read that does not go through `rootUrl`. The smoke must then report `complete:false` with a row for that frontend and reason `proxy_bypassed`. The success test keeps its check that no `/v1` read uses :3001."
+    },
+    {
+      "severity": "medium",
+      "item": "handoff-report-rows",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 54,
+      "claim": "Items 1 and 4 now require `report.rows` with a target, a specific reason and `complete`. The prompt leaves the schema to the Inspector and only asks for it to be reported. TASK-0007.md:53-60 fixes `runSmoke({ targets, fetchImpl })` but not the `targets`/`rows` shape. If the orchestrator does not carry the chosen shape into the TASK-0007 prompt, the Engineer will have to reverse-engineer it from the tests. The success sensor also accepts two PEC locations (`report.pec` or `report.targets.pec`, contract.test.mjs:223), which keeps an ambiguous interface alive, against item 3.",
+      "fix": "In item 3 or 4, require one canonical location per field. Examples: `report.rows[]` with `{ target, url, status, reason }` and `report.complete`, PEC as a row with `reason: 'not_built_r0031'`, and no alternative paths in the asserts. After the run, record the reported shape in the TASK-0007 prompt, with a new PC and prompt-review."
+    },
+    {
+      "severity": "low",
+      "item": "4-ch-503-wrong-message-literal",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 42,
+      "claim": "The wrong-message 503 does not specify which text to inject. A plausible real case is another 503 from the same adapter, for example `${name} is not a valid URL` (pades-signing.http-adapter.ts:55). Using that makes the sensor more realistic than an arbitrary text. Not blocking.",
+      "fix": "Optionally suggest injecting the Nest shape `{ statusCode: 503, message: 'DETRAN_CLINICAL_SIGNING_URL is not a valid URL', error: 'Service Unavailable' }` as the wrong-message 503."
+    }
+  ],
+  "notes": [
+    "PC: sha256(prompts/TASK-0005-escalation.md) = 40dc8eebaadeaba40b88a950b669529807aa70e01353e16436e669dd44ede107. So PC-40dc8eebaadeaba4 matches the file. It is the last entry in compositions.json:114-121 (gpt-5.6-terra/high) and appears in TASK-0005.json in both prompt_composition_id and executor.prompt_composition_id. There are no leftover references to PC-63d473045350cc30.",
+    "Delta from escalation-2, all applied. (1) Nest top-level shape `{ statusCode: 503, message, error: 'Service Unavailable' }`, compared on `body.message`, is at lines 19-21. This matches the three adapters' `ServiceUnavailableException`, which the global `@Catch(DetranError)` filter does not intercept. (2) Backend down: `fetchImpl` rejects with `TypeError('fetch failed')` on `/healthz` or `/readyz`, producing a `backend_unreachable` row. TypeErrors from import or the harness are excluded explicitly (lines 43-46). (3) Old sensors expected to be red are listed by dependency (mock SEFAZ, smoke.mjs, fresh-local-stack profile, SEFAZ health) at lines 48-51. The low finding on literal line breaks was also covered ('espaco simples').",
+    "The three CH literals were confirmed against the off/not-configured branches: pades-signing.http-adapter.ts:70-71 (URL, health or token missing), biometric-verification.http-adapter.ts:37-38 and council-verification.http-adapter.ts:26-27. The local stack does not inject provider URLs or tokens (TASK-0007 item 2), so these are the branches that will fire.",
+    "Checked the four corrections against the current sensors. Messages: contract.test.mjs:173/178/183 hold invented texts and 209 uses `{ error: { message } }`, both correctly flagged. requestId: :94 compares a POST without ID against `refund` with an explicit ID, which contradicts CTG-0002:95-96, correctly flagged. Duplicate happy path: :123-146 (array with `baseUrl`, 8 calls) against :196-238 (object with `frontends`) cannot both pass, correctly flagged. Negatives: :285 injects into every `/v1/` including `/v1/ch/`, and 'backend parado' is a 503 on `/v1`, correctly flagged. No valid sensor is dropped: ephemeral IPv4 port, `test-` marker, DTOs, localhost→IPv4, SefazAdapterError NOT_FOUND/404, 400 BUSINESS_ERROR, 405+Allow, temporary state dir, table+JSON evidence without secrets, SENATRAN/SEFAZ health, PEC 4204 not_built_r0031, Bearer local and CH 403 → blocked_before_adapter are all explicitly kept or implied by item 5.",
+    "Proportionality: iteration_count 2 of max 3, after two luna/medium attempts. Escalating to gpt-5.6-terra/high on the last attempt is proportional. The single write boundary (`tools/stack/contract.test.mjs`) is correct: the seed fix (minutes_id) is already in retry-1, and the prompt forbids editing production code.",
+    "No conflict with CTG-0002 or with Owner decisions. The two medium findings can be fixed in the prompt or at the TASK-0007 handoff without blocking the run."
+  ]
+}

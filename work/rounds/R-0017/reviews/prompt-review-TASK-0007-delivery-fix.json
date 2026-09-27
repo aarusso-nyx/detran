@@ -1,0 +1,57 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 10,
+      "claim": "The prompt tells the Engineer to read A6/A7 in contracts/CTG-0002.md, but A7 is not in the contract. The contract ends A6 at line 196 and has no A7 section. A7 exists only in work/rounds/R-0017/plan.md:288-297, and plan.md is not on the reading list. A7 is the only authority for inserting a synthetic auth.users/auth.memberships row for the default actor 00000000-0000-4000-8000-000000000002. The CTG-0002.md:187-196 text of A6 authorizes only a portal.complaint row. An Engineer reading only the listed files would find no authority for the identity/membership write required at prompt line 41-43. They could then either block or write auth rows without citing any authority.",
+      "fix": "Point line 10 to work/rounds/R-0017/plan.md section Adendas A7 (lines 288-297) as the authority, or have the Architect copy A7 into CTG-0002.md next to A6. Require the report to cite A7 for the auth rows."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 41,
+      "claim": "Item 1 requires the Portal fixture to provide identity and membership for the default actor. The prompt does not list the sources needed to do that safely: backend/database/ddl/02-auth.sql (auth.users; auth.memberships at line 68; the membership role and group tables at lines 86/93/108), the pattern in backend/database/seed/00-fixtures-core.sql:10/42-54, and backend/app/src/detran-runtime.ts:320-323. The TASK-0011 prompt listed them at lines 26-29. The prompt also sets no limits on this write. It does not say to add no role, permission or group rows (roles come only from the token, detran-runtime.ts:315-326). It does not require a .invalid e-mail domain and deterministic ON CONFLICT (tenant_id,user_id) idempotency like the core seed. It does not ban app.role bypasses beyond what portal-fixture.sh:21 already uses. It does not require the fixture to run before all four frontend phases and the restore. The default actor has no fresh membership, which is why the maestro used b0000002 (00-fixtures-core.sql:10/44). So RAIT, Dashboard and TEAT also depend on this row, not only Portal.",
+      "fix": "Add 02-auth.sql users/memberships, the 00-fixtures-core.sql membership lines and detran-runtime.ts DetranLocalTokenVerifier to the reference list. Require a users row plus a single memberships row, tenant a001, is_active, idempotent, with no rows in the membership role or group tables and no policy or RLS change. Require it to be applied after the DB_NAME guard and before the first backend-restart (smoke.mjs:463-496). Require the report to say that all four reads and the CH biometrics/council probes now run as the default actor."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 47,
+      "claim": "Item 2 covers the literal command, the six operations, the requestId echo, the unknown reference, invalid body, 405/Allow, SefazAdapterError and closing in finally. It leaves out three parts of C-02-02 in CTG-0002.md:94-104 and 106-109. First, a deterministic requestId generated when no body is sent (GET), marked as test data and free of secrets. Second, the error envelope { requestId, error: { category, code, message, retryable, providerStatus } } with BUSINESS_ERROR for an invalid body, NOT_FOUND for an unknown identifier, and retryable=false. Third, the requirement that listening be IPv4-loopback only. It also does not say which errors go through SefazHttpAdapter and which need raw HTTP. The adapter methods have fixed verbs, so 405 and a malformed body cannot come through it, while the contract sensor requires the adapter's own normalization. The Inspector sensor at contract.test.mjs:594-614 checks only the markers and exit 0. An implementation that prints markers without these checks would pass that sensor and still fail the C-02-02 closure criterion (CTG-0002.md:259).",
+      "fix": "List these checks explicitly. Assert the generated requestId on the GETs. Assert category, code, retryable=false and providerStatus in the envelope for NOT_FOUND and BUSINESS_ERROR. For 405, assert the Allow header, sent as raw fetch to the mock. Assert that unknown reference and refund go through the adapter and end in a SefazAdapterError instance with the normalized category. Print each marker only after its check passes. Keep the static TS import behind a dynamic import after tsx/esm/api register, since sefaz-adapter-smoke.mjs:2 is static today."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 55,
+      "claim": "Item 4 does not cover the delivery-review low finding at tools/stack/smoke.mjs:350. The CH preconditions are fixed strings in the evidence and are never observed. CTG-0002.md:165-167 requires the report to record that each precondition was met. This finding is inside the Engineer's boundary and would stay open with no owner.",
+      "fix": "Add to item 4: record each CH precondition as observed (query the fixture IDs before the probe, via fixture-ch output) or as explicitly inferred from reaching the adapter, citing the exact message. Never use a hardcoded literal."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 20,
+      "claim": "The write boundary leaves out tools/stack/ch-fixture.sh. If removing the actor from the non-PAdES phases requires the CH fixture to change (for example, if a biometrics or council row references the actor), the Engineer can neither fix it nor ratify it. biometric requireScope (backend/domains/ch/biometrics/src/biometric-lifecycle.service.ts:321-352) does not depend on the actor, so the risk is low. The prompt also gives no path for escalating this case.",
+      "fix": "Allow ch-fixture.sh for fixes tied to the default actor only, or tell the Engineer to report BLOCKED with the file and line instead of working around it in smoke.mjs."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 70,
+      "claim": "The prompt orders pnpm test:stack first. TASK-0011.md:18 says the full test:stack run was skipped because C-01 calls real Docker Compose. That call is revision.test.mjs:469-480, docker compose config, which is read-only. The prompt does not settle this conflict. The TASK-0007 retry-1 runner also could not finish format:check within 30s (TASK-0007-retry-1.md:12), so the required evidence may come back incomplete.",
+      "fix": "State that docker compose config in C-01-10 is allowed because it is read-only and does not start the stack. Require a separate result for each test file (contract.test.mjs and revision.test.mjs) and the exact reason if a runner timeout occurs. Do not accept a partial run as PASS."
+    }
+  ],
+  "notes": [
+    "Ratification boundary: every production file the maestro touched after retry 1 is on the allowed list at prompt line 19-21 (detran-stack.sh: fixture-portal 304-308, build_stack 507-509/527, pg_isready 250, mock env -i 399; smoke.mjs; portal-fixture.sh). The report template at line 82 requires each change to be marked ratified, corrected or reverted. TASK-0011 has already taken over the maestro test (contract.test.mjs:40/70), and TASK-0006-delivery-ratify covers the seed-40 change. That settles both high boundary findings of the delivery review, provided the maestro records the iterations in the Triagem section.",
+    "Inspector reds (TASK-0011.md:13-16) can all be fixed without editing tests. Tenant in arrays is smoke.mjs:199-203 against contract.test.mjs:461. The actor sent to the child is smoke.mjs:423-428 (actorId ?? fixtureActorId) against contract.test.mjs:485-579. The literal command is sefaz-adapter-smoke.mjs:2 against contract.test.mjs:594-614. tsx 4.23.13 is a root devDependency, so registering it inside the script keeps the literal command working without touching package.json.",
+    "A6/A7 are preserved in item 1. The actor key must be deleted, not blanked, from the env merged in command() (smoke.mjs:403-408), because detran-stack.sh:461 passes any value that is present. Only PAdES (smoke.mjs:346) keeps fixtureActorId. The restore (smoke.mjs:452-455) and the signal handler go back to the default roles and actor. AUDITOR, tenant a001 and the concrete ID 0000c2050001 do not change.",
+    "Lifecycle, guards and evidence are covered: SEFAZ start/status/stop/cleanup/timeout, a mock that does not depend on cwd or secrets, the DB_NAME guard before SQL, a preflight with no fixture, the backend restored in finally, positive and negative reports kept separate, PEC read from angular.json, entrypoints resolved through realpath and pathToFileURL, tail -n at detran-stack.sh:255/374/376/583, and /readyz in backend-restart at detran-stack.sh:572-584. The build that now always runs (527) is allowed if justified.",
+    "Outside this prompt and still open: the low finding on the RAIT spec (rait-seed-profiles.integration.spec.ts:292) belongs to the Inspector and was deliberately left out at TASK-0011 item 5. The live gates, pnpm check after A6, docs:check, ci:backend-kernel:local and checkpoint (b) belong to the maestro.",
+    "No high finding: the medium gaps are prompt wording and have simple fixes, so the prompt can be dispatched after these adjustments or with them added as a prompt addendum."
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "state-dir-alignment",
+      "file": "tools/stack/smoke.mjs",
+      "line": 4,
+      "claim": "smoke.mjs falls back to '/tmp/detran-stack'. detran-stack.sh:5 uses '${TMPDIR:-/tmp}/detran-stack', and on macOS TMPDIR is under /var/folders. When `pnpm stack:smoke` (node direct, package.json:44) runs without DETRAN_STACK_STATE_DIR, the aggregate evidence goes to a different directory from the stack's state dir and pid files. C-02-05/06 require the table and JSON in the state dir, and a backend-only restart needs the same pid dir. The retry prompt does not say this.",
+      "fix": "Add to item 6: evidence and pid/restart must use the STATE_DIR resolved by detran-stack.sh. Either run smoke through detran-stack.sh, exporting DETRAN_STACK_STATE_DIR, or make smoke.mjs use the same TMPDIR-based default."
+    },
+    {
+      "severity": "medium",
+      "item": "evidence-redaction-vs-contract",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-retry-1.md",
+      "line": 58,
+      "claim": "The current evidenceRow() swaps persona for 'local-principal' and fixture for 'test-fixture' in the persisted evidence. CTG-0002 §C-02-04 requires the report to record route, persona, public IDs, policy and the precondition met before a 503 counts, and §C-02-05 requires persona and fixture per row. Item 5 only forbids generic labels 'na validacao', so the worker may keep the generic labels in the final evidence. The tests only ban token/bearer/password/secret/userinfo, so they would still pass.",
+      "fix": "Make it explicit: the persisted evidence records the real persona (role code), public fixture IDs, route and policy key for each row, still without headers or credentials. The generic-label substitution in evidenceRow must go."
+    },
+    {
+      "severity": "low",
+      "item": "dashboard-n1",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-retry-1.md",
+      "line": 56,
+      "claim": "The C-02-05 table requires a valid N1 query and an envelope with non-empty alerts on the N1 layer. Item 5 does not mention layer=N1, and it does not ask to validate the served layer or the alerts collection. nonEmpty() accepts any non-empty object whose 'items' is absent.",
+      "fix": "Add: send `?layer=N1` (AlertsQuery accepts N1|N2) and check that the served layer is N1 and that the envelope's alerts collection contains a concrete alert from 81-fixtures-dashboard-state.sql."
+    },
+    {
+      "severity": "low",
+      "item": "council-precondition",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-retry-1.md",
+      "line": 48,
+      "claim": "'conselho pode chegar ao adapter sem fixture' differs from the contract matrix, which lists 'Clínica ativa'. The code supports the prompt: ProfessionalLifecycleService.create calls ensureCouncilCached before assertActiveClinic. This is not a conflict, but the report must justify the ordering.",
+      "fix": "Ask that the report cite professional-lifecycle.service.ts (council check before clinic check), or simply reuse the fixture clinic in the council DTO."
+    }
+  ],
+  "notes": [
+    "PC-70540a9589efc18a confirmed: sha256(TASK-0007-retry-1.md)=70540a9589efc18af58881be04279fa83c2cef0eacff8fbc0c1d0f1058c94c0e, whose prefix matches compositions.json and TASK-0007.json (iteration 1 of max 2).",
+    "Feasibility without touching backend, tests or RAIT seed was checked. detran-runtime.ts accepts DETRAN_LOCAL_ROLES free-form (split/trim) with default actor 00000000-0000-4000-8000-000000000002. policy.ts gives report:create to MEDICO, biometric:capture to MEDICO and others, and professional:create to ADMIN_CLINICA. The /v1 proxy (detran-stack.proxy.json) forwards to backend 3001.",
+    "PAdES is reachable with SQL-only fixtures. The preflight requires exam.professional_id→ch.professional.user_id=actor and a passed ch.biometric_check with kind=MEDICAL|PSYCH, encounter_id and subject_professional_id. That kind/scope is allowed by ck_ch_biometric_check_kind/scope in 45-ch-biometrics.sql. clinicalTrustConfiguration throws the exact contract message.",
+    "The three real adapter messages (pades-signing.http-adapter.ts:71, biometric-verification.http-adapter.ts, council-verification.http-adapter.ts:27) match the offline sensors exactly and contain no word blocked by the evidence regex.",
+    "Idempotency holds: the 503 comes before any report or professional insert, and ensureCouncilCached does not cache on failure.",
+    "detran-stack.sh already provides validate_database_name/die, start_backend/stop_pid_file and cleanup patterns. That is enough for backend-only restart, a trap and restoring the five default roles without new dependencies.",
+    "Not reopened: Owner decisions OD-R17-*, the SEFAZ mock proven offline, and C-02-02/03.",
+    "No high finding: none of the gaps makes the goal impossible, and all can be fixed inside the prompt's authorised scope."
+  ]
+}

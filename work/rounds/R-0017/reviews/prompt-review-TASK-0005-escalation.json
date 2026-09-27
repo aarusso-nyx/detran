@@ -1,0 +1,47 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "1-ch-messages",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 14,
+      "claim": "The prompt asks for the 'three exact messages' of the adapters, but each adapter throws more than one ServiceUnavailableException message. PAdES has 6, biometrics 4 and council 6, including 'failed with HTTP ...' and 'invalid receipt'. The worker could pick a message from a provider-reachable branch instead of the off/not-configured branch that C-02-04 requires.",
+      "fix": "Name the three literals: 'Clinical PAdES signing service is not configured; trust readiness is unavailable' (pades-signing.http-adapter.ts:70, reached from renderAndSign:128), 'Biometric verification provider and processor contract are not configured' (biometric-verification.http-adapter.ts:37) and 'Professional council verification service is not configured' (council-verification.http-adapter.ts:26)."
+    },
+    {
+      "severity": "medium",
+      "item": "3-duplicate-happy-path",
+      "file": "tools/stack/contract.test.mjs",
+      "line": 145,
+      "claim": "The only check that the smoke does GET / on the four frontends is in the old test (calls.length===8, 'four roots'). The complete test at lines 196-238 does not check the roots. 'Preserve toda verificacao que importa' is generic, so removing the old test could silently drop that C-02-05 sensor.",
+      "fix": "State in item 3 that the merged test must check a GET to each frontends[].rootUrl + '/' (4200-4203), no call to PEC 4204 while it is not_built_r0031, and 'Authorization: Bearer local' on the proxy reads."
+    },
+    {
+      "severity": "low",
+      "item": "4-negatives-shape",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-escalation.md",
+      "line": 29,
+      "claim": "The prompt requires a row/target and specific reason but does not set the reason vocabulary or where it goes in the row. That is acceptable because the worker must report the format for TASK-0007. Still, a 503 with the wrong message on CH has to be told apart from the correct 503 in the same run, and the prompt does not say whether the other two CH probes must stay 'complete'.",
+      "fix": "Optional: say that in the CH wrong-message scenario only the injected row gets blocked_before_adapter, and that the other rows keep their state."
+    },
+    {
+      "severity": "low",
+      "item": "2-requestId",
+      "file": "tools/stack/contract.test.mjs",
+      "line": 94,
+      "claim": "The fix is correct against the contract (lines 95-96: deterministic generation, with echo only when requestId is present). The existing GET pair (payment vs generatedGetAgain) already meets the rule. Only the POST comparison against refund is wrong, and item 2 fixes it without dropping the echo checks at lines 83/85/86/88.",
+      "fix": "None required. Optionally say explicitly to add a second identical POST without requestId."
+    }
+  ],
+  "notes": [
+    "Checked: sha256 of TASK-0005-escalation.md = 9315daaa2f9092c614e888d902fe983692e1948b1ef0ef6f663c126de9e95d7d; PC-9315daaa2f9092c6 matches the file, compositions.json and TASK-0005.json (prompt_composition_id and executor).",
+    "Proportionality: escalating to gpt-5.6-terra/high on the 3rd iteration (iteration_count 2, max 3), after luna/medium failed twice on sensor faults, is proportional. Limiting writes to tools/stack/contract.test.mjs is right: the seed spec fix (minutes_id) is already in retry-1 and is outside the scope of these defects.",
+    "Preservation: items 1-5 keep the ephemeral IPv4 port, the 'test-' marker, the DTOs, localhost->IPv4, SefazAdapterError NOT_FOUND/404, 400 BUSINESS_ERROR, 405+Allow, the temporary state dir, the no-secrets check, SENATRAN/SEFAZ health, PEC not_built_r0031 and the direct-backend proxy check (line 220). No valid sensor is removed.",
+    "Negatives: moving 'backend parado' to /healthz|/readyz and removing 'proxy ignorado' (currently a success response, lines 273-277) fixes scenarios that were wrongly injected. Excluding import errors, TypeError and fixture errors from counting as negatives is correct.",
+    "The single interface runSmoke({ targets, fetchImpl }) matches TASK-0007.md:54. No conflict with contract CTG-0002 (C-02-04, C-02-05, lines 168/194-197) or with Owner decisions.",
+    "Out of scope (retry-1 already passed prompt-review): the offline sensor does not check the non-zero exit of the pnpm stack:smoke CLI on failure (C-02-05 line 197)."
+  ]
+}

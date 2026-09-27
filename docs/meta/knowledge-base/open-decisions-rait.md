@@ -376,9 +376,17 @@ sem distinguir; demais valores seguem a convenção da §F.
 
 ## R-0017 — stack local (C-0002)
 
-O CTG-0001 registra as premissas, sem implementar a integração SEFAZ nesta etapa; CTG-0002 as concretiza após decisão. Outras ODs da rodada serão acrescentadas à mesma seção.
+O CTG-0001 registrou as premissas sem implementar a integração SEFAZ. O Owner aceitou as três recomendações em 2026-09-27; CTG-0002 e CTG-0003 concretizam as decisões sem integração externa real.
 
-| ID         | Questão                                                                                       | Premissa adotada até decisão                                                                                                               | Decisor | Fonte                                                                  |
-| ---------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ---------------------------------------------------------------------- |
-| OD-R17-001 | SEFAZ-AM no perfil `local-sandbox`: mock mínimo das seis rotas ou provider `off` fail-closed? | CTG-0001 reporta `pending` em `config` e não inclui SEFAZ em `health`/`start`; proposta de mock mínimo para CTG-0002, sem integração real. | Owner   | `work/rounds/R-0017/plan.md` §Metas 4; `contracts/CTG-0001.md` §Matriz |
-| OD-R17-002 | PAdES clínico, biometria e conselho profissional: desligamento explícito ou mocks locais?     | Adapters falham fechados sem variáveis; CTG-0001 reporta `proposed_off`, sem afirmar serviço mock. Smoke de 503 pertence a CTG-0002.       | Owner   | `work/rounds/R-0017/plan.md` §Metas 4; `contracts/CTG-0001.md` §Matriz |
+| ID         | Questão                                                                                                         | Decisão do Owner (2026-09-27)                                                                                                                                                        | Decisor | Fonte                                                                   |
+| ---------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- |
+| OD-R17-001 | SEFAZ-AM no perfil `local-sandbox`: mock mínimo das seis rotas ou provider `off` fail-closed?                   | **Mock local mínimo das seis rotas**, com dados determinísticos de teste, pela stack; nenhuma integração SEFAZ real. O `pending` de CTG-0001 é estado histórico.                     | Owner   | `work/rounds/R-0017/plan.md` §Metas 4; resposta do Owner nesta conversa |
+| OD-R17-002 | PAdES clínico, biometria e conselho profissional: desligamento explícito ou mocks locais?                       | **Desligamento explícito** dos três no perfil local; não configurar suas variáveis e provar os 503 fail-closed no smoke. O `proposed_off` de CTG-0001 é histórico.                   | Owner   | `work/rounds/R-0017/plan.md` §Metas 4; resposta do Owner nesta conversa |
+| OD-R17-003 | `stack-smoke` opcional/manual ou check obrigatório de proteção de `main`?                                       | **Manual/opcional**, somente `workflow_dispatch`, fora dos cinco checks obrigatórios de proteção de `main`.                                                                          | Owner   | `work/rounds/R-0017/plan.md` §Metas 7; resposta do Owner nesta conversa |
+| OD-R17-004 | A rota Portal do C-02-05 exige denúncia, mas `70-fixtures-portal.sql` não a semeia: fixture exclusiva da stack? | **Sim.** Denúncia sintética determinística só em `detran_local_stack`, aplicada pelo smoke e fora dos perfis de seed; a fonte antiga permanece como critério histórico não cumprido. | Owner   | `work/rounds/R-0017/plan.md` A6; resposta do Owner nesta conversa       |
+
+Nota de implementacao A7: a fixture local tambem cria/reativa somente
+`auth.users` e `auth.memberships` do ator default para que a denuncia e as
+leituras do smoke passem pela tenancy/RLS normal. Isso nao amplia a decisao
+OD-R17-004: nenhuma role, grupo, permissao, policy, fixture canonica ou
+banco fora de `detran_local_stack` e alterado.

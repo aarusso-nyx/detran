@@ -1,0 +1,128 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "FAIL",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "work/rounds/R-0017/reports/TASK-0007-maestro-adenda.md",
+      "line": 6,
+      "claim": "The maestro changed files owned by workers while declaring itself Architect/Engineer. It edited tools/stack/portal-fixture.sh, tools/detran-stack.sh (fixture-portal at 298-307, build_stack at 509/527, pg_isready at 250) and tools/stack/smoke.mjs, and it wrote the Portal guard test in tools/stack/contract.test.mjs:13, which checks the fixture it created itself. This breaks orchestra/README section 4 item 14 (tests only by the Inspector) and item 1 / Art. 10 (whoever defines the reference does not act on it). It also breaks the R-0012 lesson that any gate finding inside a worker boundary goes back to that worker in a restricted iteration. maestro-prompt.template section 7 requires triage followed by a worker retry, not a direct fix.",
+      "fix": "Revert the maestro edits, or have their owners ratify them, in restricted iterations under their own PCs. The Inspector authors or takes over the A6 guard test in contract.test.mjs. The TASK-0007 Engineer applies portal-fixture.sh, fixture-portal, build_stack, pg_isready and the smoke.mjs corrections. Record each iteration in section Triagem. The other path is an explicit Owner exception recorded in plan.md and in OD."
+    },
+    {
+      "severity": "high",
+      "item": 1,
+      "file": "backend/database/seed/40-fixtures-rait-org-fresh-local-stack.sql",
+      "line": 74,
+      "claim": "The maestro changed the TASK-0006 fixture itself: the rait_minutes ON CONFLICT DO UPDATE became DO NOTHING (TASK-0006-maestro-adenda.md). The change is technically correct, but it was made in the Engineer's write boundary after the worker reported BLOCKED, with no restricted worker iteration.",
+      "fix": "Send the change to a restricted TASK-0006 Engineer iteration, or have that Engineer ratify it under its own PC, and record it in section Triagem as plant-bug with the owner named."
+    },
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "tools/stack/smoke.mjs",
+      "line": 426,
+      "claim": "restartFor always sets DETRAN_LOCAL_ACTOR_ID, falling back to fixtureActorId (...0000b0000002). So the Portal phase runs with the fixture actor, not the default actor that CTG-0002:182 requires and A6 keeps. restore() (line 454) also leaves the backend on actor b0000002 instead of the default. detran-runtime.ts:322 uses ...000000000002 when the variable is unset. The smoke therefore does not bring back the default the contract requires (CTG-0002:155 and 199-200).",
+      "fix": "In command()/restartFor, remove DETRAN_LOCAL_ACTOR_ID from the child env (delete the key, do not pass an empty string) for the frontend phases and for restore. Pass actorId only to CH probes that declare it (PAdES). The Inspector adds a runCli sensor that checks the env of every backend-restart, including the final restore."
+    },
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "tools/stack/sefaz-adapter-smoke.mjs",
+      "line": 2,
+      "claim": "The C-02-02 command written in CTG-0002:24, `node tools/stack/sefaz-adapter-smoke.mjs`, cannot run. It imports packages/sefaz-adapter/src/index.ts, which re-exports './client.js', './domain.js' and others. Those .js files do not exist in src/, and Node 24 type stripping does not map .js to .ts, so the import fails with ERR_MODULE_NOT_FOUND unless tsx is loaded. The script also covers only the six positive paths. It skips the errors the criterion requires (unknown reference, invalid body, 405/Allow, SefazAdapterError normalization) and checks no DTO.",
+      "fix": "Make the command runnable: add a script, for example `stack:sefaz-smoke`: `node --import tsx tools/stack/sefaz-adapter-smoke.mjs`, or amend the command through a numbered addendum. Add assertions for the DTOs, the requestId echo and the three error cases, matching contract.test.mjs:63-135."
+    },
+    {
+      "severity": "high",
+      "item": 6,
+      "file": "tools/stack/revision.test.mjs",
+      "line": 623,
+      "claim": "CTG-0002:245 requires start, stop, status, cleanup and timeout sensors for the SEFAZ lifecycle. The only new sensor is the SEFAZ timeout test. assertRecordedProcessesStopped covers only the pnpm stub PIDs (line 112). No test asserts that pids/sefaz-mock.pid is removed or that the node mock ended, and no stop or status test mentions sefaz-mock. The harness also does not stub node, so `start` in tests launches a real listener on 127.0.0.1:3999.",
+      "fix": "Inspector: add a node stub to createStackHarness that records its PID, or assert that sefaz-mock.pid is absent and its PID is dead after the failed start. Add assertions for the SEFAZ line in stop (pid_file removed) and in status (sefaz-mock plus the URL http://127.0.0.1:3999/health). Keep the existing C-01 sensors."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-seed-profiles.integration.spec.ts",
+      "line": 292,
+      "claim": "The test title says 'banco scratch novo', but fresh-local-stack is applied to a scratch database the previous test already seeded with fresh, so it is not applied separately. legacy-upgrade is never applied with its precondition (only its refusal is checked, line 287). The six legacy IDs are searched for only in inf.rait_jeton_line, not in rait_pool_member, rait_session or rait_minutes, and not in the fixture text (CTG-0002:72-77).",
+      "fix": "Use a separate scratch database, or reset before the local profile. Look for the legacy IDs in the three referenced tables as well. Either apply legacy-upgrade with its baseline, or record by addendum that the static manifest comparison replaces that separate run."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "tools/stack/smoke.mjs",
+      "line": 199,
+      "claim": "The tenant check reads only a top-level body.tenantId. Portal, RAIT and TEAT return arrays, so tenant_mismatch is never checked there. The 'array do tenant' requirement ends up resting only on the fixture ID.",
+      "fix": "Check that every item in itemsOf(body) that has tenantId/tenant_id equals expectedTenant, and add an offline negative case with an array."
+    },
+    {
+      "severity": "low",
+      "item": 6,
+      "file": "tools/stack/smoke.mjs",
+      "line": 447,
+      "claim": "The C-02-06 negative smoke, run after stack:stop, overwrites smoke-report.json/.txt from the positive run in the same DETRAN_STACK_STATE_DIR. The checkpoint's positive evidence is lost unless it is copied first.",
+      "fix": "Write the preflight failure under its own suffix (for example smoke-report-preflight), or add a timestamp or run-id, and state in checkpoint-b.md which file belongs to which run."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "tools/stack/smoke.mjs",
+      "line": 578,
+      "claim": "The entrypoint guard compares import.meta.url with `file://${process.argv[1]}` without URL encoding or realpath. With spaces, non-ASCII characters or symlinks in the path, `pnpm stack:smoke` exits 0 without running anything, which is a false green. The same guard in tools/stack/mocks/sefaz-mock.mjs:247 makes the mock exit without listening.",
+      "fix": "Use `import.meta.url === pathToFileURL(realpathSync(process.argv[1])).href` in both files."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "tools/detran-stack.sh",
+      "line": 374,
+      "claim": "`tail --lines=80` is not supported by BSD tail on macOS/Darwin, where the stack runs. The SEFAZ mock diagnostic is silently lost because of `|| true`. The same applies at lines 376 and 583, which extends an existing pattern.",
+      "fix": "Use `tail -n 80` in the three calls; the tests' tail stub keeps passing."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "tools/detran-stack.sh",
+      "line": 580,
+      "claim": "backend-restart waits only for /healthz before handing control back to the smoke. /readyz may still be failing, which can cause flaky proxy/CH probes after a persona change.",
+      "fix": "Wait for /healthz and /readyz, as health_targets does."
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "tools/stack/smoke.mjs",
+      "line": 215,
+      "claim": "The PEC state is hardcoded as not_built_r0031. CTG-0002:175 makes 4204 conditional on apps/pec/web/angular.json existing. Today the file does not exist, so the result is correct, but the rule is not implemented.",
+      "fix": "Compute the state with existsSync('apps/pec/web/angular.json') and include the 4204 root when it exists."
+    },
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "tools/stack/smoke.mjs",
+      "line": 350,
+      "claim": "The CH preconditions are fixed strings in the evidence and are not observed. Only the exact adapter message proves the probe got past the preconditions, while CTG-0002:166 asks the report to record that each precondition was met.",
+      "fix": "Record the precondition as inferred from reaching the adapter, citing the exact message, or query the fixture IDs before the probe and put the result in the row."
+    },
+    {
+      "severity": "low",
+      "item": 1,
+      "file": "tools/detran-stack.sh",
+      "line": 527,
+      "claim": "start now always rebuilds (topological build_stack) instead of building only when dist/main.js is missing. This lifecycle change sits outside A4/A5, and no C-02 criterion or addendum mentions it.",
+      "fix": "Confirm that no C-01 criterion covers conditional build on start. If one does, record a numbered addendum; if not, record the change in section Triagem as plant-bug with the reason."
+    }
+  ],
+  "notes": [
+    "C-02-01: the fresh-local-stack manifest has exactly 19 files in contract order, and fresh/legacy-upgrade are byte-for-byte unchanged in seed.sh. Both fixtures use their own IDs, reference existing fresh users (b0000005/08/11/17) and are idempotent through ON CONFLICT.",
+    "C-02-02/03: the mock uses only node:http, binds 127.0.0.1:3999 in its CLI, starts with env -i PATH/HOME, uses only BUSINESS_ERROR/NOT_FOUND and returns 405 with Allow. Config shows sefaz mock active and the three external providers off, with no new URL variable in the allowlist.",
+    "A6: portal-fixture.sh checks the database name before any psql, is idempotent, and is not part of any canonical profile. OD-R17-004 is recorded, and the historical source is kept and declared not met.",
+    "Removing doesNotMatch(/sefaz/i) is authorized by A4 and replaced with a positive 3999 probe; no other C-01 sensor was weakened.",
+    "The PAdES probe signs before inserting into ch.report, so repeating the smoke does not create a conflicting report.",
+    "Pending gates, not judged: pnpm check after A6, docs:check, ci:backend-kernel:local on a clean worktree and the formal checkpoint (b). None is PASS in this review.",
+    "The FAIL is only for the maestro boundary violation (items 1-2 of the findings). The other highs can be fixed in the next cycle."
+  ]
+}

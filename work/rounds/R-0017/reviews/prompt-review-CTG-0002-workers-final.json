@@ -1,0 +1,41 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": "Truncated sentence in TASK-0007 step 1",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 39,
+      "claim": "Line 39 ends with 'Nao introduza override de URL/porta na allowlist do backend.' and line 40 continues with 'dados deterministicos de teste, requestId ecoado/gerado, respostas de erro...'. The inserted sentence cut off the original clause, so the list of mock obligations no longer has a verb. A worker can still follow it, because the fixed DTOs and errors are in C-02-02 and in the TASK-0005 tests.",
+      "fix": "Rewrite it as 'Nao introduza override de URL/porta na allowlist do backend. O mock serve dados deterministicos de teste, ...' in a later revision. This does not block dispatch."
+    },
+    {
+      "severity": "low",
+      "item": "Who runs the synthetic CH script in checkpoint (b) is not stated",
+      "file": "work/rounds/R-0017/plan.md",
+      "line": 150,
+      "claim": "TASK-0007.md:65-70 allows an idempotent CH fixture script under tools/stack/ and requires DB_NAME=detran_local_stack with the name guard. Neither the prompt nor checkpoint (b) (plan.md:149-151) says whether stack:smoke calls this script or the maestro runs it after db-reset. If neither does, the PAdES and biometrics probes stop at blocked_before_adapter. The smoke then fails honestly, and checkpoint (b) has to be rerun.",
+      "fix": "Have the TASK-0007 report name the invocation (inside smoke.mjs or as an explicit command). The maestro then adds that step to checkpoint (b) between stack:start and stack:smoke if needed. This does not block dispatch."
+    },
+    {
+      "severity": "low",
+      "item": "Nothing checks the name guard of the CH script",
+      "file": "work/rounds/R-0017/prompts/TASK-0005.md",
+      "line": 64,
+      "claim": "TASK-0005 fixes the createSefazMockServer and runSmoke interfaces. It does not ask the Inspector for a test that the CH fixture script refuses a DB_NAME other than detran_local_stack. The guard therefore depends on TASK-0007's implementation and on the existing guard in detran-stack.sh:86.",
+      "fix": "Optionally, the maestro can confirm in delivery-review that the script goes through die at detran-stack.sh:86, or that it reuses that guard verbatim. This does not block dispatch."
+    }
+  ],
+  "notes": [
+    "Hashes confirmed with shasum -a 256: TASK-0005.md=851f1436e42ea11c…, TASK-0006.md=95cc7a37908fe373…, TASK-0007.md=e47639d85c7a5c7f…. They match compositions.json and prompt_composition_id/executor.prompt_composition_id in tasks/TASK-0005.json:24,33 (PC-851f1436e42ea11c), TASK-0006.json:24,33 (PC-95cc7a37908fe373) and TASK-0007.json:28,40 (PC-e47639d85c7a5c7f).",
+    "Medium 1 of workers-3 is resolved. TASK-0005.md:64-69 has the Inspector define createSefazMockServer({ host, port }), with the CLI fixed at 127.0.0.1:3999, and runSmoke({ targets, fetchImpl }), with the CLI using the stack's fixed table. Ephemeral ports are passed as parameters, with no new URL/port in the backend allowlist. TASK-0007.md:37-39 and 53-56 implement the same signatures and keep the CLI defaults and fixed ports, without external destinations.",
+    "Medium 2 of workers-3 is resolved. TASK-0007.md:65-71 allows synthetic CH data only in an idempotent script under tools/stack/, with deterministic test-marked IDs. It requires DB_NAME=detran_local_stack and the existing name guard (detran-stack.sh:23-25,86) before any SQL. It forbids touching backend/database/seed/** or another database, keeps this data out of the RAIT profile and PEC R-0031, and exempts the council probe when it reaches the adapter first. TASK-0006 (seed) and the RAIT profile stay untouched.",
+    "Low 'onde apropriado' is resolved. TASK-0005.md:55-59 requires the six routes, requestId and errors through SefazHttpAdapter itself via node --import tsx importing packages/sefaz-adapter/src/index.ts, and limits direct fetch to health, 405/Allow and loopback. TASK-0007.md:41-44 requires the same, in a child process or probe (compatible with sefaz-adapter-smoke.mjs from CTG-0002.md:24).",
+    "Low checkpoint (b) is resolved. plan.md:149-151 now includes 'pnpm stack:stop → pnpm stack:smoke (exit nao-zero com backend parado)', aligned with C-02-06 and the acceptance criterion at plan.md:174.",
+    "Checked for the three 503 probes: TASK-0005.md:74-80 requires status 503 plus the exact message of each adapter, or blocked_before_adapter. TASK-0007.md:72-74 forbids a simulated 503 and bypassing policy/RLS, and keeps the smoke non-zero if a probe stops before its adapter.",
+    "Owner decision and A4 unchanged. TASK-0005 updates only the pending/proposed_off states and the SEFAZ exclusion authorized by A4, and keeps the other C-01 asserts. TASK-0007 keeps the five default roles; the DETRAN_LOCAL_ROLES override requires restoring the default. Scopes are still disjoint (Inspector: spec + tools/stack/*.test.mjs; Engineer: detran-stack.sh, tools/stack/ production files, package.json scripts).",
+    "No new high. The three notes above are low and can be handled in delivery-review or in the maestro's checkpoint (b)."
+  ]
+}

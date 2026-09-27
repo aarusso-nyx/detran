@@ -1,0 +1,29 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": "per-phase-overwrite",
+      "file": "tools/stack/smoke.mjs",
+      "line": 198,
+      "claim": "runSmoke always writes the fixed names smoke-report.json/.txt to the module-level evidenceDir. If the CLI calls runSmoke once per persona phase, each phase overwrites the previous one before the aggregate is built. Item 6 already asks for suffixed per-phase files and a stable-name aggregate, but it does not say who writes them. The offline test only needs at least one .json file and one non-.json file in the dir, and every file there must be free of forbidden words.",
+      "fix": "Optional: say the phase suffix and the aggregate are written by the CLI or wrapper from each returned `report`, or through an optional runSmoke parameter such as `evidenceName`. Keep runSmoke's default write so the offline tests stay compatible."
+    }
+  ],
+  "notes": [
+    "I read all the requested files and checked the PC against the SHA, then assessed only the corrections asked for.",
+    "PC-55e67869b9f48a41 is confirmed. sha256(prompts/TASK-0007-retry-1.md)=55e67869b9f48a41290bbd71adc81e86372a77397001c7b3c769eb287d4930d3, which matches compositions.json:125-126 and TASK-0007.json:28/40 (iteration_count 1 of max_iterations 2, gpt-5.6-terra/high). HEAD is e62aeaeb.",
+    "Review 1, STATE_DIR: fixed. Item 6 (lines 75-79) requires the STATE_DIR resolved by detran-stack.sh (`${TMPDIR:-/tmp}/detran-stack`), either through a wrapper that exports DETRAN_STACK_STATE_DIR or through identical resolution. smoke.mjs:4 still falls back to '/tmp/detran-stack' and is the explicit target. The offline tests always inject DETRAN_STACK_STATE_DIR (contract.test.mjs:242/304/342), so changing the fallback does not break them.",
+    "Review 1, persona/IDs: fixed. Lines 67-73 require the real role code, public IDs, route, policy key and precondition in the persisted evidence, and they order removal of the generic substitution in evidenceRow() (smoke.mjs:10-17). No test asserts 'local-principal' or 'test-fixture'. Role codes (AUDITOR, MEDICO, ADMIN_CLINICA, rait-coordinator, dash-operator, field-agent) and policy keys (ch:report:create, ch:biometric:capture) do not trigger the regex at contract.test.mjs:239.",
+    "Review 1, Dashboard N1: fixed, and adjusted by review 2. Lines 59-62 require `?layer=N1`, non-empty `items[]`, `item.layer === 'N1'` for every item, and a concrete alert ID from 81-fixtures-dashboard-state.sql. They also state that the real payload has no `body.layer`, which removes the live false negative.",
+    "Review 2, optional matchers: fixed. Lines 65-67 make ID/layer matchers and CH metadata optional target fields, used only by the CLI, and keep compatibility with the offline smokeFixture. That fixture (contract.test.mjs:124-157) sends CH probes without body/persona/fixture, and its mock returns items [{id:'fixture-001'}] without item.layer. So the matchers must stay inactive when absent, and the prompt says so.",
+    "Review 2, tenant by header+fixture: fixed. Lines 62-64 prove tenant through the x-detran-tenant-id header (already in authHeaders, smoke.mjs:7) plus a public ID seeded under …a001/RLS, and check `tenantId` only when present. This matches the conditional check at smoke.mjs:128-133 and the tenant_mismatch sensor (contract.test.mjs:274-279).",
+    "Review 2, forbidden words in preconditions: fixed. Lines 70-72 require neutral codes (`adapter_unconfigured`, `signing_url_absent`) and forbid text containing the words. The three real adapter messages (contract.test.mjs:142-154) contain none of the words in the regex.",
+    "Feasibility without touching backend, tests or RAIT seed: holds. The CH fixture goes in a separate script under tools/stack/ with the DB_NAME guard from detran-stack.sh. The three 503s go through the proxy with exact messages, with blocked_before_adapter otherwise (already implemented at smoke.mjs:152-180 and covered by contract.test.mjs:317-353). Personas are switched only through DETRAN_LOCAL_ROLES with a backend-only restart, a trap and restoration of the five defaults. Preflight /healthz comes before any SQL, with a final aggregate report on the negative path too (item 1 plus item 6). The authorised scope (tools/detran-stack.sh, tools/stack/*, package.json) covers everything.",
+    "Council: item 3 allows reusing the fixture clinic or justifying the ensureCouncilCached→assertActiveClinic order. This is consistent with the C-02-04 matrix and with the first review's observation.",
+    "Not reopened: Owner decisions OD-R17-*, the SEFAZ mock proven offline (C-02-02/03), and PEC not_built_r0031.",
+    "No high finding: none of the remaining gaps makes the goal impossible, and nothing conflicts with CTG-0002 §C-02-04…06."
+  ]
+}

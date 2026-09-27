@@ -1,0 +1,56 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 3,
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 52,
+      "claim": "The instruction to fix the parser says 'vazio/ausente nas fases default e na restauracao deve passar'. That wording allows a DETRAN_LOCAL_ACTOR_ID that is present but empty, which contradicts the current assert in tools/stack/contract.test.mjs:576-580 (actorState 'absent', message 'including empty') and the fix in delivery-review-CTG-0002.json finding 3 ('delete the key, do not pass an empty string'). The real bug is only the trim() at contract.test.mjs:555. It removes the final empty field of the last restart line, so actorValue becomes undefined instead of ''. The actor was already correctly absent (TASK-0007-delivery-fix.md:37). With the current wording, the Inspector can relax actorState to accept 'present' with an empty value, which weakens the default-actor rule.",
+      "fix": "Rewrite lines 50-53: 'Replace .trim().split with a split that keeps trailing fields (for example split(/\\n/) plus filter(Boolean), with no trim on the line). actorState must stay exactly absent in the seven non-MEDICO phases and in the restore. A present variable, even an empty one, fails. Only MEDICO has actorState present with ...b0000002.'"
+    },
+    {
+      "severity": "medium",
+      "item": 1,
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 30,
+      "claim": "The prompt asks the test for the 'comando literal SEFAZ' (contract.test.mjs:594) to prove that invalid_body came from the adapter (SefazAdapterError/BUSINESS_ERROR/400/retryable=false). The literal command is a child process whose only observable output is the stdout markers. sefaz-adapter-smoke.mjs:130-148 emits 'invalid_body' after an adapter check and also after a raw fetch, and the Inspector cannot change that script. On the literal command the sensor is impossible without touching production. The feasible place is the tsx child script at contract.test.mjs:129-219. It already uses the real adapter on an ephemeral port, but today it tests invalid body only with raw fetch (lines 205-213) and 405 without the full envelope (lines 214-218). The prompt does not point there.",
+      "fix": "State that proof of the adapter-origin error, the full 400/404/405 envelope, the generated requestId and the IPv4 check go in the tsx child sensor (contract.test.mjs:129), through adapter.lookupDebt({}) with an instanceof/name SefazAdapterError check. The literal-command sensor keeps its markers and exit code, with no change to sefaz-adapter-smoke.mjs."
+    },
+    {
+      "severity": "medium",
+      "item": 4,
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 62,
+      "claim": "Section 4 asks for separate scratch databases, reapplication, FK and legacy-ID checks in rait-seed-profiles.integration.spec.ts. That spec needs a real Postgres (DETRAN_SEED_ADMIN_DATABASE_URL/DETRAN_SEED_SCRATCH_DATABASE_URL, spec lines 91-111). Line 6 forbids any real database, and lines 62-66 list only offline commands, so the new C-02-01 sensors would be written without ever running. The spec also uses a fixed scratch name (line 10). A second scratch for fresh-local-stack/legacy-upgrade needs its own name and its own create-if-absent/drop guard, which the prompt does not require.",
+      "fix": "Either authorize explicitly running `vitest run` on the spec against the ephemeral local Postgres, with a scratch per profile under distinct names, refusing to reuse and dropping in afterAll, or state that the spec is delivered unexecuted and C-02-01 stays not green. Require that no scratch name matches detran_local_stack or the shared database."
+    },
+    {
+      "severity": "low",
+      "item": 0,
+      "file": "work/rounds/R-0017/tasks/TASK-0011.json",
+      "line": 18,
+      "claim": "The task still shows status 'completed', iteration_count 1 and prompt_composition_id PC-43f78fb54ba03f4a from iteration 1. The prompt (line 72) tells the worker to report the PC from this JSON. Iteration 2 would then be recorded under the PC of the previous composition.",
+      "fix": "Before dispatch, update status/iteration_count to 2 and register the PC for TASK-0011-delivery-coverage.md, then reference it in the report."
+    },
+    {
+      "severity": "low",
+      "item": 3,
+      "file": "tools/stack/revision.test.mjs",
+      "line": 120,
+      "claim": "The prompt correctly asks to replace the unbounded wait in the node stub ('while [[ ! -f .../sefaz-mock.pid ]]; do :; done'), which busy-waits and can hang the suite. The prompt does not set a numeric bound and does not say the diagnostic must show up as a test failure rather than a stub exit.",
+      "fix": "Set a bound (for example 50 x 0.1s using the real sleep, or a counter) and require a stderr message naming sefaz-mock.pid."
+    }
+  ],
+  "notes": [
+    "The allowed boundary is correct: only contract.test.mjs, revision.test.mjs and the RAIT spec (prompt:22-26). It keeps the rule against changing production to fix a test, and against weakening asserts.",
+    "Portal (item 2) is feasible offline: createPortalCommandStubs (contract.test.mjs:19-37) already captures the SQL sent over stdin to docker exec, and the DB_NAME negative already exists (line 40). The ordering check for preflight → fixture-portal → frontend phases can be recorded by the bash stub at line 492.",
+    "The restore of the five roles is already asserted at contract.test.mjs:571. Item 3 only needs to keep it.",
+    "The SEFAZ lifecycle start/status/stop with the PID removed and no real listener is already at revision.test.mjs:427-462. The timeout/diagnostic sensor with tail is at 675-693. The prompt keeps both.",
+    "No new sensor requires a real external resource: the adapter mock uses port 0 (sefaz-adapter-smoke.mjs:49, contract.test.mjs:136), and 3999 appears only as a string. The only real Docker call is the read-only `docker compose config` in C-01-10 (revision.test.mjs:469), which prompt:63 allows.",
+    "Scratch isolation: the spec refuses to reuse an existing database (spec:~218-224) and drops it only if it created it. The weak point is the single fixed name, covered in the medium finding for item 4.",
+    "Global format:check no longer fails: prettier --check on the R-0017 prompts passes now, so the block in TASK-0007-delivery-fix.md:25 is gone."
+  ]
+}

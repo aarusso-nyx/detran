@@ -28,6 +28,9 @@ MOCK_COMPOSE_FILE="$ROOT_DIR/senatran-mock/docker-compose.yml"
 MOCK_OVERRIDE_FILE="$ROOT_DIR/tools/stack/senatran-mock.compose.yml"
 MOCK_PROJECT="${DETRAN_MOCK_PROJECT:-detran-senatran-mock}"
 BACKEND_PORT='3001'
+SEFAZ_HOST='127.0.0.1'
+SEFAZ_PORT='3999'
+SEED_PROFILE='fresh-local-stack'
 
 declare -a FRONTEND_NAMES=(portal rait dashboard teat pec)
 declare -a FRONTEND_DIRS=(
@@ -52,16 +55,19 @@ usage() {
 Usage: tools/detran-stack.sh <command> [options]
 
 Commands:
-  start [--no-mock]  Start database, optional SENATRAN mock, backend and web apps
+  start [--no-mock]  Start database, mocks, backend and web apps
   stop               Stop only this project's processes and containers
   restart [--no-mock]
+  backend-restart    Restart only the backend with the current local roles
   status             Show managed processes, Docker services and URLs
-  logs <service>     Follow logs: db|mock|backend|portal|rait|dashboard|teat
+  logs <service>     Follow logs: db|mock|sefaz-mock|backend|portal|rait|dashboard|teat
   build              Build the backend and its workspace dependencies
-  db-init            Apply DDL and the fresh demonstration seed without reset
+  db-init            Apply DDL and the fresh-local-stack seed without reset
+  fixture-portal     Apply the ephemeral C-02-05 Portal smoke fixture
+  fixture-ch         Apply the ephemeral C-02-04 clinical smoke fixture
   config             Print resolved, secret-free stack configuration as JSON
   health             Probe active backend, mock and frontend HTTP endpoints
-  db-reset           Recreate disposable DB detran_local_stack and apply fresh seed
+  db-reset           Recreate disposable DB detran_local_stack and apply fresh-local-stack seed
   help               Show this help
 
 Environment overrides:
@@ -183,23 +189,24 @@ config_stack() {
     frontend_json+="$(node -e 'const [name,directory,port,project,state,command]=process.argv.slice(1); process.stdout.write(JSON.stringify({name,directory,port:Number(port),project,state,...(command?{command}:{})}))' "${FRONTEND_NAMES[$index]}" "apps/${FRONTEND_NAMES[$index]}/web" "${FRONTEND_PORTS[$index]}" "${FRONTEND_PROJECTS[$index]}" "$state" "$command"),"
   done
   frontend_json="[${frontend_json%,}]"
-  node - "$STATE_DIR" "$DB_CONTAINER" "$DB_VOLUME" "$DB_HOST" "$DB_PORT" "$DB_USER" "$DB_NAME" "$DB_IMAGE" "$timeout" "$mock_state" "$frontend_json" <<'NODE'
-const [stateDir, container, volume, host, port, user, name, image, timeout, mockState, frontends] = process.argv.slice(2);
+  node - "$STATE_DIR" "$DB_CONTAINER" "$DB_VOLUME" "$DB_HOST" "$DB_PORT" "$DB_USER" "$DB_NAME" "$DB_IMAGE" "$timeout" "$mock_state" "$frontend_json" "$SEED_PROFILE" <<'NODE'
+const [stateDir, container, volume, host, port, user, name, image, timeout, mockState, frontends, seedProfile] = process.argv.slice(2);
 const config = {
   schema: 'detran-stack-config/v1', state_dir: stateDir,
   database: { container, volume, host, port: Number(port), user, name, image, platform: 'linux/amd64' },
-  seed: { profile: 'fresh' }, timeouts: { health_seconds: Number(timeout) },
+  seed: { profile: seedProfile }, timeouts: { health_seconds: Number(timeout) },
   services: {
     backend: { state: 'active', host: '127.0.0.1', port: 3001, health: ['/healthz', '/readyz'] },
     senatran_mock: { state: mockState, host: '127.0.0.1', port: 3000, health: ['/health'] },
+    sefaz_mock: { state: 'active', host: '127.0.0.1', port: 3999, health: ['/health'] },
     frontends: JSON.parse(frontends),
   },
   providers: {
     senatran: { provider: 'mock', state: 'adapter_only' },
-    sefaz: { state: 'pending', decision: 'OD-R17-001' },
-    pades: { state: 'proposed_off', decision: 'OD-R17-002' },
-    biometrics: { state: 'proposed_off', decision: 'OD-R17-002' },
-    council: { state: 'proposed_off', decision: 'OD-R17-002' },
+    sefaz: { provider: 'mock', state: 'active', decision: 'OD-R17-001' },
+    pades: { state: 'off', decision: 'OD-R17-002' },
+    biometrics: { state: 'off', decision: 'OD-R17-002' },
+    council: { state: 'off', decision: 'OD-R17-002' },
     bank: { provider: 'createMockBankPort', state: 'in_process' },
     normative_signer: { provider: 'local-unsigned', state: 'in_process' },
     authentication: { provider: 'DetranLocalTokenVerifier', state: 'in_process' },
@@ -240,7 +247,7 @@ start_database() {
   fi
 
   for _ in $(seq 1 "$timeout"); do
-    if docker exec "$DB_CONTAINER" pg_isready -U postgres -d postgres >/dev/null 2>&1; then
+    if docker exec "$DB_CONTAINER" pg_isready -h 127.0.0.1 -U postgres -d postgres >/dev/null 2>&1; then
       return
     fi
     sleep 1
@@ -261,8 +268,8 @@ database_roles_exist() {
 
 seed_database() {
   database_env_array
-  log "applying fresh demonstration seed to $DB_NAME"
-  env "${DATABASE_ENV[@]}" SEED_PROFILE=fresh bash "$ROOT_DIR/backend/database/seed.sh"
+  log "applying $SEED_PROFILE demonstration seed to $DB_NAME"
+  env "${DATABASE_ENV[@]}" SEED_PROFILE="$SEED_PROFILE" bash "$ROOT_DIR/backend/database/seed.sh"
 }
 
 init_database() {
@@ -286,6 +293,18 @@ reset_database() {
   log "resetting disposable database $DB_NAME"
   env "${DATABASE_ENV[@]}" DETRAN_LOCAL_STACK_FULL_AUTHORIZED=1 pnpm --dir "$ROOT_DIR" backend:db:reset
   seed_database
+}
+
+fixture_ch() {
+  validate_database_name
+  [[ $# -eq 0 ]] || die "fixture-ch accepts no options"
+  bash "$ROOT_DIR/tools/stack/ch-fixture.sh"
+}
+
+fixture_portal() {
+  validate_database_name
+  [[ $# -eq 0 ]] || die "fixture-portal accepts no options"
+  bash "$ROOT_DIR/tools/stack/portal-fixture.sh"
 }
 
 mock_start() {
@@ -327,6 +346,7 @@ health_targets() {
     'backend http://127.0.0.1:3001/healthz' \
     'backend http://127.0.0.1:3001/readyz'
   mock_disabled || printf '%s\n' 'senatran-mock http://127.0.0.1:3000/health'
+  printf '%s\n' 'sefaz-mock http://127.0.0.1:3999/health'
   local index
   for index in "${!FRONTEND_NAMES[@]}"; do
     [[ "${FRONTEND_STATES[$index]}" == active ]] && printf '%s http://127.0.0.1:%s/\n' "${FRONTEND_NAMES[$index]}" "${FRONTEND_PORTS[$index]}"
@@ -350,8 +370,10 @@ health_stack() {
       echo "health timeout: $service ($url)" >&2
       if [[ "$service" == senatran-mock ]]; then
         docker compose -p "$MOCK_PROJECT" -f "$MOCK_COMPOSE_FILE" -f "$MOCK_OVERRIDE_FILE" logs --tail=80 app >&2 || true
+      elif [[ "$service" == sefaz-mock ]]; then
+        tail -n 80 "$LOG_DIR/sefaz-mock.log" >&2 || true
       else
-        tail --lines=80 "$LOG_DIR/$service.log" >&2 || true
+        tail -n 80 "$LOG_DIR/$service.log" >&2 || true
       fi
       return 1
     fi
@@ -361,6 +383,22 @@ health_stack() {
 
 backend_pid_file() {
   echo "$PID_DIR/backend.pid"
+}
+
+sefaz_pid_file() { echo "$PID_DIR/sefaz-mock.pid"; }
+
+start_sefaz_mock() {
+  local pid_file log_file
+  pid_file="$(sefaz_pid_file)"
+  pid_running "$pid_file" && { log 'SEFAZ mock already running'; return; }
+  rm -f "$pid_file"
+  log_file="$LOG_DIR/sefaz-mock.log"
+  log "starting SEFAZ mock on http://$SEFAZ_HOST:$SEFAZ_PORT"
+  (
+    cd "$ROOT_DIR"
+    exec env -i "PATH=$PATH" "HOME=${HOME:-/tmp}" node tools/stack/mocks/sefaz-mock.mjs
+  ) >"$log_file" 2>&1 &
+  echo $! >"$pid_file"
 }
 
 frontend_pid_file() {
@@ -468,11 +506,11 @@ start_frontends() {
 
 build_stack() {
   log "building backend and workspace dependencies"
-  pnpm --dir "$ROOT_DIR" build
+  pnpm --dir "$ROOT_DIR" -r --filter '@detran/app...' build
 }
 
 start_stack() {
-  local with_mock=1 mock_started=0
+  local with_mock=1 mock_started=0 sefaz_started=0
   if [[ "${1:-}" == --no-mock ]]; then
     with_mock=0
   elif [[ "${1:-}" != "" ]]; then
@@ -486,27 +524,31 @@ start_stack() {
   fi
   require_runtime
   init_database
-  [[ -f "$ROOT_DIR/backend/app/dist/main.js" ]] || build_stack
+  build_stack
+  start_sefaz_mock
+  sefaz_started=1
   if [[ "$with_mock" == 1 ]]; then
     if ! mock_start; then
       mock_stop >/dev/null 2>&1 || true
+      cleanup_failed_start "$mock_started" "$sefaz_started"
       return 1
     fi
     mock_started=1
   fi
   if ! start_backend || ! start_frontends || ! health_stack; then
-    cleanup_failed_start "$mock_started"
+    cleanup_failed_start "$mock_started" "$sefaz_started"
     return 1
   fi
   log "stack started; run '$0 status' for URLs and health"
 }
 
 cleanup_failed_start() {
-  local mock_started="$1" index
+  local mock_started="$1" sefaz_started="$2" index
   for index in "${!FRONTEND_NAMES[@]}"; do
     stop_pid_file "$(frontend_pid_file "${FRONTEND_NAMES[$index]}")"
   done
   stop_pid_file "$(backend_pid_file)"
+  [[ "$sefaz_started" == 1 ]] && stop_pid_file "$(sefaz_pid_file)"
   [[ "$mock_started" == 1 ]] && mock_stop >/dev/null 2>&1 || true
 }
 
@@ -516,6 +558,7 @@ stop_stack() {
     stop_pid_file "$(frontend_pid_file "${FRONTEND_NAMES[$index]}")"
   done
   stop_pid_file "$(backend_pid_file)"
+  stop_pid_file "$(sefaz_pid_file)"
   clear_mock_disabled
   require_runtime
   mock_stop >/dev/null 2>&1 || true
@@ -524,6 +567,22 @@ stop_stack() {
     docker stop "$DB_CONTAINER" >/dev/null
   fi
   log "stack stopped; volumes preserved"
+}
+
+restart_backend_only() {
+  [[ $# -eq 0 ]] || die "backend-restart accepts no options"
+  pid_running "$(backend_pid_file)" || die "backend is not running"
+  stop_pid_file "$(backend_pid_file)"
+  start_backend
+  local timeout
+  timeout="$(health_timeout)"
+  for _ in $(seq 1 "$timeout"); do
+    health_url backend "http://127.0.0.1:$BACKEND_PORT/healthz" &&
+      health_url backend "http://127.0.0.1:$BACKEND_PORT/readyz" && return
+    sleep 1
+  done
+  tail -n 80 "$LOG_DIR/backend.log" >&2 || true
+  die "backend did not become healthy after restart"
 }
 
 status_process() {
@@ -546,6 +605,7 @@ status_stack() {
     echo "database: not created ($DB_CONTAINER, $DB_HOST:$DB_PORT/$DB_NAME)"
   fi
   status_process backend "$(backend_pid_file)"
+  status_process sefaz-mock "$(sefaz_pid_file)"
   local index
   for index in "${!FRONTEND_NAMES[@]}"; do
     if [[ "${FRONTEND_STATES[$index]}" == active ]]; then
@@ -565,6 +625,7 @@ status_stack() {
   echo
   echo "== URLs =="
   echo "backend:  http://127.0.0.1:$BACKEND_PORT/healthz"
+  echo "sefaz:    http://127.0.0.1:$SEFAZ_PORT/health"
   mock_disabled || echo 'mock:     http://127.0.0.1:3000/health'
   for index in "${!FRONTEND_NAMES[@]}"; do
     [[ "${FRONTEND_STATES[$index]}" == active ]] || continue
@@ -574,10 +635,11 @@ status_stack() {
 
 logs_stack() {
   local service="${1:-}"
-  [[ -n "$service" ]] || die "usage: $0 logs <db|mock|backend|portal|rait|dashboard|teat>"
+  [[ -n "$service" ]] || die "usage: $0 logs <db|mock|sefaz-mock|backend|portal|rait|dashboard|teat>"
   case "$service" in
     db) docker logs --follow "$DB_CONTAINER" ;;
     mock) docker compose -p "$MOCK_PROJECT" -f "$MOCK_COMPOSE_FILE" -f "$MOCK_OVERRIDE_FILE" logs --follow --tail=100 ;;
+    sefaz-mock) tail -f "$LOG_DIR/sefaz-mock.log" ;;
     backend|portal|rait|dashboard|teat)
       tail -f "$LOG_DIR/$service.log"
       ;;
@@ -592,6 +654,7 @@ case "$command" in
   start) start_stack "$@" ;;
   stop) [[ $# -eq 0 ]] || die "stop accepts no options"; stop_stack ;;
   restart) stop_stack; start_stack "$@" ;;
+  backend-restart) restart_backend_only "$@" ;;
   status) [[ $# -eq 0 ]] || die "status accepts no options"; status_stack ;;
   logs) logs_stack "$@" ;;
   config) [[ $# -eq 0 ]] || die "config accepts no options"; config_stack ;;
@@ -599,6 +662,8 @@ case "$command" in
   build) [[ $# -eq 0 ]] || die "build accepts no options"; require_command pnpm; build_stack ;;
   db-init) [[ $# -eq 0 ]] || die "db-init accepts no options"; require_runtime; init_database ;;
   db-reset) [[ $# -eq 0 ]] || die "db-reset accepts no options"; require_runtime; reset_database ;;
+  fixture-ch) fixture_ch "$@" ;;
+  fixture-portal) fixture_portal "$@" ;;
   help|-h|--help) usage ;;
   *) usage; die "unknown command: $command" ;;
 esac

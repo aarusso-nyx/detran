@@ -1,0 +1,61 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "CH probes must go through a frontend proxy",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 57,
+      "claim": "The prompt says the four `/v1` reads go through the correct frontend. It does not say which URL the CH 503 probes use. In the offline fixture, `targets.ch[]` has only `name/path/message` and no URL (`contract.test.mjs:138-156`). The happy path rejects any `/v1` call on port 3001 (`contract.test.mjs:220-221`). An Engineer who sends `POST /v1/ch/...` straight to `backend.url` fails the sensor. Live, CTG-0002 §C-02-04 does not define the route either. This is caught by `pnpm test:stack` and fixable within the write boundary, so it is not high.",
+      "fix": "In item 4, state that the CH probes use a frontend proxy that already exists (`tools/detran-stack.proxy.json` sends `/v1` to 3001 for all four). They use `Authorization: Bearer local` and never call `backend.url` directly. Also state that `runSmoke` accepts a `ch[]` without `url` or body in the offline fixture, and that the CLI table supplies the valid body and IDs from the CH fixture."
+    },
+    {
+      "severity": "medium",
+      "item": "The plan's PC trail does not cover the dispatched PC",
+      "file": "work/rounds/R-0017/plan.md",
+      "line": 305,
+      "claim": "The plan's maestro decisions still record TASK-0007 as `PC-e47639d85c7a5c7f` (workers-final). The current prompt has sha256 `03a8e3260dac9356…`, which matches `PC-03a8e3260dac9356` in `compositions.json:101-102` and `tasks/TASK-0007.json:28,40`. The plan records neither the handoff REVIEW nor the replacement of the PC. The intermediate PC `PC-98a887406086a33a` also appears in no ledger.",
+      "fix": "Before dispatch, the maestro records in `plan.md` the handoff review (REVIEW), this targeted re-review (PASS), and the approval of `PC-03a8e3260dac9356`. It marks `PC-e47639d85c7a5c7f` and `PC-98a887406086a33a` as superseded."
+    },
+    {
+      "severity": "low",
+      "item": "Sensor forbids words, not just credential values",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 57,
+      "claim": "`contract.test.mjs:239` rejects any evidence file containing `token|bearer|password|secret` in any case. The prompt only says 'without credentials'. A column such as `auth: Bearer local`, or a reason/URL with 'token', fails the sensor even though no secret leaked.",
+      "fix": "Add that the table and JSON must not contain the header, the literal `Bearer`, or the words token/password/secret. Record auth as `local-principal`, for example."
+    },
+    {
+      "severity": "low",
+      "item": "No Inspector sensor for the CH script's guard",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 78,
+      "claim": "'Prove refusal of another database' has no `*.test.mjs` sensor, and the Engineer cannot create one (`*.test.mjs` is off-limits). The proof will be a command in the report.",
+      "fix": "Require the report to show the exact command with `DB_NAME=<other>`, its non-zero exit, and the `die` message from `detran-stack.sh:86`, run before any `psql`. The maestro checks this in delivery-review."
+    },
+    {
+      "severity": "low",
+      "item": "Evidence from per-persona phases",
+      "file": "work/rounds/R-0017/prompts/TASK-0007.md",
+      "line": 72,
+      "claim": "The CLI calls `runSmoke` once per phase, and each call writes a table and JSON to `DETRAN_STACK_STATE_DIR`. The prompt does not say whether the aggregated report replaces or accompanies the partial ones. C-02-06 requires the table and JSON of the final run, including with the backend stopped.",
+      "fix": "State that the CLI writes a final aggregated report (`complete` = AND of the phases) with a stable name. Partial files are allowed only with a phase suffix, and the preflight `backend_unreachable` also produces the final table and JSON."
+    }
+  ],
+  "notes": [
+    "SHA verified: `shasum -a 256 prompts/TASK-0007.md` = 03a8e3260dac9356afc41094fb5e9b7edd1281705808aa99ba2f97e3c2aa0fb8, matching `compositions.json:101-102` and `tasks/TASK-0007.json:28` and `:40` (`PC-03a8e3260dac9356`).",
+    "The previous high is fixed. Item 2 requires `seed_database` (the `db-init`/`db-reset` path, today `tools/detran-stack.sh:262-265` with `SEED_PROFILE=fresh`) to really invoke `SEED_PROFILE=fresh-local-stack`. `config.seed.profile` (today `:191`) comes from the same constant, log and usage are updated, the line is cited in the report, and `seed.sh` stays untouched. `characterization.test.mjs` asserts no seed literal, so the change breaks no Inspector test. `revision.test.mjs:277` requires only the new config.",
+    "Medium 'runSmoke evidence' is resolved. Item 3 says `runSmoke` runs no SQL and does not start or stop processes; it uses only `fetchImpl` and writes the table and JSON to `DETRAN_STACK_STATE_DIR`, consistent with `contract.test.mjs:235-240`.",
+    "Medium 'fixture matchers' is resolved. `persona`/`fixture` are row metadata offline, with ID comparison only through an explicit matcher, and the CLI supplies the real C-02-05 matchers. This is compatible with `items:[{id:'fixture-001'}]` in the happy path and keeps the live check (`RAIT-FRESH-2026-000001`, N1 alert, etc.).",
+    "Medium 'personas/negative checkpoint' is resolved. The four personas are listed, including Portal=`AUDITOR`. There are per-phase `runSmoke` calls with merged rows, a `/healthz` preflight with `backend_unreachable` and non-zero exit and no process start, restart only of a backend found running, and restoration of the five default roles. This is consistent with C-02-06 and `contract.test.mjs:253-257`.",
+    "The factory matches `contract.test.mjs:12-41,54-65,114`: `createSefazMockServer({ host, port })`, `address()` returns address/family/port, async `close()`, port 0 in the test, import has no side effects, the CLI is guarded on `127.0.0.1:3999`, and parity uses the real `SefazHttpAdapter` via `tools/stack/sefaz-adapter-smoke.mjs` with `node --import tsx` (CTG-0002:24). The backend allowlist is unchanged.",
+    "`runSmoke({ targets, fetchImpl })` and `report{complete, pec.state, rows[{target,result,reason,status,adapterMessage}]}` match `reports/TASK-0005-escalation.md` and the three smoke tests.",
+    "The CH fixture is idempotent, under `tools/stack/`, with deterministic test IDs. It is invoked by `stack:smoke` only after the `DB_NAME=detran_local_stack` guard (`detran-stack.sh:23-25,86`), outside `backend/database/seed/**` and outside RAIT/PEC R-0031. Council is exempted if it reaches the adapter first, and policy/RLS are not relaxed and no 503 is simulated. This is consistent with CTG-0002 §C-02-04.",
+    "Offline proof (`pnpm test:stack`, `pnpm check` = `acceptance_commands` in TASK-0007.json) is separated from checkpoint (b) and `ci:backend-kernel:local` as maestro gates after commit/push, with no green declared from mocks. No `stack:db-reset` and no volume removal in the task. This is consistent with plan.md §checkpoint (b) and the 'Gates TASK-0006/0007' decision.",
+    "Write boundary is sufficient: `tools/detran-stack.sh`, production files under `tools/stack/` (excluding `*.test.mjs`) and `package.json` scripts cover all red sensors (mock, smoke, seed/config, SEFAZ lifecycle/health) without touching `backend/**`, `packages/**`, tests, policy or RLS. `DETRAN_LOCAL_ROLES:-…` must keep its literal form because `revision.test.mjs:690` extracts it with a regex; the prompt already requires keeping the five roles.",
+    "No conflict with Owner OD-R17-001/002/003 or A4/A5. With no high finding, the verdict is PASS. The two mediums can be fixed in the prompt or checked in delivery-review; the PC trail must be recorded by the maestro before dispatch.",
+    "Reviewer did not execute git or write to the repository."
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "action": "Deliver R-0017 CTG-0002: isolated local fixtures, SEFAZ mock, four-app integrated smoke, expected CH adapter 503s, and positive legacy-upgrade RC",
+  "round": "R-0017",
+  "coupled_task_group": "CTG-0002",
+  "role": "engineer",
+  "commits": [
+    "2b5bc36db6452e5b647956ace0d3f57306c197f8",
+    "5462633f90523587947644e241e08fd8ffdfbbc0",
+    "a096e1f163261e3099dd4cfb8b6ee6a1a5c68019"
+  ],
+  "artifacts": [
+    {
+      "path": "tools/detran-stack.sh",
+      "sha256": "8c72edfdf1c6069eac61cc74fd415ef3c3c96ae6cf87c195a2ce8b4eee5479d7"
+    },
+    {
+      "path": "tools/stack/smoke.mjs",
+      "sha256": "24d38a2be6afc0908319b486b1d466d2cf3a5dd2aebba0ec563e94bad2d5f21e"
+    },
+    {
+      "path": "tools/stack/portal-fixture.sh",
+      "sha256": "a024ea011e62855fb514fdc2af7403929cf4bff76db82a9a4d6b01b2248a2f12"
+    },
+    {
+      "path": "tools/stack/mocks/sefaz-mock.mjs",
+      "sha256": "fdf6cd559c044ec0a6b2771da9289d3ac5e08aa32308951e7ec6627af3b8b232"
+    },
+    {
+      "path": "backend/database/seed.sh",
+      "sha256": "1ddfd39d40f23b1379de8616ca7c34e961530100449175443b9bece278511759"
+    },
+    {
+      "path": "work/rounds/R-0017/contracts/CTG-0002.md",
+      "sha256": "3534895c9f079e126d8e81b0d207d711cf56b16b2a4330b8a32c27147aed3593"
+    },
+    {
+      "path": "work/rounds/R-0017/reviews/delivery-review-CTG-0002-cycle-2.json",
+      "sha256": "6c93a395cb13c165117bb183060e62c9bf3d088f3ca43a0035f44a70a43356ae"
+    },
+    {
+      "path": "work/rounds/R-0017/reports/checkpoint-b.md",
+      "sha256": "7031b4c570922085e866dfedebfdcb4eb4cf5c77170f75c41a50bb3b1df538d2"
+    },
+    {
+      "path": "work/rounds/R-0017/reports/checkpoint-b-smoke.json",
+      "sha256": "756c517ecfd1474c1182c976f9b441fcbc47e504e92119b49a48b016353c4f33"
+    },
+    {
+      "path": "work/rounds/R-0017/reports/checkpoint-b-preflight.json",
+      "sha256": "844fc6a477ee50025f5594886731ab598d5c7d290b7968c643be8fd0ee247345"
+    },
+    {
+      "path": "work/rounds/R-0017/reports/rc-local-CTG-0002.md",
+      "sha256": "89f3153ee91b742b760da58266c2d1a49b6cbcb1631fce816485575974ece06c"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm test:stack",
+      "result": "pass",
+      "note": "58/58 offline stack sensors"
+    },
+    {
+      "name": "checkpoint b",
+      "result": "pass",
+      "note": "Clean worktree: db-reset/start/health/smoke/stop all exit 0; 42/42 smoke rows including Portal default actor; stopped-backend smoke exit 1"
+    },
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Full post-origin/main integration gate exit 0 on 2026-09-27"
+    },
+    {
+      "name": "pnpm docs:check",
+      "result": "pass",
+      "note": "Post-origin/main Docusaurus typecheck/build: 298 pages, 215 assets, 7 sections"
+    },
+    {
+      "name": "pnpm ci:backend-kernel:local",
+      "result": "pass",
+      "note": "Published clean SHA a096e1f1; PostGIS 16 / 3.4 pinned digest; legacy baseline 20 cases and upgrade spec 21/21; exit 0"
+    },
+    {
+      "name": "delivery-review CTG-0002 cycle 2",
+      "result": "pass",
+      "note": "Opposite-family reviewer PASS without high findings"
+    }
+  ],
+  "tasks": ["TASK-0004", "TASK-0005", "TASK-0006", "TASK-0007", "TASK-0011"],
+  "decisions": [
+    "OD-R17-001 and OD-R17-002: local SEFAZ mock and the expressly scoped synthetic stack integrations",
+    "OD-R17-004: Owner-authorized synthetic Portal complaint exclusively in the local stack, with technical default actor membership but no role or policy expansion",
+    "A7: local default actor identity is restored after persona probes; CH external adapters remain unconfigured and return the expected 503s",
+    "No production SEFAZ, PAdES, biometric, council or PEC implementation is claimed"
+  ]
+}

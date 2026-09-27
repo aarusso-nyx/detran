@@ -1,0 +1,12 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "High item 2, fixed: prompts/TASK-0011.md item 2 runs the smoke.mjs CLI as a child process. A temporary --import preload replaces globalThis.fetch and nothing listens on the real ports. A bash stub placed first on PATH intercepts every call to tools/detran-stack.sh. For each backend-restart it records argv and whether DETRAN_LOCAL_ACTOR_ID is present and its value. It never runs the real script. The prompt forbids adding a seam or export to smoke.mjs and forbids source-regex tests. If this is not feasible, the worker reports a gap. 'CLI/factory' was removed.",
+    "High item 4, fixed: the literal-command sensor now requires exit 0, the success line, markers for the six operations, and markers for NOT_FOUND, invalid_body and method_405. The script must check DTOs, requestId echo and SefazAdapterError normalization before it prints each marker. A script with only the six positive paths does not pass. No product value is decided.",
+    "The expected reds are listed in the Criterios section, with a target for each: smoke.mjs, sefaz-adapter-smoke.mjs and detran-stack.sh. The lows from cycle 1 were addressed as a side effect (psql/docker stubs, createStackHarness and the node stub, the adapter/src read list, the RAIT spec left out), but they were not re-evaluated in this restricted cycle.",
+    "Auditor role, read-only. No file was changed."
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 64,
+      "claim": "The prompt asks the bounded node stub to write an stderr error naming sefaz-mock.pid and to make the test fail. It cannot do that directly. start_sefaz_mock (tools/detran-stack.sh:397-400) runs the mock with env -i and sends stdout and stderr to logs/sefaz-mock.log. The harness curl stub (tools/stack/revision.test.mjs:128) returns 0, so start succeeds even when the node stub exits 1. The stub's stderr never reaches the test, and its exit code does not fail anything.",
+      "fix": "Tell the Inspector the failure has to be observed by the test itself. Before cleanup, the test reads stateDir/logs/sefaz-mock.log or a marker file the stub writes, and asserts that the diagnostic about sefaz-mock.pid is absent in the positive case and present in the forced-timeout case. The PID the stub started is still killed before exit 1."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 43,
+      "claim": "In the CLI sensor, bash is a stub (contract.test.mjs:492-514), so detran-stack.sh never runs. The claim that the DB_NAME negative makes zero docker and zero psql calls is therefore always true there and proves nothing. The only real proof is the direct portal-fixture.sh test (contract.test.mjs:40-68). No test covers the path through tools/detran-stack.sh fixture-portal, where validate_database_name runs at line 305.",
+      "fix": "Add a revision.test.mjs harness case: DB_NAME=x bash tools/detran-stack.sh fixture-portal must exit non-zero with no docker or psql entry in stub-calls.log. In the CLI stub, record only the order of subcommands."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 89,
+      "claim": "The name '..._local' is shorthand. The Inspector could pick a name other than detran_r17_task0011_local, which would make the scratch names hard to audit and harder to clean up.",
+      "fix": "Write out the three literal names: detran_r17_task0011_fresh, detran_r17_task0011_local, detran_r17_task0011_legacy."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0011-delivery-coverage.md",
+      "line": 112,
+      "claim": "CI (.github/workflows/ci.yml:197) and tools/ci/run-backend-kernel-local.mjs:159 still export DETRAN_SEED_SCRATCH_DATABASE_URL for detran_r7_ctg1_a2_seed_profiles. Once URLs are derived from the admin URL, that variable becomes dead configuration. The prompt already records this as residual risk, and the Inspector is not allowed to change CI.",
+      "fix": "Keep the risk recorded in the report. The maestro opens an Engineer follow-up to remove or align the variable in CI and in the local runner."
+    }
+  ],
+  "notes": [
+    "Parser: the prompt diagnoses the defect correctly. At contract.test.mjs:554-559, trim() removes the empty last field, so actorValue becomes undefined. The fix at lines 67-70 of the prompt is stricter than before: actorState must be exactly absent in all 7 non-MEDICO restarts, a variable that is present but empty fails, and only MEDICO is present with ...b0000002. The default-actor rule is not weakened.",
+    "Implementation matches: smoke.mjs:431-443 filters all DETRAN_LOCAL_* keys and adds ACTOR_ID only when it is truthy, so a parent with ACTOR_ID poison or empty behaves correctly. detran-stack.sh:454-463 applies the tenant a001 default and passes CPF and ASSURANCE only when they are set.",
+    "SEFAZ: http-adapter.ts:135-150 turns the mock's 400 invalid_body envelope into SefazAdapterError with category BUSINESS_ERROR, retryable false and providerStatus 400. lookupDebt({}) sends {}, which the mock rejects at sefaz-mock.mjs:143. index.ts exports errors.js, so the instanceof check can be written. The sensor is feasible with tsx and an ephemeral port.",
+    "Portal: portal-fixture.sh:26-39 inserts auth.users and auth.memberships, both active, with an .invalid email, ON CONFLICT and no insert into roles or groups. In smoke.mjs:472-533 the order is preflight /healthz, then the fixture-portal guard, then fixture-portal, then the 4 frontend restarts. A shared log between the preload and the bash stub is feasible because spawnSync is synchronous. A failed preflight returns before any bash call (smoke.mjs:473-488).",
+    "PEC and entrypoint: smoke.mjs has no relative imports, repoRoot is derived from import.meta.url (line 15), and the realpath guard is at lines 617-619. A copy placed at <tmp with spaces>/tools/stack/smoke.mjs, plus apps/pec/web/angular.json and a symlink inside that tree only, can be tested without touching the real PEC slot.",
+    "readyz and tail: restart_backend_only (detran-stack.sh:572-586) already waits for /healthz and /readyz and uses tail -n 80. Harness curl and tail calls go to stub-calls.log, so both offline sensors are feasible.",
+    "Scratch isolation holds: separate literal names, beforeAll refuses a database that already exists, afterAll drops only the database it created, the container runs with --rm, no volume and a free loopback port, the roles exist only in the ephemeral cluster, detran_local_stack is never used, and no data is written into rait_priority_assessment and no triggers are disabled. The prompt makes the legacy-upgrade positive conditional on a legitimate baseline (v1.1.0 exists with ddl/ and seed/) and otherwise records it as not measured.",
+    "No real external resource is used: SEFAZ and the frontends are stubs or preloads, and the only Docker use is the ephemeral PostGIS, with an environmental block allowed if it cannot run. The executor has only read and local-write capabilities, so it may be unable to run docker, and the prompt treats that as not measured rather than green.",
+    "This is the final iteration (iteration_count 2 of max_iterations 2). A red result here escalates to the maestro. prettier --check over prompts/*.md passes, so format:check is not blocked by prompts at the moment."
+  ]
+}

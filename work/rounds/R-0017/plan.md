@@ -134,13 +134,14 @@ pequeno — ids confirmados em M1. Workers por `tools/orchestra/worker.sh`.
 | TASK-0004 | Architect            | architect-blueprint | Terra / alto   | `MOD-r17-contract`                                              | CTG-0001 mesclado    | `contracts/CTG-0002.md`: caracterização de `fresh`+40+60 em banco de rascunho (saída anexada); perfil novo (nome, lista fechada de arquivos, fixtures derivadas); mock SEFAZ (rotas, formas, dados, porta 3999, prefixo `/mock`) conforme OD-R17-001; rota de smoke por app com persona e fixture; 503 esperados; critérios C-02-nn                                 |
 | TASK-0005 | Inspector            | inspector-tests     | Luna / médio   | `MOD-seed-tests`, `MOD-stack-tests`                             | TASK-0004            | extensão de `backend/domains/inf/rait-case/tests/integration/rait-seed-profiles.integration.spec.ts` (perfil novo: aplica, idempotente, `fresh`/`legacy-upgrade` inalterados); teste de paridade `SefazHttpAdapter` × mock; testes do `smoke` (relatório, exit ≠ 0 em não-2xx, 503 esperado conta como sucesso só onde o contrato manda)                            |
 | TASK-0006 | Engineer             | engineer-backend    | Luna / médio   | `MOD-seed`                                                      | TASK-0005            | `backend/database/seed.sh` (perfil novo) e fixtures em `backend/database/seed/`; testes de TASK-0005 verdes                                                                                                                                                                                                                                                         |
-| TASK-0007 | Engineer             | engineer-backend    | Terra / médio  | `MOD-stack-tool`, `MOD-stack-mocks`, `MOD-root-package-scripts` | TASK-0005            | mock SEFAZ em `tools/stack/mocks/` (ou flag, conforme OD-R17-001), ligado a `start/stop/status/health`; `tools/stack/smoke.mjs`; script `stack:smoke`; perfil novo como padrão da stack                                                                                                                                                                             |
+| TASK-0007 | Engineer             | engineer-backend    | Terra / médio  | `MOD-stack-tool`, `MOD-stack-mocks`, `MOD-root-package-scripts` | TASK-0006            | mock SEFAZ em `tools/stack/mocks/` (ou flag, conforme OD-R17-001), ligado a `start/stop/status/health`; `tools/stack/smoke.mjs`; script `stack:smoke`; perfil novo como padrão da stack                                                                                                                                                                             |
 | TASK-0008 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-dev-docs`                                                  | CTG-0002 mesclado    | `docs/dev/operations/local-stack.md`, `docs/dev/operations/README.md`, `.env.example` — conteúdo transcrito dos contratos CTG-0001/0002 e da saída real de `stack:config`                                                                                                                                                                                           |
 | TASK-0009 | Engineer             | engineer-backend    | Luna / baixo   | `MOD-ci-workflow`                                               | CTG-0002 mesclado    | job `stack-smoke` (`workflow_dispatch`) em `.github/workflows/ci.yml`, com o mesmo digest do Postgres e `PACKAGES_READ_TOKEN` como `foundation`; nenhuma mudança nos jobs obrigatórios                                                                                                                                                                              |
 | TASK-0010 | Architect (transcr.) | transcriber-docs    | Luna / baixo   | `MOD-waves`, `MOD-open-decisions`, `MOD-rounds-readme-row`      | TASK-0008, TASK-0009 | `waves.md` §Histórico (linha R-0017 com M1), seção R-0017 em `open-decisions-rait.md` (OD-R17-001…003 e novas), `docs/meta/knowledge-base/backlog.md`, linha R-0017 de `work/rounds/README.md`                                                                                                                                                                      |
+| TASK-0011 | Inspector            | inspector-tests     | Terra / alto   | `MOD-seed-tests`, `MOD-stack-tests`                             | A6, TASK-0005        | iteracao corretiva dos sensores de CTG-0002: assumir a fixture Portal, observar ator padrao/restauracao, ciclo de vida SEFAZ e comando literal do adapter; nenhum codigo de producao                                                                                                                                                                                |
 
-CTG-0001 = 0001 → 0002 → **checkpoint (a)** → 0003 (tríade). CTG-0002 = 0004 → 0005 → 0006 ∥ 0007
-(locks disjuntos) → **checkpoint (b)**. CTG-0003 = 0008 ∥ 0009 → 0010. **Um PR por CTG.** O CTG
+CTG-0001 = 0001 → 0002 → **checkpoint (a)** → 0003 (tríade). CTG-0002 = 0004 → 0005 → 0006 → 0007
+(ordem operacional para o perfil de seed) → **checkpoint (b)**. CTG-0003 = 0008 ∥ 0009 → 0010. **Um PR por CTG.** O CTG
 seguinte nasce depois do merge do anterior ou em branch empilhado; nunca commits novos no branch
 de um PR aberto.
 
@@ -148,7 +149,8 @@ de um PR aberto.
 com os testes de caracterização **verdes sobre ele**; só então libera TASK-0003. (b) após
 TASK-0006/0007, numa worktree limpa (`git clean -ndx` vazio fora de `node_modules`):
 `pnpm stack:db-reset` → `pnpm stack:start` → `pnpm stack:health` → `pnpm stack:smoke` →
-`pnpm stack:stop`; saída integral em `reports/checkpoint-b.md` (é a prova do critério de sucesso
+`pnpm stack:stop` → `pnpm stack:smoke` (exit nao-zero com backend parado);
+saída integral em `reports/checkpoint-b.md` (é a prova do critério de sucesso
 C-0002 §5, linha 1). Docker indisponível = `sensor-error`, nunca dispensa.
 
 ## Critérios de aceitação (comandos → resultado)
@@ -253,9 +255,156 @@ Verificações de arquivo:
   contornam os defaults do backend. Inspector acrescenta sensor offline apenas
   em `revision.test.mjs`; Engineer inclui cada opcional no ambiente somente
   quando ela estiver definida. Nenhuma chave de config ou criterio muda.
+- **A4 (CTG-0002, Architect, decisao do Owner OD-R17-001/002 em
+  2026-09-27):** substitui somente o estado `pending` de SEFAZ e os estados
+  `proposed_off` de PAdES clinico, biometria e conselho no JSON fixo de
+  C-01-07, e a exclusao de SEFAZ da sondagem em C-01-11. CTG-0002 deve
+  contratar e provar SEFAZ `mock` ativo em `start`, `stop`, `status`, `health`
+  e espera limitada, e os tres provedores explicitamente `off`, sem endpoint
+  ou token real. TASK-0005 atualiza os sensores correspondentes em
+  `tools/stack/revision.test.mjs` para o contrato C-02-nn; nao remove nem
+  enfraquece as demais assercoes de C-01-07/11. Os trechos substituidos de
+  C-01-07/11 serao listados em `closure.json` como **nao cumpridos**, mesmo
+  que tenham passado historicamente no CTG-0001. Nenhum outro criterio de
+  CTG-0001 muda.
+- **A5 (CTG-0002, Architect, Meta 3 do plano vinculante do Owner em
+  2026-09-27):** substitui somente o literal `config.seed.profile=fresh`
+  de C-01-07 pelo perfil novo `fresh-local-stack`, apos C-02-01 provar
+  manifesto fechado, isolamento e idempotencia. Nao altera os ramos
+  `fresh` ou `legacy-upgrade` de `seed.sh`. TASK-0005 atualiza apenas essa
+  assercao em `revision.test.mjs`, preservando as demais. O literal antigo
+  sera listado em `closure.json` como **nao cumprido**; todo o resto de
+  C-01-07 permanece vigente.
+- **A6 (CTG-0002, Architect, decisao do Owner OD-R17-004 em
+  2026-09-27):** o contrato C-02-05 atribuiu erroneamente uma denuncia a
+  `70-fixtures-portal.sql`; esse arquivo nao contem linha em
+  `portal.complaint`. O Owner autorizou uma denuncia sintetica exclusiva da
+  stack local, aplicada pelo smoke somente a `detran_local_stack`, fora dos
+  perfis `fresh` e `legacy-upgrade` e sem mudar os seeds canonicos. A leitura
+  pela rota `/v1/portal/complaints/records`, a persona `AUDITOR`, a policy,
+  o tenant e a exigencia de resposta nao vazia permanecem. A atribuicao da
+  fixture ao arquivo `70-fixtures-portal.sql` sera listada em `closure.json`
+  como **nao cumprida**; a prova efetiva identifica a fixture local.
+- **A7 (CTG-0002, Architect, esclarecimento pos-review em 2026-09-27):**
+  C-02-05 continua exigindo o ator padrao do token local nas quatro leituras
+  e na restauracao apos smoke; a fixture local pode criar usuario e membership
+  sinteticos para esse ID somente no banco descartavel, sem alterar os seeds
+  canonicos. C-02-02 continua exigindo que o comando literal `node
+tools/stack/sefaz-adapter-smoke.mjs` execute, inclusive erros. Nenhum
+  criterio foi substituido. TASK-0011 (Inspector) assume os sensores antes
+  das iteracoes corretivas dos Engineers TASK-0006/0007; o maestro nao toca
+  mais nesses arquivos de producao/teste.
 
 ## Decisões do maestro
 
+- **Owner, OD-R17-001/002/003 (2026-09-27):** aceitas as tres recomendacoes
+  da rodada: mock SEFAZ-AM minimo de seis rotas, PAdES clinico/biometria/
+  conselho explicitamente `off` com 503 fail-closed no smoke, e job
+  `stack-smoke` manual/opcional fora da protecao de `main`. Registro canonico
+  em `docs/meta/knowledge-base/open-decisions-rait.md` §R-0017. O CTG-0001
+  permanece historicamente `pending`/`proposed_off`; CTG-0002 implementa os
+  estados decididos. Nenhum servico externo real foi autorizado.
+- **Owner, OD-R17-004 (2026-09-27):** autorizou denuncia sintetica exclusiva
+  da stack local para satisfazer a leitura Portal do C-02-05. A6 registra a
+  substituicao da fonte incorreta, sem ampliar os perfis canonicos.
+- **Prompt-review CTG-0002/TASK-0004 (2026-09-27):** revisao externa
+  `reviews/prompt-review-CTG-0002-architect-6.json` = `PASS`, hash
+  `PC-edef98f28fee211b` conferido. A4 resolveu a contradicao com C-01-07/11;
+  o prompt preserva os cinco papeis padrao e exige prova de rota ate os
+  adapters clinicos. As tentativas anteriores falharam na normalizacao JSON
+  ou retornaram `REVIEW` e nao foram usadas para despacho. Duas notas baixas
+  (mapeamento de todos os sensores A4 e resolucao `localhost`/IPv4 do mock)
+  ficam para conferencia explicita no contrato e nos testes.
+- **Gates TASK-0006/0007 (2026-09-27):** TASK-0006 so conclui com o spec
+  scratch do novo perfil verde, IDs/contagens no relatorio e cleanup; um
+  bloqueio de Docker exige rerun antes de (b), mesmo que `format:check`
+  passe. `ci:backend-kernel:local` exige branch publicada, worktree limpa e
+  ambiente RC, logo e gate do maestro depois de commit/push CTG-0002, antes
+  do PR. O smoke live pertence ao checkpoint (b), nao a aceitacao isolada
+  de TASK-0007.
+- **Fecho TASK-0006 (2026-09-27):** o primeiro runner foi bloqueado por
+  invocacao de Vitest fora do workspace e preparo de roles no PostGIS
+  descartavel. O maestro repetiu a prova, encontrou update da ata RAIT
+  imutavel na segunda aplicacao, trocou apenas esse conflito por `DO
+NOTHING` e obteve 3/3 no spec scratch. A adenda esta em
+  `reports/TASK-0006-maestro-adenda.md`; o relato original nao foi
+  reescrito e o registro do worker aponta para seu hash atual. O container
+  foi parado/removido. A prova scratch foi PASS provisoria; a
+  ratificacao independente do Engineer em TASK-0006 iteracao 2 ainda
+  condiciona C-02-01. TASK-0007 foi liberada para trabalho paralelo,
+  nao para aceite final.
+- **Handoff TASK-0007 (2026-09-27):** o PC originalmente aprovado
+  `PC-e47639d85c7a5c7f` foi supersedido pelo handoff Inspector. O PC
+  intermediario `PC-98a887406086a33a` recebeu
+  `reviews/prompt-review-TASK-0007-handoff.json` = REVIEW e nao foi
+  despachado. O PC `PC-03a8e3260dac9356` recebeu re-review
+  `reviews/prompt-review-TASK-0007-handoff-2.json` = PASS, com notas
+  medias sobre rota CH via proxy e trilha do PC. O texto incorporou rota
+  CH, evidencia agregada e guarda do banco; PC final
+  `PC-f80aaf52cdbb9659` recebeu
+  `reviews/prompt-review-TASK-0007-handoff-3.json` = PASS e esta
+  aprovado para despacho. `PC-03a8e3260dac9356` foi supersedido e nao
+  despachado. Na entrega, conferir que preflight backend precede fixture
+  CH, invocacao real do seed corresponde ao config e guarda de outro banco
+  recusa antes de SQL.
+- **TASK-0007 triagem (2026-09-27):** iteracao 1 Terra/medio passou 48/48
+  sensores offline e implementou mock SEFAZ, mas entregou `ch: []` na CLI,
+  sem fixture CH nem fases de persona. Classificacao `plant-bug`:
+  C-02-04/06 nao cumpridos; o relatorio `reports/TASK-0007.md` declara
+  essa lacuna. O gate `pnpm check` nao foi declarado verde; a primeira
+  falha de formatacao de `plan.md` foi corrigida pelo maestro. Retry 1
+  Terra/alto, PC `PC-70540a9589efc18a`, restringe-se a fixture CH, 503
+  reais, validacao concreta dos proxies e evidencia agregada, sujeito a
+  prompt-review antes do despacho. `reviews/prompt-review-TASK-0007-retry-1.json`
+  = PASS no PC intermediario `PC-70540a9589efc18a`, mas pediu alinhar
+  STATE_DIR, guardar persona/IDs publicos na evidencia e validar Dashboard
+  N1. Esses ajustes geraram PC `PC-a5153ec676c0c1b1`; o PC anterior foi
+  supersedido sem despacho. A re-review
+  `reviews/prompt-review-TASK-0007-retry-1-2.json` = PASS, mas distinguiu
+  `items[].layer` do payload real e da fixture offline. PC final
+  `PC-55e67869b9f48a41` incorpora matchers opcionais, tenant por
+  header+fixture e evidencia sem termos proibidos; re-review direcionada
+  `reviews/prompt-review-TASK-0007-retry-1-3.json` = PASS. Este PC esta
+  aprovado para despacho; `PC-a5153ec676c0c1b1` foi supersedido sem
+  despacho. Conferir na entrega que as fases nao sobrescrevem a evidencia
+  agregada final.
+- **Prompt-review CTG-0002/TASK-0005…0007 (2026-09-27):**
+  `reviews/prompt-review-CTG-0002-workers-final.json` = `PASS`, PCs
+  `PC-851f1436e42ea11c`, `PC-95cc7a37908fe373` e
+  `PC-e47639d85c7a5c7f` conferidos. Os ciclos anteriores corrigiram gates
+  impossiveis em worktree suja, sequencia 0006→0007, carregamento do adapter
+  por `tsx`, seam de portas efemeras e preparo CH restrito ao banco local.
+  Notas baixas restantes sao verificadas na entrega: texto do mock,
+  invocacao da fixture CH e prova da guarda de nome.
+- **TASK-0005 triagem (2026-09-27):** primeira iteracao deixou 40 sensores
+  verdes e seis vermelhos por producao ausente, mas `contract.test.mjs`
+  nao cobriu negativos/DTOs exigidos e usou porta de teste fixa; a consulta
+  de ata contava `minutes_id` nulo como orfao. Retry 1 restrito aos tres
+  arquivos de teste, sem enfraquecer CTG-0001, antes de TASK-0006.
+- **Retry TASK-0005 prompt-review (2026-09-27):**
+  `reviews/prompt-review-TASK-0005-retry-1.json` = `PASS`; hash final do
+  prompt de retry `50b8afc4816cdf3d…`. As notas medias nao bloqueantes
+  sobre estado temporario, falha por linha e `localhost`/IPv4 foram
+  incorporadas ao texto antes do despacho.
+- **TASK-0005 escalada (2026-09-27):** retry 1 ampliou os sensores, mas
+  comparou requestId gerado com ID explicito, usou mensagens CH diferentes
+  dos adapters e criou um cenario negativo indistinguivel do sucesso.
+  Terceira iteracao, Terra/alto, corrige somente `contract.test.mjs` antes
+  de liberar TASK-0006; `max_iterations` passa a 3, sem mudar criterio.
+- **Prompt-review escalada TASK-0005 (2026-09-27):**
+  `reviews/prompt-review-TASK-0005-escalation-3.json` = `PASS`, PC
+  `PC-40dc8eebaadeaba4`. Revisao confirmou a forma top-level do 503 Nest,
+  rejeicao de `fetch` quando backend esta parado e vermelho esperado por
+  producao ausente. Notas medias sobre proxy negativo e forma canonica do
+  relatorio sao itens de aceitacao da entrega e handoff de TASK-0007.
+- **TASK-0005 aceite (2026-09-27):** terceira iteracao corrigiu os
+  sensores; `pnpm test:stack` conferido pelo maestro = 40 verdes, oito
+  vermelhos exclusivamente por producao ausente. Handoff a TASK-0007:
+  `runSmoke({ targets: { frontends, backend, senatran, sefaz, pec, ch },
+fetchImpl })`; `report.complete`, `report.pec.state` e linhas
+  `{ target, result, reason, status, adapterMessage }` em `report.rows`.
+  Factory SEFAZ aceita porta `0` no teste e retorna `address()`/`close()`;
+  a CLI permanece em `127.0.0.1:3999`.
 - **M1 (2026-09-26):** `codex-cli 0.157.1` confirmou `gpt-6-sol`,
   `gpt-5.6-terra` e `gpt-5.6-luna` com `codex exec -m <id> 'responda ok'`
   (saída `ok`, exit 0 para os três). `Claude Code 2.1.283` confirmou
@@ -321,10 +470,19 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Bloqueios
 
-(vazio)
+(vazio; OD-R17-001/002/003/004 decididas pelo Owner em 2026-09-27)
 
 ## Triagem
 
+- `sensor-error` (checkpoint b, 2026-09-27): a primeira preparacao
+  arquivou `dist` ignorados de `@detran/ui` e `@detran/boat-mobile` ao
+  limpar a worktree; `stack:start` nao recompila dependencias frontend.
+  Ambos foram reconstruidos sem alterar fontes e a worktree permaneceu
+  limpa. Na medicao seguinte, uma unica chamada `backend.healthz` durante
+  a persona TEAT teve `backend_unreachable`; `readyz` e proxy logo depois
+  passaram. A repeticao integral do checkpoint passou 42/42 no smoke,
+  parou a stack e obteve exit 1 no smoke negativo. Saida e JSON em
+  `reports/checkpoint-b*`; nenhuma guarda foi relaxada.
 - `reference-gap` (bootstrap): `devai round plan --scaffold --round R-0017`
   retornou `ROUND_ALREADY_EXISTS` (exit 2), pois o plano autorizado ja existe
   em `origin/main`. A rodada foi mantida; `tasks/` e os demais artefatos sao
@@ -362,9 +520,121 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
   varreu seu JavaScript gerado e acusou literais desconhecidos. O artefato
   criado nesta sessao foi removido; o verificador isolado e `pnpm check`
   completo passaram no mesmo codigo, sem alterar sensor, teste ou politica.
+- `plant-bug` (TASK-0007 live): o build raiz nao ordenava as dependencias do
+  app; `build_stack` passou a compilar `@detran/app...` topologicamente. O
+  `pg_isready` inicial via socket podia observar o PostGIS antes da porta
+  publica estar pronta; agora sonda `127.0.0.1`. O smoke passou a usar
+  `x-tenant-id` e `Idempotency-Key` exigidos pelo runtime, ator da fixture
+  somente nas fases do smoke, e `app=portal` para a amostra Dashboard N1.
+  `pnpm test:stack` passou 48/48; no live, todas as linhas passaram exceto
+  Portal (200 vazio). `pnpm check` e `pnpm docs:check` passaram; o RC local
+  ainda requer worktree limpa depois do commit. Nenhuma guarda RLS/policy
+  foi alterada.
+- `reference-gap` (C-02-05): o contrato atribui um complaint a
+  `70-fixtures-portal.sql`, mas o arquivo nao tem insert em `portal.complaint`.
+  Nao se reescreveu criterio nem se introduziu fixture em perfil canonico;
+  a proposta de adenda/fixture local foi submetida ao Owner.
+- `policy-issue` + `plant-bug` (CTG-0002 delivery-review ciclo 1):
+  `reviews/delivery-review-CTG-0002.json` = `FAIL`. O reviewer constatou
+  que o maestro implementou correcoes em fronteiras dos workers e escreveu
+  um teste do proprio artefato. TASK-0011 Inspector assumira os sensores;
+  TASK-0006 ratificara a correcao da ata imutavel no seed e TASK-0007
+  ratificara/corrigira stack e smoke sob PCs proprios. Achados funcionais
+  altos: ator padrao/restauracao, comando direto SEFAZ, e sensores do ciclo
+  de vida SEFAZ. O primeiro retorno Claude era JSON invalido (bridge exit 4)
+  e nao vale como veredito; o retry com JSON estrito e o ciclo 1 valido.
+- `plant-bug` (TASK-0006 ratificacao): a adenda do maestro declarava PASS
+  antes do parecer do Engineer e nao havia PC corretivo registrado. O
+  maestro voltou TASK-0006 a `in_progress`/iteracao 2, marcou a adenda
+  provisoria e registrou `PC-2640674bbd29832f`; o Engineer e dono do
+  parecer final sobre o SQL imutavel.
+- **TASK-0011 Inspector e TASK-0006 Engineer (2026-09-27):** o Inspector
+  assumiu os sensores sob `PC-43f78fb54ba03f4a` e deixou tres vermelhos
+  de producao esperados; nao editou producao. O Engineer ratificou sem
+  mudanca os SQL de hashes `c465743e86ccdd3e` e `e4aa2bc97a461eb5e`
+  sob `PC-2640674bbd29832f`. A medicao 3/3 da adenda continua historica
+  com host:port nao verificavel independentemente; C-02-01 sera medido
+  outra vez no checkpoint (b) antes de aceite final.
+- **TASK-0007 iteracao de entrega (2026-09-27):** ultimo PC
+  `PC-b855ce8a4d669db3` registra a devolucao integral da producao ao
+  Engineer, apos sensores Inspector. O prompt-review inicial passou com
+  notas medias, incorporadas antes do despacho; CTG-0002 permanece sem
+  aceite ate a nova revisao de entrega e o checkpoint (b).
+- `plant-bug` (TASK-0007 limite de iteracao): o delivery-review
+  CTG-0002 exigiu ratificacao de producao depois de duas execucoes
+  Engineer; `max_iterations` sobe de 2 para 3 e `iteration_count` a 3
+  antes do despacho do PC final. `stack:smoke` permanece no aceite da
+  tarefa, medido pelo maestro no checkpoint (b) apos entrega do worker,
+  nao dispensado pela proibicao de live no prompt individual.
+- `plant-bug` (formatacao do prompt TASK-0007): o runner leu o Markdown
+  de hash `b855ce8a4d669db3` e PC identico; Prettier apontou somente
+  uma quebra de linha dentro de codigo inline. O byte exato despachado
+  foi preservado em `prompts/TASK-0007-delivery-fix-dispatched.txt`, agora
+  caminho do PC em `compositions.json`. O `.md` visivel foi gerado pelo
+  formatter com diferenca de uma linha e nao substitui a prova do PC.
+- **Gates apos TASK-0011 iteracao 2 (2026-09-27):** `pnpm test:stack`
+  58/58, `pnpm check` completo e `pnpm docs:check` passaram; spec RAIT
+  5/5 em PostGIS descartavel com scratches fresh/local/legacy separados,
+  container removido. O relato Inspector registrou `format:check` como
+  nao concluido, mas sua telemetria item_45 e a repeticao do maestro
+  mostram exit 0. O positivo de `legacy-upgrade` segue nao medido no
+  spec: o RC local publico preparara o baseline historico pelo runner
+  `prepare-rait-priority-upgraded-legacy.mjs` em container efemero.
+- **Delivery-review CTG-0002 ciclo 2 (2026-09-27):**
+  `reviews/delivery-review-CTG-0002-cycle-2.json` = `PASS`, sem alto.
+  Restam como gates de medicao, nao defeitos provados: quatro GETs com
+  ator default no checkpoint (b) e positivo legado no RC local.
+  A7 foi anotada junto de OD-R17-004 como implementacao tecnica que nao
+  amplia a decisao do Owner.
 
 ## Retomada
 
+- **RC local CTG-0002 (2026-09-27):** `pnpm check`, `pnpm docs:check`
+  e `pnpm ci:backend-kernel:local` passaram apos integrar `origin/main`.
+  RC no SHA publicado `a096e1f1` e worktree limpa; baseline legado com
+  20 casos e spec positiva de upgrade 21/21. Relato e hash do log em
+  `reports/rc-local-CTG-0002.md`. Proximos: evidencia DEVAI, PR, CI,
+  merge e `audit observe`, depois CTG-0003.
+- **Checkpoint b concluido (2026-09-27):** TASK-0007 validada ao vivo,
+  `stack:db-reset`/`start`/`health`/`smoke`/`stop` exit 0, smoke negativo
+  exit 1; 42/42 linhas positivas, denuncia Portal sintetica local presente,
+  CH 503 esperados. Delivery-review CTG-0002 ciclo 2 = PASS.
+  Proximo gate: publicar HEAD limpo e executar RC local com positivo
+  `legacy-upgrade`, seguido de evidencia DEVAI e PR/CI/merge CTG-0002.
+- **Checkpoint CTG-0002 live (2026-09-27):** TASK-0004/0005/0006
+  concluidas; TASK-0007 em curso, retry 1 entregue e corrigido pelo maestro
+  em `tools/detran-stack.sh`/`tools/stack/smoke.mjs`. `pnpm test:stack`
+  48/48, `pnpm check` e `pnpm docs:check` verdes. O smoke live passou
+  healths, quatro roots, proxies RAIT/Dashboard/TEAT, guarda CH e os tres
+  503 CH no adapter; somente `frontend.portal.proxy` falhou (`empty_json`,
+  HTTP 200) porque o seed canônico nao contem complaint. A decisao sobre
+  fixture Portal exclusiva da stack/adenda foi solicitada ao Owner;
+  nenhum criterio foi relaxado. `pnpm ci:backend-kernel:local` recusou a
+  worktree suja como esperado; repetir apos delivery-review, commit e push.
+  A stack foi encerrada com `pnpm stack:stop`, sem processos locais vivos.
+  Depois da resposta do Owner: adenda numerada, fixture/sonda, smoke verde,
+  checkpoint (b) em worktree limpa, delivery-review, evidencia, PR e merge
+  CTG-0002; entao TASK-0008…0010 e fechamento da rodada.
+- **Retomada autorizada pelo Owner (2026-09-27):** as tres ODs impeditivas
+  foram decididas conforme as recomendacoes e registradas na secao canonica.
+  CTG-0001 continua mesclado e observado; TASK-0004 esta liberada. Executar
+  CTG-0002 pela triade 0004 → 0005 → 0006/0007, checkpoint (b), revisao,
+  evidencia, PR/CI/merge e observacao; depois CTG-0003 e fechamento completo.
+  O checkpoint de bloqueio abaixo e historico, nao a situacao atual.
+- **Checkpoint apos merge CTG-0001 (2026-09-27):** PR #133 mesclado em
+  `b1268a35c7758e9d017cf297039ba4cdbf95ba27`; TASK-0001 Architect,
+  TASK-0002 Inspector e TASK-0003 Engineer estao concluidas. Ultimo
+  delivery-review = `PASS` (ciclo 3); CI final 7/7 verde, inclusive os cinco
+  checks obrigatorios. `audit observe --at` no SHA integrado concluiu
+  `EV-46bd42141d6f82c5`; sua saida gerada e cadeia foram preservadas no
+  commit local `286db9c7`. Evidencia CTG-0001 = generic sequencia 4, head
+  antes do merge `ff127d27a3905ae2799fa5a7a4c97b5cf98e833481bc9ee75459eb305bc4a73f`;
+  apos a observacao, cadeia valida em
+  `609ddca1882f481ad7a7d30a260aeb7a6420ec1b3f8c1853d89f16800de0d032`.
+  TASK-0004…0010 seguem `queued`. Proximo: Owner responde OD-R17-001/002/003;
+  registrar respostas no cadastro canonico, compor e revisar prompts CTG-0002,
+  executar TASK-0004…0007, checkpoint (b), delivery-review e PR/CI/merge;
+  depois CTG-0003 e fechamento. Nenhuma tarefa CTG-0002/0003 foi iniciada.
 - **CTG-0001 pos-PR #132/#135 (2026-09-27):** a terceira rodada de CI
   do PR #133 passou integralmente, mas R-0019 CTG-0001 entrou em `main`
   durante o CI e exigiu reconciliar `package.json` (`test:stack` junto de

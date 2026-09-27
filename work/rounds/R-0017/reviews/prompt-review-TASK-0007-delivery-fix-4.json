@@ -1,0 +1,73 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "area": "lifecycle/iteration-budget",
+      "file": "work/rounds/R-0017/tasks/TASK-0007.json",
+      "line": 22,
+      "claim": "TASK-0007 is at iteration_count=2 with max_iterations=2 (lines 22-23 and 41). Two Engineer runs are already done (TASK-0007.md PC-f80aaf52 and TASK-0007-retry-1.md PC-55e67869), and plan.md:507 says retry 1 was 'the second and last Engineer correction'. The delivery fix (PC-e64165003f96738e, compositions.json:149-150) is a third iteration. Nothing records raising the budget. The TASK-0005 precedent recorded it explicitly (plan.md:393, 'max_iterations passa a 3'). budget.json:275-281 has no delivery-fix entry. Dispatching this would break the iteration ceiling of the task schema.",
+      "fix": "Before dispatch, record the escalation in plan.md Triagem: max_iterations 3, iteration_count 3, justified by delivery-review-CTG-0002 findings 1-5. Add the TASK-0007-delivery-fix entry to budget.json. Keep the PC already registered."
+    },
+    {
+      "severity": "medium",
+      "area": "evidence/acceptance",
+      "file": "work/rounds/R-0017/tasks/TASK-0007.json",
+      "line": 29,
+      "claim": "acceptance_commands dropped ['pnpm','stack:smoke'] compared with HEAD (git diff), and the prompt (lines 127-130) forbids live smoke. Handing live measurement to the maestro is reasonable, but the task record no longer requires C-02-05 live proof as TASK-0007 acceptance. No note or addendum explains the removal, so the task could close without the smoke.",
+      "fix": "Restore stack:smoke in acceptance_commands and mark it as maestro-measured in checkpoint (b), or record the reason for the removal in plan.md Triagem and keep C-02-05/06 as the CTG-0002 closing requirement."
+    },
+    {
+      "severity": "medium",
+      "area": "sensor-gaps",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 62,
+      "claim": "The prompt only asks the Engineer to report two sensor gaps: users/membership (lines 62-63) and invalid body via the adapter (lines 90-92). Several corrections it orders have no Inspector sensor: backend-restart waiting for /readyz (line 117), tail -n (line 116), keeping the positive report from being overwritten (lines 109-111; today smoke.mjs:447 and :574 write the same stem, smoke-report), PEC by existsSync (smoke.mjs:215 and :339 are hardcoded), and the realpath entrypoint (line 113). Without sensors, a regression to the maestro's old behavior would go unnoticed, which repeats the delivery review's complaint about unobserved evidence.",
+      "fix": "Ask the report to list every correction with no Inspector sensor (readyz, tail, report suffix, PEC, entrypoint, membership, body via adapter) so the maestro can route them to a restricted Inspector iteration before the delivery review."
+    },
+    {
+      "severity": "low",
+      "area": "A7/restore",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 45,
+      "claim": "'Remove every DETRAN_LOCAL_* except DETRAN_LOCAL_ROLES of the phase' does not say that the final restore must pass the five default roles explicitly. The Inspector sensor (contract.test.mjs:564-573) expects the literal string 'technical-admin,agency-admin,field-agent,rait-coordinator,dash-operator' in the last backend-restart. If the Engineer removes ROLES on restore and relies on the default in detran-stack.sh:455, the result is equivalent but the sensor goes red. smoke.mjs:454 already does this correctly (restartFor(defaultRoles)).",
+      "fix": "State that restore keeps DETRAN_LOCAL_ROLES=<defaultRoles> explicit and removes only ACTOR_ID and the other inherited DETRAN_LOCAL_* variables."
+    },
+    {
+      "severity": "low",
+      "area": "reading-list",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 60,
+      "claim": "The prompt asks for proof, with file and line, from the runtime or STYNX that an active membership without membership_roles is enough. The reading list (lines 17-21) does not include backend/app/src/app.module.ts. detran-runtime.ts:570 says the tenancy interceptor patched there applies STYNX membership validation. It also does not explicitly authorize reading @stynx-nyx/* in node_modules, which invites an avoidable BLOCKED.",
+      "fix": "Add app.module.ts (tenancy interceptor) and the @stynx-nyx tenancy/membership module to the read-only list."
+    },
+    {
+      "severity": "low",
+      "area": "PC/report",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 134,
+      "claim": "The report template does not ask the Engineer to record the PC. The TASK-0006 ratify prompt (TASK-0006-delivery-ratify.md:8-9) did. Delivery-review finding 1 requires ratification 'under its own PCs', so the report should tie the ratification to PC-e64165003f96738e.",
+      "fix": "Add a 'PC: PC-e64165003f96738e' line to the report template."
+    },
+    {
+      "severity": "low",
+      "area": "format",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 131,
+      "claim": "A stray indent ('   fronteira, cite teste/linha...') breaks the paragraph and may be rendered as a code block. This is cosmetic.",
+      "fix": "Remove the indent."
+    }
+  ],
+  "notes": [
+    "Ratification: lines 35-42 list all the maestro production edits in TASK-0007-maestro-adenda.md:6-9 (portal-fixture.sh, fixture-portal, topological build, pg_isready 127.0.0.1, SEFAZ env -i, tenant/idempotency headers, Dashboard app=portal, per-phase actor). The write boundary (lines 23-25) covers these files and requires each change to be classified as ratified, corrected or reverted. The Inspector took over the A6 test in contract.test.mjs:40-96 (TASK-0011.md:3), and the prompt forbids editing tests (lines 27-31). This resolves delivery-review finding 1 for the TASK-0007 boundary. Finding 2 (40-fixtures SQL) was already resolved by TASK-0006 under PC-2640674bbd29832f (plan.md:541-548).",
+    "Inspector reds can be attributed to production without editing tests. (a) tenant_mismatch in arrays (contract.test.mjs:461) depends only on smoke.mjs:199. (b) The actor sensor (contract.test.mjs:485-592) stubs bash from PATH, and smoke.mjs:403-408 invokes 'bash' without an absolute path, so the stub intercepts it. The sensor expects ACTOR_ID only in MEDICO=b0000002, which is compatible with removing it in restartFor (smoke.mjs:423-428). (c) The literal SEFAZ sensor (contract.test.mjs:594-614) fails only because of the static TS import at sefaz-adapter-smoke.mjs:2. tsx 4.23.13 is a root devDependency (package.json:90) and exposes tsx/esm/api (register), so the literal command can be kept without touching package.json.",
+    "C-02-02 errors are feasible without touching packages: http-adapter.ts:111 and :137-151 normalize the {error:{category,retryable,providerStatus}} envelope into SefazAdapterError, and BUSINESS_ERROR retryable=false is not retried. A semantically invalid body can go through the adapter, for example issueGuide({debtId:'unknown'}) against sefaz-mock.mjs:149. Unknown reference and unknown refund produce NOT_FOUND/404. Raw 405/Allow and malformed JSON via fetch match CTG-0002:99-104. Port 0 through the factory avoids conflicting with a running stack on 3999.",
+    "A6/A7 are preserved: the DB_NAME guard (portal-fixture.sh:15-16) comes before any docker/psql and stays. The order preflight → fixture-portal → first backend-restart (smoke.mjs:431-491) ensures that membership for the default actor 00000000-0000-4000-8000-000000000002 (detran-runtime.ts:321-323; absent from 00-fixtures-core.sql) exists before any authenticated read. auth.users.email is UNIQUE (02-auth.sql:37) and memberships is UNIQUE(tenant_id,user_id) (02-auth.sql:76), which matches the ON CONFLICT clauses the prompt prescribes and the fresh pattern (00-fixtures-core.sql:42). The prompt forbids membership_roles/groups, forbids any policy/RLS change and requires BLOCKED if it cannot prove the membership without roles is enough. The negative smoke keeps the preflight before any fixture.",
+    "RLS: the portal-fixture.sh:22-23 fixture uses set_config('app.role','owner'), the same pattern as the canonical seeds (20-/27-/50-fixtures). It adds no new bypass.",
+    "Remaining CH risk: ch-fixture.sh:33-41 and :99 tie the professional and biometric_check to b0000002. With the default actor, the RECEPCAO/ADMIN_CLINICA probes depend on requireScope/policy not requiring that actor to be linked. The prompt handles this correctly with BLOCKED plus file and line instead of a CLI workaround (lines 26-27). In the live run, the maestro must confirm that these two probes still reach the adapter.",
+    "SEFAZ lifecycle: the revision.test.mjs:117-121 node stub intercepts only the relative argv, and waits for pids/sefaz-mock.pid. The prompt keeps both (lines 98-101 and 114-116). Changing to tail -n keeps revision.test.mjs:688 matching.",
+    "Out of scope and not assigned: the low finding on rait-seed-profiles.integration.spec.ts:292 (C-02-01, separate scratch database / legacy-upgrade precondition) was deferred by TASK-0011 and has no owner iteration. Record it in Triagem before the new delivery review."
+  ]
+}

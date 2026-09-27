@@ -1,0 +1,63 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "State dir for the runSmoke fixture is not defined",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-retry-1.md",
+      "line": 33,
+      "claim": "Item 3 requires a table and JSON in the state dir without secrets. The fixed interface `runSmoke({ targets, fetchImpl })` (TASK-0005.md:67; TASK-0007.md:54) has no destination parameter. The prompt does not say the offline test must isolate DETRAN_STACK_STATE_DIR (CTG-0002 C-02-05). As written, the sensor could write to the state dir of a real running stack, or be impossible to verify without guessing the path. This conflicts with the 'must not collide with another stack' rule in item 1.",
+      "fix": "State that the test runs runSmoke in a child process with DETRAN_STACK_STATE_DIR pointing to a temp directory created by the test (or an explicit `stateDir` in the fixture interface). It then reads and checks the table and JSON there, including that no token, 'Bearer', password or userinfo appears. Document this in the report for TASK-0007."
+    },
+    {
+      "severity": "medium",
+      "item": "Failure signal of runSmoke on negative cases is not specified",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-retry-1.md",
+      "line": 34,
+      "claim": "The contract defines failure as a non-zero exit of the CLI (C-02-05/06). The offline sensor calls runSmoke directly. The prompt lists the negatives (backend stopped, HTML, empty JSON, wrong tenant, 401/403, proxy ignored, 503 with a preceding guard) but does not say how runSmoke signals them: `complete:false`, a per-row `result`, `blocked_before_adapter`, a rejected promise, or an exitCode. Without that, TASK-0007 may implement a signal the test does not recognize, or the test may accept any exception as failure. Harness errors (bad import, TypeError) would then count as proof of rejection, which weakens the negatives.",
+      "fix": "Require the Inspector to fix the failure signal in the test (e.g. report.complete === false plus a specific per-target result, and blocked_before_adapter for the CH 503). Each negative must also assert which row failed and why, not just that some error occurred. Optionally add a CLI check with a non-zero exit via a spawned process using only the fixture."
+    },
+    {
+      "severity": "medium",
+      "item": "The ephemeral port must not remove the localhost→IPv4 proof",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-retry-1.md",
+      "line": 17,
+      "claim": "Item 1 says to use the listener's real port for SefazHttpAdapter but does not say to keep the host as `localhost`. CTG-0002 C-02-03 and TASK-0005.md:61-62 require proving that the default `http://localhost:3999` reaches the IPv4 listener. A worker could switch to `http://127.0.0.1:<port>` to avoid IPv6 flakiness, which would drop that proof without it being obvious.",
+      "fix": "Add: 'the SefazHttpAdapter baseUrl stays `http://localhost:<real port>` with pathPrefix `/mock`, and the listener is bound only to host 127.0.0.1; assert address().address === \"127.0.0.1\" and family IPv4'."
+    },
+    {
+      "severity": "low",
+      "item": "Proxy read requirements from the original prompt are only implicit",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-retry-1.md",
+      "line": 31,
+      "claim": "Item 3 does not repeat that the four /v1 reads must carry `Authorization: Bearer local` and go to the frontend's port (not the backend). It also omits the backend /healthz and /readyz, and PEC 4204 as not_built_r0031 while apps/pec/web/angular.json is missing. These requirements exist in TASK-0005.md:70-72 and C-02-05, and the retry tells the worker to read the original. 'Proxy ignored' becomes testable only if the fixture checks the destination URL and the header.",
+      "fix": "Make it explicit that the fixture's fetchImpl records URL and headers, and that the test rejects a /v1 read sent to the backend port or missing the local bearer. Also require /healthz and /readyz, and PEC absent/not_built."
+    },
+    {
+      "severity": "low",
+      "item": "The requestId generated for GET does not require the test marker",
+      "file": "work/rounds/R-0017/prompts/TASK-0005-retry-1.md",
+      "line": 24,
+      "claim": "C-02-02 requires the generated requestId to be deterministic, marked as test and free of secrets. Item 2 only asks to prove it was 'generated in GET without body'. Nothing requires determinism across two calls or the test marker. It also does not cover a POST without requestId, which the contract also requires to generate an ID.",
+      "fix": "Add: generated requestId is a non-empty string, contains a test marker (e.g. prefix 'test-'), is stable/deterministic by the rule the test fixes, and a POST without requestId also generates one."
+    },
+    {
+      "severity": "low",
+      "item": "The nullable minutes_id check can become vacuous",
+      "file": "backend/domains/inf/rait-case/tests/integration/rait-seed-profiles.integration.spec.ts",
+      "line": 187,
+      "claim": "The fix in item 4 is correct: DDL 39-inf-rait-org.sql:90 declares `minutes_id uuid` without not null, and the current left join counts null as an orphan. With the `minutes_id is not null` filter, though, a derived fixture where every line has null minutes_id passes orphanMinutes=0 without ever exercising fk_inf_rait_jeton_line_minutes. That is not required by the contract, so it is not high.",
+      "fix": "Optional: record the count of lines with non-null minutes_id in the snapshot, so the two-run equality exposes it. Do not require > 0 without an amendment, since the contract does not demand it."
+    }
+  ],
+  "notes": [
+    "Role: the retry declares Inspector (Art. 7) at retry-1.md:3 and asks for `Papel: Inspector` in the delivery, consistent with TASK-0005.json (discipline inspector, iteration_count 1 < max_iterations 2).",
+    "Write boundary: retry-1.md:5-7 allows only tools/stack/*.test.mjs and the RAIT spec, and forbids production, contract, plan, fixtures and package.json. This is disjoint from TASK-0007 ('Nao altere testes do Inspector') and identical to TASK-0005.md:35-39. No conflict.",
+    "No test weakening: retry-1.md:14-15 and 41-44 forbid weakening and keep the red-for-missing-production state. The current source-regex test (contract.test.mjs:11-40) can stay; item 2 only says it does not replace executed behavior. The 3999/127.0.0.1 source checks keep the fixed CLI covered without binding the port.",
+    "The triage matches the real gaps: contract.test.mjs:50 hardcodes 43199; lines 69-71 check only `requestId` truthy (no DTO required fields or types, no echo versus generation); line 76 checks category/retryable but not `instanceof SefazAdapterError`; lines 100-123 have only the success path, a generic fixture with no healths/CH/negatives, and no state dir check. Spec lines 187-189 count a null minutes_id as an orphan, even though DDL 39-inf-rait-org.sql:90 makes it nullable.",
+    "Testable without production: tsx is installed at the root (`node --import tsx` resolves); index.ts re-exports SefazHttpAdapter and SefazAdapterError from the same instance, so instanceof works in the child process. http-adapter.ts:134-153 normalizes the envelope into SefazAdapterError, and NOT_FOUND non-retryable avoids retry. Port 0 and address()/close() are defined by the test, and TASK-0007.md:34-39 has to implement them. `test:stack` = `node --test tools/stack/*.test.mjs` already includes contract.test.mjs.",
+    "No conflict with contract or Owner: port 0 applies only to the factory under test; the CLI stays at 127.0.0.1:3999 (C-02-02). The 503 in the fixture is explicitly not a live proof (retry-1.md:35-37), consistent with C-02-04 and OD-R17-002. The medium findings can be fixed inline by the worker or in delivery-review and do not require a prompt re-review."
+  ]
+}

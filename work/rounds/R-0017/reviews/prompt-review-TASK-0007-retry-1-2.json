@@ -1,0 +1,51 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "item": "dashboard-served-layer-shape",
+      "file": "backend/domains/dashboard/monitor/src/handwritten/surface/alerts.controller.ts",
+      "line": 111,
+      "claim": "Item 5 of the retry prompt (line 60) asks to check the 'camada servida N1'. The real GET /v1/dashboard/alerts response is {items,page,pageSize,total,meta} and has no top-level layer field. servedLayer stays inside the gate (ceiling 'N1'), and each item exposes 'layer' (object_layer, export.service.ts:117). The offline mock in contract.test.mjs:175 returns a top-level 'layer: N1', which differs from the real response. A worker that looks for body.layer would fail live with a false negative.",
+      "fix": "State that the N1 proof is: the request with ?layer=N1 answers 200 (the gate accepts it with ceiling N1), items[] is non-empty, items[].layer === 'N1', and a concrete alert ID from 81-fixtures-dashboard-state.sql is present. Do not require a top-level layer field."
+    },
+    {
+      "severity": "low",
+      "item": "offline-sensor-compat",
+      "file": "tools/stack/contract.test.mjs",
+      "line": 124,
+      "claim": "The offline smokeFixture uses fixture '<name>-fixture-001' while the mock answers items [{id:'fixture-001'}]. Its CH probes have no body, persona or fixture. If the worker derives the concrete-ID check from the existing 'fixture' field, or makes CH persona/body mandatory, pnpm test:stack breaks, and tests cannot be changed in this retry.",
+      "fix": "Tell the worker to express the new checks (expected IDs, expected layer, persona/policy/precondition per CH probe) as optional target fields, set only in defaultTargets or the CLI. runSmoke stays compatible with the current smokeFixture."
+    },
+    {
+      "severity": "low",
+      "item": "tenant-proof-real-payloads",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-retry-1.md",
+      "line": 58,
+      "claim": "'verifique fixture concreta e tenant': the real list payloads (for example dashboard items) do not carry tenantId. The current check is conditional (body.tenantId &&). A worker that makes tenantId mandatory would block every GET live.",
+      "fix": "Clarify that tenant is proven by the x-detran-tenant-id header sent plus a concrete public ID of a fixture seeded under tenant …a001 (RLS scopes it). Check tenantId only when the field exists."
+    },
+    {
+      "severity": "low",
+      "item": "evidence-regex-precondition-text",
+      "file": "tools/stack/contract.test.mjs",
+      "line": 239,
+      "claim": "The evidence sensor rejects any 'token|bearer|password|secret'. The contract describes the precondition as '503 sem URL, token' (CTG-0002 §C-02-04). If the worker copies that text into the per-row precondition, or writes an adapterMessage or policy key containing those words, the evidence fails its own sensor.",
+      "fix": "Tell the worker to write preconditions with neutral codes (for example 'adapter_unconfigured', 'signing_url_absent') and never with the word 'token'."
+    }
+  ],
+  "notes": [
+    "PC-a5153ec676c0c1b1 confirmed: sha256(TASK-0007-retry-1.md)=a5153ec676c0c1b196c19a240e13e41538a90e6a27c20a9fe7dc78e78af6ee8c. The prefix matches compositions.json and TASK-0007.json (iteration_count 1 of max_iterations 2, gpt-5.6-terra/high).",
+    "First-review corrections applied. STATE_DIR: item 6 (line 67) requires the same STATE_DIR as detran-stack.sh:5 via a wrapper or identical resolution; smoke.mjs:4 still falls back to '/tmp/detran-stack' and is the target of the fix. Persona/IDs: item 5 requires the real role code, public IDs, route, policy key and precondition in the persisted evidence, and orders the substitution in evidenceRow() (smoke.mjs:10-17) removed. Dashboard: item 5 requires ?layer=N1 and a concrete alert from 81-fixtures-dashboard-state.sql. Council: item 3 requires reusing the clinic or justifying ensureCouncilCached before assertActiveClinic.",
+    "Removing the generic labels is safe for the tests: contract.test.mjs has no assertion on 'local-principal' or 'test-fixture'. The forbidden regex does not collide with role codes (AUDITOR, MEDICO, ADMIN_CLINICA) or with keys like ch:report:create.",
+    "Negative preflight is feasible. The current check() already maps a fetch failure to 'backend_unreachable'. Item 1 orders /healthz before SQL or restart, and item 6 requires the aggregate final report on this path too, which covers the second command of C-02-06.",
+    "DB guard is reusable: detran-stack.sh:24-25/88-89 separates REQUESTED_DB_NAME from DB_NAME and dies if it differs from detran_local_stack. The fixture script can source or replicate this before any psql.",
+    "Personas: the default roles (detran-stack.sh:437) already cover rait-coordinator, dash-operator and field-agent in one phase. Portal/AUDITOR, MEDICO, the biometric role and ADMIN_CLINICA need backend-only restarts through DETRAN_LOCAL_ROLES, which detran-runtime.ts accepts free-form (split ','). Frontends keep proxying to 3001 without a restart.",
+    "package.json:44 still points stack:smoke at node directly. Changing it to the wrapper counts as an 'already planned command' within the authorised scope, and C-02-06 keeps invoking `pnpm stack:smoke`.",
+    "The CH fixture belongs under tools/stack/ as ephemeral data in the disposable DB. This does not touch the RAIT seed or the closed profile, consistent with CTG-0002 §C-02-04.",
+    "Not reopened: Owner decisions OD-R17-*, the SEFAZ mock proven offline (C-02-02/03), and the PEC not_built_r0031 state.",
+    "No high finding: every gap can be fixed inside the authorised scope (tools/stack, detran-stack.sh, package.json) without touching backend, tests or the RAIT seed."
+  ]
+}

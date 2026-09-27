@@ -1,0 +1,49 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 62,
+      "claim": "Line 62 asks for proof that an active membership with no membership_roles is enough, but the reading list at lines 18-23 leaves out backend/app/src/detran-full-auth-roles.guard.ts. Its spec (detran-full-auth-roles.guard.spec.ts:150-199) shows the full-auth protocol reads auth.memberships, auth.membership_roles and auth.group_memberships from the database. The Engineer could cite only app.module/STYNX and report a false demonstration for routes under that guard.",
+      "fix": "Add detran-full-auth-roles.guard.ts and its spec to the identity reading list. Require the report to state, for each of the four frontend routes (Portal, RAIT, Dashboard, TEAT) and the two CH probes without an actor, whether the guard applies. If any of them depends on membership_roles, report BLOCKED without inserting roles."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 147,
+      "claim": "The report template lists ratified, corrected and reverted changes, but asks for no SHA-256 of the final files. The TASK-0006 ratification (reports/TASK-0006-delivery-ratify.md:5) recorded SHA-256 per artifact. Without hashes, the next delivery-review cannot tell whether the maestro's version was ratified unchanged or changed by the Engineer, which is the central point of delivery-review-CTG-0002.json:10.",
+      "fix": "Require the SHA-256 of each file in the write boundary (detran-stack.sh, smoke.mjs, portal-fixture.sh, sefaz-adapter-smoke.mjs, sefaz-mock.mjs) after the iteration. Mark which files are byte-for-byte identical to the maestro-adenda state."
+    },
+    {
+      "severity": "medium",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 131,
+      "claim": "Live smoke is forbidden (line 131), and ch-fixture.sh binds ch.professional.user_id and created_by to actor b0000002 (ch-fixture.sh:38,99). As a result, the default actor cannot be observed live on the biometric and council probes (RECEPCAO/ADMIN_CLINICA, which the TASK-0011 sensor at contract.test.mjs:571-580 now requires to run without an actor). The prompt tells the Engineer to report BLOCKED if ch-fixture needs to change (line 28), but does not require a static analysis that would find that dependency.",
+      "fix": "Require the report to cite, with file and line from BiometricLifecycleService.recordCheck and the council lifecycle, whether the principal's actor id is used in scope or preconditions before the adapter. Otherwise, record it explicitly as a risk for checkpoint (b)."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/prompts/TASK-0007-delivery-fix.md",
+      "line": 55,
+      "claim": "The prompt requires inserting auth.users and auth.memberships for actor ...000000000002 (lines 55-60). It does not require proof that they are needed. A7 (plan.md:288-296) only allows them ('pode criar'). Extra auth data in the scratch database is harmless, but it is not justified.",
+      "fix": "Ask for a citation of the file and line that make membership necessary (the tenancy interceptor or a query that joins auth.users), or allow skipping the insertion with a justification."
+    },
+    {
+      "severity": "low",
+      "file": "work/rounds/R-0017/reviews/delivery-review-CTG-0002.json",
+      "line": 51,
+      "claim": "Low finding C-02-01 in rait-seed-profiles.integration.spec.ts:292 (fresh-local-stack not in a separate scratch database, legacy-upgrade without its precondition, legacy IDs searched in only one table) belongs to the Inspector. TASK-0011 (reports/TASK-0011.md:3) changed only the stack tests, and this Engineer prompt cannot touch tests. So the finding is not routed in this cycle.",
+      "fix": "The maestro routes it to a restricted Inspector iteration, or records a numbered addendum under Triagem accepting the static manifest comparison, before the next delivery-review."
+    }
+  ],
+  "notes": [
+    "Boundary: the write set at lines 25-27 covers all the maestro's production edits listed in delivery-review-CTG-0002.json:11 (portal-fixture.sh, fixture-portal, build_stack, pg_isready, env -i, headers, Dashboard N1 filter, actor per phase). contract.test.mjs is excluded and stays with the Inspector, which took over the A6 guard (TASK-0011.md:10). The seed fix was already ratified by TASK-0006 under PC-2640674bbd29832f (plan.md:542-548). The own PC is confirmed: SHA-256 of the prompt = b855ce8a4d669db3…, equal to TASK-0007.json prompt_composition_id, with iteration_count 3/3 recorded under Triagem (plan.md:554-560).",
+    "Inspector reds that can be fixed without editing tests: (1) tenant_mismatch in arrays is handled at line 110; (2) actor per phase is handled at lines 47-53 and 69-72, matching contract.test.mjs:571-590 (sequence AUDITOR…ADMIN_CLINICA and then the 5 defaults; only MEDICO with b0000002; ACTOR_ID key absent, not empty); (3) the literal command is handled at lines 73-98 through register() from tsx/esm/api (tsx ^4.23.13 is in the root package.json:90) and a dynamic import, which avoids the ERR_MODULE_NOT_FOUND described in TASK-0011.md:16.",
+    "A6/A7 preserved: the Portal line stays synthetic and local only (lines 43-45), the DB_NAME guard runs before SQL (lines 66-68, portal-fixture.sh:14-15), and no canonical profile changes. The default actor matches detran-runtime.ts:322. The a001 tenant stays consistent because detran-stack.sh:454 applies the default when DETRAN_LOCAL_TENANT_ID is removed. The prompt forbids changes to policy/RLS and any bypass (line 66), and forbids role inserts (line 61).",
+    "C-02-02: the requirements at lines 73-98 match CTG-0002.md:94-109 (six DTOs, requestId echo and deterministic generation, NOT_FOUND/BUSINESS_ERROR non-retryable, 405 with Allow, IPv4 loopback). Normalization is achievable without changing packages, because http-adapter.ts:146-152 carries category/code/retryable/providerStatus/requestId from the envelope into SefazAdapterError. Raw fetch for 405 is justified because the adapter's verb is fixed. The sensor gap for invalid body through the adapter is reported to the maestro (lines 95-96).",
+    "Lifecycle/evidence: tail -n (compatible with the sensors' /^tail .*80/ regex at revision.test.mjs:643,740), readyz in backend-restart, the relative mock argv kept for the node stub (revision.test.mjs:115), sefaz-mock.pid, positive/negative reports under separate suffixes (smoke.mjs:80 already supports a suffix), PEC state through existsSync, and a justified or restored build_stack are all covered at lines 99-124. Corrections without an Inspector sensor are listed at lines 134-136 for a later Inspector iteration."
+  ]
+}
