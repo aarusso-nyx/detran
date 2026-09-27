@@ -329,6 +329,10 @@ PR CTG-0002 e repetir os gates aplicáveis.
 
 - Gates após correção e revisão: `pnpm law:test` 56/56, `pnpm verify:law-corpus`, `pnpm format:check`, DEVAI `glossary` 44/44 e `journeys` 40/40 PASS. `pnpm check` completo PASS (exit 0, inclusive blueprints, contracts, typecheck, lint, testes e builds). A diferença do status antes/depois do check contém só os arquivos de relatório, revisão e status de tarefa escritos pelo maestro durante a execução; nenhum gerado ou código fora do escopo apareceu. Repetir após integração de `origin/main` com snapshot estável.
 
+- Integração pré-PR CTG-0002: commits segregados `17ee8e27` (product), `102d48fe` (law/glossário), `7f5451f4` (gate) e `c18ec88e` (contrato, OD e trilha). `origin/main` avançou até `b1268a35` com PRs #135 (R-0018) e #133 (R-0017). Merge normal `c479ca4e` conservou OD-R19-001…006 e OD-R17-001/002; conflito de `record/proofs/chain.json` foi resolvido aceitando integralmente a versão máquina de `main`, sem edição manual. `evidence verify --scope chain` PASS, head `ff127d27a3905ae2799fa5a7a4c97b5cf98e833481bc9ee75459eb305bc4a73f`. A observação CTG-0001 EV-8749e9ca5c3e75bf fora emitida no SHA integrado exato antes desta integração; tentativa de reemissão agora devolveu `AUDIT_OBSERVE_EXACT_HEAD_REQUIRED` porque o HEAD atual já avançou. Os cinco artefatos de observação permanecem e serão referenciados na próxima prova genérica gerada pela fronteira DEVAI para manter a âncora na cadeia de `main`.
+
+- Gates pós-merge `c479ca4e`: oito membros DEVAI PASS (invariants 9, trace 1, test-trace 0, glossary 44, journeys 40; demais sem erro), `pnpm law:test` 56/56, `pnpm verify:law-corpus`, `docs:kb:check` (773 artefatos), `docs:kb:publish-check` (201 arquivos), `devai doctor` e `sense run spec_depth` PASS (9 INV, 41 ADR, 6 bundles). `pnpm check` completo **exit 0**; `git status --porcelain` antes/depois **idêntico** (nenhum arquivo gerado).
+
 ## Retomada
 
 **Estado corrente — CTG-0002:** CTG-0001 está integrado e observado no HEAD
