@@ -296,6 +296,17 @@ com escaladas Inspector e Engineer para os achados high. `pnpm law:test`
 Próximo passo: gates finais, commits segregados, evidência e
 PR CTG-0001. CTG-0002 só começa após seu merge.
 
+**Integração pré-PR CTG-0001:** commits segregados por autoridade; branch
+local ainda não publicado rebaseado em `origin/main` `4bd1d553` (R-0018
+CTG-0003). O conflito no registro OD preservou `OD-R18-005` de `main` e a
+seção R-0019 com `OD-R19-001..003`. Após o rebase, os seis membros DEVAI
+(`invariants`, `invariant-strategies`, `trace`, `test-trace`, `glob-guards`,
+`schemas`) passaram com status Git idêntico antes/depois; `devai doctor` OK;
+`pnpm check` completo **PASS** (exit 0, incluindo law:test 28/28,
+verify:law-corpus, blueprints:check, typecheck, frontends). O veredito
+delivery-review ciclo 2 continua aplicável: a única integração foi o novo
+OD-R18-005 no registro canônico e nenhuma regra revisada mudou.
+
 **Emenda de orçamento — Owner, 2026-09-26:** o Owner escreveu nesta conversa
 “waive token budget to allow this round to finish”. O limite de 650.000 tokens
 de entrada e a parada em 80% ficam dispensados para R-0019. O maestro mantém
