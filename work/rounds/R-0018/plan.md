@@ -276,6 +276,10 @@ rodadas, 14 closures`; `pnpm test:state-index` → 98/98; `pnpm check` e `pnpm d
   by path" na linha de papéis de cada arquivo. Por isso a parte "`grep -c 'Article 6'` → 0" de C-02-28
   fica **não cumprida por decisão do Owner** (`devai@1.5.6` = 1 e Prettier OK continuam cumpridos).
 
+- **M7 — OD-R18-002 e OD-R18-004 decididas (2026-09-27).** O Owner aceitou a ADR-0022 e a ADR-0035
+  ("aceito OD-R18-004 e OD-R18-002"); `## Status` de cada uma passa a Accepted/Aceita (histórico
+  preservado) e os dois índices mudam no mesmo commit, em PR próprio após o fechamento.
+
 ## Concorrência
 
 Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):

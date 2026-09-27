@@ -28,6 +28,12 @@ if [[ "$rait_full" = 1 ]]; then
         exit 2
       }
       ;;
+    detran_local_stack)
+      [[ "${DETRAN_LOCAL_STACK_FULL_AUTHORIZED:-}" = 1 ]] || {
+        echo "--full requires explicit detran local stack authorization" >&2
+        exit 2
+      }
+      ;;
     *)
       echo "--full is not authorized for database: $rait_db_name" >&2
       exit 2

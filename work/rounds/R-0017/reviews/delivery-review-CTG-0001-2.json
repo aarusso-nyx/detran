@@ -1,0 +1,28 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 2,
+      "file": "tools/detran-stack.sh",
+      "line": 417,
+      "claim": "The new `env -i` allowlist (l.411-427) turns unset optional variables into empty strings: DETRAN_LOCAL_ACTOR_ID=\"${DETRAN_LOCAL_ACTOR_ID:-}\" (l.417), DETRAN_LOCAL_CPF and DETRAN_LOCAL_ASSURANCE_LEVEL (l.419-420), and SENATRAN_MOCK_CPF_USUARIO and SENATRAN_MOCK_CLIENT_CERT_CN (l.424-425). The backend reads these with `??`, and `??` does not fall back on an empty string. backend/app/src/detran-runtime.ts:321-323 gives principal.id = '' instead of '00000000-0000-4000-8000-000000000002'. packages/senatran-adapter/src/config.ts:80-82 gives cpfUsuario = '' and simulatedClientCertificateCn = '' instead of '12345678909' and 'senatran-dev-client'. A default `stack:start` with none of these variables set therefore runs the backend with an empty actor (not a valid UUID for audit or persistence) and empty SENATRAN mock credentials. The adopted version did not have this regression because it only set the variables it gave defaults for. The sensor at revision.test.mjs:524-555 only checks that secrets are absent, so it does not catch this.",
+      "fix": "In start_backend, build the environment array conditionally: keep PATH, HOME, DATABASE_URL, PORT and the variables that have stack defaults (DETRAN_RUNTIME_PROFILE, DETRAN_LOCAL_TENANT_ID, DETRAN_LOCAL_ROLES, SENATRAN_PROVIDER, SENATRAN_MOCK_BASE_URL). Add each of DETRAN_LOCAL_ACTOR_ID, DETRAN_LOCAL_CPF, DETRAN_LOCAL_ASSURANCE_LEVEL, SENATRAN_MOCK_CPF_USUARIO and SENATRAN_MOCK_CLIENT_CERT_CN only when it is set (for example `[[ -n \"${VAR+x}\" ]] && backend_env+=(\"VAR=$VAR\")`), then run `exec env -i \"${backend_env[@]}\" pnpm ...`. Add an offline assertion to the backend-environment test: with the defaults, the dumped environment contains no `^DETRAN_LOCAL_ACTOR_ID=$`, `^DETRAN_LOCAL_CPF=`, `^DETRAN_LOCAL_ASSURANCE_LEVEL=`, `^SENATRAN_MOCK_CPF_USUARIO=` or `^SENATRAN_MOCK_CLIENT_CERT_CN=` line."
+    }
+  ],
+  "notes": [
+    "Item 1 (overrides) is fixed. Presence of DETRAN_DB_IMAGE, DB_HOST, DB_PORT, DB_USER and DETRAN_BACKEND_PORT is recorded before the fixed values are assigned (l.10-21), and validate_stack_environment (l.115-123) runs before any command (l.589), so it happens before require_runtime. The usage text (l.67-73) lists only the accepted variables, and five offline tests assert no docker/pnpm/psql call (revision.test.mjs:365-380).",
+    "Item 2 (isolation and validation) is fixed, apart from the regression above. The backend and frontends use `env -i` (l.411, l.446). Profile and provider are restricted to local-sandbox and mock (l.110-111). The URL regex (l.112) only accepts an http loopback URL with an optional port or path, which rules out userinfo and non-loopback hosts. A test verifies that sensitive variables do not reach the backend.",
+    "Item 3 (--no-mock) is fixed. mock.disabled is written in STATE_DIR before require_runtime (l.481-485) and cleared by stop (l.518). health_targets drops :3000 (l.329), config emits 'disabled' (l.176), and status reports disabled and omits the URL (l.558-567). There are tests for config/stop and for health without a probe.",
+    "Item 4 (cleanup on failure) is fixed. A failure in start_backend, start_frontends or health_stack calls cleanup_failed_start (l.496-510), which kills the PID trees, removes the PID files and brings the mock down if this run started it. A mock_start failure runs mock_stop. revision.test.mjs:557-589 checks that the processes and PID files are gone. Low residual: the cleanup does not remove mock.disabled and there is no SIGINT/TERM trap, so a Ctrl-C during the health wait still leaves processes behind.",
+    "Item 5 (Compose logs) is fixed: `logs --tail=80 app` (l.352), with an exact assertion (revision.test.mjs:602).",
+    "Item 6 (real status) is fixed. container_running/container_exists are restored (l.540-546), mock_status is called (l.562), and the frontend URLs come from FRONTEND_* (l.568-571).",
+    "Item 7 (characterization with no DDL) is fixed. The assertions now run against result.calls: no pnpm/psql line and no docker line other than `docker info` (characterization.test.mjs:143-144).",
+    "Item 8 (behavioral Compose version) is fixed. With 2.24.3 the run fails and makes no `compose ... up` call; with 2.24.4 `up` does happen (revision.test.mjs:446-471). Nested keys are checked with deepEqual (l.266-305, l.336-361). start with a failing curl is covered (l.557-606).",
+    "Low items are fixed. C-01-12 now resolves the ...RAIT_ROLES/...DASHBOARD_ROLES spreads into sets. The DB wait uses health_timeout (l.223-247). The mkdir moved to ensure_state_dirs, config is pure, and database_env was replaced by database_env_array, which is actually used. `logs mock` now passes the override (l.579).",
+    "Non-blocking, low: DETRAN_TEST_STUB_CALLS is passed to the backend and ng serve (l.414, l.449). It is a test hook on the runtime path, harmless but outside the contract's allowlist. Rejecting overrides before the dispatch also makes `help` fail when the operator's shell exports DB_PORT/DB_HOST. That is consistent with the contract but may surprise users.",
+    "`pnpm check` was not treated as PASS (no final output). apply.sh and package.json are unchanged since cycle 1."
+  ]
+}
