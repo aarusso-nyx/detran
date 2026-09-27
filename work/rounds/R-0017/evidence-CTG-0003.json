@@ -1,0 +1,68 @@
+{
+  "action": "Deliver R-0017 CTG-0003: local-stack runbook, disposable environment example, optional manual CI smoke, and round decision/history transcription",
+  "round": "R-0017",
+  "coupled_task_group": "CTG-0003",
+  "role": "engineer",
+  "commits": ["9210a906a3e6d0a12d7fcefa4a98a3d58022b090"],
+  "artifacts": [
+    {
+      "path": ".env.example",
+      "sha256": "037ab52415554c959f035c5723dc624e2c0aefedb23c6b05b0df1f085b0b24e2"
+    },
+    {
+      "path": "docs/dev/operations/local-stack.md",
+      "sha256": "e2a512218c07d44b06d87fd6fd883865644b2ab21636f836db46a665ba1b1b54"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "c7efb570e182405a492310c3ed61bb9b28c865be82b3f1be7b271fb4635fda40"
+    },
+    {
+      "path": "docs/meta/agents/orchestra/waves.md",
+      "sha256": "8a47997f25f42ac5d26b87a90b4aadacdf2f4e65d537c2395c57f1da00e46526"
+    },
+    {
+      "path": "docs/meta/knowledge-base/backlog.md",
+      "sha256": "e45cde5468974d3516fc09373c2032add4872d2e90cea53c11c2094c7cbab71a"
+    },
+    {
+      "path": "work/rounds/R-0017/reviews/delivery-review-CTG-0003-cycle-2.json",
+      "sha256": "c1fc0307fe318e1abb494e951dfe4e670704f521897cc922b514da93e643afdf"
+    }
+  ],
+  "gates": [
+    {
+      "name": "pnpm check",
+      "result": "pass",
+      "note": "Full CTG-0003 group gate exit 0 on 2026-09-27; ignored docs build archived before catalogue verification"
+    },
+    {
+      "name": "pnpm docs:check",
+      "result": "pass",
+      "note": "TASK-0010 escalation Docusaurus typecheck and build exit 0"
+    },
+    {
+      "name": "pnpm verify:state-index",
+      "result": "pass",
+      "note": "39 ADRs, 33 rounds, 16 closures; R-0017 remains aberta until close"
+    },
+    {
+      "name": "pnpm format:check",
+      "result": "pass",
+      "note": "Final re-run after formatting maestro-owned review artifact exit 0"
+    },
+    {
+      "name": "delivery-review CTG-0003 cycle 2",
+      "result": "pass",
+      "note": "Opposite-family reviewer PASS, no findings; two backlog omissions from cycle 1 corrected"
+    }
+  ],
+  "tasks": ["TASK-0008", "TASK-0009", "TASK-0010"],
+  "decisions": [
+    "OD-R17-001: local SEFAZ mock with six routes; no real integration",
+    "OD-R17-002: PAdES, biometric and council adapters explicitly off with fail-closed smoke",
+    "OD-R17-003: stack-smoke CI job only on workflow_dispatch, not a required branch-protection check",
+    "OD-R17-004: synthetic Portal complaint exclusively in detran_local_stack, never canonical seed",
+    "Backlog preserves future RAIT serve.buildTarget repair and a dedicated SEFAZ adapter ADR without claiming either delivered"
+  ]
+}
