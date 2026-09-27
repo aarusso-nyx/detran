@@ -3,8 +3,8 @@
   "window": 2,
   "window_input_budget": 600000,
   "checkpoint_threshold": 480000,
-  "estimated_input_total": 877000,
-  "estimated_output_total": 144000,
+  "estimated_input_total": 1723000,
+  "estimated_output_total": 262000,
   "note": "Tokens únicos estimados (convenção R-0003/R-0006: ≈ ¼ dos brutos do subagente; brutos na nota). Maestro Opus 5.5 (claude-opus-5-5); workers Opus 5.5/Sonnet 5; reviewer Sol 6 (codex gpt-6-sol). Janela 2 (retomada com permissão total, Emenda 2): CTG-0001 executado. Janela 2 excedeu o limiar de 480k (≈632k únicos só nesta janela, antes do CTG-0002/0003); a execução segue pela instrução explícita do Owner de concluir a rodada (AUTHORIZATION.md Emenda 2), registrada aqui e em plan.md.",
   "entries": [
     {
@@ -94,6 +94,46 @@
       "input_tokens": 90000,
       "output_tokens": 25000,
       "note": "Retomada após handoff."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "claude-opus-5-5",
+      "input_tokens": 76000,
+      "output_tokens": 18000,
+      "note": "306k brutos."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0005 (tentativa 1 + iteração isolada), TASK-0007",
+      "model": "claude-sonnet-5",
+      "input_tokens": 100000,
+      "output_tokens": 15000,
+      "note": "≈ 400k brutos."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008/0009/0010 (tentativa 1 + redespacho + iterações de 0009), TASK-0011 fases 1 e 2",
+      "model": "claude-sonnet-5",
+      "input_tokens": 290000,
+      "output_tokens": 30000,
+      "note": "≈ 1,16 M brutos; tentativa 1 perdida em T8."
+    },
+    {
+      "kind": "reviewer",
+      "id": "prompt-review-3…10, delivery-review-CTG-0002 (1, 2), CTG-0003 (1, 2)",
+      "model": "gpt-6-sol",
+      "input_tokens": 240000,
+      "output_tokens": 15000,
+      "note": "12 chamadas."
+    },
+    {
+      "kind": "maestro",
+      "id": "janela 2 — CTG-0002, CTG-0003 e fechamento",
+      "model": "claude-opus-5-5",
+      "input_tokens": 140000,
+      "output_tokens": 40000,
+      "note": "Triagem T8, PRs #129/#130, observações, PC-0015."
     }
   ]
 }

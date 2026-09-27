@@ -294,6 +294,11 @@ Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):
   contradição canônica ou decisão do Owner. Correções aplicadas nos prompts, na tarefa e em M4.
   Pelo §5 do prompt do maestro, FAIL → parar e reportar ao humano; ciclo 2 (restrito aos itens
   corrigidos) só com decisão do Owner.
+- **B2 — `devai round seal` recusado (2026-09-27).** `devai round seal --round R-0018` →
+  `{"code":"ROUND_ARCHIVE_RECORD_MISSING","operation":"seal","exit":2}`. Pré-requisito ainda não
+  entregue (registro de arquivamento/fluxo de selo: R-0020, C-0002 §4). Não contornado: o selo de
+  R-0018 fica para R-0020, que sela R-0003…R-0019. O fechamento emitido é **PC-0015**
+  (`record/proofs/compliance/closures/PC-0015.json`).
 
 ## Triagem
 
@@ -326,15 +331,10 @@ Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):
 
 ## Retomada
 
-**Checkpoint 3 — 2026-09-26/27, janela 2.** CTG-0001 mesclado (PR #128, merge `289a072f`, observado
-EV-5b4f8f7a4c723afa). CTG-0002 concluído (TASK-0006, TASK-0005 it. 1 isolada após T8, TASK-0007;
-delivery-review PASS no ciclo 2; `pnpm check` exit 0; checkpoint (b) sem arquivo ignorado em
-`work/rounds`) e commitado em `orchestra/index-state-ctg2`. Próximos passos: evidência do CTG-0002,
-integrar `origin/main`, push, PR (pedir OD-R18-003), merge, `audit observe`; CTG-0003 em
-`orchestra/index-state-ctg3`: redespacho idêntico de TASK-0008/0009/0010 (T8) → TASK-0011 fase 1 →
-gates → delivery-review → PR; fechamento (closure, `round close`, `round seal`, TASK-0011 fase 2).
-
-(Checkpoint 2: CTG-0001 commitado; checkpoint 1: bootstrap, M1–M4.)
+**Rodada fechada — 2026-09-27.** CTG-0001 (PR #128, `289a072f`), CTG-0002 (PR #129, `681e8d65`) e
+CTG-0003 (PR #130, `4bd1d553`) mesclados e observados; closure **PC-0015**; `round seal` recusado
+(B2, fica para R-0020). Pendências do Owner: OD-R18-001…005 (OD-R18-003 = aplicar os patches de
+`CLAUDE.md`/`AGENTS.md`). Nada a retomar nesta rodada além dessas decisões.
 
 ## Leitura
 

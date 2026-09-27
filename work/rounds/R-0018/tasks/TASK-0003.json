@@ -15,8 +15,8 @@
   "coupled_pipeline_position": "engineer",
   "upstream_task_id": "TASK-0002",
   "db_isolation": "database",
-  "iteration_count": 1,
-  "max_iterations": 2,
+  "iteration_count": 3,
+  "max_iterations": 3,
   "priority": 3,
   "tags": ["c-0002", "action-3", "ctg-0001"],
   "branch": "orchestra/index-state",
@@ -55,9 +55,25 @@
     {
       "iteration": 1,
       "started_at": "2026-09-26T21:30:00.000Z",
-      "ended_at": "2026-09-26T21:45:00.000Z",
+      "ended_at": "2026-09-26T23:00:00.000Z",
       "verdict": "PASS",
-      "hard_gate_failures": []
+      "hard_gate_failures": ["Adenda A2 (desescape de \\|)"]
+    },
+    {
+      "iteration": 2,
+      "started_at": "2026-09-26T21:30:00.000Z",
+      "ended_at": "2026-09-26T23:00:00.000Z",
+      "verdict": "PASS",
+      "hard_gate_failures": ["delivery-review-CTG-0001: 3 lacunas de detecção"]
+    },
+    {
+      "iteration": 3,
+      "started_at": "2026-09-26T21:30:00.000Z",
+      "ended_at": "2026-09-26T23:00:00.000Z",
+      "verdict": "PASS",
+      "hard_gate_failures": [
+        "delivery-review-CTG-0001-2: §Aliases por linha; escalada Sonnet 5 → Opus 5.5"
+      ]
     }
   ]
 }
