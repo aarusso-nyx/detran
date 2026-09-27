@@ -5,8 +5,8 @@
   "checkpoint_at": "2026-09-26",
   "window_input_budget": 650000,
   "checkpoint_threshold": 520000,
-  "estimated_input_total": 1601823,
-  "estimated_output_total": 283004,
+  "estimated_input_total": 1642823,
+  "estimated_output_total": 292004,
   "note": "Owner waived the token budget on 2026-09-26 to allow R-0019 to finish. Estimates remain for audit only; actual per-worker usage was not exposed by the subagent interface. The Claude alias opus resolved to claude-opus-5-5 during bootstrap.",
   "entries": [
     {
@@ -296,6 +296,46 @@
       "input_tokens": 50000,
       "output_tokens": 5000,
       "note": "Restricted review of 42-file correction diff and cycle-1 findings."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0011",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 12000,
+      "output_tokens": 3000,
+      "note": "Architect transcriber updates R-0019 backlog, orchestra history and round index after CTG-0002 proposal PR checkpoint."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0011-index-parity",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 6000,
+      "output_tokens": 1000,
+      "note": "Restricted R-0019 row correction for merged PR #132 and state-index status vocabulary."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Cross-family delivery review of three documentation indexes and TASK-0011 report."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0011-review-findings",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 5000,
+      "output_tokens": 1000,
+      "note": "Restricted correction of R-0019 opening date and history details after CTG-0003 cycle-1 REVIEW."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0003-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 8000,
+      "output_tokens": 2000,
+      "note": "Restricted review of CTG-0003 cycle-1 finding corrections."
     }
   ]
 }
