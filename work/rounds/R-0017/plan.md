@@ -365,6 +365,17 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **CTG-0001 pos-PR #132/#135 (2026-09-27):** a terceira rodada de CI
+  do PR #133 passou integralmente, mas R-0019 CTG-0001 entrou em `main`
+  durante o CI e exigiu reconciliar `package.json` (`test:stack` junto de
+  `law:test`/`verify:law-corpus`), o registro de ODs e a cadeia governada.
+  Merge local `72012c25` aceitou a cadeia de `main`; R-0018 OD-R18-002/004
+  entrou depois, integrada por `cbd8fe1f` sem conflito. `pnpm check`
+  (incluindo stack 42/42, law-corpus e state-index 98/98) e
+  `pnpm docs:check` passaram no candidato consolidado. Proximo:
+  `evidence record` na cadeia atual, push normal, CI verde, merge do PR #133
+  e `audit observe` no SHA integrado. As OD-R17-001/002/003 ainda exigem
+  resposta do Owner para CTG-0002/0003.
 - **CTG-0001 pos-PR #134 (2026-09-27):** a segunda rodada de CI do PR #133
   passou integralmente (inclusive `verified-local-rc`); antes do merge,
   `origin/main` avancou pela decisao OD-R18-003. O branch publicado integrou

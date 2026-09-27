@@ -8,7 +8,9 @@
     "defe6a58151b76c7560f94ac730ef762324e22ed",
     "6e8491846a6266e996d097427c44661512d0c805",
     "90078a30b3e9bfdefceabc151f729c44fbbc0305",
-    "b8d6cfe640bf521bb82d78d265354a3e9869be50"
+    "b8d6cfe640bf521bb82d78d265354a3e9869be50",
+    "72012c25040fef24580fb038f619480c1cdc4e82",
+    "cbd8fe1fa4c602892e64ae97bd039166f9a87c0f"
   ],
   "artifacts": [
     {
@@ -37,11 +39,11 @@
     },
     {
       "path": "package.json",
-      "sha256": "c0d4e6299c278a69c409738a2ca26d55d05f1b791f36f121e5861578d5c96b2e"
+      "sha256": "0cbb65c82082cd561e0eb482653343e60773792cc9783a952de39c130127bdca"
     },
     {
       "path": "docs/meta/knowledge-base/open-decisions-rait.md",
-      "sha256": "716be0347fca7c85faa9380272c169eb78f39b732124a169deb934f7f5bff41a"
+      "sha256": "254703089ceb6437bdc3c76a59e2ac46c175c9b9b7bcaa1e9741a4314ac065e3"
     },
     {
       "path": "work/rounds/R-0017/contracts/CTG-0001.md",
@@ -53,7 +55,7 @@
     },
     {
       "path": "work/rounds/R-0017/plan.md",
-      "sha256": "85c22f06949575dc6c81abd27fc29dfdb5a449a2607a21175f92f17e6ccd599e"
+      "sha256": "39557c1abeaab73cf9284394436c6b7810d40c1a734fce31e82e57e84eee8ac5"
     },
     {
       "path": "work/rounds/R-0017/budget.json",
@@ -69,7 +71,7 @@
     {
       "name": "pnpm check",
       "result": "pass",
-      "note": "Post-origin/main integrated candidate: test:stack 42/42; verify:state-index and test:state-index 98/98; blueprint, contract, type, policy, frontend test and build gates exit 0"
+      "note": "Post-PR #132/#135 integrated candidate: test:stack 42/42, law:test and verify:law-corpus, state-index 98/98, blueprint, contract, type, policy, frontend test and build gates exit 0"
     },
     {
       "name": "pnpm docs:check",
@@ -88,6 +90,7 @@
     "The three checkpoint-(a) hashes were verified on the verbatim-adoption commit before any revision",
     "The R-0018 state-index gates were retained alongside test:stack during unpublished-branch rebase",
     "Published branch merged origin/main after R-0018 closure PR #131; chain.json was accepted from main and this record re-anchors CTG-0001 to that chain",
-    "Published branch merged origin/main after R-0018 OD-R18-003 PR #134; both decision sections were preserved and all post-merge gates passed"
+    "Published branch merged origin/main after R-0018 OD-R18-003 PR #134; both decision sections were preserved and all post-merge gates passed",
+    "Published branch merged R-0019 PR #132 and R-0018 PR #135; package.json runs both stack and law-corpus gates, all decision sections are preserved, and full local gates passed"
   ]
 }
