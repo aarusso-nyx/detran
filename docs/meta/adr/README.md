@@ -56,7 +56,7 @@ ADR-0012 and ADR-0013 were taken by the PEC port while the infractions definitio
 
 ## Série `law/adr`
 
-Destino pendente de OD-R18-001.
+Série DEVAI distinta, com prefixo `LAW-ADR-` nos índices (OD-R18-001, opção b).
 
 | ADR                                                                   | Título                                    | Status   | Vigência                                                                                                                                |
 | --------------------------------------------------------------------- | ----------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
