@@ -1,0 +1,14 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "O SHA-256 de work/rounds/R-0017/prompts/TASK-0010.md é 3b71a75336e97ec3427d69355a88723cd34d03a3cea920e00968901831b3ee08, igual ao esperado. O PC-3b71a75336e97ec3 aparece em tasks/TASK-0010.json nos dois campos: prompt_composition_id no topo e em executor.",
+    "A leitura fechada (linhas 23-40) só acrescenta reports/TASK-0008-retry-1.md e reports/TASK-0009-retry-1.md. Os dois arquivos existem, e as seções Pode tocar, Nao pode tocar, Definicoes fechadas e Criterios de aceitacao não mudaram.",
+    "Os dois retries registram correções restritas com Bloqueios: nenhum. TASK-0008-retry-1 corrige local-stack.md, e TASK-0009-retry-1 preserva workflow_dispatch e o digest. Nada neles contradiz OD-R17-001 a 004 nem a fronteira da TASK-0010.",
+    "Em tools/docs/state-index/check.mjs, a linha 929 define validEstados com 'aberta'. As linhas 847-865 só exigem PC válido quando a linha está fechada, então trocar 'proposta (C-0002)' por 'aberta' com PC '—' passa no gate.",
+    "A última closure emitida é PC-0016. O prompt proíbe inventar o próximo PC-* e declarar a rodada selada, e deixa o PC como '—' até o devai round close.",
+    "Observação sem finding: o relatório de TASK-0008-retry-1 declara 'PC: não disponível'. Isso é informativo e não muda o escopo da TASK-0010."
+  ]
+}

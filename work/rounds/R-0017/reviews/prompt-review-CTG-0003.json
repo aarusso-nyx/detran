@@ -1,0 +1,14 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "The sha256 values of the three final prompts match the requested hashes: TASK-0008 7e1bd568...083c73, TASK-0009 c48788ac...abc5b5, TASK-0010 c5fba4e2...be52a35.",
+    "compositions.json (lines 163-184) and the task JSONs agree with these hashes: TASK-0008 PC-7e1bd5688745a251, TASK-0009 PC-c48788ac3e508a63, TASK-0010 PC-c5fba4e27d0c0650.",
+    "prompt-review-CTG-0003.md still lists the old PC-59c148b71cf82418 as the expected id for TASK-0008. That hash is from before the .env note, so the recomposition to PC-7e1bd5688745a251 is consistent and is not a finding.",
+    "The TASK-0008 change at lines 85-87 only fixes the previous low note. tools/detran-stack.sh never loads .env or .env.example, and the operator exports overrides by hand. The change does not widen the paths the task may touch or its acceptance criteria.",
+    "Lines 83-84 of TASK-0008 say that DB_HOST, DB_PORT, DB_USER, DETRAN_DB_IMAGE and DETRAN_BACKEND_PORT are not overrides. This matches the guard at tools/detran-stack.sh:123.",
+    "No new high findings. TASK-0009 keeps OD-R17-003 as workflow_dispatch only with no competing Postgres service. TASK-0010 keeps the round state aberta without making up a closing PC."
+  ]
+}

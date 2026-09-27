@@ -1,0 +1,13 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "High 1 (serve.buildTarget) is fixed. backlog.md:638 is an open R-0017 entry. It gives the current values `portal-web:build:production` and `portal-web:build:development`, which match apps/rait/web/angular.json:67 and :70. It names the CTG-0001 workaround in the tooling, the owner (Architect / Engineer-frontend, in a future round) and the source (plan.md §RAIT serve, lines 450-452).",
+    "High 2 (sefaz-adapter ADR) is fixed. backlog.md:639 is an open entry for the missing ADR of `packages/sefaz-adapter`. It says the item is out of R-0017 scope, names the owner (Architect, in a future round) and the source (plan.md §Riscos, lines 211-213). The ADR itself was not created, as required.",
+    "Boundary: the backlog diff only adds lines 637-639 (the R-0017 summary entry, which was already reviewed in cycle 1, plus the two new entries). No other backlog entry changed and no OD was reopened.",
+    "Gates: `pnpm format:check` exits 0 on re-run in this review. The worker report also records `pnpm docs:kb:check` exit 0 and backlog Prettier exit 0. The worker's earlier format:check failure came from the maestro's own delivery-review-CTG-0003.md, which is outside the worker's boundary. No criterion was relaxed.",
+    "Low (housekeeping, does not change the verdict): work/rounds/R-0017/reviews/ contains untracked temporary files `delivery-review-CTG-0003-cycle-2.json.formatted.*` and `.raw.*`. Check before committing that they are not versioned by mistake."
+  ]
+}

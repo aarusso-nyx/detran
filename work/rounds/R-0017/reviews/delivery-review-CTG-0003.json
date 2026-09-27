@@ -1,0 +1,34 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0017",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/meta/knowledge-base/backlog.md",
+      "line": 637,
+      "claim": "work/rounds/R-0017/plan.md:450-452 promises that the repair of the RAIT `serve.buildTarget` reference goes into the backlog in TASK-0010. The defect is still in the code: apps/rait/web/angular.json:67 and :70 point to `portal-web:build:*`. backlog.md has no entry for it (`grep buildTarget` finds nothing). The TASK-0010 prompts did not carry this obligation, and the escalation ratified the backlog without checking it.",
+      "fix": "Restricted TASK-0010 iteration (Architect, transcription): add an open R-0017 backlog entry for fixing `serve.buildTarget` in apps/rait/web/angular.json. It should record the current value (`portal-web:build:*`), the workaround in the tooling (CTG-0001), the owner or next round, and the source plan.md §RAIT serve."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/meta/knowledge-base/backlog.md",
+      "line": 637,
+      "claim": "The risk at work/rounds/R-0017/plan.md:212-213 says `packages/sefaz-adapter` has no ADR of its own (inspection (c)), is out of scope, and must be recorded in the backlog. backlog.md does not mention it: the only SEFAZ occurrence is the summary entry at line 637. This out-of-scope item is left without the record the plan requires.",
+      "fix": "In the same restricted TASK-0010 iteration, add an open backlog entry: 'ADR of its own for `packages/sefaz-adapter`' (owner Architect; source plan.md §Riscos). Do not create the ADR in this round."
+    }
+  ],
+  "notes": [
+    "No high findings for TASK-0008 or TASK-0009. The `stack-smoke` job runs only when `github.event_name == 'workflow_dispatch'`, which the `on:` already declares. The diff only appends at the end of ci.yml, so the five required checks are unchanged. The digest at ci.yml:435 matches ci.yml:180 and `DB_IMAGE` in tools/detran-stack.sh:17. The job uses `PACKAGES_READ_TOKEN` like `foundation`. `stack:stop` runs under `if: always()`. The config check reads `bash tools/detran-stack.sh config`, which avoids the pnpm banner.",
+    "The runbook matches the code: the refused overrides (`DB_HOST`/`DB_PORT`/`DB_USER`/`DETRAN_DB_IMAGE`/`DETRAN_BACKEND_PORT`, detran-stack.sh:123), the 120 s timeout, ports 3000/3001/3999/4200-4204, PEC `not_built_r0031`, `db-init` without reset (line 65) and the `smoke-report[-<sufixo>]` names (smoke.mjs:93). The claim about `runtime-config.js` also holds: portal/rait/dashboard/teat-mobile have one, teat-web does not. The external-integrations table matches OD-R17-001, 002 and 004. `.env.example` has no real credential; the only `PASSWORD` value is the local disposable Postgres default.",
+    "Low: `.env.example` sets `DETRAN_STACK_STATE_DIR=/tmp/detran-stack`, but the script's default uses `${TMPDIR:-/tmp}` and the runbook says not to fix `state_dir` in documentation. Consider leaving it empty or commenting it out. The empty `DETRAN_LOCAL_*` and `SENATRAN_MOCK_*` lines are harmless only if they are not exported as empty strings; the runbook could say this.",
+    "Low: the `stack-smoke` job has no `timeout-minutes`. It runs four `ng serve` plus backend and PostGIS, so a hang would use the default six-hour limit. Adding a timeout is optional and does not change OD-R17-003.",
+    "Low: compositions.json keeps entries that were superseded. TASK-0010.md is listed with `c5fba4e2…` (current hash `3b71a753…`) and TASK-0010-escalation.md with `5ad5c237…` (current hash `675d04b3…`). The current hashes match `PC-3b71…` and `PC-675d…`, and TASK-0010.json points to the final PC. The superseded entries could be marked as stale for traceability.",
+    "Low: the new R-0017 line in waves.md and the plan.md §Triagem/§Retomada entries are written without accents (`canonicas`, `Correcoes`, `concluidas`), while the rest of the table is accented. The TASK-0008 retry report cites the file with an absolute local path (`/Users/...`).",
+    "The TASK-0010 records follow the historical state without anticipating closure: the index row is `aberta` with #133, #143 and PC `—`; waves.md says 'CTG-0003 em curso' and 'selo ainda pendente'; the backlog entry is unchecked and 'em curso'. The OD-R17-001…004 section was ratified without edits, and A7 stays a technical clarification. Tokens are not invented; the budget waiver is attributed to the Owner.",
+    "Gates as reported: TASK-0008 docs:check/format:check PASS; TASK-0009 positive exit 0 and negative exit 1 plus format:check PASS; TASK-0010 verify:state-index/docs:check/format:check exit 0. TASK-0009's retry did not run `pnpm check`; the maestro's full `pnpm check` (exit 0, after archiving the ignored docs/site/build) covers it, as recorded in §Triagem without relaxing any gate. Checkpoint (b) 42/42 and RC 21/21 belong to CTG-0002 and were not re-evaluated here.",
+    "This session's Google Drive and Mermaid Chart MCP connectors need authorization in the claude.ai connector settings; they were not needed for this review."
+  ]
+}

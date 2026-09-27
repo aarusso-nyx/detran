@@ -474,6 +474,27 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Triagem
 
+- `sensor-error` (TASK-0010 retry 1, 2026-09-27): a tentativa
+  Luna/baixo atualizou backlog e indice, mas nao conseguiu aplicar um patch
+  ancorado na longa linha R-0018 de `waves.md` e nao rodou os gates.
+  O maestro inseriu apenas a linha R-0017 por patch exato, sem reformatar
+  linhas historicas; escalada Terra/alto ratifica os quatro registros e
+  executa os gates. Nenhum criterio de aceitacao foi reduzido.
+- `sensor-error` (TASK-0010 tentativa 1, 2026-09-27): executor
+  Luna/baixo ficou mais de dez minutos sem avancar apos leitura ampla
+  de linhas historicas extensas de `waves.md`; nenhuma fonte-alvo foi
+  editada e nenhum relatorio foi produzido. O processo proprio foi
+  encerrado, preservando transcript e registro incompleto. Retry com
+  janela de leitura estreita e fatos fechados no prompt; nenhum
+  criterio foi reduzido.
+- `sensor-error` (CTG-0003, 2026-09-27): `pnpm check` apos
+  `docs:check` varreu `docs/site/build/assets/js` ignorado e acusou
+  literais de parametro de bundle como desconhecidos. O build gerado foi
+  arquivado fora da worktree; `pnpm verify:parameter-catalogue` voltou
+  a passar (91 entradas, zero erros), e `pnpm check` integral terminou
+  exit 0. Nenhum catalogo ou gate foi relaxado. TASK-0009 teve ainda
+  retry restrito: `pnpm stack:config | jq` falhava pelo banner pnpm;
+  `bash tools/detran-stack.sh config | jq` passou positivo/negativo.
 - `sensor-error` (checkpoint b, 2026-09-27): a primeira preparacao
   arquivou `dist` ignorados de `@detran/ui` e `@detran/boat-mobile` ao
   limpar a worktree; `stack:start` nao recompila dependencias frontend.
@@ -589,6 +610,28 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **CTG-0003 pronto para evidência e PR (2026-09-27):** TASK-0008,
+  TASK-0009 e TASK-0010 concluídas; a transcrição exigiu escalada
+  Terra/alto por contexto histórico longo e correção documental dos dois
+  itens previstos no backlog (RAIT `serve.buildTarget` e ADR própria do
+  adaptador SEFAZ). Delivery-review ciclo 1 = REVIEW, ciclo 2 = PASS
+  sem achados. `pnpm check`, `pnpm docs:check`,
+  `pnpm verify:state-index` e `pnpm format:check` passaram. Próximos:
+  evidência DEVAI, integração de `origin/main`, PR, CI, merge e
+  `audit observe` no SHA exato; então closure/selo.
+- **CTG-0003 antes de TASK-0010 (2026-09-27):** TASK-0008 e TASK-0009
+  concluidas com correcoes restritas, ambas prompt-reviewed PASS; runbook,
+  `.env.example` e job manual `workflow_dispatch` entregues. Os gates
+  `pnpm docs:check`, `pnpm format:check`, digest positivo/negativo e
+  `pnpm check` integral passaram. TASK-0010 em curso para indices; depois
+  delivery-review e gates finais do grupo.
+- **CTG-0003 liberado (2026-09-27):** CTG-0002 mesclado no PR #143
+  (`f1dde3bc`) com sete checks verdes, reviewer PASS e RC local final
+  21/21 no upgrade; `audit observe` exato emitiu `EV-f00f856e4a26cd94`.
+  Prompt-review CTG-0003 retornou PASS em
+  `reviews/prompt-review-CTG-0003.json`, sem high; a ponte exigiu
+  confirmacao em JSON cru apos duas saidas invalidas. TASK-0008/0009
+  liberadas sob PCs finais; TASK-0010 aguarda as duas.
 - **RC local CTG-0002 (2026-09-27):** `pnpm check`, `pnpm docs:check`
   e `pnpm ci:backend-kernel:local` passaram apos integrar `origin/main`.
   RC no SHA publicado `a096e1f1` e worktree limpa; baseline legado com

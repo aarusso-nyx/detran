@@ -1,0 +1,14 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "The SHA-256 of work/rounds/R-0017/prompts/TASK-0009-retry-1.md matches 47edae38d004dd7384f43d1f1e8f428d3dcd4ee9fe4825e73102fd36f9de4354 (PC-47edae38d004dd73).",
+    "Scope is limited to the optional stack-smoke job in .github/workflows/ci.yml (lines 15-21 of the prompt). The prompt forbids changes to existing jobs, triggers, branch protection, tools/**, package.json and the other protected paths. The only authorized change is swapping pnpm stack:config for bash tools/detran-stack.sh config at ci.yml:436, which keeps the pinned digest and the workflow_dispatch condition.",
+    "I ran the proof myself with set -o pipefail. With the exact digest, bash tools/detran-stack.sh config | jq -e ... printed true and exited 0. With a deliberately wrong digest it printed false and exited 1. The current pnpm stack:config | jq pipeline exits 5, which confirms the pnpm banner problem the prompt describes. config_stack (tools/detran-stack.sh:179) writes only the JSON from node to stdout.",
+    "The required checks are untouched. The diff to ci.yml only appends the stack-smoke job (43 lines added, none removed). on.pull_request and on.push have no paths filters and are unchanged. The job is not listed in the needs of any other job, and it only runs when if: github.event_name == 'workflow_dispatch'.",
+    "Low, not blocking: the command that fixes the problem is given in the prompt only as an example ('por exemplo'). The exit 0/non-zero acceptance criterion and the ban on other behavior changes are enough to limit how far the worker can deviate.",
+    "The prompt correctly withholds a live PASS for the job until a real workflow_dispatch run happens, and it asks for the first worker's pnpm check result to be reported separately."
+  ]
+}

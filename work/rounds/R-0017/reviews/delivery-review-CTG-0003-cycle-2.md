@@ -1,0 +1,7 @@
+# Delivery-review CTG-0003, ciclo 2
+
+Papel: Auditor externo Claude Opus 5.5, somente leitura. Reavalie **somente** os dois achados high de `work/rounds/R-0017/reviews/delivery-review-CTG-0003.json`, conforme `docs/meta/agents/orchestra/reviewer-prompt.template.md` (segundo ciclo restrito). Leia `docs/meta/knowledge-base/backlog.md` linhas R-0017, `work/rounds/R-0017/plan.md` §Riscos e §RAIT serve, `work/rounds/R-0017/prompts/TASK-0010-delivery-fix.md` e `work/rounds/R-0017/reports/TASK-0010-delivery-fix.md`. O worker adicionou apenas duas entradas abertas no backlog; o maestro formatou seu próprio artefato `delivery-review-CTG-0003.md`, que causava o `format:check` vermelho fora da fronteira do worker. `pnpm format:check` voltou a exit 0; `pnpm docs:kb:check` e Prettier no backlog haviam passado no worker. Nenhum critério foi reduzido.
+
+Verifique que a primeira entrada registra `serve.buildTarget` errado no RAIT, os valores atuais, workaround CTG-0001, dono e fonte; e que a segunda registra ADR própria ausente do `packages/sefaz-adapter`, fora de escopo, dono e fonte. PASS se os dois high estiverem corrigidos, REVIEW somente por falha demonstrável nessas correções, FAIL por contradição canônica/Owner/fronteira. Não levante achados novos sobre material não alterado, salvo contradição FAIL explicitamente justificada.
+
+Responda JSON cru numa linha, sem Markdown: {"mode":"delivery-review","round":"R-0017","verdict":"PASS","findings":[],"notes":[]}

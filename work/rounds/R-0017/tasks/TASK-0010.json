@@ -2,7 +2,7 @@
   "schemaVersion": "2.0.0",
   "id": "TASK-0010",
   "round_id": "R-0017",
-  "status": "queued",
+  "status": "completed",
   "discipline": "architect",
   "discipline_specialization": "transcriber-docs",
   "title": "Registrar historia, decisoes e backlog da rodada",
@@ -19,13 +19,13 @@
   "coupled_pipeline_position": "architect",
   "upstream_task_id": "TASK-0009",
   "db_isolation": "database",
-  "iteration_count": 0,
-  "max_iterations": 2,
+  "iteration_count": 3,
+  "max_iterations": 4,
   "priority": 3,
   "tags": ["local-stack", "records"],
   "branch": "orchestra/local-stack",
   "worktree_id": "WT-local-stack",
-  "prompt_composition_id": "PC-0000000000000000",
+  "prompt_composition_id": "PC-91cc7233d82b04c0",
   "acceptance_commands": [
     ["pnpm", "docs:check"],
     ["pnpm", "format:check"]
@@ -34,11 +34,11 @@
   "executor": {
     "kind": "agent",
     "runtime": "codex-cli",
-    "model": "gpt-5.6-luna",
-    "effort": "low",
-    "selection": { "mode": "exact", "registry_id": "gpt-5.6-luna" },
-    "prompt_composition_id": "PC-0000000000000000",
-    "max_iterations": 2,
+    "model": "gpt-5.6-terra",
+    "effort": "high",
+    "selection": { "mode": "exact", "registry_id": "gpt-5.6-terra" },
+    "prompt_composition_id": "PC-91cc7233d82b04c0",
+    "max_iterations": 4,
     "capabilities": ["read", "local-write"]
   }
 }
