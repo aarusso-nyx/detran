@@ -2,6 +2,8 @@
 
 ## Status
 
+Accepted on 2026-09-27 by Owner decision (OD-R18-002, round R-0018).
+
 Proposed on 2026-09-14 by the Architect, on the Owner's decisions of the same date. Depends on
 ADR-0013…0021 and on the DEVAI Constitution 1.0.0 (Articles 10, 17, 18, 19, 23, 24, 25, 27, 35, 37).
 

@@ -2,6 +2,8 @@
 
 ## Status
 
+Aceita pelo Owner em 2026-09-27 (OD-R18-004, rodada R-0018).
+
 Proposta pelo Architect na rodada R-0018 (CTG-0001); a aceitação é do Owner (OD-R18-004). As
 renumerações que ela registra executam a Meta 1 do plano de R-0018, autorizado pelo Owner.
 
