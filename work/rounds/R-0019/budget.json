@@ -5,8 +5,8 @@
   "checkpoint_at": "2026-09-26",
   "window_input_budget": 650000,
   "checkpoint_threshold": 520000,
-  "estimated_input_total": 844823,
-  "estimated_output_total": 136504,
+  "estimated_input_total": 1601823,
+  "estimated_output_total": 283004,
   "note": "Owner waived the token budget on 2026-09-26 to allow R-0019 to finish. Estimates remain for audit only; actual per-worker usage was not exposed by the subagent interface. The Claude alias opus resolved to claude-opus-5-5 during bootstrap.",
   "entries": [
     {
@@ -184,6 +184,118 @@
       "input_tokens": 25000,
       "output_tokens": 4000,
       "note": "Restricted second-cycle review of cycle-1 high findings and their corrections."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0006",
+      "model": "gpt-5.6-terra/high",
+      "input_tokens": 85000,
+      "output_tokens": 25000,
+      "note": "Architect contract for glossary, 40 journeys and 110 use cases after CTG-0001 merge."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0006-term-parity",
+      "model": "gpt-5.6-terra/high",
+      "input_tokens": 8000,
+      "output_tokens": 1000,
+      "note": "Restricted GE-004 source-term correction; 44/44 exact source terms."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0007",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 30000,
+      "output_tokens": 7000,
+      "note": "Glossary transcription; provisional estimate."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 60000,
+      "output_tokens": 13000,
+      "note": "Forty journeys and six UC bundles; provisional estimate."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0008-source-read-list",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 60000,
+      "output_tokens": 13000,
+      "note": "Initial attempt blocked without writing because source JRN/UC fiches omitted from closed read list; restricted iteration after 12 exact source globs added."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0007-readme-authority",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 4000,
+      "output_tokens": 500,
+      "note": "Restricted README correction from Architect to joint authority; glossary and format gates remain green."
+    },
+    {
+      "kind": "worker-escalation",
+      "id": "TASK-0008-semantic-source-review",
+      "model": "gpt-5.6-terra/high",
+      "input_tokens": 90000,
+      "output_tokens": 18000,
+      "note": "Architect escalation after Luna iteration: semantically classify JNY pre/postconditions and UC actors against 150 source fiches."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "model": "gpt-6-luna/medium",
+      "input_tokens": 35000,
+      "output_tokens": 7000,
+      "note": "Inspector red tests for glossary and product parity, after semantic source review."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010",
+      "model": "gpt-5.6-terra/medium",
+      "input_tokens": 65000,
+      "output_tokens": 14000,
+      "note": "Engineer gate rules c/d against six Inspector RED tests; provisional estimate."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-cycle-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 120000,
+      "output_tokens": 7000,
+      "note": "Cross-family exhaustive review of 115 staged paths/8027 diff lines; REVIEW 4 high and 5 low."
+    },
+    {
+      "kind": "worker-escalation",
+      "id": "TASK-0008-delivery-source-fidelity",
+      "model": "gpt-6-sol/high",
+      "input_tokens": 100000,
+      "output_tokens": 25000,
+      "note": "Product Architect escalation for 45 truncated journey steps, Owner authority index and source actor low finding."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0009-delivery-coverage",
+      "model": "gpt-6-luna/medium",
+      "input_tokens": 40000,
+      "output_tokens": 9000,
+      "note": "Inspector adds direct negative tests for every contract §5 rejection branch and mutation evidence."
+    },
+    {
+      "kind": "worker-iteration",
+      "id": "TASK-0007-delivery-law-index",
+      "model": "gpt-6-luna/low",
+      "input_tokens": 10000,
+      "output_tokens": 2000,
+      "note": "Architect transcriber updates law root index and glossary authority header."
+    },
+    {
+      "kind": "reviewer",
+      "id": "delivery-review-CTG-0002-cycle-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 50000,
+      "output_tokens": 5000,
+      "note": "Restricted review of 42-file correction diff and cycle-1 findings."
     }
   ]
 }

@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0.0",
+  "id": "JNY-017",
+  "title": "Turno do agente com lavratura offline — do login ao recibo sincronizado",
+  "persona": {
+    "role": "field-agent"
+  },
+  "preconditions": [],
+  "steps": [
+    {
+      "seq": 1,
+      "action": "Login e turno. Agente autentica (STYNX), passa por MFA/reautenticação se exigido, seleciona unidade/equipe/viatura e abre turno (`shift-context` → `home`, jornada `ait-complete`/`bi-dashboard` de `ux-parity/journeys.json`). `Shift.status = open` é criado. O sistema já verifica, neste passo, que não há outra sessão ativa do mesmo agente em outro aparelho — a tela não avisa isso ao agente com destaque hoje, mas deveria (REF-SENATRAN-997 Anexo II, h; ver JRN-TEAT-006). A bodycam, se o DETRAN-AM a adotar como evidência formal do TEAT, precisa estar ativa a partir daqui — todo o período de serviço operacional, não só durante a lavratura (REF-DETRANAM-TALAO-BODYCAM art. 5º)."
+    },
+    {
+      "seq": 2,
+      "action": "Verificação de postura: Antes de qualquer ato legal, o runtime móvel verifica se o dispositivo está autorizado e não adulterado, e instala/atualiza o pacote normativo mobile vigente (WF-TEAT-003)."
+    },
+    {
+      "seq": 3,
+      "action": "Conectividade cai: Agente perde sinal em via sem cobertura; continua operando normalmente — offline é comportamento normal de campo, não exceção, e agora é também requisito normativo explícito do talão eletrônico, não apenas decisão de arquitetura (RN-TEAT-001/INV-OFFLINE-001; REF-SENATRAN-997 Anexo I, e)."
+    },
+    {
+      "seq": 4,
+      "action": "Reserva de numeração: Dispositivo já possui (ou solicita) reserva de faixa de numeração válida para operar offline por um período (WF-TEAT-002) — a norma confirma que essa numeração pode vir pré-carregada no aparelho exatamente para viabilizar o preenchimento offline (REF-SENATRAN-997 Anexo II, c)."
+    },
+    {
+      "seq": 5,
+      "action": "Abordagem e lavratura: Agente aborda um veículo, constata infração e lavra o AIT completo (UC-TEAT-001), com evidências (UC-TEAT-003) e ciência/recusa do condutor (UC-TEAT-004) — tudo local, com hash de conteúdo e chave de idempotência. Nota de UX: a tela de finalização precisa de um toque deliberado do agente (\"Finalizar AIT\") — nunca avançar sozinha ao fim do preenchimento; é vedação normativa, não só boa prática (REF-SENATRAN-997 Anexo II, g)."
+    },
+    {
+      "seq": 6,
+      "action": "Segunda lavratura sem abordagem: Mais adiante, constata veículo estacionado em situação irregular sem condutor presente; lavra AIT sem abordagem (UC-TEAT-002)."
+    },
+    {
+      "seq": 7,
+      "action": "Medida administrativa: Em nova abordagem, aplica retenção de veículo; termo é assinado pelo condutor. (Para o cenário completo de remoção com reboque, ver JRN-TEAT-004.)"
+    },
+    {
+      "seq": 8,
+      "action": "Fila local: Todos os atos ficam na fila local cifrada, com recibo simulado disponível para impressão offline."
+    },
+    {
+      "seq": 9,
+      "action": "Conectividade retorna: Ao reconectar, o dispositivo sincroniza o lote inteiro (UC-TEAT-005) — cada ato recebe protocolo de recebimento da retaguarda; nenhum é duplicado."
+    },
+    {
+      "seq": 10,
+      "action": "Encerramento de turno: Agente encerra o turno (`shift-summary`); resumo mostra atos lavrados, sincronizados e pendentes."
+    }
+  ],
+  "postconditions": [
+    "Encerramento de turno: Agente encerra o turno (`shift-summary`); resumo mostra atos lavrados, sincronizados e pendentes."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "AC-001",
+      "statement": "Zero atos duplicados por reenvio; 100% dos atos offline com hash e reserva de numeração válidos ao sincronizar; tempo entre finalização local e confirmação de recebimento pela retaguarda (fonte pendente — meta não quantificada nas fontes lidas); zero incidentes de sessão concorrente não declarada (ver JRN-TEAT-006)."
+    }
+  ],
+  "related_invariants": [],
+  "status": "draft",
+  "provenance": [
+    "JRN-TEAT-001",
+    "docs/framework/product/domains/inf/teat/journeys/JRN-TEAT-001.md"
+  ]
+}

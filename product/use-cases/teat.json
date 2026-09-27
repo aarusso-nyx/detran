@@ -1,0 +1,418 @@
+{
+  "schemaVersion": "1.0.0",
+  "roles": [
+    "Agente de trânsito (field-agent)",
+    "Agente de trânsito",
+    "O dispositivo do agente",
+    "Operador de processamento (processing-operator)",
+    "O dispositivo do agente de trânsito",
+    "Agente ou autoridade de trânsito",
+    "O sistema"
+  ],
+  "cases": [
+    {
+      "id": "UC-TEAT-001",
+      "title": "Agente lavra AIT com abordagem ao condutor",
+      "goal": "Agente de trânsito (field-agent) em turno aberto, com dispositivo homologado e pacote normativo instalado, constata infração mediante abordagem ao condutor e lavra o AIT no aplicativo móvel, finalizando um ato legal válido e íntegro.",
+      "actors": ["Agente de trânsito (field-agent)"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-001-001",
+          "action": "Agente aborda o veículo/condutor (tela `ait-start` → `ait-vehicle`, UX-MOB-020/021)."
+        },
+        {
+          "id": "UC-TEAT-001-002",
+          "action": "Consulta e confirma o veículo (`AitVehicle.visually_confirmed_by_agent`); registra divergência observada, se houver."
+        },
+        {
+          "id": "UC-TEAT-001-003",
+          "action": "Identifica o condutor/infrator (`ait-driver`, UX-MOB-022; `AitPerson.identified_by`)."
+        },
+        {
+          "id": "UC-TEAT-001-004",
+          "action": "Seleciona o enquadramento normativo aplicável (`ait-frame`/`ait-frame-detail`, UX-MOB-023/024), filtrado pelo catálogo normativo vigente."
+        },
+        {
+          "id": "UC-TEAT-001-005",
+          "action": "Registra local (`ait-location`, UX-MOB-025, com `location_json`/`gps_accuracy_m`), observações obrigatórias e complementares (`ait-observations`, UX-MOB-026)."
+        },
+        {
+          "id": "UC-TEAT-001-006",
+          "action": "Sistema valida campos mínimos (`ait-validations`, UX-MOB-027) — RN-AIT-009: enquadramento incompatível com constatação com abordagem é bloqueado."
+        },
+        {
+          "id": "UC-TEAT-001-007",
+          "action": "Agente anexa evidências (`ait-evidence`, UX-MOB-028) — ver UC-TEAT-003."
+        },
+        {
+          "id": "UC-TEAT-001-008",
+          "action": "Agente registra medidas administrativas sugeridas, se aplicável (`ait-measures`, UX-MOB-029)."
+        },
+        {
+          "id": "UC-TEAT-001-009",
+          "action": "Agente oferece assinatura/ciência ao condutor (`ait-signature`, UX-MOB-030) — ver UC-TEAT-004."
+        },
+        {
+          "id": "UC-TEAT-001-010",
+          "action": "Agente revisa o auto completo (`ait-review`, UX-MOB-031)."
+        },
+        {
+          "id": "UC-TEAT-001-011",
+          "action": "Agente finaliza — `POST /v1/ait-lifecycle/aits/:id/finalize`: sistema congela o conteúdo, computa `content_hash`, grava `AitStatusHistory` (`draft → issued`), publica evento `ait.finalized` (`ait-done`, UX-MOB-032)."
+        },
+        {
+          "id": "UC-TEAT-001-012",
+          "action": "Recibo é impresso (simulado ou físico) — `ait-print`, UX-MOB-033; evento registrado em `AitPrintEvent`; falha de impressão não invalida o ato (RN-AIT-017/018)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-002",
+      "title": "Agente lavra AIT sem abordagem (constatação indireta)",
+      "goal": "Agente de trânsito constata infração sem contato direto com o condutor (`had_approach = false`) — por exemplo veículo estacionado sem condutor presente, ou constatação por equipamento — e lavra o AIT registrando o motivo da ausência de abordagem.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-002-001",
+          "action": "Agente registra que não houve abordagem (`Ait.had_approach = false`)."
+        },
+        {
+          "id": "UC-TEAT-002-002",
+          "action": "Sistema exige `no_approach_reason` — RN-AIT-008: \"AIT sem abordagem deve registrar condição ou motivo, quando exigido pela regra\" (ex.: veículo estacionado sem condutor — GL-1 define \"sem abordagem\" como situação em que a infração é registrada sem contato com o condutor, exigindo motivo/justificativa em alguns fluxos)."
+        },
+        {
+          "id": "UC-TEAT-002-003",
+          "action": "Agente seleciona enquadramento compatível com constatação sem abordagem — RN-AIT-009 bloqueia enquadramento que exige abordagem quando `had_approach = false`."
+        },
+        {
+          "id": "UC-TEAT-002-004",
+          "action": "Segue o mesmo fluxo de UC-TEAT-001 a partir do passo 4 (enquadramento) até a finalização, exceto pela etapa de assinatura/ciência do condutor, que é omitida (não há condutor presente para colher ciência no ato)."
+        },
+        {
+          "id": "UC-TEAT-002-005",
+          "action": "Sistema identifica condutor/proprietário por consulta de veículo, quando possível (`AitPerson.identified_by = \"consulta_veicular\"`), para fins de posterior notificação em WF-INF-003 — a identificação do condutor no ato, quando possível, é preceito de REF-CONTRAN-918 art. 3º §4º."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-003",
+      "title": "Agente anexa evidência com cadeia de custódia",
+      "goal": "Agente de trânsito captura evidência (foto, vídeo, áudio, leitura de equipamento) durante a lavratura de um AIT, medida administrativa, procedimento de etilômetro ou sinistro, garantindo hash verificável e vínculo formal ao ato desde a captura.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-003-001",
+          "action": "Agente captura mídia no dispositivo (tela `ait-evidence`/`crash-evidence`, conforme o ato)."
+        },
+        {
+          "id": "UC-TEAT-003-002",
+          "action": "Aplicativo computa hash (sha256) da mídia no momento da captura, localmente."
+        },
+        {
+          "id": "UC-TEAT-003-003",
+          "action": "Registro `Evidence` é criado com `status = captured`, `hash_algorithm`, `hash_value`, `captured_by_user_ref`, `agent_id`, `device_id`, `captured_at`, `location_json`."
+        },
+        {
+          "id": "UC-TEAT-003-004",
+          "action": "`EvidenceLink` vincula a evidência ao ato legal (`entity_type`, `entity_id`, `role`, `mandatory`)."
+        },
+        {
+          "id": "UC-TEAT-003-005",
+          "action": "Evento de custódia inicial é apensado (`CustodyEvent`, `event_type = captured`)."
+        },
+        {
+          "id": "UC-TEAT-003-006",
+          "action": "Se offline, a evidência permanece cifrada localmente até a transmissão (RN-EVD-009)."
+        },
+        {
+          "id": "UC-TEAT-003-007",
+          "action": "No envio (ver UC-TEAT-005), evidência é transmitida; estado avança `pending_upload → uploaded → validated`."
+        },
+        {
+          "id": "UC-TEAT-003-008",
+          "action": "Ao vincular a um pacote probatório (`traffic-authority`/`auditor`), sistema gera `ProbativePackage` com `manifest_hash` imutável, reunindo evidências, hashes, assinaturas, logs e protocolos do ato (RN-EVD-012)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-004",
+      "title": "Agente coleta assinatura, recusa ou impossibilidade de assinatura",
+      "goal": "Agente de trânsito oferece ao condutor/pessoa a ciência do ato lavrado (AIT ou termo de medida administrativa) e registra um dos três resultados possíveis, sem impedir a finalização do ato em nenhum dos casos.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-004-001",
+          "action": "Agente apresenta o auto/termo ao condutor na tela de assinatura (`ait-signature`, UX-MOB-030)."
+        },
+        {
+          "id": "UC-TEAT-004-002",
+          "action": "Condutor assina digitalmente → `AitPerson.signed = true`; `AitSignature` criada com `signature_type`, `signature_evidence_id` (se capturada como evidência), `signed_at`, `location_json`."
+        },
+        {
+          "id": "UC-TEAT-004-003",
+          "action": "Sistema grava `AitStatusHistory` refletindo o evento de ciência."
+        },
+        {
+          "id": "UC-TEAT-004-004",
+          "action": "Fluxo prossegue para revisão e finalização (UC-TEAT-001 passo 10)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-005",
+      "title": "Dispositivo sincroniza lote de atos offline",
+      "goal": "O dispositivo do agente, ao recuperar conectividade, envia o lote de atos legais finalizados localmente (AITs, medidas, sinistros, evidências) para a retaguarda, de forma idempotente e sem duplicação.",
+      "actors": ["O dispositivo do agente"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-005-001",
+          "action": "Dispositivo detecta conectividade e inicia envio (tela `sync`, UX-MOB-080 fila de sincronização)."
+        },
+        {
+          "id": "UC-TEAT-005-002",
+          "action": "Aplicativo envia `POST /v1/offline-sync/sync-batches` com o lote, em sequência local monotônica por dispositivo."
+        },
+        {
+          "id": "UC-TEAT-005-003",
+          "action": "Backend valida idempotência: aceitação do lote é idempotente por tenant+dispositivo+id de lote local."
+        },
+        {
+          "id": "UC-TEAT-005-004",
+          "action": "Cada `SyncQueueItem` avança `pending → sent → received`."
+        },
+        {
+          "id": "UC-TEAT-005-005",
+          "action": "Worker de sincronização (`OfflineSyncWorkerService`) aplica os itens recebidos: `received → applied`; item aplicado com sucesso gera o(s) recurso(s) definitivo(s) no domínio correspondente (ex.: AIT passa a `received` em WF-TEAT-001)."
+        },
+        {
+          "id": "UC-TEAT-005-006",
+          "action": "Dispositivo recebe confirmação e marca os itens locais como sincronizados; recibo de impressão simulado é exibido (item de mobile-runtime)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-006",
+      "title": "Operador saneia AIT com inconsistência tratável",
+      "goal": "Operador de processamento (processing-operator) identifica inconsistência saneável em AIT recebido e solicita correção; autoridade de trânsito (traffic-authority) aprova a correção, preservando trilha completa da alteração.",
+      "actors": ["Operador de processamento (processing-operator)"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-006-001",
+          "action": "Validação automatizada classifica a inconsistência como saneável (RN-PRO-004); AIT permanece em `validating`, exibido na fila de saneamento (`ait-sanitization-queue`, tela web)."
+        },
+        {
+          "id": "UC-TEAT-006-002",
+          "action": "Operador de processamento analisa o AIT (`ait-detail`) e decide solicitar correção — `POST /v1/ait-lifecycle/aits/:id/correction-request` → AIT move para `pending_correction`; evento `ait.correction-requested`."
+        },
+        {
+          "id": "UC-TEAT-006-003",
+          "action": "Operador (ou autoridade) prepara a correção na tela `ait-sanitize`: campo alterado, valor anterior, valor novo e justificativa obrigatória (RN-PRO-006) — nunca sobre fato essencial do auto (RN-PRO-005)."
+        },
+        {
+          "id": "UC-TEAT-006-004",
+          "action": "Autoridade de trânsito aprova — `POST /v1/ait-lifecycle/aits/:id/corrections/:correctionId/ approve` → grava `AitCorrection` completa (`operator_user_ref`, `changed_field`, `previous_value`, `new_value`, `justification`, `corrected_at`, `approved_by_user_ref`); AIT move para `corrected`; evento `ait.correction-approved`."
+        },
+        {
+          "id": "UC-TEAT-006-005",
+          "action": "Autoridade de trânsito aceita o AIT corrigido — `.../:id/accept` → move para `accepted`, autorizando integração downstream (WF-INF-003)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-007",
+      "title": "Agente conduz procedimento de etilômetro (teste, recusa, sinais, encaminhamento)",
+      "goal": "Agente de trânsito (field-agent), durante abordagem ou atendimento de sinistro, conduz o procedimento de verificação de influência de álcool/substância psicoativa do condutor, registrando um resultado que produz efeito jurídico determinado — autuação administrativa, encaminhamento criminal, ou nenhuma autuação — sem jamais confundir recusa com impossibilidade técnica do aparelho.",
+      "actors": ["Agente de trânsito (field-agent)"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-007-001",
+          "action": "Agente inicia o procedimento (tela `alcohol-start`, grupo `alcoolemia`)."
+        },
+        {
+          "id": "UC-TEAT-007-002",
+          "action": "Agente verifica sinais de alteração da capacidade psicomotora, se presentes (REF-CONTRAN-432 art. 5º) — um sinal isolado não basta; exige-se conjunto de sinais (art. 5º §1º)."
+        },
+        {
+          "id": "UC-TEAT-007-003",
+          "action": "Agente oferece o teste de etilômetro, meio prioritário entre os procedimentos do art. 3º (REF-CONTRAN-432 art. 3º §2º)."
+        },
+        {
+          "id": "UC-TEAT-007-004",
+          "action": "Condutor se submete ao teste. Sistema registra marca, modelo e nº de série do aparelho, nº do teste, medição realizada e valor considerado (após desconto da margem de tolerância da \"Tabela de Valores Referenciais para Etilômetro\", Anexo I)."
+        },
+        {
+          "id": "UC-TEAT-007-005",
+          "action": "Sistema classifica o valor considerado em uma das três faixas de WF-TEAT-005: `< 0,05 mg/L` (sem autuação por alcoolemia), `0,05–0,34 mg/L` (infração administrativa, art. 165), `≥ 0,34 mg/L` (crime, art. 306)."
+        },
+        {
+          "id": "UC-TEAT-007-006",
+          "action": "Se administrativo ou se sinais bastaram por si: agente lavra AIT por art. 165 (segue UC-TEAT-001/UC-TEAT-002) com as medidas administrativas vinculadas — recolhimento de CNH e retenção do veículo, obrigatórias por força do tipo penal, não discricionárias (WF-TEAT-004)."
+        },
+        {
+          "id": "UC-TEAT-007-007",
+          "action": "Se crime: agente registra o encaminhamento do condutor (e testemunhas, se houver) à Polícia Judiciária como evento — instrução do crime em si é fora do escopo TEAT (REF-CONTRAN-432 art. 7º §2º)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-008",
+      "title": "Agente aplica medida administrativa de retenção e recolhimento de documento",
+      "goal": "Agente de trânsito aplica uma medida administrativa do catálogo fechado do CTB art. 269 — tipicamente retenção do veículo e/ou recolhimento de documento de habilitação/registro/ licenciamento — vinculada ou não a uma autuação, registrando o fundamento e o desfecho (liberação local, liberação com prazo, ou conversão em remoção).",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-008-001",
+          "action": "Agente seleciona o tipo de medida administrativa (`ait-measures`/tela dedicada, grupo `medidas-administrativas`) — enum fechado: retenção, remoção (ver UC-TEAT-009), recolhimento de CNH/PPD/CRV/CLA, transbordo, teste de alcoolemia (ver UC-TEAT-007), recolhimento de animais, exames de aptidão (fora do escopo de campo — ver APP-PEC)."
+        },
+        {
+          "id": "UC-TEAT-008-002",
+          "action": "Se retenção: agente verifica se a irregularidade é sanável no local (CTB art. 270 §1º). 2a. Sanável no local → agente libera o veículo imediatamente (`LIBERADO_LOCAL`, WF-TEAT-004). 2b. Não sanável, mas condições de segurança OK → agente recolhe o Certificado de Licenciamento Anual (CLA), emite recibo, assinala prazo ≤30 dias para regularização (`LIBERADO_COM_PRAZO`, CTB art. 270 §2º)."
+        },
+        {
+          "id": "UC-TEAT-008-003",
+          "action": "Se recolhimento de documento de habilitação/registro: agente verifica se o documento é físico ou digital. 3a. Físico: agente recolhe o documento, mediante recibo, mantém custódia local. 3b. Digital (CNH-e, CRLV-e): agente não apreende nada fisicamente — executa registro eletrônico via integração RENACH/RENAVAM, conforme CTB art. 269 §5º."
+        },
+        {
+          "id": "UC-TEAT-008-004",
+          "action": "Sistema grava o `AdministrativeTerm` com tipo, fundamento legal, recibo (quando aplicável) e prazo de regularização, quando houver."
+        },
+        {
+          "id": "UC-TEAT-008-005",
+          "action": "Condutor/proprietário assina ciência do termo, recusa, ou está impossibilitado — mesmo padrão de três resultados distintos de RN-TEAT-005 (UC-TEAT-004)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-009",
+      "title": "Agente aciona remoção do veículo e avalia guarda monitorada",
+      "goal": "Agente de trânsito aciona a remoção do veículo (CTB art. 271) e emite o Termo de Recolhimento do Veículo com conteúdo mínimo normatizado. Este UC também documenta a alternativa de guarda monitorada (REF-CONTRAN-1025-2026) — passos 4, 4a, 5a-1 e os critérios de aceitação AC-TEAT-009-5/6/7 abaixo —, mas essa parte está fora do escopo do MVP (decisão do Owner, 2026-08-28, `_meta/open-issues.md` DT-015): mantida como registro de desenho, não como escopo de construção atual. No MVP, o passo 4 é pulado e toda remoção segue para `EM_DEPOSITO` (passo 4b).",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-009-001",
+          "action": "Agente registra a remoção (`ait-measures` → fluxo de remoção, grupo `medidas-administrativas`)."
+        },
+        {
+          "id": "UC-TEAT-009-002",
+          "action": "Sistema exige o preenchimento do Termo de Recolhimento do Veículo com, no mínimo: órgão responsável, identificação do veículo, número do AIT/ordem judicial/ato administrativo que determinou a remoção, local/data/hora, fundamento legal, local de guarda, identificação de proprietário e condutor quando possível (REF-CONTRAN-1025-2026 art. 14, _caput_)."
+        },
+        {
+          "id": "UC-TEAT-009-003",
+          "action": "Sistema exige também: objetos deixados no veículo, equipamentos obrigatórios ausentes, estado geral de lataria/pintura/pneus, prazo para retirada sob pena de leilão (art. 14 §1º)."
+        },
+        {
+          "id": "UC-TEAT-009-004",
+          "action": "FORA DO MVP — DT-015 Agente avalia se o caso é elegível para guarda monitorada em vez de remoção física — checagem estruturada dos 9 requisitos do art. 17 §1º (condições de segurança, ausência de indícios de adulteração, condutor habilitado, ausência de ocorrência criminal/restrição judicial, alienação fiduciária regular, licenciamento recente, ausência de descumprimento anterior, ausência de circunstâncias que comprometam a fiscalização). 4a. FORA DO MVP — DT-015 Elegível e autorizado (decisão do órgão — \"prerrogativa\", não direito automático do condutor): veículo permanece com o proprietário sob monitoramento eletrônico homologado (`GUARDA_MONITORADA`, WF-TEAT-004). 4b. No MVP, único caminho: veículo é levado a depósito (`EM_DEPOSITO`)."
+        },
+        {
+          "id": "UC-TEAT-009-005",
+          "action": "Se proprietário/condutor presente no ato: é considerado notificado, mesmo que se recuse a assinar o termo (REF-CONTRAN-1025-2026 art. 14 §2º — mesmo padrão de RN-TEAT-005). 5a. Se ausente: sistema registra a pendência de notificação em até 10 dias (postal, edital, ou SNE — marco de exclusividade SNE a partir de 01/01/2027, art. 15 §3º)."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-010",
+      "title": "Agente captura e vincula gravação de bodycam como evidência do ato legal",
+      "goal": "O dispositivo do agente de trânsito mantém a câmera corporal (bodycam) ativa durante todo o serviço operacional e vincula o(s) trecho(s) de gravação correlato(s) a cada ato legal (AIT, medida administrativa, procedimento de etilômetro) praticado durante uma interação com o condutor/usuário da via — regime de evidência de fluxo contínuo, distinto do anexo pontual já modelado em UC-TEAT-003.",
+      "actors": ["O dispositivo do agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-010-001",
+          "action": "Bodycam permanece ativada durante todo o período de serviço — obrigatório em: atendimento a sinistro, abordagem veicular de qualquer natureza, operação de trânsito, atividade de fiscalização/vistoria, e toda interação entre agente e condutor/usuário da via (Portaria 003/2026 art. 4º, incisos I-IV e VIII)."
+        },
+        {
+          "id": "UC-TEAT-010-002",
+          "action": "Ao iniciar um ato legal em campo (lavratura de AIT, medida administrativa, procedimento de etilômetro), o trecho de gravação correlato é vinculado automaticamente ao ato, análogo ao `EvidenceLink` já usado para evidência pontual (RN-TEAT-002), mas referenciando um intervalo de gravação contínua, não um arquivo capturado sob demanda."
+        },
+        {
+          "id": "UC-TEAT-010-003",
+          "action": "Sistema mantém indicador visual persistente do estado de gravação (ativo) durante toda a interação — recomendação de UX do dossiê de pesquisa, dado que a norma proíbe interrupção não autorizada."
+        },
+        {
+          "id": "UC-TEAT-010-004",
+          "action": "Ao final da interação, o vínculo evidência↔ato é fechado; o trecho permanece sob o mesmo regime de cadeia de custódia (apensa, não editável) de RN-TEAT-002."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-011",
+      "title": "Diretoria de Fiscalização decide cancelamento de AIT pós-finalização",
+      "goal": "Agente ou autoridade de trânsito submete pedido de cancelamento de um AIT já finalizado/ sincronizado; a Diretoria de Fiscalização do órgão decide, preservando a imutabilidade do conteúdo legal do ato original — o cancelamento é um ato novo e apenso, nunca uma reescrita. Distinto do cancelamento de rascunho em curso (REF-SENATRAN-997 Anexo II, k), coberto dentro do próprio fluxo de lavratura, UC-TEAT-001).",
+      "actors": ["Agente ou autoridade de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-011-001",
+          "action": "Agente ou traffic-authority identifica a necessidade de cancelar um AIT já finalizado — diferente de erro saneável por UC-TEAT-006 (que corrige campo, não cancela o ato)."
+        },
+        {
+          "id": "UC-TEAT-011-002",
+          "action": "Solicitante submete pedido formal de cancelamento, com justificativa, endereçado à Diretoria de Fiscalização — `SOLICITADO_CANCEL_POSFINAL` em WF-TEAT-001."
+        },
+        {
+          "id": "UC-TEAT-011-003",
+          "action": "Diretoria de Fiscalização analisa o pedido (fora do fluxo padrão de saneamento/aceite/rejeição de WF-TEAT-001, que trata de mérito da infração e inconsistências formais, não de cancelamento pós-ato). 4a. Defere: AIT marcado `CANCELADO_POSFINAL`; conteúdo legal original permanece imutável e preservado (RN-TEAT-004) — o cancelamento é registrado como evento apenso, com motivo, responsável e data, nunca como edição do AIT original. 4b. Indefere: AIT retorna ao estado em que estava antes do pedido, sem alteração."
+        },
+        {
+          "id": "UC-TEAT-011-004",
+          "action": "Sistema comunica o solicitante do desfecho."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-012",
+      "title": "Sistema impede sessão concorrente do mesmo agente em dispositivos diferentes",
+      "goal": "O sistema garante que um mesmo agente não opere sessões simultâneas em dispositivos diferentes — gate de segurança normativo, não apenas boa prática técnica. Quando a concorrência é detectada apenas no momento da sincronização (não no login), os registros envolvidos são bloqueados e apurados pela autoridade, nunca processados silenciosamente.",
+      "actors": ["O sistema"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-012-001",
+          "action": "Gate de bootstrap (preventivo): ao autenticar em um dispositivo, o sistema verifica se o agente já possui sessão ativa em outro equipamento — \"o agente de trânsito não poderá estar logado simultaneamente em mais de um equipamento\" (REF-SENATRAN-997 Anexo II, h). 2a. Sem sessão concorrente: autenticação prossegue normalmente, entra em WF-TEAT-001 a partir de `RASCUNHO_OFFLINE`. 2b. Sessão concorrente detectada no bootstrap: sistema bloqueia a nova autenticação, ou força encerramento da sessão anterior (comportamento exato de UX é decisão de produto — ver `_intake/bpo-notes.md` §2)."
+        },
+        {
+          "id": "UC-TEAT-012-002",
+          "action": "Gate de sincronização (detectivo, cobre o caso em que dois dispositivos operaram offline sem comunicação entre si): ao receber um lote (`POST /v1/offline-sync/sync-batches`), o backend verifica se há registros do mesmo agente, em dispositivos diferentes, no mesmo intervalo de tempo. 4a. Sem concorrência: lote segue o fluxo normal de validação em WF-TEAT-001. 4b. Concorrência detectada: registros envolvidos movem para `SUSPEITO_CONCORRENCIA` — não são processados até apuração — \"esses registros não deverão ser processados e o fato deve ser apurado pela autoridade de trânsito\" (REF-SENATRAN-997 Anexo II, h)."
+        },
+        {
+          "id": "UC-TEAT-012-003",
+          "action": "Traffic-authority/auditor analisa o caso (ex.: dispositivo perdido/roubado usado por terceiro, erro de reautenticação, ou uso fraudulento intencional). 6a. Apuração conclui legitimidade: registros liberados, retornam a `RECEBIDO` e seguem validação normal. 6b. Apuração conclui irregularidade: registros permanecem bloqueados (`REJEITADO`), evento de auditoria registrado."
+        }
+      ]
+    },
+    {
+      "id": "UC-TEAT-013",
+      "title": "Agente lavra AIT por medição de velocidade com equipamento acoplado ao talão",
+      "goal": "Agente de trânsito em operação de campo opera um medidor de velocidade acoplado ao talão eletrônico (REF-CONTRAN-918 art. 3º §1º, II) e lavra o AIT de excesso de velocidade a partir da medição, com a cadeia metrológica e probatória verificada no próprio ato.",
+      "actors": ["Agente de trânsito"],
+      "mainFlow": [
+        {
+          "id": "UC-TEAT-013-001",
+          "action": "Agente inicia a operação de fiscalização de velocidade e vincula o medidor à sessão do turno — sistema registra modelo, número de série e identificação do equipamento no órgão."
+        },
+        {
+          "id": "UC-TEAT-013-002",
+          "action": "Sistema verifica a cadeia metrológica do equipamento (RN-TEAT-138): modelo aprovado pelo INMETRO, verificação inicial aprovada e verificação periódica vigente. Falha em qualquer uma bloqueia a operação — o TEAT não lavra por equipamento sem prova de conformidade."
+        },
+        {
+          "id": "UC-TEAT-013-003",
+          "action": "Equipamento mede e transmite ao talão: velocidade medida (km/h), local (latitude/longitude), data/hora e a imagem com a placa do veículo."
+        },
+        {
+          "id": "UC-TEAT-013-004",
+          "action": "Sistema calcula a velocidade considerada subtraindo da medida o erro máximo admitido pela legislação metrológica (RN-TEAT-138) — os dois valores são persistidos e exibidos, nunca um só."
+        },
+        {
+          "id": "UC-TEAT-013-005",
+          "action": "Sistema deriva o enquadramento a partir da velocidade considerada contra a velocidade regulamentada da via, e da classificação de constatação sem abordagem quando não houver abordagem (RN-TEAT-108)."
+        },
+        {
+          "id": "UC-TEAT-013-006",
+          "action": "Sistema vincula a imagem com a placa como evidência do ato, sob a cadeia de custódia comum (RN-TEAT-002, RN-TEAT-139) — o AIT de velocidade sem essa imagem é candidato natural a insubsistência (RN-TEAT-119)."
+        },
+        {
+          "id": "UC-TEAT-013-007",
+          "action": "Agente finaliza o AIT por ato explícito (RN-TEAT-114); o auto segue o ciclo comum de WF-TEAT-001 a partir de `FINALIZADO_LOCAL`."
+        }
+      ]
+    }
+  ]
+}

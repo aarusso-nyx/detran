@@ -1,0 +1,35 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0019",
+  "ctg": "CTG-0002",
+  "cycle": 2,
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "tools/law/verify.mjs",
+      "line": 636,
+      "claim": "Carried over from cycle 1 as an observation only, outside the immutable §5 rejection list. Rule (c) still accepts any non-empty GE provenance: it does not check the `domain.md:<n>` format, the term on the cited line, or that the file basename equals the id. JNY titles are still compared through canonicalText, while UC titles are compared exactly (line 759). All 44 current GE and 40 current JNY happen to comply.",
+      "fix": "Optional future hardening: validate the GE provenance format, the term on the cited line and basename==id, and use one exact title policy for both JNY and UC. Add matching Inspector negatives."
+    },
+    {
+      "severity": "low",
+      "item": 9,
+      "file": "work/rounds/R-0019/reports/TASK-0009-delivery-correction.md",
+      "line": 8,
+      "claim": "The mutation evidence suppresses a whole violation code. JOURNEY_DIVERGENT (verify.mjs:636-648), USE_CASE_DIVERGENT (verify.mjs:757-769) and JOURNEY_CONTENT_INCOMPLETE (verify.mjs:651-665) each join several disjuncts under one code, so the recorded RED does not show that each disjunct is killed on its own. Each new test does change a single attribute in an otherwise valid fixture, so the tests are in fact focused and a disjunct-level removal should also go RED. This is an evidence granularity gap, not a coverage gap.",
+      "fix": "Optional: record disjunct-level mutations (for example, remove only the title clause, or only the bundle clause) in a disposable copy on the next Inspector touch."
+    }
+  ],
+  "notes": [
+    "High #1 (source fidelity) is resolved. I ran an independent read-only audit of all 40 JNY against every numbered item of the source `## Narrativa ponta-a-ponta`. Text was normalized (markdown, links, `[...]`) and compared as token multisets. Result: 294/294 steps, and step counts equal source item counts for every JNY. For every step, the only source token missing from the JNY is the item's own list number. Minimum lexical coverage is 0.938, and every shortfall is just that number. No step ends on a heading, a trailing colon or an unbalanced quote.",
+    "Specific cases are verified against the source text. JNY-001 step 1 keeps the unresolved CFM 1.636/2002 art. 3º point on impartial distribution and the UI anti-pattern. Step 4 keeps both sub-bullets, the two-business-day psychological deadline (927/2022 art. 9º §3º) and the reduced-validity rule (art. 9º §2º). Step 7 keeps the nomenclature note, `CONDICIONADO` and the unresolved conflict with DETRAN-AM 005/2021 art. 34 §9º. JNY-003 step 5 keeps the 968/2022 vs 495/2025 '(NR)' caveat and the note that the federal norm neither requires nor forbids the approver. Step 6 also carries the source's trailing '### Nota — não confundir com o controle de estagiário'. JNY-008 step 3 keeps 'não existe, em nenhuma fonte lida, um requisito de captura completa antes da remoção'. Step 6 keeps 'sem critério normativo de precedência encontrado nas fontes lidas' (the OD-R19-004 gap). JNY-032 step 4 closes the quote and keeps the restitution path (918 art. 33; CTB art. 286 §2º).",
+    "High #2 (Inspector direct tests) is resolved. There are 19 new negatives, each using assertTargetedViolation, which requires the exact code and a match on path or detail. Together they cover every cycle-1 branch: GLOSSARY_TERM_DUPLICATE (case-insensitive), GLOSSARY_STATUS_INVALID, GLOSSARY_PROVENANCE_MISSING and GLOSSARY_INVARIANT_UNRESOLVED; JOURNEY_DIVERGENT for both mapping and title; USE_CASE_DIVERGENT for title, wrong bundle and empty actors; BUNDLE_ID_DUPLICATE; USE_CASE_ROLE_UNDECLARED; JOURNEY_CONTENT_INCOMPLETE for missing steps, missing AC, missing persona and non-draft status; and the four *_COUNT_DIVERGENT codes. The existing tests are unchanged. `pnpm law:test` passed 56/56 on the current tree. `tools/law/verify.mjs` has no unstaged changes, and the correction diff does not touch it, which is consistent with mutation being done in a disposable copy. The Inspector report records 19/19 GREEN→RED.",
+    "High #3 (law indexes) is resolved. law/README.md:14-15 now states 44 draft GE entries under joint Owner and Architect authority with Owner acceptance pending. Line 24 says rules (a)–(e), and the DEVAI members now include `glossary` and `journeys`. law/glossary/README.md:3 restores '**Authority:** Owner and Architect, jointly (Constitution Article 6).'",
+    "High #4 (product index) is resolved. product/README.md:3 carries the exact line '**Authority:** Owner (Constitution Article 6).' The title reads 'proposta draft do Owner, transcrita pelo Architect' and states that explicit Owner acceptance is pending. product/specification.md:1-3 uses the same authority line and proposal status.",
+    "The low corrections are verified. GE-010 now reads 'Registro Nacional de Infrações; fonte normativa pendente (source_pending)', which matches domain.md:33 ('(fonte normativa pendente)'), and contract §2 row GE-010 was revised to match; the revision is recorded in plan.md. The TASK-0010 report no longer claims a GE=44 count or a six-app whitelist, and now describes GE parity against source rows and bundle discovery. The actor normalizations are source-equivalent: 'Agente'/'O agente de trânsito' became 'Agente de trânsito', 'O sistema' became 'Sistema', and 'Membro' became 'Membro do colegiado', a designation the source uses in UC-RAIT-019. UC-RAIT-026 adds 'Presidente do colegiado (ou autoridade, no 1º circuito)', matching its 'Ator e objetivo' and mainFlow step 3. Bundle roles were updated consistently.",
+    "No boundary contradiction: nothing under docs/framework/** changed (staged or unstaged), and the correction diff stays within product/**, law/**, tools/law/tests/** and work/rounds/R-0019/**. product/** and law/glossary/** remain draft and still need separate explicit Owner acceptance before the CTG-0002 merge. The segregated commits are still pending.",
+    "Read-only audit. I ran only the read-only comparison script and `pnpm law:test`. I did not rerun `devai check --only journeys` or `pnpm format:check`; for those the evidence was taken as recorded in plan.md and the correction reports."
+  ]
+}
