@@ -589,6 +589,12 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **RC local CTG-0002 (2026-09-27):** `pnpm check`, `pnpm docs:check`
+  e `pnpm ci:backend-kernel:local` passaram apos integrar `origin/main`.
+  RC no SHA publicado `a096e1f1` e worktree limpa; baseline legado com
+  20 casos e spec positiva de upgrade 21/21. Relato e hash do log em
+  `reports/rc-local-CTG-0002.md`. Proximos: evidencia DEVAI, PR, CI,
+  merge e `audit observe`, depois CTG-0003.
 - **Checkpoint b concluido (2026-09-27):** TASK-0007 validada ao vivo,
   `stack:db-reset`/`start`/`health`/`smoke`/`stop` exit 0, smoke negativo
   exit 1; 42/42 linhas positivas, denuncia Portal sintetica local presente,
