@@ -1,3 +1,14 @@
+---
+schemaVersion: '1.0.0'
+round_id: 'R-0017'
+status: active
+authority: Owner
+decision: GRANTED
+source: 'Owner instruction to execute work/rounds/R-0017/prompts/00-maestro.md in this Codex chat'
+publication: true
+release: false
+---
+
 # Autorizacao da rodada R-0017
 
 O Owner autorizou a execucao de `work/rounds/R-0017/prompts/00-maestro.md`
