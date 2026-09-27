@@ -365,6 +365,15 @@ partilhadas de `package.json`, `waves.md`, `open-decisions-rait.md` e
 
 ## Retomada
 
+- **CTG-0001 pos-PR #134 (2026-09-27):** a segunda rodada de CI do PR #133
+  passou integralmente (inclusive `verified-local-rc`); antes do merge,
+  `origin/main` avancou pela decisao OD-R18-003. O branch publicado integrou
+  esse estado por merge `b8d6cfe6`, preservando as secoes R-0017 e R-0018
+  de `open-decisions-rait.md`. `pnpm check` e `pnpm docs:check` passaram no
+  novo candidato. Regravar prova CTG-0001 com os hashes atuais, fazer push
+  normal, aguardar novo CI e so entao mesclar PR #133. O papel Engineer agora
+  segue Article 7 da AGENTS.md atualizada (Article 6 rege autoridade por
+  caminho). As OD-R17-001/002/003 seguem sem resposta do Owner.
 - **CTG-0001 pos-PR #131 (2026-09-26):** PR #133 abriu com
   delivery-review ciclo 3 `PASS` e primeira rodada de CI inteiramente verde.
   `origin/main` avancou pelo fechamento de R-0018; o branch publicado integrou
