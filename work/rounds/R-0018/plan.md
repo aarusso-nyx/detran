@@ -268,6 +268,14 @@ rodadas, 14 closures`; `pnpm test:state-index` → 98/98; `pnpm check` e `pnpm d
   delivery-review PASS no ciclo 3. OD-R18-001, OD-R18-002 e OD-R18-004 **pendentes** (pedidas ao Owner
   no PR do CTG-0001); OD-R18-003 no CTG-0002.
 
+- **M6 — OD-R18-003 decidida (2026-09-27).** O Owner aceitou explicitamente os patches
+  `proposals/CLAUDE.md.patch` e `AGENTS.md.patch` ("aceito OD-R18-003, aplique os patches"); aplicados
+  por `git apply` em PR próprio após o fechamento (PC-0015). **Adenda de aplicação (decisão do Owner,
+  2026-09-27):** o `devai doctor` 1.5.6 (`agents-claude-sync`) exige a string literal `Article 6` nos
+  dois arquivos; o Owner escolheu manter o patch e acrescentar a cláusula "Article 6 governs authority
+  by path" na linha de papéis de cada arquivo. Por isso a parte "`grep -c 'Article 6'` → 0" de C-02-28
+  fica **não cumprida por decisão do Owner** (`devai@1.5.6` = 1 e Prettier OK continuam cumpridos).
+
 ## Concorrência
 
 Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):
