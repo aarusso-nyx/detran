@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-PORTAL-001",
+  "domain": "PORTAL",
+  "lifecycle": "supported",
+  "severity": "gate",
+  "type": "state_machine",
+  "title": "PORTAL persists request protocol and lifecycle transactionally",
+  "statement": "PORTAL MUST persist the documented request protocol sequence and request lifecycle transactionally.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["int"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/framework/product/transversal/portal/APP.md",
+        "anchor": "modelo-de-operação"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["portal-requests"],
+    "code_areas": ["backend/domains/portal/requests/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["APP-PORTAL", "ADR-0002"]
+}

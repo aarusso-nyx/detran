@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devai.nyxk.com.br/schemas/adopter-policy.schema.json",
+  "title": "DEVAI Adopter Policy",
+  "description": "Validated adopter-owned policy source merged into DEVAI's resolved project configuration without replacing core policy domains.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "policy_id", "policy_version"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "policy_id": { "type": "string", "pattern": "^[a-z][a-z0-9.-]+$" },
+    "policy_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "project_type": {
+          "enum": ["runtime-host", "platform-package", "docs-archive", "framework"]
+        },
+        "repo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "enum": ["library", "application"] } }
+        },
+        "docs": {
+          "$ref": "project-config.schema.json#/properties/docs",
+          "description": "Documentation configuration uses the same closed shape accepted by the resolved adopter project configuration."
+        }
+      }
+    },
+    "ci_economy": {
+      "$ref": "project-config.schema.json#/properties/ci_economy",
+      "description": "Optional CI-economy policy materialized into the adopter project configuration."
+    },
+    "release_verification": { "$ref": "release-verification-profile.schema.json" },
+    "domains": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["client"],
+      "properties": {
+        "client": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Z][A-Z0-9_-]*$" }
+        }
+      }
+    },
+    "thresholds": { "type": "object", "additionalProperties": true },
+    "scorecard_na": { "$ref": "scorecard-na-config.schema.json" },
+    "glob_guards": { "$ref": "glob-guards.schema.json" }
+  },
+  "schema_version": "1.0.0",
+  "examples": [
+    {
+      "schemaVersion": "1.0.0",
+      "policy_id": "teat.devai-adoption",
+      "policy_version": "1.0.0"
+    }
+  ]
+}

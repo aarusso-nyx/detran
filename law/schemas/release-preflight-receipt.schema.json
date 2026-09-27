@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://devai.nyxk.com.br/schemas/release-preflight-receipt.schema.json",
+  "title": "Release preflight receipt",
+  "description": "Exact cheap-preflight evidence required before expensive release verification starts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "repository",
+    "base",
+    "releaseIntentDigest",
+    "releaseProfileDigest",
+    "taskPolicyDigest",
+    "toolchainDigest",
+    "checks",
+    "verdict",
+    "blockingReasons",
+    "createdAt"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "repository": { "$ref": "#/$defs/repository" },
+    "base": { "$ref": "#/$defs/gitIdentity" },
+    "releaseIntentDigest": { "$ref": "#/$defs/sha256" },
+    "releaseProfileDigest": { "$ref": "#/$defs/sha256" },
+    "taskPolicyDigest": { "$ref": "#/$defs/sha256" },
+    "toolchainDigest": { "$ref": "#/$defs/sha256" },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["capability", "status", "reasonCode"],
+        "properties": {
+          "capability": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+          "status": {
+            "enum": ["executed", "reused", "not-required", "failed", "blocked", "unknown"]
+          },
+          "reasonCode": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+          "failureClass": {
+            "enum": [
+              "static-defect",
+              "sensor-stale",
+              "environment-drift",
+              "product-regression",
+              "policy-invalid",
+              "evidence-mismatch",
+              "unknown"
+            ]
+          },
+          "resultDigest": { "$ref": "#/$defs/sha256" }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "status": { "enum": ["executed", "reused"] } } },
+            "then": { "required": ["resultDigest"] }
+          },
+          {
+            "if": {
+              "properties": { "status": { "enum": ["failed", "blocked", "unknown"] } }
+            },
+            "then": { "required": ["failureClass"] }
+          }
+        ]
+      }
+    },
+    "verdict": { "enum": ["pass", "block"] },
+    "blockingReasons": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" }
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "gitIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "tree"],
+      "properties": {
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "tree": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "commit", "tree"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "tree": { "type": "string", "pattern": "^[a-f0-9]{40}$" }
+      }
+    }
+  },
+  "schema_version": "1.0.0",
+  "examples": [
+    {
+      "schemaVersion": "1.0.0",
+      "repository": {
+        "id": "example/repo",
+        "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "tree": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "base": {
+        "commit": "cccccccccccccccccccccccccccccccccccccccc",
+        "tree": "dddddddddddddddddddddddddddddddddddddddd"
+      },
+      "releaseIntentDigest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "releaseProfileDigest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "taskPolicyDigest": "3333333333333333333333333333333333333333333333333333333333333333",
+      "toolchainDigest": "4444444444444444444444444444444444444444444444444444444444444444",
+      "checks": [
+        {
+          "capability": "formatting-hygiene",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "1111111111111111111111111111111111111111111111111111111111111111"
+        },
+        {
+          "capability": "lint",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "2222222222222222222222222222222222222222222222222222222222222222"
+        },
+        {
+          "capability": "type-integrity",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "3333333333333333333333333333333333333333333333333333333333333333"
+        },
+        {
+          "capability": "schema-consistency",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "4444444444444444444444444444444444444444444444444444444444444444"
+        },
+        {
+          "capability": "secret-scan",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "5555555555555555555555555555555555555555555555555555555555555555"
+        },
+        {
+          "capability": "path-portability",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "6666666666666666666666666666666666666666666666666666666666666666"
+        },
+        {
+          "capability": "package-integrity",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "7777777777777777777777777777777777777777777777777777777777777777"
+        },
+        {
+          "capability": "exact-candidate",
+          "status": "executed",
+          "reasonCode": "required-floor",
+          "resultDigest": "8888888888888888888888888888888888888888888888888888888888888888"
+        }
+      ],
+      "verdict": "pass",
+      "blockingReasons": [],
+      "createdAt": "2026-08-29T00:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "invariants": [
+    {
+      "id": "INV-INF-001",
+      "docs": [
+        {
+          "doc": "docs/framework/product/domains/inf/teat/APP.md",
+          "anchor": "offline-first--doutrina"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "unit",
+          "path": "backend/domains/inf/ait/src/ait-lifecycle.service.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/inf/ait/**"]
+    },
+    {
+      "id": "INV-EST-001",
+      "docs": [
+        {
+          "doc": "docs/framework/product/domains/est/boat/APP.md",
+          "anchor": "modelo-de-dados--conceitos-centrais"
+        },
+        {
+          "doc": "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+          "anchor": "decision"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "int",
+          "path": "backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/est/crash/**"]
+    },
+    {
+      "id": "INV-CH-001",
+      "docs": [
+        {
+          "doc": "docs/framework/product/domains/ch/pec/workflows/WF-PEC-001.md",
+          "anchor": "transições-e-gatilhos"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "unit",
+          "path": "backend/domains/ch/encounters/tests/unit/encounter-lifecycle.service.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/ch/encounters/**"]
+    },
+    {
+      "id": "INV-OPS-001",
+      "docs": [
+        {
+          "doc": "docs/framework/product/domains/inf/teat/screens/IU-TEAT-close-shift.md",
+          "anchor": "contrato-transcrito"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "int",
+          "path": "backend/domains/ops/field/tests/integration/shift-lifecycle.integration.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/ops/field/**"]
+    },
+    {
+      "id": "INV-PORTAL-001",
+      "docs": [
+        {
+          "doc": "docs/framework/product/transversal/portal/APP.md",
+          "anchor": "modelo-de-operação"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "int",
+          "path": "backend/domains/portal/requests/tests/integration/portal-requests.integration.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/portal/requests/**"]
+    },
+    {
+      "id": "INV-DASH-001",
+      "docs": [
+        {
+          "doc": "docs/framework/product/transversal/dashboard/APP.md",
+          "anchor": "atores"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "unit",
+          "path": "backend/domains/shared/src/policy.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/shared/**"]
+    },
+    {
+      "id": "INV-SEC-001",
+      "docs": [
+        {
+          "doc": "docs/framework/product/domains/est/boat/APP.md",
+          "anchor": "atores"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "e2e",
+          "path": "backend/app/tests/e2e/policy-routes.e2e.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/app/**", "backend/domains/shared/**"]
+    },
+    {
+      "id": "INV-AUTH-001",
+      "docs": [
+        {
+          "doc": "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+          "anchor": "decision"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "unit",
+          "path": "backend/domains/shared/src/policy.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/shared/**"]
+    },
+    {
+      "id": "INV-DATA-001",
+      "docs": [
+        {
+          "doc": "docs/meta/adr/ADR-0002-unified-backend-modular-monolith.md",
+          "anchor": "decision"
+        }
+      ],
+      "tests": [
+        {
+          "suite": "int",
+          "path": "backend/domains/est/crash/tests/integration/boat-contract.integration.spec.ts",
+          "target_type": "test"
+        }
+      ],
+      "code_areas": ["backend/domains/est/crash/**"]
+    }
+  ],
+  "test_corpus": []
+}

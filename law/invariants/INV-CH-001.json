@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "1.0.0",
+  "version": "1.0.0",
+  "id": "INV-CH-001",
+  "domain": "CH",
+  "lifecycle": "supported",
+  "severity": "gate",
+  "type": "lifecycle",
+  "title": "CH opens encounters from checked-in appointments",
+  "statement": "CH MUST open an encounter only from a checked-in appointment.",
+  "status": "active",
+  "verification": {
+    "required_suites": ["unit"],
+    "oracle": "tests",
+    "strategy": {
+      "primary": "regression",
+      "deterministic_check_available": true,
+      "rationale": "The existing test listed in CTG-0001 provides the specified regression check."
+    }
+  },
+  "authority_docs": {
+    "docs": [
+      {
+        "doc": "docs/framework/product/domains/ch/pec/workflows/WF-PEC-001.md",
+        "anchor": "transições-e-gatilhos"
+      }
+    ]
+  },
+  "scope": {
+    "components": ["ch-encounters"],
+    "code_areas": ["backend/domains/ch/encounters/**"]
+  },
+  "change_policy": {
+    "breaking_change_requires": [
+      "doc_update",
+      "trace_update",
+      "test_update",
+      "human_approval"
+    ],
+    "test_weakening_allowed": false,
+    "human_approval_required": true
+  },
+  "provenance": ["WF-PEC-001", "APP-PEC"]
+}
