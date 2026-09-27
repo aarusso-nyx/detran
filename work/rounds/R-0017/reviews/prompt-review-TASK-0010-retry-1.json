@@ -1,0 +1,33 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 12,
+      "file": "work/rounds/R-0017/prompts/TASK-0010-retry-1.md",
+      "line": 27,
+      "claim": "O rg sugerido `'^\\\\| R-001[68] '` fica, em aspas simples, como a regex `^\\\\|` seguida de alternância. Com isso, casa qualquer linha que contenha ` R-0016 ` ou ` R-0018 `, e não só as linhas da tabela. O caminho também está como `...`. O `cut -c 1-300` limita o dano, então isso não bloqueia.",
+      "fix": "Usar `rg -n '^\\| R-001[68] ' docs/meta/agents/orchestra/waves.md | cut -c 1-300`, com uma única barra e o caminho explícito."
+    },
+    {
+      "severity": "low",
+      "item": 2,
+      "file": "work/rounds/R-0017/prompts/TASK-0010-retry-1.md",
+      "line": 17,
+      "claim": "A leitura de plan.md ficou restrita aos dois bullets mais recentes de §Retomada. Saíram §Triagem, §Tarefas e A4/A6/A7, que o original usava para os ciclos corretivos reais. Assim, as colunas Ciclos de REVIEW e Escaladas de waves.md tendem a sair `em apuracao`. O prompt permite isso explicitamente, então não reduz critério nem leva a valor inventado.",
+      "fix": "Opcional: incluir §Triagem de plan.md (linhas 475-500, cerca de 25 linhas curtas) para que os ciclos reais possam ser contados, ou manter e aceitar `em apuracao` na entrega."
+    }
+  ],
+  "notes": [
+    "O PC confere: o SHA-256 de prompts/TASK-0010-retry-1.md é 48f5fe279eaffb439bbe39eaa1c6dbffdf86a8e3fca2d5e4d7bb9a847c489e67, ou seja, PC-48f5fe279eaffb43.",
+    "A tarefa não foi reduzida. O retry manda ler TASK-0010.md inteiro para fronteira e critérios, e mantém os mesmos quatro alvos e os mesmos três gates (verify:state-index, docs:check, format:check). Também mantém a proibição de git, instalação, stack e policy/RLS/tenancy, e a regra de relatar a lacuna com source_pending/OD.",
+    "A fronteira está coerente com o original. A lista positiva 'Pode tocar somente' cobre as exclusões de tools/backend/apps/packages/.github. As linhas R-0018/R-0019 são intocáveis, e waves.md hoje não tem linha R-0017 (vai de R-0016 na linha 66 para R-0018 na linha 67). Então 'acrescentar linha R-0017' não duplica nada.",
+    "O token de estado está correto. check.mjs tem validEstados = fechada, pré-método, aberta e proposta (C-0002), e só exige PC-\\d{4} para linhas `fechada`. A troca de 'proposta (C-0002)' por 'aberta' com PC '—' passa no gate. O retry proíbe 'em execucao' e 'PC-0017'.",
+    "As ODs estão preservadas. Os quatro fatos OD-R17-001…004 do retry batem com as linhas 383-386 de open-decisions-rait.md. A7 continua como esclarecimento técnico, sem virar quinta OD. O budget waived e budget.json (budget_waived=true) sustentam o 'nao invente contagem'.",
+    "A mitigação do sensor-error é adequada e bate com plan.md §Triagem (linhas 477-483). O retry proíbe sed de intervalos amplos, restringe cada arquivo a uma seção e fecha os fatos no prompt, o que dispensa checkpoint-b, rc-local, os CTGs e PC-0016.",
+    "Ficou de fora, sem impacto: o hash do head da cadeia (ace64626…) e EV-f00f856e4a26cd94 não constam do retry. São opcionais para as linhas de índice.",
+    "Lembrete para a delivery-review: o template do relatório virou 'OD tocadas/propostas: <ids ou nenhuma>'. Espera-se que a entrega cite OD-R17-001…004 como no original."
+  ]
+}

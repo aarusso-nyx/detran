@@ -1,0 +1,15 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Integridade confirmada: o SHA-256 de work/rounds/R-0017/prompts/TASK-0008-retry-1.md e 05b1089be1f67fac5fd7f6d36b39c087455ea8fae508b8365b5271d506ca792f; tasks/TASK-0008.json registra prompt_composition_id PC-05b1089be1f67fac (linhas 24 e 36).",
+    "Fronteira confirmada (item 3): TASK-0008-retry-1.md:16-21 permite escrever somente em docs/dev/operations/local-stack.md e proibe explicitamente README.md, .env.example, codigo, CI, testes, record, .devai, law, ADR e git; nao ha violacao.",
+    "A correcao de stack:logs tem base: tools/detran-stack.sh:638 exige um servico no logs_stack e para com erro sem ele; local-stack.md:72 ainda tem 'pnpm stack:logs' sem argumento. O prompt (linhas 24-27) manda trocar por 'pnpm stack:logs backend', e backend esta na lista de servicos do usage (detran-stack.sh:63).",
+    "Os dois comandos de build existem: packages/ui/package.json define @detran/ui com o script build (ng-packagr) e apps/boat/mobile/package.json define @detran/boat-mobile com o script build (ng-packagr). A nota sobre dist em local-stack.md:83-84 hoje nao mostra os comandos, e o prompt manda mostra-los explicitamente.",
+    "Os gates existem (item 4): package.json:73 define docs:check e package.json:16 define format:check (prettier --check .); pnpm exec prettier --check sobre o arquivo e valido. O criterio 'Ciclo seguro sem stack:logs sem servico' pode ser verificado lendo o arquivo.",
+    "Baixo, nao bloqueante: o bloco de relatorio do retry (linhas 37-46) nao tem a linha 'OD tocadas ou propostas', que existe no prompt original (TASK-0008.md:127); a correcao nao envolve OD.",
+    "Baixo, nao bloqueante: a leitura e fechada e suficiente (item 2). O prompt restringe package.json aos scripts stack:logs/stack:build, sem prejuizo porque os gates sao executados, nao lidos. Os outros pontos ja aceitos de CTG-0003 nao foram reavaliados."
+  ]
+}

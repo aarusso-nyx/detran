@@ -1,0 +1,14 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "PC checked: the SHA-256 of prompts/TASK-0010-escalation.md is 675d04b3195b293c024abf80372cccfc18d5f53362c787b440fff050b8d63677, which matches PC-675d04b3195b293c.",
+    "Prior low finding (item 5) is resolved: L16 now tells the worker to put M1 (Sol 6, Terra/Luna, Opus 5.5), OD-R17-001…004 and the evidence chain already anchored for CTG-0002 into the R-0017 row of waves.md itself. The chain head ace64626…c4b is the one cited in TASK-0010.md:89 and matches record/proofs/chain.json:2 and 5344 (manifest_hash). The wording 'naquele checkpoint' and 'sem sugerir que CTG-0003 esteja fechado' keep the row as in-progress history. The current row at waves.md:67 still lacks M1 and the ODs, so this edit is a demonstrable gap inside the boundary.",
+    "Prior low finding (item 4) is resolved: L16 limits Prettier to waves.md and work/rounds/README.md, says only the R-0017 lines are expected to change, and tells the worker to stop and report if the formatter flags any other line. A read-only check confirms this: `prettier --check` flags only those two files, and `prettier <f> | diff` shows exactly 1 changed line in each (the R-0017 row at waves.md:67 and README.md:36).",
+    "The boundary is intact. L8 still restricts reading, with `rg '^\\| R-0017 '` for waves.md. L10 still limits writes to the R-0017 row, section or entry of the four records, with 'ratifique-a sem edicao' for the OD section. git, stack, db-reset, installs, code, CI, tests, record/**, .devai/**, law/**, ADRs, earlier rounds and AGENTS.md/CLAUDE.md all remain forbidden.",
+    "The gates are intact. L18 still requires verify:state-index, docs:check and format:check with exit codes and summaries, no loosening of gates or criteria, and fixes only within the boundary. Excluding `pnpm check` (docs/site/build) is still justified and was not part of the original acceptance criteria in TASK-0010.md.",
+    "No contradiction with the Owner or the canon. L12 still states OD-R17-001…004 in line with TASK-0010.md §Definicoes fechadas. L14 still keeps the index `aberta`, #133/#143, PC `—`, with no seal claimed, and A7 stays a technical clarification. The Owner waived the token limit and the prompt forbids inventing consumption figures."
+  ]
+}

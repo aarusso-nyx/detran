@@ -1,0 +1,17 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [],
+  "notes": [
+    "Hash confirmed: SHA-256 of work/rounds/R-0017/prompts/TASK-0010-delivery-fix.md = 91cc7233d82b04c0ed9e7a421d073aaf95abc57dc8739cfa79b282d5b5d90e4f (PC-91cc7233d82b04c0).",
+    "Both highs from delivery-review-CTG-0003 are covered: (1) an open entry for repairing serve.buildTarget in apps/rait/web/angular.json, recording the current value portal-web:build:production/development (confirmed at angular.json:67 and :70), the CTG-0001 tooling workaround and the Architect/Engineer-frontend owner; (2) an open entry for the missing ADR of packages/sefaz-adapter, citing plan.md §Riscos, owner Architect, and forbidding creation of the ADR.",
+    "Boundary kept: the only writable file is docs/meta/knowledge-base/backlog.md, as an append beside the R-0017 entry (line 637) that preserves the existing entries. Code, Angular, CI, tests, ADRs, law/**, .devai/**, record/** and git are explicitly forbidden. Owner ODs are not reopened. Role Architect (transcription) matches a docs-only edit.",
+    "The read list is closed and sufficient: AGENTS.md, CODESTYLE.md and transcriber-docs.md exist; plan.md 210-214 contains the SEFAZ risk; 449-453 contains §RAIT serve; angular.json 62-73 is read-only and contains serve.configurations.",
+    "No round or owner is invented: the prompt uses 'rodada futura a planejar' and forbids naming an unchosen round, which matches the fix's 'owner or next round'.",
+    "Gates are not reduced: prettier --check on the file, docs:kb:check (package.json:75) and format:check (package.json:16), with exit codes reported and a stop if anything fails outside the boundary.",
+    "Low: the first entry does not explicitly require citing the source 'plan.md §RAIT serve', which the fix suggested; the second entry does cite §Riscos. Consider requiring the source citation in both for traceability. This is not blocking.",
+    "Low: the prompt says 'ADR propria ainda ausente' without citing 'inspecao (c)' from plan.md:212. This is optional.",
+    "The Google Drive and Mermaid Chart MCP connectors need authorization in the claude.ai connector settings; they were not used in this review."
+  ]
+}

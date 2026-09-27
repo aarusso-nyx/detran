@@ -1,0 +1,32 @@
+{
+  "mode": "prompt-review",
+  "round": "R-0017",
+  "verdict": "PASS",
+  "findings": [
+    {
+      "severity": "low",
+      "item": 4,
+      "file": "work/rounds/R-0017/prompts/TASK-0010-escalation.md",
+      "line": 16,
+      "claim": "`pnpm format:check` (`prettier --check .`) currently fails on only two files. They are `docs/meta/agents/orchestra/waves.md` (R-0017 row inserted by the maestro without column alignment) and `work/rounds/README.md` (misaligned R-0017 row). A preview of the fix (`prettier <file> | diff`) changes only the R-0017 line in each file, so the fix stays inside the boundary. The escalation does not tell the worker to format these files, unlike TASK-0010.md:107, and a worker could read the table realignment as a change to other lines.",
+      "fix": "Add a sentence: 'Formate com Prettier somente waves.md e work/rounds/README.md; a correcao esperada altera apenas as linhas R-0017 (alinhamento de colunas).'"
+    },
+    {
+      "severity": "low",
+      "item": 5,
+      "file": "work/rounds/R-0017/prompts/TASK-0010-escalation.md",
+      "line": 14,
+      "claim": "The current `waves.md` row (L67) does not mention M1 (Sol 6, Terra/Luna, Opus 5.5), the decisions OD-R17-001…004 or the evidence chain, all of which TASK-0010.md:61-65 requires. The escalation lists the facts on L12 and allows only 'lacunas demonstraveis' to be filled, without saying that this gap counts as demonstrable.",
+      "fix": "Say explicitly that the R-0017 row must cover M1, OD-R17-001…004 and the evidence chain from TASK-0010.md §Tarefa, completing only those points inside the same row."
+    }
+  ],
+  "notes": [
+    "PC checked: the SHA-256 of prompts/TASK-0010-escalation.md is 5ad5c237bbcdadae9b05812e1bd2aa122e1930077db00553a07ddf23d5346a05, which matches PC-5ad5c237bbcdadae.",
+    "Read and write boundary is restricted to the four records (L8, L10), with `rg '^\\| R-0017 '` for waves.md. git, stack, db-reset, installs, code, CI, record/**, .devai/**, law/** and ADRs are all forbidden, so the boundary is consistent with TASK-0010.md.",
+    "The Owner's OD section is preserved: 'ratifique-a sem edicao' (L10), and A7 remains a technical clarification rather than a new decision (L14). The current §R-0017 text in open-decisions-rait.md keeps OD-R17-001…004 and the A7 note intact.",
+    "No early closure is claimed: the index stays `aberta`, #133/#143, PC `—` (L14), and the waves row must be in-progress history without a seal. The current README.md L36 and waves.md L67 are consistent with this (the row says 'selo ainda pendente').",
+    "The TASK-0010 criteria and gates are kept: verify:state-index, docs:check and format:check, with exit codes reported and no weakening (L16). Excluding `pnpm check` because of the ignored docs/site/build is justified by §Triagem (CTG-0003 sensor-error), and `pnpm check` is not part of the original acceptance.",
+    "The escalation ratifies the maestro's insertion of the R-0017 row, anchored before R-0018 (L6). git diff shows +1 line in waves.md with R-0016, R-0018 and R-0019 unchanged, which matches plan.md §Triagem (TASK-0010 retry 1). No acceptance criterion was reduced.",
+    "Read-only check: `node tools/docs/state-index/check.mjs` exits 0 (39 ADRs, 33 rounds, 16 closures), and repo-wide `prettier --check .` flags only the two files above."
+  ]
+}

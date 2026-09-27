@@ -5,8 +5,8 @@
   "checkpoint_threshold": 480000,
   "budget_waived": true,
   "waiver_note": "Owner/user em 2026-09-26: waive token budget to allow this round to finish. O limite historico de 80% permanece registrado, mas nao interrompe a rodada.",
-  "estimated_input_total": 2999442,
-  "estimated_output_total": 432708,
+  "estimated_input_total": 3433837,
+  "estimated_output_total": 472719,
   "note": "Estimativas de tokens unicos de entrada por chamada; atualizar apos cada worker e reviewer. Orcamento dispensado pelo usuario para concluir R-0017.",
   "entries": [
     {
@@ -332,6 +332,159 @@
       "output_tokens": 3000,
       "status": "completed",
       "note": "Estimativa sem telemetria CLI; PASS sem achado alto, antes do checkpoint (b) e RC local."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0003-prompt-review",
+      "model": "claude-opus-5-5",
+      "input_tokens": 30000,
+      "output_tokens": 2500,
+      "status": "completed",
+      "note": "Estimativa; PASS apos duas respostas JSON invalidas."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0008-retry-prompt-review",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Estimativa; PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0009-retry-prompt-review",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Estimativa; PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0010-retry-prompt-review",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Estimativa; PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0010-escalation-prompt-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 15000,
+      "output_tokens": 1500,
+      "status": "completed",
+      "note": "Estimativa; PASS com duas observacoes low incorporadas."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0010-escalation-prompt-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Estimativa; PASS sem achados."
+    },
+    {
+      "kind": "reviewer",
+      "id": "TASK-0010-delivery-fix-prompt-review",
+      "model": "claude-opus-5-5",
+      "input_tokens": 10000,
+      "output_tokens": 1000,
+      "status": "completed",
+      "note": "Estimativa; PASS."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0003-delivery-review-1",
+      "model": "claude-opus-5-5",
+      "input_tokens": 50000,
+      "output_tokens": 4000,
+      "status": "completed",
+      "note": "Estimativa; REVIEW, duas omissoes de backlog."
+    },
+    {
+      "kind": "reviewer",
+      "id": "CTG-0003-delivery-review-2",
+      "model": "claude-opus-5-5",
+      "input_tokens": 15000,
+      "output_tokens": 2000,
+      "status": "completed",
+      "note": "Estimativa; PASS sem achados."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 43577,
+      "output_tokens": 4358,
+      "status": "completed-with-retry",
+      "note": "Telemetria: 796217 input, 752640 cached."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0008-retry-1",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 42960,
+      "output_tokens": 2216,
+      "status": "completed",
+      "note": "Telemetria: 476624 input, 433664 cached."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 60360,
+      "output_tokens": 3285,
+      "status": "completed-with-retry",
+      "note": "Telemetria: 1012168 input, 951808 cached."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0009-retry-1",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 19599,
+      "output_tokens": 1427,
+      "status": "completed",
+      "note": "Telemetria: 260495 input, 240896 cached."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010-attempt-1",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 10000,
+      "output_tokens": 0,
+      "status": "interrupted",
+      "note": "Estimativa sem turn.completed; leitura ampla de linha historica sem entrega."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010-retry-1",
+      "model": "gpt-5.6-luna",
+      "input_tokens": 47083,
+      "output_tokens": 5676,
+      "status": "partial",
+      "note": "Telemetria: 445675 input, 398592 cached; backlog e indice entregues."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010-escalation",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 28127,
+      "output_tokens": 5260,
+      "status": "completed",
+      "note": "Telemetria: 305887 input, 277760 cached; historico ratificado."
+    },
+    {
+      "kind": "worker",
+      "id": "TASK-0010-delivery-fix",
+      "model": "gpt-5.6-terra",
+      "input_tokens": 22689,
+      "output_tokens": 2789,
+      "status": "completed",
+      "note": "Telemetria: 241569 input, 218880 cached; dois itens backlog registrados."
     }
   ]
 }

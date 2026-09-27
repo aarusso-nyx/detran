@@ -408,3 +408,46 @@ jobs:
       - name: Run the tiered test suite (unit + integration + e2e)
         working-directory: senatran-mock
         run: pnpm test:ci
+
+  stack-smoke:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - uses: pnpm/action-setup@f40ffcd9367d9f12939873eb1018b921a783ffaa # v4
+        with:
+          version: 9.15.0
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: pnpm
+
+      - name: Install dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify the pinned disposable database image
+        run: |
+          set -euo pipefail
+          expected='postgis/postgis@sha256:44126d872ac91993766c341e369c539e8196614321765d36a6f1bab0419a5fa5'
+          bash tools/detran-stack.sh config | jq -e --arg expected "$expected" '.database.image == $expected'
+
+      - name: Prepare frontend packages used by the stack
+        run: |
+          pnpm --filter @detran/ui build
+          pnpm --filter @detran/boat-mobile build
+
+      - name: Run the disposable local stack smoke sequence
+        run: |
+          set -euo pipefail
+          pnpm stack:db-reset
+          pnpm stack:start
+          pnpm stack:health
+          pnpm stack:smoke
+
+      - name: Stop the disposable local stack
+        if: always()
+        run: pnpm stack:stop
