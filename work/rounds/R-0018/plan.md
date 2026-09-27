@@ -280,6 +280,10 @@ rodadas, 14 closures`; `pnpm test:state-index` → 98/98; `pnpm check` e `pnpm d
   ("aceito OD-R18-004 e OD-R18-002"); `## Status` de cada uma passa a Accepted/Aceita (histórico
   preservado) e os dois índices mudam no mesmo commit, em PR próprio após o fechamento.
 
+- **M8 — OD-R18-001 decidida (2026-09-27): opção (b).** O Owner manteve `law/adr/` como série DEVAI
+  distinta (`LAW-ADR-` nos índices). Aplicada a variante (b) do contrato CTG-0001 §9.1–§9.3 e
+  `lawAdrMode: "distinct"`, em PR próprio após o fechamento.
+
 ## Concorrência
 
 Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):

@@ -9,7 +9,9 @@
     "7f5451f4a27204a76da20f18e88b8b50f56476da",
     "c18ec88ee36d233842d4f86f903b220172cad43b",
     "c479ca4e01efc57f843c4b5f96657a0e72aa40d6",
-    "f023cd2609173bdfdd6e4829d56db8188e8dbd51"
+    "f023cd2609173bdfdd6e4829d56db8188e8dbd51",
+    "2d5e67669a0c2e838df69537785c675b51813b05",
+    "153ff23178df778eb6ef0fcce52bdb715a35449c"
   ],
   "artifacts": [
     {
@@ -62,7 +64,7 @@
     },
     {
       "path": "docs/meta/knowledge-base/open-decisions-rait.md",
-      "sha256": "3f59a437ee7fb1f4b60a0b8e35af8cb8a0afab258c4f3d6d039035e8b0ea6d70"
+      "sha256": "5e6fd5f25cf55b825e3f3679cd3cf582caffc7a5e8ba0d0fed81fe28681377df"
     },
     {
       "path": ".devai/state/audit-observations/968f07296a49f27f7bfccc8f453b36c44ded0373/assessment.json",
@@ -83,6 +85,10 @@
     {
       "path": ".devai/state/audit-observations/968f07296a49f27f7bfccc8f453b36c44ded0373/status.json",
       "sha256": "8c4c2418deb9494f5abdedf1e15b8a8a1c067ee0ecba6aa3489da8fd6f796922"
+    },
+    {
+      "path": "work/rounds/R-0019/AUTHORIZATION.md",
+      "sha256": "c3b853ce232d801184680f6f2bfe9d51d6625a1546de7df0dfd4e0ceb2ffc286"
     }
   ],
   "gates": [
@@ -125,6 +131,11 @@
       "name": "proof chain handoff from origin/main",
       "result": "pass",
       "note": "Main chain head ff127d27 accepted verbatim after PR #133; original CTG-0001 audit observation at exact SHA 968f0729 retained as hashed artifacts in this record."
+    },
+    {
+      "name": "post-PR136 origin/main merge reconciliation",
+      "result": "pass",
+      "note": "Normal merge 153ff231; full pnpm check exit 0 with identical Git status, eight DEVAI members pass, doctor and spec_depth pass, evidence chain valid. Owner acceptance recorded in AUTHORIZATION.md."
     }
   ]
 }
