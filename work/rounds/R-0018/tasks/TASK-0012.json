@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "2.0.0",
+  "id": "TASK-0012",
+  "round_id": "R-0018",
+  "status": "completed",
+  "discipline": "architect",
+  "discipline_specialization": "architect-blueprint",
+  "title": "Fixar o contrato do CTG-0004: README de DDL e tools/README pós-R-0017",
+  "description": "Grupo pós-fechamento CTG-0004 (plan.md M9): OD-R18-005 e nota de stack de tools/README.md.",
+  "lifecycle": "supported",
+  "target_modules": ["MOD-r18-contract"],
+  "target_substrates": ["F2"],
+  "target_invariants": [],
+  "coupled_task_group": "CTG-0004",
+  "coupled_pipeline_position": "architect",
+  "upstream_task_id": null,
+  "db_isolation": "database",
+  "iteration_count": 0,
+  "max_iterations": 2,
+  "priority": 12,
+  "tags": ["c-0002", "action-3", "ctg-0004"],
+  "branch": "orchestra/index-state-ctg4",
+  "worktree_id": "WT-index-state",
+  "prompt_composition_id": "PC-c19b2df4b78026de",
+  "acceptance_commands": [
+    ["test", "-f", "work/rounds/R-0018/contracts/CTG-0004.md"]
+  ],
+  "created_at": "2026-09-27T12:00:00.000Z",
+  "executor": {
+    "kind": "agent",
+    "runtime": "claude-cli",
+    "model": "opus",
+    "effort": "medium",
+    "selection": {
+      "mode": "exact",
+      "registry_id": "claude-opus-5-5"
+    },
+    "prompt_composition_id": "PC-c19b2df4b78026de",
+    "max_iterations": 2,
+    "capabilities": ["read", "local-write"]
+  }
+}

@@ -284,6 +284,14 @@ rodadas, 14 closures`; `pnpm test:state-index` → 98/98; `pnpm check` e `pnpm d
   distinta (`LAW-ADR-` nos índices). Aplicada a variante (b) do contrato CTG-0001 §9.1–§9.3 e
   `lawAdrMode: "distinct"`, em PR próprio após o fechamento.
 
+- **M9 — OD-R18-005 decidida e CTG-0004 pós-fechamento (2026-09-27).** R-0017 (`local-stack`) e
+  R-0019 (`law-corpus`) mesclaram em `main` (#133, #132), liberando o lock de `backend/database/**`. O
+  Owner autorizou ("resume your work and go ahead until completely closes this round", após a oferta do
+  maestro) atualizar `backend/database/ddl/README.md` (OD-R18-005) e a nota "pendente R-0017" de
+  `tools/README.md` (regra do CTG-0003 §3.6, cuja premissa mudou). Grupo **CTG-0004**: TASK-0012
+  (Architect, contrato `contracts/CTG-0004.md`) → TASK-0013 (transcriber) → delivery-review → PR.
+  O closure PC-0015 não é reemitido; o grupo é registrado por evidência própria.
+
 ## Concorrência
 
 Registrado no bootstrap (2026-09-26, `origin/main` `220a4020`):

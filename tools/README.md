@@ -26,38 +26,52 @@ Checks with their own entry below (the complete gate chain is the `check` script
 
 Scripts of the root `package.json` that call `tools/`:
 
-| Script                        | Command                                                                                                                                             |
-| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `verify:decorators`           | `tsx tools/verify-controller-decorators.ts`                                                                                                         |
-| `verify:rls-ddl`              | `tsx tools/check-rls-ddl.ts`                                                                                                                        |
-| `verify:role-catalog`         | `tsx tools/check-role-catalog.ts`                                                                                                                   |
-| `verify:lifecycle-vocabulary` | `tsx tools/check-lifecycle-vocabulary.ts`                                                                                                           |
-| `verify:senatran-boundary`    | `tsx tools/verify-senatran-boundary.ts`                                                                                                             |
-| `verify:pec-parity`           | `tsx tools/verify-pec-parity.ts`                                                                                                                    |
-| `verify:pec-superset`         | `tsx tools/verify-pec-superset.ts`                                                                                                                  |
-| `verify:orchestra-bridge`     | `bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh`                                                                        |
-| `backend:rls-smoke`           | `tsx tools/check-rls-smoke.ts`                                                                                                                      |
-| `ci:backend-full`             | `bash tools/ci/run-backend-kernel.sh`                                                                                                               |
-| `ci:backend-kernel:local`     | `node tools/ci/run-backend-kernel-local.mjs`                                                                                                        |
-| `devai:rc:prepare`            | `node tools/ci/prepare-local-rc.mjs`                                                                                                                |
-| `devai:rc:publish`            | `node tools/ci/publish-local-rc.mjs`                                                                                                                |
-| `blueprints:generate`         | `node tools/blueprints/generate.mjs`                                                                                                                |
-| `parameters:generate`         | `node tools/parameters/generate-seed.mjs`                                                                                                           |
-| `parameters:test`             | `node --test tools/parameters/tests/*.test.mjs`                                                                                                     |
-| `verify:parameter-catalogue`  | `node tools/parameters/verify.mjs --check-generated --check-usage`                                                                                  |
-| `blueprints:check`            | `node tools/blueprints/check.mjs`                                                                                                                   |
-| `contracts:openapi`           | `node tools/contracts/generate-openapi.mjs`                                                                                                         |
-| `contracts:check`             | `node tools/contracts/generate-openapi.mjs --check && node tools/contracts/check-commands.mjs && node tools/contracts/generate-clients.mjs --check` |
-| `contracts:test`              | `node --test tools/contracts/tests/*.test.mjs`                                                                                                      |
-| `contracts:clients`           | `node tools/contracts/generate-clients.mjs`                                                                                                         |
-| `docs:kb:check`               | `node tools/docs/kb/check.mjs`                                                                                                                      |
-| `docs:kb:cutover-check`       | `node tools/docs/kb/check.mjs --cutover`                                                                                                            |
-| `docs:kb:publish-check`       | `node tools/docs/kb/publish-dry-run.mjs`                                                                                                            |
-| `verify:state-index`          | `node tools/docs/state-index/check.mjs`                                                                                                             |
-| `test:state-index`            | `node --test tools/docs/state-index/tests/*.test.mjs tools/docs/adr/tests/*.test.mjs`                                                               |
-| `adr:renumber`                | `node tools/docs/adr/renumber.mjs`                                                                                                                  |
+| Script                        | Command                                                                                                                                                                                  |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `law:test`                    | `node --test tools/law/tests/*.test.mjs`                                                                                                                                                 |
+| `verify:law-corpus`           | `node tools/law/verify.mjs --repo-root . --package-schemas-dir node_modules/@aarusso-nyx/devai/dist/runtime/index/schemas --od-registry docs/meta/knowledge-base/open-decisions-rait.md` |
+| `verify:decorators`           | `tsx tools/verify-controller-decorators.ts`                                                                                                                                              |
+| `verify:rls-ddl`              | `tsx tools/check-rls-ddl.ts`                                                                                                                                                             |
+| `verify:role-catalog`         | `tsx tools/check-role-catalog.ts`                                                                                                                                                        |
+| `verify:lifecycle-vocabulary` | `tsx tools/check-lifecycle-vocabulary.ts`                                                                                                                                                |
+| `verify:senatran-boundary`    | `tsx tools/verify-senatran-boundary.ts`                                                                                                                                                  |
+| `verify:pec-parity`           | `tsx tools/verify-pec-parity.ts`                                                                                                                                                         |
+| `verify:pec-superset`         | `tsx tools/verify-pec-superset.ts`                                                                                                                                                       |
+| `verify:orchestra-bridge`     | `bash tools/orchestra/bridge.test.sh && bash tools/orchestra/worker.test.sh`                                                                                                             |
+| `stack`                       | `bash tools/detran-stack.sh`                                                                                                                                                             |
+| `stack:start`                 | `bash tools/detran-stack.sh start`                                                                                                                                                       |
+| `stack:stop`                  | `bash tools/detran-stack.sh stop`                                                                                                                                                        |
+| `stack:restart`               | `bash tools/detran-stack.sh restart`                                                                                                                                                     |
+| `stack:status`                | `bash tools/detran-stack.sh status`                                                                                                                                                      |
+| `stack:logs`                  | `bash tools/detran-stack.sh logs`                                                                                                                                                        |
+| `stack:build`                 | `bash tools/detran-stack.sh build`                                                                                                                                                       |
+| `stack:db-init`               | `bash tools/detran-stack.sh db-init`                                                                                                                                                     |
+| `stack:db-reset`              | `bash tools/detran-stack.sh db-reset`                                                                                                                                                    |
+| `stack:config`                | `bash tools/detran-stack.sh config`                                                                                                                                                      |
+| `stack:health`                | `bash tools/detran-stack.sh health`                                                                                                                                                      |
+| `test:stack`                  | `node --test tools/stack/*.test.mjs`                                                                                                                                                     |
+| `backend:rls-smoke`           | `tsx tools/check-rls-smoke.ts`                                                                                                                                                           |
+| `ci:backend-full`             | `bash tools/ci/run-backend-kernel.sh`                                                                                                                                                    |
+| `ci:backend-kernel:local`     | `node tools/ci/run-backend-kernel-local.mjs`                                                                                                                                             |
+| `devai:rc:prepare`            | `node tools/ci/prepare-local-rc.mjs`                                                                                                                                                     |
+| `devai:rc:publish`            | `node tools/ci/publish-local-rc.mjs`                                                                                                                                                     |
+| `blueprints:generate`         | `node tools/blueprints/generate.mjs`                                                                                                                                                     |
+| `parameters:generate`         | `node tools/parameters/generate-seed.mjs`                                                                                                                                                |
+| `parameters:test`             | `node --test tools/parameters/tests/*.test.mjs`                                                                                                                                          |
+| `verify:parameter-catalogue`  | `node tools/parameters/verify.mjs --check-generated --check-usage`                                                                                                                       |
+| `blueprints:check`            | `node tools/blueprints/check.mjs`                                                                                                                                                        |
+| `contracts:openapi`           | `node tools/contracts/generate-openapi.mjs`                                                                                                                                              |
+| `contracts:check`             | `node tools/contracts/generate-openapi.mjs --check && node tools/contracts/check-commands.mjs && node tools/contracts/generate-clients.mjs --check`                                      |
+| `contracts:test`              | `node --test tools/contracts/tests/*.test.mjs`                                                                                                                                           |
+| `contracts:clients`           | `node tools/contracts/generate-clients.mjs`                                                                                                                                              |
+| `docs:kb:check`               | `node tools/docs/kb/check.mjs`                                                                                                                                                           |
+| `docs:kb:cutover-check`       | `node tools/docs/kb/check.mjs --cutover`                                                                                                                                                 |
+| `docs:kb:publish-check`       | `node tools/docs/kb/publish-dry-run.mjs`                                                                                                                                                 |
+| `verify:state-index`          | `node tools/docs/state-index/check.mjs`                                                                                                                                                  |
+| `test:state-index`            | `node --test tools/docs/state-index/tests/*.test.mjs tools/docs/adr/tests/*.test.mjs`                                                                                                    |
+| `adr:renumber`                | `node tools/docs/adr/renumber.mjs`                                                                                                                                                       |
 
-Local stack (`tools/detran-stack*`, `tools/stack/`): pendente R-0017.
+Local stack: `tools/detran-stack.sh` (references `tools/detran-stack.proxy.json` and `tools/stack/senatran-mock.compose.yml`) runs through the `stack` and `stack:*` scripts above; `tools/stack/` also holds its tests (`test:stack`).
 
 Keep entries small and single-purpose; anything platform-generic belongs in stynx or
 devai, not here.

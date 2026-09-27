@@ -1,0 +1,28 @@
+{
+  "mode": "delivery-review",
+  "round": "R-0018",
+  "ctg": "CTG-0004",
+  "verdict": "REVIEW",
+  "findings": [
+    {
+      "severity": "high",
+      "item": 5,
+      "file": "backend/database/ddl/README.md",
+      "line": 3,
+      "claim": "A introdução afirma que os arquivos `30`–`80` vêm depois dos arquivos `00`–`21`, mas `apply.sh` aplica `19-rait-priority-pre.sql` após `33-inf-alcohol.sql` e `20-rls-policies.sql` após `80-dashboard.sql`.",
+      "fix": "Corrigir a frase no README e no texto integral de CTG-0004 §1.2 para refletir as exceções da ordem de aplicação."
+    },
+    {
+      "severity": "high",
+      "item": 11,
+      "file": "docs/meta/knowledge-base/backlog.md",
+      "line": 637,
+      "claim": "O resumo ainda lista OD-R18-005 como aberta, enquanto a linha seguinte a marca resolvida.",
+      "fix": "Atualizar o resumo para deixar apenas OD-R18-001 em aberto e ajustar o contrato e a fronteira de TASK-0013 para incluir essa linha."
+    }
+  ],
+  "notes": [
+    "Inventário e ordem dos 66 arquivos, 48 cabeçalhos gerados, tabela dos 42 scripts, Prettier, verify:state-index e docs:kb:check conferidos.",
+    "C-04-15 permanece atribuído ao maestro para execução antes do PR."
+  ]
+}
